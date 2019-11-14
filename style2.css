@@ -1,0 +1,172 @@
+/* CSS Document bleu svg : #345492*/
+
+body
+{
+	width: 100%;
+	margin: auto; /* Pour centrer notre page */
+	margin-top: 0px; /* Pour éviter de coller avec le haut de la fenêtre du navigateur. Essayez d'enlever pour voir ! */
+	margin-bottom: 0px;    /* Idem pour le bas du navigateur */
+	background-color: #EEEEEE; /*#200000*/ 
+	background-image:url('./images/texture_parchemin.gif');
+}
+
+#en_tete
+{
+   width: 800px;
+   height: 200px;
+   background-repeat: no-repeat;
+   margin: auto;
+}
+
+#gauche
+{
+   float: left; /* Le menu flottera à gauche */
+   width: 150px; /* Très important : donner une taille au menu */
+}
+
+#gauche a:hover {
+	background-image:url(./images/guill_rouge.png);
+	background-repeat:no-repeat;
+	background-position:1% 50%;
+	padding-left:15px;
+}
+
+#droite
+{
+   float: right; /* Le menu flottera à droite */
+   width: 160px; /* Très important : donner une taille au menu */
+
+}
+
+.element_menu
+{
+   background-color: #beb0a9;
+   -moz-border-radius-bottomleft: 13px;
+   
+   border-right: 2px solid black;
+   border-left: 2px solid #666;
+   border-bottom: 2px solid #666;
+   border-top: 8px solid #602821;
+   padding: 5px;
+   padding-top: 0px;
+
+   margin-bottom: 20px; /* Pour éviter que les éléments du menu ne soient trop collés */
+}
+
+.element_menu h3 /* Tous les titres de menus */
+{    
+   color: #a75d3a;
+   font-family: Arial, "Arial Black", "Times New Roman", Times, serif;
+   text-align: center;
+   margin-top: 3px;
+}
+
+.element_menu ul /* Toutes les listes à puces se trouvant dans un menu */
+{
+   list-style-image: url("./images/perso1t.png"); /* On change l'apparence des puces */
+   padding: 0px; /* Tous les côtés ont une marge intérieure de 0 pixels */
+   padding-left: 20px; /* ... mais on modifie ensuite la marge de gauche, donc celle-là fera finalement 20 pixels */
+   margin: 0px; /* Idem pour margin, ça nous évite d'avoir à en écrire 4 (margin-left, margin-right...) */
+   margin-bottom: 5px; /* Même chose que tout à l'heure, on modifie ensuite juste margin-bottom, mais tous les autres sont à 0px */
+}
+
+.element_menu a /* Tous les liens se trouvant dans un menu */
+{
+   color: #222;
+   text-decoration:none;
+}
+
+.element_menu a:hover /* Quand on pointe sur un lien du menu */
+{
+   color: black;
+   text-decoration:overline underline;
+}
+
+#corps
+{
+   margin-left: 220px; /* Une marge à gauche pour pousser le corps, afin qu'il ne passe plus sous le menu */
+   margin-right: 100px;
+   margin-bottom: 20px; /* Ca c'est pour éviter que le corps colle trop au pied de page en-dessous */
+   padding: 5px; /* Pour éviter que le texte à l'intérieur du corps ne colle trop à la bordure */
+   
+   color: #000;
+   background-image : url(images/parchemin.gif);
+   background-repeat: no-repeat;
+   
+   width: 700px;
+   height: 600px;
+}
+
+#corps h1 /* Tous les titres h1 du corps */
+{
+   color: #a75d3a;
+   text-align: center;
+   font-family: Arial, "Arial Black", "Times New Roman", Times, serif;
+}
+
+#corps h2 /* Tous les titres h2 du corps */
+{
+	height: 30px;
+	
+	/*background-image: url("./images/perso1t.png"); /* Une petite image de fond sur les titres h2 */
+	background-repeat: no-repeat; /* L'image ne se répètera pas, elle sera à gauche du titre */
+   
+	margin-top: 100px;
+	padding-left: 75px;
+	color: #a75d3a;
+	text-align: left;
+}
+
+#corps txt
+{
+	height: 15px;
+	
+	align: left;
+	
+	color: #a75d3a;	
+	text-align: left;
+	
+	padding-left: 75px;
+	padding-right: 100px;
+}
+
+#pied_de_page
+{
+   padding: 0px;
+   margin-left: 170px; 
+   margin-right: 170px;
+
+   text-align: center;
+
+   color: #000;
+   background-color: #beb0a9;
+   
+   border: 2px solid black;
+}
+
+.lien a
+{
+	text-decoration : underline;
+	font-size : 100%;
+}
+
+a
+{
+	color : rgb(0,0,0);
+	text-decoration : none;
+}
+
+a:hover
+{
+	text-decoration : underline;
+}
+
+a:visited
+{
+	color : rgb(0,0,0);
+}
+
+.imagedessous { 
+  position : absolute;
+  z-index : 1; 
+}

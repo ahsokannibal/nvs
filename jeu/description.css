@@ -1,0 +1,33 @@
+a {
+	text-decoration: none; /* définition du lien qui affichera le calque */
+	color: black;
+}
+   
+a:hover {
+	background: none; /* correction d'un bug IE */
+}
+   
+a span { /* définition de la balise <span> inclue dans <a> */
+	display: none;
+}
+
+a:hover span { /* définition de la balise <span> au survol */
+	display: block;
+}
+   
+img {
+	border:0;
+}
+
+dl, dt, dd {
+	margin:0;
+	padding:0;
+}
+
+dl {
+	float: center;
+	width: 150px;
+	text-align: center;
+	margin: 1em;
+	padding: 0.5em;
+}
