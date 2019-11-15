@@ -78,7 +78,6 @@ if(config_dispo_jeu($mysqli)){
 						$pmMax = 5;
 						$recup = 4;
 						$perc = 3;
-						$degats = 5;
 						
 						// securité
 						$sql = "select email_joueur from joueur,perso where nom_perso='$nom_perso'";
@@ -95,7 +94,7 @@ if(config_dispo_jeu($mysqli)){
 							$IDJoueur_perso = $mysqli->insert_id;
 							
 							// insertion nouveau perso
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, degats_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','1','7','$pvMax','$pvMax','$pmMax','$pmMax','$perc','$recup','10','$degats','$image_perso',NOW(),FROM_UNIXTIME($dla), $camp, '')";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','1','7','$pvMax','$pvMax','$pmMax','$pmMax','$perc','$recup','10','$image_perso',NOW(),FROM_UNIXTIME($dla), $camp, '')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);

@@ -77,7 +77,7 @@ if($verif){
 			}
 			
 			// recup des données du perso
-			$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, degats_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+			$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_perso = $res->fetch_assoc();
 			
@@ -101,7 +101,6 @@ if($verif){
 			$bp_perso = $t_perso["bonusPerception_perso"];
 			$ch_perso = $t_perso["charge_perso"];
 			$chM_perso = $t_perso["chargeMax_perso"];
-			$degats_perso = $t_perso["degats_perso"];
 			$lvl_perso = $t_perso["niveau_perso"];
 			$dc_perso = $t_perso["dateCreation_perso"];
 			$clan_perso = $t_perso["clan"];
@@ -118,7 +117,7 @@ if($verif){
 				}
 				
 				// recuperation des données du perso cible
-				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, degats_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan FROM perso WHERE ID_perso='$id_cible'";
+				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan FROM perso WHERE ID_perso='$id_cible'";
 				$res = $mysqli->query($sql);
 				$t_cible = $res->fetch_assoc();
 				
@@ -143,7 +142,6 @@ if($verif){
 				$bp_cible = $t_cible["bonusPerception_perso"];
 				$ch_cible = $t_cible["charge_perso"];
 				$chM_cible = $t_cible["chargeMax_perso"];
-				$degats_cible = $t_cible["degats_perso"];
 				$lvl_cible = $t_cible["niveau_perso"];
 				$dc_cible = $t_cible["dateCreation_perso"];
 				$or_cible = $t_cible["or_perso"];
@@ -215,7 +213,7 @@ if($verif){
 							<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 						<tr>
 						<tr>
-							<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> ".$degats_perso; ?></td>
+							<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> "; ?></td>
 						<tr>
 						<tr>
 							<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
@@ -294,7 +292,7 @@ if($verif){
 							$gain_xp = gain_xp_level($lvl_perso, $lvl_cible, $clan_perso, $clan_cible);
 			
 							// Si le perso est équipée d'une arme => On prend les dégats de l'arme
-							if($id_arme_equipee){						
+							if($id_arme_equipee){				
 								// Calcul des degats de l'arme
 								if($degatMin_arme_equipee && $degatMax_arme_equipee){
 									$min_degats_arme = $degatMin_arme_equipee;
@@ -330,10 +328,6 @@ if($verif){
 								else {
 									echo "<br />Votre arme principale a perdu $perte_pv_arme pv suite à votre attaque, il lui reste $pv_arme_equipee pv";
 								}
-							}
-							// Sinon, on prend les dégats de base du perso
-							else {
-								$degats = $degats_perso;
 							}
 							
 							// Mise a jour des degats selon l'armure de la cible
@@ -556,7 +550,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, degats_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
@@ -580,7 +574,6 @@ if($verif){
 		$bp_perso = $t_perso["bonusPerception_perso"];
 		$ch_perso = $t_perso["charge_perso"];
 		$chM_perso = $t_perso["chargeMax_perso"];
-		$degats_perso = $t_perso["degats_perso"];
 		$lvl_perso = $t_perso["niveau_perso"];
 		$dc_perso = $t_perso["dateCreation_perso"];
 		$clan_perso = $t_perso["clan"];
@@ -650,7 +643,7 @@ if($verif){
 						<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 					<tr>
 					<tr>
-						<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> ".$degats_perso; ?></td>
+						<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> "; ?></td>
 					<tr>
 					<tr>
 						<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
@@ -758,10 +751,6 @@ if($verif){
 							else {
 								echo "<br />Votre arme principale a perdu $perte_pv_arme pv suite à votre attaque, il lui reste $pv_arme_equipee pv";
 							}
-						}
-						// Sinon, on prend les dégats de base du perso
-						else {
-							$degats = $degats_perso;
 						}
 						
 						// mise a jour des pv du pnj
@@ -1322,7 +1311,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, degats_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
@@ -1346,7 +1335,6 @@ if($verif){
 		$bp_perso = $t_perso["bonusPerception_perso"];
 		$ch_perso = $t_perso["charge_perso"];
 		$chM_perso = $t_perso["chargeMax_perso"];
-		$degats_perso = $t_perso["degats_perso"];
 		$lvl_perso = $t_perso["niveau_perso"];
 		$dc_perso = $t_perso["dateCreation_perso"];
 		$clan_perso = $t_perso["clan"];
@@ -1420,7 +1408,7 @@ if($verif){
 											<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 										<tr>
 										<tr>
-											<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> ".$degats_perso; ?></td>
+											<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> "; ?></td>
 										<tr>
 										<tr>
 											<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
@@ -1512,10 +1500,6 @@ if($verif){
 						else {
 							echo "<br />Votre arme principale a perdu $perte_pv_arme pv suite à votre attaque, il lui reste $pv_arme_equipee pv.";
 						}
-					}
-					// Sinon, on prend les dégats de base du perso
-					else {
-						$degats = $degats_perso;
 					}
 						
 					// mise à jour des pv du pnj

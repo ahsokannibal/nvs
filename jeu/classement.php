@@ -59,7 +59,6 @@ if(isset($_GET["top"])){
 	echo "<OPTION value='7'"; if(isset($_GET["classement"]) && $_GET["classement"] == 7) echo " selected"; echo">pa Max</option>";
 	echo "<OPTION value='8'"; if(isset($_GET["classement"]) && $_GET["classement"] == 8) echo " selected"; echo">perception</option>";
 	echo "<OPTION value='9'"; if(isset($_GET["classement"]) && $_GET["classement"] == 9) echo " selected"; echo">recup</option>";
-	echo "<OPTION value='10'"; if(isset($_GET["classement"]) && $_GET["classement"] == 10) echo " selected"; echo">degats</option>";
 	echo "</select>";
 	echo "<input type=\"submit\" name=\"ch_c\" value=\"ok\">";
 	echo "</form></center>";
@@ -97,9 +96,6 @@ if(isset($_GET["top"])){
 				case 9:
 					$class = "recup_perso";
 					break;
-				case 10:
-					$class = "degats_perso";
-					break;
 				default:
 					$class = "nb_kill";
 					break;
@@ -118,26 +114,33 @@ if(isset($_GET["top"])){
 		echo "<table align=center width='500' border=1> <tr><th><font color=darkred>position</font></th><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>$class</font></th></tr>";
 		$c = 0;
 		
-		if($class == "nb_kill")
+		if($class == "nb_kill") {
 			echo "<center><h3><font color=darkred>Les Pks</font></h3></center>";
-		if($class == "nb_mort")
+		}
+		if($class == "nb_mort") {
 			echo "<center><h3><font color=darkred>Les Cibles humaines</font></h3></center>";
-		if($class == "nb_pnj")
+		}
+		if($class == "nb_pnj") {
 			echo "<center><h3><font color=darkred>Les Killers</font></h3></center>";
-		if($class == "or_perso")
+		}
+		if($class == "or_perso") {
 			echo "<center><h3><font color=darkred>Les Riches</font></h3></center>";
-		if($class == "pvMax_perso")
+		}
+		if($class == "pvMax_perso") {
 			echo "<center><h3><font color=darkred>Les Bons vivants</font></h3></center>";
-		if($class == "pmMax_perso")
+		}
+		if($class == "pmMax_perso") {
 			echo "<center><h3><font color=darkred>Les Vagabonds</font></h3></center>";
-		if($class == "paMax_perso")
+		}
+		if($class == "paMax_perso") {
 			echo "<center><h3><font color=darkred>Les Hyperactifs</font></h3></center>";
-		if($class == "perception_perso")
+		}
+		if($class == "perception_perso") {
 			echo "<center><h3><font color=darkred>Les Jumelles ambulantes</font></h3></center>";
-		if($class == "recup_perso")
+		}
+		if($class == "recup_perso") {
 			echo "<center><h3><font color=darkred>Les Meilleures recup</font></h3></center>";
-		if($class == "degats_perso")
-			echo "<center><h3><font color=darkred>Les Bourrins</font></h3></center>";
+		}
 			
 		while($t = $res->fetch_assoc()){
 			$c++;
@@ -289,7 +292,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
 	
 	// bleus
-	$sql = "SELECT max(niveau_perso) as niveau_max, max(xp_perso) as xp_max, max(pvMax_perso) as pv_max, max(deAttaque_perso+deDefense_perso) as des_max, max(pmMax_perso) as pm_max, max(perception_perso) as perception_max, max(recup_perso) as recup_max, max(paMax_perso) as pa_max, max(degats_perso) as degats_max, max(nb_kill) as kill_max, max(nb_pnj) as pnj_max FROM perso WHERE id_perso!='15' AND id_perso!='1' AND id_perso!='424' AND clan='1'";
+	$sql = "SELECT max(niveau_perso) as niveau_max, max(xp_perso) as xp_max, max(pvMax_perso) as pv_max, max(deAttaque_perso+deDefense_perso) as des_max, max(pmMax_perso) as pm_max, max(perception_perso) as perception_max, max(recup_perso) as recup_max, max(paMax_perso) as pa_max, max(nb_kill) as kill_max, max(nb_pnj) as pnj_max FROM perso WHERE id_perso!='15' AND id_perso!='1' AND id_perso!='424' AND clan='1'";
 	$res = $mysqli->query($sql);
 	$t_b = $res->fetch_assoc();
 	$niveau_max_b = $t_b['niveau_max'];
@@ -300,12 +303,11 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	$perception_max_b = $t_b['perception_max'];
 	$recup_max_b = $t_b['recup_max'];
 	$pa_max_b = $t_b['pa_max'];
-	$degats_max_b = $t_b['degats_max'];
 	$kill_max_b = $t_b['kill_max'];
 	$pnj_max_b = $t_b['pnj_max'];
 	
 	// rouges
-	$sql = "SELECT max(niveau_perso) as niveau_max, max(xp_perso) as xp_max, max(pvMax_perso) as pv_max, max(deAttaque_perso+deDefense_perso) as des_max, max(pmMax_perso) as pm_max, max(perception_perso) as perception_max, max(recup_perso) as recup_max, max(paMax_perso) as pa_max, max(degats_perso) as degats_max, max(nb_kill) as kill_max, max(nb_pnj) as pnj_max FROM perso WHERE id_perso!='16' AND id_perso!='425' AND clan='2'";
+	$sql = "SELECT max(niveau_perso) as niveau_max, max(xp_perso) as xp_max, max(pvMax_perso) as pv_max, max(deAttaque_perso+deDefense_perso) as des_max, max(pmMax_perso) as pm_max, max(perception_perso) as perception_max, max(recup_perso) as recup_max, max(paMax_perso) as pa_max, max(nb_kill) as kill_max, max(nb_pnj) as pnj_max FROM perso WHERE id_perso!='16' AND id_perso!='425' AND clan='2'";
 	$res = $mysqli->query($sql);
 	$t_r = $res->fetch_assoc();
 	$niveau_max_r = $t_r['niveau_max'];
@@ -316,14 +318,13 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	$perception_max_r = $t_r['perception_max'];
 	$recup_max_r = $t_r['recup_max'];
 	$pa_max_r = $t_r['pa_max'];
-	$degats_max_r = $t_r['degats_max'];
 	$kill_max_r = $t_r['kill_max'];
 	$pnj_max_r = $t_r['pnj_max'];
 	
 	echo "<table align='center' border='1'>";
-	echo "<tr><th>Nom</th><th>niveau</th><th>Xp</th><th>Pv</th><th>Pm</th><th>Des</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Dégats</th><th>Nombre de kills</th><th>Nombre de pnj tués</th></tr>";
-	echo "<tr><td align='center'><font color='blue'>SuperBleu</font></td><td align='center'>$niveau_max_b</td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$des_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$degats_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
-	echo "<tr><td align='center'><font color='red'>SuperRouge</font></td><td align='center'>$niveau_max_r</td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$des_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$degats_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
+	echo "<tr><th>Nom</th><th>niveau</th><th>Xp</th><th>Pv</th><th>Pm</th><th>Des</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Nombre de kills</th><th>Nombre de pnj tués</th></tr>";
+	echo "<tr><td align='center'><font color='blue'>SuperBleu</font></td><td align='center'>$niveau_max_b</td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$des_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
+	echo "<tr><td align='center'><font color='red'>SuperRouge</font></td><td align='center'>$niveau_max_r</td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$des_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
 	echo "</table>";
 }
 

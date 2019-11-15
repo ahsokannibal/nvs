@@ -50,7 +50,7 @@ if($dispo){
 	<p align="center"><input type="button" value="Fermer cette fen�tre" onclick="window.close()"></p>
 	<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
 	<?php
-	$sql = "SELECT pi_perso, pvMax_perso, pmMax_perso, paMax_perso, perception_perso, recup_perso, deAttaque_perso, deDefense_perso, chargeMax_perso, degats_perso FROM perso WHERE id_perso ='$id'";
+	$sql = "SELECT pi_perso, pvMax_perso, pmMax_perso, paMax_perso, perception_perso, recup_perso, deAttaque_perso, deDefense_perso, chargeMax_perso FROM perso WHERE id_perso ='$id'";
 	$res = $mysqli->query($sql);
 	$tab = $res->fetch_assoc();
 	
@@ -62,7 +62,6 @@ if($dispo){
 	$deAttaque_p = $tab["deAttaque_perso"];
 	$deDefense_p = $tab["deDefense_perso"];
 	$ch = $tab["chargeMax_perso"];
-	$deg = $tab["degats_perso"];
 	$pi = $tab["pi_perso"];
 	
 	$nbd = $deAttaque_p + $deDefense_p;
@@ -147,20 +146,6 @@ if($dispo){
 			$mysqli->query($sql2);
 			$ch = $ch + 1;
 			$pi = $pi - $nbpi_ch;
-		}
-		else
-			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-	}
-	if (isset($_POST["deg"])) {
-		// calcul du nombre de pi necessaire
-		$nbpi_deg = ameliore_deg($deg);
-	
-		// verification que le perso a assez de pi
-		if($pi >= $nbpi_deg) {
-			$sql2 = "UPDATE perso SET degats_perso=degats_perso+1, pi_perso=pi_perso-$nbpi_deg WHERE id_perso ='$id'";
-			$mysqli->query($sql2);
-			$deg = $deg + 1;
-			$pi = $pi - $nbpi_deg;
 		}
 		else
 			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";

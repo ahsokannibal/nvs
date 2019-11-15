@@ -54,7 +54,7 @@ if($dispo){
 			}
 			else {			
 				// recuperation des infos du perso
-				$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, degats_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, mainPrincipale_perso FROM perso WHERE id_perso='$id'";
+				$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, mainPrincipale_perso FROM perso WHERE id_perso='$id'";
 				$res = exec_requete($sql);
 				$t_i = mysql_fetch_assoc($res);
 				$nom_p = $t_i["nom_perso"];
@@ -79,7 +79,6 @@ if($dispo){
 				$b_p = $t_i["bonus_perso"];
 				$ch_p = $t_i["charge_perso"];
 				$chM_p = $t_i["chargeMax_perso"];
-				$deg_p = $t_i["degats_perso"];
 				$lvl_p = $t_i["niveau_perso"];
 				$dc_p = $t_i["dateCreation_perso"];
 				$clan_perso = $t_i["clan"];
