@@ -6,7 +6,7 @@ require_once("f_combat.php");
 $mysqli = db_connexion();
 
 /**
-  * Fonction qui retourne la chaine de caractère correspondant à l'image associée à une action
+  * Fonction qui retourne la chaine de caractere correspondant a l'image associee a une action
   * @param $id_action	: L'identifiant de l'action
   * @return String		: L'image
   */
@@ -35,9 +35,9 @@ function image_action($id_action){
 
 /**
   * Fonction qui permet de construire un batiment sur une case
-  * @param $t_bat	: Un tableau contenant les coordonnées où le batiement doit être construit ainsi que l'identifiant du batiment
+  * @param $t_bat	: Un tableau contenant les coordonnees ou le batiement doit etre construit ainsi que l'identifiant du batiment
   * @param $id_perso	: L'identifiant du perso qui construit le batiment
-  * @param $carte 	: La carte sur laquelle le batiment doit être construit
+  * @param $carte 	: La carte sur laquelle le batiment doit etre construit
   * @return Bool		: Si oui ou non le batiment est constructible
   */
 function construire_bat($mysqli, $t_bat, $id_perso,$carte){
@@ -56,13 +56,13 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 	
 	if(isset($id_bat) && $id_bat != ''){
 	
-		// recupération du nom du batiment
+		// recuperation du nom du batiment
 		$sql = "SELECT nom_batiment FROM batiment WHERE id_batiment='$id_bat'";
 		$res = $mysqli->query($sql);
 		$tb = $res->fetch_assoc();
 		$nom_bat = $tb["nom_batiment"];
 		
-		// recupération des données nécéssaires pour la construction du batiment
+		// recuperation des donnees necessaires pour la construction du batiment
 		$sql = "SELECT clan, or_perso, pa_perso, pvMin_action, pvMax_action, coutPa_action, coutOr_action, coutBois_action, coutfer_action, contenance, action.nb_points as niveau_bat
 				FROM action, action_as_batiment, perso_as_competence, competence_as_action, perso
 				WHERE action.id_action = action_as_batiment.id_action
@@ -90,7 +90,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 		if($camp_perso == '1'){
 			$bat_camp = "b";
 			
-			// recupération de la position du fort
+			// recuperation de la position du fort
 			$sql = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_batiment='9' AND camp_instance='1'";
 			$res = $mysqli->query($sql);
 			$t_fort_b = $res->fetch_assoc();
@@ -101,7 +101,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 		if($camp_perso == '2'){
 			$bat_camp = "r";
 			
-			// recupération de la position du fort
+			// recuperation de la position du fort
 			$sql = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_batiment='9' AND camp_instance='2'";
 			$res = $mysqli->query($sql);
 			$t_fort_r = $res->fetch_assoc();
@@ -113,7 +113,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 		// test pa
 		if($pa_perso >= $coutPa){
 		
-			// recupération nombre bois du perso
+			// recuperation nombre bois du perso
 			$nb_bois = nb_bois_perso($id_perso);
 			
 			if($or_perso >= $coutOr && $nb_bois >= $coutBois){
@@ -154,12 +154,12 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 				
 				if($autorisation_construction){
 					if($coutPa == -1){
-						// mise à jour des pa, or et charge du perso + xp/pi
+						// mise a jour des pa, or et charge du perso + xp/pi
 						$sql = "UPDATE perso SET pa_perso='0' , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
 						$mysqli->query($sql);
 					}
 					else {
-						// mise à jour des pa, or et charge du perso + xp/pi
+						// mise a jour des pa, or et charge du perso + xp/pi
 						$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
 						$mysqli->query($sql);
 					}
@@ -175,45 +175,45 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 					
 					if($id_bat == 4 || $id_bat == 5){
 						// route et pont
-						// mise à jour de la carte
+						// mise a jour de la carte
 						$sql = "UPDATE $carte SET occupee_carte='0', fond_carte='$img_bat' WHERE x_carte=$x_bat AND y_carte=$y_bat";
 						$mysqli->query($sql);
 					}
 					else {
-						// mise à jour de la table instance_bat
+						// mise a jour de la table instance_bat
 						$sql = "INSERT INTO instance_batiment VALUES ('', '$niveau_bat', '$id_bat', '', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
 						$mysqli->query($sql);
 						$id_i_bat = $mysqli->insert_id;
 					
-						// mise à jour de la carte
+						// mise a jour de la carte
 						$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
 						$mysqli->query($sql);
 					}
-					// recupération des infos du perso
+					// recuperation des infos du perso
 					$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
 					$res = $mysqli->query($sql);
 					$t_p = $res->fetch_assoc();
 					$nom_perso = $t_p["nom_perso"];
 					$camp = $t_p["clan"];
 					
-					// récupération de la couleur du camp du perso
+					// recuperation de la couleur du camp du perso
 					$couleur_clan_perso = couleur_clan($camp);
 					
 					// route et pont
 					if($id_bat == 4 || $id_bat == 5){
-						//mise à jour de la table evenement
+						//mise a jour de la table evenement
 						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','a construit $nom_bat','','','',NOW(),'0')";
 						$mysqli->query($sql);
 					}
 					else {
-						//mise à jour de la table evenement
+						//mise a jour de la table evenement
 						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','a construit ','$id_i_bat','<font color=$couleur_clan_perso>$nom_bat</font>','',NOW(),'0')";
 						$mysqli->query($sql);
 					}
 					return 1;
 				}
 				else {
-					echo "<center>Vous ne pouvez pas construire ce bâtiment aussi loin du fort : distance = $distance ; distance max = $distance_max</center><br />";
+					echo "<center>Vous ne pouvez pas construire ce bÃ¢timent aussi loin du fort : distance = $distance ; distance max = $distance_max</center><br />";
 					echo "<a href='jouer.php'>[ retour ]</a>";
 					return 0;
 				}
@@ -236,15 +236,15 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 }
 
 /**
-  * Fonction qui permet de réparer un batiment
-  * @param $id_perso	: L'identifiant du perso qui répare le batiment
-  * @param $id_cible	: L'identifiant de l'instance du batiment cible de la réparation
-  * @param $id_action	: L'identifiant de l'action pour récupérer le niveau de réparation
+  * Fonction qui permet de reparer un batiment
+  * @param $id_perso	: L'identifiant du perso qui repare le batiment
+  * @param $id_cible	: L'identifiant de l'instance du batiment cible de la reparation
+  * @param $id_action	: L'identifiant de l'action pour recuperer le niveau de reparation
   * @return Void
   */
 function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT coutPa_action FROM action WHERE id_action=$id_action";
 	$res = $mysqli->query($sql);
 	$t_reparer = $res->fetch_assoc();
@@ -259,13 +259,13 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$pa_perso = $t_i_perso['pa_perso'];
 	$camp_perso = $t_i_perso['clan'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	// test pa
 	if($pa_perso >= $coutPa){
 		
-		// recupération des infos de la cible
+		// recuperation des infos de la cible
 		$sql = "SELECT nom_batiment, pv_instance, pvMax_instance, camp_instance FROM instance_batiment, batiment WHERE id_instanceBat='$id_cible' AND batiment.id_batiment = instance_batiment.id_batiment";
 		$res = $mysqli->query($sql);
 		$t_i_cible = $res->fetch_assoc();
@@ -274,7 +274,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 		$pv_max_bat = $t_i_cible['pvMax_instance'];
 		$camp_bat = $t_i_cible['camp_instance'];
 		
-		// récupération de la couleur du camp du batiment
+		// recuperation de la couleur du camp du batiment
 		$couleur_clan_cible = couleur_clan($camp_bat);
 		
 		//calcul des reparations
@@ -299,11 +299,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 				$mysqli->query($sql);
 					
 				//MAJ evenments perso
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparÃ© le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
 				$mysqli->query($sql);
 					
-				echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
-				echo "<center>Vous avez gagné $gain_xp XP</center>";
+				echo "<center>Vous avez rÃ©parÃ© <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
+				echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 			}
 			else {
 				// on met aux pvMax de la cible
@@ -315,16 +315,16 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 				$mysqli->query($sql);
 					
 				//MAJ evenments perso
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparÃ© le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
 				$mysqli->query($sql);
 					
-				echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
-				echo "<center>La cible est revenu à son max de vie</center><br />";
-				echo "<center>Vous avez gagné $gain_xp XP</center>";
+				echo "<center>Vous avez rÃ©parÃ© <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
+				echo "<center>La cible est revenu Ã  son max de vie</center><br />";
+				echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 			}
 		}
 		else {
-			// cible déjà au max
+			// cible deja au max
 			$gain_xp = '1';
 				
 				//MAJ xp/pi/pa perso
@@ -332,11 +332,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			$mysqli->query($sql);
 				
 			//MAJ evenments perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a fait une révision sur le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv déjà au max...',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a fait une rÃ©vision sur le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv dÃ©jÃ  au max...',NOW(),'0')";
 			$mysqli->query($sql);
 				
-			echo "<center>La cible est était déjà à son max de vie</center><br />";
-			echo "<center>Vous avez gagné $gain_xp XP</center>";
+			echo "<center>La cible est Ã©tait dÃ©jÃ  Ã  son max de vie</center><br />";
+			echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 		}
 	}
 	else {
@@ -346,15 +346,15 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 }
 
 /**
-  * Fonction d'upgrade de batiment (passage d'une batiment vers son niveau directement supérieur)
+  * Fonction d'upgrade de batiment (passage d'une batiment vers son niveau directement superieur)
   * @param $id_perso	: L'identifiant du personnage qui va faire l'upgrade
   * @param $id_cible	: L'identifiant de l'instance du batiment cible de l'upgrade
-  * @param $id_action	: L'identifiant de l'action afin de récuperer le niveau d'upgrade et donc le pourcentage de réussite
+  * @param $id_action	: L'identifiant de l'action afin de recuperer le niveau d'upgrade et donc le pourcentage de reussite
   * @return Void
   */
 function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT coutPa_action FROM action WHERE id_action=$id_action";
 	$res = $mysqli->query($sql);
 	$t_reparer = $res->fetch_assoc();
@@ -369,13 +369,13 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$or_perso = $t_i_perso['or_perso'];
 	$camp_perso = $t_i_perso['clan'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	// test pa
 	if($pa_perso >= $coutPa){
 	
-		// recupération des infos de la cible
+		// recuperation des infos de la cible
 		$sql = "SELECT nom_batiment, batiment.id_batiment, niveau_instance, camp_instance FROM instance_batiment, batiment WHERE id_instanceBat='$id_cible' AND batiment.id_batiment = instance_batiment.id_batiment";
 		$res = $mysqli->query($sql);
 		$t_i_cible = $res->fetch_assoc();
@@ -384,13 +384,13 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 		$niveau_instance_bat = $t_i_cible['niveau_instance'];
 		$camp_bat = $t_i_cible['camp_instance'];
 		
-		// récupération de la couleur du camp du batiment
+		// recuperation de la couleur du camp du batiment
 		$couleur_clan_cible = couleur_clan($camp_bat);
 		
 		// recuperation de l'id de la competence de construction du batiment cible
 		$id_competence = recup_id_competence_bat($id_batiment);
 		
-		// verification si le perso posséde la compétence et recupération du nombre de points
+		// verification si le perso possede la competence et recuperation du nombre de points
 		$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='$id_competence'";
 		$res = $mysqli->query($sql);
 		$verif_comp = $res->num_rows;
@@ -400,7 +400,7 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 			$t_comp = $res->fetch_assoc();
 			$nb_points_comp_perso = $t_comp['nb_points'];
 			
-			// recupération de l'action necessaire à la construction du niveau supérieur du batiment
+			// recuperation de l'action necessaire a la construction du niveau superieur du batiment
 			$sql = "SELECT action.id_action, action.nb_points
 				FROM perso_as_competence, competence, competence_as_action, action
 				WHERE perso_as_competence.id_perso='$id_perso' 
@@ -415,16 +415,16 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 			$id_action_cible = $t["id_action"];
 			$nb_points_action_cible = $t['nb_points'];
 			
-			// verification si le perso possède la possibilité de construire le niveau de batiment supérieur
+			// verification si le perso possede la possibilite de construire le niveau de batiment superieur
 			if($nb_points_comp_perso >= $nb_points_action_cible){
 				
 				// calcul du cout en or
 				$cout_or = 10 * $nb_points_action_cible;
 				
-				// verification que le perso posséde l'or nécessaire à l'upgrade
+				// verification que le perso possede l'or necessaire a l'upgrade
 				if($or_perso >= $cout_or){
 				
-					// calcul du pourcentage de réussite de l'action
+					// calcul du pourcentage de reussite de l'action
 					$pourcentage_reussite = calcul_pourcentage_action($id_action);
 					
 					$reussite = rand(0,100);
@@ -438,7 +438,7 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 					}
 					
 					if($reussite <= $pourcentage_reussite + $bonus_chance){
-						// recupération des infos du nouveau niveau de batiment
+						// recuperation des infos du nouveau niveau de batiment
 						$sql = "SELECT pvMin_action, pvMax_action, contenance FROM action, action_as_batiment WHERE action.id_action = '$id_action_cible' AND action.id_action = action_as_batiment.id_action";
 						$res = $mysqli->query($sql);
 						$t_action_cible = $res->fetch_assoc();
@@ -449,7 +449,7 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 						
 						$new_pv_bat = rand($pv_min, $pv_max);
 					
-						// mise à jour du bâtiment
+						// mise a jour du batiment
 						$sql = "UPDATE instance_batiment SET niveau_instance = niveau_instance+1, pvMax_instance=$new_pv_bat, contenance_instance=$new_contenance 
 								WHERE id_instanceBat = '$id_cible'";
 						$mysqli->query($sql);
@@ -458,34 +458,34 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 						$gain_xp = rand(2,4);
 							
 						//MAJ evenments perso
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passé niveau $nb_points_action_cible',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradÃ© le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passÃ© niveau $nb_points_action_cible',NOW(),'0')";
 						$mysqli->query($sql);
 							
-						echo "<center>Vous avez Upgradé le batiment $id_cible <font color=$couleur_clan_cible>$nom_cible</font> au niveau suivant : le niveau $nb_points_action_cible</center><br />";
-						echo "<center>Le bâtiment posséde maintenant $new_pv_bat Points de Vie et une contenance de $new_contenance</center>";
-						echo "<center>Vous avez gagné $gain_xp XP</center>";
+						echo "<center>Vous avez UpgradÃ© le batiment $id_cible <font color=$couleur_clan_cible>$nom_cible</font> au niveau suivant : le niveau $nb_points_action_cible</center><br />";
+						echo "<center>Le bÃ¢timent possÃ©de maintenant $new_pv_bat Points de Vie et une contenance de $new_contenance</center>";
+						echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 					}
 					else {
 						$gain_xp = 1;
-						echo "<center>Vous n'avez pas réussi à upgrader ce bâtiment ($reussite / $pourcentage_reussite)</center><br/>";
-						echo "<center>Vous avez gagné $gain_xp XP</center>";
+						echo "<center>Vous n'avez pas rÃ©ussi Ã  upgrader ce bÃ¢timent ($reussite / $pourcentage_reussite)</center><br/>";
+						echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 					}
 					//MAJ xp perso
 					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa, or_perso=or_perso-$cout_or WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
 				}
 				else {
-					echo "<center>Vous ne possedez pas assez d'or pour upgrader le bâtiment (Votre or : $or_perso / cout en or : $cout_or)</center>";
+					echo "<center>Vous ne possedez pas assez d'or pour upgrader le bÃ¢timent (Votre or : $or_perso / cout en or : $cout_or)</center>";
 				}
 			}
 			else {
-				echo "<center>Vous ne possédez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
-				echo "<center>Vous devez être capable de construire le niveau supérieur de ce bâtiment afin de pouvoir l'upgrader</center><br />";
+				echo "<center>Vous ne possÃ©dez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
+				echo "<center>Vous devez Ãªtre capable de construire le niveau supÃ©rieur de ce bÃ¢timent afin de pouvoir l'upgrader</center><br />";
 			}
 		}
 		else {
-			echo "<center>Vous ne possédez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
-			echo "<center>Vous devez avoir la compétence de construction de ce bâtiment</center><br />";
+			echo "<center>Vous ne possÃ©dez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
+			echo "<center>Vous devez avoir la compÃ©tence de construction de ce bÃ¢timent</center><br />";
 		}
 	}
 	else {
@@ -498,12 +498,12 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
   * Fonction d'upgrade de batiment de niveau expert (Passage du niveau d'un batiment directement vers son niveau maximum)
   * @param $id_perso	: L'identifiant du personnage qui va effetuer l'upgrade
   * @param $id_cible	: L'identifiant de l'instance du batiment cible de l'upgrade
-  * @param $id_action	: L'identifiant de l'action afin de récupérer le pourcentage de réussite de l'upgrade
+  * @param $id_action	: L'identifiant de l'action afin de recuperer le pourcentage de reussite de l'upgrade
   * @return Void
   */
 function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT coutPa_action FROM action WHERE id_action=$id_action";
 	$res = $mysqli->query($sql);
 	$t_reparer = $res->fetch_assoc();
@@ -518,13 +518,13 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$or_perso = $t_i_perso['or_perso'];
 	$camp_perso = $t_i_perso['clan'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	// test pa
 	if($pa_perso >= $coutPa){
 	
-		// recupération des infos de la cible
+		// recuperation des infos de la cible
 		$sql = "SELECT nom_batiment, batiment.id_batiment, niveau_instance, camp_instance FROM instance_batiment, batiment WHERE id_instanceBat='$id_cible' AND batiment.id_batiment = instance_batiment.id_batiment";
 		$res = $mysqli->query($sql);
 		$t_i_cible = $res->fetch_assoc();
@@ -534,13 +534,13 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 		$niveau_instance_bat = $t_i_cible['niveau_instance'];
 		$camp_bat = $t_i_cible['camp_instance'];
 		
-		// récupération de la couleur du camp du perso
+		// recuperation de la couleur du camp du perso
 		$couleur_clan_cible = couleur_clan($camp_bat);
 		
 		// recuperation de l'id de la competence de construction du batiment cible
 		$id_competence = recup_id_competence_bat($id_batiment);
 		
-		// verification si le perso posséde la compétence et recupération du nombre de points
+		// verification si le perso possede la competence et recuperation du nombre de points
 		$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='$id_competence'";
 		$res = $mysqli->query($sql);
 		$verif_comp = $res->num_rows;
@@ -549,13 +549,13 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 			$t_comp = $res->fetch_assoc();
 			$nb_points_comp_perso = $t_comp['nb_points'];
 			
-			// recuperation du niveau max de la compétence
+			// recuperation du niveau max de la competence
 			$sql = "SELECT nbPoints_competence FROM competence WHERE id_competence='$id_competence'";
 			$res = $mysqli->query($sql);
 			$t_p = $res->fetch_assoc();
 			$nbPoints_max_comp = $t_p['nbPoints_competence'];
 			
-			// recupération de l'action necessaire à la construction du niveau supérieur du batiment
+			// recuperation de l'action necessaire a la construction du niveau superieur du batiment
 			$sql = "SELECT action.id_action, action.nb_points
 				FROM perso_as_competence, competence, competence_as_action, action
 				WHERE perso_as_competence.id_perso='$id_perso' 
@@ -570,17 +570,17 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 			$id_action_cible = $t["id_action"];
 			$nb_points_action_cible = $t['nb_points'];
 			
-			// verification si le perso possède la possibilité de construire le niveau de batiment supérieur
+			// verification si le perso possede la possibilite de construire le niveau de batiment superieur
 			if($nb_points_comp_perso >= $nb_points_action_cible){
 				
 				// calcul du cout en or
 				$cout_or = 10 * $nb_points_action_cible;
 				
-				// verification que le perso posséde l'or nécessaire à l'upgrade
+				// verification que le perso possede l'or necessaire a l'upgrade
 				if($or_perso >= $cout_or){
 				
 					if($niveau_instance_bat == $nb_points_action_cible){
-						echo "<center>bâtiment déjà au niveau maximum</center>";
+						echo "<center>bÃ¢timent dÃ©jÃ  au niveau maximum</center>";
 					}
 					else {
 				
@@ -598,7 +598,7 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 						}
 						
 						if($reussite <= $pourcentage_reussite + $bonus_chance){
-							// recupération des infos du nouveau niveau de batiment
+							// recuperation des infos du nouveau niveau de batiment
 							$sql = "SELECT pvMin_action, pvMax_action, contenance FROM action, action_as_batiment WHERE action.id_action = '$id_action_cible' AND action.id_action = action_as_batiment.id_action";
 							$res = $mysqli->query($sql);
 							$t_action_cible = $res->fetch_assoc();
@@ -609,7 +609,7 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 							
 							$new_pv_bat = rand($pv_min, $pv_max);
 						
-							// mise à jour du bâtiment
+							// mise a jour du batiment
 							$sql = "UPDATE instance_batiment SET niveau_instance = niveau_instance+1, pvMax_instance=$new_pv_bat, contenance_instance=$new_contenance 
 									WHERE id_instanceBat = '$id_cible'";
 							$mysqli->query($sql);
@@ -618,17 +618,17 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 							$gain_xp = rand(2,4);
 								
 							//MAJ evenments perso
-							$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passé niveau $nb_points_action_cible (niveau max)',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradÃ© le bÃ¢timent ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passÃ© niveau $nb_points_action_cible (niveau max)',NOW(),'0')";
 							$mysqli->query($sql);
 								
-							echo "<center>Vous avez Upgradé le batiment $id_cible <font color=$couleur_clan_cible>$nom_cible</font> au niveau maximum : le niveau $nb_points_action_cible</center><br />";
-							echo "<center>Le bâtiment posséde maintenant $new_pv_bat Points de Vie et une contenance de $new_contenance</center>";
-							echo "<center>Vous avez gagné $gain_xp XP</center>";
+							echo "<center>Vous avez UpgradÃ© le bÃ¢timent $id_cible <font color=$couleur_clan_cible>$nom_cible</font> au niveau maximum : le niveau $nb_points_action_cible</center><br />";
+							echo "<center>Le bÃ¢timent possÃ©de maintenant $new_pv_bat Points de Vie et une contenance de $new_contenance</center>";
+							echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 						}
 						else {
 							$gain_xp = 1;
-							echo "<center>Vous n'avez pas réussi à upgrader ce bâtiment ($reussite / $pourcentage_reussite)</center><br/>";
-							echo "<center>Vous avez gagné $gain_xp XP</center>";
+							echo "<center>Vous n'avez pas rÃ©ussi Ã  upgrader ce bÃ¢timent ($reussite / $pourcentage_reussite)</center><br/>";
+							echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 						}
 						//MAJ xp perso
 						$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa, or_perso=or_perso-$cout_or WHERE id_perso='$id_perso'";
@@ -636,17 +636,17 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 					}
 				}
 				else {
-					echo "<center>Vous ne possedez pas assez d'or pour upgrader le bâtiment (Votre or : $or_perso / cout en or : $cout_or)</center>";
+					echo "<center>Vous ne possedez pas assez d'or pour upgrader le bÃ¢timent (Votre or : $or_perso / cout en or : $cout_or)</center>";
 				}
 			}
 			else {
-				echo "<center>Vous ne possédez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
-				echo "<center>Vous devez être capable de construire le niveau supérieur de ce bâtiment afin de pouvoir l'upgrader</center><br />";
+				echo "<center>Vous ne possÃ©dez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
+				echo "<center>Vous devez Ãªtre capable de construire le niveau supÃ©rieur de ce bÃ¢timent afin de pouvoir l'upgrader</center><br />";
 			}
 		}
 		else {
-			echo "<center>Vous ne possédez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
-			echo "<center>Vous devez avoir la compétence de construction de ce bâtiment</center><br />";
+			echo "<center>Vous ne possÃ©dez pas les connaissances necessaires pour upgrader ce batiment</center><br />";
+			echo "<center>Vous devez avoir la compÃ©tence de construction de ce bÃ¢timent</center><br />";
 		}
 	}
 	else {
@@ -659,13 +659,13 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
   * Fonction qui permet d'effectuer des soin de malus sur une cible
   * @param $id_perso		: l'identifiant du personnage effectuant les soins
   * @param $id_ciblea		: L'identiiant du pnj ou pj (cible) recevant les soins
-  * @param $id_action		: L'identifiant de l'action de soin afin de récupérer le niveau de compétence
-  * @param $id_objet_soin	: L'identifiant de l'objet qu'on va utiliser pour améliorer les soins
+  * @param $id_action		: L'identifiant de l'action de soin afin de recuperer le niveau de competence
+  * @param $id_objet_soin	: L'identifiant de l'objet qu'on va utiliser pour ameliorer les soins
   * @return Void
   */
 function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	
-	// récupération des données correspondant à l'action
+	// reuperation des donnees correspondant a l'action
 	$sql = "SELECT coutPa_action FROM action WHERE id_action=$id_action";
 	$res = $mysqli->query($sql);
 	$t_soin = $res->fetch_assoc();
@@ -683,12 +683,12 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 	$niveau_perso = $t_p['niveau_perso'];
 	$camp = $t_p["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recupetion de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	// test pa
 	if($pa_perso >= $coutPa){
-		// récupération des malus du perso cible
+		// recuperation des malus du perso cible
 		$sql = "SELECT nom_perso, bonus_perso, pv_perso, pvMax_perso, niveau_perso, clan FROM perso WHERE id_perso='$id_cible'";
 		$res = $mysqli->query($sql);
 		$t_pv = $res->fetch_assoc();
@@ -700,14 +700,14 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 		$niveau_cible = $t_pv['niveau_perso'];
 		$camp_cible = $t_pv['clan'];
 		
-		// récupération de la couleur du camp du perso
+		// recuperation de la couleur du camp du perso
 		$couleur_clan_cible = couleur_clan($camp_cible);
 		
 		// calcul gain xp
 		$gain_xp = gain_xp_level($niveau_perso, $niveau_cible, $camp, $camp_cible);
 		$gain_xp = min($gain_xp, 5);
 		
-		// Si on soigne les malus d'un perso autre que soi même
+		// Si on soigne les malus d'un perso autre que soi meme
 		if($id_perso != $id_cible){
 			$gain_xp = $gain_xp * 2;
 		}
@@ -715,7 +715,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 		$bonus_recup_s = 0;
 		
 		if($id_objet_soin > 0){
-			// récupération des avantages de l'objet de soin
+			// recuperation des avantages de l'objet de soin
 			$sql_s = "SELECT nom_objet, bonusPv_objet, bonusRecup_objet FROM objet WHERE id_objet='$id_objet_soin'";
 			$res_s = $mysqli->query($sql_s);
 			$t_s = $res_s->fetch_assoc();
@@ -742,19 +742,19 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 				$sql = "UPDATE perso SET bonus_perso=0, bonusRecup_perso=bonusRecup_perso+$bonus_recup_s WHERE id_perso='$id_cible'";
 				$mysqli->query($sql);
 				
-				echo "<center>La cible a complétement récupérée de ses malus</center><br />";
+				echo "<center>La cible a complÃ©tement rÃ©cupÃ©rÃ©e de ses malus</center><br />";
 			}
 			
-			echo "<center>Vous avez apaisé <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_final</center><br />";
+			echo "<center>Vous avez apaisÃ© <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_final</center><br />";
 			
 			if($bonus_recup_s){
 				if($id_objet_soin != 12){
-					echo "<center>Vous avez augmenté la récupération de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
+					echo "<center>Vous avez augmentÃ© la rÃ©cupÃ©ration de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
 				}
 			}
 			
 			//MAJ evenements perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a apaisé ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : apaisement de $bonus_recup_final',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a apaisÃ© ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : apaisement de $bonus_recup_final',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		else {
@@ -765,12 +765,12 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 			
 			if($bonus_recup_s){
 				if($id_objet_soin != 12){
-					echo "<center>Vous avez augmenté la récupération de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
+					echo "<center>Vous avez augmentÃ© la rÃ©cupÃ©ration de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
 				}
 			}
 			
 			//MAJ evenements perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a tenté d\'apaiser ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : cible sans malus',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a tentÃ© d\'apaiser ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : cible sans malus',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		
@@ -784,7 +784,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 		$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		echo "<center>Vous avez gagné $gain_xp XP</center>";
+		echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 		
 	}
 	else {
@@ -798,13 +798,13 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
   * Fonction qui permet d'effectuer des soin sur une cible
   * @param $id_perso	: l'identifiant du personnage effectuant les soins
   * @param $id_ciblea	: L'identiiant du pnj ou pj (cible) recevant les soins
-  * @param $id_action	: L'identifiant de l'action de soin afin de récupérer le niveau de compétence
-  * @param $id_objet_soin	: L'identifiant de l'objet qu'on va utiliser pour améliorer les soins
+  * @param $id_action	: L'identifiant de l'action de soin afin de recuperer le niveau de competence
+  * @param $id_objet_soin	: L'identifiant de l'objet qu'on va utiliser pour ameliorer les soins
   * @return Void
   */
 function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action=$id_action";
 	$res = $mysqli->query($sql);
 	$t_soin = $res->fetch_assoc();
@@ -816,7 +816,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	// calcul pv
 	$pv_soin = rand($pvMin_soin, $pvMax_soin);
 	
-	// récupération du pourcentage
+	// recuperation du pourcentage
 	$pourcent = calcul_pourcentage_action($id_action);
 	
 	//recuperation des infos sur le perso
@@ -829,13 +829,13 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	$niveau_perso = $t_p['niveau_perso'];
 	$camp = $t_p["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	// test pa
 	if($pa_perso >= $coutPa){
 	
-		// récupération des pv du perso cible
+		// recuperation des pv du perso cible
 		$sql = "SELECT nom_perso, pv_perso, pvMax_perso, niveau_perso, clan FROM perso WHERE id_perso='$id_cible'";
 		$res = $mysqli->query($sql);
 		$t_pv = $res->fetch_assoc();
@@ -846,14 +846,14 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 		$niveau_cible = $t_pv['niveau_perso'];
 		$camp_cible = $t_pv['clan'];
 		
-		// récupération de la couleur du camp du perso
+		// recuperation de la couleur du camp du perso
 		$couleur_clan_cible = couleur_clan($camp_cible);
 		
 		// calcul gain xp
 		$gain_xp = gain_xp_level($niveau_perso, $niveau_cible, $camp, $camp_cible);
 		$gain_xp = min($gain_xp, 5);
 		
-		// Si on soigne un perso autre que soi même
+		// Si on soigne un perso autre que soi meme
 		if($id_perso != $id_cible){
 			$gain_xp = $gain_xp * 2;
 		}
@@ -863,7 +863,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 		$bonus_pourcent = 0;
 		
 		if($id_objet_soin > 0){
-			// récupération des avantages de l'objet de soin
+			// recuperation des avantages de l'objet de soin
 			$sql_s = "SELECT nom_objet, bonusPv_objet, bonusRecup_objet FROM objet WHERE id_objet='$id_objet_soin'";
 			$res_s = $mysqli->query($sql_s);
 			$t_s = $res_s->fetch_assoc();
@@ -901,19 +901,19 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 					$mysqli->query($sql);
 					
 					//MAJ evenments perso
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin_final PV',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soignÃ© ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin_final PV',NOW(),'0')";
 					$mysqli->query($sql);
 					
-					echo "<center>Vous avez soigné <font color=$couleur_clan_cible>$nom_cible</font> de $pv_soin (+$bonus_pv_s) PV</center><br />";
+					echo "<center>Vous avez soignÃ© <font color=$couleur_clan_cible>$nom_cible</font> de $pv_soin (+$bonus_pv_s) PV</center><br />";
 					if($bonus_recup_s){
 						if($id_objet_soin == 12){
 							echo "<center>Vous avez soigner les malus de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
 						}
 						else {
-							echo "<center>Vous avez augmenté la récupération de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
+							echo "<center>Vous avez augmentÃ© la rÃ©cupÃ©ration de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
 						}
 					}
-					echo "<center>Vous avez gagné $gain_xp XP</center>";
+					echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 				}
 				else {
 					// on met aux pvMax de la cible
@@ -925,12 +925,12 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 					$mysqli->query($sql);
 					
 					//MAJ evenments perso
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin PV',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soignÃ© ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin PV',NOW(),'0')";
 					$mysqli->query($sql);
 					
-					echo "<center>Vous avez soigné <font color=$couleur_clan_cible>$nom_cible</font> de $pv_soin PV</center><br />";
-					echo "<center>La cible est revenu à son max de vie</center><br />";
-					echo "<center>Vous avez gagné $gain_xp XP</center>";
+					echo "<center>Vous avez soignÃ© <font color=$couleur_clan_cible>$nom_cible</font> de $pv_soin PV</center><br />";
+					echo "<center>La cible est revenu Ã  son max de vie</center><br />";
+					echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 				}
 				
 				if($id_objet_soin > 0){
@@ -940,7 +940,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 				}
 			}
 			else {
-				// cible déjà au max
+				// cible deja au max
 				$gain_xp = '1';
 				
 				//MAJ xp perso
@@ -955,10 +955,10 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 						$mysqli->query($sql);
 						
 						// MAJ evenments perso
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a supprimé des malus de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a supprimÃ© des malus de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
 						$mysqli->query($sql);
 						
-						echo "<center>Vous avez soigné des malus de <font color=$couleur_clan_cible>$nom_cible</font> grâce à $nom_objet : +$bonus_recup_s </center><br/>";
+						echo "<center>Vous avez soignÃ© des malus de <font color=$couleur_clan_cible>$nom_cible</font> grÃ¢ce Ã  $nom_objet : +$bonus_recup_s </center><br/>";
 					}
 					else {
 						// Augmentation recup
@@ -967,10 +967,10 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 						$mysqli->query($sql);
 						
 						// MAJ evenments perso
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a augmenté la récupération de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a augmentÃ© la rÃ©cupÃ©ration de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
 						$mysqli->query($sql);
 						
-						echo "<center>Vous avez augmenté la récupération de <font color=$couleur_clan_cible>$nom_cible</font> grâce à $nom_objet : +$bonus_recup_s </center><br/>";
+						echo "<center>Vous avez augmentÃ© la rÃ©cupÃ©ration de <font color=$couleur_clan_cible>$nom_cible</font> grÃ¢ce Ã  $nom_objet : +$bonus_recup_s </center><br/>";
 					}
 					
 					if($id_objet_soin > 0){
@@ -981,27 +981,27 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 				}
 				else {
 					//MAJ evenments perso
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a joué au docteur avec ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv déjà au max...',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a jouÃ© au docteur avec ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv dÃ©jÃ  au max...',NOW(),'0')";
 					$mysqli->query($sql);
 				}
 				
-				echo "<center>La cible est était déjà à son max de vie</center><br />";
-				echo "<center>Vous avez gagné $gain_xp XP</center>";
+				echo "<center>La cible est Ã©tait dÃ©jÃ  Ã  son max de vie</center><br />";
+				echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 			}
 		}
 		else {
-			// Compétence de soin pas assez développée pour soigner le perso cible
+			// Competence de soin pas assez developpee pour soigner le perso cible
 			$gain_xp = '1';
 			//MAJ xp perso
 			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
 			//MAJ evenments perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté ses soins sur ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : compétence pas assez développée...',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a ratÃ© ses soins sur ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : compÃ©tence pas assez dÃ©veloppÃ©e...',NOW(),'0')";
 			$mysqli->query($sql);
 			
-			echo "<center>Votre niveau dans cette compétence ne vous permet pas de soigner correctement la cible</center><br />";
-			echo "<center>Vous avez gagné $gain_xp XP</center>";
+			echo "<center>Votre niveau dans cette compÃ©tence ne vous permet pas de soigner correctement la cible</center><br />";
+			echo "<center>Vous avez gagnÃ© $gain_xp XP</center>";
 		}
 	}
 	else {
@@ -1018,7 +1018,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
   */
 function action_dormir($mysqli, $id_perso, $nb_points_action){
 
-	// recupération des infos du perso
+	// recuperation des infos du perso
 	$sql = "SELECT nom_perso, clan, recup_perso, bonusRecup_perso, pa_perso, paMax_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
@@ -1030,7 +1030,7 @@ function action_dormir($mysqli, $id_perso, $nb_points_action){
 	$br_p = $t_p["bonusRecup_perso"];
 	$camp = $t_p["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	if($nb_points_action == '1'){
@@ -1059,12 +1059,12 @@ function action_dormir($mysqli, $id_perso, $nb_points_action){
 		$sql = "UPDATE perso SET bonusRecup_perso = bonusRecup_perso $bonus_recup, pm_perso=0, pa_perso=0, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		//mise à jour de la table evenement
+		//mise a jour de la table evenement
 		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' ... ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
-		echo "<center>Vous dormez profondément, votre récupération au prochain tour sera de : $n_r</center><br />";
-		echo "<center>Vous avez gagné 1xp</center><br /><br />";
+		echo "<center>Vous dormez profondÃ©ment, votre rÃ©cupÃ©ration au prochain tour sera de : $n_r</center><br />";
+		echo "<center>Vous avez gagnÃ© 1xp</center><br /><br />";
 		echo "<a href='jouer.php'>[ retour ]</a>";
 	}
 	else {
@@ -1074,15 +1074,15 @@ function action_dormir($mysqli, $id_perso, $nb_points_action){
 }
 
 /**
-  * Fonction qui permet à un personnage d'effectuer une marche forcée (+1pm contre des pv)
-  * @param $id_perso	: L'identifiant du personnage qui veut faire la marche forcée
-  * @param $nb_points_action	: le niveau de l'action de marche forcée
+  * Fonction qui permet a un personnage d'effectuer une marche forcee (+1pm contre des pv)
+  * @param $id_perso	: L'identifiant du personnage qui veut faire la marche forcee
+  * @param $nb_points_action	: le niveau de l'action de marche forcee
   * @param $coutPa_action	: Le cout en Pa de l'action
   * @return	Void
   */
 function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_action){
 	
-	// recupération des infos du perso
+	// recuperation des infos du perso
 	$sql = "SELECT nom_perso, clan, pv_perso, x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc($res);
@@ -1094,7 +1094,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
 	$y_perso = $t_p["y_perso"];
 	$camp = $t_p["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 
 	$cout_pv = 10 - (2 * $nb_points_action);
@@ -1109,18 +1109,18 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
 		$mysqli->query($sql);
 		
 		if($pv_perso - $cout_pv <= 0){
-			// Le perso s'est tué tout seul...
+			// Le perso s'est tue tout seul...
 			// on l'efface de la carte
 			$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
 			$mysqli->query($sql);
 			
-			//mise à jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est tué en effectuant une marche forcée... ','','',' : Bravo !',NOW(),'0')";
+			//mise a jour de la table evenement
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est tuÃ© en effectuant une marche forcÃ©e... ','','',' : Bravo !',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		else {	
-			//mise à jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a effectué une marche forcée ','','',' : +1 PM',NOW(),'0')";
+			//mise a jour de la table evenement
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a effectuÃ© une marche forcÃ©e ','','',' : +1 PM',NOW(),'0')";
 			$mysqli->query($sql);
 		
 			echo "<center>Vous gagnez 1 PM contre 3PA et $cout_pv PV</center><br />";
@@ -1134,7 +1134,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
 }
 
 /**
-  * Fonction qui permet à un personnage d'effectuer une course
+  * Fonction qui permet a un personnage d'effectuer une course
   * @param $id_perso		: L'identifiant du personnage qui veut faire une course
   * @param $direction		: Direction de la course (1 = hg, 2 = h, 3 = hd, 4 = g, 5 = d, 6 = bg, 7 = b, 8 = bd)
   * @param $nb_points_action	: le niveau de l'action de course
@@ -1143,7 +1143,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
   */
 function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutPa_action){
 	
-	// recupération des infos du perso
+	// recuperation des infos du perso
 	$sql = "SELECT x_perso, y_perso, nom_perso, clan, pm_perso, pa_perso, paMax_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
@@ -1156,7 +1156,7 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
 	$y_perso_depart = $t_p['y_perso'];
 	$camp = $t_p["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	// Calcul du bonus de mouvement en course
@@ -1178,8 +1178,8 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
 	if($pa_perso >= $paMax_perso){
 		$gain_xp = '0';
 		
-		//mise à jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' se met à courir ','','',' : $pm_total PM',NOW(),'0')";
+		//mise a jour de la table evenement
+		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' se met Ã  courir ','','',' : $pm_total PM',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		$obstacle = 0;
@@ -1187,7 +1187,7 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
 		
 		while($pm_total > 0){
 			
-			// Recupération position perso
+			// Recuperation position perso
 			$sql = "SELECT x_perso, y_perso, image_perso FROM perso WHERE id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
@@ -1296,15 +1296,15 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
 		$sql = "UPDATE perso SET pa_perso=0, pm_perso=0 WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		//mise à jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a couru de $x_perso_depart / $y_perso_depart jusqu\'à $x_perso_final / $y_perso_final','','',' : $pm_utilise PM',NOW(),'0')";
+		//mise a jour de la table evenement
+		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a couru de $x_perso_depart / $y_perso_depart jusqu\'Ã  $x_perso_final / $y_perso_final','','',' : $pm_utilise PM',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		echo "<center>Votre course vous fait gagner : + $bonus_mouv PM</center><br />";
 		if($obstacle) {
-			echo "<center>Vous avez rencontré un obstacle</center><br />";
+			echo "<center>Vous avez rencontrÃ© un obstacle</center><br />";
 		}
-		echo "<center>Vous avez utilisé $pm_utilise PM et êtes arrivé en $x_perso_final / $y_perso_final</center><br />";
+		echo "<center>Vous avez utilisÃ© $pm_utilise PM et Ãªtes arrivÃ© en $x_perso_final / $y_perso_final</center><br />";
 		echo "<a href='jouer.php'>[ retour ]</a>";
 	}
 	else {
@@ -1317,12 +1317,12 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
   * Fonction qui permet de couper du bois
   * @param $id_perso	: L'identifiant du personnage qui va couper du bois
   * @param $id_action	: L'identifiant de l'action (A SUPPRIMER !!!)
-  * @param $nb_points_action	: Le niveau de l'action, permettant de déterminer le nombre de morceaux de bois récupérés
+  * @param $nb_points_action	: Le niveau de l'action, permettant de determiner le nombre de morceaux de bois recuperes
   * @return Void
   */
 function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 	
-	// recupération des coordonnées du perso
+	// recuperation des coordonnees du perso
 	$sql = "SELECT x_perso, y_perso, nom_perso, clan, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_c = $res->fetch_assoc();
@@ -1333,7 +1333,7 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 	$pa_perso = $t_c["pa_perso"];
 	$camp = $t_c["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	// Cout de l'action en Pa
@@ -1341,13 +1341,13 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 	
 	if($pa_perso >= $cout_pa){
 		
-		// récupération du fond de carte
+		// recuperation du fond de carte
 		$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_perso' and y_carte='$y_perso'";
 		$res = $mysqli->query($sql);
 		$t_f = $res->fetch_assoc();
 		$fond_carte = $t_f["fond_carte"];
 		
-		// vérification que le perso est bien sur une case de forêt
+		// verification que le perso est bien sur une case de foret
 		if($fond_carte == '7.gif'){
 			
 			// calcul des gain de bois
@@ -1370,16 +1370,16 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 				$mysqli->query($sql);
 			}
 			
-			//mise à jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a coupé des arbres ','','',' : + $gain_bois morceaux de bois',NOW(),'0')";
+			//mise a jour de la table evenement
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a coupÃ© des arbres ','','',' : + $gain_bois morceaux de bois',NOW(),'0')";
 			$mysqli->query($sql);
 			
-			echo "<center><font color=red><b>Vous avez coupé une fôret, vous avez récupéré $gain_bois morceaux de bois </b></font></center><br />";
-			echo "<center>Vous avez gagné 1xp</center><br /><br />";
+			echo "<center><font color=red><b>Vous avez coupÃ© une forÃªt, vous avez rÃ©cupÃ©rÃ© $gain_bois morceaux de bois </b></font></center><br />";
+			echo "<center>Vous avez gagnÃ© 1xp</center><br /><br />";
 			echo "<a href='jouer.php'>[ retour ]</a>";
 		}
 		else {
-			echo "<center><font color=red><b>Vous devez être sur une case de forêt afin de pouvoir la couper</b></font></center><br />";
+			echo "<center><font color=red><b>Vous devez Ãªtre sur une case de forÃªt afin de pouvoir la couper</b></font></center><br />";
 			echo "<a href='jouer.php'>[ retour ]</a>";
 		}
 	}
@@ -1390,7 +1390,7 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 }
 
 /**
-  * Fonction qui permet de récupérer du minerais dans la montagne
+  * Fonction qui permet de recuperer du minerais dans la montagne
   * @param $id_perso	: L'identifiant du personnage qui va miner la montagne
   * @param $id_action	: L'identifiant de l'action
   * @param $nb_points_action	: Le niveau de l'action
@@ -1398,7 +1398,7 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
   */
 function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action){
 	
-	// recupération des coordonnées du perso
+	// recuperation des coordonnees du perso
 	$sql = "SELECT x_perso, y_perso, nom_perso, clan, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_c = $res->fetch_assoc();
@@ -1409,7 +1409,7 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 	$pa_perso = $t_c["pa_perso"];
 	$camp = $t_c["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	// Cout en Pa de l'action
@@ -1417,21 +1417,21 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 	
 	if($pa_perso >= $cout_pa){
 		
-		// récupération du fond de carte
+		// recuperation du fond de carte
 		$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_perso' and y_carte='$y_perso'";
 		$res = $mysqli->query($sql);
 		$t_f = $res->fetch_assoc();
 		$fond_carte = $t_f["fond_carte"];
 		
-		// vérification que le perso est bien sur une case de montagne
+		// verification que le perso est bien sur une case de montagne
 		if($fond_carte == '3.gif'){
 			
-			// calcul chance de récupérer du fer
+			// calcul chance de recuperer du fer
 			$chance = rand(0,100);
 			
 			if(est_chanceux($id_perso)){
 				$bonus_chance = 2 * est_chanceux($id_perso);
-				echo "Bonus donné par la chance : ".$bonus_chance."<br/>";
+				echo "Bonus donnÃ© par la chance : ".$bonus_chance."<br/>";
 			}
 			else {
 				$bonus_chance = 0;
@@ -1455,12 +1455,12 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 					$mysqli->query($sql);
 				}
 				
-				//mise à jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a miné la montagne ','','',' : + $gain_fer morceaux de fer',NOW(),'0')";
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a minÃ© la montagne ','','',' : + $gain_fer morceaux de fer',NOW(),'0')";
 				$mysqli->query($sql);
 				
-				echo "<center><font color=red><b>Vous avez miné la montagne, vous avez récupéré $gain_fer morceaux de fer </b></font></center><br />";
-				echo "<center>Vous avez gagné 2xp</center><br /><br />";
+				echo "<center><font color=red><b>Vous avez minÃ© la montagne, vous avez rÃ©cupÃ©rÃ© $gain_fer morceaux de fer </b></font></center><br />";
+				echo "<center>Vous avez gagnÃ© 2xp</center><br /><br />";
 				echo "<a href='jouer.php'>[ retour ]</a>";
 			}
 			else {
@@ -1470,17 +1470,17 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 				$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, pa_perso=pa_perso-$cout_pa WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 				
-				//mise à jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a miné la montagne ','','',' : + $gain_fer morceaux de fer, pas de chance...',NOW(),'0')";
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a minÃ© la montagne ','','',' : + $gain_fer morceaux de fer, pas de chance...',NOW(),'0')";
 				$mysqli->query($sql);
 				
-				echo "<center><font color=red><b>Vous avez miné la montagne mais vous n'avez rien trouvé </b></font></center><br />";
-				echo "<center>Vous avez gagné 1xp</center><br /><br />";
+				echo "<center><font color=red><b>Vous avez minÃ© la montagne mais vous n'avez rien trouvÃ© </b></font></center><br />";
+				echo "<center>Vous avez gagnÃ© 1xp</center><br /><br />";
 				echo "<a href='jouer.php'>[ retour ]</a>";
 			}
 		}
 		else {
-			echo "<center><font color=red><b>Vous devez être sur une case de montagne afin de pouvoir la miner</b></font></center><br />";
+			echo "<center><font color=red><b>Vous devez Ãªtre sur une case de montagne afin de pouvoir la miner</b></font></center><br />";
 			echo "<a href='jouer.php'>[ retour ]</a>";
 		}
 	}
@@ -1493,14 +1493,14 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 /**
   * Fonction qui permet d'utiliser l'action sauter
   * @param $id_perso	: L'identifia,t du personnage qui veut sauter
-  * @param $x_cible	: La coordonnée x de la case cible
-  * @param $y_cible	: La coordonnée y de la case cible
+  * @param $x_cible	: La coordonnee x de la case cible
+  * @param $y_cible	: La coordonnee y de la case cible
   * @param $coutpa	: Le cout en Points d'action
   * @return Void
   */
 function action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte){
 	
-	// recupération du cout de pm de la case cible
+	// recuperation du cout de pm de la case cible
 	$sql = "SELECT fond_carte FROM $carte WHERE x_carte=$x_cible AND y_carte=$y_cible";
 	$res = $mysqli->query($sql);
 	$t_f = $res->fetch_assoc();
@@ -1509,7 +1509,7 @@ function action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte){
 	$cout_pm_cible = cout_pm($fond_carte);
 	$cout_pm_total = $cout_pm_cible + 1;
 
-	// recupération des pm du perso
+	// recuperation des pm du perso
 	$sql = "SELECT nom_perso, pm_perso, x_perso, y_perso, image_perso, clan, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_pm = $res->fetch_assoc();
@@ -1522,7 +1522,7 @@ function action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte){
 	$image_perso = $t_pm["image_perso"];
 	$camp = $t_pm["clan"];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	// tests pa
@@ -1543,17 +1543,17 @@ function action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte){
 			$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 			$mysqli->query($sql);
 			
-			//mise à jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a sauté ','','',' en $x_cible / $y_cible',NOW(),'0')";
+			//mise a jour de la table evenement
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a sautÃ© ','','',' en $x_cible / $y_cible',NOW(),'0')";
 			$mysqli->query($sql);
 			
-			echo "<center><font color=red><b>Vous avez sauté en $x_cible/$y_cible, cout total en PM : $cout_pm_total PM</b></font></center><br />";
-			echo "<center>Vous avez gagné $gain_xp XP</center><br /><br />";
+			echo "<center><font color=red><b>Vous avez sautÃ© en $x_cible/$y_cible, cout total en PM : $cout_pm_total PM</b></font></center><br />";
+			echo "<center>Vous avez gagnÃ© $gain_xp XP</center><br /><br />";
 			
 		}
 		else {
 			// pas assez de pm
-			echo "<center><font color=red><b>Vous ne possédez pas assez de pm pour sauter sur cette case, il vous faut $cout_pm_total PM</b></font></center><br />";
+			echo "<center><font color=red><b>Vous ne possÃ©dez pas assez de pm pour sauter sur cette case, il vous faut $cout_pm_total PM</b></font></center><br />";
 		}
 	}
 	else {
@@ -1571,7 +1571,7 @@ function action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte){
   */
 function action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action){
 
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action=$id_action";
 	$res = $mysqli->query($sql);
 	$t_action = $res->fetch_assoc();
@@ -1596,7 +1596,7 @@ function action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action){
 		$y_perso = $t_perso['y_perso'];
 		$pa_perso = $t_perso['pa_perso'];
 		
-		// récupération de la couleur du camp du perso
+		// recuperation de la couleur du camp du perso
 		$couleur_clan_perso = couleur_clan($camp_perso);
 		
 		if($pa_perso >= $coutPa){
@@ -1612,12 +1612,12 @@ function action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action){
 			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 		
-			//mise à jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a planté des arbres ','','',' en $x_perso / $y_perso',NOW(),'0')";
+			//mise a jour de la table evenement
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a plantÃ© des arbres ','','',' en $x_perso / $y_perso',NOW(),'0')";
 			$mysqli->query($sql);
 			
-			echo "<center>Vous avez planté des arbres en $x_perso / $y_perso, ils pousseront automatiquement d'ici 5 jours environs</center>";
-			echo "<center>Vous avez gagné $gain_xp XP</center><br /><br />";
+			echo "<center>Vous avez plantÃ© des arbres en $x_perso / $y_perso, ils pousseront automatiquement d'ici 5 jours environs</center>";
+			echo "<center>Vous avez gagnÃ© $gain_xp XP</center><br /><br />";
 		}
 		else {
 			echo "<center>Vous n'avez pas assez de PA</center><br />";
@@ -1638,13 +1638,13 @@ function action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action){
   */
 function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 	
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action='$id_action'";
 	$res = $mysqli->query($sql);
 	$t_action = $res->fetch_assoc();
 	$coutPa = $t_action["coutPa_action"];
 
-	// Récupération des données de la case où se toruve le perso
+	// Recuperation des donnees de la case ou se trouve le perso
 	$sql = "SELECT fond_carte FROM carte,perso WHERE x_carte=x_perso AND y_carte=y_perso AND id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_fond = $res->fetch_assoc();
@@ -1665,7 +1665,7 @@ function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 		$y_perso = $t_perso['y_perso'];
 		$pa_perso = $t_perso['pa_perso'];
 		
-		// récupération de la couleur du camp du perso
+		// recuperation de la couleur du camp du perso
 		$couleur_clan_perso = couleur_clan($camp_perso);
 		
 		if($pa_perso >= $coutPa){
@@ -1693,54 +1693,54 @@ function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 				$mysqli->query($sql);
 				
 				if($fond_carte == 'b4b.png' || $fond_carte == 'b4r.png'){
-					//mise à jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté une route ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
+					//mise a jour de la table evenement
+					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a sabotÃ© une route ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
 					$mysqli->query($sql);
 				
-					echo "<center>Vous avez saboté une route en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
+					echo "<center>Vous avez sabotÃ© une route en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
 				}
 				if($fond_carte == 'b5b.png' || $fond_carte == 'b5r.png'){
-					//mise à jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté un pont ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
+					//mise a jour de la table evenement
+					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a sabotÃ© un pont ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
 					$mysqli->query($sql);
 				
-					echo "<center>Vous avez saboté un pont en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
+					echo "<center>Vous avez sabotÃ© un pont en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
 				}
 			}
 			else {
 				$gain_xp = 1;
 				
-				//mise à jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son sabotage ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a ratÃ© son sabotage ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
 				$mysqli->query($sql);
 				
-				echo "<center>Vous avez raté votre sabotage (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
+				echo "<center>Vous avez ratÃ© votre sabotage (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
 			}
 			// MAJ xp/pi/pa/pm/x et y perso
 			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
-			echo "<center>Vous avez gagné $gain_xp XP</center><br /><br />";
+			echo "<center>Vous avez gagnÃ© $gain_xp XP</center><br /><br />";
 		}
 		else {
 			echo "<center>Vous n'avez pas assez de PA</center><br />";
 		}
 	}
 	else {
-		echo "<center>Vous devez être sur une case de route ou de pont afin de pouvoir saboter</center>";
+		echo "<center>Vous devez Ãªtre sur une case de route ou de pont afin de pouvoir saboter</center>";
 	}
 	echo "<a href='jouer.php'>[ retour ]</a>";
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement chant
+  * Fonction qui permet d'ajouter un evenement chant
   * @param $id_perso	: L'identifiant du perso qui veut chanter
   * @param $id_action	: L'identifiant de l'action afin de connaitre le niveau
   * @return Void
   */
 function action_chanter($mysqli, $id_perso,$id_action){
 
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action='$id_action'";
 	$res = $mysqli->query($sql);
 	$t_action = $res->fetch_assoc();
@@ -1755,19 +1755,19 @@ function action_chanter($mysqli, $id_perso,$id_action){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= $coutPa){
-		//mise à jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a chanté ','','','',NOW(),'0')";
+		//mise a jour de la table evenement
+		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a chantÃ© ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
 		$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		echo "<center>Vous avez chanté</center>";
+		echo "<center>Vous avez chantÃ©</center>";
 	}
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
@@ -1776,9 +1776,9 @@ function action_chanter($mysqli, $id_perso,$id_action){
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement chant
+  * Fonction qui permet d'ajouter un evenement chant
   * @param $id_perso	: L'identifiant du perso qui veut chanter
-  * @param $phrase	: La phrase à mettre dans les évènements
+  * @param $phrase	: La phrase a mettre dans les evenements
   * @return Void
   */
 function action_chanter_perso($mysqli, $id_perso,$phrase){
@@ -1792,11 +1792,11 @@ function action_chanter_perso($mysqli, $id_perso,$phrase){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= 2){
-		//mise à jour de la table evenement
+		//mise a jour de la table evenement
 		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
@@ -1813,14 +1813,14 @@ function action_chanter_perso($mysqli, $id_perso,$phrase){
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement danse
+  * Fonction qui permet d'ajouter un evenement danse
   * @param $id_perso	: L'identifiant du perso qui veut danser
   * @param $id_action	: l'identifiant de l'action afin de connaitre le niveau
   * @return Void
   */
 function action_danser($mysqli, $id_perso,$id_action){
 
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action='$id_action'";
 	$res = $mysqli->query($sql);
 	$t_action = $res->fetch_assoc();
@@ -1835,19 +1835,19 @@ function action_danser($mysqli, $id_perso,$id_action){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= $coutPa){
-		//mise à jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a dansé ','','','',NOW(),'0')";
+		//mise a jour de la table evenement
+		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a dansÃ© ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
 		$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		echo "<center>Vous avez dansé</center>";
+		echo "<center>Vous avez dansÃ©</center>";
 	}
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
@@ -1856,9 +1856,9 @@ function action_danser($mysqli, $id_perso,$id_action){
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement danse
+  * Fonction qui permet d'ajouter un evenement danse
   * @param $id_perso	: L'identifiant du perso qui veut danser
-  * @param $phrase	: La phrase à mettre dans les évènements
+  * @param $phrase	: La phrase a mettre dans les evenements
   * @return Void
   */
 function action_danser_perso($mysqli, $id_perso, $phrase){
@@ -1872,11 +1872,11 @@ function action_danser_perso($mysqli, $id_perso, $phrase){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= 2){
-		//mise à jour de la table evenement
+		//mise a jour de la table evenement
 		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
@@ -1893,14 +1893,14 @@ function action_danser_perso($mysqli, $id_perso, $phrase){
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement peinture
+  * Fonction qui permet d'ajouter un evenement peinture
   * @param $id_perso	: L'identifiant du perso qui veut peindre
   * @param $id_action	: l'identifiant de l'action afin de connaitre le niveau
   * @return Void
   */
 function action_peindre($mysqli, $id_perso, $id_action){
 
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action='$id_action'";
 	$res = $mysqli->query($sql);
 	$t_action = $res->fetch_assoc();
@@ -1915,11 +1915,11 @@ function action_peindre($mysqli, $id_perso, $id_action){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= $coutPa){
-		//mise à jour de la table evenement
+		//mise a jour de la table evenement
 		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a peind ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
@@ -1936,9 +1936,9 @@ function action_peindre($mysqli, $id_perso, $id_action){
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement peinture
+  * Fonction qui permet d'ajouter un evenement peinture
   * @param $id_perso	: L'identifiant du perso qui veut peindre
-  * @param $phrase	: La phrase à mettre dans les évènements
+  * @param $phrase	: La phrase a mettre dans les evenements
   * @return Void
   */
 function action_peindre_perso($mysqli, $id_perso,$phrase){
@@ -1952,11 +1952,11 @@ function action_peindre_perso($mysqli, $id_perso,$phrase){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= 2){
-		//mise à jour de la table evenement
+		//mise a jour de la table evenement
 		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
@@ -1973,14 +1973,14 @@ function action_peindre_perso($mysqli, $id_perso,$phrase){
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement sculpture
+  * Fonction qui permet d'ajouter un evenement sculpture
   * @param $id_perso	: L'identifiant du perso qui veut scuplter
   * @param $id_action	: l'identifiant de l'action afin de connaitre le niveau
   * @return Void
   */
 function action_sculter($mysqli, $id_perso,$id_action){
 
-	// récupération des données correspondant à l'action
+	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action='$id_action'";
 	$res = $mysqli->query($sql);
 	$t_action = $res->fetch_assoc();
@@ -1995,19 +1995,19 @@ function action_sculter($mysqli, $id_perso,$id_action){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= $coutPa){
-		//mise à jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a scuplté ','','','',NOW(),'0')";
+		//mise a jour de la table evenement
+		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a scupltÃ© ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
 		$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		echo "<center>Vous avez sculpté</center>";
+		echo "<center>Vous avez sculptÃ©</center>";
 	}
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
@@ -2016,9 +2016,9 @@ function action_sculter($mysqli, $id_perso,$id_action){
 }
 
 /**
-  * Fonction qui permet d'ajouter un évènement sculpture
+  * Fonction qui permet d'ajouter un evenement sculpture
   * @param $id_perso	: L'identifiant du perso qui veut scuplter
-  * @param $phrase	: La phrase à mettre dans les évènements
+  * @param $phrase	: La phrase a mettre dans les evenements
   * @return Void
   */
 function action_scuplter_perso($mysqli, $id_perso, $phrase){
@@ -2032,11 +2032,11 @@ function action_scuplter_perso($mysqli, $id_perso, $phrase){
 	$camp_perso = $t_perso['clan'];
 	$pa_perso = $t_perso['pa_perso'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
 	if($pa_perso >= 2){
-		//mise à jour de la table evenement
+		//mise a jour de la table evenement
 		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
@@ -2053,18 +2053,18 @@ function action_scuplter_perso($mysqli, $id_perso, $phrase){
 }
 
 /**
-  * Fonction qui permet de faire l'action entrainement à un personnage
+  * Fonction qui permet de faire l'action entrainement a un personnage
   * @param $id_perso	: L'identifiant du perso qui veut s'entrainer
   * @return Void
   */
 function action_entrainement($mysqli, $id_perso){
 	
-	// vérification si le perso s'est déjà entrainé auparavent
+	// verification si le perso s'est deja entraine auparavent
 	$sql = "SELECT niveau_entrainement, nb FROM perso_as_entrainement WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$entraine = $res->num_rows;
 	
-	// recupération du nombre de PA et infos du perso
+	// recuperation du nombre de PA et infos du perso
 	$sql_pa = "SELECT nom_perso, pa_perso, clan FROM perso WHERE id_perso='$id_perso'";
 	$res_pa = $mysqli->query($sql_pa);
 	$t_pa = $res_pa->fetch_assoc();
@@ -2073,26 +2073,26 @@ function action_entrainement($mysqli, $id_perso){
 	$pa_perso = $t_pa['pa_perso'];
 	$camp = $t_pa['clan'];
 	
-	// récupération de la couleur du camp du perso
+	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
-	if(est_chanceux($id_perso)){
+	if(est_chanceux($mysqli, $id_perso)){
 		$bonus_chance = 2 * est_chanceux($id_perso);
-		echo "Bonus donné par la chance : ".$bonus_chance."<br/>";
+		echo "Bonus donnÃ© par la chance : ".$bonus_chance."<br/>";
 	}
 	else {
 		$bonus_chance = 0;
 	}
 	
 	if($pa_perso >= 10){
-		// déjà en base
+		// deja en base
 		if($entraine){
 			
 			$t_e = $res->fetch_assoc();
 			$niveau_e = $t_e['niveau_entrainement'];
 			$nb_e = $t_e['nb'];
 			
-			// calcul pourcentage de réussite
+			// calcul pourcentage de reussite
 			$sup = 100-$niveau_e;
 			$mil = ceil($sup/2);
 			$succes = mt_rand(0,100);
@@ -2111,12 +2111,12 @@ function action_entrainement($mysqli, $id_perso){
 					$sql = "UPDATE perso_as_entrainement SET niveau_entrainement=niveau_entrainement+1, nb=0 WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
 					
-					//mise à jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son entrainement ','','',' : entrainement niveau $new_niveau',NOW(),'0')";
+					//mise a jour de la table evenement
+					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rÃ©ussi son entrainement ','','',' : entrainement niveau $new_niveau',NOW(),'0')";
 					$mysqli->query($sql);
 					
-					echo "<center>Vous venez d'effectuer votre $new_niveau ème entrainement avec succès</center><br />";
-					echo "<center>Vous avez gagné $gain_xp xp</center>";
+					echo "<center>Vous venez d'effectuer votre $new_niveau Ã¨me entrainement avec succÃ¨s</center><br />";
+					echo "<center>Vous avez gagnÃ© $gain_xp xp</center>";
 					echo "<center><a href='jouer.php'>[retour]</a></center>";
 				}
 				else {
@@ -2130,11 +2130,11 @@ function action_entrainement($mysqli, $id_perso){
 					
 					$nb_entrainement_restant = $niveau_e - $nb_e - 1;
 					
-					//mise à jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son entrainement ','','',' : bientot au prochain niveau d\'entrainement',NOW(),'0')";
+					//mise a jour de la table evenement
+					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rÃ©ussi son entrainement ','','',' : bientot au prochain niveau d\'entrainement',NOW(),'0')";
 					$mysqli->query($sql);
 					
-					echo "<center>Vous avez réussi votre entrainement, entrainez vous encore $nb_entrainement_restant fois pour passer au niveau supérieur d'entrainement</center><br />";
+					echo "<center>Vous avez rÃ©ussi votre entrainement, entrainez vous encore $nb_entrainement_restant fois pour passer au niveau supÃ©rieur d'entrainement</center><br />";
 					echo "<center><a href='jouer.php'>[retour]</a></center>";
 				}				
 			}
@@ -2143,17 +2143,17 @@ function action_entrainement($mysqli, $id_perso){
 				$sql = "UPDATE perso SET pa_perso=pa_perso-10 WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 			
-				//mise à jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son entrainement ','','',' : dommage',NOW(),'0')";
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a ratÃ© son entrainement ','','',' : dommage',NOW(),'0')";
 				$mysqli->query($sql);
 			
-				echo "<center>Vous avez raté votre entrainement</center><br />";
-				echo "<center>Vous êtes fatigué</center>";
+				echo "<center>Vous avez ratÃ© votre entrainement</center><br />";
+				echo "<center>Vous Ãªtes fatiguÃ©</center>";
 				echo "<center><a href='jouer.php'>[retour]</a></center>";
 			}
 		}
 		else {
-			// on le créé
+			// on le cree
 			$sql = "INSERT INTO perso_as_entrainement VALUES('$id_perso','1','0')";
 			$mysqli->query($sql);
 			
@@ -2161,12 +2161,12 @@ function action_entrainement($mysqli, $id_perso){
 			$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, pa_perso=pa_perso-10 WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
-			//mise à jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son premier entrainement ','','',' : bravo !',NOW(),'0')";
+			//mise a jour de la table evenement
+			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rÃ©ussi son premier entrainement ','','',' : bravo !',NOW(),'0')";
 			$mysqli->query($sql);
 			
-			echo "<center>Vous venez d'effectuer votre premier entrainement avec succès</center><br />";
-			echo "<center>Vous avez gagné 1xp</center>";
+			echo "<center>Vous venez d'effectuer votre premier entrainement avec succÃ¨s</center><br />";
+			echo "<center>Vous avez gagnÃ© 1xp</center>";
 			echo "<center><a href='jouer.php'>[retour]</a></center>";
 		}
 	}
@@ -2177,38 +2177,38 @@ function action_entrainement($mysqli, $id_perso){
 }
 
 /**
- * Fonction qui permet de donner un objet à un perso
+ * Fonction qui permet de donner un objet a un perso
  * @param $id_perso	: L'identifiant du personnage qui veut donner un objet
- * @param $id_cible	: L'identifiant du personnage à qui on veut donner un objet
+ * @param $id_cible	: L'identifiant du personnage a qui on veut donner un objet
  * @param $type_objet	: La nature de l'objet (1 => Or, 2 => Objet, 3 => Arme, 4 => Armure)
- * @param $id_objet	: L'identifiant de l'objet à déposer
- * @param $pv_objet	: Les points de vie de l'objet qu'on souhaite déposer*
- * @param $quantite	: La quantité
+ * @param $id_objet	: L'identifiant de l'objet a deposer
+ * @param $pv_objet	: Les points de vie de l'objet qu'on souhaite deposer*
+ * @param $quantite	: La quantite
  */
 function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $pv_objet, $quantite){
 	
-	// On vérifie que l'id du perso est correct
+	// On verifie que l'id du perso est correct
 	$verif_idPerso = preg_match("#^[0-9]*[0-9]$#i","$id_perso");
 	
 	if($verif_idPerso && $id_perso != "" && $id_perso != null){
 		
-		// On vérifie que l'id de la cible est correct
+		// On verifie que l'id de la cible est correct
 		$verif_idCible = preg_match("#^[0-9]*[0-9]$#i","$id_cible");
 		
 		if($verif_idCible && $id_cible != "" && $id_cible != null){
 			
-			// On vérifie que l'id de l'objet est correct
+			// On verifie que l'id de l'objet est correct
 			$verif_idObjet = preg_match("#^[0-9]*[0-9]$#i","$id_objet");
 			
 			if(($verif_idObjet || $id_objet=='-1') && $id_objet != "" && $id_objet != null){
 				
-				// On vérifie que les pv de l'objet sont correct
+				// On verifie que les pv de l'objet sont correct
 				$verif_pvObjet = preg_match("#^[0-9]*[0-9]$#i","$id_cible");
 				
 				if($verif_pvObjet && $pv_objet != "" && $pv_objet != null){
 					
-					// On vérifie que la cible est bien au CàC avec le perso
-					// Recuperation coordonnées perso
+					// On verifie que la cible est bien au CaC avec le perso
+					// Recuperation coordonnees perso
 					$sql_p = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
 					$res_p = $mysqli->query($sql_p);
 					$t_p = $res_p->fetch_assoc();
@@ -2222,8 +2222,8 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 					
 					$verif_cac_idCible = $t_v['idPerso_carte'];
 					if($verif_cac == 1 && $verif_cac_idCible == $id_cible){
-						// On vérifie que le perso posséde bien l'objet qu'il souhaite donner
-						// Si c'est de l'or : on vérifie qu'il posséde bien la bonne quantité
+						// On verifie que le perso possede bien l'objet qu'il souhaite donner
+						// Si c'est de l'or : on verifie qu'il possede bien la bonne quantite
 						if($type_objet == 1){
 							
 							$sql_vo = "SELECT or_perso FROM perso WHERE id_perso='$id_perso'";
@@ -2234,15 +2234,15 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 							
 							if($or_perso >= $quantite){
 								
-								// On met à jour l'or du perso
+								// On met a jour l'or du perso
 								$sql_u = "UPDATE perso SET or_perso=or_perso-$quantite WHERE id_perso='$id_perso'";
 								$mysqli->query($sql_u);
 								
-								// On met à jour l'or de la cible
+								// On met a jour l'or de la cible
 								$sql_u2 = "UPDATE perso SET or_perso=or_perso+$quantite WHERE id_perso='$id_cible'";
 								$mysqli->query($sql_u2);
 								
-								// Récupération infos cible
+								// Recuperation infos cible
 								$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
 								$res = $mysqli->query($sql);
 								$t = $res->fetch_assoc();
@@ -2251,16 +2251,16 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$clan_cible = $t['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
 								
-								echo "Vous avez donné <b>$quantite or</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "Vous avez donnÃ© <b>$quantite or</b> Ã  <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
-								echo "<font color='red'>Vous ne possédez pas assez d'or.</font>";
+								echo "<font color='red'>Vous ne possÃ©dez pas assez d'or.</font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 						}
 						
-						// Si c'est un objet ou une arme ou une armure : on vérifie qu'il le/la posséde
+						// Si c'est un objet ou une arme ou une armure : on verifie qu'il le/la possede
 						// Objet
 						if($type_objet == 2){
 							
@@ -2275,7 +2275,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$sql_d = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' LIMIT 1";
 								$mysqli->query($sql_d);
 								
-								// Récupération des infos de l'objet
+								// Recuperation des infos de l'objet
 								$sql = "SELECT poids_objet, nom_objet FROM objet WHERE id_objet='$id_objet'";
 								$res = $mysqli->query($sql);
 								$t = $res->fetch_assoc();
@@ -2283,7 +2283,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$poids_objet = $t['poids_objet'];
 								$nom_objet = $t['nom_objet'];
 																
-								// On met à jour le poids du perso
+								// On met a jour le poids du perso
 								$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_objet WHERE id_perso='$id_perso'";
 								$mysqli->query($sql_u);
 								
@@ -2291,11 +2291,11 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$sql_i = "INSERT INTO perso_as_objet VALUES('$id_cible','$id_objet')";
 								$mysqli->query($sql_i);
 								
-								// On met à jour le poids de la cible
+								// On met a jour le poids de la cible
 								$sql_u2 = "UPDATE perso SET charge_perso=charge_perso+$poids_objet WHERE id_perso='$id_cible'";
 								$mysqli->query($sql_u2);
 								
-								// Récupération des informations de la cible
+								// Recuperation des informations de la cible
 								$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
 								$res_c = $mysqli->query($sql_c);
 								$t_c = $res_c->fetch_assoc();
@@ -2304,11 +2304,11 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$clan_cible = $t_c['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
 								
-								echo "Vous avez donné <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "Vous avez donnÃ© <b>$nom_objet</b> Ã  <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
-								echo "<font color='red'>Vous ne possédez pas l'objet que vous souhaitiez donner.</font>";
+								echo "<font color='red'>Vous ne possÃ©dez pas l'objet que vous souhaitiez donner.</font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 						}
@@ -2328,7 +2328,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$sql_d = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND pv_arme='$pv_objet'";
 								$mysqli->query($sql_d);
 								
-								// récupération des infos de l'arme
+								// recuperation des infos de l'arme
 								$sql = "SELECT nom_arme, poids_arme FROM arme WHERE id_arme='$id_objet'";
 								$res = $mysqli->query($sql);
 								$t = $res->fetch_assoc();
@@ -2336,19 +2336,19 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$nom_arme = $t['nom_arme'];
 								$poids_arme = $t['poids_arme'];
 								
-								// On met à jour le poids du perso
+								// On met a jour le poids du perso
 								$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
 								$mysqli->query($sql_u);
 								
-								// On ajoute l'arme à l'inventaire de la cible
+								// On ajoute l'arme a l'inventaire de la cible
 								$sql_i = "INSERT INTO perso_as_arme VALUES('$id_cible','$id_objet','0','$pv_objet','1')";
 								$mysqli->query($sql_i);
 								
-								// On met à jour le poids de la cible
+								// On met a jour le poids de la cible
 								$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_cible'";
 								$mysqli->query($sql_u);
 								
-								// Récupération des informations de la cible
+								// Recuperation des informations de la cible
 								$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
 								$res_c = $mysqli->query($sql_c);
 								$t_c = $res_c->fetch_assoc();
@@ -2357,12 +2357,12 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$clan_cible = $t_c['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
 								
-								echo "Vous avez donné <b>$nom_arme</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "Vous avez donnÃ© <b>$nom_arme</b> Ã  <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
-								echo "<font color='red'>Vous ne possédez pas l'arme que vous souhaitiez donner.</font>";
+								echo "<font color='red'>Vous ne possÃ©dez pas l'arme que vous souhaitiez donner.</font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 						}
@@ -2382,7 +2382,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$sql_d = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND pv_armure='$pv_objet'";
 								$mysqli->query($sql_d);
 								
-								// récupération des infos de l'armure
+								// recuperation des infos de l'armure
 								$sql = "SELECT nom_armure, poids_armure, corps_armure FROM armure WHERE id_armure='$id_objet'";
 								$res = $mysqli->query($sql);
 								$t = $res->fetch_assoc();
@@ -2391,19 +2391,19 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$poids_armure = $t['poids_armure'];
 								$corps_armure = $t['corps_armure'];
 								
-								// On met à jour le poids du perso
+								// On met a jour le poids du perso
 								$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_armure WHERE id_perso='$id_perso'";
 								$mysqli->query($sql_u);
 								
-								// On ajoute l'armure à l'inventaire de la cible
+								// On ajoute l'armure a l'inventaire de la cible
 								$sql_i = "INSERT INTO perso_as_armure VALUES('$id_cible','$id_objet','0','$corps_armure','$pv_objet')";
 								$mysqli->query($sql_i);
 								
-								// On met à jour le poids de la cible
+								// On met a jour le poids de la cible
 								$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_armure WHERE id_perso='$id_cible'";
 								$mysqli->query($sql_u);
 								
-								// Récupération des informations de la cible
+								// Recuperation des informations de la cible
 								$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
 								$res_c = $mysqli->query($sql_c);
 								$t_c = $res_c->fetch_assoc();
@@ -2412,53 +2412,53 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$clan_cible = $t_c['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
 								
-								echo "Vous avez donné <b>$nom_armure</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "Vous avez donnÃ© <b>$nom_armure</b> Ã  <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
-								echo "<font color='red'>Vous ne possédez pas l'armure que vous souhaitiez donner.</font>";
+								echo "<font color='red'>Vous ne possÃ©dez pas l'armure que vous souhaitiez donner.</font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 						}
 					}
 					else {
-						echo "<font color='red'>La cible n'est pas au Corps à corps.</font>";
+						echo "<font color='red'>La cible n'est pas au Corps Ã  corps.</font>";
 						echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 					}
 				}
 				else {
-					echo "<font color='red'>Les pv de l'objet ne sont pas correct, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+					echo "<font color='red'>Les pv de l'objet ne sont pas correct, si le problÃ¨me persiste, veuillez contacter l'administrateur.</font><br/>";
 					echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 				}
 			}
 			else {
-				echo "<font color='red'>L'objet choisi n'est pas correct, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+				echo "<font color='red'>L'objet choisi n'est pas correct, si le problÃ¨me persiste, veuillez contacter l'administrateur.</font><br/>";
 				echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 			}
 		}
 		else {
-			echo "<font color='red'>La cible n'est pas correcte, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+			echo "<font color='red'>La cible n'est pas correcte, si le problÃ¨me persiste, veuillez contacter l'administrateur.</font><br/>";
 			echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 		}
 	}
 	else {
-		echo "<font color='red'>Votre identifiant est mal renseigné, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+		echo "<font color='red'>Votre identifiant est mal renseignÃ©, si le problÃ¨me persiste, veuillez contacter l'administrateur.</font><br/>";
 		echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 	}
 }
  
 
 /**
-  * Fonction qui permet à un perso de déposer un objet
-  * @param $id_perso	: L'identifiant du personnage qui veut déposer un objet
+  * Fonction qui permet a un perso de deposer un objet
+  * @param $id_perso	: L'identifiant du personnage qui veut deposer un objet
   * @param $type_objet	: La nature de l'objet (1 => Or, 2 => Objet, 3 => Arme, 4 => Armure)
-  * @param $id_objet	: L'identifiant de l'objet à déposer
-  * @param $pv_objet	: Les points de vie de l'objet qu'on souhaite déposer
+  * @param $id_objet	: L'identifiant de l'objet a deposer
+  * @param $pv_objet	: Les points de vie de l'objet qu'on souhaite deposer
   * @return Void
   */
 function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet){
 
-	// Vérification que le perso possède bien cet objet
+	// Verification que le perso possede bien cet objet
 	// Objet
 	if($type_objet == 2){
 		$sql = "SELECT perso_as_objet.id_objet, poids_objet FROM perso_as_objet, objet WHERE id_perso='$id_perso' 
@@ -2498,7 +2498,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 		
 		$coutPa = 1;
 		
-		// vérification que le perso a assez de PA et récupération de ses coordonnées
+		// verification que le perso a assez de PA et recuperation de ses coordonnees
 		$sql = "SELECT pa_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$t = $res->fetch_assoc();
@@ -2508,7 +2508,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 		$pa_perso = $t["pa_perso"];
 		
 		if($pa_perso >= $coutPa){
-			// On dépose l'objet
+			// On depose l'objet
 			
 			if($type_objet == 2){ // Objet
 				// Suppression de l'inventaire du perso
@@ -2526,18 +2526,18 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 				$mysqli->query($sql);
 			}
 			
-			// On met à jour le poid et les pa du perso
+			// On met a jour le poid et les pa du perso
 			$sql = "UPDATE perso SET charge_perso = charge_perso - $poid_objet, pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
 			if($pv_objet){
-				// Vérification si l'objet existe déjà sur cette case
+				// Verification si l'objet existe deja sur cette case
 				$sql = "SELECT nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' 
 						AND objet_in_carte.x_carte = perso.x_perso AND objet_in_carte.y_carte = perso.y_perso
 						AND type_objet = '$type_objet' AND id_objet = '$id_objet' AND pv_objet='$pv_objet'";
 			}
 			else {
-				// Vérification si l'objet existe déjà sur cette case
+				// Verification si l'objet existe deja sur cette case
 				$sql = "SELECT nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' 
 						AND objet_in_carte.x_carte = perso.x_perso AND objet_in_carte.y_carte = perso.y_perso
 						AND type_objet = '$type_objet' AND id_objet = '$id_objet'";
@@ -2548,13 +2548,13 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 			
 			if($nb_o){
 				if($pv_objet){
-					// On met à jour le nombre
+					// On met a jour le nombre
 					$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
 							WHERE type_objet='$type_objet' AND id_objet='$id_objet' AND pv_objet='$pv_objet'
 							AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				}
 				else {
-					// On met à jour le nombre
+					// On met a jour le nombre
 					$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
 							WHERE type_objet='$type_objet' AND id_objet='$id_objet'
 							AND x_carte='$x_perso' AND y_carte='$y_perso'";
@@ -2563,18 +2563,18 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 			}
 			else {
 				if(isset($pv_objet) && $pv_objet > 0){					
-					// Insertion dans la table objet_in_carte : On créé le premier enregistrement
+					// Insertion dans la table objet_in_carte : On cree le premier enregistrement
 					$sql = "INSERT INTO objet_in_carte VALUES ('$type_objet','$id_objet','1','$x_perso','$y_perso','$pv_objet')";
 					$mysqli->query($sql);
 				}
 				else {
-					// Insertion dans la table objet_in_carte : On créé le premier enregistrement
+					// Insertion dans la table objet_in_carte : On cree le premier enregistrement
 					$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('$type_objet','$id_objet','1','$x_perso','$y_perso')";
 					$mysqli->query($sql);
 				}
 			}
 			
-			echo "<center>Vous venez de déposer un objet à terre</center><br />";
+			echo "<center>Vous venez de dÃ©poser un objet Ã  terre</center><br />";
 			echo "<center><a href='jouer.php'>[retour]</a></center>";
 		}
 	}
@@ -2585,7 +2585,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 }
 
 /**
-  * Fonction qui permet de ramasser un objet à terre
+  * Fonction qui permet de ramasser un objet Ã  terre
   * @param $id_perso	: L'identifiant du perso quiveut ramasser un objet
   * @param $type_objet	: Le type de l'objet (2 => Objet, 3 => Arme, 4 => Armure)
   * @param $id_objet	: L'identifiant de l'objet qu'on veut ramasser
@@ -2594,7 +2594,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
   */
 function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet){
 	
-	// Vérification que l'objet est bien toujours sur la case du perso
+	// Verification que l'objet est bien toujours sur la case du perso
 	if($pv_objet){
 		$sql = "SELECT nb_objet FROM objet_in_carte,perso WHERE id_perso='$id_perso' 
 				AND x_carte=x_perso AND y_carte=y_perso
@@ -2613,7 +2613,7 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 		
 		$coutPa = 1;
 		
-		// vérification que le perso a assez de PA et récupération de ses coordonnées
+		// verification que le perso a assez de PA et recuperation de ses coordonnees
 		$sql = "SELECT pa_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$t = $res->fetch_assoc();
@@ -2625,16 +2625,16 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 		if($pa_perso >= $coutPa){
 			// On ramasse l'objet
 			
-			// Vérification si l'objet est à plus de 1 exemplaire sur la case => maj du nombre plutot que suppression			
+			// Verification si l'objet est a plus de 1 exemplaire sur la case => maj du nombre plutot que suppression			
 			$nb_o = $to["nb_objet"];
 			if($nb_o > 1){
 				if($pv_objet){
-					// On met à jour le nombre d'objet sur la case
+					// On met a jour le nombre d'objet sur la case
 					$sql = "UPDATE objet_in_carte SET nb_objet=nb_objet-1 WHERE type_objet='$type_objet' 
 							AND id_objet='$id_objet' AND pv_objet='$pv_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				}
 				else {
-					// On met à jour le nombre d'objet sur la case
+					// On met a jour le nombre d'objet sur la case
 					$sql = "UPDATE objet_in_carte SET nb_objet=nb_objet-1 WHERE type_objet='$type_objet' 
 							AND id_objet='$id_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				}
@@ -2654,10 +2654,10 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 				$mysqli->query($sql);
 			}
 			
-			// Récupération du poid et des infos de l'objet et insertion de l'objet dans l'inventaire du perso
+			// Recuperation du poid et des infos de l'objet et insertion de l'objet dans l'inventaire du perso
 			// Objet
 			if($type_objet == 2){
-				// récupération des infos de l'objet
+				// recuperation des infos de l'objet
 				$sql = "SELECT poids_objet FROM objet WHERE id_objet='$id_objet'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
@@ -2671,7 +2671,7 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 			
 			// Arme
 			if($type_objet == 3){
-				// récupération des infos de l'objet
+				// recuperation des infos de l'objet
 				$sql = "SELECT poids_arme FROM arme WHERE id_arme='$id_objet'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
@@ -2691,7 +2691,7 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 				
 				$poid_objet = $t["poids_armure"];
 				
-				// Récupération de la position de l'armure sur le corps
+				// Recuperation de la position de l'armure sur le corps
 				$corps_armure = $t["corps_armure"];
 				
 				// Insertion de l'objet dans l'inventaire du perso
@@ -2699,11 +2699,11 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 				$mysqli->query($sql);
 			}
 			
-			// On met à jour le poid et les pa du perso
+			// On met a jour le poid et les pa du perso
 			$sql = "UPDATE perso SET charge_perso = charge_perso + $poid_objet, pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
-			echo "<center>Vous venez de ramasser un objet à terre</center><br />";
+			echo "<center>Vous venez de ramasser un objet Ã  terre</center><br />";
 			echo "<center><a href='jouer.php'>[retour]</a></center>";
 		}
 	}
@@ -2714,9 +2714,9 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 }
 
 /**
-  * Fonction qui vérifie si un perso est un marchand et retourne le nombre de points de marchandage
+  * Fonction qui verifie si un perso est un marchand et retourne le nombre de points de marchandage
   * @param $id_perso	: L'identifiant du personnage
-  * @return Int		: Le nombre de points dans la compétence de marchandage
+  * @return Int		: Le nombre de points dans la competence de marchandage
   */
 function est_marchand($mysqli, $id_perso){
 	
@@ -2728,9 +2728,9 @@ function est_marchand($mysqli, $id_perso){
 }
 
 /** 
-  * Fonction qui vérifie si le perso est un ami des animaux et retourne le nombre de points
+  * Fonction qui verifie si le perso est un ami des animaux et retourne le nombre de points
   * @param $id_perso	: L'identifiant du personnage
-  * @return Int		: le nombre de points dans la compétence d'amitié avec les animaux
+  * @return Int		: le nombre de points dans la competence d'amitie avec les animaux
   */
 function est_ami_animaux($mysqli, $id_perso){
 	
@@ -2742,9 +2742,9 @@ function est_ami_animaux($mysqli, $id_perso){
 }
 
 /**
-  * Fonction qui permet de récupérer le nombre de morceaux de bois que le personnage posséde
+  * Fonction qui permet de recuperer le nombre de morceaux de bois que le personnage possede
   * @param $id_perso	: L'identifiant du personnage
-  * @return Int		: Le nombre de morceaux de bois que le personnage possède dans son sac
+  * @return Int		: Le nombre de morceaux de bois que le personnage possede dans son sac
   */
 function nb_bois_perso($mysqli, $id_perso){
 	
@@ -2756,7 +2756,7 @@ function nb_bois_perso($mysqli, $id_perso){
 }
 
 /**
-  * Fonction qui vérifie si une arme d'identifiant passé en paramètre existe bien
+  * Fonction qui verifie si une arme d'identifiant passe en parametre existe bien
   * @param $id_arme	: L'identifiant de l'arme
   * @return Bool
   */
@@ -2769,7 +2769,7 @@ function existe_arme($mysqli, $id_arme){
 }
 
 /**
-  * Fonction qui vérifie si une armure d'identifiant passé en paramètre existe bien
+  * Fonction qui verifie si une armure d'identifiant passe en parametre existe bien
   * @param $id_armure	: L'identifiant de l'armure
   * @return Bool
   */
@@ -2782,7 +2782,7 @@ function existe_armure($mysqli, $id_armure){
 }
 
 /**
-  * Fonction qui vérifie si un objet d'identifiant passé en paramètre existe bien
+  * Fonction qui verifie si un objet d'identifiant passe en parametre existe bien
   * @param $id_objet	: L'identifiant de l'objet
   * @return Bool
   */
@@ -2795,9 +2795,9 @@ function existe_objet($mysqli, $id_objet){
 }
 
 /**
-  * Fonction qui permet de calculer la récupération de malus selon l'action utilisée
+  * Fonction qui permet de calculer la recuperation de malus selon l'action utilisee
   * @param $id_action	: L'identifiant de l'action
-  * @return			: La récupération de malus
+  * @return			: La reuperation de malus
   */
 function calcul_recup_malus($id_action){
 	if($id_action == '140'){
@@ -2813,7 +2813,7 @@ function calcul_recup_malus($id_action){
 }
 
 /**
-  * Fonction qui calcul le nombre de pv de réparation du batiment le personnage va effectuer
+  * Fonction qui calcul le nombre de pv de reparation du batiment le personnage va effectuer
   * @param $id_action	: L'identifiant de l'action
   * @return int		: Le nombre de pv de reparation
   */
@@ -2852,9 +2852,9 @@ function calcul_gain_pv_reparer($nb_points_action){
 }
 
 /**
-  * Fonction qui récupére l'identifiant de compétence correspondant à la construction d'un type de batiment
+  * Fonction qui recupere l'identifiant de competence correspondant a la construction d'un type de batiment
   * @param $id_batiment	: l'identifiant du batiment
-  * @return  Int			: L'identifant de la compétence associée à la construction du type de batiment passé en paramètre
+  * @return  Int			: L'identifant de la competence associee a la construction du type de batiment passe en parametre
   */
 function recup_id_competence_bat($id_batiment){
 	if($id_batiment == 1){
@@ -2902,9 +2902,9 @@ function recup_id_competence_bat($id_batiment){
 }
 
 /**
-  * Fonction qui calcul le pourcentage de réussite ou autre pourcentage d'une action donnée
+  * Fonction qui calcul le pourcentage de reussite ou autre pourcentage d'une action donnee
   * @param $id_action	: L'identifiant de l'action
-  * @return Int		: le pourcentage de reussite ou autre pourcentage récupéré de l'action
+  * @return Int		: le pourcentage de reussite ou autre pourcentage recupere de l'action
   */
 function calcul_pourcentage_action($id_action){
 	
@@ -2914,30 +2914,30 @@ function calcul_pourcentage_action($id_action){
 	}
 	
 	if(	/*Upgrade batiment*/ $id_action == '80' || $id_action == '83'
-		/* Soins avancés */ 	|| $id_action == '14' || $id_action == '15' || $id_action == '16'){
+		/* Soins avances */ 	|| $id_action == '14' || $id_action == '15' || $id_action == '16'){
 		$pourcent = 25;
 	}
 	
 	if(	/*Upgrade batiment*/ $id_action == '81' || $id_action == '84'
 		/* Chirurgie */ 		|| $id_action == '22' || $id_action == '23' || $id_action == '24'
-		/*Réparer Arme*/ 	|| $id_action == '115' 
-		/*Réparer Armure*/ 	|| $id_action == '124'){
+		/*Reparer Arme*/ 	|| $id_action == '115' 
+		/*Reparer Armure*/ 	|| $id_action == '124'){
 		$pourcent = 50;
 	}
 	
-	if(	/*Réparer Arme*/	$id_action == '116' || $id_action == '117' 
-		/*Réparer Armure*/	|| $id_action == '125' || $id_action == '126'){
+	if(	/*Reparer Arme*/	$id_action == '116' || $id_action == '117' 
+		/*Reparer Armure*/	|| $id_action == '125' || $id_action == '126'){
 		$pourcent = 65;
 	}
 	
 	if(	/*Upgrade batiment*/ $id_action == '82' || $id_action == '85'
-		/*Réparer Arme*/	|| $id_action == '118' || $id_action == '119'
-		/*Réparer Armure*/	|| $id_action == '127' || $id_action == '128'){
+		/*Reparer Arme*/	|| $id_action == '118' || $id_action == '119'
+		/*Reparer Armure*/	|| $id_action == '127' || $id_action == '128'){
 		$pourcent = 75;
 	}
 	
-	if(	/*Réparer Arme*/	$id_action == '120'
-		/*Réparer Armure*/	|| $id_action == '129'){
+	if(	/*Reparer Arme*/	$id_action == '120'
+		/*Reparer Armure*/	|| $id_action == '129'){
 		$pourcent = 95;
 	}
 	

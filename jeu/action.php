@@ -9,7 +9,7 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
-// recupération config jeu
+// recuperation config jeu
 $sql = "SELECT disponible FROM config_jeu";
 $res = $mysqli->query($sql);
 $t_dispo = $res->fetch_assoc();
@@ -28,18 +28,18 @@ if($dispo){
 		$ok = construire_bat($mysqli, $_POST['image_bat'], $id_perso, $carte);
 		
 		if($ok){
-			// header (retour à la page de jeu)
+			// header (retour a la page de jeu)
 			header("location:jouer.php");
 		}
 	}
 	else {
 		// traitement action construction batiment
-		// passage par le champ caché pour IE
+		// passage par le champ cache pour IE
 		if(isset($_POST['hid_image_bat'])){
 			$ok = construire_bat($mysqli, $_POST['hid_image_bat'], $id_perso, $carte);
 			
 			if($ok){
-				// header (retour à la page de jeu)
+				// header (retour a la page de jeu)
 				header("location:jouer.php");
 			}
 		}
@@ -55,7 +55,7 @@ if($dispo){
 	<body>
 	<?php
 	
-	// Traitement action cible perso et soi-même
+	// Traitement action cible perso et soi-meme
 	if(isset($_POST['action_cible_ref']) || isset($_POST['select_objet_soin'])){
 		
 		if(isset($_POST['select_objet_soin'])){
@@ -76,7 +76,7 @@ if($dispo){
 		   $id_action == '16' || $id_action == '22' || $id_action == '23' || $id_action == '24' || $id_action == '25' ||
 		   $id_action == '26' || $id_action == '27'){
 		   // Soins pv
-		   // Récupération des objets que possède le perso pouvant améliorer les soins
+		   // Recuperation des objets que possede le perso pouvant ameliorer les soins
 			$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 					(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
 			$res_s = $mysqli->query($sql_s);
@@ -92,7 +92,7 @@ if($dispo){
 			}		
 			else {
 				if($num_s >= 1){
-					// Affichage liste des objets qu'on peut utiliser pour améliorer les soins
+					// Affichage liste des objets qu'on peut utiliser pour ameliorer les soins
 					echo "<form method='post' action='action.php'>";
 					echo "<td align='center'><select name=\"select_objet_soin\">";
 					echo "<option value=\"NO,$t_cib_ref\">-- AUCUN --</option>";
@@ -110,13 +110,13 @@ if($dispo){
 					echo "</form>";
 				}
 				else {
-					echo "<center><font color='red'>Problème dans les données, veuillez contacter un administrateur.</font></center>";
+					echo "<center><font color='red'>ProblÃ¨me dans les donnÃ©es, veuillez contacter un administrateur.</font></center>";
 				}
 			}
 		}
 		if($id_action == '140' || $id_action == '141' || $id_action == '142' ){
 			// Soins malus
-			// Récupération des objets que possède le perso pouvant améliorer les soins
+			// Recuperation des objets que possede le perso pouvant ameliorer les soins
 			$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 					(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
 			$res_s = $mysqli->query($sql_s);
@@ -132,7 +132,7 @@ if($dispo){
 			}		
 			else {
 				if($num_s >= 1){
-					// Affichage liste des objets qu'on peut utiliser pour améliorer les soins
+					// Affichage liste des objets qu'on peut utiliser pour ameliorer les soins
 					echo "<form method='post' action='action.php'>";
 					echo "<td align='center'><select name=\"select_objet_soin\">";
 					echo "<option value=\"NO,$t_cib_ref\">-- AUCUN --</option>";
@@ -150,18 +150,18 @@ if($dispo){
 					echo "</form>";
 				}
 				else {
-					echo "<center><font color='red'>Problème dans les données, veuillez contacter un administrateur.</font></center>";
+					echo "<center><font color='red'>ProblÃ¨me dans les donnÃ©es, veuillez contacter un administrateur.</font></center>";
 				}
 			}
 		}
 		if($id_action == '17' || $id_action == '18' || $id_action == '19' || $id_action == '20' || $id_action == '21'){
-			// Soins vétérinaire
-			echo "Soins vétérinaire";
+			// Soins veterinaire
+			echo "Soins vÃ©tÃ©rinaire";
 		}
 	}
 	else {
-		// traitement action cible perso et soi-même
-		// passage par le champ caché pour IE
+		// traitement action cible perso et soi-meme
+		// passage par le champ cache pour IE
 		if(isset($_POST['hid_action_cible_ref']) || isset($_POST['select_objet_soin'])){
 			if(isset($_POST['select_objet_soin'])){
 				$t_cib_ref = $_POST['select_objet_soin'];
@@ -181,7 +181,7 @@ if($dispo){
 			   $id_action == '16' || $id_action == '22' || $id_action == '23' || $id_action == '24' || $id_action == '25' ||
 			   $id_action == '26' || $id_action == '27'){
 				// Soins pv
-				// Récupération des objets que possède le perso pouvant améliorer les soins
+				// Reparation des objets que possede le perso pouvant ameliorer les soins
 				$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 						(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
 				$res_s = $mysqli->query($sql_s);
@@ -197,7 +197,7 @@ if($dispo){
 				}		
 				else {
 					if($num_s >= 1){
-						// Affichage liste des objets qu'on peut utiliser pour améliorer les soins
+						// Affichage liste des objets qu'on peut utiliser pour ameliorer les soins
 						echo "<form method='post' action='action.php'>";
 						echo "<td align='center'><select name=\"select_objet_soin\">";
 						echo "<option value=\"NO,$t_cib_ref\">-- AUCUN --</option>";
@@ -215,13 +215,13 @@ if($dispo){
 						echo "</form>";
 					}
 					else {
-						echo "<center><font color='red'>Problème dans les données, veuillez contacter un administrateur.</font></center>";
+						echo "<center><font color='red'>ProblÃ¨me dans les donnÃ©es, veuillez contacter un administrateur.</font></center>";
 					}
 				}
 			}
 			if($id_action == '140' || $id_action == '141' || $id_action == '142' ){
 				// Soins malus
-				// Récupération des objets que possède le perso pouvant améliorer les soins
+				// Recuperation des objets que possede le perso pouvant ameliorer les soins
 				$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 						(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
 				$res_s = $mysqli->query($sql_s);
@@ -237,7 +237,7 @@ if($dispo){
 				}		
 				else {
 					if($num_s >= 1){
-						// Affichage liste des objets qu'on peut utiliser pour améliorer les soins
+						// Affichage liste des objets qu'on peut utiliser pour ameliorer les soins
 						echo "<form method='post' action='action.php'>";
 						echo "<td align='center'><select name=\"select_objet_soin\">";
 						echo "<option value=\"NO,$t_cib_ref\">-- AUCUN --</option>";
@@ -255,13 +255,13 @@ if($dispo){
 						echo "</form>";
 					}
 					else {
-						echo "<center><font color='red'>Problème dans les données, veuillez contacter un administrateur.</font></center>";
+						echo "<center><font color='red'>ProblÃ¨me dans les donnÃ©es, veuillez contacter un administrateur.</font></center>";
 					}
 				}
 			}
 			if($id_action == '17' || $id_action == '18' || $id_action == '19' || $id_action == '20' || $id_action == '21'){
-				// Soins vétérinaire
-				echo "Soins vétérinaire";
+				// Soins veterinaire
+				echo "Soins vÃ©tÃ©rinaire";
 			}
 		}
 	}
@@ -289,7 +289,7 @@ if($dispo){
 	}
 	else {
 		// traitement action cible bat
-		// passage par le champ caché pour IE
+		// passage par le champ cache pour IE
 		if(isset($_POST['hid_action_cible_bat'])){
 			
 			$t_cib_bat = $_POST['hid_action_cible_bat'];
@@ -359,7 +359,7 @@ if($dispo){
 	
 	// Chant
 	if(isset($_POST['event_chant'])){
-		$phrase = "a chanté ".addslashes($_POST['event_chant']);
+		$phrase = "a chantÃ© ".addslashes($_POST['event_chant']);
 		
 		action_chanter_perso($mysqli, $id_perso, $phrase);
 	}
@@ -380,12 +380,12 @@ if($dispo){
 	
 	// Danse
 	if(isset($_POST['event_danse'])){
-		$phrase = "a dansé ".$_POST['event_danse'];
+		$phrase = "a dansÃ© ".$_POST['event_danse'];
 		
 		action_danser_perso($mysqli, $id_perso, $phrase);
 	}
 	
-	// Déposer objet
+	// Deposer objet
 	if(isset($_POST['valid_objet_depo']) && isset($_POST['id_objet_depo'])){
 		$t_objet = $_POST['id_objet_depo'];
 		$t2 = explode(',',$t_objet);
@@ -407,7 +407,7 @@ if($dispo){
 		action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet);
 	}
 	
-	// Don objet après choix perso
+	// Don objet apres choix perso
 	if(isset($_POST['select_perso_don']) && isset($_POST['valid_perso_don'])){
 		
 		$id_cible = $_POST['select_perso_don'];
@@ -417,10 +417,10 @@ if($dispo){
 		
 		if($verif_idPerso && $id_cible != "" && $id_cible != null){
 		
-			echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets à donner</th></tr>";
+			echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets Ã  donner</th></tr>";
 			echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>donner ?</th></tr>";
 							
-			// Récupération des objets / armes / armures que possède le perso
+			// Recuperation des objets / armes / armures que possede le perso
 			// Or
 			$compteur_or = 0;
 			$sql_o0 = "SELECT or_perso FROM perso WHERE id_perso='$id_perso'";
@@ -476,7 +476,7 @@ if($dispo){
 				echo "</tr>";
 			}
 			
-			// Armes non portés
+			// Armes non portes
 			$sql_a1 = "SELECT DISTINCT id_arme, pv_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
 			$res_a1 = $mysqli->query($sql_a1);
 			
@@ -493,7 +493,7 @@ if($dispo){
 				$poids_a1 = $t1_a1["poids_arme"];
 				$image_arme = $t1_a1["image_arme"];
 									
-				// recuperation du nombre d'armes non équipés de ce type et ayant ce nombre de pv que possede le perso 
+				// recuperation du nombre d'armes non equipes de ce type et ayant ce nombre de pv que possede le perso 
 				$sql2_a1 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_arme' AND est_portee='0' AND pv_arme='$pv_arme'";
 				$res2_a1 = $mysqli->query($sql2_a1);
 				$nb_a1 = $res2_a1->num_rows;
@@ -508,7 +508,7 @@ if($dispo){
 				echo "</tr>";
 			}
 									
-			// Armures non portés
+			// Armures non portes
 			$sql_a2 = "SELECT DISTINCT id_armure, pv_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
 			$res_a2 = $mysqli->query($sql_a2);
 			
@@ -525,7 +525,7 @@ if($dispo){
 				$poids_a2 = $t1_a2["poids_armure"];
 				$image_armure = $t1_a2["image_armure"];
 									
-				// recuperation du nombre d'armes non équipés de ce type que possede le perso 
+				// recuperation du nombre d'armes non equipes de ce type que possede le perso 
 				$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' AND pv_armure='$pv_armure'";
 				$res2_a2 = $mysqli->query($sql2_a2);
 				$nb_a2 = $res2_a2->num_rows;
@@ -548,7 +548,7 @@ if($dispo){
 		}
 	}
 	
-	// Don objet après choix objet
+	// Don objet apres choix objet
 	if(isset($_POST['valid_objet_don']) && isset($_POST['id_objet_don']) ){
 		
 		$quantite = 1;
@@ -574,7 +574,7 @@ if($dispo){
 			// recuperation de l'id de l'action
 			$id_action = $_POST['liste_action'];
 			
-			// verification que le perso posséde bien l'action
+			// verification que le perso possede bien l'action
 			$sql_v = "SELECT action.id_action
 					FROM perso_as_competence, competence_as_action, action 
 					WHERE id_perso='$id_perso' 
@@ -631,15 +631,16 @@ if($dispo){
 						action_dormir($mysqli, $id_perso, $nb_points_action);
 					}
 					
-					// traitement de l'action marche forcée
-					if($nom_action == 'Marche forcée'){
+					// traitement de l'action marche forcee
+					if($nom_action == 'Marche forcÃ©e'){
 						action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_action);
 					}
 					
 					// traitement de l'action courir
 					if($nom_action == 'Courir'){
 						if(!in_bat($id_perso)){
-							//recuperation des coordonnées du perso
+							
+							//recuperation des coordonnees du perso
 							$sql = "SELECT x_perso, y_perso, perception_perso, clan FROM perso WHERE id_perso='$id_perso'";
 							$res = $mysqli->query($sql);
 							$t_coord = $res->fetch_assoc();
@@ -649,12 +650,12 @@ if($dispo){
 							$perception_perso = $t_coord['perception_perso'];
 							$clan_perso = $t_coord['clan'];
 							
-							// recuperation des données de la carte
+							// recuperation des donnees de la carte
 							$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perception_perso AND x_carte <= $x_perso + $perception_perso AND y_carte <= $y_perso + $perception_perso AND y_carte >= $y_perso - $perception_perso ORDER BY y_carte DESC, x_carte";
 							$res = $mysqli->query($sql);
 							$tab = $res->fetch_assoc(); 			
 							
-							//<!--Génération de la carte-->
+							//<!--Generation de la carte-->
 							echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 										
 							echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -664,9 +665,13 @@ if($dispo){
 							echo "</tr>";
 										
 							for ($y = $y_perso + $perception_perso; $y >= $y_perso - $perception_perso; $y--) {
+								
 								echo "<th>$y</th>";
 								for ($x = $x_perso - $perception_perso; $x <= $x_perso + $perception_perso; $x++) {
-									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+									
+									//les coordonnees sont dans les limites
+									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+										
 										if ($tab["occupee_carte"]){
 											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
 										}
@@ -720,7 +725,7 @@ if($dispo){
 										$tab = $res->fetch_assoc();
 									}
 									else{
-										//les coordonnées sont hors limites
+										//les coordonnees sont hors limites
 										echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 									}
 								}
@@ -733,7 +738,7 @@ if($dispo){
 							echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 						}
 						else {
-							echo "<center><font color='red'>Impossible de courir depuis un bâtiment, veuillez sortir pour effectuer cette action</font>";
+							echo "<center><font color='red'>Impossible de courir depuis un bÃ¢timent, veuillez sortir pour effectuer cette action</font>";
 							echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
 						}
 					}
@@ -741,7 +746,8 @@ if($dispo){
 					// traitement de l'action sauter
 					if($nom_action == 'Sauter'){
 						if(!in_bat($id_perso)){
-							//recuperation des coordonnées du perso
+							
+							//recuperation des coordonnees du perso
 							$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
 							$res = $mysqli->query($sql);
 							$t_coord = $res->fetch_assoc();
@@ -752,12 +758,12 @@ if($dispo){
 										
 							$image_saut='../images/saut.gif';
 							
-							// recuperation des données de la carte
+							// recuperation des donnees de la carte
 							$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 2 AND x_carte <= $x_perso + 2 AND y_carte <= $y_perso + 2 AND y_carte >= $y_perso - 2 ORDER BY y_carte DESC, x_carte";
 							$res = $mysqli->query($sql);
 							$tab = $res->fetch_assoc(); 			
 							
-							//<!--Génération de la carte-->
+							//<!--Generation de la carte-->
 							echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 										
 							echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -767,9 +773,13 @@ if($dispo){
 							echo "</tr>";
 										
 							for ($y = $y_perso + 2; $y >= $y_perso - 2; $y--) {
+								
 								echo "<th>$y</th>";
 								for ($x = $x_perso - 2; $x <= $x_perso + 2; $x++) {
-									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+									
+									//les coordonnees sont dans les limites
+									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+										
 										if ($tab["occupee_carte"]){
 											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
 										}
@@ -803,7 +813,7 @@ if($dispo){
 										$tab = $res->fetch_assoc();
 									}
 									else{
-										//les coordonnées sont hors limites
+										//les coordonnees sont hors limites
 										echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 									}
 								}
@@ -816,7 +826,7 @@ if($dispo){
 							echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 						}
 						else {
-							echo "<center><font color='red'>Impossible de sauter depuis un bâtiment, veuillez sortir pour effectuer cette action</font>";
+							echo "<center><font color='red'>Impossible de sauter depuis un bÃ¢timent, veuillez sortir pour effectuer cette action</font>";
 							echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
 						}
 					}
@@ -827,9 +837,9 @@ if($dispo){
 							action_chanter($mysqli, $id_perso,$id_action);
 						}
 						else {
-							echo "<center>Personnalisation de l'événement</center>";
+							echo "<center>Personnalisation de l'Ã©vÃ©nement</center>";
 							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_chant\"><input type=\"submit\" value=\"ok\">";
+							echo "a chantÃ© <input type=\"text\" name=\"event_chant\"><input type=\"submit\" value=\"ok\">";
 							echo "</form>";
 						}
 					}
@@ -840,9 +850,9 @@ if($dispo){
 							action_danser($mysqli, $id_perso, $id_action);
 						}
 						else {
-							echo "<center>Personnalisation de l'événement</center>";
+							echo "<center>Personnalisation de l'Ã©vÃ©nement</center>";
 							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_danse\"><input type=\"submit\" value=\"ok\">";
+							echo "a chantÃ© <input type=\"text\" name=\"event_danse\"><input type=\"submit\" value=\"ok\">";
 							echo "</form>";
 						}
 					}
@@ -853,9 +863,9 @@ if($dispo){
 							action_peindre($mysqli, $id_perso, $id_action);
 						}
 						else {
-							echo "<center>Personnalisation de l'événement</center>";
+							echo "<center>Personnalisation de l'Ã©vÃ©nement</center>";
 							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_peind\"><input type=\"submit\" value=\"ok\">";
+							echo "a chantÃ© <input type=\"text\" name=\"event_peind\"><input type=\"submit\" value=\"ok\">";
 							echo "</form>";
 						}
 					}
@@ -866,16 +876,16 @@ if($dispo){
 							action_sculter($mysqli, $id_perso, $id_action);
 						}
 						else {
-							echo "<center>Personnalisation de l'événement</center>";
+							echo "<center>Personnalisation de l'Ã©vÃ©nement</center>";
 							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_scult\"><input type=\"submit\" value=\"ok\">";
+							echo "a chantÃ© <input type=\"text\" name=\"event_scult\"><input type=\"submit\" value=\"ok\">";
 							echo "</form>";
 						}
 					}
 				}
 				
 				if($pnj_action){
-					// header (retour à la page de jeu)
+					// header (retour a la page de jeu)
 					header("location:jouer.php?erreur=competence");
 				}
 				
@@ -893,7 +903,7 @@ if($dispo){
 					// action pouvant cibler son propre perso
 					if($reflexive_action){
 						
-						//recuperation des coordonnées du perso
+						//recuperation des coordonnees du perso
 						$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
 						$res = $mysqli->query($sql);
 						$t_coord = $res->fetch_assoc();
@@ -902,12 +912,12 @@ if($dispo){
 						$y_perso = $t_coord['y_perso'];
 						$clan_perso = $t_coord['clan'];
 						
-						// recuperation des données de la carte
+						// recuperation des donnees de la carte
 						$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
 						$res = $mysqli->query($sql);
 						$tab = $res->fetch_assoc(); 
 						
-						//<!--Génération de la carte-->
+						//<!--Generation de la carte-->
 						echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 						
 						echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -919,15 +929,22 @@ if($dispo){
 						for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
 							echo "<th>$y</th>";
 							for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-								if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+								
+								//les coordonnees sont dans les limites
+								if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+									
 									if ($tab["occupee_carte"]){
+										
 										$image_perso = $tab["image_carte"];
 										$id_perso_carte = $tab["idPerso_carte"];
+										
 										if($id_perso_carte < 10000 && isset($id_perso_carte)){
-											// recupération des infos du perso
+											
+											// recuperation des infos du perso
 											$sql_perso_carte = "SELECT nom_perso, clan FROM perso WHERE id_perso=$id_perso_carte";
 											$res_perso_carte = $mysqli->query($sql_perso_carte);
 											$t_perso_carte = $res_perso_carte->fetch_assoc();
+											
 											$nom_perso_carte = $t_perso_carte["nom_perso"];
 											$clan_perso_carte = $t_perso_carte["clan"];
 											if($clan_perso_carte == $clan_perso){
@@ -960,7 +977,7 @@ if($dispo){
 									}
 									$tab = $res->fetch_assoc();
 								}
-								else //les coordonnées sont hors limites
+								else //les coordonnees sont hors limites
 									echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 							}
 							echo "</tr>";
@@ -974,7 +991,7 @@ if($dispo){
 					
 					// action ne pouvant pas cibler son propre perso
 					else {
-						//recuperation des coordonnées du perso
+						//recuperation des coordonnees du perso
 						$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
 						$res = $mysqli->query($sql);
 						$t_coord = $res->fetch_assoc();
@@ -986,10 +1003,10 @@ if($dispo){
 						// Donner objet
 						if($nom_action == 'Donner objet'){
 							
-							echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Personnage à qui donner l'objet</th></tr>";
+							echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Personnage Ã  qui donner l'objet</th></tr>";
 							echo "<tr>";
 							
-							// Récupération des persos au CàC
+							// Recuperation des persos au CaC
 							$sql_c = "SELECT idPerso_carte FROM $carte WHERE x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte>=$y_perso-1 AND y_carte<=$y_perso+1 AND occupee_carte='1' AND idPerso_carte!='$id_perso' AND idPerso_carte < 10000";
 							$res_c = $mysqli->query($sql_c);
 							
@@ -997,14 +1014,14 @@ if($dispo){
 								
 								$id_cible = $t_c['idPerso_carte'];
 								
-								// Récupération infos cible
+								// Recuperation infos cible
 								$sql_cible = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
 								$res_cible = $mysqli->query($sql_cible);
 								$t_cible = $res_cible->fetch_assoc();
 								$nom_cible = $t_cible['nom_perso'];
 								$camp_cible = $t_cible['clan'];
 								
-								// récupération de la couleur du camp
+								// recuperation de la couleur du camp
 								$couleur_clan_cible = couleur_clan($camp_cible);
 								
 								echo "<form method='post' action='action.php'>";
@@ -1021,12 +1038,12 @@ if($dispo){
 						}
 						else {
 							// Soins							
-							// recuperation des données de la carte
+							// recuperation des donnees de la carte
 							$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
 							$res = $mysqli->query($sql);
 							$tab = $res->fetch_assoc(); 
 							
-							//<!--Génération de la carte-->
+							//<!--Generation de la carte-->
 							echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 							
 							echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -1038,13 +1055,18 @@ if($dispo){
 							for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
 								echo "<th>$y</th>";
 								for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+									
+									//les coordonnees sont dans les limites
+									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+										
 										if ($tab["occupee_carte"]){
+											
 											$image_perso = $tab["image_carte"];
 											$id_perso_carte = $tab["idPerso_carte"];
+											
 											if($id_perso_carte < 10000 && isset($id_perso_carte) && $id_perso_carte != $id_perso){
 												
-												// recupération des infos du perso
+												// recuperation des infos du perso
 												$sql_perso_carte = "SELECT nom_perso, clan FROM perso WHERE id_perso=$id_perso_carte";
 												$res_perso_carte = $mysqli->query($sql_perso_carte);
 												$t_perso_carte = $res_perso_carte->fetch_assoc();
@@ -1086,7 +1108,7 @@ if($dispo){
 										}
 										$tab = $res->fetch_assoc();
 									}
-									else //les coordonnées sont hors limites
+									else //les coordonnees sont hors limites
 										echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 								}
 								echo "</tr>";
@@ -1140,7 +1162,7 @@ if($dispo){
 								echo "<center><img src=\"../images_perso/$image_bat\" alt=\"$nom_batiment\" /></center>";
 								echo "<center>$nom_batiment</center>";
 							
-								//recuperation des coordonnées du perso
+								//recuperation des coordonnees du perso
 								$sql = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
 								$res = $mysqli->query($sql);
 								$t_coord = $res->fetch_assoc();
@@ -1148,12 +1170,12 @@ if($dispo){
 								$x_perso = $t_coord['x_perso'];
 								$y_perso = $t_coord['y_perso'];
 								
-								// recuperation des données de la carte
+								// recuperation des donnees de la carte
 								$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
 								$res = $mysqli->query($sql);
 								$tab = $res->fetch_assoc(); 
 								
-								//<!--Génération de la carte-->
+								//<!--Generation de la carte-->
 								echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 								
 								echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -1165,7 +1187,10 @@ if($dispo){
 								for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
 									echo "<th>$y</th>";
 									for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+										
+										//les coordonnees sont dans les limites
+										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+											
 											if ($tab["occupee_carte"]){
 												echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
 											}
@@ -1209,7 +1234,7 @@ if($dispo){
 											}
 											$tab = $res->fetch_assoc();
 										}
-										else //les coordonnées sont hors limites
+										else //les coordonnees sont hors limites
 											echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 									}
 									echo "</tr>";
@@ -1221,12 +1246,12 @@ if($dispo){
 								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 							}
 							
-							// réparer bâtiment
-							if($nom_action == 'Réparer bâtiment'){
+							// reparer batiment
+							if($nom_action == 'RÃ©parer bÃ¢timent'){
 								
 								echo "<center><h2>$nom_action</h2></center>";
 							
-								//recuperation des coordonnées du perso
+								//recuperation des coordonnees du perso
 								$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
 								$res = $mysqli->query($sql);
 								$t_coord = $res->fetch_assoc();
@@ -1235,12 +1260,12 @@ if($dispo){
 								$y_perso = $t_coord['y_perso'];
 								$clan_perso = $t_coord['clan'];
 								
-								// recuperation des données de la carte
+								// recuperation des donnees de la carte
 								$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
 								$res = $mysqli->query($sql);
 								$tab = $res->fetch_assoc(); 
 								
-								//<!--Génération de la carte-->
+								//<!--Generation de la carte-->
 								echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 								
 								echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -1252,17 +1277,24 @@ if($dispo){
 								for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
 									echo "<th>$y</th>";
 									for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+										
+										//les coordonnees sont dans les limites
+										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+											
 											if ($tab["occupee_carte"]){
+												
 												$image_bat = $tab["image_carte"];
 												$id_bat_carte = $tab["idPerso_carte"];
 												if($id_bat_carte > 50000 && isset($id_bat_carte)){
-													// recupération des infos du batiment
+													
+													// recuperation des infos du batiment
 													$sql_bat_carte = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance, pvMax_instance FROM batiment, instance_batiment WHERE id_instanceBat=$id_bat_carte AND batiment.id_batiment = instance_batiment.id_batiment";
 													$res_bat_carte = $mysqli->query($sql_bat_carte);
 													$t_bat_carte = $res_bat_carte->fetch_assoc();
+													
 													$nom_bat_carte = $t_bat_carte["nom_batiment"];
 													$clan_bat_carte = $t_bat_carte["camp_instance"];
+													
 													if($clan_bat_carte == $clan_perso){
 														$clan_pc = 'blue';
 													}
@@ -1286,7 +1318,7 @@ if($dispo){
 											}
 											$tab = $res->fetch_assoc();
 										}
-										else //les coordonnées sont hors limites
+										else //les coordonnees sont hors limites
 											echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 									}
 									echo "</tr>";
@@ -1298,8 +1330,8 @@ if($dispo){
 								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 							}
 							
-							// upgrade bâtiment
-							if($nom_action == 'Upgrade bâtiment'){
+							// upgrade batiment
+							if($nom_action == 'Upgrade bÃ¢timent'){
 								
 								echo "<center><h2>$nom_action</h2></center>";
 							
@@ -1312,12 +1344,12 @@ if($dispo){
 								$y_perso = $t_coord['y_perso'];
 								$clan_perso = $t_coord['clan'];
 								
-								// recuperation des données de la carte
+								// recuperation des donnees de la carte
 								$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
 								$res = $mysqli->query($sql);
 								$tab = $res->fetch_assoc(); 
 								
-								//<!--Génération de la carte-->
+								//<!--Generation de la carte-->
 								echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 								
 								echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -1329,7 +1361,10 @@ if($dispo){
 								for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
 									echo "<th>$y</th>";
 									for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+										
+										//les coordonnees sont dans les limites
+										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+											
 											if ($tab["occupee_carte"]){
 											
 												$image_bat = $tab["image_carte"];
@@ -1337,7 +1372,7 @@ if($dispo){
 												
 												if($id_bat_carte > 50000 && isset($id_bat_carte)){
 												
-													// recupération des infos du batiment
+													// recuperation des infos du batiment
 													$sql_bat_carte = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance, pvMax_instance FROM batiment, instance_batiment WHERE id_instanceBat=$id_bat_carte AND batiment.id_batiment = instance_batiment.id_batiment";
 													$res_bat_carte = $mysqli->query($sql_bat_carte);
 													$t_bat_carte = $res_bat_carte->fetch_assoc();
@@ -1366,7 +1401,7 @@ if($dispo){
 											}
 											$tab = $res->fetch_assoc();
 										}
-										else //les coordonnées sont hors limites
+										else //les coordonnees sont hors limites
 											echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 									}
 									echo "</tr>";
@@ -1378,8 +1413,8 @@ if($dispo){
 								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 							}
 							
-							// upgrade bâtiment expert
-							if($nom_action == 'Upgrade bâtiment Expert'){
+							// upgrade batiment expert
+							if($nom_action == 'Upgrade bÃ¢timent Expert'){
 								echo "<center><h2>$nom_action</h2></center>";
 							
 								//recuperation des infos du perso
@@ -1391,12 +1426,12 @@ if($dispo){
 								$y_perso = $t_coord['y_perso'];
 								$clan_perso = $t_coord['clan'];
 								
-								// recuperation des données de la carte
+								// recuperation des donnees de la carte
 								$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
 								$res = $mysqli->query($sql);
 								$tab = $res->fetch_assoc(); 
 								
-								//<!--Génération de la carte-->
+								//<!--Generation de la carte-->
 								echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 								
 								echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -1408,7 +1443,7 @@ if($dispo){
 								for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
 									echo "<th>$y</th>";
 									for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
+										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnees sont dans les limites
 											if ($tab["occupee_carte"]){
 											
 												$image_bat = $tab["image_carte"];
@@ -1416,7 +1451,7 @@ if($dispo){
 												
 												if($id_bat_carte > 50000 && isset($id_bat_carte)){
 												
-													// recupération des infos du batiment
+													// recuperation des infos du batiment
 													$sql_bat_carte = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance, pvMax_instance FROM batiment, instance_batiment WHERE id_instanceBat=$id_bat_carte AND batiment.id_batiment = instance_batiment.id_batiment";
 													$res_bat_carte = $mysqli->query($sql_bat_carte);
 													$t_bat_carte = $res_bat_carte->fetch_assoc();
@@ -1445,7 +1480,7 @@ if($dispo){
 											}
 											$tab = $res->fetch_assoc();
 										}
-										else //les coordonnées sont hors limites
+										else //les coordonnees sont hors limites
 											echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
 									}
 									echo "</tr>";
@@ -1457,7 +1492,7 @@ if($dispo){
 								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 							}
 						}
-						// action à faire sur la case courante du perso
+						// action a faire sur la case courante du perso
 						else {
 							
 							//couper du bois
@@ -1481,10 +1516,10 @@ if($dispo){
 								// lien retour
 								echo "<br /><center><a href='jouer.php'><b>[ retour ]</b></a></center><br />";
 							
-								echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets déposables</th></tr>";
-								echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>déposer à terre ?</th></tr>";
+								echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets dÃ©posables</th></tr>";
+								echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>dÃ©poser Ã  terre ?</th></tr>";
 								
-								// Récupération des objets / armes / armures que possède le perso
+								// Recuperation des objets / armes / armures que possede le perso
 								// Objets
 								$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' ORDER BY id_objet";
 								$res_o = $mysqli->query($sql_o);
@@ -1515,7 +1550,7 @@ if($dispo){
 									echo "</tr>";
 								}
 								
-								// Armes non portés
+								// Armes non portes
 								$sql_a1 = "SELECT DISTINCT id_arme, pv_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
 								$res_a1 = $mysqli->query($sql_a1);
 								
@@ -1532,7 +1567,7 @@ if($dispo){
 									$poids_a1 = $t1_a1["poids_arme"];
 									$image_arme = $t1_a1["image_arme"];
 									
-									// recuperation du nombre d'armes non équipés de ce type et ayant ce nombre de pv que possede le perso 
+									// recuperation du nombre d'armes non equipes de ce type et ayant ce nombre de pv que possede le perso 
 									$sql2_a1 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_arme' AND est_portee='0' AND pv_arme='$pv_arme'";
 									$res2_a1 = $mysqli->query($sql2_a1);
 									$nb_a1 = $res2_a1->num_rows;
@@ -1547,7 +1582,7 @@ if($dispo){
 									echo "</tr>";
 								}
 								
-								// Armures non portés
+								// Armures non portes
 								$sql_a2 = "SELECT DISTINCT id_armure, pv_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
 								$res_a2 = $mysqli->query($sql_a2);
 								while($t_a2 = $res_a2->fetch_assoc()){
@@ -1563,7 +1598,7 @@ if($dispo){
 									$poids_a2 = $t1_a2["poids_armure"];
 									$image_armure = $t1_a2["image_armure"];
 									
-									// recuperation du nombre d'armes non équipés de ce type que possede le perso 
+									// recuperation du nombre d'armes non equipes de ce type que possede le perso 
 									$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' AND pv_armure='$pv_armure'";
 									$res2_a2 = $mysqli->query($sql2_a2);
 									$nb_a2 = $res2_a2->num_rows;
@@ -1590,14 +1625,14 @@ if($dispo){
 								echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets ramassable</th></tr>";
 								echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>ramasser ?</th></tr>";
 								
-								// Récupération des objets à terre
+								// Recuperation des objets a terre
 								$sql = "SELECT type_objet, id_objet, nb_objet, pv_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' AND x_carte=x_perso AND y_carte=y_perso";
 								$res = $mysqli->query($sql);
 								$nb = $res->num_rows;
 								
 								if($nb){
 									
-									// Il y a des objets à ramasser
+									// Il y a des objets a ramasser
 									while($t = $res->fetch_assoc()){
 										
 										$type_objet = $t["type_objet"];
@@ -1605,7 +1640,7 @@ if($dispo){
 										$nb_objet = $t["nb_objet"];
 										$pv_objet = $t["pv_objet"];
 										
-										// Récupération des infos sur les objets à terre
+										// RÃ©cupÃ©ration des infos sur les objets Ã  terre
 										// Objets
 										if($type_objet == '2'){
 											
@@ -1713,7 +1748,7 @@ if($dispo){
 						}
 					}
 					else {
-						echo "<center><font color='red'>Impossible d'effectuer cette action depuis un bâtiment, veuillez sortir pour effectuer cette action</font>";
+						echo "<center><font color='red'>Impossible d'effectuer cette action depuis un bÃ¢timent, veuillez sortir pour effectuer cette action</font>";
 						echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
 					}
 				}				
@@ -1743,8 +1778,8 @@ if($dispo){
 }
 else {
 	// logout
-	$_SESSION = array(); // On écrase le tableau de session
-	session_destroy(); // On détruit la session
+	$_SESSION = array(); // On Ã©crase le tableau de session
+	session_destroy(); // On dÃ©truit la session
 	
 	header("Location: index2.php");
 }
