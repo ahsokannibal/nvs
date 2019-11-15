@@ -581,8 +581,8 @@ if($dispo || !$admin){
 						if(isset($_POST['valeur_attaque']) && $_POST['valeur_attaque'] != ""
 							&& isset($_POST['valeur_defense']) && $_POST['valeur_defense'] != ""){
 						   
-							$verif_attaque = ereg("^[0-9]+$",$_POST['valeur_attaque']);
-							$verif_defense = ereg("^[0-9]+$",$_POST['valeur_defense']);
+							$verif_attaque = preg_match("#^[0-9]+$#i",$_POST['valeur_attaque']);
+							$verif_defense = preg_match("#^[0-9]+$#i",$_POST['valeur_defense']);
 							
 							if($verif_attaque && $verif_defense){
 								$deAttaque = $_POST['valeur_attaque'];
@@ -948,9 +948,6 @@ if($dispo || !$admin){
 				$x_perso = $t_perso2["x_perso"];
 				$y_perso = $t_perso2["y_perso"];
 				$image_perso = $t_perso2["image_perso"];
-				$t_type_perso = explode ('t', $image_perso);
-				$type_perso = $t_type_perso[0];
-				$image_face = $type_perso.".png";
 				$perc = $t_perso2["perception_perso"] + $t_perso2["bonusPerception_perso"];
 				$pa_perso = $t_perso2["pa_perso"];
 				$paMax_perso = $t_perso2["paMax_perso"];
@@ -971,14 +968,12 @@ if($dispo || !$admin){
 				if($clan_perso == 1){
 					$clan = 'rond_b.png';
 					$couleur_clan_perso = 'blue';
+					$image_profil = "nord.gif";
 				}
 				if($clan_perso == 2){
 					$clan = 'rond_r.png';
 					$couleur_clan_perso = 'red';
-				}
-				if($clan_perso == 3){
-					$clan = 'rond_v.png';
-					$couleur_clan_perso = 'purple';
+					$image_profil = "sud.gif";
 				}
 				
 				// verifier que $_SESSION['deAttaque'] + $_SESSION['deDefense'] + ameliorations = deDefense_perso + deAttaque_perso
@@ -1022,7 +1017,7 @@ if($dispo || !$admin){
 				<center>
 					<table border=0 align="center" width=100%>
 						<tr>
-							<td align="center" width=14%><a href="profil.php" target='_blank'><img width=40 height=50 border=0 src="../images/<?php echo "$image_face";?>"></a></td>
+							<td align="center" width=14%><a href="profil.php" target='_blank'><img width=40 height=50 border=0 src="../images/<?php echo "$image_profil";?>"></a></td>
 							<td align="center" width=14%><a href="evenement.php" target='_blank'><img width=83 height=66 border=0 src="../images/evenement2.gif"></a></td>
 							<td align="center" width=14%><a href="sac.php" target='_blank'><img width=36 height=50 border=0 src="../images/sac.png"></a></td>
 							<td align="center" width=14%><a href="carte2.php" target='_blank'><img width=83 height=83 border=0 src="../images/world.png"></a></td>
@@ -1154,9 +1149,6 @@ if($dispo || !$admin){
 														$res_perso_im = $mysqli->query($sql_perso_im);
 														$t_perso_im = $res_perso_im->fetch_assoc();
 														$im_perso = $t_perso_im["image_perso"];
-														$t_type_perso = explode ('t', $im_perso);
-														$type_perso = $t_type_perso[0];
-														$image_face = $type_perso.".png";
 														$nom_ennemi = $t_perso_im['nom_perso'];
 														$id_ennemi = $t_perso_im['id_perso'];
 														$clan_e = $t_perso_im['clan'];
@@ -1164,14 +1156,12 @@ if($dispo || !$admin){
 														if($clan_e == 1){
 															$clan_ennemi = 'rond_b.png';
 															$couleur_clan_e = 'blue';
+															$image_profil = "nord.gif";
 														}
 														if($clan_e == 2){
 															$clan_ennemi = 'rond_r.png';
 															$couleur_clan_e = 'red';
-														}
-														if($clan_e == 3){
-															$clan_ennemi = 'rond_v.png';
-															$couleur_clan_e = 'purple';
+															$image_profil = "sud.gif";
 														}
 														
 														// recuperation de l'id de la section 
@@ -1193,10 +1183,10 @@ if($dispo || !$admin){
 														}
 														
 														if(isset($groupe) && $groupe != ''){
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"imagedessous\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<tr><td rowspan=2><img src=../images/$image_face></td><td>id:</td><td> $id_ennemi</td></tr><tr><td>nom:</td><td> $nom_ennemi</td></tr><tr><td>groupe:</td><td colspan=2> $groupe</td></tr>')\" onMouseOut=\"HideBulle()\" /><img border=0 src=\"../images_perso/$clan_ennemi\" /></a></td>";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"imagedessous\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<tr><td rowspan=2><img src=../images/$image_profil></td><td>id:</td><td> $id_ennemi</td></tr><tr><td>nom:</td><td> $nom_ennemi</td></tr><tr><td>groupe:</td><td colspan=2> $groupe</td></tr>')\" onMouseOut=\"HideBulle()\" /><img border=0 src=\"../images_perso/$clan_ennemi\" /></a></td>";
 														}
 														else {
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"imagedessous\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<tr><td rowspan=2><img src=../images/$image_face></td><td>id:</td><td> $id_ennemi</td></tr><tr><td>nom:</td><td> $nom_ennemi</td></tr><tr><td align=center><a href=evenement.php?infoid=$id_ennemi>Plus d\'info</a></td></tr>')\" onMouseOut=\"HideBulle()\" /><img border=0 src=\"../images_perso/$clan_ennemi\" /></a></td>";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"imagedessous\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<tr><td rowspan=2><img src=../images/$image_profil></td><td>id:</td><td> $id_ennemi</td></tr><tr><td>nom:</td><td> $nom_ennemi</td></tr><tr><td align=center><a href=evenement.php?infoid=$id_ennemi>Plus d\'info</a></td></tr>')\" onMouseOut=\"HideBulle()\" /><img border=0 src=\"../images_perso/$clan_ennemi\" /></a></td>";
 														}
 													}
 												}

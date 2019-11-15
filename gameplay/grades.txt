@@ -1,0 +1,28 @@
+** Grades (image)
+
+* Infanterie
+- Grouillot 2em classe (1)				- 0 à 100 xp ?
+- Grouillot 1ere classe (1.1)			- 100 à 499 xp ?
+- Grouillot d'elite (1.2)				- >= 500 xp ?
+
+* Perso principal
+- Caporal (2)
+- Caporal Chef (3)
+- Sergent (4)
+- 1er Sergent Chef (5)
+- Sergent chef (6)
+- Sergent Major (7)
+- Adjudant (8)
+- Adjudant chef (9)						- 923 PC
+- Adjudant major (10)
+- Second Lieutenant (11)				- 1530 PC
+- Premier Leutenant (12)
+- Capitaine (14)
+- Major (15)
+- Lieutenant colonel (16)
+- Colonel (17)
+- Brigadier general (18)
+- Major General (19)
+- Lieutenant General (20)
+- General (21)
+- General des armées (22)

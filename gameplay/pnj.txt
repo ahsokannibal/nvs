@@ -1,0 +1,56 @@
+** PNJ
+
+* Bison
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Aigle
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Caiman
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Coyote
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Crotale
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Scorpion
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Sangsue
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Loup
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+
+* Lapin
+- PV : 
+- PM : 
+- PA : 
+- Dégats : 
+

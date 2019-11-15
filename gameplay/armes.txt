@@ -1,0 +1,72 @@
+** Armes **
+
+* Cavalerie 
+-- Sabre
+- cout PA :
+- dégats : 
+- portée : 
+- Précision : 
+
+-- Sabre Lourd
+- cout PA : 50
+- dégats : 25D6
+- portée : 1
+- Précision : 80% 
+
+-- Cailloux
+- cout PA : 30
+- dégats : 5D6
+- portée : 2
+- Précision : 25% 
+
+-- Pistolet
+- cout PA : 30
+- dégats : 15D6
+- portée : 2
+- Précision : 40% 
+
+-- Pistolet Canon Long
+- cout PA : 30
+- dégats : 16D6
+- portée : 3
+- Précision : 40% (3) - 45% (2)
+
+
+* Infanterie
+-- Baïonette
+- coût PA : 30
+- dégats : 15D6
+- portée : 1
+- Précision : 60%
+
+-- Fusil 
+- coût PA : 40
+- dégats : 20D6
+- portée : 3
+- Précision : 70%
+
+-- Fusil Précision 
+- coût PA : 50
+- dégats : 20D6
+- portée : 4
+- Précision : 90%
+
+* Indien
+-- Tomahawk
+- coût PA : 40
+- dégats : 20D6
+- portée : 1
+- Précision : 80%
+
+-- Lance
+- coût PA : 50
+- dégats : 12D10
+- portée : 2
+- Précision : 60%
+
+* Toutou
+-- Canines
+- coût PA : 100
+- dégats : 15G4
+- portée : 1
+- Précision : 90%
