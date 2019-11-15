@@ -1346,7 +1346,9 @@ if($dispo || !$admin){
 															AND passif_action = '0'
 															ORDER BY nom_action";
 													$res = $mysqli->query($sql);
+													
 													while ($t_ac = $res->fetch_assoc()) {
+														
 														$id_ac = $t_ac["id_action"];
 														$portee_ac = $t_ac["portee_action"];
 														$cout_PA = $t_ac["coutPa_action"];

@@ -72,10 +72,11 @@ if($dispo){
 			$id_action = $t_cib_ref2[1];
 		}
 		
+		// Soins pv
 		if($id_action == '11' || $id_action == '12' || $id_action == '13' || $id_action == '14' || $id_action == '15' || 
 		   $id_action == '16' || $id_action == '22' || $id_action == '23' || $id_action == '24' || $id_action == '25' ||
 		   $id_action == '26' || $id_action == '27'){
-		   // Soins pv
+		   
 		   // Recuperation des objets que possede le perso pouvant ameliorer les soins
 			$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 					(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
@@ -114,8 +115,10 @@ if($dispo){
 				}
 			}
 		}
+		
+		// Soins malus
 		if($id_action == '140' || $id_action == '141' || $id_action == '142' ){
-			// Soins malus
+			
 			// Recuperation des objets que possede le perso pouvant ameliorer les soins
 			$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 					(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
@@ -154,8 +157,9 @@ if($dispo){
 				}
 			}
 		}
+		
+		// Soins veterinaire
 		if($id_action == '17' || $id_action == '18' || $id_action == '19' || $id_action == '20' || $id_action == '21'){
-			// Soins veterinaire
 			echo "Soins vétérinaire";
 		}
 	}
@@ -163,6 +167,7 @@ if($dispo){
 		// traitement action cible perso et soi-meme
 		// passage par le champ cache pour IE
 		if(isset($_POST['hid_action_cible_ref']) || isset($_POST['select_objet_soin'])){
+			
 			if(isset($_POST['select_objet_soin'])){
 				$t_cib_ref = $_POST['select_objet_soin'];
 				$t_cib_ref2 = explode(',',$t_cib_ref);
@@ -177,10 +182,11 @@ if($dispo){
 				$id_action = $t_cib_ref2[1];
 			}
 			
+			// Soins pv
 			if($id_action == '11' || $id_action == '12' || $id_action == '13' || $id_action == '14' || $id_action == '15' || 
 			   $id_action == '16' || $id_action == '22' || $id_action == '23' || $id_action == '24' || $id_action == '25' ||
 			   $id_action == '26' || $id_action == '27'){
-				// Soins pv
+				
 				// Reparation des objets que possede le perso pouvant ameliorer les soins
 				$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 						(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
@@ -219,8 +225,10 @@ if($dispo){
 					}
 				}
 			}
+			
+			// Soins malus
 			if($id_action == '140' || $id_action == '141' || $id_action == '142' ){
-				// Soins malus
+				
 				// Recuperation des objets que possede le perso pouvant ameliorer les soins
 				$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
 						(select id_objet FROM objet WHERE type_objet ='SSP') AND id_perso='$id_perso'";
@@ -259,8 +267,9 @@ if($dispo){
 					}
 				}
 			}
+			
+			// Soins veterinaire
 			if($id_action == '17' || $id_action == '18' || $id_action == '19' || $id_action == '20' || $id_action == '21'){
-				// Soins veterinaire
 				echo "Soins vétérinaire";
 			}
 		}
@@ -638,7 +647,8 @@ if($dispo){
 					
 					// traitement de l'action courir
 					if($nom_action == 'Courir'){
-						if(!in_bat($id_perso)){
+						
+						if(!in_bat($mysqli, $id_perso)){
 							
 							//recuperation des coordonnees du perso
 							$sql = "SELECT x_perso, y_perso, perception_perso, clan FROM perso WHERE id_perso='$id_perso'";
@@ -745,7 +755,8 @@ if($dispo){
 					
 					// traitement de l'action sauter
 					if($nom_action == 'Sauter'){
-						if(!in_bat($id_perso)){
+						
+						if(!in_bat($mysqli, $id_perso)){
 							
 							//recuperation des coordonnees du perso
 							$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
@@ -1125,7 +1136,7 @@ if($dispo){
 				// action ayant pour cible une case
 				if($case_action){
 					
-					if(!in_bat($id_perso)){
+					if(!in_bat($mysqli, $id_perso)){
 						
 						// action pouvant affecter les cases aux alentours du perso
 						if($portee_action){

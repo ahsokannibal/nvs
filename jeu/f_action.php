@@ -114,7 +114,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 		if($pa_perso >= $coutPa){
 		
 			// recuperation nombre bois du perso
-			$nb_bois = nb_bois_perso($id_perso);
+			$nb_bois = nb_bois_perso($mysqli, $id_perso);
 			
 			if($or_perso >= $coutOr && $nb_bois >= $coutBois){
 				// -- TODO --
