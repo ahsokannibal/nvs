@@ -25,7 +25,7 @@ if($dispo){
 	
 	// Traitement action construction batiment
 	if(isset($_POST['image_bat'])){
-		$ok = construire_bat($_POST['image_bat'],$id_perso,$carte);
+		$ok = construire_bat($mysqli, $_POST['image_bat'], $id_perso, $carte);
 		
 		if($ok){
 			// header (retour à la page de jeu)
@@ -36,7 +36,7 @@ if($dispo){
 		// traitement action construction batiment
 		// passage par le champ caché pour IE
 		if(isset($_POST['hid_image_bat'])){
-			$ok = construire_bat($_POST['hid_image_bat'],$id_perso,$carte);
+			$ok = construire_bat($mysqli, $_POST['hid_image_bat'], $id_perso, $carte);
 			
 			if($ok){
 				// header (retour à la page de jeu)
@@ -57,6 +57,7 @@ if($dispo){
 	
 	// Traitement action cible perso et soi-même
 	if(isset($_POST['action_cible_ref']) || isset($_POST['select_objet_soin'])){
+		
 		if(isset($_POST['select_objet_soin'])){
 			$t_cib_ref = $_POST['select_objet_soin'];
 			$t_cib_ref2 = explode(',',$t_cib_ref);
@@ -87,7 +88,7 @@ if($dispo){
 				else
 					$id_objet_soin = $id_objet_s;
 					
-				action_soin($id_perso, $id_cible, $id_action,$id_objet_soin);
+				action_soin($mysqli, $id_perso, $id_cible, $id_action,$id_objet_soin);
 			}		
 			else {
 				if($num_s >= 1){
@@ -127,7 +128,7 @@ if($dispo){
 				else
 					$id_objet_soin = $id_objet_s;
 					
-				action_soin_malus($id_perso, $id_cible, $id_action, $id_objet_soin);
+				action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin);
 			}		
 			else {
 				if($num_s >= 1){
@@ -192,7 +193,7 @@ if($dispo){
 					else
 						$id_objet_soin = $id_objet_s;
 						
-					action_soin($id_perso, $id_cible, $id_action,$id_objet_soin);
+					action_soin($mysqli, $id_perso, $id_cible, $id_action,$id_objet_soin);
 				}		
 				else {
 					if($num_s >= 1){
@@ -232,7 +233,7 @@ if($dispo){
 					else
 						$id_objet_soin = $id_objet_s;
 						
-					action_soin_malus($id_perso, $id_cible, $id_action, $id_objet_soin);
+					action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin);
 				}		
 				else {
 					if($num_s >= 1){
@@ -267,6 +268,7 @@ if($dispo){
 	
 	// Traitement action cible bat
 	if(isset($_POST['action_cible_bat'])){
+		
 		$t_cib_bat = $_POST['action_cible_bat'];
 		$t_cib_bat2 = explode(',',$t_cib_bat);
 		$id_cible = $t_cib_bat2[0];
@@ -274,21 +276,22 @@ if($dispo){
 		
 		if($id_action == '76' || $id_action == '77' || $id_action == '78' || $id_action == '79'){
 			// Reparer bat
-			action_reparer_bat($id_perso, $id_cible, $id_action);
+			action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action);
 		}
 		if($id_action == '80' || $id_action == '81' || $id_action == '82'){
 			// Upgrade bat
-			action_upgrade_bat($id_perso, $id_cible, $id_action);
+			action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action);
 		}
 		if($id_action == '83' || $id_action == '84' || $id_action == '85'){
 			// Upgrade bat Expert
-			action_upgrade_expert_bat($id_perso, $id_cible, $id_action);
+			action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action);
 		}
 	}
 	else {
 		// traitement action cible bat
 		// passage par le champ caché pour IE
 		if(isset($_POST['hid_action_cible_bat'])){
+			
 			$t_cib_bat = $_POST['hid_action_cible_bat'];
 			$t_cib_bat2 = explode(',',$t_cib_bat);
 			$id_cible = $t_cib_bat2[0];
@@ -296,15 +299,15 @@ if($dispo){
 			
 			if($id_action == '76' || $id_action == '77' || $id_action == '78' || $id_action == '79'){
 				// Reparer bat
-				action_reparer_bat($id_perso, $id_cible, $id_action);
+				action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action);
 			}
 			if($id_action == '80' || $id_action == '81' || $id_action == '82'){
 				// Upgrade bat
-				action_upgrade_bat($id_perso, $id_cible, $id_action);
+				action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action);
 			}
 			if($id_action == '83' || $id_action == '84' || $id_action == '85'){
 				// Upgrade bat Expert
-				action_upgrade_expert_bat($id_perso, $id_cible, $id_action);
+				action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action);
 			}
 		}
 	}
@@ -317,7 +320,7 @@ if($dispo){
 		$y_cible = $t_coord2[1];
 		$coutPa = $t_coord2[2];
 		
-		action_sauter($id_perso, $x_cible, $y_cible, $coutPa, $carte);
+		action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte);
 	}
 	else {
 		if(isset($_POST['hid_saut'])){
@@ -327,7 +330,7 @@ if($dispo){
 			$y_cible = $t_coord2[1];
 			$coutPa = $t_coord2[2];
 			
-			action_sauter($id_perso, $x_cible, $y_cible, $coutPa, $carte);
+			action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte);
 		}
 	}
 	
@@ -339,7 +342,7 @@ if($dispo){
 		$nb_points_action = $t_coord2[1];
 		$coutPa_action = $t_coord2[2];
 		
-		action_courir($id_perso, $direction, $nb_points_action, $coutPa_action);
+		action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutPa_action);
 	}
 	else {
 		if(isset($_POST['hid_courir'])){
@@ -349,7 +352,7 @@ if($dispo){
 			$nb_points_action = $t_coord2[1];
 			$coutPa_action = $t_coord2[2];
 			
-			action_courir($id_perso, $direction, $nb_points_action, $coutPa_action);
+			action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutPa_action);
 		}
 	}
 	
@@ -358,78 +361,28 @@ if($dispo){
 	if(isset($_POST['event_chant'])){
 		$phrase = "a chanté ".addslashes($_POST['event_chant']);
 		
-		action_chanter_perso($id_perso,$phrase);
+		action_chanter_perso($mysqli, $id_perso, $phrase);
 	}
 	
 	// Sculpture
 	if(isset($_POST['event_scult'])){
 		$phrase = "a sculpter ".$_POST['event_scult'];
 		
-		action_sculter_perso($id_perso,$phrase);
+		action_sculter_perso($mysqli, $id_perso, $phrase);
 	}
 	
 	// Peinture
 	if(isset($_POST['event_peind'])){
 		$phrase = "a peind ".$_POST['event_peind'];
 		
-		action_peindre_perso($id_perso,$phrase);
+		action_peindre_perso($mysqli, $id_perso, $phrase);
 	}
 	
 	// Danse
 	if(isset($_POST['event_danse'])){
 		$phrase = "a dansé ".$_POST['event_danse'];
 		
-		action_danser_perso($id_perso,$phrase);
-	}
-	
-	// Nettoyer arme
-	if(isset($_POST['Nettoyer_arme']) && isset($_POST['id_Nettoyer_arme'])){
-		$t_recup = $_POST['id_Nettoyer_arme'];
-		$t2 = explode(',',$t_recup);
-		$id_arme = $t2[0];
-		$pv_arme = $t2[1];
-		$nb_points_action = $t2[2];
-		$coutPa_action = $t2[3];
-		
-		action_nettoyer_arme($id_perso,$id_arme,$pv_arme,$nb_points_action,$coutPa_action);
-	}
-	
-	// Reparer arme
-	if(isset($_POST['Réparer_arme']) && isset($_POST['id_Réparer_arme'])){
-		$t_recup = $_POST['id_Réparer_arme'];
-		$t2 = explode(',',$t_recup);
-		$id_arme = $t2[0];
-		$pv_arme = $t2[1];
-		$nb_points_action = $t2[2];
-		$coutPa_action = $t2[3];
-		$id_action = $t2[4];
-		
-		action_reparer_arme($id_perso,$id_arme,$pv_arme,$nb_points_action,$coutPa_action,$id_action);
-	}
-	
-	// Nettoyer armure
-	if(isset($_POST['Nettoyer_armure']) && isset($_POST['id_Nettoyer_armure'])){
-		$t_recup = $_POST['id_Nettoyer_armure'];
-		$t2 = explode(',',$t_recup);
-		$id_armure = $t2[0];
-		$pv_armure = $t2[1];
-		$nb_points_action = $t2[2];
-		$coutPa_action = $t2[3];
-		
-		action_nettoyer_armure($id_perso,$id_armure,$pv_armure,$nb_points_action,$coutPa_action);
-	}
-	
-	// Reparer armure
-	if(isset($_POST['Réparer_armure']) && isset($_POST['id_Réparer_armure'])){
-		$t_recup = $_POST['id_Réparer_armure'];
-		$t2 = explode(',',$t_recup);
-		$id_armure = $t2[0];
-		$pv_armure = $t2[1];
-		$nb_points_action = $t2[2];
-		$coutPa_action = $t2[3];
-		$id_action = $t2[4];
-		
-		action_reparer_armure($id_perso,$id_armure,$pv_armure,$nb_points_action,$coutPa_action,$id_action);
+		action_danser_perso($mysqli, $id_perso, $phrase);
 	}
 	
 	// Déposer objet
@@ -440,7 +393,7 @@ if($dispo){
 		$type_objet = $t2[1];
 		$pv_objet = $t2[2];
 		
-		action_deposerObjet($id_perso, $type_objet, $id_objet, $pv_objet);
+		action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet);
 	}
 	
 	// Ramasser objet
@@ -451,15 +404,17 @@ if($dispo){
 		$type_objet = $t2[1];
 		$pv_objet = $t2[2];
 		
-		action_ramasserObjet($id_perso, $type_objet, $id_objet, $pv_objet);
+		action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet);
 	}
 	
 	// Don objet après choix perso
 	if(isset($_POST['select_perso_don']) && isset($_POST['valid_perso_don'])){
+		
 		$id_cible = $_POST['select_perso_don'];
 		
 		// verif perso chiffre et perso existe
 		$verif_idPerso = preg_match("#^[0-9]*[0-9]$#i","$id_cible");
+		
 		if($verif_idPerso && $id_cible != "" && $id_cible != null){
 		
 			echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets à donner</th></tr>";
@@ -471,7 +426,9 @@ if($dispo){
 			$sql_o0 = "SELECT or_perso FROM perso WHERE id_perso='$id_perso'";
 			$res_o0 = $mysqli->query($sql_o0);
 			$t_o0 = $res_o0->fetch_assoc();
+			
 			$or_perso = $t_o0['or_perso'];
+			
 			echo "<tr>";
 			echo "<td align='center'><dl><dd><a href='#'><img src='../images/or.png' alt='or' height='30' width='30'/><span><b>or</b></span></a></dd></dl></td>";
 			echo "<td align='center'>0</td>";
@@ -492,7 +449,9 @@ if($dispo){
 			// Objets
 			$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' ORDER BY id_objet";
 			$res_o = $mysqli->query($sql_o);
+			
 			while($t_o = $res_o->fetch_assoc()){
+				
 				$id_objet = $t_o["id_objet"];
 					
 				// recuperation des carac de l'objet
@@ -516,10 +475,13 @@ if($dispo){
 				echo "</form>";
 				echo "</tr>";
 			}
+			
 			// Armes non portés
 			$sql_a1 = "SELECT DISTINCT id_arme, pv_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
 			$res_a1 = $mysqli->query($sql_a1);
+			
 			while($t_a1 = $res_a1->fetch_assoc()){
+				
 				$id_arme = $t_a1["id_arme"];
 				$pv_arme = $t_a1["pv_arme"];
 									
@@ -549,7 +511,9 @@ if($dispo){
 			// Armures non portés
 			$sql_a2 = "SELECT DISTINCT id_armure, pv_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
 			$res_a2 = $mysqli->query($sql_a2);
+			
 			while($t_a2 = $res_a2->fetch_assoc()){
+				
 				$id_armure = $t_a2["id_armure"];
 				$pv_armure = $t_a2["pv_armure"];
 									
@@ -598,13 +562,15 @@ if($dispo){
 		$pv_objet = $t2[2];
 		$id_cible = $t2[3];
 		
-		action_don_objet($id_perso, $id_cible, $type_objet, $id_objet, $pv_objet, $quantite);
+		action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $pv_objet, $quantite);
 	}
 	
 	/////////////////////////
 	// Traitement des actions
 	if(isset($_POST['action'])){
+		
 		if(isset($_POST['liste_action']) && $_POST['liste_action'] != 'invalide' && $_POST['liste_action'] != 'PA'){
+			
 			// recuperation de l'id de l'action
 			$id_action = $_POST['liste_action'];
 			
@@ -654,24 +620,28 @@ if($dispo){
 				
 				// action ayant pour cible juste son propre perso
 				if($reflexive_action && !$cible_action){
+					
 					// traitement de l'action entrainement
 					if($nom_action == 'Entrainement'){
-						action_entrainement($id_perso);
-					}			
+						action_entrainement($mysqli, $id_perso);
+					}
+					
 					// traitement de l'action dormir
 					if($nom_action == 'dormir'){
-						action_dormir($id_perso, $nb_points_action);
+						action_dormir($mysqli, $id_perso, $nb_points_action);
 					}
+					
 					// traitement de l'action marche forcée
 					if($nom_action == 'Marche forcée'){
-						action_marcheForcee($id_perso, $nb_points_action,$coutPa_action);
+						action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_action);
 					}
+					
 					// traitement de l'action courir
 					if($nom_action == 'Courir'){
 						if(!in_bat($id_perso)){
 							//recuperation des coordonnées du perso
 							$sql = "SELECT x_perso, y_perso, perception_perso, clan FROM perso WHERE id_perso='$id_perso'";
-							$res = $mysqli->query($sql, __LINE__, __FILE__);
+							$res = $mysqli->query($sql);
 							$t_coord = $res->fetch_assoc();
 										
 							$x_perso = $t_coord['x_perso'];
@@ -767,6 +737,7 @@ if($dispo){
 							echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
 						}
 					}
+					
 					// traitement de l'action sauter
 					if($nom_action == 'Sauter'){
 						if(!in_bat($id_perso)){
@@ -849,10 +820,11 @@ if($dispo){
 							echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
 						}
 					}
+					
 					// traitement de l'action chanter
 					if($nom_action == 'Chanter'){
 						if($nb_points_action == 1){
-							action_chanter($id_perso,$id_action);
+							action_chanter($mysqli, $id_perso,$id_action);
 						}
 						else {
 							echo "<center>Personnalisation de l'événement</center>";
@@ -861,10 +833,11 @@ if($dispo){
 							echo "</form>";
 						}
 					}
+					
 					// traitement de l'action Danser
 					if($nom_action == 'Danser'){
 						if($nb_points_action == 1){
-							action_danser($id_perso,$id_action);
+							action_danser($mysqli, $id_perso, $id_action);
 						}
 						else {
 							echo "<center>Personnalisation de l'événement</center>";
@@ -873,10 +846,11 @@ if($dispo){
 							echo "</form>";
 						}
 					}
+					
 					// traitement de l'action Peindre
 					if($nom_action == 'Peindre'){
 						if($nb_points_action == 1){
-							action_peindre($id_perso,$id_action);
+							action_peindre($mysqli, $id_perso, $id_action);
 						}
 						else {
 							echo "<center>Personnalisation de l'événement</center>";
@@ -885,10 +859,11 @@ if($dispo){
 							echo "</form>";
 						}
 					}
+					
 					// traitement de l'action Sculpter
 					if($nom_action == 'Sculpter'){
 						if($nb_points_action == 1){
-							action_sculter($id_perso,$id_action);
+							action_sculter($mysqli, $id_perso, $id_action);
 						}
 						else {
 							echo "<center>Personnalisation de l'événement</center>";
@@ -896,34 +871,6 @@ if($dispo){
 							echo "a chanté <input type=\"text\" name=\"event_scult\"><input type=\"submit\" value=\"ok\">";
 							echo "</form>";
 						}
-					}
-					// traitement de l'action mélanger ingrédients
-					if($nom_action == 'Mélanger ingrédients'){
-						action_melanger_ingredients($id_perso);
-					}
-					// traitement de l'action netoyer arme
-					if($nom_action == "Nettoyer arme"){
-						echo "<br /><center><a href='jouer.php'>[ retour ]</a></center><br />";
-						
-						selection_arme_abimee($nom_action,$nb_points_action,$coutPa_action,$id_perso,$id_action);
-					}
-					// traitement de l'action réparer arme
-					if($nom_action == "Réparer arme"){
-						echo "<br /><center><a href='jouer.php'>[ retour ]</a></center><br />";
-						
-						selection_arme_abimee($nom_action,$nb_points_action,$coutPa_action,$id_perso,$id_action);
-					}
-					// traitement de l'action netoyer armure
-					if($nom_action == "Nettoyer armure"){
-						echo "<br /><center><a href='jouer.php'>[ retour ]</a></center><br />";
-						
-						selection_armure_abimee($nom_action,$nb_points_action,$coutPa_action,$id_perso,$id_action);
-					}
-					// traitement de l'action réparer armure
-					if($nom_action == "Réparer armure"){
-						echo "<br /><center><a href='jouer.php'>[ retour ]</a></center><br />";
-						
-						selection_armure_abimee($nom_action,$nb_points_action,$coutPa_action,$id_perso,$id_action);
 					}
 				}
 				
@@ -942,8 +889,10 @@ if($dispo){
 		
 				// action ayant pour cible un perso
 				if($cible_action){
+					
 					// action pouvant cibler son propre perso
-					if($reflexive_action){					
+					if($reflexive_action){
+						
 						//recuperation des coordonnées du perso
 						$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
 						$res = $mysqli->query($sql);
@@ -1043,7 +992,9 @@ if($dispo){
 							// Récupération des persos au CàC
 							$sql_c = "SELECT idPerso_carte FROM $carte WHERE x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte>=$y_perso-1 AND y_carte<=$y_perso+1 AND occupee_carte='1' AND idPerso_carte!='$id_perso' AND idPerso_carte < 10000";
 							$res_c = $mysqli->query($sql_c);
+							
 							while($t_c = $res_c->fetch_assoc()){
+								
 								$id_cible = $t_c['idPerso_carte'];
 								
 								// Récupération infos cible
@@ -1052,6 +1003,7 @@ if($dispo){
 								$t_cible = $res_cible->fetch_assoc();
 								$nom_cible = $t_cible['nom_perso'];
 								$camp_cible = $t_cible['clan'];
+								
 								// récupération de la couleur du camp
 								$couleur_clan_cible = couleur_clan($camp_cible);
 								
@@ -1096,8 +1048,10 @@ if($dispo){
 												$sql_perso_carte = "SELECT nom_perso, clan FROM perso WHERE id_perso=$id_perso_carte";
 												$res_perso_carte = $mysqli->query($sql_perso_carte);
 												$t_perso_carte = $res_perso_carte->fetch_assoc();
+												
 												$nom_perso_carte = $t_perso_carte["nom_perso"];
 												$clan_perso_carte = $t_perso_carte["clan"];
+												
 												if($clan_perso_carte == $clan_perso){
 													$clan_pc = 'blue';
 												}
@@ -1148,9 +1102,12 @@ if($dispo){
 				
 				// action ayant pour cible une case
 				if($case_action){
+					
 					if(!in_bat($id_perso)){
+						
 						// action pouvant affecter les cases aux alentours du perso
 						if($portee_action){
+							
 							if ($nom_action=='Construire - fort' || $nom_action=='Construire - fortin' || $nom_action == 'Construire - hopital'
 								|| $nom_action == 'Construire - entrepot d\'armes' || $nom_action == 'Construire - tour de garde' || $nom_action == 'Construire - tour de visu'
 								|| $nom_action == 'Construire - pont' || $nom_action == 'Construire - barricade' || $nom_action == 'Construire - route'){
@@ -1163,11 +1120,14 @@ if($dispo){
 										AND batiment.id_batiment=action_as_batiment.id_batiment";
 								$res = $mysqli->query($sql);
 								$num_bat = $res->num_rows;
+								
 								if($num_bat){
+									
 									$t_bat = $res->fetch_assoc();
 									$id_bat = $t_bat['id_batiment'];
 									$nom_batiment = $t_bat['nom_batiment'];
 									$camp_batiment = $t_bat['clan'];
+									
 									if($camp_batiment == '1'){
 										$camp_b = 'b';
 									}
@@ -1260,8 +1220,10 @@ if($dispo){
 								// lien annuler
 								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 							}
+							
 							// réparer bâtiment
 							if($nom_action == 'Réparer bâtiment'){
+								
 								echo "<center><h2>$nom_action</h2></center>";
 							
 								//recuperation des coordonnées du perso
@@ -1335,8 +1297,10 @@ if($dispo){
 								// lien annuler
 								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 							}
+							
 							// upgrade bâtiment
 							if($nom_action == 'Upgrade bâtiment'){
+								
 								echo "<center><h2>$nom_action</h2></center>";
 							
 								//recuperation des infos du perso
@@ -1413,6 +1377,7 @@ if($dispo){
 								// lien annuler
 								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 							}
+							
 							// upgrade bâtiment expert
 							if($nom_action == 'Upgrade bâtiment Expert'){
 								echo "<center><h2>$nom_action</h2></center>";
@@ -1494,24 +1459,25 @@ if($dispo){
 						}
 						// action à faire sur la case courante du perso
 						else {
+							
 							//couper du bois
 							if($nom_action=='Couper du bois'){
-								action_couper_bois($id_perso, $id_action, $nb_points_action);
+								action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action);
 							}
-							// miner montagne
-							if($nom_action=='Miner la montagne'){
-								action_miner_montagne($id_perso, $id_action, $nb_points_action);
-							}
+							
 							// saboter
 							if($nom_action == 'Saboter'){
-								action_saboter($id_perso, $id_action, $nb_points_action);
+								action_saboter($mysqli, $id_perso, $id_action, $nb_points_action);
 							}
+							
 							// planter arbre
 							if($nom_action == 'Planter arbre'){
-								action_planterArbre($id_perso, $id_action, $nb_points_action);
+								action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action);
 							}
+							
 							// deposer objet
 							if($nom_action == 'Deposer objet'){
+								
 								// lien retour
 								echo "<br /><center><a href='jouer.php'><b>[ retour ]</b></a></center><br />";
 							
@@ -1522,7 +1488,9 @@ if($dispo){
 								// Objets
 								$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' ORDER BY id_objet";
 								$res_o = $mysqli->query($sql_o);
+								
 								while($t_o = $res_o->fetch_assoc()){
+									
 									$id_objet = $t_o["id_objet"];
 									
 									// recuperation des carac de l'objet
@@ -1546,10 +1514,13 @@ if($dispo){
 									echo "</form>";
 									echo "</tr>";
 								}
+								
 								// Armes non portés
 								$sql_a1 = "SELECT DISTINCT id_arme, pv_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
 								$res_a1 = $mysqli->query($sql_a1);
+								
 								while($t_a1 = $res_a1->fetch_assoc()){
+									
 									$id_arme = $t_a1["id_arme"];
 									$pv_arme = $t_a1["pv_arme"];
 									
@@ -1580,6 +1551,7 @@ if($dispo){
 								$sql_a2 = "SELECT DISTINCT id_armure, pv_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
 								$res_a2 = $mysqli->query($sql_a2);
 								while($t_a2 = $res_a2->fetch_assoc()){
+									
 									$id_armure = $t_a2["id_armure"];
 									$pv_armure = $t_a2["pv_armure"];
 									
@@ -1608,8 +1580,10 @@ if($dispo){
 								
 								echo "</table><br /><br /><br /><br /><br /><br />";
 							}
+							
 							// Ramasser objet
 							if($nom_action == 'Ramasser objet'){
+								
 								// lien retour
 								echo "<br /><center><a href='jouer.php'><b>[ retour ]</b></a></center><br />";
 							
@@ -1622,8 +1596,10 @@ if($dispo){
 								$nb = $res->num_rows;
 								
 								if($nb){
+									
 									// Il y a des objets à ramasser
 									while($t = $res->fetch_assoc()){
+										
 										$type_objet = $t["type_objet"];
 										$id_objet = $t["id_objet"];
 										$nb_objet = $t["nb_objet"];
@@ -1632,9 +1608,11 @@ if($dispo){
 										// Récupération des infos sur les objets à terre
 										// Objets
 										if($type_objet == '2'){
+											
 											$sql_o = "SELECT nom_objet, poids_objet, description_objet FROM objet WHERE id_objet='$id_objet'";
 											$res_o = $mysqli->query($sql_o);
 											$t_o = $res_o->fetch_assoc();
+											
 											$nom_objet = $t_o["nom_objet"];
 											$poids_objet = $t_o["poids_objet"];
 											$description_objet = $t_o["description_objet"];
@@ -1650,10 +1628,12 @@ if($dispo){
 										}
 										// Armes
 										if($type_objet == '3'){
+											
 											$sql_a1 = "SELECT nom_arme, porteeMin_arme, porteeMax_arme, image_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, degatZone_arme, poids_arme, description_arme FROM arme
 													   WHERE id_arme='$id_objet'";
 											$res_a1 = $mysqli->query($sql_a1);
 											$t_a1 = $res_a1->fetch_assoc();
+											
 											$nom_objet = $t_a1["nom_arme"];
 											$poids_objet = $t_a1["poids_arme"];
 											$description_objet = $t_a1["description_arme"];
@@ -1696,8 +1676,10 @@ if($dispo){
 											echo "</form>";
 											echo "</tr>";
 										}
+										
 										//Armures
 										if($type_objet == '4'){
+											
 											$sql_a2 = "SELECT nom_armure, poids_armure, description_armure, image_armure, bonusDefense_armure FROM armure WHERE id_armure='$id_objet'";
 											$res_a2 = $mysqli->query($sql_a2);
 											$t_a2 = $res_a2->fetch_assoc();
