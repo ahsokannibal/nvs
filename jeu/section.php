@@ -6,7 +6,7 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
-// recupération config jeu
+// recupÃ©ration config jeu
 $sql = "SELECT disponible FROM config_jeu";
 $res = $mysqli->query($sql);
 $t_dispo = $res->fetch_assoc();
@@ -15,15 +15,18 @@ $dispo = $t_dispo["disponible"];
 if($dispo){
 
 	if (@$_SESSION["id_perso"]) {
-		//recuperation des varaibles de sessions
+		
+		//recuperation des variables de sessions
 		$pseudo = $_SESSION["nom_perso"];
 		$id = $_SESSION["id_perso"];
+		
 		$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		$testpv = $tpv['pv_perso'];
+		
 		if ($testpv <= 0) {
-			echo "<font color=red>Vous êtes mort...</font>";
+			echo "<font color=red>Vous Ãªtes mort...</font>";
 		}
 		else {
 			$erreur = "<div class=\"erreur\">";
@@ -37,7 +40,7 @@ if($dispo){
 	<link href="../style.css" rel="stylesheet" type="text/css">
 	</head>
 	<body>
-	<p align="center"><input type="button" value="Fermer la fenêtre de groupe" onclick="window.close()"></p>
+	<p align="center"><input type="button" value="Fermer la fenÃªtre de groupe" onclick="window.close()"></p>
 	<?php
 	if (isset($_GET["id_section"])){
 		$verif = preg_match("#^[0-9]+$#i",$_GET["id_section"]);
@@ -45,36 +48,37 @@ if($dispo){
 		if($verif){
 			$id_section = $_SESSION["id_section"] = $_GET["id_section"];
 			
-			// vérification que la section existe
+			// vÃ©rification que la section existe
 			$sql = "SELECT id_section, id_clan from sections where id_section='$id_section'";
 			$res = $mysqli->query($sql);
 			$exist = $res->num_rows;
 			
-			// récupération du camp du groupe
+			// rÃ©cupÃ©ration du camp du groupe
 			$sql = "SELECT id_clan from sections where id_section='$id_section'";
 			$res = $mysqli->query($sql);
 			$t_c = $res->fetch_assoc();
 			$clan_section = $t_c["id_clan"];
 			
-			// récupération du clan du perso
+			// rÃ©cupÃ©ration du clan du perso
 			$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_cp = $res->fetch_assoc();
 			$clan_perso = $t_cp["clan"];
 			
 			if($exist){
-				// vérification que le perso est bien du même camp que le groupe				
+				// vÃ©rification que le perso est bien du meme camp que le groupe				
 				if($clan_perso == $clan_section){
 					if (isset($_GET["rejoindre"])) { 
 						if($_GET["rejoindre"] == "ok") {// on souhaite rejoindre une section
 							$ok_n = 1;
 							
-							// vérification que le perso est bien du même camp que le groupe				
+							// verification que le perso est bien du meme camp que le groupe				
 							if($clan_perso == $clan_section){
 							
-								// verification que le perso n'est pas déjà dans le groupe
+								// verification que le perso n'est pas deja dans le groupe
 								$sql = "SELECT id_perso FROM perso_in_section WHERE id_section='$id_section'";
 								$res = $mysqli->query($sql);
+								
 								while ($n = $res->fetch_assoc()){
 									$id_n = $n["id_perso"];
 									if ($id_n == $id) {
@@ -83,7 +87,7 @@ if($dispo){
 									}
 								}
 								
-								// vérification que le perso n'est pas déjà dans un groupe ou en attente sur une autre
+								// vefication que le perso n'est pas deja dans un groupe ou en attente sur une autre
 								$sql = "SELECT id_perso FROM perso_in_section WHERE id_perso='$id'";
 								$res = $mysqli->query($sql);
 								$est_deja = $res->num_rows;
@@ -102,7 +106,7 @@ if($dispo){
 									echo "<a href='section.php'> [retour] </a>";
 								}
 								else {
-									echo "<font color = res>Vous êtes déjà inscrit dans un groupe</font>";
+									echo "<font color = res>Vous Ãªtes dÃ©jÃ  inscrit dans un groupe</font>";
 								}
 							}
 							else {
@@ -196,17 +200,17 @@ if($dispo){
 				}
 			}
 			else {
-				echo "<center>Le groupe demandé n'existe pas</center>";
+				echo "<center>Le groupe demandÃ© n'existe pas</center>";
 			}
 		}
 		else {
-			echo "<center>Le groupe demandé n'existe pas</center>";
+			echo "<center>Le groupe demandÃ© n'existe pas</center>";
 		}
 	}
 	else {
 		// si le perso souhaite voir la liste des sections
 		if(isset($_GET['voir_groupe']) && $_GET['voir_groupe']=='ok'){
-			echo "<br/><center><b><u>Liste des groupes déjà existants</u></b></center><br/>";
+			echo "<br/><center><b><u>Liste des groupes dÃ©jÃ  existants</u></b></center><br/>";
 			
 			// recuperation des sections existantes
 			$sql = "SELECT id_section, nom_section, image_section, resume_section, description_section FROM sections, perso WHERE id_perso = $id AND sections.id_clan = perso.clan";
@@ -228,7 +232,7 @@ if($dispo){
 			}
 		}
 		else {
-			// verification si le perso appartient déjà a une section
+			// verification si le perso appartient deja a une section
 			$sql = "SELECT id_section FROM perso_in_section WHERE id_perso = '$id' and attenteValidation_section='0'";
 			$res = $mysqli->query($sql);
 			$c = $res->fetch_row();
@@ -276,7 +280,7 @@ if($dispo){
 				echo "</td>";
 				echo "</tr></table><br>";
 				
-				echo "<center><a href='banque_section.php?id_section=$id_section'>Deposer des sous à la banque du groupe</a></center>";
+				echo "<center><a href='banque_section.php?id_section=$id_section'>Deposer des sous Ã  la banque du groupe</a></center>";
 				
 				// verification si le perso est le chef de la section
 				$sql = "SELECT poste_section FROM perso_in_section WHERE id_perso=$id";
@@ -284,12 +288,12 @@ if($dispo){
 				$boss = $res->fetch_assoc();
 				$poste_s = $boss["poste_section"];
 				
-				if($poste_s != 5) { // le perso à un poste
+				if($poste_s != 5) { // le perso a un poste
 					if($poste_s == 1) { // c'est le chef
 						echo "<center><a href='admin_section.php?id_section=$id_section'> Page d'administration du groupe</a></center>";
 					}
-					if($poste_s == 2){ // c'est le trèsorier
-						// verification si quelqu'un a demandé un emprunt
+					if($poste_s == 2){ // c'est le tresorier
+						// verification si quelqu'un a demande un emprunt
 						$sql = "SELECT banque_section.id_perso FROM banque_section, perso_in_section WHERE demande_emprunt='1' AND id_section=$id_section AND banque_section.id_perso=perso_in_section.id_perso";
 						$res = $mysqli->query($sql);
 						$nb = $res->num_rows;
@@ -306,7 +310,7 @@ if($dispo){
 						echo "<center><a href='diplo_section.php?id_section=$id_section'> Page diplomatie du groupe</a></center>";
 					}
 				}
-				echo "<br/><center><a href='section.php?id_section=$id_section&rejoindre=off'"?> OnClick="return(confirm('Êtes vous sûr de vouloir quitter le groupe ?'))" <?php echo"><b> >>Quitter le groupe (ATTENTION : Cette action vous fera quitter definitivement le groupe)</b></a></center>";
+				echo "<br/><center><a href='section.php?id_section=$id_section&rejoindre=off'"?> OnClick="return(confirm('Ãªtes vous sÃ»r de vouloir quitter le groupe ?'))" <?php echo"><b> >>Quitter le groupe (ATTENTION : Cette action vous fera quitter definitivement le groupe)</b></a></center>";
 				echo "<br/><br/><a href='section.php?voir_groupe=ok'>Voir les autres groupes</a>";
 			}
 			else { 
@@ -319,18 +323,18 @@ if($dispo){
 					$sql ="delete from perso_in_section where id_perso='$id'";
 					$mysqli->query($sql);
 			
-					echo "Vous venez d'annuler votre demande d'adhésion <br />";
+					echo "Vous venez d'annuler votre demande d'adhÃ©sion <br />";
 					echo "<a href='section.php'>[ retour ]</>";
 				}
 				else{
 					if ($c != 0) { // en attente de validation
-						echo "Vous êtes en attente de validation pour un groupe";
+						echo "Vous Ãªtes en attente de validation pour un groupe";
 						echo "<br/><a href='section.php?annuler=ok'>annuler sa candidature</a>";
 						echo "<br/><br/><a href='section.php?voir_groupe=ok'>Voir les autres groupes</a>";
 					}
 					else { // il n'appartient a aucune section
 				
-						echo "<center><u>Vous pouvez créer un nouveau groupe si vous le souhaitez :</u></center>";
+						echo "<center><u>Vous pouvez crÃ©er un nouveau groupe si vous le souhaitez :</u></center>";
 						echo "<form action=\"creer_section.php\" method=\"post\" name=\"section\">";
 						echo "<div align=\"center\"><br>";
 						echo "Nom du groupe : ";
@@ -339,11 +343,14 @@ if($dispo){
 						echo "</div>";
 						echo "</form>";
 					
-						echo "<br/><center><b><u>Liste des groupes déjà existants</u></b></center><br/>";
+						echo "<br/><center><b><u>Liste des groupes dÃ©jÃ  existants</u></b></center><br/>";
+						
 						// recuperation des sections existantes
 						$sql = "SELECT id_section, nom_section, image_section, resume_section, description_section FROM sections, perso WHERE id_perso = $id AND sections.id_clan = perso.clan";
 						$res = $mysqli->query($sql);
+						
 						while ($sec = $res->fetch_assoc()) {
+							
 							$id_section = $sec["id_section"];
 							$nom_section = $sec["nom_section"];
 							$image_section = $sec["image_section"];
@@ -371,14 +378,14 @@ if($dispo){
 		}
 	}
 	else{
-		echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
+		echo "<font color=red>Vous ne pouvez pas accÃ©der Ã  cette page, veuillez vous loguer.</font>";
 	}?>
 <?php
 }
 else {
 	// logout
-	$_SESSION = array(); // On écrase le tableau de session
-	session_destroy(); // On détruit la session
+	$_SESSION = array(); // On Ã©crase le tableau de session
+	session_destroy(); // On dÃ©truit la session
 	
 	header("Location: index2.php");
 }

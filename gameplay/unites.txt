@@ -4,16 +4,16 @@
 - PM : 100
 - Perception : 4
 - Protection : 25
-- Recupération : 30
+- Récupération : 30
 
 
-* Infanterie 
+* Infanterie / Infirmier / Artillerie
 - PV : 500
 - PA : 100
 - PM : 50
 - Perception : 3
 - Protection : 20
-- Recupération : 30
+- Récupération : 30
 
 
 * Toutou
@@ -22,4 +22,4 @@
 - PM : 200
 - Perception : 5
 - Protection : 10
-- Recupération : 20
+- Récupération : 20
