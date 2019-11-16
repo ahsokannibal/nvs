@@ -84,7 +84,7 @@ if($dispo || !$admin){
 				<html>
 				<head>
 				<title>Nord VS Sud</title>
-				<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+				<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 				<link href="../style2.css" rel="stylesheet" type="text/css">
 				</head>
 	
@@ -941,7 +941,7 @@ if($dispo || !$admin){
 					</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pv_perso, changementDe_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pmMax_perso, pm_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, deAttaque_perso, deDefense_perso, clan FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, changementDe_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pmMax_perso, pm_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, deAttaque_perso, deDefense_perso, clan FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -953,6 +953,7 @@ if($dispo || !$admin){
 				$paMax_perso = $t_perso2["paMax_perso"];
 				$pi_perso = $t_perso2["pi_perso"];
 				$xp_perso = $t_perso2["xp_perso"];
+				$pc_perso = $t_perso2["pc_perso"];
 				$pv_perso = $t_perso2["pv_perso"];
 				$pvMax_perso = $t_perso2["pvMax_perso"];
 				$pm_perso = $t_perso2["pm_perso"] + $malus_pm;
@@ -982,7 +983,7 @@ if($dispo || !$admin){
 				<table border=1 align="center" width=90%>
 					<tr>
 						<td width=60><center><img src="../images_perso/<?php echo "$image_perso";?>"></center></td>
-						<td align=center>Pseudo: <?php echo "$nom_perso [$id_perso]";?></td><td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?></td>
+						<td align=center>Pseudo: <?php echo "$nom_perso [$id_perso]";?></td><td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?></td>
 						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 						<td><?php echo "<center>Attaque ".$deAttaque_perso."/".$deDefense_perso." Défense<br>"; echo"<font color=red>Pensez à cliquer sur valider pour changer les dés</font></center>";?></td>
 					</tr>
