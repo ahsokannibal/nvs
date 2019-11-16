@@ -1561,7 +1561,7 @@ if($verif){
 							$couleur_clan_p = couleur_clan($clan_p);
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p>$nom_p</font>','a été bléssé suite à la destruction du bâtiment','','',' : - $perte_pv',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p>$nom_p</font>','a été bléssé suite à la destruction du bâtiment',NULL,'',' : - $perte_pv',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// Le perso est encore vivant
