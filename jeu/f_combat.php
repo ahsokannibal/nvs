@@ -343,7 +343,7 @@ function maj_niveau_perso($mysqli, $id_perso, $lvl_perso, $nom_perso, $couleur_c
 			echo "Vous avez <b>".$pi_tmp."</b> points à répartir dans vos caractéristiques.<br>";
 										
 			// maj evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','est passé niveau ','','','$lvl_perso',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','est passé niveau ','','','$lvl_perso',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		else {

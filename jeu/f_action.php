@@ -202,12 +202,12 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 					// route et pont
 					if($id_bat == 4 || $id_bat == 5){
 						//mise a jour de la table evenement
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','a construit $nom_bat','','','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','a construit $nom_bat','','','',NOW(),'0')";
 						$mysqli->query($sql);
 					}
 					else {
 						//mise a jour de la table evenement
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','a construit ','$id_i_bat','<font color=$couleur_clan_perso>$nom_bat</font>','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','a construit ','$id_i_bat','<font color=$couleur_clan_perso>$nom_bat</font>','',NOW(),'0')";
 						$mysqli->query($sql);
 					}
 					return 1;
@@ -299,7 +299,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 				$mysqli->query($sql);
 					
 				//MAJ evenments perso
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
 				$mysqli->query($sql);
 					
 				echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
@@ -315,7 +315,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 				$mysqli->query($sql);
 					
 				//MAJ evenments perso
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : reparation de $pv_reparation PV',NOW(),'0')";
 				$mysqli->query($sql);
 					
 				echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
@@ -332,7 +332,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			$mysqli->query($sql);
 				
 			//MAJ evenments perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a fait une révision sur le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv déjà au max...',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a fait une révision sur le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv déjà au max...',NOW(),'0')";
 			$mysqli->query($sql);
 				
 			echo "<center>La cible est était déjà à son max de vie</center><br />";
@@ -458,7 +458,7 @@ function action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action){
 						$gain_xp = rand(2,4);
 							
 						//MAJ evenments perso
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passé niveau $nb_points_action_cible',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradé le batiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passé niveau $nb_points_action_cible',NOW(),'0')";
 						$mysqli->query($sql);
 							
 						echo "<center>Vous avez Upgradé le batiment $id_cible <font color=$couleur_clan_cible>$nom_cible</font> au niveau suivant : le niveau $nb_points_action_cible</center><br />";
@@ -618,7 +618,7 @@ function action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action){
 							$gain_xp = rand(2,4);
 								
 							//MAJ evenments perso
-							$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradé le bâtiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passé niveau $nb_points_action_cible (niveau max)',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a upgradé le bâtiment ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : le batiment est passé niveau $nb_points_action_cible (niveau max)',NOW(),'0')";
 							$mysqli->query($sql);
 								
 							echo "<center>Vous avez Upgradé le bâtiment $id_cible <font color=$couleur_clan_cible>$nom_cible</font> au niveau maximum : le niveau $nb_points_action_cible</center><br />";
@@ -754,7 +754,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 			}
 			
 			//MAJ evenements perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a apaisé ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : apaisement de $bonus_recup_final',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a apaisé ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : apaisement de $bonus_recup_final',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		else {
@@ -770,7 +770,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 			}
 			
 			//MAJ evenements perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a tenté d\'apaiser ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : cible sans malus',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a tenté d\'apaiser ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : cible sans malus',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		
@@ -901,7 +901,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 					$mysqli->query($sql);
 					
 					//MAJ evenments perso
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin_final PV',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin_final PV',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					echo "<center>Vous avez soigné <font color=$couleur_clan_cible>$nom_cible</font> de $pv_soin (+$bonus_pv_s) PV</center><br />";
@@ -925,7 +925,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 					$mysqli->query($sql);
 					
 					//MAJ evenments perso
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin PV',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : soin de $pv_soin PV',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					echo "<center>Vous avez soigné <font color=$couleur_clan_cible>$nom_cible</font> de $pv_soin PV</center><br />";
@@ -955,7 +955,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 						$mysqli->query($sql);
 						
 						// MAJ evenments perso
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a supprimé des malus de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a supprimé des malus de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						echo "<center>Vous avez soigné des malus de <font color=$couleur_clan_cible>$nom_cible</font> grâce à $nom_objet : +$bonus_recup_s </center><br/>";
@@ -967,7 +967,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 						$mysqli->query($sql);
 						
 						// MAJ evenments perso
-						$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a augmenté la récupération de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a augmenté la récupération de ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : (+$bonus_recup_s) $nom_objet',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						echo "<center>Vous avez augmenté la récupération de <font color=$couleur_clan_cible>$nom_cible</font> grâce à $nom_objet : +$bonus_recup_s </center><br/>";
@@ -981,7 +981,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 				}
 				else {
 					//MAJ evenments perso
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a joué au docteur avec ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv déjà au max...',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a joué au docteur avec ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : pv déjà au max...',NOW(),'0')";
 					$mysqli->query($sql);
 				}
 				
@@ -997,7 +997,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 			$mysqli->query($sql);
 			
 			//MAJ evenments perso
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté ses soins sur ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : compétence pas assez développée...',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté ses soins sur ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',' : compétence pas assez développée...',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			echo "<center>Votre niveau dans cette compétence ne vous permet pas de soigner correctement la cible</center><br />";
@@ -1060,7 +1060,7 @@ function action_dormir($mysqli, $id_perso, $nb_points_action){
 		$mysqli->query($sql);
 		
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' ... ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' ... ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		echo "<center>Vous dormez profondément, votre récupération au prochain tour sera de : $n_r</center><br />";
@@ -1115,12 +1115,12 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
 			$mysqli->query($sql);
 			
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est tué en effectuant une marche forcée... ','','',' : Bravo !',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est tué en effectuant une marche forcée... ','','',' : Bravo !',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		else {	
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a effectué une marche forcée ','','',' : +1 PM',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a effectué une marche forcée ','','',' : +1 PM',NOW(),'0')";
 			$mysqli->query($sql);
 		
 			echo "<center>Vous gagnez 1 PM contre 3PA et $cout_pv PV</center><br />";
@@ -1179,7 +1179,7 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
 		$gain_xp = '0';
 		
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' se met à courir ','','',' : $pm_total PM',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' se met à courir ','','',' : $pm_total PM',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		$obstacle = 0;
@@ -1297,7 +1297,7 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
 		$mysqli->query($sql);
 		
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a couru de $x_perso_depart / $y_perso_depart jusqu\'à $x_perso_final / $y_perso_final','','',' : $pm_utilise PM',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a couru de $x_perso_depart / $y_perso_depart jusqu\'à $x_perso_final / $y_perso_final','','',' : $pm_utilise PM',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		echo "<center>Votre course vous fait gagner : + $bonus_mouv PM</center><br />";
@@ -1371,7 +1371,7 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 			}
 			
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a coupé des arbres ','','',' : + $gain_bois morceaux de bois',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a coupé des arbres ','','',' : + $gain_bois morceaux de bois',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			echo "<center><font color=red><b>Vous avez coupé une forêt, vous avez récupéré $gain_bois morceaux de bois </b></font></center><br />";
@@ -1456,7 +1456,7 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 				}
 				
 				//mise a jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a miné la montagne ','','',' : + $gain_fer morceaux de fer',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a miné la montagne ','','',' : + $gain_fer morceaux de fer',NOW(),'0')";
 				$mysqli->query($sql);
 				
 				echo "<center><font color=red><b>Vous avez miné la montagne, vous avez récupéré $gain_fer morceaux de fer </b></font></center><br />";
@@ -1471,7 +1471,7 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 				$mysqli->query($sql);
 				
 				//mise a jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a miné la montagne ','','',' : + $gain_fer morceaux de fer, pas de chance...',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a miné la montagne ','','',' : + $gain_fer morceaux de fer, pas de chance...',NOW(),'0')";
 				$mysqli->query($sql);
 				
 				echo "<center><font color=red><b>Vous avez miné la montagne mais vous n'avez rien trouvé </b></font></center><br />";
@@ -1544,7 +1544,7 @@ function action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte){
 			$mysqli->query($sql);
 			
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a sauté ','','',' en $x_cible / $y_cible',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a sauté ','','',' en $x_cible / $y_cible',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			echo "<center><font color=red><b>Vous avez sauté en $x_cible/$y_cible, cout total en PM : $cout_pm_total PM</b></font></center><br />";
@@ -1613,7 +1613,7 @@ function action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action){
 			$mysqli->query($sql);
 		
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a planté des arbres ','','',' en $x_perso / $y_perso',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a planté des arbres ','','',' en $x_perso / $y_perso',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			echo "<center>Vous avez planté des arbres en $x_perso / $y_perso, ils pousseront automatiquement d'ici 5 jours environs</center>";
@@ -1694,14 +1694,14 @@ function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 				
 				if($fond_carte == 'b4b.png' || $fond_carte == 'b4r.png'){
 					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté une route ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté une route ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
 					$mysqli->query($sql);
 				
 					echo "<center>Vous avez saboté une route en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
 				}
 				if($fond_carte == 'b5b.png' || $fond_carte == 'b5r.png'){
 					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté un pont ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté un pont ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
 					$mysqli->query($sql);
 				
 					echo "<center>Vous avez saboté un pont en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
@@ -1711,7 +1711,7 @@ function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 				$gain_xp = 1;
 				
 				//mise a jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son sabotage ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son sabotage ','','',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
 				$mysqli->query($sql);
 				
 				echo "<center>Vous avez raté votre sabotage (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
@@ -1760,7 +1760,7 @@ function action_chanter($mysqli, $id_perso,$id_action){
 	
 	if($pa_perso >= $coutPa){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a chanté ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a chanté ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -1797,7 +1797,7 @@ function action_chanter_perso($mysqli, $id_perso,$phrase){
 	
 	if($pa_perso >= 2){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -1840,7 +1840,7 @@ function action_danser($mysqli, $id_perso,$id_action){
 	
 	if($pa_perso >= $coutPa){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a dansé ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a dansé ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -1877,7 +1877,7 @@ function action_danser_perso($mysqli, $id_perso, $phrase){
 	
 	if($pa_perso >= 2){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -1920,7 +1920,7 @@ function action_peindre($mysqli, $id_perso, $id_action){
 	
 	if($pa_perso >= $coutPa){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a peind ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a peind ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -1957,7 +1957,7 @@ function action_peindre_perso($mysqli, $id_perso,$phrase){
 	
 	if($pa_perso >= 2){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -2000,7 +2000,7 @@ function action_sculter($mysqli, $id_perso,$id_action){
 	
 	if($pa_perso >= $coutPa){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a scuplté ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a scuplté ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -2037,7 +2037,7 @@ function action_scuplter_perso($mysqli, $id_perso, $phrase){
 	
 	if($pa_perso >= 2){
 		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' $phrase ','','','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		// MAJ xp/pi/pa/pm/x et y perso
@@ -2112,7 +2112,7 @@ function action_entrainement($mysqli, $id_perso){
 					$mysqli->query($sql);
 					
 					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son entrainement ','','',' : entrainement niveau $new_niveau',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son entrainement ','','',' : entrainement niveau $new_niveau',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					echo "<center>Vous venez d'effectuer votre $new_niveau ème entrainement avec succès</center><br />";
@@ -2131,7 +2131,7 @@ function action_entrainement($mysqli, $id_perso){
 					$nb_entrainement_restant = $niveau_e - $nb_e - 1;
 					
 					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son entrainement ','','',' : bientot au prochain niveau d\'entrainement',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son entrainement ','','',' : bientot au prochain niveau d\'entrainement',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					echo "<center>Vous avez réussi votre entrainement, entrainez vous encore $nb_entrainement_restant fois pour passer au niveau supérieur d'entrainement</center><br />";
@@ -2144,7 +2144,7 @@ function action_entrainement($mysqli, $id_perso){
 				$mysqli->query($sql);
 			
 				//mise a jour de la table evenement
-				$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son entrainement ','','',' : dommage',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son entrainement ','','',' : dommage',NOW(),'0')";
 				$mysqli->query($sql);
 			
 				echo "<center>Vous avez raté votre entrainement</center><br />";
@@ -2162,7 +2162,7 @@ function action_entrainement($mysqli, $id_perso){
 			$mysqli->query($sql);
 			
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` VALUES ('',$id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son premier entrainement ','','',' : bravo !',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a réussi son premier entrainement ','','',' : bravo !',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			echo "<center>Vous venez d'effectuer votre premier entrainement avec succès</center><br />";
