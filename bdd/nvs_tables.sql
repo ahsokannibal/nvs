@@ -270,6 +270,19 @@ CREATE TABLE `evenement` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `grades`
+--
+
+CREATE TABLE `grades` (
+  `id_grade` int(11) NOT NULL,
+  `nom_grade` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `pc_grade` int(11) NOT NULL,
+  `point_armee_grade` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `instance_batiment`
 --
 
@@ -550,6 +563,17 @@ CREATE TABLE `perso_as_entrainement` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `perso_as_grade`
+--
+
+CREATE TABLE `perso_as_grade` (
+  `id_perso` int(11) NOT NULL,
+  `id_grade` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `perso_as_killpnj`
 --
 
@@ -771,6 +795,12 @@ ALTER TABLE `evenement`
   ADD PRIMARY KEY (`ID_evenement`);
 
 --
+-- Index pour la table `grades`
+--
+ALTER TABLE `grades`
+  ADD PRIMARY KEY (`id_grade`); 
+  
+--
 -- Index pour la table `instance_batiment`
 --
 ALTER TABLE `instance_batiment`
@@ -837,6 +867,12 @@ ALTER TABLE `perso_as_contact`
 --
 ALTER TABLE `perso_as_entrainement`
   ADD PRIMARY KEY (`id_perso`);
+  
+--
+-- Index pour la table `perso_as_grade`
+--
+ALTER TABLE `perso_as_grade`
+  ADD PRIMARY KEY (`id_perso`,`id_grade`); 
 
 --
 -- Index pour la table `perso_as_killpnj`
@@ -930,6 +966,11 @@ ALTER TABLE `dossier`
 --
 ALTER TABLE `evenement`
   MODIFY `ID_evenement` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+--
+-- AUTO_INCREMENT pour la table `grades`
+--
+ALTER TABLE `grades`
+  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
 --
 -- AUTO_INCREMENT pour la table `instance_batiment`
 --

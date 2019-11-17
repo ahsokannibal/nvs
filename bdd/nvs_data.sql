@@ -510,6 +510,36 @@ INSERT INTO `competence_as_competence` (`id_competence`, `id_competence_accessib
 INSERT INTO `config_jeu` (`disponible`) VALUES
 (1);
 
+--
+-- Contenu de la table `grades`
+--
+
+INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) VALUES
+(2, 'Caporal', 10, 1),
+(3, 'Caporal Chef', 40, 1),
+(4, 'Sergent', 80, 2),
+(5, '1er Sergent Chef', 200, 2),
+(6, 'Sergent Chef', 300, 3),
+(7, 'Sergent Major', 400, 3),
+(8, 'Adjudant', 550, 4),
+(9, 'Adjudant Chef', 800, 5),
+(10, 'Adjudant Major', 1100, 6),
+(11, 'Sous-Lieutenant', 1500, 7),
+(12, 'Lieutenant', 2200, 8),
+(13, 'Capitaine', 3000, 9),
+(14, 'Commandant', 4000, 10),
+(15, 'Major', 5100, 11),
+(16, 'Colonnel', 6300, 12),
+(17, 'Lieutenant Colonnel', 7500, 13),
+(18, 'Général de Brigade', 9000, 14),
+(19, 'Général Major', 11000, 15),
+(20, 'Lieutenant Général', 13000, 18),
+(21, 'Général', 15000, 20),
+(22, 'Général des armées', 999999999, 100),
+(1, 'Grouillot 2nd classe', 0, 0),
+(101, 'Grouillot 1ere classe', 0, 0),
+(102, 'Grouillot d\'élite', 0, 0);
+
 -- --------------------------------------------------------
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
