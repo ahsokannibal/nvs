@@ -450,9 +450,6 @@ CREATE TABLE `perso` (
   `xp_perso` int(11) NOT NULL DEFAULT '0',
   `pi_perso` int(11) NOT NULL DEFAULT '0',
   `pc_perso` int(11) NOT NULL DEFAULT '0',
-  `deAttaque_perso` int(11) NOT NULL DEFAULT '1',
-  `deDefense_perso` int(11) NOT NULL DEFAULT '1',
-  `changementDe_perso` enum('0','1') NOT NULL DEFAULT '0',
   `or_perso` int(11) NOT NULL DEFAULT '20',
   `pvMax_perso` int(11) NOT NULL DEFAULT '0',
   `pm_perso` int(11) NOT NULL DEFAULT '5',
@@ -482,8 +479,7 @@ CREATE TABLE `perso` (
   `arene` enum('0','1') NOT NULL DEFAULT '0',
   `a_gele` tinyint(1) NOT NULL DEFAULT '0',
   `est_gele` tinyint(1) NOT NULL DEFAULT '0',
-  `date_gele` datetime DEFAULT NULL,
-  `mainPrincipale_perso` tinyint(4) NOT NULL DEFAULT '1'
+  `date_gele` datetime DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -495,9 +491,7 @@ CREATE TABLE `perso` (
 CREATE TABLE `perso_as_arme` (
   `id_perso` int(11) NOT NULL DEFAULT '0',
   `id_arme` int(11) NOT NULL DEFAULT '0',
-  `est_portee` enum('0','1') NOT NULL DEFAULT '0',
-  `pv_arme` int(11) NOT NULL DEFAULT '0',
-  `mains` tinyint(4) NOT NULL DEFAULT '1'
+  `est_portee` enum('0','1') NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -509,9 +503,7 @@ CREATE TABLE `perso_as_arme` (
 CREATE TABLE `perso_as_armure` (
   `id_perso` int(11) NOT NULL DEFAULT '0',
   `id_armure` int(11) NOT NULL DEFAULT '0',
-  `est_portee` enum('0','1') NOT NULL DEFAULT '0',
-  `corps_armure` int(11) DEFAULT NULL,
-  `pv_armure` int(11) NOT NULL DEFAULT '0'
+  `est_portee` enum('0','1') NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
