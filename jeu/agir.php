@@ -77,7 +77,7 @@ if($verif){
 			}
 			
 			// recup des données du perso
-			$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+			$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_perso = $res->fetch_assoc();
 			
@@ -86,8 +86,6 @@ if($verif){
 			$xp_perso = $t_perso["xp_perso"];
 			$x_perso = $t_perso["x_perso"];
 			$y_perso = $t_perso["y_perso"];
-			$deAttaque_perso = $t_perso["deAttaque_perso"];
-			$deDefense_perso = $t_perso["deDefense_perso"];
 			$pm_perso = $t_perso["pm_perso"];
 			$pmM_perso = $t_perso["pmMax_perso"];
 			$pi_perso = $t_perso["pi_perso"];
@@ -117,7 +115,7 @@ if($verif){
 				}
 				
 				// recuperation des données du perso cible
-				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan FROM perso WHERE ID_perso='$id_cible'";
+				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan FROM perso WHERE ID_perso='$id_cible'";
 				$res = $mysqli->query($sql);
 				$t_cible = $res->fetch_assoc();
 				
@@ -126,8 +124,6 @@ if($verif){
 				$xp_cible = $t_cible["xp_perso"];
 				$x_cible = $t_cible["x_perso"];
 				$y_cible = $t_cible["y_perso"];
-				$deAttaque_cible = $t_cible["deAttaque_perso"];
-				$deDefense_cible = $t_cible["deDefense_perso"];
 				$pm_cible = $t_cible["pm_perso"];
 				$pmM_cible = $t_cible["pmMax_perso"];
 				$pi_cible = $t_cible["pi_perso"];
@@ -213,9 +209,6 @@ if($verif){
 							<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 						<tr>
 						<tr>
-							<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> "; ?></td>
-						<tr>
-						<tr>
 							<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
 						<tr>
 						<tr>
@@ -280,11 +273,12 @@ if($verif){
 						echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b><br/>";
 						
 						// Calcul des scores d'attaque et de defense
-						$score_perso = calcul_de($deAttaque_perso);
-						$score_cible = calcul_de($deDefense_cible) + $bonus_cible;
+						// TODO
+						$score_perso = 0;
+						$score_cible = 0;
 						
-						echo "Votre score d'attaque : ".$score_perso."<br>";
-						echo "Son score de défense : ".$score_cible."<br>";
+						echo "Votre score d'attaque : <br>";
+						echo "Son score de défense : <br>";
 						
 						if ($score_cible <= $score_perso) { //la cible est touchée
 							
@@ -550,7 +544,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
@@ -559,8 +553,6 @@ if($verif){
 		$xp_perso = $t_perso["xp_perso"];
 		$x_perso = $t_perso["x_perso"];
 		$y_perso = $t_perso["y_perso"];
-		$deAttaque_perso = $t_perso["deAttaque_perso"];
-		$deDefense_perso = $t_perso["deDefense_perso"];
 		$pm_perso = $t_perso["pm_perso"];
 		$pmM_perso = $t_perso["pmMax_perso"];
 		$pi_perso = $t_perso["pi_perso"];
@@ -643,9 +635,6 @@ if($verif){
 						<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 					<tr>
 					<tr>
-						<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> "; ?></td>
-					<tr>
-					<tr>
 						<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
 					<tr>
 					<tr>
@@ -699,12 +688,13 @@ if($verif){
 				if ($pv_cible > 0) { //la cible est encore en vie
 							
 					echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b><br>";
-							
-					$score_perso = calcul_de($deAttaque_perso);
-					$score_cible = calcul_de($deDefense_cible);
 					
-					echo "Votre score d'attaque :<b>".$score_perso."</b><br>";
-					echo "Son score de defense :<b>".$score_cible."</b><br>";
+					// TODO
+					$score_perso = 0;
+					$score_cible = 0;
+					
+					echo "Votre score d'attaque :<b></b><br>";
+					echo "Son score de defense :<b></b><br>";
 					
 					// mise a jour de dernier attaquant du pnj
 					$sql = "UPDATE instance_pnj SET dernierAttaquant_i='$id' WHERE idInstance_pnj='$id_cible'";
@@ -1194,7 +1184,8 @@ if($verif){
 							echo "Le pnj tente une riposte<br>";
 							
 							// on l'attaque
-							if (combat_pnj($deDefense_cible,$deAttaque_perso)) { // touché
+							// TODO
+							if (true) { // touché
 								
 								srand((double) microtime() * 1000000);
 								$degats = rand($degatMin, $degatMax);
@@ -1311,7 +1302,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
@@ -1320,8 +1311,6 @@ if($verif){
 		$xp_perso = $t_perso["xp_perso"];
 		$x_perso = $t_perso["x_perso"];
 		$y_perso = $t_perso["y_perso"];
-		$deAttaque_perso = $t_perso["deAttaque_perso"];
-		$deDefense_perso = $t_perso["deDefense_perso"];
 		$pm_perso = $t_perso["pm_perso"];
 		$pmM_perso = $t_perso["pmMax_perso"];
 		$pi_perso = $t_perso["pi_perso"];
@@ -1406,9 +1395,6 @@ if($verif){
 										<tr>
 										<tr>
 											<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
-										<tr>
-										<tr>
-											<td><?php echo "<u><b>Nombre de dés en attaque :</b></u> ".$deAttaque_perso." - <b><u>Degats :</u></b> "; ?></td>
 										<tr>
 										<tr>
 											<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>

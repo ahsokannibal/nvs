@@ -55,7 +55,7 @@ if($dispo){
 			}
 			else {			
 				// recuperation des infos du perso
-				$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, pc_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+				$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$t_i = $res->fetch_assoc();
 				
@@ -65,8 +65,6 @@ if($dispo){
 				$pc_p 		= $t_i["pc_perso"];
 				$x_p 		= $t_i["x_perso"];
 				$y_p 		= $t_i["y_perso"];
-				$deA_p 		= $t_i["deAttaque_perso"];
-				$deD_p 		= $t_i["deDefense_perso"];
 				$pm_p 		= $t_i["pm_perso"];
 				$pmM_p 		= $t_i["pmMax_perso"];
 				$pi_p 		= $t_i["pi_perso"];
@@ -133,9 +131,6 @@ if($dispo){
 					</tr>
 					<tr>
 						<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_p."/".$y_p; ?></td>
-					</tr>
-					<tr>
-						<td><?php echo "<u><b>Nombre de dés :</b></u> ".max($deA_p,$deD_p).""; ?></td>
 					</tr>
 					<tr>
 						<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_p."/".$pmM_p; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_p."/".$pvM_p; ?></td>

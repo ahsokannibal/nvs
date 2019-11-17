@@ -41,16 +41,14 @@ if($dispo){
 		<li><a href="profil.php">Profil</a></li>
 		<li id="current"><a href="ameliorer.php">Améliorer son perso</a></li>
 		<li><a href="equipement.php">Equiper son perso</a></li>
-		<li><a href="pnjdex.php">PNJ Dex</a></li>
-		<li><a href="mes_monstres.php">Mes monstres</a></li>
 		<li><a href="compte.php">Gérer son Compte</a></li>
 	  </ul>
 	</div>
 	<br /><br /><br /><br />
-	<p align="center"><input type="button" value="Fermer cette fen�tre" onclick="window.close()"></p>
+	<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 	<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
 	<?php
-	$sql = "SELECT pi_perso, pvMax_perso, pmMax_perso, paMax_perso, perception_perso, recup_perso, deAttaque_perso, deDefense_perso, chargeMax_perso FROM perso WHERE id_perso ='$id'";
+	$sql = "SELECT pi_perso, pvMax_perso, pmMax_perso, paMax_perso, perception_perso, recup_perso, chargeMax_perso FROM perso WHERE id_perso ='$id'";
 	$res = $mysqli->query($sql);
 	$tab = $res->fetch_assoc();
 	
@@ -59,12 +57,8 @@ if($dispo){
 	$per = $tab["perception_perso"];
 	$pv = $tab["pvMax_perso"];
 	$rec = $tab["recup_perso"];
-	$deAttaque_p = $tab["deAttaque_perso"];
-	$deDefense_p = $tab["deDefense_perso"];
 	$ch = $tab["chargeMax_perso"];
 	$pi = $tab["pi_perso"];
-	
-	$nbd = $deAttaque_p + $deDefense_p;
 	
 	if (isset($_POST["pv"])) {
 		// calcul du nombre de pi necessaire
@@ -150,49 +144,29 @@ if($dispo){
 		else
 			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
 	}
-	if (isset($_POST["nbd"])) {
-		// calcul du nombre de pi necessaire
-		$nbpi_des = ameliore_des($nbd);
-	
-		// verification que le perso a assez de pi
-		if($pi >= $nbpi_des) {
-			$sql2 = "UPDATE perso SET deDefense_perso=deDefense_perso+1, pi_perso=pi_perso-$nbpi_des WHERE id_perso ='$id'";
-			$mysqli->query($sql2);
-			$nbd = $nbd + 1;
-			$pi = $pi - $nbpi_des;
-			$_SESSION['deDefense'] = $_SESSION['deDefense'] + 1; //$deDefense_p+1;
-		}
-		else
-			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-	}
 	?>
 	<form method="post" action="ameliorer.php">
-	<br>
-	<center>
-	Points d'investissements : <input type="text" size="2" maxlength="5" value="<?php echo $pi ?>" disabled>
-	</center>
-	
-	<table border="1" align="center"> 
-	
-	<tr><td>Points de vie</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pv; ?>" disabled>&nbsp;<input type="submit" name="pv" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pv($pv)." pi"; ?></td></tr>
-	
-	<tr><td>Points de mouvement</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pm; ?>" disabled>&nbsp;<input type="submit" name="pm" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pm($pm)." pi"; ?></td></tr>
-	
-	<tr><td>Points d'action</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pa; ?>" disabled>&nbsp;<input type="submit" name="pa" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pa($pa)." pi"; ?></td></tr>
-	
-	<tr><td>Perception</td><td><input type="text" size="3" maxlength="3" value="<?php echo $per; ?>" disabled>&nbsp;<input type="submit" name="per" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_perc($per)." pi"; ?></td></tr>
-	
-	<tr><td>Recuperation</td><td><input type="text" size="3" maxlength="3" value="<?php echo $rec; ?>" disabled>&nbsp;<input type="submit" name="rec" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_recup($rec)." pi"; ?></td></tr>
-	
-	<tr><td>Charge Maximum (*)</td><td><input type="text" size="3" maxlength="3" value="<?php echo $ch; ?>" disabled>&nbsp;<input type="submit" name="ch" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_charge($ch)." pi"; ?></td></tr>
-	
-	<tr><td>Degats</td><td><input type="text" size="3" maxlength="3" value="<?php echo $deg; ?>" disabled>&nbsp;<input type="submit" name="deg" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_deg($deg)." pi"; ?></td></tr>
-	
-	<tr><td>Nombre de dés</td><td><input type="text" size="3" maxlength="3" value="<?php echo $nbd; ?>" disabled>&nbsp;<input type="submit" name="nbd" value=">> monter">&nbsp;&nbsp;<?php echo "Cout :".ameliore_des($nbd)." pi"; ?></td></tr>
-	
-	</table>
+		<br>
+		<center>
+		Points d'investissements : <input type="text" size="2" maxlength="5" value="<?php echo $pi ?>" disabled>
+		</center>
+		
+		<table border="1" align="center"> 
+		
+			<tr><td>Points de vie</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pv; ?>" disabled>&nbsp;<input type="submit" name="pv" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pv($pv)." pi"; ?></td></tr>
+			
+			<tr><td>Points de mouvement</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pm; ?>" disabled>&nbsp;<input type="submit" name="pm" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pm($pm)." pi"; ?></td></tr>
+			
+			<tr><td>Points d'action</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pa; ?>" disabled>&nbsp;<input type="submit" name="pa" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pa($pa)." pi"; ?></td></tr>
+			
+			<tr><td>Perception</td><td><input type="text" size="3" maxlength="3" value="<?php echo $per; ?>" disabled>&nbsp;<input type="submit" name="per" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_perc($per)." pi"; ?></td></tr>
+			
+			<tr><td>Recuperation</td><td><input type="text" size="3" maxlength="3" value="<?php echo $rec; ?>" disabled>&nbsp;<input type="submit" name="rec" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_recup($rec)." pi"; ?></td></tr>
+			
+			<tr><td>Charge Maximum (*)</td><td><input type="text" size="3" maxlength="3" value="<?php echo $ch; ?>" disabled>&nbsp;<input type="submit" name="ch" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_charge($ch)." pi"; ?></td></tr>
+			
+		</table>
 	</form>
-	<p>&nbsp;&nbsp;&nbsp;&nbsp;(*) Pour avoir la charge maximale que peut porter votre personnage, il faut multiplier le nombre de points par 4.</p>
 	</body>
 	</html>
 	<?php

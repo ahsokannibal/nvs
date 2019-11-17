@@ -197,7 +197,7 @@ if($dispo){
 			$or_p = $t_or["or_perso"];
 			$charge_perso = $t_or["charge_perso"];
 			$chargeMax_perso = $t_or["chargeMax_perso"];
-			$chargeMax_reel = $chargeMax_perso * 4;
+			$chargeMax_reel = $chargeMax_perso;
 	?>
 	<table border=0 width=100%>
 		<tr><td>

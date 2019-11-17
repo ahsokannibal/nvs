@@ -93,7 +93,7 @@ if($dispo || !$admin){
 				<?php
 				
 				// recuperation des anciennes données du perso
-				$sql = "SELECT nom_perso, x_perso, y_perso, pm_perso, image_perso, pa_perso, recup_perso, bonusRecup_perso, bonusPM_perso, paMax_perso, pv_perso, deAttaque_perso, deDefense_perso, DLA_perso, clan, changementDe_perso FROM perso WHERE id_perso='$id_perso'";
+				$sql = "SELECT nom_perso, x_perso, y_perso, pm_perso, image_perso, pa_perso, recup_perso, bonusRecup_perso, bonusPM_perso, paMax_perso, pv_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
 				$t_perso1 = $res->fetch_assoc();
 				$nom_perso = $t_perso1["nom_perso"];
@@ -102,9 +102,6 @@ if($dispo || !$admin){
 				$pm_perso = $t_perso1["pm_perso"];
 				$n_dla = $t_perso1["DLA_perso"];
 				$image_perso = $t_perso1["image_perso"];
-				$deAttaque_p = $t_perso1["deAttaque_perso"];
-				$deDefense_p = $t_perso1["deDefense_perso"];
-				$changementDe_p = $t_perso1["changementDe_perso"];
 				$bonusPM_perso_p = $t_perso1["bonusPM_perso"];
 				$clan_p = $t_perso1["clan"];
 				
@@ -576,55 +573,6 @@ if($dispo || !$admin){
 					}
 				}
 	
-				if(isset($_POST['valide_changement_de'])){
-					if(!$changementDe_p){
-						if(isset($_POST['valeur_attaque']) && $_POST['valeur_attaque'] != ""
-							&& isset($_POST['valeur_defense']) && $_POST['valeur_defense'] != ""){
-						   
-							$verif_attaque = preg_match("#^[0-9]+$#i",$_POST['valeur_attaque']);
-							$verif_defense = preg_match("#^[0-9]+$#i",$_POST['valeur_defense']);
-							
-							if($verif_attaque && $verif_defense){
-								$deAttaque = $_POST['valeur_attaque'];
-								$deDefense = $_POST['valeur_defense'];
-								
-								// On récupére les dès que possède le perso
-								$sql = "SELECT deAttaque_perso, deDefense_perso FROM perso WHERE id_perso='$id_perso'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
-								$attaque_perso = $t["deAttaque_perso"];
-								$defense_perso = $t["deDefense_perso"];
-								$total_des_perso = $attaque_perso + $defense_perso;
-								
-								// controles divers
-								if($deAttaque + $deDefense == $total_des_perso 
-									&& ($deAttaque >= 1 && $deAttaque <= $total_des_perso - 1) 
-									&& ($deDefense >= 1 && $deDefense <= $total_des_perso - 1)){
-									
-									// on met à jour les dés du perso
-									$sql = "UPDATE perso SET deAttaque_perso=$deAttaque, deDefense_perso=$deDefense, changementDe_perso='1' WHERE id_perso=$id_perso";
-									$mysqli->query($sql);
-								
-									// on indique au joueur que la maj à été bien faite
-									echo "Changement de dés effectué";
-								}
-								else {
-									echo "<font color=red><center><b>Les valeurs des dès sont incorrectes</b></center></font>";
-								}
-							}
-							else {
-								echo "<font color=red><center><b>Les valeurs des dès sont incorrectes</b></center></font>";
-							}
-						}
-						else {
-							echo "<font color=red><center><b>Les valeurs des dès sont incorrectes</b></center></font>";
-						}
-					}
-					else {
-						echo "<font color=red><center><b>Ouh le petit tricheur !</b></center></font>";
-					}
-				}
-	
 				// traitement des deplacements
 				if (isset($_GET["mouv"])) {
 					
@@ -941,7 +889,7 @@ if($dispo || !$admin){
 					</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, changementDe_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pmMax_perso, pm_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, deAttaque_perso, deDefense_perso, clan FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pmMax_perso, pm_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -958,9 +906,6 @@ if($dispo || !$admin){
 				$pvMax_perso = $t_perso2["pvMax_perso"];
 				$pm_perso = $t_perso2["pm_perso"] + $malus_pm;
 				$pmMax_perso = $t_perso2["pmMax_perso"];
-				$deAttaque_perso = $t_perso2["deAttaque_perso"];
-				$deDefense_perso = $t_perso2["deDefense_perso"];
-				$changementDe_perso = $t_perso2["changementDe_perso"];
 				$perception_perso = $t_perso2["perception_perso"];
 				$bonusPerception_perso = $t_perso2["bonusPerception_perso"];
 				$bonus_perso = $t_perso2["bonus_perso"];
@@ -977,7 +922,6 @@ if($dispo || !$admin){
 					$image_profil = "sud.gif";
 				}
 				
-				// verifier que $_SESSION['deAttaque'] + $_SESSION['deDefense'] + ameliorations = deDefense_perso + deAttaque_perso
 				?>
 				<!-- Début du tableau d'information-->
 				<table border=1 align="center" width=90%>
@@ -985,32 +929,12 @@ if($dispo || !$admin){
 						<td width=60><center><img src="../images_perso/<?php echo "$image_perso";?>"></center></td>
 						<td align=center>Pseudo: <?php echo "$nom_perso [$id_perso]";?></td><td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?></td>
 						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
-						<td><?php echo "<center>Attaque ".$deAttaque_perso."/".$deDefense_perso." Défense<br>"; echo"<font color=red>Pensez à cliquer sur valider pour changer les dés</font></center>";?></td>
 					</tr>
 					<tr>
 						<td align=center>pa: <?php echo "".$pa_perso."/".$paMax_perso."";?></td>
 						<td align=center>perception: <?php echo "$perception_perso"; if($bonusPerception_perso){ if($bonusPerception_perso>0) echo "(+".$bonusPerception_perso.")"; else echo "(".$bonusPerception_perso.")";}?></td>
 						<td align=center>pm: <?php echo "".$pm_perso."/".$pmMax_perso.""; if($malus_pm){ echo "<font color='red'> ($malus_pm)</font>";}?></td>
 						<td align=center>position : <?php echo "".$t_perso2["x_perso"]."/".$t_perso2["y_perso"]."";?></td>
-						<!-- Début formulaire changement de dès -->
-						<td>
-							<center>
-								<form method='post' name='change_des' action='jouer.php'>
-									<?php if($changementDe_perso) {?>
-									<a href="#" <?php if($changementDe_perso) echo "disabled";?>><</a>
-									<input type="text" disabled maxlength="2" size="1" value="<?php echo $deAttaque_perso; echo "\"> / <input type=\"text\" disabled maxlength=\"2\" size=\"1\" value=\""; echo $deDefense_perso; echo "\">";?>
-									<a href="#" <?php if($changementDe_perso) echo "disabled";?>>></a>
-									<?php } else {?>
-									<a href="#" onClick="moins()"><</a>
-									<input type="text" maxlength="2" size="1" name='valeur_attaque' value="<?php echo $deAttaque_perso; echo "\"> / <input type=\"text\" maxlength=\"2\" size=\"1\" name=\"valeur_defense\" value=\""; echo $deDefense_perso; echo "\">";?>
-									<a href="#" onClick="plus()">></a>
-									<?php }?>
-									&nbsp;
-									<input type="submit" name='valide_changement_de' <?php if($changementDe_perso) echo "disabled";?> value="Valider">
-								</form>
-							</center>
-						</td>
-						<!-- Fin formulaire changement de dès -->
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
