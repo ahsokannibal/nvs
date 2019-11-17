@@ -297,31 +297,6 @@ if($verif){
 									$max_degats_arme = $degats_perso * $multiplicateurMax_degats_equipee + $additionMax_degats_equipee;
 								}
 								$degats = rand($min_degats_arme, $max_degats_arme);
-								
-								// MAJ pv arme
-								// Calcul de la perte de pv de l'arme aprés attaque
-								$perte_pv_arme = rand(1,5);
-								// Mise a jour des pv de l'arme
-								$sql = "UPDATE perso_as_arme SET pv_arme=pv_arme-$perte_pv_arme WHERE id_perso='$id' AND id_arme='$id_arme_equipee' AND est_portee='1'";
-								$mysqli->query($sql);
-								
-								// Vérification si l'arme est cassée ou non
-								// Récupération des pv de l'arme
-								$sql = "SELECT pv_arme FROM perso_as_arme WHERE id_perso='$id' AND id_arme='$id_arme_equipee' AND est_portee='1'";
-								$res = $mysqli->query($sql);
-								$t_pv_arme = $res->fetch_assoc();
-								$pv_arme_equipee = $t_pv_arme["pv_arme"];
-								
-								if($pv_arme_equipee <= 0){
-									// Arme cassée
-									// On la supprime des possessions du perso
-									supprime_arme_principale($mysqli, $id);
-									
-									echo "Votre arme s'est cassée suite à votre attaque, elle n'est pas réparable, vous l'avez définitivement perdue !";
-								}
-								else {
-									echo "<br />Votre arme principale a perdu $perte_pv_arme pv suite à votre attaque, il lui reste $pv_arme_equipee pv";
-								}
 							}
 							
 							// Mise a jour des degats selon l'armure de la cible
@@ -715,32 +690,9 @@ if($verif){
 								$min_degats_arme = $degats_perso * $multiplicateurMin_degats_equipee + $additionMin_degats_equipee;
 								$max_degats_arme = $degats_perso * $multiplicateurMax_degats_equipee + $additionMax_degats_equipee;
 							}
+							
 							$degats = rand($min_degats_arme, $max_degats_arme);
 							
-							// MAJ pv arme
-							// Calcul de la perte de pv de l'arme aprés attaque
-							$perte_pv_arme = rand(1,5);
-							// Mise a jour des pv de l'arme
-							$sql = "UPDATE perso_as_arme SET pv_arme=pv_arme-$perte_pv_arme WHERE id_perso='$id' AND id_arme='$id_arme_equipee' AND est_portee='1'";
-							$mysqli->query($sql);
-								
-							// Vérification si l'arme est cassée ou non
-							// Récupération des pv de l'arme
-							$sql = "SELECT pv_arme FROM perso_as_arme WHERE id_perso='$id' AND id_arme='$id_arme_equipee' AND est_portee='1'";
-							$res = $mysqli->query($sql);
-							$t_pv_arme = $res->fetch_assoc();
-							$pv_arme_equipee = $t_pv_arme["pv_arme"];
-								
-							if($pv_arme_equipee <= 0){
-								// Arme cassée
-								// On la supprime des possessions du perso
-								supprime_arme_principale($mysqli, $id);
-								
-								echo "Votre arme s'est cassée suite à votre attaque, elle n'est pas réparable, vous l'avez définitivement perdue !";
-							}
-							else {
-								echo "<br />Votre arme principale a perdu $perte_pv_arme pv suite à votre attaque, il lui reste $pv_arme_equipee pv";
-							}
 						}
 						
 						// mise a jour des pv du pnj
@@ -1460,32 +1412,9 @@ if($verif){
 							$min_degats_arme = $degats_perso * $multiplicateurMin_degats_equipee + $additionMin_degats_equipee;
 							$max_degats_arme = $degats_perso * $multiplicateurMax_degats_equipee + $additionMax_degats_equipee;
 						}
+						
 						$degats = rand($min_degats_arme, $max_degats_arme);
 						
-						// MAJ pv arme
-						// Calcul de la perte de pv de l'arme aprés attaque
-						$perte_pv_arme = rand(1,5);
-						// Mise à jour des pv de l'arme
-						$sql = "UPDATE perso_as_arme SET pv_arme=pv_arme-$perte_pv_arme WHERE id_perso='$id' AND id_arme='$id_arme_equipee' AND est_portee='1'";
-						$mysqli->query($sql);
-								
-						// Vérification si l'arme est cassée ou non
-						// Récupération des pv de l'arme
-						$sql = "SELECT pv_arme FROM perso_as_arme WHERE id_perso='$id' AND id_arme='$id_arme_equipee' AND est_portee='1'";
-						$res = $mysqli->query($sql);
-						$t_pv_arme = $res->fetch_assoc();
-						$pv_arme_equipee = $t_pv_arme["pv_arme"];
-								
-						if($pv_arme_equipee <= 0){
-							// Arme cassée
-							// On la supprime des possessions du perso
-							supprime_arme_principale($mysqli, $id);
-								
-							echo "<br />Votre arme s'est <b>cassée</b> suite à votre attaque, elle n'est pas réparable, vous l'avez définitivement perdue !";
-						}
-						else {
-							echo "<br />Votre arme principale a perdu $perte_pv_arme pv suite à votre attaque, il lui reste $pv_arme_equipee pv.";
-						}
 					}
 						
 					// mise à jour des pv du pnj

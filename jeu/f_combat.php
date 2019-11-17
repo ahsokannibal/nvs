@@ -61,11 +61,8 @@ function couleur_clan($clan_perso){
   * @return int		: L'identifiant de l'arme equipee, 0 si pas d'arme equipee
   */
 function id_arme_equipee($mysqli, $id_perso){
-	
-	// Reparation de la main principale du perso
-	$main_principale = recherche_main_principale($mysqli, $id_perso);
 
-	$sql_arme_equipee = "SELECT perso_as_arme.id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='1' AND (mains='$main_principale' OR mains='2')";
+	$sql_arme_equipee = "SELECT perso_as_arme.id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='1'";
 	$res_a = $mysqli->query($sql_arme_equipee);
 	$num_a = $res_a->num_rows;
 	
@@ -76,45 +73,6 @@ function id_arme_equipee($mysqli, $id_perso){
 	
 	return 0;
 	
-}
-
-/**
-  * Fonction qui permet de supprimer l'arme principale du perso (par exemple quand elle se casse definitivement)
-  * @param $id_perso	: L'identifiant du perso
-  * @return Void
-  */
-function supprime_arme_principale($mysqli, $id_perso){
-	// recuperation de l'id de l'arme sur la main principale
-	$id_arme = id_arme_equipee($id_perso);
-	
-	// Recuperation du poid de l'arme
-	$sql = "SELECT poids_arme FROM arme WHERE id_arme='$id_arme'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$poids_arme = $t["poids_arme"];
-	
-	// Recuperation de la main principale du perso
-	$main_principale = recherche_main_principale($id_perso);
-	
-	// Suppression de l'arme
-	$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_arme' AND est_portee='1' AND (mains='$main_principale' OR mains='2')";
-	$mysqli->query($sql);
-	
-	// Mise a jour du poid du perso
-	$sql = "UPDATE perso SET charge_perso=charge_perso - $poids_arme WHERE id_perso='$id_perso'";
-	$mysqli->query($sql);
-}
-
-/**
-  * Fonction qui permet de recuperer la main principale du personnage
-  * @param $id_perso	: L'identifiant du perso
-  * @return Int		: L'identifiant de la main (0 => main gauche, 1 => main droite)
-  */
-function recherche_main_principale($mysqli, $id_perso){
-	$sql_main = "SELECT mainPrincipale_perso FROM perso WHERE id_perso='$id_perso'";
-	$res_main = $mysqli->query($sql_main);
-	$t_main = $res_main->fetch_assoc();
-	return $t_main["mainPrincipale_perso"];
 }
 
 /**
