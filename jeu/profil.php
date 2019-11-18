@@ -55,7 +55,7 @@ if($dispo){
 			}
 			else {			
 				// recuperation des infos du perso
-				$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+				$sql = "SELECT nom_perso, image_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$t_i = $res->fetch_assoc();
 				
@@ -80,7 +80,6 @@ if($dispo){
 				$b_p 		= $t_i["bonus_perso"];
 				$ch_p 		= $t_i["charge_perso"];
 				$chM_p 		= $t_i["chargeMax_perso"];
-				$lvl_p 		= $t_i["niveau_perso"];
 				$dc_p 		= $t_i["dateCreation_perso"];
 				$clan_perso = $t_i["clan"];
 				
@@ -124,7 +123,7 @@ if($dispo){
 			
 				<table border=0 width=100%>
 					<tr>
-						<td><?php echo "<u><b>Pseudo :</b></u><font color=\"$couleur_clan_perso\"> ".$nom_p." </font>- <b><u>Niveau :</u></b> ".$lvl_p." - <b><u>Camp :</u></b><font color=\"$couleur_clan_perso\"> ".$nom_clan." </font>"; ?></td>
+						<td><?php echo "<u><b>Pseudo :</b></u><font color=\"$couleur_clan_perso\"> ".$nom_p." </font>- <b><u>Camp :</u></b><font color=\"$couleur_clan_perso\"> ".$nom_clan." </font>"; ?></td>
 					</tr>
 					<tr>
 						<td><?php echo "<u><b>Xp :</b></u> ".$xp_p." - <u><b>Pi :</b></u> ".$pi_p." - <u><b>PC :</b></u> ".$pc_p.""; ?></td>

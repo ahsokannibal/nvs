@@ -442,7 +442,7 @@ CREATE TABLE `objet_in_carte` (
 
 CREATE TABLE `perso` (
   `id_perso` int(11) NOT NULL,
-  `idJoueur_perso` int(11) NOT NULL DEFAULT '0',
+  `idJoueur_perso` int(11) NOT NULL,
   `nom_perso` varchar(50) NOT NULL DEFAULT '',
   `type_perso` int(11) NOT NULL DEFAULT '1',
   `x_perso` int(11) NOT NULL DEFAULT '0',
@@ -459,9 +459,9 @@ CREATE TABLE `perso` (
   `recup_perso` int(11) NOT NULL DEFAULT '0',
   `pa_perso` int(11) NOT NULL DEFAULT '0',
   `paMax_perso` int(11) NOT NULL DEFAULT '10',
+  `protec_perso` int(11) NOT NULL DEFAULT '0',
   `charge_perso` int(11) NOT NULL DEFAULT '0',
   `chargeMax_perso` int(11) NOT NULL DEFAULT '5',
-  `niveau_perso` int(11) NOT NULL DEFAULT '1',
   `bonusPerception_perso` int(11) NOT NULL DEFAULT '0',
   `bonusRecup_perso` int(11) NOT NULL DEFAULT '0',
   `bonusPM_perso` int(11) NOT NULL DEFAULT '0',
@@ -476,10 +476,10 @@ CREATE TABLE `perso` (
   `DLA_perso` datetime DEFAULT NULL,
   `description_perso` longtext,
   `clan` tinyint(4) NOT NULL,
-  `arene` enum('0','1') NOT NULL DEFAULT '0',
   `a_gele` tinyint(1) NOT NULL DEFAULT '0',
   `est_gele` tinyint(1) NOT NULL DEFAULT '0',
-  `date_gele` datetime DEFAULT NULL
+  `date_gele` datetime DEFAULT NULL,
+  `chef` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -839,8 +839,7 @@ ALTER TABLE `objet`
 -- Index pour la table `perso`
 --
 ALTER TABLE `perso`
-  ADD PRIMARY KEY (`id_perso`),
-  ADD UNIQUE KEY `id_joueur` (`idJoueur_perso`);
+  ADD PRIMARY KEY (`id_perso`);
 
 --
 -- Index pour la table `perso_as_competence`
