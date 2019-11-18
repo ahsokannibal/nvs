@@ -45,18 +45,20 @@ if(config_dispo_jeu($mysqli)){
 						
 						if($camp == 1){ // bleu
 							$x_min_spawn = 0;
-							$x_max_spawn = 40;
+							$x_max_spawn = 50;
 							$y_min_spawn = 0;
-							$y_max_spawn = 40;
-							$image_perso = "cavalerie_nord.gif";
+							$y_max_spawn = 50;
+							$image_chef = "cavalerie_nord.gif";
+							$image_g = "infanterie_nord.gif";
 						}
 						
 						if($camp == 2){ // rouge
-							$x_min_spawn = 160;
+							$x_min_spawn = 150;
 							$x_max_spawn = 200;
-							$y_min_spawn = 120;
+							$y_min_spawn = 110;
 							$y_max_spawn = 160;
-							$image_perso = "cavalerie_sud.gif";
+							$image_chef = "cavalerie_sud.gif";
+							$image_g = "infanterie_sud.gif";
 						}
 						
 						$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn); //placement du perso position x
@@ -74,10 +76,22 @@ if(config_dispo_jeu($mysqli)){
 						$date = time();
 						$dla = $date + DUREE_TOUR; // calcul dla
 				
-						$pvMax = 40;
-						$pmMax = 5;
-						$recup = 4;
-						$perc = 3;
+						// Caracs Chef
+						$pvMax_chef = 750;
+						$pmMax_chef = 10;
+						$pamax_chef = 10;
+						$recup_chef = 40;
+						$perc_chef = 5;
+						$protec_chef = 20;
+						
+						// Carac grouillot
+						$pvMax_g = 500;
+						$pmMax_g = 5;
+						$pamax_g = 10;
+						$recup_g = 30;
+						$perc_g = 4;
+						$protec_g = 10;
+						$nom_g = $nom_perso."_junior";
 						
 						// securité
 						$sql = "select email_joueur from joueur,perso where nom_perso='$nom_perso'";
@@ -93,8 +107,8 @@ if(config_dispo_jeu($mysqli)){
 							$result_j = $mysqli->query($insert_j);
 							$IDJoueur_perso = $mysqli->insert_id;
 							
-							// insertion nouveau perso
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','1','7','$pvMax','$pvMax','$pmMax','$pmMax','$perc','$recup','10','$image_perso',NOW(),FROM_UNIXTIME($dla), $camp, '')";
+							// insertion nouveau perso / Chef
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','1','7','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -109,8 +123,32 @@ if(config_dispo_jeu($mysqli)){
 							$sql_i = "INSERT INTO perso_as_dossiers VALUES ('$id','2')";
 							$mysqli->query($sql_i);
 						
-							// insertion du perso sur la carte
-							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id', image_carte='$image_perso' WHERE x_carte=$x AND y_carte=$y";
+							// insertion du Chef sur la carte
+							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id', image_carte='$image_chef' WHERE x_carte=$x AND y_carte=$y";
+							$mysqli->query($sql);
+							
+							// Insertion grouillot
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, deAttaque_perso, deDefense_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso) VALUES ('$IDJoueur_perso','$nom_g','$x','$y','1','7','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '')";
+
+							if (!$mysqli->query($insert_sql)) {
+								printf("Erreur : %s\n", $mysqli->error);
+							}
+							$id_g = $mysqli->insert_id;
+							
+							$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn); //placement du perso position x
+							$y = pos_zone_rand_y($y_min_spawn, $y_max_spawn); //placement du perso position y
+						
+							// verification si la position est libre
+							$libre = verif_pos_libre($mysqli, $x, $y); 
+							while ($libre == 1) {
+								// position pas libre => on rechoisit de nouvelles coordonnées
+								$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn); 
+								$y = pos_zone_rand_y($y_min_spawn, $y_max_spawn);
+								$libre = verif_pos_libre($x, $y);
+							}
+							
+							// insertion du Grouillot sur la carte
+							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id_g', image_carte='$image_g' WHERE x_carte=$x AND y_carte=$y";
 							$mysqli->query($sql);
 					
 							$_SESSION["ID_joueur"] = $IDJoueur_perso;

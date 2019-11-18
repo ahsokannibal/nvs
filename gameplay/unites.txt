@@ -1,25 +1,47 @@
-* Cavalerie
-- PV : 800
-- PA : 100
-- PM : 100
-- Perception : 4
-- Protection : 25
-- Récupération : 30
-
-
-* Infanterie / Infirmier / Artillerie
-- PV : 500
-- PA : 100
-- PM : 50
-- Perception : 3
+* Cavalerie / Chef
+- PV : 750
+- PA : 10
+- PM : 10
+- Perception : 5
 - Protection : 20
+- Récupération : 40
+
+* Cavalerie Lourde
+- PV : 500
+- PA : 10
+- PM : 10
+- Perception : 5
+- Protection : 10
 - Récupération : 30
 
+* Infanterie
+- PV : 500
+- PA : 10
+- PM : 5
+- Perception : 4
+- Protection : 10
+- Récupération : 30
+
+* Infirmier 
+- PV : 500
+- PA : 10
+- PM : 6
+- Perception : 4
+- Protection : 10
+- Récupération : 30
+
+* Artillerie
+- PV : 500
+- PA : 10
+- PM : 3
+- Perception : 6
+- Protection : 10
+- Récupération : 30
 
 * Toutou
 - PV : 200
-- PA : 100
-- PM : 200
+- PA : 10
+- PM : 20
 - Perception : 5
 - Protection : 10
 - Récupération : 20
