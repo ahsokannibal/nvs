@@ -108,7 +108,7 @@ if(isset($_SESSION["ID_joueur"])){
 					
 					if ($pv + $recup >= $pv_max) { //il aurait recup plus de pv que son maximum
 						if($bonus < -1){
-							$sql = "UPDATE perso SET changementDe_perso='0' ,pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=bonus_perso+2, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
+							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=bonus_perso+2, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
 							$mysqli->query($sql);
 							$recup = $pv_max - $pv;
 			
@@ -116,7 +116,7 @@ if(isset($_SESSION["ID_joueur"])){
 							header("location:jeu/jouer.php");
 						}
 						else {
-							$sql = "UPDATE perso SET changementDe_perso='0' ,pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
+							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
 							$mysqli->query($sql);
 							$recup = $pv_max - $pv;
 			
@@ -126,14 +126,14 @@ if(isset($_SESSION["ID_joueur"])){
 					}
 					else {
 						if($bonus < -1){
-							$sql = "UPDATE perso SET changementDe_perso='0' ,pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pv_perso+recup_perso+$bonus_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=bonus_perso+2, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+1, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
+							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pv_perso+recup_perso+$bonus_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=bonus_perso+2, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+1, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
 							$mysqli->query($sql);
 			
 							// redirection
 							header("location:jeu/jouer.php");
 						}
 						else {
-							$sql = "UPDATE perso SET changementDe_perso='0' ,pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pv_perso+recup_perso+$bonus_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+1, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
+							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pv_perso+recup_perso+$bonus_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+1, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
 							$mysqli->query($sql);
 			
 							// redirection
@@ -161,7 +161,7 @@ if(isset($_SESSION["ID_joueur"])){
 					$mysqli->query($sql);
 					
 					// MAJ perso
-					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', arene='0', changementDe_perso='0' ,pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
+					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', arene='0', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
 					$mysqli->query($sql);
 		
 					//redirection
