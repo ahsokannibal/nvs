@@ -9,7 +9,6 @@ $mysqli = db_connexion();
 include ('../nb_online.php');
 
 $id = $_SESSION["id_perso"];
-$pseudo = $_SESSION["nom_perso"];
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -34,10 +33,11 @@ else {
 	$id_attaque = $_POST["id_attaque"];
 	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_attaque");
 }
+
 if($verif){
 	//traitement de l'attaque sur un perso
 	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] < 10000) || (isset($_POST["re_attaque"]) && $id_c < 10000) ) { 
-		if(!in_bat($id)){
+		if(!in_bat($mysqli, $id)){
 	
 			if(isset($_POST["re_attaque"])) {
 				$id_cible = $id_c;
@@ -77,7 +77,7 @@ if($verif){
 			}
 			
 			// recup des données du perso
-			$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+			$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_perso = $res->fetch_assoc();
 			
@@ -99,7 +99,6 @@ if($verif){
 			$bp_perso = $t_perso["bonusPerception_perso"];
 			$ch_perso = $t_perso["charge_perso"];
 			$chM_perso = $t_perso["chargeMax_perso"];
-			$lvl_perso = $t_perso["niveau_perso"];
 			$dc_perso = $t_perso["dateCreation_perso"];
 			$clan_perso = $t_perso["clan"];
 			
@@ -115,7 +114,7 @@ if($verif){
 				}
 				
 				// recuperation des données du perso cible
-				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan FROM perso WHERE ID_perso='$id_cible'";
+				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan FROM perso WHERE ID_perso='$id_cible'";
 				$res = $mysqli->query($sql);
 				$t_cible = $res->fetch_assoc();
 				
@@ -138,7 +137,6 @@ if($verif){
 				$bp_cible = $t_cible["bonusPerception_perso"];
 				$ch_cible = $t_cible["charge_perso"];
 				$chM_cible = $t_cible["chargeMax_perso"];
-				$lvl_cible = $t_cible["niveau_perso"];
 				$dc_cible = $t_cible["dateCreation_perso"];
 				$or_cible = $t_cible["or_perso"];
 				$image_perso_cible = $t_cible["image_perso"];
@@ -146,10 +144,6 @@ if($verif){
 				
 				// Récupération de la couleur associée au clan de la cible
 				$couleur_clan_cible = couleur_clan($clan_cible);
-				
-				// image de la cible
-				$t_im_cible = explode("t",$image_perso_cible);
-				$im_p_cible = $t_im_cible[0]."e.png";
 				
 				// verif chanceux et recup nb_points de chance
 				if(est_chanceux($mysqli, $id_cible)){
@@ -178,10 +172,6 @@ if($verif){
 				
 				// Récupération de la couleur associée au clan du perso
 				$couleur_clan_perso = couleur_clan($clan_perso);
-					
-				// image du perso
-				$t_im = explode("t",$image_perso);
-				$im_p = $t_im[0]."e.png";
 				
 				$pa_restant = $pa_perso - $coutPa_attaque;
 				if($pa_restant <= 0){
@@ -194,13 +184,13 @@ if($verif){
 						<tr><td width=25%>	
 						<table border=0 width=100%>
 							<tr>
-							<td align="center"><img src="../images/<?php echo $im_p; ?>"></td>
+							<td align="center"><img src="../images/<?php echo $image_perso; ?>"></td>
 							</tr>
 						</table>
 						</td><td width=75%>
 						<table border=0 width=100%>
 						<tr>
-							<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso." - <b><u>niveau :</u></b> ".$lvl_perso; ?></td>
+							<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso; ?></td>
 						<tr>
 						<tr>
 							<td><?php echo "<u><b>Xp :</b></u> ".$xp_perso." - <u><b>Pi :</b></u> ".$pi_perso.""; ?></td>
@@ -226,13 +216,13 @@ if($verif){
 						<tr><td width=25%>	
 						<table border=0 width=100%>
 							<tr>
-							<td align="center"><img src="../images/<?php echo $im_p_cible; ?>"></td>
+							<td align="center"><img src="../images/<?php echo $image_perso_cible; ?>"></td>
 							</tr>
 						</table>
 						</td><td width=75%>
 						<table border=0 width=100%>
 						<tr>
-							<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_cible." - <b><u>niveau :</u></b> ".$lvl_cible; ?></td>
+							<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_cible; ?></td>
 						<tr>
 						<tr>
 							<td><?php echo "<u><b>Xp :</b></u> ".$xp_cible.""; ?></td>
@@ -283,7 +273,7 @@ if($verif){
 						if ($score_cible <= $score_perso) { //la cible est touchée
 							
 							// Récupération du gain d'xp en fonction des levels
-							$gain_xp = gain_xp_level($lvl_perso, $lvl_cible, $clan_perso, $clan_cible);
+							$gain_xp = gain_xp($clan_perso, $clan_cible);
 			
 							// Si le perso est équipée d'une arme => On prend les dégats de l'arme
 							if($id_arme_equipee){				
@@ -293,10 +283,12 @@ if($verif){
 									$max_degats_arme = $degatMax_arme_equipee;
 								}
 								else {
-									$min_degats_arme = $degats_perso * $multiplicateurMin_degats_equipee + $additionMin_degats_equipee;
-									$max_degats_arme = $degats_perso * $multiplicateurMax_degats_equipee + $additionMax_degats_equipee;
+									$min_degats_arme = 1;
+									$max_degats_arme = 5;
 								}
 								$degats = rand($min_degats_arme, $max_degats_arme);
+							} else {
+								$degats = rand(1, 5);
 							}
 							
 							// Mise a jour des degats selon l'armure de la cible
@@ -308,7 +300,7 @@ if($verif){
 							// Vérification si la cible posséde des armures
 							$sql_armure_cible = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_cible' AND est_portee='1' ORDER BY id_armure";
 							$res_armure_cible = $mysqli->query($sql_armure_cible);
-							$nb_armure_cible = $res_armure_ciblenum_rows;
+							$nb_armure_cible = $res_armure_cible->num_rows;
 							
 							if($nb_armure_cible){								
 								// Calcul des pv de dommage
@@ -360,7 +352,7 @@ if($verif){
 							// mise a jour des pv et des malus de la cible
 							$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_final, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible'";
 							$mysqli->query($sql);
-							echo "<br>Vous avez infligé $degats_final dégâts à la cible (dégâts : $degats - armure cible : $armure_utilisee).<br><br>";
+							echo "<br>Vous avez infligé $degats_final dégâts à la cible.<br><br>";
 							echo "Vous avez gagné $gain_xp xp.<br>";
 							
 							// mise a jour des xp/pi/pc
@@ -428,9 +420,6 @@ if($verif){
 									$mysqli->query($sql);
 								}
 							}
-							
-							// MAJ Level perso
-							maj_niveau_perso($mysqli, $id, $lvl_perso, $nom_perso, $couleur_clan_perso);
 							
 						}
 						else { // la cible a esquivé l'attaque
@@ -1117,9 +1106,6 @@ if($verif){
 							echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 						}
 						
-						// MAJ Level perso
-						maj_niveau_perso($mysqli, $id, $lvl_perso, $nom_perso, $couleur_clan_perso);
-						
 					}
 					else { // la cible a esquivé l'attaque
 		
@@ -1548,9 +1534,6 @@ if($verif){
 						echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 					}
 					/* Fin du traitement de la destruction du bâtiment*/
-					
-					// MAJ Level perso
-					maj_niveau_perso($mysqli, $id, $lvl_perso, $nom_perso, $couleur_clan_perso);
 					
 					//mise à jour des pa
 					$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_attaque WHERE id_perso='$id'";

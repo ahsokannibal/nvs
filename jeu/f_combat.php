@@ -143,30 +143,19 @@ function is_a_portee_attaque($mysqli, $carte, $id_perso, $id_cible, $portee_min,
 
 /**
   * Fonction qui renvoie le gain d'xp lors d'une attaque en fonction des levels des deux protagonistes (attaquant et cible)
-  * @param $lvl_perso	: Le level du perso attaquant
-  * @param $lvl_cible	: Le level du perso cible de l'attaque
   * @param $clan_perso	: Le clan du perso
   * @param $clan_cible	: Le clan de la cible
   * @return int		: Le nombre d'xp gagne par l'attaquant
   */
-function gain_xp_level($lvl_perso, $lvl_cible, $clan_perso, $clan_cible){
-	$dif_lvl = $lvl_cible - $lvl_perso;
-	if($dif_lvl <= 0){
-		if($clan_cible != $clan_perso){
-			$gain_xp = 2;
-		}
-		else {
-			$gain_xp = 1;
-		}
+function gain_xp($clan_perso, $clan_cible){
+
+	if($clan_cible != $clan_perso){
+		$gain_xp = 2;
 	}
 	else {
-		if($clan_cible != $clan_perso){
-			$gain_xp = 2 + $dif_lvl;
-		}
-		else {
-			$gain_xp = floor((2 + $dif_lvl)/2);
-		}
+		$gain_xp = 1;
 	}
+	
 	return $gain_xp;
 }
 
@@ -189,34 +178,16 @@ function defense_armure($mysqli, $id_perso){
 	$total_armure = $t["sum_armure"];
 	
 	// On vefie s'il soufre ou non de malus s'il est nu
-	if(!possede_comp_nu($id_perso)){
-		// On verifie s'il porte un casque
-		$sql_c = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND corps_armure='1' AND est_portee='1'";
+	if(!possede_comp_nu($mysqli, $id_perso)){
+		
+		// On verifie s'il porte une armure
+		$sql_c = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='1'";
 		$res_c = $mysqli->query($sql_c);
 		$ok_c = $res_c->num_rows;
-		if($ok_c == 0)
+		if($ok_c == 0) {
 			$malus = $malus - 1;
+		}
 			
-		// On verifie s'il porte une armure de corps
-		$sql_co = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND corps_armure='3' AND est_portee='1'";
-		$res_co = $mysqli->query($sql_co);
-		$ok_co = $res_co->num_rows;
-		if($ok_co == 0)
-			$malus = $malus - 1;
-			
-		// On verifie s'il porte un pantalon
-		$sql_p = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND corps_armure='8' AND est_portee='1'";
-		$res_p = $mysqli->query($sql_p);
-		$ok_p = $res_p->num_rows;
-		if($ok_p == 0)
-			$malus = $malus - 1;
-			
-		// On verifie s'il porte des bottes
-		$sql_c = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND corps_armure='9' AND est_portee='1'";
-		$res_c = $mysqli->query($sql_c);
-		$ok_c = $res_c->num_rows;
-		if($ok_c == 0)
-			$malus = $malus - 1;
 	}
 	
 	if($total_armure == null)
@@ -260,54 +231,6 @@ function possede_comp_nu($mysqli, $id_perso){
 	}
 
 	return 0;
-}  
-
-/**
-  * Fonction qui permet de verifier et de mettre a jour le niveau d'un perso
-  * @param $id_perso			: L'identifiant du perso
-  * @param $lvl_perso			: Le niveau actuel du perso
-  * @param $nom_perrso		: Le nom du perso
-  * @param $couleur_clan_perso	: La couleur associee au clan du perso
-  * @return Void
-  */
-function maj_niveau_perso($mysqli, $id_perso, $lvl_perso, $nom_perso, $couleur_clan_perso){
-	//verification si perso a assez d'xp pour changer de niveau
-	// recuperation du nombre d'xp du perso apres attaque
-	$sql2 = "SELECT xp_perso, pi_perso FROM perso WHERE id_perso='$id_perso'";
-	$res2 = $mysqli->query($sql2);
-	$t_perso2 = $res2->fetch_assoc();
-	$xp_per = $t_perso2["xp_perso"];
-	$pi_per = $t_perso2["pi_perso"];
-							
-	//recuperation du nombre d'xp pour le passage au grade suivant
-	$sqlg = "SELECT xpDebut_niveau FROM niveau WHERE id_niveau=$lvl_perso+1";
-	$resg = $mysqli->query($sqlg);
-	$t_persog = $resg->fetch_assoc();
-	$xpNext_lvl = $t_persog["xpDebut_niveau"];
-	
-	// Si son nombre d'xp est superieur ou egal au nombre d'xp necessaire pour atteindre le niveau suivant
-	// il passe au niveau suivant
-	if($xp_per >= $xpNext_lvl) {
-		if($xpNext_lvl != 0){
-			// maj niveau perso
-			$sql = "UPDATE perso SET niveau_perso=niveau_perso+1, pi_perso=pi_perso+5 WHERE id_perso='$id_perso'";
-			$mysqli->query($sql);
-										
-			$lvl_perso = $lvl_perso+1;
-			$pi_tmp = $pi_per+5;
-			
-			// affichage message
-			echo "<br><br>Vous êtes passé niveau <b>".$lvl_perso."</b> !<br/><font color=red>FELICITATION !</font><br/>";
-			echo "Vous avez <b>".$pi_tmp."</b> points à répartir dans vos caractéristiques.<br>";
-										
-			// maj evenement
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','est passé niveau ',NULL,'','$lvl_perso',NOW(),'0')";
-			$mysqli->query($sql);
-		}
-		else {
-			echo "<br/>Vous ne pouvez plus gagner de niveau (<b>niveau max atteint</b>).<br/>";
-		}
-	}
 }
 
 /** 
@@ -356,7 +279,7 @@ function port_armures_lourdes($mysqli, $id_perso){
   */
 function verif_coche_mail($mysqli, $id_joueur){
 	$sql_i = "select mail_info from joueur WHERE id_joueur ='".$id_joueur."'";
-	$res_i = $mysqli->query($sql_i, __LINE__, __FILE__);
+	$res_i = $mysqli->query($sql_i);
 	$tabAttr_i = $res_i->fetch_assoc();
 	return $tabAttr_i["mail_info"];
 }

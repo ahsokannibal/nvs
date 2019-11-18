@@ -1108,10 +1108,10 @@ if($dispo || !$admin){
 														}
 														
 														if(isset($groupe) && $groupe != ''){
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"imagedessous\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a></td>";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a></td>";
 														}
 														else {
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"imagedessous\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a></td>";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a></td>";
 														}
 													}
 												}

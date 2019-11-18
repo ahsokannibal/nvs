@@ -675,12 +675,11 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 	$recup_malus = calcul_recup_malus($id_action);
 	
 	//recuperation des infos sur le perso
-	$sql = "SELECT nom_perso, clan, niveau_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, clan, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	$nom_perso = $t_p["nom_perso"];
 	$pa_perso = $t_p["pa_perso"];
-	$niveau_perso = $t_p['niveau_perso'];
 	$camp = $t_p["clan"];
 	
 	// recupetion de la couleur du camp du perso
@@ -689,7 +688,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 	// test pa
 	if($pa_perso >= $coutPa){
 		// recuperation des malus du perso cible
-		$sql = "SELECT nom_perso, bonus_perso, pv_perso, pvMax_perso, niveau_perso, clan FROM perso WHERE id_perso='$id_cible'";
+		$sql = "SELECT nom_perso, bonus_perso, pv_perso, pvMax_perso, clan FROM perso WHERE id_perso='$id_cible'";
 		$res = $mysqli->query($sql);
 		$t_pv = $res->fetch_assoc();
 		
@@ -697,14 +696,13 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 		$pv_cible = $t_pv['pv_perso'];
 		$pvMax_cible = $t_pv['pvMax_perso'];
 		$bonus_cible = $t_pv['bonus_perso'];
-		$niveau_cible = $t_pv['niveau_perso'];
 		$camp_cible = $t_pv['clan'];
 		
 		// recuperation de la couleur du camp du perso
 		$couleur_clan_cible = couleur_clan($camp_cible);
 		
 		// calcul gain xp
-		$gain_xp = gain_xp_level($niveau_perso, $niveau_cible, $camp, $camp_cible);
+		$gain_xp = gain_xp$camp, $camp_cible);
 		$gain_xp = min($gain_xp, 5);
 		
 		// Si on soigne les malus d'un perso autre que soi meme
@@ -820,13 +818,12 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	$pourcent = calcul_pourcentage_action($id_action);
 	
 	//recuperation des infos sur le perso
-	$sql = "SELECT nom_perso, clan, niveau_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, clan, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	
 	$nom_perso = $t_p["nom_perso"];
 	$pa_perso = $t_p["pa_perso"];
-	$niveau_perso = $t_p['niveau_perso'];
 	$camp = $t_p["clan"];
 	
 	// recuperation de la couleur du camp du perso
@@ -836,21 +833,20 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	if($pa_perso >= $coutPa){
 	
 		// recuperation des pv du perso cible
-		$sql = "SELECT nom_perso, pv_perso, pvMax_perso, niveau_perso, clan FROM perso WHERE id_perso='$id_cible'";
+		$sql = "SELECT nom_perso, pv_perso, pvMax_perso, clan FROM perso WHERE id_perso='$id_cible'";
 		$res = $mysqli->query($sql);
 		$t_pv = $res->fetch_assoc();
 		
 		$nom_cible = $t_pv['nom_perso'];
 		$pv_cible = $t_pv['pv_perso'];
 		$pvMax_cible = $t_pv['pvMax_perso'];
-		$niveau_cible = $t_pv['niveau_perso'];
 		$camp_cible = $t_pv['clan'];
 		
 		// recuperation de la couleur du camp du perso
 		$couleur_clan_cible = couleur_clan($camp_cible);
 		
 		// calcul gain xp
-		$gain_xp = gain_xp_level($niveau_perso, $niveau_cible, $camp, $camp_cible);
+		$gain_xp = gain_xp($camp, $camp_cible);
 		$gain_xp = min($gain_xp, 5);
 		
 		// Si on soigne un perso autre que soi meme
