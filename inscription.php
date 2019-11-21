@@ -192,7 +192,7 @@ if(config_dispo_jeu($mysqli)){
 							L\'admin de Nord VS Sud";
 							
 							// création du message
-							$sql = "INSERT INTO message VALUES ('', '" . $expediteur . "', NOW(), '" . $message . "', '" . $objet . "')";
+							$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message , objet_message ) VALUES ('" . $expediteur . "', NOW(), '" . $message . "', '" . $objet . "')";
 							$mysqli->query($sql);
 							$id_message = $mysqli->insert_id;
 							

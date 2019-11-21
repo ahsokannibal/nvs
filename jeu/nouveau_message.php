@@ -172,16 +172,19 @@ if(isset($_GET["id"])) {
 }
 
 if(isset($_GET["visu"]) && $_GET["visu"] == "ok"){
+	
 	$sql = "SELECT x_perso, y_perso, perception_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
+	
 	$x = $t["x_perso"];
 	$y = $t["y_perso"];
 	$perc = $t["perception_perso"];
 	
-	$res_visu = get_persos_visu($x,$y,$perc,$id_perso);
+	$res_visu = get_persos_visu($mysqli, $x, $y, $perc, $id_perso);
 	$tv =  $res_visu->fetch_assoc();
 	$visu = $tv["nom_perso"];
+	
 	while ($tv = $res_visu->fetch_assoc()){
 			$visu .=";".$tv["nom_perso"];
 	}
