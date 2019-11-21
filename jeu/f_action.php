@@ -702,7 +702,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 		$couleur_clan_cible = couleur_clan($camp_cible);
 		
 		// calcul gain xp
-		$gain_xp = gain_xp$camp, $camp_cible);
+		$gain_xp = gain_xp($camp, $camp_cible);
 		$gain_xp = min($gain_xp, 5);
 		
 		// Si on soigne les malus d'un perso autre que soi meme
@@ -2178,10 +2178,9 @@ function action_entrainement($mysqli, $id_perso){
  * @param $id_cible	: L'identifiant du personnage a qui on veut donner un objet
  * @param $type_objet	: La nature de l'objet (1 => Or, 2 => Objet, 3 => Arme, 4 => Armure)
  * @param $id_objet	: L'identifiant de l'objet a deposer
- * @param $pv_objet	: Les points de vie de l'objet qu'on souhaite deposer*
  * @param $quantite	: La quantite
  */
-function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $pv_objet, $quantite){
+function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $quantite){
 	
 	// On verifie que l'id du perso est correct
 	$verif_idPerso = preg_match("#^[0-9]*[0-9]$#i","$id_perso");
@@ -2197,233 +2196,224 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 			$verif_idObjet = preg_match("#^[0-9]*[0-9]$#i","$id_objet");
 			
 			if(($verif_idObjet || $id_objet=='-1') && $id_objet != "" && $id_objet != null){
+					
+				// On verifie que la cible est bien au CaC avec le perso
+				// Recuperation coordonnees perso
+				$sql_p = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
+				$res_p = $mysqli->query($sql_p);
+				$t_p = $res_p->fetch_assoc();
+				$x_perso = $t_p['x_perso'];
+				$y_perso = $t_p['y_perso'];
+					
+				$sql_v = "SELECT idPerso_carte FROM carte WHERE idPerso_carte='$id_cible' AND occupee_carte='1' AND x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte<=$y_perso+1 AND y_carte>=$y_perso-1";
+				$res_v = $mysqli->query($sql_v);
+				$verif_cac = $res_v->num_rows;
+				$t_v = $res_v->fetch_assoc();
+					
+				$verif_cac_idCible = $t_v['idPerso_carte'];
 				
-				// On verifie que les pv de l'objet sont correct
-				$verif_pvObjet = preg_match("#^[0-9]*[0-9]$#i","$id_cible");
-				
-				if($verif_pvObjet && $pv_objet != "" && $pv_objet != null){
-					
-					// On verifie que la cible est bien au CaC avec le perso
-					// Recuperation coordonnees perso
-					$sql_p = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
-					$res_p = $mysqli->query($sql_p);
-					$t_p = $res_p->fetch_assoc();
-					$x_perso = $t_p['x_perso'];
-					$y_perso = $t_p['y_perso'];
-					
-					$sql_v = "SELECT idPerso_carte FROM carte WHERE idPerso_carte='$id_cible' AND occupee_carte='1' AND x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte<=$y_perso+1 AND y_carte>=$y_perso-1";
-					$res_v = $mysqli->query($sql_v);
-					$verif_cac = $res_v->num_rows;
-					$t_v = $res_v->fetch_assoc();
-					
-					$verif_cac_idCible = $t_v['idPerso_carte'];
-					if($verif_cac == 1 && $verif_cac_idCible == $id_cible){
-						// On verifie que le perso possede bien l'objet qu'il souhaite donner
-						// Si c'est de l'or : on verifie qu'il possede bien la bonne quantite
-						if($type_objet == 1){
+				if($verif_cac == 1 && $verif_cac_idCible == $id_cible){
+					// On verifie que le perso possede bien l'objet qu'il souhaite donner
+					// Si c'est de l'or : on verifie qu'il possede bien la bonne quantite
+					if($type_objet == 1){
 							
-							$sql_vo = "SELECT or_perso FROM perso WHERE id_perso='$id_perso'";
-							$res_vo = $mysqli->query($sql_vo);
-							$t_vo = $res_vo->fetch_assoc();
+						$sql_vo = "SELECT or_perso FROM perso WHERE id_perso='$id_perso'";
+						$res_vo = $mysqli->query($sql_vo);
+						$t_vo = $res_vo->fetch_assoc();
 							
-							$or_perso = $t_vo['or_perso'];
-							
-							if($or_perso >= $quantite){
-								
-								// On met a jour l'or du perso
-								$sql_u = "UPDATE perso SET or_perso=or_perso-$quantite WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_u);
-								
-								// On met a jour l'or de la cible
-								$sql_u2 = "UPDATE perso SET or_perso=or_perso+$quantite WHERE id_perso='$id_cible'";
-								$mysqli->query($sql_u2);
-								
-								// Recuperation infos cible
-								$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
-								
-								$nom_cible = $t['nom_perso'];
-								$clan_cible = $t['clan'];
-								$couleur_clan_cible = couleur_clan($clan_cible);
-								
-								echo "Vous avez donné <b>$quantite or</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
-							else {
-								echo "<font color='red'>Vous ne possédez pas assez d'or.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
-						}
+						$or_perso = $t_vo['or_perso'];
 						
-						// Si c'est un objet ou une arme ou une armure : on verifie qu'il le/la possede
-						// Objet
-						if($type_objet == 2){
-							
-							$sql_vo = "SELECT count(*) as q_obj FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'";
-							$res_vo = $mysqli->query($sql_vo);
-							$t_vo = $res_vo->fetch_assoc();
-							
-							$q_obj = $t_vo['q_obj'];
-							if($q_obj >= $quantite){
+						if($or_perso >= $quantite){
 								
-								// On supprime l'objet de l'inventaire du perso
-								$sql_d = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' LIMIT 1";
-								$mysqli->query($sql_d);
+							// On met a jour l'or du perso
+							$sql_u = "UPDATE perso SET or_perso=or_perso-$quantite WHERE id_perso='$id_perso'";
+							$mysqli->query($sql_u);
 								
-								// Recuperation des infos de l'objet
-								$sql = "SELECT poids_objet, nom_objet FROM objet WHERE id_objet='$id_objet'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
+							// On met a jour l'or de la cible
+							$sql_u2 = "UPDATE perso SET or_perso=or_perso+$quantite WHERE id_perso='$id_cible'";
+							$mysqli->query($sql_u2);
 								
-								$poids_objet = $t['poids_objet'];
-								$nom_objet = $t['nom_objet'];
-																
-								// On met a jour le poids du perso
-								$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_objet WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_u);
+							// Recuperation infos cible
+							$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
 								
-								// On ajoute l'objet dans l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_objet VALUES('$id_cible','$id_objet')";
-								$mysqli->query($sql_i);
+							$nom_cible = $t['nom_perso'];
+							$clan_cible = $t['clan'];
+							$couleur_clan_cible = couleur_clan($clan_cible);
 								
-								// On met a jour le poids de la cible
-								$sql_u2 = "UPDATE perso SET charge_perso=charge_perso+$poids_objet WHERE id_perso='$id_cible'";
-								$mysqli->query($sql_u2);
-								
-								// Recuperation des informations de la cible
-								$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
-								$res_c = $mysqli->query($sql_c);
-								$t_c = $res_c->fetch_assoc();
-								
-								$nom_cible = $t_c['nom_perso'];
-								$clan_cible = $t_c['clan'];
-								$couleur_clan_cible = couleur_clan($clan_cible);
-								
-								echo "Vous avez donné <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
-							else {
-								echo "<font color='red'>Vous ne possédez pas l'objet que vous souhaitiez donner.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
+							echo "Vous avez donné <b>$quantite or</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 						}
-							
-						// Arme
-						if($type_objet == 3){
-							
-							$sql_vo = "SELECT count(*) as q_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND pv_arme='$pv_objet'";
-							$res_vo = $mysqli->query($sql_vo);
-							$t_vo = $res_vo->fetch_assoc();
-							
-							$q_arme = $t_vo['q_arme'];
-							
-							if($q_arme >= $quantite){
-								
-								// On supprime l'arme de l'inventaire du perso
-								$sql_d = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND pv_arme='$pv_objet'";
-								$mysqli->query($sql_d);
-								
-								// recuperation des infos de l'arme
-								$sql = "SELECT nom_arme, poids_arme FROM arme WHERE id_arme='$id_objet'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
-								
-								$nom_arme = $t['nom_arme'];
-								$poids_arme = $t['poids_arme'];
-								
-								// On met a jour le poids du perso
-								$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_u);
-								
-								// On ajoute l'arme a l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_arme VALUES('$id_cible','$id_objet','0','$pv_objet','1')";
-								$mysqli->query($sql_i);
-								
-								// On met a jour le poids de la cible
-								$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_cible'";
-								$mysqli->query($sql_u);
-								
-								// Recuperation des informations de la cible
-								$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
-								$res_c = $mysqli->query($sql_c);
-								$t_c = $res_c->fetch_assoc();
-								
-								$nom_cible = $t_c['nom_perso'];
-								$clan_cible = $t_c['clan'];
-								$couleur_clan_cible = couleur_clan($clan_cible);
-								
-								echo "Vous avez donné <b>$nom_arme</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-								
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
-							else {
-								echo "<font color='red'>Vous ne possédez pas l'arme que vous souhaitiez donner.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
-						}
-							
-						// Armure
-						if($type_objet == 4){
-							
-							$sql_vo = "SELECT count(*) as q_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND pv_armure='$pv_objet'";
-							$res_vo = $mysqli->query($sql_vo);
-							$t_vo = $res_vo->fetch_assoc();
-							
-							$q_armure = $t_vo['q_armure'];
-							
-							if($q_armure >= $quantite){
-								
-								// On supprime l'armure de l'inventaire du perso
-								$sql_d = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND pv_armure='$pv_objet'";
-								$mysqli->query($sql_d);
-								
-								// recuperation des infos de l'armure
-								$sql = "SELECT nom_armure, poids_armure, corps_armure FROM armure WHERE id_armure='$id_objet'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
-								
-								$nom_armure = $t['nom_armure'];
-								$poids_armure = $t['poids_armure'];
-								$corps_armure = $t['corps_armure'];
-								
-								// On met a jour le poids du perso
-								$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_armure WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_u);
-								
-								// On ajoute l'armure a l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_armure VALUES('$id_cible','$id_objet','0','$corps_armure','$pv_objet')";
-								$mysqli->query($sql_i);
-								
-								// On met a jour le poids de la cible
-								$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_armure WHERE id_perso='$id_cible'";
-								$mysqli->query($sql_u);
-								
-								// Recuperation des informations de la cible
-								$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
-								$res_c = $mysqli->query($sql_c);
-								$t_c = $res_c->fetch_assoc();
-								
-								$nom_cible = $t_c['nom_perso'];
-								$clan_cible = $t_c['clan'];
-								$couleur_clan_cible = couleur_clan($clan_cible);
-								
-								echo "Vous avez donné <b>$nom_armure</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
-							else {
-								echo "<font color='red'>Vous ne possédez pas l'armure que vous souhaitiez donner.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
-							}
+						else {
+							echo "<font color='red'>Vous ne possédez pas assez d'or.</font>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 						}
 					}
-					else {
-						echo "<font color='red'>La cible n'est pas au Corps à corps.</font>";
-						echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						
+					// Si c'est un objet ou une arme ou une armure : on verifie qu'il le/la possede
+					// Objet
+					if($type_objet == 2){
+							
+						$sql_vo = "SELECT count(*) as q_obj FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'";
+						$res_vo = $mysqli->query($sql_vo);
+						$t_vo = $res_vo->fetch_assoc();
+							
+						$q_obj = $t_vo['q_obj'];
+						if($q_obj >= $quantite){
+								
+							// On supprime l'objet de l'inventaire du perso
+							$sql_d = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' LIMIT 1";
+							$mysqli->query($sql_d);
+								
+							// Recuperation des infos de l'objet
+							$sql = "SELECT poids_objet, nom_objet FROM objet WHERE id_objet='$id_objet'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+								
+							$poids_objet = $t['poids_objet'];
+							$nom_objet = $t['nom_objet'];
+																
+							// On met a jour le poids du perso
+							$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_objet WHERE id_perso='$id_perso'";
+							$mysqli->query($sql_u);
+								
+							// On ajoute l'objet dans l'inventaire de la cible
+							$sql_i = "INSERT INTO perso_as_objet VALUES('$id_cible','$id_objet')";
+							$mysqli->query($sql_i);
+								
+							// On met a jour le poids de la cible
+							$sql_u2 = "UPDATE perso SET charge_perso=charge_perso+$poids_objet WHERE id_perso='$id_cible'";
+							$mysqli->query($sql_u2);
+								
+							// Recuperation des informations de la cible
+							$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
+							$res_c = $mysqli->query($sql_c);
+							$t_c = $res_c->fetch_assoc();
+								
+							$nom_cible = $t_c['nom_perso'];
+							$clan_cible = $t_c['clan'];
+							$couleur_clan_cible = couleur_clan($clan_cible);
+								
+							echo "Vous avez donné <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						}
+						else {
+							echo "<font color='red'>Vous ne possédez pas l'objet que vous souhaitiez donner.</font>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						}
+					}
+							
+					// Arme
+					if($type_objet == 3){
+							
+						$sql_vo = "SELECT count(*) as q_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet'";
+						$res_vo = $mysqli->query($sql_vo);
+						$t_vo = $res_vo->fetch_assoc();
+							
+						$q_arme = $t_vo['q_arme'];
+							
+						if($q_arme >= $quantite){
+								
+							// On supprime l'arme de l'inventaire du perso
+							$sql_d = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet'";
+							$mysqli->query($sql_d);
+								
+							// recuperation des infos de l'arme
+							$sql = "SELECT nom_arme, poids_arme FROM arme WHERE id_arme='$id_objet'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+								
+							$nom_arme = $t['nom_arme'];
+							$poids_arme = $t['poids_arme'];
+								
+							// On met a jour le poids du perso
+							$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
+							$mysqli->query($sql_u);
+								
+							// On ajoute l'arme a l'inventaire de la cible
+							$sql_i = "INSERT INTO perso_as_arme VALUES('$id_cible','$id_objet','0')";
+							$mysqli->query($sql_i);
+								
+							// On met a jour le poids de la cible
+							$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_cible'";
+							$mysqli->query($sql_u);
+								
+							// Recuperation des informations de la cible
+							$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
+							$res_c = $mysqli->query($sql_c);
+							$t_c = $res_c->fetch_assoc();
+								
+							$nom_cible = $t_c['nom_perso'];
+							$clan_cible = $t_c['clan'];
+							$couleur_clan_cible = couleur_clan($clan_cible);
+								
+							echo "Vous avez donné <b>$nom_arme</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						}
+						else {
+							echo "<font color='red'>Vous ne possédez pas l'arme que vous souhaitiez donner.</font>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						}
+					}
+							
+					// Armure
+					if($type_objet == 4){
+							
+						$sql_vo = "SELECT count(*) as q_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet'";
+						$res_vo = $mysqli->query($sql_vo);
+						$t_vo = $res_vo->fetch_assoc();
+							
+						$q_armure = $t_vo['q_armure'];
+							
+						if($q_armure >= $quantite){
+								
+							// On supprime l'armure de l'inventaire du perso
+							$sql_d = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet'";
+							$mysqli->query($sql_d);
+								
+							// recuperation des infos de l'armure
+							$sql = "SELECT nom_armure, poids_armure, corps_armure FROM armure WHERE id_armure='$id_objet'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+								
+							$nom_armure = $t['nom_armure'];
+							$poids_armure = $t['poids_armure'];
+							$corps_armure = $t['corps_armure'];
+								
+							// On met a jour le poids du perso
+							$sql_u = "UPDATE perso SET charge_perso=charge_perso-$poids_armure WHERE id_perso='$id_perso'";
+							$mysqli->query($sql_u);
+							
+							// On ajoute l'armure a l'inventaire de la cible
+							$sql_i = "INSERT INTO perso_as_armure VALUES('$id_cible','$id_objet','0')";
+							$mysqli->query($sql_i);
+								
+							// On met a jour le poids de la cible
+							$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_armure WHERE id_perso='$id_cible'";
+							$mysqli->query($sql_u);
+								
+							// Recuperation des informations de la cible
+							$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
+							$res_c = $mysqli->query($sql_c);
+							$t_c = $res_c->fetch_assoc();
+								
+							$nom_cible = $t_c['nom_perso'];
+							$clan_cible = $t_c['clan'];
+							$couleur_clan_cible = couleur_clan($clan_cible);
+								
+							echo "Vous avez donné <b>$nom_armure</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						}
+						else {
+							echo "<font color='red'>Vous ne possédez pas l'armure que vous souhaitiez donner.</font>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						}
 					}
 				}
 				else {
-					echo "<font color='red'>Les pv de l'objet ne sont pas correct, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+					echo "<font color='red'>La cible n'est pas au Corps à corps.</font>";
 					echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 				}
 			}
@@ -2449,10 +2439,9 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
   * @param $id_perso	: L'identifiant du personnage qui veut deposer un objet
   * @param $type_objet	: La nature de l'objet (1 => Or, 2 => Objet, 3 => Arme, 4 => Armure)
   * @param $id_objet	: L'identifiant de l'objet a deposer
-  * @param $pv_objet	: Les points de vie de l'objet qu'on souhaite deposer
   * @return Void
   */
-function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet){
+function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 
 	// Verification que le perso possede bien cet objet
 	// Objet
@@ -2463,31 +2452,32 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 		$res = $mysqli->query($sql);
 		$nb = $res->num_rows;
 		$t = $res->fetch_assoc();
+		
 		$poid_objet = $t["poids_objet"];
 	}
 	
 	// Arme
 	if($type_objet == 3){
-		$sql = "SELECT perso_as_arme.id_arme, poids_arme, pv_arme FROM perso_as_arme, arme WHERE id_perso='$id_perso' 
-				AND perso_as_arme.id_arme='$id_objet' AND est_portee='0' AND pv_arme='$pv_objet'
+		$sql = "SELECT perso_as_arme.id_arme, poids_arme FROM perso_as_arme, arme WHERE id_perso='$id_perso' 
+				AND perso_as_arme.id_arme='$id_objet' AND est_portee='0'
 				AND perso_as_arme.id_arme = arme.id_arme";
 		$res = $mysqli->query($sql);
 		$nb = $res->num_rows;
 		$t = $res->fetch_assoc();
+		
 		$poid_objet = $t["poids_arme"];
-		$pv_objet = $t["pv_arme"];
 	}
 	
 	// Armure
 	if($type_objet == 4){
-		$sql = "SELECT perso_as_armure.id_armure, poids_armure, pv_armure FROM perso_as_armure, armure WHERE id_perso='$id_perso' 
-				AND perso_as_armure.id_armure='$id_objet' AND est_portee='0' AND pv_armure='$pv_objet'
+		$sql = "SELECT perso_as_armure.id_armure, poids_armure FROM perso_as_armure, armure WHERE id_perso='$id_perso' 
+				AND perso_as_armure.id_armure='$id_objet' AND est_portee='0'
 				AND perso_as_armure.id_armure = armure.id_armure";
 		$res = $mysqli->query($sql);
 		$nb = $res->num_row;
 		$t = $res->fetch_assoc();
+		
 		$poid_objet = $t["poids_armure"];
-		$pv_objet = $t["pv_armure"];
 	}
 	
 	if($nb){
@@ -2513,12 +2503,12 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 			}
 			if($type_objet == 3){ // Arme
 				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND pv_arme='$pv_objet' LIMIT 1";
+				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' LIMIT 1";
 				$mysqli->query($sql);
 			}
 			if($type_objet == 4){ // Armure
 				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND pv_armure='$pv_objet' LIMIT 1";
+				$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' LIMIT 1";
 				$mysqli->query($sql);
 			}
 			
@@ -2526,48 +2516,27 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
 			$sql = "UPDATE perso SET charge_perso = charge_perso - $poid_objet, pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
-			if($pv_objet){
-				// Verification si l'objet existe deja sur cette case
-				$sql = "SELECT nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' 
-						AND objet_in_carte.x_carte = perso.x_perso AND objet_in_carte.y_carte = perso.y_perso
-						AND type_objet = '$type_objet' AND id_objet = '$id_objet' AND pv_objet='$pv_objet'";
-			}
-			else {
-				// Verification si l'objet existe deja sur cette case
-				$sql = "SELECT nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' 
-						AND objet_in_carte.x_carte = perso.x_perso AND objet_in_carte.y_carte = perso.y_perso
-						AND type_objet = '$type_objet' AND id_objet = '$id_objet'";
-			}
+			
+			// Verification si l'objet existe deja sur cette case
+			$sql = "SELECT nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' 
+					AND objet_in_carte.x_carte = perso.x_perso AND objet_in_carte.y_carte = perso.y_perso
+					AND type_objet = '$type_objet' AND id_objet = '$id_objet'";
 			$res = $mysqli->query($sql);
 			$to = $res->fetch_assoc();
+			
 			$nb_o = $to["nb_objet"];
 			
 			if($nb_o){
-				if($pv_objet){
-					// On met a jour le nombre
-					$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
-							WHERE type_objet='$type_objet' AND id_objet='$id_objet' AND pv_objet='$pv_objet'
-							AND x_carte='$x_perso' AND y_carte='$y_perso'";
-				}
-				else {
-					// On met a jour le nombre
-					$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
-							WHERE type_objet='$type_objet' AND id_objet='$id_objet'
-							AND x_carte='$x_perso' AND y_carte='$y_perso'";
-				}
+				// On met a jour le nombre
+				$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
+						WHERE type_objet='$type_objet' AND id_objet='$id_objet'
+						AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				$mysqli->query($sql);
 			}
 			else {
-				if(isset($pv_objet) && $pv_objet > 0){					
-					// Insertion dans la table objet_in_carte : On cree le premier enregistrement
-					$sql = "INSERT INTO objet_in_carte VALUES ('$type_objet','$id_objet','1','$x_perso','$y_perso','$pv_objet')";
-					$mysqli->query($sql);
-				}
-				else {
-					// Insertion dans la table objet_in_carte : On cree le premier enregistrement
-					$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('$type_objet','$id_objet','1','$x_perso','$y_perso')";
-					$mysqli->query($sql);
-				}
+				// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+				$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('$type_objet','$id_objet','1','$x_perso','$y_perso')";
+				$mysqli->query($sql);
 			}
 			
 			echo "<center>Vous venez de déposer un objet à terre</center><br />";
@@ -2585,22 +2554,14 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_obj
   * @param $id_perso	: L'identifiant du perso quiveut ramasser un objet
   * @param $type_objet	: Le type de l'objet (2 => Objet, 3 => Arme, 4 => Armure)
   * @param $id_objet	: L'identifiant de l'objet qu'on veut ramasser
-  * @param $pv_objet	: Points de vie de l'objet qu'on souhaite ramasser
   * @return Void
   */
-function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet){
+function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet){
 	
 	// Verification que l'objet est bien toujours sur la case du perso
-	if($pv_objet){
-		$sql = "SELECT nb_objet FROM objet_in_carte,perso WHERE id_perso='$id_perso' 
-				AND x_carte=x_perso AND y_carte=y_perso
-				AND type_objet='$type_objet' AND id_objet='$id_objet' AND pv_objet='$pv_objet'";
-	}
-	else {
-		$sql = "SELECT nb_objet FROM objet_in_carte,perso WHERE id_perso='$id_perso' 
-				AND x_carte=x_perso AND y_carte=y_perso
-				AND type_objet='$type_objet' AND id_objet='$id_objet'";
-	}
+	$sql = "SELECT nb_objet FROM objet_in_carte,perso WHERE id_perso='$id_perso' 
+			AND x_carte=x_perso AND y_carte=y_perso
+			AND type_objet='$type_objet' AND id_objet='$id_objet'";
 	$res = $mysqli->query($sql);
 	$to = $res->fetch_assoc();
 	$verif = $res->num_rows;
@@ -2624,35 +2585,23 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 			// Verification si l'objet est a plus de 1 exemplaire sur la case => maj du nombre plutot que suppression			
 			$nb_o = $to["nb_objet"];
 			if($nb_o > 1){
-				if($pv_objet){
-					// On met a jour le nombre d'objet sur la case
-					$sql = "UPDATE objet_in_carte SET nb_objet=nb_objet-1 WHERE type_objet='$type_objet' 
-							AND id_objet='$id_objet' AND pv_objet='$pv_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
-				}
-				else {
-					// On met a jour le nombre d'objet sur la case
-					$sql = "UPDATE objet_in_carte SET nb_objet=nb_objet-1 WHERE type_objet='$type_objet' 
-							AND id_objet='$id_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
-				}
+				
+				// On met a jour le nombre d'objet sur la case
+				$sql = "UPDATE objet_in_carte SET nb_objet=nb_objet-1 WHERE type_objet='$type_objet' 
+						AND id_objet='$id_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				$mysqli->query($sql);
 			}
 			else {
-				if($pv_objet){
-					// Il n'est qu'en 1 exemplaire sur la case => on supprime la ligne dans la bdd
-					$sql = "DELETE FROM objet_in_carte WHERE type_objet='$type_objet' 
-							AND id_objet='$id_objet' AND pv_objet='$pv_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
-				}
-				else {
-					// Il n'est qu'en 1 exemplaire sur la case => on supprime la ligne dans la bdd
-					$sql = "DELETE FROM objet_in_carte WHERE type_objet='$type_objet' 
-							AND id_objet='$id_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
-				}
+				// Il n'est qu'en 1 exemplaire sur la case => on supprime la ligne dans la bdd
+				$sql = "DELETE FROM objet_in_carte WHERE type_objet='$type_objet' 
+						AND id_objet='$id_objet' AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				$mysqli->query($sql);
 			}
 			
 			// Recuperation du poid et des infos de l'objet et insertion de l'objet dans l'inventaire du perso
 			// Objet
 			if($type_objet == 2){
+				
 				// recuperation des infos de l'objet
 				$sql = "SELECT poids_objet FROM objet WHERE id_objet='$id_objet'";
 				$res = $mysqli->query($sql);
@@ -2675,12 +2624,13 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 				$poid_objet = $t["poids_arme"];
 				
 				// Insertion de l'objet dans l'inventaire du perso
-				$sql = "INSERT INTO perso_as_arme VALUES ('$id_perso','$id_objet','0','$pv_objet','1')";
+				$sql = "INSERT INTO perso_as_arme VALUES ('$id_perso','$id_objet','0')";
 				$mysqli->query($sql);
 			}
 			
 			// Armure
 			if($type_objet == 4){
+				
 				$sql = "SELECT poids_armure, corps_armure FROM armure WHERE id_armure='$id_objet'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
@@ -2691,7 +2641,7 @@ function action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_ob
 				$corps_armure = $t["corps_armure"];
 				
 				// Insertion de l'objet dans l'inventaire du perso
-				$sql = "INSERT INTO perso_as_armure VALUES ('$id_perso','$id_objet','0','$corps_armure','$pv_objet')";
+				$sql = "INSERT INTO perso_as_armure VALUES ('$id_perso','$id_objet','0')";
 				$mysqli->query($sql);
 			}
 			

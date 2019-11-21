@@ -430,8 +430,7 @@ CREATE TABLE `objet_in_carte` (
   `id_objet` int(11) NOT NULL DEFAULT '0',
   `nb_objet` int(11) NOT NULL DEFAULT '0',
   `x_carte` int(11) NOT NULL DEFAULT '-1',
-  `y_carte` int(11) NOT NULL DEFAULT '-1',
-  `pv_objet` int(11) DEFAULT NULL
+  `y_carte` int(11) NOT NULL DEFAULT '-1'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

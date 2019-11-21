@@ -400,9 +400,8 @@ if($dispo){
 		$t2 = explode(',',$t_objet);
 		$id_objet = $t2[0];
 		$type_objet = $t2[1];
-		$pv_objet = $t2[2];
 		
-		action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet);
+		action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet);
 	}
 	
 	// Ramasser objet
@@ -411,9 +410,8 @@ if($dispo){
 		$t2 = explode(',',$t_objet);
 		$id_objet = $t2[0];
 		$type_objet = $t2[1];
-		$pv_objet = $t2[2];
 		
-		action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet, $pv_objet);
+		action_ramasserObjet($mysqli, $id_perso, $type_objet, $id_objet);
 	}
 	
 	// Don objet apres choix perso
@@ -450,7 +448,7 @@ if($dispo){
 			}
 			echo "</select></td>";
 				
-			echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='-1,1,0,$id_cible' /></td>";
+			echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='-1,1,$id_cible' /></td>";
 			echo "</form>";
 			echo "</tr>";
 				
@@ -480,19 +478,18 @@ if($dispo){
 				echo "<td align='center'>$poids_o</td>";
 				echo "<td align='center'>$nb_o</td>";
 				echo "<form method='post' action='action.php'>";
-				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_objet,2,0,$id_cible' /></td>";
+				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
 				echo "</form>";
 				echo "</tr>";
 			}
 			
 			// Armes non portes
-			$sql_a1 = "SELECT DISTINCT id_arme, pv_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
+			$sql_a1 = "SELECT DISTINCT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
 			$res_a1 = $mysqli->query($sql_a1);
 			
 			while($t_a1 = $res_a1->fetch_assoc()){
 				
 				$id_arme = $t_a1["id_arme"];
-				$pv_arme = $t_a1["pv_arme"];
 									
 				// recuperation des carac de l'arme
 				$sql1_a1 = "SELECT nom_arme, poids_arme, image_arme FROM arme WHERE id_arme='$id_arme'";
@@ -502,29 +499,28 @@ if($dispo){
 				$poids_a1 = $t1_a1["poids_arme"];
 				$image_arme = $t1_a1["image_arme"];
 									
-				// recuperation du nombre d'armes non equipes de ce type et ayant ce nombre de pv que possede le perso 
-				$sql2_a1 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_arme' AND est_portee='0' AND pv_arme='$pv_arme'";
+				// recuperation du nombre d'armes non equipes de ce type que possede le perso 
+				$sql2_a1 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_arme' AND est_portee='0'";
 				$res2_a1 = $mysqli->query($sql2_a1);
 				$nb_a1 = $res2_a1->num_rows;
 									
 				echo "<tr>";
-				echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b><br /><u>Pv :</u> ".$pv_arme."</span></a></dd></dl></td>";
+				echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
 				echo "<td align='center'>$poids_a1</td>";
 				echo "<td align='center'>$nb_a1</td>";
 				echo "<form method='post' action='action.php'>";
-				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_arme,3,$pv_arme,$id_cible' /></td>";
+				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_arme,3,$id_cible' /></td>";
 				echo "</form>";
 				echo "</tr>";
 			}
 									
 			// Armures non portes
-			$sql_a2 = "SELECT DISTINCT id_armure, pv_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
+			$sql_a2 = "SELECT DISTINCT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
 			$res_a2 = $mysqli->query($sql_a2);
 			
 			while($t_a2 = $res_a2->fetch_assoc()){
 				
 				$id_armure = $t_a2["id_armure"];
-				$pv_armure = $t_a2["pv_armure"];
 									
 				// recuperation des carac de l'arme
 				$sql1_a2 = "SELECT nom_armure, poids_armure, image_armure FROM armure WHERE id_armure='$id_armure'";
@@ -535,16 +531,16 @@ if($dispo){
 				$image_armure = $t1_a2["image_armure"];
 									
 				// recuperation du nombre d'armes non equipes de ce type que possede le perso 
-				$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' AND pv_armure='$pv_armure'";
+				$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' ";
 				$res2_a2 = $mysqli->query($sql2_a2);
 				$nb_a2 = $res2_a2->num_rows;
 									
 				echo "<tr>";
-				echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b><br /><u>Pv :</u> ".$pv_armure."</span></a></dd></dl></td>";
+				echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b><</span></a></dd></dl></td>";
 				echo "<td align='center'>$poids_a2</td>";
 				echo "<td align='center'>$nb_a2</td>";
 				echo "<form method='post' action='action.php'>";
-				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_armure,4,$pv_armure,$id_cible' /></td>";
+				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_armure,4,$id_cible' /></td>";
 				echo "</form>";
 				echo "</tr>";
 			}
@@ -568,10 +564,9 @@ if($dispo){
 		$t2 = explode(',',$t_objet);
 		$id_objet = $t2[0];
 		$type_objet = $t2[1];
-		$pv_objet = $t2[2];
-		$id_cible = $t2[3];
+		$id_cible = $t2[2];
 		
-		action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $pv_objet, $quantite);
+		action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $quantite);
 	}
 	
 	/////////////////////////
@@ -1562,13 +1557,12 @@ if($dispo){
 								}
 								
 								// Armes non portes
-								$sql_a1 = "SELECT DISTINCT id_arme, pv_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
+								$sql_a1 = "SELECT DISTINCT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_arme";
 								$res_a1 = $mysqli->query($sql_a1);
 								
 								while($t_a1 = $res_a1->fetch_assoc()){
 									
 									$id_arme = $t_a1["id_arme"];
-									$pv_arme = $t_a1["pv_arme"];
 									
 									// recuperation des carac de l'arme
 									$sql1_a1 = "SELECT nom_arme, poids_arme, image_arme FROM arme WHERE id_arme='$id_arme'";
@@ -1578,28 +1572,27 @@ if($dispo){
 									$poids_a1 = $t1_a1["poids_arme"];
 									$image_arme = $t1_a1["image_arme"];
 									
-									// recuperation du nombre d'armes non equipes de ce type et ayant ce nombre de pv que possede le perso 
-									$sql2_a1 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_arme' AND est_portee='0' AND pv_arme='$pv_arme'";
+									// recuperation du nombre d'armes non equipes de ce type que possede le perso 
+									$sql2_a1 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_arme' AND est_portee='0'";
 									$res2_a1 = $mysqli->query($sql2_a1);
 									$nb_a1 = $res2_a1->num_rows;
 									
 									echo "<tr>";
-									echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b><br /><u>Pv :</u> ".$pv_arme."</span></a></dd></dl></td>";
+									echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
 									echo "<td align='center'>$poids_a1</td>";
 									echo "<td align='center'>$nb_a1</td>";
 									echo "<form method='post' action='action.php'>";
-									echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_arme,3,$pv_arme' /></td>";
+									echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_arme,3' /></td>";
 									echo "</form>";
 									echo "</tr>";
 								}
 								
 								// Armures non portes
-								$sql_a2 = "SELECT DISTINCT id_armure, pv_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
+								$sql_a2 = "SELECT DISTINCT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
 								$res_a2 = $mysqli->query($sql_a2);
 								while($t_a2 = $res_a2->fetch_assoc()){
 									
 									$id_armure = $t_a2["id_armure"];
-									$pv_armure = $t_a2["pv_armure"];
 									
 									// recuperation des carac de l'arme
 									$sql1_a2 = "SELECT nom_armure, poids_armure, image_armure FROM armure WHERE id_armure='$id_armure'";
@@ -1610,16 +1603,16 @@ if($dispo){
 									$image_armure = $t1_a2["image_armure"];
 									
 									// recuperation du nombre d'armes non equipes de ce type que possede le perso 
-									$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' AND pv_armure='$pv_armure'";
+									$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0'";
 									$res2_a2 = $mysqli->query($sql2_a2);
 									$nb_a2 = $res2_a2->num_rows;
 									
 									echo "<tr>";
-									echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b><br /><u>Pv :</u> ".$pv_armure."</span></a></dd></dl></td>";
+									echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b></span></a></dd></dl></td>";
 									echo "<td align='center'>$poids_a2</td>";
 									echo "<td align='center'>$nb_a2</td>";
 									echo "<form method='post' action='action.php'>";
-									echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_armure,4,$pv_armure' /></td>";
+									echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_armure,4' /></td>";
 									echo "</form>";
 									echo "</tr>";
 								}
@@ -1637,7 +1630,7 @@ if($dispo){
 								echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>ramasser ?</th></tr>";
 								
 								// Recuperation des objets a terre
-								$sql = "SELECT type_objet, id_objet, nb_objet, pv_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' AND x_carte=x_perso AND y_carte=y_perso";
+								$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' AND x_carte=x_perso AND y_carte=y_perso";
 								$res = $mysqli->query($sql);
 								$nb = $res->num_rows;
 								
@@ -1649,7 +1642,6 @@ if($dispo){
 										$type_objet = $t["type_objet"];
 										$id_objet = $t["id_objet"];
 										$nb_objet = $t["nb_objet"];
-										$pv_objet = $t["pv_objet"];
 										
 										// Récupération des infos sur les objets à terre
 										// Objets
@@ -1668,7 +1660,7 @@ if($dispo){
 											echo "<td align='center'>$poids_objet</td>";
 											echo "<td align='center'>$nb_objet</td>";
 											echo "<form method='post' action='action.php'>";
-											echo "<td align='center'><input type='submit' name='valid_objet_ramasser' value='oui' /><input type='hidden' name='id_objet_ramasser' value='$id_objet,$type_objet,$pv_objet' /></td>";
+											echo "<td align='center'><input type='submit' name='valid_objet_ramasser' value='oui' /><input type='hidden' name='id_objet_ramasser' value='$id_objet,$type_objet' /></td>";
 											echo "</form>";
 											echo "</tr>";
 										}
@@ -1714,11 +1706,11 @@ if($dispo){
 											}
 											
 											echo "<tr>";
-											echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/".$image_arme."' alt='$nom_objet' height='50' width='50'/><span><b>".stripslashes($nom_objet)."</b><br /><u>Pv :</u> ".$pv_objet."<br /><u>Portee :</u> ".$portee_arme."<br /><u>Degats :</u> ".$degats_arme."<br />".stripslashes($description_objet)."</span></a></dd></dl></td>";
+											echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/".$image_arme."' alt='$nom_objet' height='50' width='50'/><span><b>".stripslashes($nom_objet)."</b><br /><u>Portee :</u> ".$portee_arme."<br /><u>Degats :</u> ".$degats_arme."<br />".stripslashes($description_objet)."</span></a></dd></dl></td>";
 											echo "<td align='center'>$poids_objet</td>";
 											echo "<td align='center'>$nb_objet</td>";
 											echo "<form method='post' action='action.php'>";
-											echo "<td align='center'><input type='submit' name='valid_objet_ramasser' value='oui' /><input type='hidden' name='id_objet_ramasser' value='$id_objet,$type_objet,$pv_objet' /></td>";
+											echo "<td align='center'><input type='submit' name='valid_objet_ramasser' value='oui' /><input type='hidden' name='id_objet_ramasser' value='$id_objet,$type_objet' /></td>";
 											echo "</form>";
 											echo "</tr>";
 										}
@@ -1741,11 +1733,11 @@ if($dispo){
 											$defense_armure = $t_a2["bonusDefense_armure"];
 											
 											echo "<tr>";
-											echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/".$image_armure."' alt='$nom_objet' height='50' width='50'/><span><b>".stripslashes($nom_objet)."</b><br /><u>Pv :</u> ".$pv_objet."<br /><u>Defense :</u> ".$defense_armure."<br />".stripslashes($description_objet)."</span></a></dd></dl></td>";
+											echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/".$image_armure."' alt='$nom_objet' height='50' width='50'/><span><b>".stripslashes($nom_objet)."</b><br /><u>Defense :</u> ".$defense_armure."<br />".stripslashes($description_objet)."</span></a></dd></dl></td>";
 											echo "<td align='center'>$poids_objet</td>";
 											echo "<td align='center'>$nb_objet</td>";
 											echo "<form method='post' action='action.php'>";
-											echo "<td align='center'><input type='submit' name='valid_objet_ramasser' value='oui' /><input type='hidden' name='id_objet_ramasser' value='$id_objet,$type_objet,$pv_objet' /></td>";
+											echo "<td align='center'><input type='submit' name='valid_objet_ramasser' value='oui' /><input type='hidden' name='id_objet_ramasser' value='$id_objet,$type_objet' /></td>";
 											echo "</form>";
 											echo "</tr>";
 										}

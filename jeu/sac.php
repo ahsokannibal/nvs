@@ -217,7 +217,7 @@ if($dispo){
 					}
 					echo "".$charge_perso."</font> / ".$chargeMax_reel."</p>"; 
 					?>
-					<img src="../images/pierre_t.png" align="middle">Vous possédez <b><?php echo $or_p; ?></b> piéce<?php if($or_p > 1){echo "s";}?> d'or.<br>
+					<img src="../images/or.png" align="middle">Vous possédez <b><?php echo $or_p; ?></b> piéce<?php if($or_p > 1){echo "s";}?> d'or.<br>
 					</center>
 				</td>
 			</tr>
