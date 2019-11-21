@@ -880,7 +880,7 @@ if($dispo || !$admin){
 				echo "<table width=100% bgcolor='white' border=0>";
 				echo "<tr>
 						<td><img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1>".date('H:i:s ')."</span></b></td>
-						<td rowspan=2><img src='../images/accueil/banniere3.jpg' alt='banniere NAOnline' width=400 height=62 /></td>
+						<td rowspan=2><img src='../images/accueil/banniere.jpg' alt='banniere Nord VS Sud' width=150 height=63 /></td>
 						<td align=right> <a href=\"../logout.php\"><font color=red><b>[déconnexion]</b></font></a></td>
 					</tr>";
 				echo "<tr>
@@ -1017,25 +1017,41 @@ if($dispo || !$admin){
 					else
 						echo "<th width=40 height=40 background=\"../images/background.jpg\">$y</th>";
 					for ($x = $x_perso - $perc; $x <= $x_perso + $perc; $x++) {
-						if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnées sont dans les limites
-							if ($x == $x_perso && $y == $y_perso){ //coordonnées du perso
-								echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img class=\"imagedessous\" border=0 src=\"../images_perso/$image_perso\" width=40 height=40 /><img border=0 src=\"../images_perso/$clan\" /></td>";
+						
+						//les coordonnées sont dans les limites
+						if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { 
+						
+							//coordonnées du perso
+							if ($x == $x_perso && $y == $y_perso){ 
+								echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+								echo "	<div width=40 height=40 style=\"position: relative;\">";
+								echo "		<div style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_perso . "</div>";
+								echo "		<img class=\"\" border=0 src=\"../images_perso/$image_perso\" width=40 height=40 />";
+								echo "	</div>";
+								echo "</td>";
 							}
 							else {
 								if ($tab["occupee_carte"]){
-									if($tab['image_carte'] == "coffre1t.png")
-										echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?coffre=ok\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40\" title=\"coffre fermé\"></a></td>";//positionement du coffre present
+									if($tab['image_carte'] == "coffre1t.png") {
+										// positionement du coffre present
+										echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?coffre=ok\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40\" title=\"coffre fermé\"></a></td>";
+									}
 									else {
-										if($tab['image_carte'] == "coffre2t.png")
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40\" title=\"coffre ouvert\"></a></td>";//positionement du coffre present
+										if($tab['image_carte'] == "coffre2t.png") {
+											//positionement du coffre present
+											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40\" title=\"coffre ouvert\"></a></td>";
+										}
 										else{
 											// recuperation de l'image du pnj
 											if($tab['idPerso_carte'] >= 10000 && $tab['idPerso_carte'] < 50000){
+												
 												$idI_pnj = $tab['idPerso_carte'];
+												
 												// recuperation du type de pnj
 												$sql_im = "SELECT id_pnj FROM instance_pnj WHERE idInstance_pnj='$idI_pnj'";
 												$res_im = $mysqli->query($sql_im);
 												$t_im = $res_im->fetch_assoc();
+												
 												$id_pnj_im = $t_im["id_pnj"];
 												$im_pnj="Monstre".$id_pnj_im."t.png";
 	
@@ -1044,13 +1060,17 @@ if($dispo || !$admin){
 											else{
 												//  traitement Batiment
 												if($tab['idPerso_carte'] >= 50000){
+													
 													$idI_bat = $tab['idPerso_carte'];
+													
 													// recuperation du type de bat et du camp
 													$sql_im = "SELECT id_batiment, camp_instance FROM instance_batiment WHERE id_instanceBat='$idI_bat'";
 													$res_im = $mysqli->query($sql_im);
 													$t_im = $res_im->fetch_assoc();
+													
 													$type_bat = $t_im["id_batiment"];
 													$camp_bat = $t_im["camp_instance"];
+													
 													if($camp_bat == '1'){
 														$camp_bat2 = 'bleu';
 													}
@@ -1065,14 +1085,18 @@ if($dispo || !$admin){
 												else {
 											
 													if($tab['image_carte'] == "murt.png"){
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<img src=../images/murs/mur.jpeg>')\" onMouseOut=\"HideBulle()\" title=\"mur\"></td>";//positionement du coffre
+														//positionement du mur
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<img src=../images/murs/mur.jpeg>')\" onMouseOut=\"HideBulle()\" title=\"mur\"></td>";
 													}
 													else {
+														
 														$id_perso_im = $tab['idPerso_carte'];
+														
 														//recuperation du type de perso (image)
 														$sql_perso_im ="SELECT * FROM perso WHERE id_perso='$id_perso_im'";
 														$res_perso_im = $mysqli->query($sql_perso_im);
 														$t_perso_im = $res_perso_im->fetch_assoc();
+														
 														$im_perso = $t_perso_im["image_perso"];
 														$nom_ennemi = $t_perso_im['nom_perso'];
 														$id_ennemi = $t_perso_im['id_perso'];
@@ -1108,10 +1132,20 @@ if($dispo || !$admin){
 														}
 														
 														if(isset($groupe) && $groupe != ''){
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a></td>";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\">";
+															echo "	<div width=40 height=40 style=\"position: relative;\">";
+															echo "		<div style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+															echo "		<img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a>";
+															echo "	</div>";
+															echo "</td>";
 														}
 														else {
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a></td>";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\">";
+															echo "	<div width=40 height=40 style=\"position: relative;\">";
+															echo "		<div style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+															echo "		<img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a>";
+															echo "	</div>";
+															echo "</td>";
 														}
 													}
 												}
