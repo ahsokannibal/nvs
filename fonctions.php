@@ -433,8 +433,8 @@ function mail_gele_zombie($id_perso){
 	$t = $res->fetch_assoc();
 
 	// Headers mail
-	$headers ='From: "NAOnline"<naonline@no-reply.fr>'."\n";
-	$headers .='Reply-To: naonline@no-reply.fr'."\n";
+	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
+	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
 	$headers .='Content-Type: text/plain; charset="iso-8859-1"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	

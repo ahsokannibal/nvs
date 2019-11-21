@@ -114,8 +114,11 @@ if(isset($_POST["envoyer"])) {
 }
 
 if(isset($_GET["id"])) {
-	$verif = ereg("^[0-9]+$",$_GET["id"]);
+	
+	$verif = preg_match("#^[0-9]+$#i",$_GET["id"]);
+	
 	if($verif){
+		
 		$id_message = $_GET["id"];
 
 		// verif identité joueur qui veut lire le message
@@ -203,9 +206,11 @@ if(isset($_GET["id_section"])) {
 	else {
 		$contenu = "";
 	}
+	
 	// recuperation des persos de la section
 	$sql = "SELECT nom_perso FROM perso, perso_in_section WHERE perso.id_perso=perso_in_section.id_perso AND attenteValidation_section='0' AND id_section='$id_section'";
 	$res = $mysqli->query($sql);
+	
 	$dest = "";
 	while ($nom = $res->fetch_assoc()) {
 		$dest .= $nom["nom_perso"].";";
@@ -213,9 +218,12 @@ if(isset($_GET["id_section"])) {
 }
 
 if(isset($_GET['id_contact'])){
+	
 	$dest_contact = "";
-	$verif = ereg("^[0-9]+$",$_GET["id_contact"]);
+	$verif = preg_match("#^[0-9]+$#i",$_GET["id_contact"]);
+	
 	if($verif){
+		
 		$id_contact = $_GET["id_contact"];
 
 		// verif identité joueur qui veut utiliser le contact

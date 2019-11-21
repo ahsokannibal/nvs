@@ -24,6 +24,7 @@ $id = $_SESSION["id_perso"];
 $sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
 $res = $mysqli->query($sql);
 $t = $res->fetch_assoc();
+
 $pseudo = $t["nom_perso"];
 
 // nombre de message à lire
@@ -115,7 +116,7 @@ if($verif){
 			echo "</td></tr></table>";
 			
 			if ($methode == "r"){
-				echo '<form method="post" action="traitement/t_message_lire.php">';
+				echo '<form method="post" action="traitement/t_lire.php">';
 				echo '<input type="hidden" name="id_message" value="' . $id_message . '">';
 				echo '<div align="center"> 
 						<input type="submit" name="submit" value="Repondre"> &nbsp&nbsp 
