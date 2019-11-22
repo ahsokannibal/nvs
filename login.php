@@ -21,7 +21,7 @@ if(isSet ($_POST['pseudo']) && isSet ($_POST['password']))
 		$mdp = md5($mdp); 
 		
 		// recuperation de l'id du joueur et log du joueur
-		$sql = "SELECT id_joueur, mdp_joueur, id_perso FROM joueur,perso WHERE joueur.id_joueur=perso.idJoueur_perso and nom_perso='$pseudo'";
+		$sql = "SELECT id_joueur, mdp_joueur, id_perso FROM joueur,perso WHERE joueur.id_joueur=perso.idJoueur_perso and nom_perso='$pseudo' and chef='1'";
 		$res = $mysqli->query($sql);
 		$t_user = $res->fetch_assoc();
 		$mdp_j = $t_user["mdp_joueur"];
