@@ -949,8 +949,9 @@ if($dispo || !$admin){
 				<!-- Début du tableau d'information-->
 				<table border=1 align="center" width=90%>
 					<tr>
-						<td width=60><center><img src="../images_perso/<?php echo "$image_perso";?>"></center></td>
-						<td align=center>Pseudo: <?php echo "$nom_perso [$id_perso]";?></td><td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?></td>
+						<td width=60><center><div width=40 height=40 style="position: relative;"><div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id_perso; ?></div><img src="../images_perso/<?php echo "$image_perso";?>" width=40 height=40></div></center></td>
+						<td align=center>Pseudo: <?php echo "$nom_perso [$id_perso]";?></td>
+						<td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?></td>
 						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 					</tr>
 					<tr>
