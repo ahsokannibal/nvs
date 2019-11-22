@@ -36,7 +36,10 @@ function entete($mysqli, $id) {
 			}
 			
 			echo "<center>
-					<img src=\"../images_perso/$image_perso\" width=\"40\" height=\"40\">
+					<div width=40 height=40 style=\"position: relative;\">
+						<div style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id ."</div>
+						<img src=\"../images_perso/" . $image_perso . "\" width=\"40\" height=\"40\">
+					</div>
 					<table border=\"1\">
 						<tr>
 							<td width=\"60%\"><b>Pseudo :</b> <font color=\"$couleur_clan_perso\">$nom_perso</font> [$id]</td>
