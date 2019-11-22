@@ -9,6 +9,11 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+// Traitement selection perso
+if (isset($_POST["select_perso"]) && $_POST["select_perso"] == "ok" && isset($_POST["liste_perso"])) {
+	$id_perso = $_SESSION['id_perso'] = $_POST["liste_perso"];
+}
+
 if(isset($_SESSION["id_perso"])){
 	$id_perso = $_SESSION['id_perso'];
 }
@@ -18,6 +23,7 @@ $dispo = config_dispo_jeu($mysqli);
 $admin = admin_perso($mysqli, $id_perso);
 
 if($dispo || !$admin){
+	
 	if(isset($_SESSION["id_perso"])){
 		
 		$id_perso = $_SESSION['id_perso'];
@@ -33,11 +39,13 @@ if($dispo || !$admin){
 		$config = '1';
 		
 		// verification si le perso est encore en vie
-		if ($testpv <= 0) { // le perso est mort
+		if ($testpv <= 0) {
+			// le perso est mort
 			//tour.php se charge de verifier si nouveau tour
 			header("Location: ../tour.php"); 
 		}
-		else { // le perso est vivant	
+		else { 
+			// le perso est vivant
 			// verification si nouveau tour ou gele
 			if(nouveau_tour($date, $dla) || $est_gele) {
 				header("Location: ../tour.php");
@@ -93,9 +101,11 @@ if($dispo || !$admin){
 				<?php
 				
 				// recuperation des anciennes données du perso
-				$sql = "SELECT nom_perso, x_perso, y_perso, pm_perso, image_perso, pa_perso, recup_perso, bonusRecup_perso, bonusPM_perso, paMax_perso, pv_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
+				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, image_perso, pa_perso, recup_perso, bonusRecup_perso, bonusPM_perso, paMax_perso, pv_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
 				$t_perso1 = $res->fetch_assoc();
+				
+				$id_joueur_perso = $t_perso1["idJoueur_perso"];
 				$nom_perso = $t_perso1["nom_perso"];
 				$x_persoN = $t_perso1["x_perso"];
 				$y_persoN = $t_perso1["y_perso"];
@@ -899,6 +909,7 @@ if($dispo || !$admin){
 						}
 					}
 				}
+				
 				//affichage de l'heure serveur et de nouveau tour
 				echo "<table width=100% bgcolor='white' border=0>";
 				echo "<tr>
@@ -945,12 +956,35 @@ if($dispo || !$admin){
 					$image_profil = "sud.gif";
 				}
 				
+				// Récupération de tous les persos du joueur
+				$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso'";
+				$res = $mysqli->query($sql);
+				
 				?>
 				<!-- Début du tableau d'information-->
 				<table border=1 align="center" width=90%>
 					<tr>
 						<td width=60><center><div width=40 height=40 style="position: relative;"><div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id_perso; ?></div><img src="../images_perso/<?php echo "$image_perso";?>" width=40 height=40></div></center></td>
-						<td align=center>Pseudo: <?php echo "$nom_perso [$id_perso]";?></td>
+						<td align=center>
+							<form method='post' action='jouer.php'>
+								Personnage : <select name='liste_perso'>
+						<?php 
+						while($t_liste_perso = $res->fetch_assoc()) {
+							
+							$id_perso_liste = $t_liste_perso["id_perso"];
+							$nom_perso_liste = $t_liste_perso["nom_perso"];
+							
+							echo "<option value='$id_perso_liste'";
+							if ($id_perso == $id_perso_liste) {
+								echo " selected";
+							}
+							echo ">$nom_perso_liste [$id_perso_liste]</option>";
+						}
+						?>
+								</select>
+								<input type='submit' name='select_perso' value='ok' />
+							</form>
+						</td>
 						<td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?></td>
 						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 					</tr>
