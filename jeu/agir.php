@@ -37,6 +37,7 @@ else {
 if($verif){
 	//traitement de l'attaque sur un perso
 	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] < 10000) || (isset($_POST["re_attaque"]) && $id_c < 10000) ) { 
+	
 		if(!in_bat($mysqli, $id)){
 	
 			if(isset($_POST["re_attaque"])) {
@@ -184,7 +185,7 @@ if($verif){
 						<tr><td width=25%>	
 						<table border=0 width=100%>
 							<tr>
-							<td align="center"><img src="../images/<?php echo $image_perso; ?>"></td>
+							<td align="center"><img src="../images_perso/<?php echo $image_perso; ?>"></td>
 							</tr>
 						</table>
 						</td><td width=75%>
@@ -216,7 +217,7 @@ if($verif){
 						<tr><td width=25%>	
 						<table border=0 width=100%>
 							<tr>
-							<td align="center"><img src="../images/<?php echo $image_perso_cible; ?>"></td>
+							<td align="center"><img src="../images_perso/<?php echo $image_perso_cible; ?>"></td>
 							</tr>
 						</table>
 						</td><td width=75%>
@@ -508,7 +509,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
@@ -530,7 +531,6 @@ if($verif){
 		$bp_perso = $t_perso["bonusPerception_perso"];
 		$ch_perso = $t_perso["charge_perso"];
 		$chM_perso = $t_perso["chargeMax_perso"];
-		$lvl_perso = $t_perso["niveau_perso"];
 		$dc_perso = $t_perso["dateCreation_perso"];
 		$clan_perso = $t_perso["clan"];
 		
@@ -566,9 +566,6 @@ if($verif){
 			// Récupération de la couleur associée au clan du perso
 			$couleur_clan_perso = couleur_clan($clan_perso);
 			
-			$t_im = explode("t",$image_perso);
-			$im_p = $t_im[0]."e.png";
-			
 			// on verifie si le perso a déja tué ce type de pnj et on en récupère le nombre
 			$nb_pnj_t = is_deja_tue_pnj($mysqli, $id, $id_pnj);
 			
@@ -584,13 +581,13 @@ if($verif){
 					<tr><td width=25%>	
 					<table border=0 width=100%>
 						<tr>
-						<td align="center"><img src="../images/<?php echo $im_p; ?>"></td>
+						<td align="center"><img src="../images_perso/<?php echo $image_perso; ?>"></td>
 						</tr>
 					</table>
 					</td><td width=75%>
 					<table border=0 width=100%>
 					<tr>
-						<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso." - <b><u>niveau :</u></b> ".$lvl_perso; ?></td>
+						<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso; ?></td>
 					<tr>
 					<tr>
 						<td><?php echo "<u><b>Xp :</b></u> ".$xp_perso." - <u><b>Pi :</b></u> ".$pi_perso.""; ?></td>
@@ -615,7 +612,7 @@ if($verif){
 					<tr><td width=25%>	
 					<table border=0 width=100%>
 						<tr>
-						<td align="center"><img src="../images/<?php echo $image_pnj; ?>"></td>
+						<td align="center"><img src="../images_perso/<?php echo $image_pnj; ?>"></td>
 						</tr>
 					</table>
 					</td><td width=75%>
@@ -795,7 +792,7 @@ if($verif){
 							switch($id_pnj){
 								case(1):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(1,3) - $lvl_perso; // gain xp
+									$gain_xp = rand(1,3); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -824,7 +821,7 @@ if($verif){
 								
 								case(2):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(2,8) - $lvl_perso; // gain xp
+									$gain_xp = rand(2,8); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -854,7 +851,7 @@ if($verif){
 									
 								case(3):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(10,40) - $lvl_perso; // gain xp
+									$gain_xp = rand(10,40); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -884,7 +881,7 @@ if($verif){
 								
 								case(4):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(8,40) - $lvl_perso; // gain xp
+									$gain_xp = rand(8,40); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -914,7 +911,7 @@ if($verif){
 									
 								case(5):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(1,5) - $lvl_perso; // gain xp
+									$gain_xp = rand(1,5); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -944,7 +941,7 @@ if($verif){
 									
 								case(6):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(5,15) - $lvl_perso; // gain xp
+									$gain_xp = rand(5,15); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -974,7 +971,7 @@ if($verif){
 									
 								case(7):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(4,12) - $lvl_perso; // gain xp
+									$gain_xp = rand(4,12); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -1004,7 +1001,7 @@ if($verif){
 									
 								case(8):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(3,10) - $lvl_perso; // gain xp
+									$gain_xp = rand(3,10); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -1034,7 +1031,7 @@ if($verif){
 									
 								case(9):
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(1,5) - $lvl_perso; // gain xp
+									$gain_xp = rand(1,5); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -1063,7 +1060,7 @@ if($verif){
 									break;
 								default :
 									srand((double) microtime() * 1000000);
-									$gain_xp = rand(1,10) - $lvl_perso; // gain xp
+									$gain_xp = rand(1,10); // gain xp
 									if($gain_xp <= 0){
 										$gain_xp = 1;
 									}
@@ -1114,69 +1111,6 @@ if($verif){
 						// maj evenement
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_cible','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso>$nom_perso</font>','(A:$score_perso,D:$score_cible)',NOW(),'0')";
 						$mysqli->query($sql);
-						
-						srand((double) microtime() * 1000000);
-						$riposte_pnj = rand(0, 100);
-						
-						if ($riposte_pnj > $lvl_perso){
-							echo "Le pnj tente une riposte<br>";
-							
-							// on l'attaque
-							// TODO
-							if (true) { // touché
-								
-								srand((double) microtime() * 1000000);
-								$degats = rand($degatMin, $degatMax);
-								
-								echo "<br>Le pnj <b>$nom_cible ";
-								echo "[";
-								echo $id_cible;
-								echo "]</b> attaque <b>$nom_perso</b> : <b>$degats</b> degats<br/>";
-								
-								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$id'";
-								$mysqli->query($sql);		
-								
-								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_cible','a contre-attaqué ','$id','<font color=$couleur_clan_perso>$nom_perso</font>',': $degats degats',NOW(),'0')";
-								$mysqli->query($sql);
-								
-								// verification si la cible est morte ou non
-								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$id'";
-								$res2 = $mysqli->query($sql);
-								$tab = $res2->fetch_assoc();
-								
-								$pv_cible = $tab["pv_perso"];
-								$x_cible = $tab["x_perso"];
-								$y_cible = $tab["y_perso"];
-								$xp_cible = $tab["xp_perso"];
-							
-								if ($pv_cible <= 0) {
-								
-									echo "Le pnj <b>$id_pnj</b> vous a tué<br>";
-									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
-									$mysqli->query($sql);
-									
-									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pnj,'$nom_cible','a tué','$id','<font color=$couleur_clan_perso>$nom_perso</font>','',NOW(),'0')";
-									$mysqli->query($sql);
-									
-									// maj cv
-									$sql = "INSERT INTO `cv` VALUES ('',$id_pnj,'$nom_cible','$id','<font color=$couleur_clan_perso>$nom_perso</font>',NOW())"; //mise à jour de la table cv
-									$mysqli->query($sql);
-								}	
-							}
-							else { // la cible a esquivé l'attaque
-								
-								echo "<br>Vous avez esquivé son attaque.<br>";
-							
-								$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$id'";
-								$mysqli->query($sql);
-								
-								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a esquivé la contre-attaque de','$id_cible','$nom_cible','',NOW(),'0')";
-								$mysqli->query($sql);
-							}
-						}
 		
 					}
 					//mise à jour des pa
@@ -1240,7 +1174,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, niveau_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
@@ -1262,7 +1196,6 @@ if($verif){
 		$bp_perso = $t_perso["bonusPerception_perso"];
 		$ch_perso = $t_perso["charge_perso"];
 		$chM_perso = $t_perso["chargeMax_perso"];
-		$lvl_perso = $t_perso["niveau_perso"];
 		$dc_perso = $t_perso["dateCreation_perso"];
 		$clan_perso = $t_perso["clan"];
 		
@@ -1303,9 +1236,6 @@ if($verif){
 			// Récupération de la couleur associée au clan du perso
 			$couleur_clan_perso = couleur_clan($clan_perso);
 			
-			$t_im = explode("t",$image_perso);
-			$im_p = $t_im[0]."e.png";
-			
 			$pa_restant = $pa_perso - $coutPa_attaque;
 			if($pa_restant <= 0){
 				$pa_restant = 0;
@@ -1319,14 +1249,14 @@ if($verif){
 								<td width=25%>	
 									<table border=0 width=100%>
 										<tr>
-											<td align="center"><img src="../images/<?php echo $im_p; ?>"></td>
+											<td align="center"><img src="../images_perso/<?php echo $image_perso; ?>"></td>
 										</tr>
 									</table>
 								</td>
 								<td width=75%>
 									<table border=0 width=100%>
 										<tr>
-											<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso." - <b><u>niveau :</u></b> ".$lvl_perso; ?></td>
+											<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso; ?></td>
 										<tr>
 										<tr>
 											<td><?php echo "<u><b>Xp :</b></u> ".$xp_perso." - <u><b>Pi :</b></u> ".$pi_perso.""; ?></td>
@@ -1354,7 +1284,7 @@ if($verif){
 								<td width=25%>	
 									<table border=0 width=100%>
 										<tr>
-											<td align="center"><img src="../images/<?php echo $image_bat; ?>"></td>
+											<td align="center"><img src="../images_perso/<?php echo $image_bat; ?>"></td>
 										</tr>
 									</table>
 								</td>

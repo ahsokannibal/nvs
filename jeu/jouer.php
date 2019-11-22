@@ -237,7 +237,8 @@ if($dispo || !$admin){
 													$id_inst_bat = $_GET["bat"];
 													
 													// verification si le perso est de la même nation ou non que le batiment
-													if(!nation_perso_bat($id_perso,$id_inst_bat)) { // pas même nation
+													if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) { // pas même nation
+													
 														// capture du batiment, il devient de la nation du perso
 														$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
 														$mysqli->query($sql);
@@ -374,9 +375,10 @@ if($dispo || !$admin){
 													if($nb_perso_bat < $contenance_inst_bat){
 													
 														// verification si le perso est de la même nation que le batiment
-														if(!nation_perso_bat($id_perso,$id_inst_bat)) { // pas même nation
+														if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) { // pas même nation
+														
 															// verification que le batiment est vide
-															if(batiment_vide($id_inst_bat)) {
+															if(batiment_vide($mysqli, $id_inst_bat)) {
 																// capture du batiment, il devient de la nation du perso
 																$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
 																$mysqli->query($sql);
@@ -640,8 +642,10 @@ if($dispo || !$admin){
 											$mysqli->query($sql);
 	
 											if(prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
+											
 												// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-												$res_bat = id_prox_bat($x_persoN,$y_persoN); 
+												$res_bat = id_prox_bat($mysqli, $x_persoN, $y_persoN); 
+												
 												while ($bat1 = $res_bat->fetch_assoc()) {
 													$nom_ibat = $bat1["nom_instance"];
 													$id_bat = $bat1["id_instanceBat"];
@@ -654,9 +658,10 @@ if($dispo || !$admin){
 													$nom_bat = $t_n["nom_batiment"];
 													
 													// verification si le batiment est de la même nation que le perso
-													if(!nation_perso_bat($id_perso,$id_bat)) { // pas même nation
+													if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+													
 														// verification si le batiment est vide
-														if(batiment_vide($id_bat) && $bat != 1){
+														if(batiment_vide($mysqli, $id_bat) && $bat != 1){
 															$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 														}
 													}
@@ -673,9 +678,12 @@ if($dispo || !$admin){
 											$erreur .= "Vous n'avez pas assez de pm !";
 											
 											if(prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
+											
 												// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-												$res_bat = id_prox_bat($x_persoE,$y_persoE); 
+												$res_bat = id_prox_bat($mysqli, $x_persoE, $y_persoE); 
+												
 												while ($bat1 = $res_bat->fetch_assoc()) {
+													
 													$nom_ibat = $bat1["nom_instance"];
 													$id_bat = $bat1["id_instanceBat"];
 													$bat = $bat1["id_batiment"];
@@ -687,9 +695,9 @@ if($dispo || !$admin){
 													$nom_bat = $t_n["nom_batiment"];
 													
 													// verification si le batiment est de la même nation que le perso
-													if(!nation_perso_bat($id_perso,$id_bat)) { // pas même nation
+													if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
 														// verification si le batiment est vide
-														if(batiment_vide($id_bat) && $bat != 1){
+														if(batiment_vide($mysqli, $id_bat) && $bat != 1){
 															$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 														}
 													}
@@ -707,9 +715,12 @@ if($dispo || !$admin){
 										$erreur .= "Cette case est déjà occupée !";
 										
 										if(prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
+										
 											// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-											$res_bat = id_prox_bat($x_persoE,$y_persoE); 
+											$res_bat = id_prox_bat($mysqli, $x_persoE, $y_persoE); 
+											
 											while ($bat1 = $res_bat->fetch_assoc()) {
+												
 												$nom_ibat = $bat1["nom_instance"];
 												$id_bat = $bat1["id_instanceBat"];
 												$bat = $bat1["id_batiment"];
@@ -721,9 +732,9 @@ if($dispo || !$admin){
 												$nom_bat = $t_n["nom_batiment"];
 													
 												// verification si le batiment est de la même nation que le perso
-												if(!nation_perso_bat($id_perso,$id_bat)) { // pas même nation
+												if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
 													// verification si le batiment est vide
-													if(batiment_vide($id_bat) && $bat != 1){
+													if(batiment_vide($mysqli, $id_bat) && $bat != 1){
 														$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 													}
 												}
@@ -741,9 +752,12 @@ if($dispo || !$admin){
 									$erreur .= "Vous ne pouvez pas vous deplacer en eau profonde !";
 									
 									if(prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
+									
 										// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-										$res_bat = id_prox_bat($x_persoE,$y_persoE); 
+										$res_bat = id_prox_bat($mysqli, $x_persoE, $y_persoE); 
+										
 										while ($bat1 = $res_bat->fetch_assoc()) {
+											
 											$nom_ibat = $bat1["nom_instance"];
 											$id_bat = $bat1["id_instanceBat"];
 											$bat = $bat1["id_batiment"];
@@ -755,9 +769,9 @@ if($dispo || !$admin){
 											$nom_bat = $t_n["nom_batiment"];
 											
 											// verification si le batiment est de la même nation que le perso
-											if(!nation_perso_bat($id_perso,$id_bat)) { // pas même nation
+											if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
 												// verification si le batiment est vide
-												if(batiment_vide($id_bat) && $bat != 1){
+												if(batiment_vide($mysqli, $id_bat) && $bat != 1){
 													$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 												}
 											}
@@ -775,9 +789,12 @@ if($dispo || !$admin){
 								$erreur .= "Vous ne pouvez pas vous déplacer sur cette case, elle est hors limites !";
 								
 								if(prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
+								
 									// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-									$res_bat = id_prox_bat($x_persoE,$y_persoE); 
+									$res_bat = id_prox_bat($mysqli, $x_persoE, $y_persoE); 
+									
 									while ($bat1 = $res_bat->fetch_assoc()) {
+										
 										$nom_ibat = $bat1["nom_instance"];
 										$id_bat = $bat1["id_instanceBat"];
 										$bat = $bat1["id_batiment"];
@@ -789,9 +806,9 @@ if($dispo || !$admin){
 										$nom_bat = $t_n["nom_batiment"];
 											
 										// verification si le batiment est de la même nation que le perso
-										if(!nation_perso_bat($id_perso,$id_bat)) { // pas même nation
+										if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
 											// verification si le batiment est vide
-											if(batiment_vide($id_bat) && $bat != 1){
+											if(batiment_vide($mysqli, $id_bat) && $bat != 1){
 												$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 											}
 										}
@@ -809,9 +826,12 @@ if($dispo || !$admin){
 							$erreur .= "Vous n'avez plus de pm !";
 							
 							if(prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
+							
 								// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-								$res_bat = id_prox_bat($x_persoE,$y_persoE); 
+								$res_bat = id_prox_bat($mysqli, $x_persoE, $y_persoE); 
+								
 								while ($bat1 = $res_bat->fetch_assoc()) {
+									
 									$nom_ibat = $bat1["nom_instance"];
 									$id_bat = $bat1["id_instanceBat"];
 									$bat = $bat1["id_batiment"];
@@ -823,9 +843,9 @@ if($dispo || !$admin){
 									$nom_bat = $t_n["nom_batiment"];
 									
 									// verification si le batiment est de la même nation que le perso
-									if(!nation_perso_bat($id_perso,$id_bat)) { // pas même nation
+									if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
 										// verification si le batiment est vide
-										if(batiment_vide($id_bat) && $bat != 1){
+										if(batiment_vide($mysqli, $id_bat) && $bat != 1){
 											$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 										}
 									}
@@ -848,8 +868,10 @@ if($dispo || !$admin){
 				else {
 					// verification si il y a un batiment a proximite du perso
 					if(prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso) && !in_bat($mysqli, $id_perso)){ 
+					
 						// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-						$res_bat = id_prox_bat($x_persoN,$y_persoN); 
+						$res_bat = id_prox_bat($mysqli, $x_persoN, $y_persoN);
+						
 						while ($bat1 = $res_bat->fetch_assoc()) {
 							$nom_ibat = $bat1["nom_instance"];
 							$id_bat = $bat1["id_instanceBat"];
@@ -862,9 +884,10 @@ if($dispo || !$admin){
 							$nom_bat = $t_n["nom_batiment"];
 							
 							// verification si le batiment est de la même nation que le perso
-							if(!nation_perso_bat($id_perso,$id_bat)) { // pas même nation
+							if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+							
 								// verification si le batiment est vide
-								if(batiment_vide($id_bat) && $bat != 1){
+								if(batiment_vide($mysqli, $id_bat) && $bat != 1){
 									$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 								}
 							}
