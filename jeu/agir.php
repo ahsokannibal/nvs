@@ -1331,6 +1331,8 @@ if($verif){
 						
 						$degats = rand($min_degats_arme, $max_degats_arme);
 						
+					} else {
+						$degats = 1;
 					}
 						
 					// mise à jour des pv du pnj
