@@ -34,24 +34,32 @@ if(isset($_POST["id_info"])){
 }
 else {
 	if(isset($_GET["infoid"])){
+		
 		// verifier que la valeur est valide
 		$id_tmp = $_GET["infoid"];
 		$verif = preg_match("#^[0-9]*[0-9]$#i","$id_tmp");
+		
 		if($verif){
+			
 			$id = $_GET["infoid"];
 			
 			if(isset($_GET["liste"]) && $_GET["liste"] == "ok") { // on souhaite connaitre la liste des persos d'un batiment par exemple.
+			
 				// test si c'est bien un batiment
 				if ($_GET['infoid'] >= 50000) {
+					
 					// test si le batiment existe
 					$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id'";
 					$res = $mysqli->query($sql);
 					$nb_b = $res->fetch_row();
+					
 					if ($nb_b) { // il existe
+					
 						// recuperation de la liste des persos dans le batiment
 						$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_batiment, perso WHERE perso.id_perso=perso_in_batiment.id_perso AND id_instanceBat='$id'";
 						$res_liste = $mysqli->query($sql_liste);
 						$verif_liste = '1';
+						
 					}
 					else {
 						echo "<font color = red><center>Le batiment selectionné n'existe pas</center></font>";
@@ -97,6 +105,7 @@ if(isset($id)){
 	}
 
 	if($nb_p == '1'){
+		
 		// l'entité existe bien
 		entete($mysqli, $id);
 	

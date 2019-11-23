@@ -956,6 +956,14 @@ if($dispo || !$admin){
 					$image_profil = "sud.gif";
 				}
 				
+				// récupération du grade du perso 
+				$sql_grade = "SELECT perso_as_grade.id_grade, nom_grade FROM perso_as_grade, grades WHERE perso_as_grade.id_grade = grades.id_grade AND id_perso='$id_perso'";
+				$res_grade = $mysqli->query($sql_grade);
+				$t_grade = $res_grade->fetch_assoc();
+				
+				$id_grade_perso = $t_grade["id_grade"];
+				$nom_grade_perso = $t_grade["nom_grade"];
+				
 				// Récupération de tous les persos du joueur
 				$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso'";
 				$res = $mysqli->query($sql);
@@ -964,7 +972,16 @@ if($dispo || !$admin){
 				<!-- Début du tableau d'information-->
 				<table border=1 align="center" width=90%>
 					<tr>
-						<td width=60><center><div width=40 height=40 style="position: relative;"><div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id_perso; ?></div><img src="../images_perso/<?php echo "$image_perso";?>" width=40 height=40></div></center></td>
+						<td width=120>
+							<center>
+								<div width=40 height=40 style="position: relative;">
+									<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;">
+										<?php echo $id_perso; ?>
+									</div>
+									<img src="../images_perso/<?php echo "$image_perso";?>" width=40 height=40>
+								</div>
+							</center>
+						</td>
 						<td align=center>
 							<form method='post' action='jouer.php'>
 								Personnage : <select name='liste_perso'>
@@ -985,7 +1002,9 @@ if($dispo || !$admin){
 								<input type='submit' name='select_perso' value='ok' />
 							</form>
 						</td>
-						<td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?></td>
+						<td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?> / Grade : <?php echo $nom_grade_perso; ?>
+							<img alt="<?php echo $nom_grade_perso; ?>" title="<?php echo $nom_grade_perso; ?>" src="../images/grades/<?php echo $id_grade_perso . ".gif";?>" width=40 height=40>
+						</td>
 						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 					</tr>
 					<tr>

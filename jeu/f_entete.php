@@ -3,15 +3,19 @@
 function entete($mysqli, $id) {
 		
 	if ($id) {
+		
 		// Perso
 		if($id < 10000){
+			
 			$sql = "SELECT nom_perso, xp_perso, image_perso, clan FROM perso WHERE id_perso ='$id'";
 			$result = $mysqli->query($sql);
 			$tabAttr = $result->fetch_assoc();
+			
 			$nom_perso = $tabAttr['nom_perso'];
 			$xp = $tabAttr['xp_perso'];
 			$image_perso = $tabAttr['image_perso'];
 			$clan_perso = $tabAttr["clan"];
+			
 			if($clan_perso == '1'){
 				$couleur_clan_perso = 'blue';
 				$nom_clan = 'Nord';
@@ -20,6 +24,14 @@ function entete($mysqli, $id) {
 				$couleur_clan_perso = 'red';
 				$nom_clan = 'Sud';
 			}
+			
+			// récupération du grade du perso 
+			$sql_grade = "SELECT perso_as_grade.id_grade, nom_grade FROM perso_as_grade, grades WHERE perso_as_grade.id_grade = grades.id_grade AND id_perso='$id'";
+			$res_grade = $mysqli->query($sql_grade);
+			$t_grade = $res_grade->fetch_assoc();
+				
+			$id_grade_perso = $t_grade["id_grade"];
+			$nom_grade_perso = $t_grade["nom_grade"];
 			
 			// recuperation de l'id de la section 
 			$sql_groupe = "SELECT id_section from perso_in_section where id_perso='$id' and attenteValidation_section='0'";
@@ -43,8 +55,10 @@ function entete($mysqli, $id) {
 					<table border=\"1\">
 						<tr>
 							<td width=\"60%\"><b>Pseudo :</b> <font color=\"$couleur_clan_perso\">$nom_perso</font> [$id]</td>
+						</tr>
+						<tr>
+							<td><b>Grade : </b><img src=\"../images/grades/" . $id_grade_perso . ".gif\" width=\"40\" height=\"40\">  " . $nom_grade_perso . "</td>
 						</tr>";
-			echo "<tr><td><b>Xp :</b> $xp</td></tr>";
 			echo "<tr><td><b>Camp :</b> <font color=\"$couleur_clan_perso\">$nom_clan</font></td></tr>";
 			if(isset($groupe) && $groupe != ''){
 				echo "<tr><td><b>Groupe :</b> <a href=\"section.php?id_section=$id_groupe&voir_groupe=ok\">". stripslashes($groupe) ."</a></td></tr>";
