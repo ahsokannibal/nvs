@@ -8,10 +8,11 @@ $mysqli = db_connexion();
 include ('nb_online.php');
 
 if(isset($_SESSION["ID_joueur"])){
+	
 	$id_joueur = $_SESSION['ID_joueur']; 
 	
 	// recuperation de l'id et du nom du perso
-	$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso=$id_joueur";
+	$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso=$id_joueur AND chef=1";
 	$res = $mysqli->query($sql);
 	$t_id = $res->fetch_assoc();
 	$_SESSION["id_perso"] = $id = $t_id["id_perso"];
@@ -86,7 +87,9 @@ if(isset($_SESSION["ID_joueur"])){
 		header("location:jeu/jouer.php"); 
 	}
 	else {
+		
 		if($est_gele && !temp_degele($date, $date_gele)){
+			
 			$tr = temp_restant($date, $date_gele);
 			$jours = floor ($tr/(3600*24));
 			$heures = floor (($tr%(3600*24))/3600);
@@ -97,8 +100,9 @@ if(isset($_SESSION["ID_joueur"])){
 			echo "<a href=\"logout.php\">[ retour ]</a>";
 		}
 		else {
+			
 			//c'est un nouveau tour et le perso n'est pas gele
-			if (!$est_gele && nouveau_tour($date, $dla)) { 
+			if (!$est_gele && nouveau_tour($date, $dla)) {
 			
 				// calcul du prochain tour
 				$new_dla = get_new_dla($date, $dla);
@@ -147,7 +151,7 @@ if(isset($_SESSION["ID_joueur"])){
 					//    RESPAWN BATIMENT    //
 					
 					// Récupération du batiment de rappatriement le plus proche du perso
-					$id_bat = selection_bat_rapat($x_perso, $y_perso, $clan);
+					$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
 					
 					// récupération coordonnées batiment
 					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
@@ -168,7 +172,7 @@ if(isset($_SESSION["ID_joueur"])){
 					header("location:jeu/jouer.php");
 				}
 			}
-			else {
+			else {				
 				if ($pv > 0) { //il est encore en vie
 					// redirection
 					header("location:jeu/jouer.php");

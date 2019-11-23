@@ -299,6 +299,7 @@ function batiment_vide($mysqli, $id_bat){
 
 // fonction qui verifie si l'instance du batiment existe
 function existe_instance_bat($mysqli, $instance_bat){
+	
 	$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$instance_bat'";
 	$res = $mysqli->query($sql);
 	$verif = $res->num_rows;
@@ -333,8 +334,9 @@ function calcul_nb_cases($x_depart, $y_depart, $x_arrivee, $y_arrivee){
 
 // fontion qui calcule la distance de construction possible d'un bâtiment selon le nombre de points
 function calcul_distance_construction($nombre_points){
+	
 	if($nombre_points == 1){
-		return 20;
+		return 50;
 	}
 	else {
 		return $nombre_points * 10;

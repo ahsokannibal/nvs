@@ -118,15 +118,21 @@ if(isset($id)){
 			$camp_bat = $t_ci["camp_instance"];
 			
 			if($camp_perso == $camp_bat){
+				
 				// si à l'interieur
-				if(in_instance_bat($id_perso,$id)){
+				if(in_instance_bat($mysqli, $id_perso, $id)){
+					
 					echo "<center>";
 					echo "<b>Liste des persos dans le bâtiment</b><br />";
+					
 					while($liste = $res_liste->fetch_assoc()) {
+						
 						$nom_p = $liste["nom_perso"];
 						$id_p = $liste["id_perso"];
+						
 						echo "$nom_p [<a href=\"evenement.php?infoid=".$id_p."\">$id_p</a>]";
 					}
+					
 					echo "</center>";
 					echo "<br />";
 				}

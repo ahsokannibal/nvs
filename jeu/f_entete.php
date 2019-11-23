@@ -33,6 +33,14 @@ function entete($mysqli, $id) {
 			$id_grade_perso = $t_grade["id_grade"];
 			$nom_grade_perso = $t_grade["nom_grade"];
 			
+			// cas particuliers grouillot
+			if ($id_grade_perso == 101) {
+				$id_grade_perso = "1.1";
+			}
+			if ($id_grade_perso == 102) {
+				$id_grade_perso = "1.2";
+			}
+			
 			// recuperation de l'id de la section 
 			$sql_groupe = "SELECT id_section from perso_in_section where id_perso='$id' and attenteValidation_section='0'";
 			$res_groupe = $mysqli->query($sql_groupe);

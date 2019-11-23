@@ -28,21 +28,30 @@ if($dispo || !$admin){
 		
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
+		
+		$sql_joueur = "SELECT idJoueur_perso FROM perso WHERE ID_perso='$id_perso'";
+		$res_joueur = $mysqli->query($sql_joueur);
+		$t_joueur = $res_joueur->fetch_assoc();
+		
+		$id_joueur_perso = $t_joueur["idJoueur_perso"];
+		
+		$sql_dla = "SELECT UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
+		$res_dla = $mysqli->query($sql_dla);
+		$t_dla = $res_dla->fetch_assoc();
+		$dla = $t_dla["DLA"];
+		$est_gele = $t_dla["est_gele"];
 	
-		$sql = "SELECT pv_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE ID_perso='$id_perso'";
+		$sql = "SELECT pv_perso FROM perso WHERE ID_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		$testpv = $tpv['pv_perso'];
-		$dla = $tpv["DLA"];
-		$est_gele = $tpv["est_gele"];
 		
 		$config = '1';
 		
 		// verification si le perso est encore en vie
 		if ($testpv <= 0) {
 			// le perso est mort
-			//tour.php se charge de verifier si nouveau tour
-			header("Location: ../tour.php"); 
+			header("Location: ../mort.php"); 
 		}
 		else { 
 			// le perso est vivant
@@ -192,9 +201,9 @@ if($dispo || !$admin){
 								
 								// mise a jour du bonus de perception
 								$bonus_visu = get_malus_visu($fond);
-								if(bourre($id_perso)){
-									if(!endurance_alcool($id_perso))
-										$malus_bourre = bourre($id_perso) * 2;
+								if(bourre($mysqli, $id_perso)){
+									if(!endurance_alcool($mysqli, $id_perso))
+										$malus_bourre = bourre($mysqli, $id_perso) * 2;
 										$bonus_visu -= $malus_bourre;
 								}				
 								$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
@@ -217,12 +226,12 @@ if($dispo || !$admin){
 							if(!in_bat($mysqli, $id_perso)){
 						
 								// verification que l'instance du batiment existe
-								if (existe_instance_bat($_GET["bat"])){
+								if (existe_instance_bat($mysqli, $_GET["bat"])){
 								
-									if(verif_bat_instance($_GET["bat2"],$_GET["bat"])){
+									if(verif_bat_instance($mysqli, $_GET["bat2"],$_GET["bat"])){
 							
 										// verification qu'on soit bien à côté du batiment
-										if(prox_instance_bat($x_persoN,$y_persoN,$_GET["bat"])){
+										if(prox_instance_bat($mysqli, $x_persoN, $y_persoN, $_GET["bat"])){
 										
 											// verification si il y a un perso dans la tour
 											$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat=".$_GET["bat"]."";
@@ -240,6 +249,7 @@ if($dispo || !$admin){
 													$sql = "SELECT nom_instance, niveau_instance, x_instance, y_instance FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
 													$res = $mysqli->query($sql);
 													$coordonnees_instance = $res->fetch_assoc();
+													
 													$x_bat = $coordonnees_instance["x_instance"];
 													$y_bat = $coordonnees_instance["y_instance"];
 													$nom_bat = $coordonnees_instance["nom_instance"];
@@ -314,9 +324,10 @@ if($dispo || !$admin){
 													
 													// mise a jour du bonus de perception du perso
 													$bonus_visu = $bonus_perc;
-													if(bourre($id_perso)){
-														if(!endurance_alcool($id_perso))
-															$malus_bourre = bourre($id_perso) * 2;
+													
+													if(bourre($mysqli, $id_perso)){
+														if(!endurance_alcool($mysqli, $id_perso))
+															$malus_bourre = bourre($mysqli, $id_perso) * 2;
 															$bonus_visu -= $malus_bourre;
 													}
 													// maj bonus perception et -1 pm pour rentrer dans le batiment
@@ -356,12 +367,12 @@ if($dispo || !$admin){
 								if(!in_bat($mysqli, $id_perso)){
 								
 									// verification que l'instance du batiment existe
-									if (existe_instance_bat($_GET["bat"])){
+									if (existe_instance_bat($mysqli, $_GET["bat"])){
 										
-										if(verif_bat_instance($_GET["bat2"],$_GET["bat"])){
+										if(verif_bat_instance($mysqli, $_GET["bat2"], $_GET["bat"])){
 										
 											// verification qu'on soit bien à côté du batiment
-											if(prox_instance_bat($x_persoN,$y_persoN,$_GET["bat"])){
+											if(prox_instance_bat($mysqli, $x_persoN, $y_persoN, $_GET["bat"])){
 												
 												// verification que le perso a encore des pm
 												if($pm_perso + $malus_pm >= 1){
@@ -375,6 +386,7 @@ if($dispo || !$admin){
 													$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance, contenance_instance FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
 													$res = $mysqli->query($sql);
 													$coordonnees_instance = $res->fetch_assoc();
+													
 													$x_bat = $coordonnees_instance["x_instance"];
 													$y_bat = $coordonnees_instance["y_instance"];
 													$nom_bat = $coordonnees_instance["nom_instance"];
@@ -450,9 +462,12 @@ if($dispo || !$admin){
 														
 														// mise a jour du bonus de perception du perso
 														$bonus_visu = $bonus_perc;
-														if(bourre($id_perso)){
-															if(!endurance_alcool($id_perso))
-																$malus_bourre = bourre($id_perso) * 2;
+														
+														if(bourre($mysqli, $id_perso)){
+															
+															if(!endurance_alcool($mysqli, $id_perso))
+																
+																$malus_bourre = bourre($mysqli, $id_perso) * 2;
 																$bonus_visu -= $malus_bourre;
 														}
 														// maj bonus perception et -1 pm pour l'entrée dans le batiment
@@ -522,9 +537,9 @@ if($dispo || !$admin){
 					
 					// mise a jour du bonus de perception du perso
 					$bonus_visu = $bonus_perc;
-					if(bourre($id_perso)){
-						if(!endurance_alcool($id_perso))
-							$malus_bourre = bourre($id_perso) * 2;
+					if(bourre($mysqli, $id_perso)){
+						if(!endurance_alcool($mysqli, $id_perso))
+							$malus_bourre = bourre($mysqli, $id_perso) * 2;
 							$bonus_visu -= $malus_bourre;
 					}
 					
@@ -621,8 +636,8 @@ if($dispo || !$admin){
 								$bonus_visu = get_malus_visu($fond);
 								
 								if(bourre($mysqli, $id_perso)){
-									if(!endurance_alcool($id_perso))
-										$malus_bourre = bourre($id_perso) * 2;
+									if(!endurance_alcool($mysqli, $id_perso))
+										$malus_bourre = bourre($mysqli, $id_perso) * 2;
 										$bonus_visu -= $malus_bourre;
 								}
 		
@@ -963,6 +978,14 @@ if($dispo || !$admin){
 				
 				$id_grade_perso = $t_grade["id_grade"];
 				$nom_grade_perso = $t_grade["nom_grade"];
+				
+				// cas particuliers grouillot
+				if ($id_grade_perso == 101) {
+					$id_grade_perso = "1.1";
+				}
+				if ($id_grade_perso == 102) {
+					$id_grade_perso = "1.2";
+				}
 				
 				// Récupération de tous les persos du joueur
 				$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso'";
