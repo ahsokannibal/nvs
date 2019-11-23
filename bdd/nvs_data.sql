@@ -220,16 +220,16 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 --
 
 INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `description`) VALUES
-(1, 'barricade', 100, 'Une barricade permet de tenir des positions defensives'),
-(2, 'tour de visu', 50, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis'),
-(3, 'tour de garde', 50, 'Une tour de garde permet de monter la defense sur une position haute permettant de voir l\'ennemi s\'approcher et ainsi de l\'abattre avant qu\'il n\'atteigne sa position'),
-(4, 'route', 10, 'Une route permet de se d&eacute;placer plus facilement sur les terrains difficiles'),
-(5, 'pont', 60, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau'),
-(6, 'entrepot', 100, 'Un entrepot permet de stocker et vendre du mat&eacute;riel'),
-(7, 'hopital', 200, 'Un hopital de campagne permet de soigner des blessers'),
-(8, 'fortin', 400, 'Un fortin permet de prendre position sur une partie de la carte'),
-(9, 'fort', 1000, 'Un fort, à defendre coute que coute'),
-(10, 'prison', 500, 'La prison est un batiment ou sont enferm&eacute;s les criminels');
+(1, 'barricade', 250, 'Une barricade permet de tenir des positions defensives'),
+(2, 'tour de visu', 200, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis'),
+(3, 'tour de garde', 250, 'Une tour de garde permet de monter la defense sur une position haute permettant de voir l\'ennemi s\'approcher et ainsi de l\'abattre avant qu\'il n\'atteigne sa position'),
+(4, 'route', 100, 'Une route permet de se d&eacute;placer plus facilement sur les terrains difficiles'),
+(5, 'pont', 2000, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau'),
+(6, 'entrepot', 1000, 'Un entrepot permet de stocker et vendre du mat&eacute;riel'),
+(7, 'hopital', 2000, 'Un hopital de campagne permet de soigner des blessers'),
+(8, 'fortin', 5000, 'Un fortin permet de prendre position sur une partie de la carte'),
+(9, 'fort', 10000, 'Un fort, à defendre coute que coute'),
+(10, 'prison', 4000, 'La prison est un batiment ou sont enferm&eacute;s les criminels');
 
 -- --------------------------------------------------------
 
