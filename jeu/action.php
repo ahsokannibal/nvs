@@ -103,9 +103,7 @@ if($dispo){
 		}
 		
 		// Soins pv
-		if($id_action == '11' || $id_action == '12' || $id_action == '13' || $id_action == '14' || $id_action == '15' || 
-		   $id_action == '16' || $id_action == '22' || $id_action == '23' || $id_action == '24' || $id_action == '25' ||
-		   $id_action == '26' || $id_action == '27'){
+		if($id_action == '11'){
 		   
 		   // Recuperation des objets que possede le perso pouvant ameliorer les soins
 			$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
@@ -147,7 +145,7 @@ if($dispo){
 		}
 		
 		// Soins malus
-		if($id_action == '140' || $id_action == '141' || $id_action == '142' ){
+		if($id_action == '140'){
 			
 			// Recuperation des objets que possede le perso pouvant ameliorer les soins
 			$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
@@ -156,6 +154,7 @@ if($dispo){
 			$num_s = $res_s->num_rows;
 				
 			if((isset($_POST['select_objet_soin']) && $_POST['select_objet_soin'] != "" ) || $num_s == 0 || isset($id_objet_s)){
+				
 				if($num_s == 0 || $id_objet_s == "NO")
 					$id_objet_soin = 0;
 				else
@@ -187,11 +186,6 @@ if($dispo){
 				}
 			}
 		}
-		
-		// Soins veterinaire
-		if($id_action == '17' || $id_action == '18' || $id_action == '19' || $id_action == '20' || $id_action == '21'){
-			echo "Soins vétérinaire";
-		}
 	}
 	else {
 		// traitement action cible perso et soi-meme
@@ -213,9 +207,7 @@ if($dispo){
 			}
 			
 			// Soins pv
-			if($id_action == '11' || $id_action == '12' || $id_action == '13' || $id_action == '14' || $id_action == '15' || 
-			   $id_action == '16' || $id_action == '22' || $id_action == '23' || $id_action == '24' || $id_action == '25' ||
-			   $id_action == '26' || $id_action == '27'){
+			if($id_action == '11'){
 				
 				// Reparation des objets que possede le perso pouvant ameliorer les soins
 				$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
@@ -257,7 +249,7 @@ if($dispo){
 			}
 			
 			// Soins malus
-			if($id_action == '140' || $id_action == '141' || $id_action == '142' ){
+			if($id_action == '140'){
 				
 				// Recuperation des objets que possede le perso pouvant ameliorer les soins
 				$sql_s = "SELECT id_objet FROM perso_as_objet WHERE id_objet IN
@@ -297,11 +289,6 @@ if($dispo){
 					}
 				}
 			}
-			
-			// Soins veterinaire
-			if($id_action == '17' || $id_action == '18' || $id_action == '19' || $id_action == '20' || $id_action == '21'){
-				echo "Soins vétérinaire";
-			}
 		}
 	}
 	
@@ -333,79 +320,6 @@ if($dispo){
 				action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action);
 			}
 		}
-	}
-	
-	// Saut
-	if(isset($_POST['saut'])){
-		$t_coord = $_POST['saut'];
-		$t_coord2 = explode(',',$t_coord);
-		$x_cible = $t_coord2[0];
-		$y_cible = $t_coord2[1];
-		$coutPa = $t_coord2[2];
-		
-		action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte);
-	}
-	else {
-		if(isset($_POST['hid_saut'])){
-			$t_coord = $_POST['hid_saut'];
-			$t_coord2 = explode(',',$t_coord);
-			$x_cible = $t_coord2[0];
-			$y_cible = $t_coord2[1];
-			$coutPa = $t_coord2[2];
-			
-			action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte);
-		}
-	}
-	
-	// Courir
-	if(isset($_POST['courir'])){
-		$t_coord = $_POST['courir'];
-		$t_coord2 = explode(',',$t_coord);
-		$direction = $t_coord2[0];
-		$nb_points_action = $t_coord2[1];
-		$coutPa_action = $t_coord2[2];
-		
-		action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutPa_action);
-	}
-	else {
-		if(isset($_POST['hid_courir'])){
-			$t_coord = $_POST['hid_courir'];
-			$t_coord2 = explode(',',$t_coord);
-			$direction = $t_coord2[0];
-			$nb_points_action = $t_coord2[1];
-			$coutPa_action = $t_coord2[2];
-			
-			action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutPa_action);
-		}
-	}
-	
-	
-	// Chant
-	if(isset($_POST['event_chant'])){
-		$phrase = "a chanté ".addslashes($_POST['event_chant']);
-		
-		action_chanter_perso($mysqli, $id_perso, $phrase);
-	}
-	
-	// Sculpture
-	if(isset($_POST['event_scult'])){
-		$phrase = "a sculpter ".$_POST['event_scult'];
-		
-		action_sculter_perso($mysqli, $id_perso, $phrase);
-	}
-	
-	// Peinture
-	if(isset($_POST['event_peind'])){
-		$phrase = "a peind ".$_POST['event_peind'];
-		
-		action_peindre_perso($mysqli, $id_perso, $phrase);
-	}
-	
-	// Danse
-	if(isset($_POST['event_danse'])){
-		$phrase = "a dansé ".$_POST['event_danse'];
-		
-		action_danser_perso($mysqli, $id_perso, $phrase);
 	}
 	
 	// Deposer objet
@@ -652,255 +566,6 @@ if($dispo){
 					// traitement de l'action marche forcee
 					if($nom_action == 'Marche forcée'){
 						action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_action);
-					}
-					
-					// traitement de l'action courir
-					if($nom_action == 'Courir'){
-						
-						if(!in_bat($mysqli, $id_perso)){
-							
-							//recuperation des coordonnees du perso
-							$sql = "SELECT x_perso, y_perso, perception_perso, clan FROM perso WHERE id_perso='$id_perso'";
-							$res = $mysqli->query($sql);
-							$t_coord = $res->fetch_assoc();
-										
-							$x_perso = $t_coord['x_perso'];
-							$y_perso = $t_coord['y_perso'];
-							$perception_perso = $t_coord['perception_perso'];
-							$clan_perso = $t_coord['clan'];
-							
-							// recuperation des donnees de la carte
-							$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perception_perso AND x_carte <= $x_perso + $perception_perso AND y_carte <= $y_perso + $perception_perso AND y_carte >= $y_perso - $perception_perso ORDER BY y_carte DESC, x_carte";
-							$res = $mysqli->query($sql);
-							$tab = $res->fetch_assoc(); 			
-							
-							//<!--Generation de la carte-->
-							echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
-										
-							echo "<tr><td>y \ x</td>";  //affichage des abscisses
-							for ($i = $x_perso - $perception_perso; $i <= $x_perso + $perception_perso; $i++) {
-								echo "<th width=40 height=40>$i</th>";
-							}
-							echo "</tr>";
-										
-							for ($y = $y_perso + $perception_perso; $y >= $y_perso - $perception_perso; $y--) {
-								
-								echo "<th>$y</th>";
-								for ($x = $x_perso - $perception_perso; $x <= $x_perso + $perception_perso; $x++) {
-									
-									//les coordonnees sont dans les limites
-									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
-										
-										if ($tab["occupee_carte"]){
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-										}
-										else{
-											//positionnement du fond
-											$fond_carte = $tab["fond_carte"];
-											if($x == ($x_perso - 1) && $y == ($y_perso + 1)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"1,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche01.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"1,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == $x_perso && $y == ($y_perso + 1)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"2,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche02.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"2,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == ($x_perso + 1) && $y == ($y_perso + 1)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"3,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche03.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"3,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == ($x_perso - 1) && $y == $y_perso){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"4,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche04.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"4,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == ($x_perso + 1) && $y == $y_perso){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"5,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche05.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"5,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == ($x_perso - 1) && $y == ($y_perso - 1)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"6,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche06.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"6,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == $x_perso && $y == ($y_perso - 1)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"7,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche07.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"7,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == ($x_perso + 1) && $y == ($y_perso - 1)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"courir\" value=\"8,$nb_points_action,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../fond_carte/fleche08.gif';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_courir\" value=\"8,$nb_points_action,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else{
-												echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
-											}
-										}
-										$tab = $res->fetch_assoc();
-									}
-									else{
-										//les coordonnees sont hors limites
-										echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
-									}
-								}
-								echo "</tr>";
-							}
-							echo "</table>";
-							// fin de la generation de la carte
-							
-							// lien annuler
-							echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
-						}
-						else {
-							echo "<center><font color='red'>Impossible de courir depuis un bâtiment, veuillez sortir pour effectuer cette action</font>";
-							echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
-						}
-					}
-					
-					// traitement de l'action sauter
-					if($nom_action == 'Sauter'){
-						
-						if(!in_bat($mysqli, $id_perso)){
-							
-							//recuperation des coordonnees du perso
-							$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
-							$res = $mysqli->query($sql);
-							$t_coord = $res->fetch_assoc();
-										
-							$x_perso = $t_coord['x_perso'];
-							$y_perso = $t_coord['y_perso'];
-							$clan_perso = $t_coord['clan'];
-										
-							$image_saut='../images/saut.gif';
-							
-							// recuperation des donnees de la carte
-							$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 2 AND x_carte <= $x_perso + 2 AND y_carte <= $y_perso + 2 AND y_carte >= $y_perso - 2 ORDER BY y_carte DESC, x_carte";
-							$res = $mysqli->query($sql);
-							$tab = $res->fetch_assoc(); 			
-							
-							//<!--Generation de la carte-->
-							echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
-										
-							echo "<tr><td>y \ x</td>";  //affichage des abscisses
-							for ($i = $x_perso - 2; $i <= $x_perso + 2; $i++) {
-								echo "<th width=40 height=40>$i</th>";
-							}
-							echo "</tr>";
-										
-							for ($y = $y_perso + 2; $y >= $y_perso - 2; $y--) {
-								
-								echo "<th>$y</th>";
-								for ($x = $x_perso - 2; $x <= $x_perso + 2; $x++) {
-									
-									//les coordonnees sont dans les limites
-									if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
-										
-										if ($tab["occupee_carte"]){
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-										}
-										else{
-											//positionnement du fond
-											$fond_carte = $tab["fond_carte"];
-											if($x == $x_perso && $y == ($y_perso + 2)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"saut\" value=\"$x,$y,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../images_perso/$image_saut';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_saut\" value=\"$x,$y,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == ($x_perso - 2) && $y == $y_perso){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"saut\" value=\"$x,$y,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../images_perso/$image_saut';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_saut\" value=\"$x,$y,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == ($x_perso + 2) && $y == $y_perso){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"saut\" value=\"$x,$y,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../images_perso/$image_saut';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_saut\" value=\"$x,$y,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else if($x == $x_perso && $y == ($y_perso - 2)){
-												echo "<form method=\"post\" action=\"action.php\" >";
-												echo "<td width=40 height=40> <input type=\"image\" name=\"saut\" value=\"$x,$y,$coutPa_action\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../images_perso/$image_saut';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_saut\" value=\"$x,$y,$coutPa_action\" ></td>";
-												echo "</form>";
-											}
-											else{
-												echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
-											}
-										}
-										$tab = $res->fetch_assoc();
-									}
-									else{
-										//les coordonnees sont hors limites
-										echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
-									}
-								}
-								echo "</tr>";
-							}
-							echo "</table>";
-							// fin de la generation de la carte
-							
-							// lien annuler
-							echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
-						}
-						else {
-							echo "<center><font color='red'>Impossible de sauter depuis un bâtiment, veuillez sortir pour effectuer cette action</font>";
-							echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
-						}
-					}
-					
-					// traitement de l'action chanter
-					if($nom_action == 'Chanter'){
-						if($nb_points_action == 1){
-							action_chanter($mysqli, $id_perso,$id_action);
-						}
-						else {
-							echo "<center>Personnalisation de l'événement</center>";
-							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_chant\"><input type=\"submit\" value=\"ok\">";
-							echo "</form>";
-						}
-					}
-					
-					// traitement de l'action Danser
-					if($nom_action == 'Danser'){
-						if($nb_points_action == 1){
-							action_danser($mysqli, $id_perso, $id_action);
-						}
-						else {
-							echo "<center>Personnalisation de l'événement</center>";
-							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_danse\"><input type=\"submit\" value=\"ok\">";
-							echo "</form>";
-						}
-					}
-					
-					// traitement de l'action Peindre
-					if($nom_action == 'Peindre'){
-						if($nb_points_action == 1){
-							action_peindre($mysqli, $id_perso, $id_action);
-						}
-						else {
-							echo "<center>Personnalisation de l'événement</center>";
-							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_peind\"><input type=\"submit\" value=\"ok\">";
-							echo "</form>";
-						}
-					}
-					
-					// traitement de l'action Sculpter
-					if($nom_action == 'Sculpter'){
-						if($nb_points_action == 1){
-							action_sculter($mysqli, $id_perso, $id_action);
-						}
-						else {
-							echo "<center>Personnalisation de l'événement</center>";
-							echo "<form method=\"post\" action=\"action.php\">";
-							echo "a chanté <input type=\"text\" name=\"event_scult\"><input type=\"submit\" value=\"ok\">";
-							echo "</form>";
-						}
 					}
 				}
 				
@@ -1150,9 +815,9 @@ if($dispo){
 						// action pouvant affecter les cases aux alentours du perso
 						if($portee_action){
 							
-							if ($nom_action=='Construire - fort' || $nom_action=='Construire - fortin' || $nom_action == 'Construire - hopital'
-								|| $nom_action == 'Construire - entrepot d\'armes' || $nom_action == 'Construire - tour de garde' || $nom_action == 'Construire - tour de visu'
-								|| $nom_action == 'Construire - pont' || $nom_action == 'Construire - barricade' || $nom_action == 'Construire - route'){
+							if ($nom_action=='Construire - Fort' || $nom_action=='Construire - Fortin' || $nom_action == 'Construire - Hopital'
+								|| $nom_action == 'Construire - Rail' || $nom_action == 'Construire - Tour de guet' || $nom_action == 'Construire - Gare'
+								|| $nom_action == 'Construire - Pont' || $nom_action == 'Construire - Barricade'){
 								
 								// recuperation du batiment
 								$sql = "SELECT batiment.id_batiment, batiment.nom_batiment, clan 
