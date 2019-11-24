@@ -642,7 +642,9 @@ if($dispo || !$admin){
 								}
 		
 								if (!is_eau_p($fond)) {
+									
 									if (!$case_occupee){
+										
 										if($pm_perso  + $malus_pm >= $cout_pm){	
 										
 											// maj perso : mise à jour des pm et du bonus de perception
@@ -669,12 +671,15 @@ if($dispo || !$admin){
 											if(prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
 											
 												// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-												$res_bat = id_prox_bat($mysqli, $x_persoN, $y_persoN); 
+												$res_bat = id_prox_bat($mysqli, $x_persoN, $y_persoN);
 												
 												while ($bat1 = $res_bat->fetch_assoc()) {
-													$nom_ibat = $bat1["nom_instance"];
-													$id_bat = $bat1["id_instanceBat"];
-													$bat = $bat1["id_batiment"];
+													
+													$nom_ibat 		= $bat1["nom_instance"];
+													$id_bat 		= $bat1["id_instanceBat"];
+													$bat 			= $bat1["id_batiment"];
+													$pv_instance 	= $bat1["pv_instance"];
+													$pvMax_instance = $bat1["pvMax_instance"];
 													
 													//recuperation du nom du batiment
 													$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -686,13 +691,17 @@ if($dispo || !$admin){
 													if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
 													
 														// verification si le batiment est vide
-														if(batiment_vide($mysqli, $id_bat) && $bat != 1){
+														if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
 															$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 														}
 													}
 													else {
-														if($bat != 1){
+														if($bat != 1 && $bat != 5){
 															$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+														}
+														
+														if ($pv_instance < $pvMax_instance) {
+															$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 														}
 													}
 												}
@@ -709,9 +718,11 @@ if($dispo || !$admin){
 												
 												while ($bat1 = $res_bat->fetch_assoc()) {
 													
-													$nom_ibat = $bat1["nom_instance"];
-													$id_bat = $bat1["id_instanceBat"];
-													$bat = $bat1["id_batiment"];
+													$nom_ibat 		= $bat1["nom_instance"];
+													$id_bat 		= $bat1["id_instanceBat"];
+													$bat 			= $bat1["id_batiment"];
+													$pv_instance 	= $bat1["pv_instance"];
+													$pvMax_instance = $bat1["pvMax_instance"];
 													
 													//recuperation du nom du batiment
 													$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -721,14 +732,20 @@ if($dispo || !$admin){
 													
 													// verification si le batiment est de la même nation que le perso
 													if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+													
 														// verification si le batiment est vide
-														if(batiment_vide($mysqli, $id_bat) && $bat != 1){
+														if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
 															$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 														}
+														
 													}
 													else {
-														if($bat != 1){
+														if($bat != 1 && $bat != 5){
 															$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+														}
+														
+														if ($pv_instance < $pvMax_instance) {
+															$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 														}
 													}
 												}
@@ -746,9 +763,11 @@ if($dispo || !$admin){
 											
 											while ($bat1 = $res_bat->fetch_assoc()) {
 												
-												$nom_ibat = $bat1["nom_instance"];
-												$id_bat = $bat1["id_instanceBat"];
-												$bat = $bat1["id_batiment"];
+												$nom_ibat 		= $bat1["nom_instance"];
+												$id_bat 		= $bat1["id_instanceBat"];
+												$bat 			= $bat1["id_batiment"];
+												$pv_instance 	= $bat1["pv_instance"];
+												$pvMax_instance = $bat1["pvMax_instance"];
 													
 												//recuperation du nom du batiment
 												$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -758,14 +777,19 @@ if($dispo || !$admin){
 													
 												// verification si le batiment est de la même nation que le perso
 												if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+												
 													// verification si le batiment est vide
-													if(batiment_vide($mysqli, $id_bat) && $bat != 1){
+													if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
 														$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 													}
 												}
 												else {
-													if($bat != 1){
+													if($bat != 1 && $bat != 5){
 														$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+													}
+													
+													if ($pv_instance < $pvMax_instance) {
+														$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 													}
 												}
 											}
@@ -783,9 +807,11 @@ if($dispo || !$admin){
 										
 										while ($bat1 = $res_bat->fetch_assoc()) {
 											
-											$nom_ibat = $bat1["nom_instance"];
-											$id_bat = $bat1["id_instanceBat"];
-											$bat = $bat1["id_batiment"];
+											$nom_ibat 		= $bat1["nom_instance"];
+											$id_bat 		= $bat1["id_instanceBat"];
+											$bat 			= $bat1["id_batiment"];
+											$pv_instance 	= $bat1["pv_instance"];
+											$pvMax_instance = $bat1["pvMax_instance"];
 											
 											//recuperation du nom du batiment
 											$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -795,14 +821,19 @@ if($dispo || !$admin){
 											
 											// verification si le batiment est de la même nation que le perso
 											if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+											
 												// verification si le batiment est vide
-												if(batiment_vide($mysqli, $id_bat) && $bat != 1){
+												if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
 													$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 												}
 											}
 											else {
-												if($bat != 1){
+												if($bat != 1 && $bat != 5){
 													$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+												}
+												
+												if ($pv_instance < $pvMax_instance) {
+													$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 												}
 											}
 										}
@@ -820,9 +851,11 @@ if($dispo || !$admin){
 									
 									while ($bat1 = $res_bat->fetch_assoc()) {
 										
-										$nom_ibat = $bat1["nom_instance"];
-										$id_bat = $bat1["id_instanceBat"];
-										$bat = $bat1["id_batiment"];
+										$nom_ibat 		= $bat1["nom_instance"];
+										$id_bat 		= $bat1["id_instanceBat"];
+										$bat 			= $bat1["id_batiment"];
+										$pv_instance 	= $bat1["pv_instance"];
+										$pvMax_instance = $bat1["pvMax_instance"];
 											
 										//recuperation du nom du batiment
 										$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -832,14 +865,19 @@ if($dispo || !$admin){
 											
 										// verification si le batiment est de la même nation que le perso
 										if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+										
 											// verification si le batiment est vide
-											if(batiment_vide($mysqli, $id_bat) && $bat != 1){
+											if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
 												$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 											}
 										}
 										else {
-											if($bat != 1){
+											if($bat != 1 && $bat != 5){
 												$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+											}
+											
+											if ($pv_instance < $pvMax_instance) {
+												$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 											}
 										}
 									}
@@ -857,9 +895,11 @@ if($dispo || !$admin){
 								
 								while ($bat1 = $res_bat->fetch_assoc()) {
 									
-									$nom_ibat = $bat1["nom_instance"];
-									$id_bat = $bat1["id_instanceBat"];
-									$bat = $bat1["id_batiment"];
+									$nom_ibat 		= $bat1["nom_instance"];
+									$id_bat 		= $bat1["id_instanceBat"];
+									$bat 			= $bat1["id_batiment"];
+									$pv_instance 	= $bat1["pv_instance"];
+									$pvMax_instance = $bat1["pvMax_instance"];
 									
 									//recuperation du nom du batiment
 									$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -869,14 +909,19 @@ if($dispo || !$admin){
 									
 									// verification si le batiment est de la même nation que le perso
 									if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+									
 										// verification si le batiment est vide
-										if(batiment_vide($mysqli, $id_bat) && $bat != 1){
+										if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
 											$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 										}
 									}
 									else {
-										if($bat != 1){
+										if($bat != 1 && $bat != 5){
 											$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+										}
+										
+										if ($pv_instance < $pvMax_instance) {
+											$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 										}
 									}
 								}
@@ -898,9 +943,12 @@ if($dispo || !$admin){
 						$res_bat = id_prox_bat($mysqli, $x_persoN, $y_persoN);
 						
 						while ($bat1 = $res_bat->fetch_assoc()) {
-							$nom_ibat = $bat1["nom_instance"];
-							$id_bat = $bat1["id_instanceBat"];
-							$bat = $bat1["id_batiment"];
+							
+							$nom_ibat 		= $bat1["nom_instance"];
+							$id_bat 		= $bat1["id_instanceBat"];
+							$bat 			= $bat1["id_batiment"];
+							$pv_instance 	= $bat1["pv_instance"];
+							$pvMax_instance = $bat1["pvMax_instance"];
 							
 							//recuperation du nom du batiment
 							$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -912,13 +960,17 @@ if($dispo || !$admin){
 							if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
 							
 								// verification si le batiment est vide
-								if(batiment_vide($mysqli, $id_bat) && $bat != 1){
+								if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
 									$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 								}
 							}
 							else {
-								if($bat != 1){
+								if($bat != 1 && $bat != 5){
 									$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat] </a>~~</font></center>";
+								}
+								
+								if ($pv_instance < $pvMax_instance) {
+									$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 								}
 							}
 						}
@@ -938,7 +990,7 @@ if($dispo || !$admin){
 					</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pmMax_perso, pm_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pmMax_perso, pm_perso, type_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -958,6 +1010,7 @@ if($dispo || !$admin){
 				$perception_perso = $t_perso2["perception_perso"];
 				$bonusPerception_perso = $t_perso2["bonusPerception_perso"];
 				$bonus_perso = $t_perso2["bonus_perso"];
+				$type_perso = $t_perso2["type_perso"];
 				$clan_perso = $t_perso2["clan"];
 				
 				if($clan_perso == 1){
@@ -1366,22 +1419,72 @@ if($dispo || !$admin){
 												<select name='liste_action'>
 													<option value="invalide">-- -- -- -- -- -- - Choisir une action - -- -- -- -- -- --</option>
 													<?php
+													
 													// Action d'entrainement
 													if($pa_perso < 10){
-														echo "<option value=\"PA\">* Entrainement (1 point - 10 pa)</option>";
+														echo "<option value=\"PA\">* Entrainement (10 pa)</option>";
+														echo "<option value=\"PA\">* Se reposer (10 pa)</option>";
 													}
 													else {
-														echo "<option value=\"65\">Entrainement (1 point - 10 pa)</option>";
+														echo "<option value=\"65\">Entrainement (10 pa)</option>";
+														echo "<option value=\"1\">Se reposer (10 pa)</option>";
 													}
+													
 													// Action Déposer Objet
 													if($pa_perso < 1){
-														echo "<option value=\"PA\">* Deposer objet (1 point - 1 pa)</option>";
-														echo "<option value=\"PA\">* Donner objet (1 point - 1 pa)</option>";
+														echo "<option value=\"PA\">* Deposer objet (1 pa)</option>";
+														echo "<option value=\"PA\">* Donner objet (1 pa)</option>";
 													}
 													else {
-														echo "<option value=\"110\">Deposer objet (1 point - 1 pa)</option>";
-														echo "<option value=\"139\">Donner objet (1 point - 1 pa)</option>";
+														echo "<option value=\"110\">Deposer objet (1 pa)</option>";
+														echo "<option value=\"139\">Donner objet (1 pa)</option>";
 													}
+													
+													// Actions selon le type d'unité
+													// Soigneurs
+													if ($type_perso == 4) {
+														// Soin = 11
+														if($pa_perso < 6){
+															echo "<option value=\"PA\">Soin (6 pa)</option>";
+														}
+														else {
+															echo "<option value=\"65\">Soin (6 pa)</option>";
+														}
+													}
+													
+													// Infanterie et soigneur
+													if ($type_perso == 3 || $type_perso == 4) {
+														// Bousculer = 145
+														if($pa_perso < 3){
+															echo "<option value=\"PA\">Bousculer (3 pa)</option>";
+														}
+														else {
+															echo "<option value=\"145\">Bousculer (3 pa)</option>";
+														}
+														
+														// Construction barricade = 33
+														if($pa_perso < 10){
+															echo "<option value=\"PA\">Construction - Barricade (10 pa)</option>";
+														}
+														else {
+															echo "<option value=\"33\">Construction - Barricade (10 pa)</option>";
+														}
+													}
+													
+													// Cavalerie et cavalerie lourde
+													if ($type_perso == 1 || $type_perso == 2) {
+														// Charge = 999
+														echo "<option value=\"999\">Charger (0 pa)</option>";
+														
+														// Bousculer = 145
+														if($pa_perso < 3){
+															echo "<option value=\"PA\">Bousculer (3 pa)</option>";
+														}
+														else {
+															echo "<option value=\"145\">Bousculer (3 pa)</option>";
+														}
+													}
+													
 													// verification s'il y a un objet sur la case du perso
 													$sql_op = "SELECT id_objet FROM objet_in_carte, perso WHERE x_carte=x_perso AND y_carte=y_perso";
 													$res_op = $mysqli->query($sql_op);
@@ -1396,12 +1499,11 @@ if($dispo || !$admin){
 														}
 													}
 													
-													$sql = "SELECT action.id_action, nom_action, portee_action, coutPa_action, perso_as_competence.nb_points 
+													$sql = "SELECT action.id_action, nom_action, coutPa_action
 															FROM perso_as_competence, competence_as_action, action 
 															WHERE id_perso='$id_perso' 
 															AND perso_as_competence.id_competence=competence_as_action.id_competence 
 															AND competence_as_action.id_action=action.id_action
-															AND perso_as_competence.nb_Points=action.nb_points
 															AND passif_action = '0'
 															ORDER BY nom_action";
 													$res = $mysqli->query($sql);
@@ -1409,10 +1511,8 @@ if($dispo || !$admin){
 													while ($t_ac = $res->fetch_assoc()) {
 														
 														$id_ac = $t_ac["id_action"];
-														$portee_ac = $t_ac["portee_action"];
 														$cout_PA = $t_ac["coutPa_action"];
 														$nom_ac = $t_ac["nom_action"];
-														$nb_points_ac = $t_ac["nb_points"];
 													
 														if ($cout_PA == -1){
 															$cout_PA = $paMax_perso;
@@ -1423,12 +1523,6 @@ if($dispo || !$admin){
 														}
 														else {
 															echo "<option value=\"PA\">* ".$nom_ac." (";
-														}
-														if ($nb_points_ac == 1){
-															echo $nb_points_ac." point - ";
-														}
-														else{ 
-															echo $nb_points_ac." points - ";
 														}
 														echo "". $cout_PA . "pa)</option>";
 													}

@@ -11,6 +11,7 @@ $mysqli = db_connexion();
   * @return String		: L'image
   */
 function image_action($id_action){
+	
 	if($id_action == '11' || $id_action == '12' || $id_action == '13' || $id_action == '14' || $id_action == '15' || 
 	   $id_action == '16' || $id_action == '17' || $id_action == '18' || $id_action == '19' || $id_action == '20' ||
 	   $id_action == '21' || $id_action == '22' || $id_action == '23' || $id_action == '24' || $id_action == '25' ||
@@ -18,14 +19,17 @@ function image_action($id_action){
 	   // soins pv
 	   return 'soin.gif';
 	}
+	
 	if($id_action == '140' || $id_action == '141' || $id_action == '142'){
 	   // soins malus
 	   return 'soin.gif';
 	}
-	if($id_action == '76' || $id_action == '77' || $id_action == '78' || $id_action == '79'){
+	
+	if($id_action == '76'){
 		// Reparer bat
 		return 'reparer_bat.png';
 	}
+	
 	if($id_action == '80' || $id_action == '81' || $id_action == '82' || $id_action == '83' || 
 	   $id_action == '84' || $id_action == '85'){
 		// Upgrade bat
@@ -251,11 +255,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$coutPa = $t_reparer["coutPa_action"];
 	
 	// recuperation des infos du perso
-	$sql = "SELECT nom_perso, degats_perso, pa_perso, clan FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, pa_perso, clan FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_i_perso = $res->fetch_assoc();
+	
 	$nom_perso = $t_i_perso['nom_perso'];
-	$degats_main_nu_perso = $t_i_perso['degats_perso'];
 	$pa_perso = $t_i_perso['pa_perso'];
 	$camp_perso = $t_i_perso['clan'];
 	
@@ -278,13 +282,14 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 		$couleur_clan_cible = couleur_clan($camp_bat);
 		
 		//calcul des reparations
-		$pv_reparation = calcul_pv_reparation($id_action, $degats_main_nu_perso);
+		$pv_reparation = calcul_pv_reparation($id_action);
 		
 		// traitement reparation
 		if($pv_instance_bat < $pv_max_bat){
 		
 			// calcul gain xp
 			$gain_xp = rand(2,6);
+			
 			if($camp_bat != $camp_perso){
 				$gain_xp = floor($gain_xp / 2);
 			}
@@ -2761,21 +2766,14 @@ function calcul_recup_malus($id_action){
 /**
   * Fonction qui calcul le nombre de pv de reparation du batiment le personnage va effectuer
   * @param $id_action	: L'identifiant de l'action
-  * @return int		: Le nombre de pv de reparation
+  * @return int			: Le nombre de pv de reparation
   */
 function calcul_pv_reparation($id_action){
+	
 	if($id_action == '76'){
-		$pv_reparation = rand(1, 5);
+		$pv_reparation = rand(20, 120);
 	}
-	if($id_action == '77'){
-		$pv_reparation = rand(2, 10);
-	}
-	if($id_action == '78'){
-		$pv_reparation = rand(2, 15);
-	}
-	if($id_action == '79'){
-		$pv_reparation = rand(2, 20);
-	}
+	
 	return $pv_reparation;
 }
 

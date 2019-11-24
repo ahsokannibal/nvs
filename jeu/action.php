@@ -13,6 +13,7 @@ include ('../nb_online.php');
 $sql = "SELECT disponible FROM config_jeu";
 $res = $mysqli->query($sql);
 $t_dispo = $res->fetch_assoc();
+
 $dispo = $t_dispo["disponible"];
 
 if($dispo){
@@ -54,6 +55,35 @@ if($dispo){
 	</head>
 	<body>
 	<?php
+	
+	// Reparer batiment
+	if (isset($_GET['bat']) && $_GET['bat'] != '' && isset($_GET['reparer']) && $_GET['reparer'] == 'ok') {
+		
+		$id_bat = $_GET['bat'];
+		
+		// verification bat est un id correct
+		$verif_idBat = preg_match("#^[0-9]*[0-9]$#i","$id_bat");
+		
+		if ($verif_idBat && isset($_SESSION["id_perso"])) {
+			
+			$id_perso = $_SESSION["id_perso"];
+			
+			// recup coordonnées perso
+			$sql = "SELECT x_perso, y_perso FROM perso WHERE id_perso = '$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_coord = $res->fetch_assoc();
+			
+			$x_perso = $t_coord["x_perso"];
+			$y_perso = $t_coord["y_perso"];
+			
+			// verifier batiment est à côté du perso ou perso dans le batiment
+			if (prox_instance_bat($mysqli, $x_perso, $y_perso, $id_bat) || in_bat($mysqli, $id_perso)) {
+				
+				// Lancement de la réparation
+				action_reparer_bat($mysqli, $id_perso, $id_bat, 76);
+			}
+		}
+	}
 	
 	// Traitement action cible perso et soi-meme
 	if(isset($_POST['action_cible_ref']) || isset($_POST['select_objet_soin'])){
@@ -283,17 +313,9 @@ if($dispo){
 		$id_cible = $t_cib_bat2[0];
 		$id_action = $t_cib_bat2[1];
 		
-		if($id_action == '76' || $id_action == '77' || $id_action == '78' || $id_action == '79'){
+		if($id_action == '76'){
 			// Reparer bat
 			action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action);
-		}
-		if($id_action == '80' || $id_action == '81' || $id_action == '82'){
-			// Upgrade bat
-			action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action);
-		}
-		if($id_action == '83' || $id_action == '84' || $id_action == '85'){
-			// Upgrade bat Expert
-			action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action);
 		}
 	}
 	else {
@@ -306,17 +328,9 @@ if($dispo){
 			$id_cible = $t_cib_bat2[0];
 			$id_action = $t_cib_bat2[1];
 			
-			if($id_action == '76' || $id_action == '77' || $id_action == '78' || $id_action == '79'){
+			if($id_action == '76'){
 				// Reparer bat
 				action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action);
-			}
-			if($id_action == '80' || $id_action == '81' || $id_action == '82'){
-				// Upgrade bat
-				action_upgrade_bat($mysqli, $id_perso, $id_cible, $id_action);
-			}
-			if($id_action == '83' || $id_action == '84' || $id_action == '85'){
-				// Upgrade bat Expert
-				action_upgrade_expert_bat($mysqli, $id_perso, $id_cible, $id_action);
 			}
 		}
 	}
@@ -1311,168 +1325,6 @@ if($dispo){
 													echo "<form method=\"post\" action=\"action.php\" >";
 													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <input type=\"image\" name=\"action_cible_bat\" value=\"$id_bat_carte,$id_action\" border=0 src=\"../images_perso/".$image_bat."\" width=40 height=40 onMouseOver=\"this.src='../images/$image_action';AffBulle('<tr><td>+ Reparer +</td></tr><tr><td><font color=$clan_pc>$nom_bat_carte</font> [$id_bat_carte]</td></tr>');\" onMouseOut=\"this.src='../images_perso/$image_bat';HideBulle();\" ><input type=\"hidden\" name=\"hid_action_cible_bat\" value=\"$id_bat_carte,$id_action\" ></td>";
 													echo "</form>";
-												}
-												else {
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-												}
-											}
-											else{
-												//positionnement du fond
-												$fond_carte = $tab["fond_carte"];
-												
-												echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
-											}
-											$tab = $res->fetch_assoc();
-										}
-										else //les coordonnees sont hors limites
-											echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
-									}
-									echo "</tr>";
-								}
-								echo "</table>";
-								// fin de la generation de la carte
-								
-								// lien annuler
-								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
-							}
-							
-							// upgrade batiment
-							if($nom_action == 'Upgrade bâtiment'){
-								
-								echo "<center><h2>$nom_action</h2></center>";
-							
-								//recuperation des infos du perso
-								$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
-								$res = $mysqli->query($sql);
-								$t_coord = $res->fetch_assoc();
-								
-								$x_perso = $t_coord['x_perso'];
-								$y_perso = $t_coord['y_perso'];
-								$clan_perso = $t_coord['clan'];
-								
-								// recuperation des donnees de la carte
-								$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
-								$res = $mysqli->query($sql);
-								$tab = $res->fetch_assoc(); 
-								
-								//<!--Generation de la carte-->
-								echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
-								
-								echo "<tr><td>y \ x</td>";  //affichage des abscisses
-								for ($i = $x_perso - 1; $i <= $x_perso + 1; $i++) {
-									echo "<th width=40 height=40>$i</th>";
-								}
-								echo "</tr>";
-								
-								for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
-									echo "<th>$y</th>";
-									for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-										
-										//les coordonnees sont dans les limites
-										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
-											
-											if ($tab["occupee_carte"]){
-											
-												$image_bat = $tab["image_carte"];
-												$id_bat_carte = $tab["idPerso_carte"];
-												
-												if($id_bat_carte > 50000 && isset($id_bat_carte)){
-												
-													// recuperation des infos du batiment
-													$sql_bat_carte = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance, pvMax_instance FROM batiment, instance_batiment WHERE id_instanceBat=$id_bat_carte AND batiment.id_batiment = instance_batiment.id_batiment";
-													$res_bat_carte = $mysqli->query($sql_bat_carte);
-													$t_bat_carte = $res_bat_carte->fetch_assoc();
-													$nom_bat_carte = $t_bat_carte["nom_batiment"];
-													$clan_bat_carte = $t_bat_carte["camp_instance"];
-													
-													if($clan_bat_carte == $clan_perso){
-														$clan_pc = 'blue';
-														echo "<form method=\"post\" action=\"action.php\" >";
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <input type=\"image\" name=\"action_cible_bat\" value=\"$id_bat_carte,$id_action\" border=0 src=\"../images_perso/".$image_bat."\" width=40 height=40 onMouseOver=\"this.src='../images/$image_action';AffBulle('<tr><td>+ Upgrader au niveau sup�rieur +</td></tr><tr><td><font color=$clan_pc>$nom_bat_carte</font> [$id_bat_carte]</td></tr>');\" onMouseOut=\"this.src='../images_perso/$image_bat';HideBulle();\" ><input type=\"hidden\" name=\"hid_action_cible_bat\" value=\"$id_bat_carte,$id_action\" ></td>";
-														echo "</form>";
-													}
-													else {
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-													}
-												}
-												else {
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-												}
-											}
-											else{
-												//positionnement du fond
-												$fond_carte = $tab["fond_carte"];
-												
-												echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
-											}
-											$tab = $res->fetch_assoc();
-										}
-										else //les coordonnees sont hors limites
-											echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
-									}
-									echo "</tr>";
-								}
-								echo "</table>";
-								// fin de la generation de la carte
-								
-								// lien annuler
-								echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
-							}
-							
-							// upgrade batiment expert
-							if($nom_action == 'Upgrade bâtiment Expert'){
-								echo "<center><h2>$nom_action</h2></center>";
-							
-								//recuperation des infos du perso
-								$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
-								$res = $mysqli->query($sql);
-								$t_coord = $res->fetch_assoc();
-								
-								$x_perso = $t_coord['x_perso'];
-								$y_perso = $t_coord['y_perso'];
-								$clan_perso = $t_coord['clan'];
-								
-								// recuperation des donnees de la carte
-								$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
-								$res = $mysqli->query($sql);
-								$tab = $res->fetch_assoc(); 
-								
-								//<!--Generation de la carte-->
-								echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
-								
-								echo "<tr><td>y \ x</td>";  //affichage des abscisses
-								for ($i = $x_perso - 1; $i <= $x_perso + 1; $i++) {
-									echo "<th width=40 height=40>$i</th>";
-								}
-								echo "</tr>";
-								
-								for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
-									echo "<th>$y</th>";
-									for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
-										if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { //les coordonnees sont dans les limites
-											if ($tab["occupee_carte"]){
-											
-												$image_bat = $tab["image_carte"];
-												$id_bat_carte = $tab["idPerso_carte"];
-												
-												if($id_bat_carte > 50000 && isset($id_bat_carte)){
-												
-													// recuperation des infos du batiment
-													$sql_bat_carte = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance, pvMax_instance FROM batiment, instance_batiment WHERE id_instanceBat=$id_bat_carte AND batiment.id_batiment = instance_batiment.id_batiment";
-													$res_bat_carte = $mysqli->query($sql_bat_carte);
-													$t_bat_carte = $res_bat_carte->fetch_assoc();
-													$nom_bat_carte = $t_bat_carte["nom_batiment"];
-													$clan_bat_carte = $t_bat_carte["camp_instance"];
-													
-													if($clan_bat_carte == $clan_perso){
-														$clan_pc = 'blue';
-														echo "<form method=\"post\" action=\"action.php\" >";
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <input type=\"image\" name=\"action_cible_bat\" value=\"$id_bat_carte,$id_action\" border=0 src=\"../images_perso/".$image_bat."\" width=40 height=40 onMouseOver=\"this.src='../images/$image_action';AffBulle('<tr><td>+ Reparer +</td></tr><tr><td><font color=$clan_pc>$nom_bat_carte</font> [$id_bat_carte]</td></tr>');\" onMouseOut=\"this.src='../images_perso/$image_bat';HideBulle();\" ><input type=\"hidden\" name=\"hid_action_cible_bat\" value=\"$id_bat_carte,$id_action\" ></td>";
-														echo "</form>";
-													}
-													else {
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-													}
 												}
 												else {
 													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";

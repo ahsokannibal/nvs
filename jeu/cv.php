@@ -50,6 +50,7 @@ else {
 <p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 <?php
 if(isset($id)){
+	
 	if($id < 10000){
 		// verifier que le perso existe
 		$sql = "SELECT id_perso FROM perso WHERE id_perso='$id'";
@@ -76,44 +77,60 @@ if(isset($id)){
 		entete($mysqli, $id); 
 		
 		//Évènements spéciaux
-		echo "<center><font color=red><b>Évènements spéciaux</b></font></center>";
 		$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' AND special='1'";
 		$res = $mysqli->query($sql);
-		echo "<center><table border=1 width=80%><tr><th width=25%>date</th><th>Évènement</th></tr>";
-		while ($t = $res->fetch_assoc()){
-			echo "<tr>";
-			echo "<td>".$t['date_evenement']."</td><td align='center'>".$t['nomActeur_evenement']." ".stripslashes($t['phrase_evenement'])." ";
-			if($_SESSION["id_perso"] == $id){
-				echo stripslashes($t['effet_evenement'])."";
+		$nb_event = $res->num_rows;
+		
+		if ($nb_event) {
+			
+			echo "<center><font color=red><b>Évènements spéciaux</b></font></center>";
+			echo "<center><table border=1 width=80%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		
+			while ($t = $res->fetch_assoc()){
+				echo "<tr>";
+				echo "<td>".$t['date_evenement']."</td><td align='center'>".$t['nomActeur_evenement']." ".stripslashes($t['phrase_evenement'])." ";
+				if($_SESSION["id_perso"] == $id){
+					echo stripslashes($t['effet_evenement'])."";
+				}
+				echo "</td></tr>";
 			}
-			echo "</td></tr>";
+			echo "</table></center><br />";
 		}
-		echo "</table></center><br />";
+		
 		
 		//missions
 		$count = 0;
-		echo "<center><font color=red><b>Missions</b></font></center>";
 		$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' AND special='2'";
 		$res = $mysqli->query($sql);
-		echo "<center><table border=1 width=80%><tr><th width=25%>date</th><th>Évènement</th></tr>";
-		while ($t = $res->fetch_assoc()){
-			$count++;
-			echo "<tr>";
-			echo "<td>".$t['date_evenement']."</td><td align='center'>".$t['nomActeur_evenement']." ".stripslashes($t['phrase_evenement'])." ";
-			if($_SESSION["id_perso"] == $id){
-				echo stripslashes($t['effet_evenement'])."";
+		$nb_mission = $res->num_rows;
+		
+		if ($nb_mission) {
+			
+			echo "<center><font color=red><b>Missions</b></font></center>";
+			echo "<center><table border=1 width=80%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+			
+			while ($t = $res->fetch_assoc()){
+				$count++;
+				echo "<tr>";
+				echo "<td>".$t['date_evenement']."</td><td align='center'>".$t['nomActeur_evenement']." ".stripslashes($t['phrase_evenement'])." ";
+				if($_SESSION["id_perso"] == $id){
+					echo stripslashes($t['effet_evenement'])."";
+				}
+				echo "</td></tr>";
 			}
-			echo "</td></tr>";
+			echo "<tr><td><font color = red>total</font></td><td>$count</td></tr>";
+			echo "</table></center><br />";
+			
 		}
-		echo "<tr><td><font color = red>total</font></td><td>$count</td></tr>";
-		echo "</table></center><br />";
 		
 		// nombre de kills
 		$count = 0;
-		echo "<center><font color=red><b>Kills</b></font></center>";
 		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
+		
+		echo "<center><font color=red><b>Le bon...</b></font></center>";
 		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 10000) {
 				$count++;
@@ -128,7 +145,10 @@ if(isset($id)){
 		$count = 0;
 		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
-		echo "</table></center><br><center><font color=red><b>Morts</b></font></center><center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		
+		echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
+		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDCible_cv'] == $id) {
 				$count++;
@@ -141,10 +161,12 @@ if(isset($id)){
 		
 		// nombre de pnj tu"s
 		$count = 0;
-		echo "<center><font color=red><b>PNJ</b></font></center>";
 		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
+		
+		echo "<center><font color=red><b>PNJ</b></font></center>";
 		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 10000 && $t['IDCible_cv'] < 50000) {
 				$count++;
@@ -157,10 +179,12 @@ if(isset($id)){
 		
 		// nombre de batiments d"truits
 		$count = 0;
-		echo "<center><font color=red><b>Batiments</b></font></center>";
 		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
+		
+		echo "<center><font color=red><b>Batiments</b></font></center>";
 		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000) {
 				$count++;
