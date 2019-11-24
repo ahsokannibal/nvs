@@ -36,6 +36,8 @@ CREATE TABLE `action` (
   `perceptionMax_action` int(11) NOT NULL DEFAULT '0',
   `pvMin_action` int(11) NOT NULL DEFAULT '0',
   `pvMax_action` int(11) NOT NULL DEFAULT '0',
+  `nb_des_action` int(11) NOT NULL DEFAULT '0',
+  `valeur_des_action` int(11) NOT NULL DEFAULT '0',
   `recupMin_action` int(11) NOT NULL DEFAULT '0',
   `recupMax_action` int(11) NOT NULL DEFAULT '0',
   `pmMin_action` int(11) NOT NULL DEFAULT '0',
@@ -86,6 +88,7 @@ CREATE TABLE `arme` (
   `multiplicateurMax_degats` double NOT NULL DEFAULT '0',
   `degatMin_arme` int(11) NOT NULL DEFAULT '0',
   `degatMax_arme` int(11) NOT NULL DEFAULT '0',
+  `valeur_des_arme` int(11) NOT NULL DEFAULT '0',
   `degatZone_arme` enum('0','1') NOT NULL DEFAULT '0',
   `bonusPM_arme` int(11) NOT NULL DEFAULT '0',
   `poids_arme` decimal(10,1) NOT NULL DEFAULT '0.0',
@@ -94,6 +97,17 @@ CREATE TABLE `arme` (
   `qualite_arme` tinyint(4) NOT NULL DEFAULT '6',
   `main` tinyint(4) NOT NULL DEFAULT '1',
   `image_arme` varchar(100) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `arme_as_type_unite`
+--
+
+CREATE TABLE `arme_as_type_unite` (
+  `id_arme` int(11) NOT NULL,
+  `id_type_unite` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -692,6 +706,25 @@ CREATE TABLE `stats_camp_kill` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `type_unite`
+--
+
+CREATE TABLE `type_unite` (
+  `id_unite` int(11) NOT NULL,
+  `nom_unite` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `description_unite` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `perception_unite` int(11) NOT NULL,
+  `protection_unite` int(11) NOT NULL,
+  `recup_unite` int(11) NOT NULL,
+  `pv_unite` int(11) NOT NULL,
+  `pa_unite` int(11) NOT NULL,
+  `pm_unite` int(11) NOT NULL,
+  `cout_pg` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `zones`
 --
 
@@ -900,6 +933,12 @@ ALTER TABLE `ressources_entrepot`
 ALTER TABLE `sections`
   ADD PRIMARY KEY (`id_section`),
   ADD UNIQUE KEY `nom_section` (`nom_section`);
+  
+--
+-- Index pour la table `type_unite`
+--
+ALTER TABLE `type_unite`
+  ADD KEY `id_unite` (`id_unite`);
 
 --
 -- Index pour la table `zones`

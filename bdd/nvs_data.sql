@@ -26,151 +26,30 @@ SET time_zone = "+00:00";
 -- Contenu de la table `action`
 --
 
-INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_action`, `portee_action`, `perceptionMin_action`, `perceptionMax_action`, `pvMin_action`, `pvMax_action`, `recupMin_action`, `recupMax_action`, `pmMin_action`, `pmMax_action`, `DefMin_action`, `DefMax_action`, `coutPa_action`, `nbreTourMin`, `nbreTourMax`, `coutOr_action`, `coutBois_action`, `coutFer_action`, `reflexive_action`, `cible_action`, `case_action`, `pnj_action`, `passif_action`) VALUES
-(1, 'dormir', 1, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(2, 'dormir', 2, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(3, 'dormir', 3, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(4, 'Marche forc&eacute;e', 1, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -8, -8, 0, 0, 1, 1, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(5, 'Marche forc&eacute;e', 2, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -6, -6, 0, 0, 1, 1, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(6, 'Marche forc&eacute;e', 3, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -4, -4, 0, 0, 1, 1, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(7, 'Courir', 1, 'Permet de courir et de gagner des PM pendant 1 tour en consommant tout ses PA - permet de fuir...', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(8, 'Courir', 2, 'Permet de courir et de gagner des PM pendant 1 tour en consommant tout ses PA - permet de fuir...', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(9, 'Courir', 3, 'Permet de courir et de gagner des PM pendant 1 tour en consommant tout ses PA - permet de fuir...', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(10, 'Sauter', 1, 'Permet de sauter par dessus un autre perso. Utilise 1PM + cout PM case arriv&eacute;e', 0, 0, 0, 0, 0, 0, 0, -1, -1, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(11, 'Premiers soins', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures l&eacute;gères (jusqu\'à 10% de PV en moins)', 1, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(12, 'Premiers soins', 2, 'Permet de se soigner ou de soigner une personne ayant des blessures l&eacute;gères (jusqu\'à 10% de PV en moins)', 1, 0, 0, 1, 5, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(13, 'Premiers soins', 3, 'Permet de se soigner ou de soigner une personne ayant des blessures l&eacute;gères (jusqu\'à 10% de PV en moins)', 1, 0, 0, 1, 8, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(14, 'Soins avanc&eacute;s', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures un peu plus graves (jusqu\'à  25% de PV en moins)', 1, 0, 0, 1, 5, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(15, 'Soins avanc&eacute;s', 2, 'Permet de se soigner ou de soigner une personne ayant des blessures un peu plus graves (jusqu\'à  25% de PV en moins)', 1, 0, 0, 1, 8, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(16, 'Soins avanc&eacute;s', 3, 'Permet de se soigner ou de soigner une personne ayant des blessures un peu plus graves (jusqu\'à  25% de PV en moins)', 1, 0, 0, 1, 12, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(17, 'Soins v&eacute;t&eacute;rinaire', 1, 'Permet de soigner un de ses animaux de compagnie', 1, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
-(18, 'Soins v&eacute;t&eacute;rinaire', 2, 'Permet de soigner un de ses animaux de compagnie', 1, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
-(19, 'Soins v&eacute;t&eacute;rinaire', 3, 'Permet de soigner un de ses animaux de compagnie', 1, 0, 0, 1, 5, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
-(20, 'Soins v&eacute;t&eacute;rinaire', 4, 'Permet de soigner un de ses animaux de compagnie', 1, 0, 0, 1, 8, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
-(21, 'Soins v&eacute;t&eacute;rinaire', 5, 'Permet de soigner un de ses animaux de compagnie', 1, 0, 0, 1, 12, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0),
-(22, 'Chirurgie', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures graves (jusqu\'à 50% de pv en moins)', 1, 0, 0, 1, 8, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(23, 'Chirurgie', 2, 'Permet de se soigner ou de soigner une personne ayant des blessures graves (jusqu\'à 50% de pv en moins)', 1, 0, 0, 1, 12, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(24, 'Chirurgie', 3, 'Permet de se soigner ou de soigner une personne ayant des blessures graves (jusqu\'à 50% de pv en moins)', 1, 0, 0, 1, 15, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(25, 'Chirurgie de guerre', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures très graves (jusqu\'à 99% de pv en moins)', 1, 0, 0, 1, 8, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(26, 'Chirurgie de guerre', 2, 'Permet de se soigner ou de soigner une personne ayant des blessures très graves (jusqu\'à 99% de pv en moins)', 1, 0, 0, 1, 12, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(27, 'Chirurgie de guerre', 3, 'Permet de se soigner ou de soigner une personne ayant des blessures très graves (jusqu\'à 99% de pv en moins)', 1, 0, 0, 1, 15, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(28, 'Couper du bois', 1, 'Permet de couper du bois. Fais disparaitre la forêt qu\'on d&eacute;coupe', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(29, 'Couper du bois', 2, 'Permet de couper du bois. Fais disparaitre la forêt qu\'on d&eacute;coupe', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(30, 'Couper du bois', 3, 'Permet de couper du bois. Fais disparaitre la forêt qu\'on d&eacute;coupe', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 7, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(31, 'Miner la montagne', 1, 'Permet de miner une montagne à la recherche de fer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(32, 'Construire - route', 1, 'Permet de construire une route. la route ne peut être construite adjacente à un QG (le fortin est consid&eacute;r&eacute; comme un QG), un hôpital, un entrepôt ou Ã  une autre route', 1, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 5, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0),
-(33, 'Construire - barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 20, 20, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(34, 'Construire - barricade', 2, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 40, 40, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(35, 'Construire - barricade', 3, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(36, 'Construire - barricade', 4, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 60, 60, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(37, 'Construire - barricade', 5, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 60, 100, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(38, 'Construire - pont', 1, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 10, 10, 0, 0, 0, 0, 0, 0, 10, 0, 0, 10, 1, 0, 0, 0, 1, 0, 0),
-(39, 'Construire - pont', 2, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 20, 20, 0, 0, 0, 0, 0, 0, 10, 0, 0, 10, 1, 0, 0, 0, 1, 0, 0),
-(40, 'Construire - pont', 3, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 30, 30, 0, 0, 0, 0, 0, 0, 10, 0, 0, 10, 1, 0, 0, 0, 1, 0, 0),
-(41, 'Construire - pont', 4, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 40, 40, 0, 0, 0, 0, 0, 0, 10, 0, 0, 10, 1, 0, 0, 0, 1, 0, 0),
-(42, 'Construire - pont', 5, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 40, 60, 0, 0, 0, 0, 0, 0, 10, 0, 0, 10, 1, 0, 0, 0, 1, 0, 0),
-(43, 'Construire - tour de visu', 1, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 20, 20, 0, 0, 0, 0, 0, 0, 12, 0, 0, 40, 2, 0, 0, 0, 1, 0, 0),
-(44, 'Construire - tour de visu', 2, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 40, 40, 0, 0, 0, 0, 0, 0, 12, 0, 0, 40, 2, 0, 0, 0, 1, 0, 0),
-(45, 'Construire - tour de visu', 3, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 12, 0, 0, 40, 2, 0, 0, 0, 1, 0, 0),
-(46, 'Construire - tour de visu', 4, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 12, 0, 0, 40, 2, 0, 0, 0, 1, 0, 0),
-(47, 'Construire - tour de visu', 5, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 12, 0, 0, 40, 2, 0, 0, 0, 1, 0, 0),
-(48, 'Construire - tour de gard', 1, 'Permet de construire une tour de garde, occupe une case et peut contenir un perso. Le perso peut attaquer depuis la tour avec une arme de distance. Donne un bonus de +2 en perception', 1, 0, 0, 50, 50, 0, 0, 0, 0, 0, 0, 12, 0, 0, 50, 2, 0, 0, 0, 1, 0, 0),
-(49, 'Construire - entrepot d\'a', 1, 'Permet de construire un entrepôt d\'arme, occupe une case et les persos à proximit&eacute; peuvent acheter objets, armes et armures', 1, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 12, 0, 0, 200, 4, 0, 0, 0, 1, 0, 0),
-(50, 'Construire - entrepot d\'a', 2, 'Permet de construire un entrepôt d\'arme, occupe une case et les persos à proximit&eacute; peuvent acheter objets, armes et armures', 1, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 12, 0, 0, 200, 4, 0, 0, 0, 1, 0, 0),
-(51, 'Construire - entrepot d\'a', 3, 'Permet de construire un entrepôt d\'arme, occupe une case et les persos à proximit&eacute; peuvent acheter objets, armes et armures', 1, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 12, 0, 0, 200, 4, 0, 0, 0, 1, 0, 0),
-(52, 'Construire - entrepot d\'a', 4, 'Permet de construire un entrepôt d\'arme, occupe une case et les persos à proximit&eacute; peuvent acheter objets, armes et armures', 1, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 12, 0, 0, 200, 4, 0, 0, 0, 1, 0, 0),
-(53, 'Construire - entrepot d\'a', 5, 'Permet de construire un entrepôt d\'arme, occupe une case et les persos à proximit&eacute; peuvent acheter objets, armes et armures', 1, 0, 0, 100, 100, 0, 0, 0, 0, 0, 0, 12, 0, 0, 200, 4, 0, 0, 0, 1, 0, 0),
-(54, 'Construire - hopital', 1, 'Permet de construire un hôpital', 1, 0, 0, 200, 200, 0, 0, 0, 0, 0, 0, 14, 0, 0, 500, 5, 0, 0, 0, 1, 0, 0),
-(55, 'Construire - hopital', 2, 'Permet de construire un hôpital', 1, 0, 0, 200, 200, 0, 0, 0, 0, 0, 0, 14, 0, 0, 500, 5, 0, 0, 0, 1, 0, 0),
-(56, 'Construire - hopital', 3, 'Permet de construire un hôpital', 1, 0, 0, 200, 200, 0, 0, 0, 0, 0, 0, 14, 0, 0, 500, 5, 0, 0, 0, 1, 0, 0),
-(57, 'Construire - hopital', 4, 'Permet de construire un hopital', 1, 0, 0, 200, 200, 0, 0, 0, 0, 0, 0, 14, 0, 0, 500, 5, 0, 0, 0, 1, 0, 0),
-(58, 'Construire - hopital', 5, 'Permet de construire un hopital', 1, 0, 0, 200, 200, 0, 0, 0, 0, 0, 0, 14, 0, 0, 500, 5, 0, 0, 0, 1, 0, 0),
-(59, 'Construire - fortin', 1, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 400, 400, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1000, 10, 0, 0, 0, 1, 0, 0),
-(60, 'Construire - fortin', 2, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 400, 400, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1000, 10, 0, 0, 0, 1, 0, 0),
-(61, 'Construire - fortin', 3, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 400, 400, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1000, 10, 0, 0, 0, 1, 0, 0),
-(62, 'Construire - fortin', 4, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 400, 400, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1000, 10, 0, 0, 0, 1, 0, 0),
-(63, 'Construire - fortin', 5, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 400, 400, 0, 0, 0, 0, 0, 0, 15, 0, 0, 1000, 10, 0, 0, 0, 1, 0, 0),
-(64, 'Construire - fort', 1, 'Permet de construire un fort. Les persos peuvent respawn dedans. Accessible seulement aux anims', 1, 0, 0, 1000, 1000, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 10, 0, 0, 0, 1, 0, 0),
-(65, 'Entrainement', 1, 'Permet de s\'entrainer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(66, 'Chance', 1, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(67, 'Chance', 2, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(68, 'Chance', 3, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(69, 'Chance', 4, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(70, 'Chance', 5, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(71, 'Chance', 6, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(72, 'Chance', 7, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(73, 'Chance', 8, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(74, 'Chance', 9, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(75, 'Chance', 10, 'Am&eacute;liore le taux de r&eacute;ussite sur toutes les actions utilisant un pourcentage (dont l\\\'entrainement)', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(76, 'R&eacute;parer bâtiment', 1, 'Permet de r&eacute;parer un bâtiment dans lequel on se trouve ou à  port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
-(77, 'R&eacute;parer bâtiment', 2, 'Permet de r&eacute;parer un bâtiment dans lequel on se trouve ou à  port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
-(78, 'R&eacute;parer bâtiment', 3, 'Permet de r&eacute;parer un bâtiment dans lequel on se trouve ou à  port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
-(79, 'R&eacute;parer bâtiment', 4, 'Permet de r&eacute;parer un bâtiment dans lequel on se trouve ou à  port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
-(80, 'Upgrade bâtiment', 1, 'Permet d\'upgrader un bâtiment dans lequel on se trouve ou à port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
-(81, 'Upgrade bâtiment', 2, 'Permet d\'upgrader un bâtiment dans lequel on se trouve ou à port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
-(82, 'Upgrade bâtiment', 3, 'Permet d\'upgrader un bâtiment dans lequel on se trouve ou à port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 2, 0, 0, 0, 0, 1, 0, 0),
-(83, 'Upgrade bâtiment Expert', 1, 'Permet d\'upgrader un bâtiment jusqu\'au niveau max qu\'on possède dans lequel on se trouve ou à port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0),
-(84, 'Upgrade bâtiment Expert', 2, 'Permet d\'upgrader un bâtiment jusqu\'au niveau max qu\'on possède dans lequel on se trouve ou à port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0),
-(85, 'Upgrade bâtiment Expert', 3, 'Permet d\'upgrader un bâtiment jusqu\'au niveau max qu\'on possède dans lequel on se trouve ou à port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0),
-(86, 'Planter arbre', 1, 'Permet de planter des arbustes sur une case. Au bout d\'une semaine, la forêt apparait', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(87, 'Ami des animaux', 1, 'Permet d\'&eacute;viter de se faire attaquer par les pnjs', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(88, 'Ami des animaux', 2, 'Permet d\'&eacute;viter de se faire attaquer par les pnj.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(89, 'Ami des animaux', 3, 'Permet d\'&eacute;viter de se faire attaquer par les pnj.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(90, 'M&eacute;langer ingr&eacute;dients', 1, 'Permet de m&eacute;langer 2 ingr&eacute;dients afin d\'en obtenir un nouveau... ou pas', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(91, 'M&eacute;langer ingr&eacute;dients', 2, 'Permet de m&eacute;langer 2 ingr&eacute;dients afin d\'en obtenir un nouveau... ou pas', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(92, 'M&eacute;langer ingr&eacute;dients', 3, 'Permet de m&eacute;langer 2 ingr&eacute;dients afin d\'en obtenir un nouveau... ou pas', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(93, 'Alchimie avanc&eacute;e', 1, 'Augmente le taux de r&eacute;ussite des m&eacute;langes', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(94, 'Alchimie avanc&eacute;e', 2, 'Augmente le taux de r&eacute;ussite des m&eacute;langes', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(95, 'Alchimie avanc&eacute;e', 3, 'Augmente le taux de r&eacute;ussite des m&eacute;langes', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(96, 'Danser', 1, 'Ajoute un &eacute;v&eacute;nement de danse dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(97, 'Danser', 2, 'Ajoute un &eacute;v&eacute;nement de danse dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(98, 'Chanter', 1, 'Ajoute un &eacute;v&eacute;nement de chant dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(99, 'Chanter', 2, 'Ajoute un &eacute;v&eacute;nement de chant dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(100, 'Peindre', 1, 'Ajoute un &eacute;v&eacute;nement de peinture dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(101, 'Peindre', 2, 'Ajoute un &eacute;v&eacute;nement de peinture dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(102, 'Sculpter', 1, 'Ajoute un &eacute;v&eacute;nement de sculpture dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(103, 'Sculpter', 2, 'Ajoute un &eacute;v&eacute;nement de sculpture dans ses &eacute;v&eacute;nements', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(104, 'Saboter', 1, 'permet de d&eacute;truire les routes et les ponts', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(105, 'Saboter', 2, 'permet de d&eacute;truire les routes et les ponts', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(106, 'Saboter', 3, 'permet de d&eacute;truire les routes et les ponts', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(107, 'Marchandage', 1, 'Permet d\'avoir des prix sur les objets, armes et armures', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(108, 'Marchandage', 2, 'Permet d\'avoir des prix sur les objets, armes et armures', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(109, 'Marchandage', 3, 'Permet d\'avoir des prix sur les objets, armes et armures', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(110, 'Deposer objet', 1, 'Action permettant de d&eacute;poser un objet à terre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(111, 'Ramasser objet', 1, 'Action permettant de ramasser des objets', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(112, 'Nettoyer arme', 1, 'Il est recommander d\'entretenir ses armes r&eacute;gulièrement. Permet de redonner quelques pv à son arme en la nettoyant.', 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(113, 'Nettoyer arme', 2, 'Il est recommander d\'entretenir ses armes r&eacute;gulièrement. Permet de redonner quelques pv à son arme en la nettoyant.', 0, 0, 0, 2, 5, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(114, 'Nettoyer arme', 3, 'Il est recommander d\'entretenir ses armes r&eacute;gulièrement. Permet de redonner quelques pv à son arme en la nettoyant.', 0, 0, 0, 3, 8, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(115, 'R&eacute;parer arme', 1, 'A force de manipuler des armes, vous avez appris comment les d&eacute;monter et les r&eacute;parer. Permet de redonner beaucoup de pv à son arme.', 0, 0, 0, 5, 10, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(116, 'R&eacute;parer arme', 2, 'A force de manipuler des armes, vous avez appris comment les d&eacute;monter et les r&eacute;parer. Permet de redonner beaucoup de pv à son arme.', 0, 0, 0, 5, 10, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(117, 'R&eacute;parer arme', 3, 'A force de manipuler des armes, vous avez appris comment les d&eacute;monter et les r&eacute;parer. Permet de redonner beaucoup de pv à son arme.', 0, 0, 0, 8, 15, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(118, 'R&eacute;parer arme', 4, 'A force de manipuler des armes, vous avez appris comment les d&eacute;monter et les r&eacute;parer. Permet de redonner beaucoup de pv à son arme.', 0, 0, 0, 8, 15, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(119, 'R&eacute;parer arme', 5, 'A force de manipuler des armes, vous avez appris comment les d&eacute;monter et les r&eacute;parer. Permet de redonner beaucoup de pv à son arme.', 0, 0, 0, 10, 20, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(120, 'R&eacute;parer arme', 6, 'A force de manipuler des armes, vous avez appris comment les d&eacute;monter et les r&eacute;parer. Permet de redonner beaucoup de pv à son arme.', 0, 0, 0, 10, 20, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(121, 'Nettoyer armure', 1, 'Il est recommand&eacute; d\'entretenir r&eacute;gulièrement ses armures. Permet de redonner quelques pv à ses armures.', 0, 0, 0, 1, 3, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(122, 'Nettoyer armure', 2, 'Il est recommand&eacute; d\'entretenir r&eacute;gulièrement ses armures. Permet de redonner quelques pv à ses armures.', 0, 0, 0, 2, 5, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(123, 'Nettoyer armure', 3, 'Il est recommand&eacute; d\'entretenir r&eacute;gulièrement ses armures. Permet de redonner quelques pv à ses armures.', 0, 0, 0, 3, 8, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(124, 'R&eacute;parer armure', 1, 'A force de rafistoler vos armures, vous avez appris comment le faire efficacement. permet de redonner beaucoup de pv à ses armures.', 0, 0, 0, 5, 10, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(125, 'R&eacute;parer armure', 2, 'A force de rafistoler vos armures, vous avez appris comment le faire efficacement. permet de redonner beaucoup de pv à ses armures.', 0, 0, 0, 5, 10, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(126, 'R&eacute;parer armure', 3, 'A force de rafistoler vos armures, vous avez appris comment le faire efficacement. permet de redonner beaucoup de pv à ses armures.', 0, 0, 0, 8, 15, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(127, 'R&eacute;parer armure', 4, 'A force de rafistoler vos armures, vous avez appris comment le faire efficacement. permet de redonner beaucoup de pv à ses armures.', 0, 0, 0, 8, 15, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(128, 'R&eacute;parer armure', 5, 'A force de rafistoler vos armures, vous avez appris comment le faire efficacement. permet de redonner beaucoup de pv à ses armures.', 0, 0, 0, 10, 20, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(129, 'R&eacute;parer armure', 6, 'A force de rafistoler vos armures, vous avez appris comment le faire efficacement. permet de redonner beaucoup de pv à ses armures.', 0, 0, 0, 10, 20, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
-(130, 'Defense d\'armure', 1, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(131, 'Defense d\'armure', 2, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(132, 'Defense d\'armure', 3, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(133, 'Defense d\'armure', 4, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(134, 'Defense d\'armure', 5, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(135, 'Defense d\'armure', 6, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(136, 'Defense d\'armure', 7, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(137, 'Defense d\'armure', 8, 'Votre connaissance des armures vous permet d\'utiliser au mieux leurs capacit&eacute;s d&eacute;fensives. Augmente le pourcentage de chance d\'utiliser totalement son bonus d\'armure lors d\'un combat.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(138, 'Nudiste inv&eacute;t&eacute;r&eacute;', 1, 'A force de vous balader nu, vous avez appris à recevoir des coup nu. Votre malus de d&eacute;fense du à votre nudit&eacute; disparait.', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(139, 'Donner objet', 1, 'Action permettant de donner un objet à un perso au Corps à corps', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0),
-(140, 'Apaiser', 1, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(141, 'Apaiser', 2, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(142, 'Apaiser', 3, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(143, 'Port armes lourdes', 1, 'Permet de baisser les malus dues au port des armes lourdes', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
-(144, 'Port armures lourdes', 1, 'Permet de baisser les malus dues au port des armures lourdes', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1);
+INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_action`, `portee_action`, `perceptionMin_action`, `perceptionMax_action`, `pvMin_action`, `pvMax_action`, `nb_des_action`, `valeur_des_action`, `recupMin_action`, `recupMax_action`, `pmMin_action`, `pmMax_action`, `DefMin_action`, `DefMax_action`, `coutPa_action`, `nbreTourMin`, `nbreTourMax`, `coutOr_action`, `coutBois_action`, `coutFer_action`, `reflexive_action`, `cible_action`, `case_action`, `pnj_action`, `passif_action`) VALUES
+(1, 'sieste', 1, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(4, 'Marche forc&eacute;e', 1, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -10, -10, 0, 0, 0, 0, 1, 1, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(11, 'Soins', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures', 1, 0, 0, 0, 0, 20, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+(33, 'Construire - Barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 100, 250, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(38, 'Construire - Pont', 1, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 750, 750, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(43, 'Construire - Tour de guet', 1, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 250, 250, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(54, 'Construire - Hopital', 1, 'Permet de construire un hôpital', 1, 0, 0, 1000, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(59, 'Construire - Fortin', 1, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 6000, 6000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(64, 'Construire - Fort', 1, 'Permet de construire un fort. Les persos peuvent respawn dedans. Accessible seulement aux anims', 1, 0, 0, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(65, 'Entrainement', 1, 'Permet de s\'entrainer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(76, 'R&eacute;parer bâtiment', 1, 'Permet de r&eacute;parer un bâtiment dans lequel on se trouve ou à  port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(87, 'Ami des animaux', 1, 'Permet d\'&eacute;viter de se faire attaquer par les pnjs', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(104, 'Saboter', 1, 'permet de d&eacute;truire les routes et les ponts', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(107, 'Marchandage', 1, 'Permet d\'avoir des prix sur les objets, armes et armures', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(108, 'Marchandage', 2, 'Permet d\'avoir des prix sur les objets, armes et armures', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(109, 'Marchandage', 3, 'Permet d\'avoir des prix sur les objets, armes et armures', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1),
+(110, 'Deposer objet', 1, 'Action permettant de d&eacute;poser un objet à terre', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(111, 'Ramasser objet', 1, 'Action permettant de ramasser des objets', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(139, 'Donner objet', 1, 'Action permettant de donner un objet à un perso au Corps à corps', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0),
+(140, 'Apaiser', 1, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 2, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
+(145, 'Bousculer', 1, 'Permet de bouculer quelqu\'un', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+(146, 'Construire - Gare', 1, 'Permet de construire une gare.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(146, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -179,39 +58,56 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 --
 
 INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALUES
-(32, 4, 0),
 (33, 1, 0),
-(34, 1, 0),
-(35, 1, 0),
-(36, 1, 0),
-(37, 1, 0),
 (38, 5, 0),
-(39, 5, 0),
-(40, 5, 0),
-(41, 5, 0),
-(42, 5, 0),
-(43, 2, 1),
-(44, 2, 1),
-(45, 2, 1),
-(46, 2, 1),
-(47, 2, 1),
-(48, 3, 1),
-(49, 6, 50),
-(50, 6, 50),
-(51, 6, 50),
-(52, 6, 50),
-(53, 6, 50),
-(54, 7, 5),
-(55, 7, 10),
-(56, 7, 10),
-(57, 7, 15),
-(58, 7, 20),
-(59, 8, 5),
-(60, 8, 10),
-(61, 8, 15),
-(62, 8, 20),
-(63, 8, 25),
-(64, 9, 50);
+(43, 2, 3),
+(54, 7, 50),
+(59, 8, 50),
+(64, 9, 100),
+(146, 11, 50);
+
+
+-- --------------------------------------------------------
+
+--
+-- Contenu de la table `arme`
+--
+
+INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `coutPa_arme`, `coutOr_arme`, `additionMin_degats`, `additionMax_degats`, `multiplicateurMin_degats`, `multiplicateurMax_degats`, `degatMin_arme`, `degatMax_arme`, `valeur_des_arme`, `precision_arme`, `degatZone_arme`, `bonusPM_arme`, `poids_arme`, `pvMax_arme`, `description_arme`, `qualite_arme`, `main`, `image_arme`) VALUES
+(1, 'sabre', 1, 1, 4, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.2', 0, '', 0, 1, NULL),
+(2, 'Sabre lourd', 1, 1, 5, 200, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '1.5', 0, '', 0, 1, NULL),
+(3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, NULL),
+(4, 'Pistolet', 1, 2, 3, 100, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.2', 0, '', 0, 1, NULL),
+(5, 'Pistolet Canon Long', 1, 3, 3, 200, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '1.3', 0, '', 0, 1, NULL),
+(6, 'Baïonette', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, NULL),
+(7, 'Fusil ', 1, 3, 4, 0, 0, 0, 0, 0, 20, 20, 6, 70, '0', 0, '1.6', 0, '', 0, 1, NULL),
+(8, 'Fusil Précision ', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, NULL),
+(9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, NULL);
+
+-- --------------------------------------------------------
+
+--
+-- Contenu de la table `arme_as_type_unite`
+--
+
+INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
+(1, 1),
+(1, 2),
+(2, 1),
+(2, 2),
+(3, 1),
+(3, 2),
+(4, 1),
+(4, 2),
+(5, 1),
+(5, 2),
+(6, 3),
+(6, 4),
+(7, 3),
+(7, 4),
+(8, 3),
+(8, 4),
+(9, 6);
 
 -- --------------------------------------------------------
 
@@ -220,16 +116,16 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 --
 
 INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `description`) VALUES
-(1, 'barricade', 250, 'Une barricade permet de tenir des positions defensives'),
-(2, 'tour de visu', 200, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis'),
-(3, 'tour de garde', 250, 'Une tour de garde permet de monter la defense sur une position haute permettant de voir l\'ennemi s\'approcher et ainsi de l\'abattre avant qu\'il n\'atteigne sa position'),
-(4, 'route', 100, 'Une route permet de se d&eacute;placer plus facilement sur les terrains difficiles'),
-(5, 'pont', 2000, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau'),
-(6, 'entrepot', 1000, 'Un entrepot permet de stocker et vendre du mat&eacute;riel'),
-(7, 'hopital', 2000, 'Un hopital de campagne permet de soigner des blessers'),
-(8, 'fortin', 5000, 'Un fortin permet de prendre position sur une partie de la carte'),
-(9, 'fort', 10000, 'Un fort, à defendre coute que coute'),
-(10, 'prison', 4000, 'La prison est un batiment ou sont enferm&eacute;s les criminels');
+(1, 'Barricade', 250, 'Une barricade permet de tenir des positions defensives'),
+(2, 'Tour de guet', 250, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis'),
+(5, 'Pont', 750, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau'),
+(6, 'Entrepot', 1000, 'Un entrepot permet de stocker et vendre du mat&eacute;riel'),
+(7, 'Hopital', 1000, 'Un hopital de campagne permet de soigner des blessers'),
+(8, 'Fortin', 6000, 'Un fortin permet de prendre position sur une partie de la carte'),
+(9, 'Fort', 10000, 'Un fort, à defendre coute que coute'),
+(10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels')
+(11, 'Gare', 5000, 'Une gare'),
+(12, 'Train', 2500, 'Un train');
 
 -- --------------------------------------------------------
 
@@ -541,6 +437,18 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 (102, 'Grouillot d\'élite', 0, 0);
 
 -- --------------------------------------------------------
+
+--
+-- Contenu de la table `type_unite`
+--
+
+INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `perception_unite`, `protection_unite`, `recup_unite`, `pv_unite`, `pa_unite`, `pm_unite`, `cout_pg`) VALUES
+(1, 'Chef', 'Chef d\'unité, cavalier', 5, 3, 40, 850, 10, 10, 0),
+(2, 'Cavalerie lourde', 'Cavalerie lourde', 5, 1, 30, 700, 10, 10, 4),
+(3, 'Infanterie', 'Infanterie', 4, 1, 30, 500, 10, 5, 2),
+(4, 'Soigneur', 'Soigneur', 4, 1, 30, 500, 10, 6, 3),
+(5, 'Artillerie', 'Artillerie', 6, 1, 30, 500, 10, 3, 5),
+(6, 'Toutou', 'Toutou', 5, 1, 20, 200, 10, 10, 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
