@@ -49,7 +49,7 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 (140, 'Apaiser', 1, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 2, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
 (145, 'Bousculer', 1, 'Permet de bouculer quelqu\'un', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (146, 'Construire - Gare', 1, 'Permet de construire une gare.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(146, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+(147, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -193,7 +193,9 @@ INSERT INTO `competence` (`id_competence`, `nom_competence`, `niveau_competence`
 (59, 'Apaiser', 3, 3, 'Permet de soigner les malus d\'une personne', 26),
 (60, 'Port armes lourdes', 1, 1, 'Permet de baisser les malus dues au port des armes lourdes', 20),
 (61, 'Port armures lourdes', 1, 1, 'Permet de baisser les malus dues au port des armures lourdes', 36),
-(62, 'Guerrier', 0, 1, 'Comp&eacute;tence permettant de d&eacute;bloquer les actions des comp&eacute;tences passives des guerriers', 50);
+(62, 'Guerrier', 0, 1, 'Comp&eacute;tence permettant de d&eacute;bloquer les actions des comp&eacute;tences passives des guerriers', 50),
+(63, 'Construire - Gare', 3, 1, 'Permet de construire des gares', 50),
+(64, 'Construire - Rail', 1, 1, 'Permet de construire des rails', 50);
 
 -- --------------------------------------------------------
 
@@ -218,7 +220,9 @@ INSERT INTO `competence_as_action` (`id_competence`, `id_action`) VALUES
 (50, 107),
 (50, 108),
 (50, 109),
-(59, 140);
+(59, 140),
+(63, 146),
+(64, 147);
 
 -- --------------------------------------------------------
 
