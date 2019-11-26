@@ -72,7 +72,7 @@ if(config_dispo_jeu($mysqli)){
 							// position pas libre => on rechoisit de nouvelles coordonnées
 							$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn); 
 							$y = pos_zone_rand_y($y_min_spawn, $y_max_spawn);
-							$libre = verif_pos_libre($x, $y);
+							$libre = verif_pos_libre($mysqli, $x, $y);
 						}
 					
 						$date = time();
@@ -168,10 +168,14 @@ if(config_dispo_jeu($mysqli)){
 							if($camp == '1'){
 								$group_id = '5';
 								$nom_camp = 'Nordistes';
+								$ncamp = "Nord";
+								$couleur_clan_perso = "blue";
 							}
 							if($camp == '2'){
 								$group_id = '6';
 								$nom_camp = 'Sudistes';
+								$ncamp = "Sud";
+								$couleur_clan_perso = "red";
 							}
 							
 							$now = time();
@@ -200,6 +204,12 @@ if(config_dispo_jeu($mysqli)){
 							
 							// assignation du message au perso
 							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id', '1', '0', '0')";
+							$mysqli->query($sql);
+							
+							// TODO - Insertion evenement suivant :
+							// $nom_perso vient tout juste de sortir des jupons de sa maman pour venir grossir les rangs du $ncamp
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+									VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>',' vient tout juste de sortir des jupons de sa maman pour venir grossir les rangs de l\'armée du $ncamp ',NULL,'','',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							header("location:index.php?creation=ok");

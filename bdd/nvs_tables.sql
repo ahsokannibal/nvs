@@ -273,10 +273,10 @@ CREATE TABLE `evenement` (
   `ID_evenement` int(11) NOT NULL,
   `IDActeur_evenement` int(11) NOT NULL DEFAULT '0',
   `nomActeur_evenement` varchar(100) NOT NULL DEFAULT '',
-  `phrase_evenement` varchar(250) NOT NULL,
+  `phrase_evenement` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `IDCible_evenement` int(11) DEFAULT NULL,
   `nomCible_evenement` varchar(100) DEFAULT NULL,
-  `effet_evenement` varchar(250) DEFAULT NULL,
+  `effet_evenement` varchar(250) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `date_evenement` datetime NOT NULL,
   `special` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;

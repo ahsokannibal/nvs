@@ -93,11 +93,11 @@ if($dispo || !$admin){
 	
 				<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 				<html>
-				<head>
-				<title>Nord VS Sud</title>
-				<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-				<link href="../style2.css" rel="stylesheet" type="text/css">
-				</head>
+					<head>
+						<title>Nord VS Sud</title>
+						<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+						<link href="../style2.css" rel="stylesheet" type="text/css">
+					</head>
 
 					<body>
 				<?php
@@ -1629,7 +1629,15 @@ if($dispo || !$admin){
 													</td>
 												</tr>
 												<tr>
-													<td valign='top'>&nbsp;</td>
+													<td valign='top'>
+													<?php
+														if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) {
+															echo "<a href=\"nouveau_message.php?pseudo=$nom_infoid\" target='_blank'>";
+															echo "<img src=\"../images/msg.gif\" style=\"vertical-align:middle; margin-left:-5\" border='0' width='25' height='25'>";
+															echo "Envoyer un message</a>";
+														}
+														?>
+													</td>
 													<td valign='top'>
 														<form method="post" action="agir.php" target='_main'>
 															<input type="text" maxlength="6" size="6" name="id_attaque" value="<?php if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) echo $infoid; elseif(isset($_GET["infoid"]) && $_GET["infoid"] >= 10000) echo $_GET["infoid"];?>"style="background-image:url('../images/background3.jpg');">
@@ -1659,10 +1667,8 @@ if($dispo || !$admin){
 									<tr>
 										<td background='../images/background.jpg' align='left' colspan='2'>
 											<?php 
-											//if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) 
-												//echo "<a href=\"nouveau_message.php?pseudo=$nom_infoid\" target='_blank'><img src=\"../images/msg.gif\" border=0 width=40 height=40></a>Envoyer un message a ce perso<br />";
-											echo "<a href=\"nouveau_message.php?visu=ok\" target='_blank'><img src='../images/Ecrire.png' border=0 /><img src='../images/Envoyer_message.png' border=0 />";?>
-											
+											echo "<a href=\"nouveau_message.php?visu=ok\" target='_blank'><img src='../images/Ecrire.png' border=0 /><img src='../images/Envoyer_message.png' border=0 />";
+											?>
 										</td>
 									</tr>
 									<tr>
@@ -1717,11 +1723,12 @@ if($dispo || !$admin){
 		header("Location: ../index.php");
 	}
 	?>
-		<table border='0'>
-			<tr>
-				<td height='100'>&nbsp;</td>
-			</tr>
-		</table>
+			<table border='0'>
+				<tr>
+					<td height='100'>&nbsp;</td>
+				</tr>
+			</table>
+			
 		</body>
 	</html>
 <?php
