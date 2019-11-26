@@ -302,7 +302,17 @@ if($dispo){
 					
 					// Degats de l'arme
 					if($t_equip["degatMin_arme"][$l] && $t_equip["degatMax_arme"][$l]){
-						echo "<td align=\"center\">".$t_equip["degatMin_arme"][$l]." - ".$t_equip["degatMax_arme"][$l]."</td>";
+						
+						echo "<td align=\"center\">";
+						
+						if ($t_equip["valeur_des_arme"][$l]) {
+							echo $t_equip["degatMin_arme"][$l] . "D".$t_equip["valeur_des_arme"][$l];
+						} else {
+							echo $t_equip["degatMin_arme"][$l]." - ".$t_equip["degatMax_arme"][$l];
+						}
+						
+						echo "</td>";
+						
 					}
 					else {
 						echo "<td align=\"center\">D";
@@ -370,6 +380,7 @@ if($dispo){
 					
 					// Degats de l'arme
 					if($t_porte["degatMin_arme"][$l] && $t_porte["degatMax_arme"][$l]){
+						
 						echo "<td align=\"center\">";
 						
 						if ($t_porte["valeur_des_arme"][$l]) {
