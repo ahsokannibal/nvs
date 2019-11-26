@@ -1038,8 +1038,11 @@ if($dispo || !$admin){
 				}
 				
 				// Récupération de tous les persos du joueur
-				$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso'";
+				$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso'";
 				$res = $mysqli->query($sql);
+				
+				// init vide
+				$nom_perso_chef = "";
 				
 				?>
 				<!-- Début du tableau d'information-->
@@ -1057,12 +1060,17 @@ if($dispo || !$admin){
 						</td>
 						<td align=center>
 							<form method='post' action='jouer.php'>
-								Nom : <select name='liste_perso'>
+								<b>Nom : </b><select name='liste_perso'>
 						<?php 
 						while($t_liste_perso = $res->fetch_assoc()) {
 							
-							$id_perso_liste = $t_liste_perso["id_perso"];
-							$nom_perso_liste = $t_liste_perso["nom_perso"];
+							$id_perso_liste 	= $t_liste_perso["id_perso"];
+							$nom_perso_liste 	= $t_liste_perso["nom_perso"];
+							$chef_perso			= $t_liste_perso["chef"];
+							
+							if ($chef_perso) {
+								$nom_perso_chef = $nom_perso_liste;
+							}
 							
 							echo "<option value='$id_perso_liste'";
 							if ($id_perso == $id_perso_liste) {
@@ -1075,16 +1083,16 @@ if($dispo || !$admin){
 								<input type='submit' name='select_perso' value='ok' />
 							</form>
 						</td>
-						<td align=center>Grade : <?php echo $nom_grade_perso; ?>
+						<td align=center><b>Grade : </b><?php echo $nom_grade_perso; ?>
 							<img alt="<?php echo $nom_grade_perso; ?>" title="<?php echo $nom_grade_perso; ?>" src="../images/grades/<?php echo $id_grade_perso . ".gif";?>" width=40 height=40>
 						</td>
 						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 					</tr>
 					<tr>
-						<td align=center>Chef : <?php echo "";?></td>
-						<td align=center>Bataillon : <?php echo $bataillon_perso; ?></td>
-						<td align=center>Compagnie : <?php echo ""; ?></td>
-						<td align=center>Section : <?php echo ""; ?></td>
+						<td align=center><b>Chef : </b><?php echo $nom_perso_chef;?></td>
+						<td align=center><b>Bataillon : </b><?php echo $bataillon_perso; ?></td>
+						<td align=center><b>Compagnie : </b><?php echo ""; ?></td>
+						<td align=center><b>Section : </b><?php echo ""; ?></td>
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
@@ -1599,10 +1607,12 @@ if($dispo || !$admin){
 									</tr>
 									<?php // recuperation des infos du perso choisit
 									if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) {
+										
 										$infoid = $_GET["infoid"];
 										$sql = "SELECT nom_perso, message_perso FROM perso WHERE ID_perso='$infoid'";
 										$res = $mysqli->query($sql);
 										$tab = $res->fetch_assoc();
+										
 										$mess_infoid = stripslashes($tab["message_perso"]);
 										$nom_infoid = $tab["nom_perso"];
 									}?>
