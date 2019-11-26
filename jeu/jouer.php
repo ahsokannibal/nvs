@@ -304,7 +304,7 @@ if($dispo || !$admin){
 													echo"<font color = blue>vous êtes entrée dans le batiment $id_inst_bat</font><br>";
 														
 													// mise a jour table evenement
-													$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p>$nom_perso</font>','est entre dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
+													$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p>$nom_perso</font>','est entré dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
 													$mysqli->query($sql);
 														
 													// calcul du bonus de perception
@@ -448,7 +448,7 @@ if($dispo || !$admin){
 														echo"<font color = blue>vous êtes entrée dans le batiment $nom_bat</font>";
 														
 														// mise a jour table evenement
-														$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p>$nom_perso</font>','est entre dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
+														$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p>$nom_perso</font>','est entré dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
 														$mysqli->query($sql);
 														
 														$bonus_perc = 0;
