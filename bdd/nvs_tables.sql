@@ -492,7 +492,8 @@ CREATE TABLE `perso` (
   `a_gele` tinyint(1) NOT NULL DEFAULT '0',
   `est_gele` tinyint(1) NOT NULL DEFAULT '0',
   `date_gele` datetime DEFAULT NULL,
-  `chef` tinyint(1) NOT NULL DEFAULT '0'
+  `chef` tinyint(1) NOT NULL DEFAULT '0',
+  `bataillon` varchar(250) NOT NULL DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

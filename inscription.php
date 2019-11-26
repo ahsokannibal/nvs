@@ -12,6 +12,7 @@ if(config_dispo_jeu($mysqli)){
 		
 		$nom_perso 		= $_POST['nom_perso'];
 		$email_joueur 	= $_POST['email_joueur'];
+		$nom_bataillon	= $_POST['nom_bataillon'];
 		$mdp_joueur 	= $_POST['mdp_joueur'];
 		$camp 			= $_POST['camp_perso'];
 	
@@ -41,6 +42,7 @@ if(config_dispo_jeu($mysqli)){
 					
 					// sécurité camp
 					if($camp == "1" || $camp == "2"){
+						
 						$mdp_joueur = md5($mdp_joueur);
 						
 						if($camp == 1){ // bleu
@@ -108,7 +110,7 @@ if(config_dispo_jeu($mysqli)){
 							$IDJoueur_perso = $mysqli->insert_id;
 							
 							// insertion nouveau perso / Chef
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1)";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1, '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -145,7 +147,7 @@ if(config_dispo_jeu($mysqli)){
 							}
 							
 							// Insertion grouillot
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso) VALUES ('$IDJoueur_perso','$nom_g','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '')";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -214,37 +216,46 @@ if(config_dispo_jeu($mysqli)){
 	?>
 	<html>
 	<head>
-	<title>Nord VS Sud</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link href="nvs.css" rel="stylesheet" type="text/css">
+		<title>Nord VS Sud</title>
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
+	
 	<body background="">
-	<center>
-	<font color="blue" size=5 face="Verdana, Arial, Helvetica, sans-serif"><b>INSCRIPTION</b></font><br/><br/>
-	<form method="post" action="inscription.php">
-		Entrez un nom pour votre personnage:<br/>
-		<input type="text" name="nom_perso" value="" size="20" maxlength="30">
-		<br/>
-		Entrez votre email:<br/>
-		<input type="text" name="email_joueur" value="" size="20" maxlength="60">
-		<br/>
-		Entrez votre mot de passe:<br/>
-		<input type="password" name="mdp_joueur" value="" size="20" maxlength="20">
-		<br/>
-		Choisissez votre camp:<br/>
-		<select name="camp_perso">
-			<option value="1">Nord</option>
-			<option value="2">Sud</option>
-		</select>
-		<br/><br/><input name="creation" type="hidden" value="ok">
-		<input type="submit" name="creer" value="Cr&eacute;er">
-		<br/><br/>
+		<center>
+		<font color="blue" size=5 face="Verdana, Arial, Helvetica, sans-serif"><b>INSCRIPTION</b></font><br/><br/>
+		<form method="post" action="inscription.php">
+			Entrez un nom pour votre personnage:<br/>
+			<input type="text" name="nom_perso" value="" size="20" maxlength="30">
+			<br/>
+			Entrez un nom pour votre bataillon:<br/>
+			<input type="text" name="nom_bataillon" value="" size="20" maxlength="100">
+			<br/>
+			Entrez votre email:<br/>
+			<input type="text" name="email_joueur" value="" size="20" maxlength="60">
+			<br/>
+			Entrez votre mot de passe:<br/>
+			<input type="password" name="mdp_joueur" value="" size="20" maxlength="20">
+			<br/>
+			Choisissez votre camp:<br/>
+			<select name="camp_perso">
+				<option value="1">Nord</option>
+				<option value="2">Sud</option>
+			</select>
+			<br/><br/><input name="creation" type="hidden" value="ok">
+			<input type="submit" name="creer" value="Cr&eacute;er">
+			<br/><br/>
 	<?php
-	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1'";
+	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND chef='1'";
 	$res_nbb = $mysqli->query($sql_nbb);
 	$nbb = $res_nbb->num_rows;
 	
-	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2'";
+	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND chef='1'";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
 	echo "<font color=blue>Nombre de persos au Nord : $nbb</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color=red>Nombre de persos au Sud : $nbr</font>";
@@ -263,15 +274,22 @@ if(config_dispo_jeu($mysqli)){
 		echo "<a href=\"inscription.php\"><img border=0 src=\"images/b_ok.gif\"></a>";
 	}
 	?>
-		</font>
+			</font>
+		
+			<table border="0">
+			  
+			</table>
+		</form>
+		</center>
 	
-		<table border="0">
-		  
-		</table>
-	</form>
-	</center>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
 	</body>
-	</html>
+</html>
 <?php
 }
 else {
