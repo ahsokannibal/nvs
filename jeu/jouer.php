@@ -983,7 +983,7 @@ if($dispo || !$admin){
 					</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pmMax_perso, pm_perso, type_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -1002,8 +1002,12 @@ if($dispo || !$admin){
 				$pmMax_perso = $t_perso2["pmMax_perso"];
 				$perception_perso = $t_perso2["perception_perso"];
 				$bonusPerception_perso = $t_perso2["bonusPerception_perso"];
+				$recup_perso = $t_perso2["recup_perso"];
+				$protec_perso = $t_perso2["protec_perso"];
 				$bonus_perso = $t_perso2["bonus_perso"];
 				$type_perso = $t_perso2["type_perso"];
+				$bataillon_perso = $t_perso2["bataillon"];
+				
 				$clan_perso = $t_perso2["clan"];
 				
 				if($clan_perso == 1){
@@ -1078,7 +1082,7 @@ if($dispo || !$admin){
 					</tr>
 					<tr>
 						<td align=center>Chef : <?php echo "";?></td>
-						<td align=center>Bataillon : <?php echo ""; ?></td>
+						<td align=center>Bataillon : <?php echo $bataillon_perso; ?></td>
 						<td align=center>Compagnie : <?php echo ""; ?></td>
 						<td align=center>Section : <?php echo ""; ?></td>
 					</tr>
@@ -1180,15 +1184,15 @@ if($dispo || !$admin){
 										<table border="2" bordercolor="white">
 											<tr>
 												<td><b>Protection</b></td>
-												<td><?php echo ""; ?>&nbsp;</td>
+												<td><?php echo $protec_perso; ?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>Recuperation</b></td>
-												<td><?php echo ""; ?>&nbsp;</td>
+												<td><?php echo $recup_perso; ?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>Bonus / Malus</b></td>
-												<td><?php echo ""; ?>&nbsp;</td>
+												<td><?php echo $bonus_perso; ?>&nbsp;</td>
 											</tr>
 										</table>
 									</td>

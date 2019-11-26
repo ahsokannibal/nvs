@@ -79,7 +79,7 @@ if($dispo){
 				</tr>
 				<?php
 					// recuperation des donnees des armes equipees
-					$sql_e_a = "SELECT perso_as_arme.id_arme, nom_arme, description_arme, porteeMin_arme, porteeMax_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, pvMax_arme, image_arme, mains 
+					$sql_e_a = "SELECT perso_as_arme.id_arme, nom_arme, description_arme, porteeMin_arme, porteeMax_arme, valeur_des_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, pvMax_arme, image_arme 
 								FROM perso_as_arme, arme 
 								WHERE perso_as_arme.id_arme = arme.id_arme AND est_portee='1' AND id_perso='$id_perso'";
 					$res_e_a = $mysqli->query($sql_e_a);
@@ -96,37 +96,27 @@ if($dispo){
 						$multiplicateurMax_degats[$i] = $t_e_a["multiplicateurMax_degats"];
 						$degatMin_arme[$i] = $t_e_a["degatMin_arme"];
 						$degatMax_arme[$i] = $t_e_a["degatMax_arme"];
+						$valeur_des_arme[$i] = $t_e_a["valeur_des_arme"];
 						$pvMax_arme[$i] = $t_e_a["pvMax_arme"];
 						$image_arme[$i] = $t_e_a["image_arme"];
 						$description_arme[$i] = $t_e_a["description_arme"];
-						$mains[$i] = $t_e_a["mains"];	
 						
 						// Calcul des degats de l'arme
 						if($degatMin_arme[$i] && $degatMax_arme[$i]){
-							$degats_armes[$mains[$i]] = $degatMin_arme[$i]." - ".$degatMax_arme[$i];
+							$degats_armes[$i] = $degatMin_arme[$i]." - ".$degatMax_arme[$i];
 						}
 						else {
-							$deg_min[$mains[$i]] = $degats_perso * $multiplicateurMin_degats[$i] + $additionMin_degats[$i];
-							$deg_max[$mains[$i]] = $degats_perso * $multiplicateurMax_degats[$i] + $additionMax_degats[$i];
-							$degats_armes[$mains[$i]] = $deg_min[$mains[$i]]." - ".$deg_max[$mains[$i]];
+							$deg_min[$i] = $degats_perso * $multiplicateurMin_degats[$i] + $additionMin_degats[$i];
+							$deg_max[$i] = $degats_perso * $multiplicateurMax_degats[$i] + $additionMax_degats[$i];
+							$degats_armes[$i] = $deg_min[$mains[$i]]." - ".$deg_max[$mains[$i]];
 						}
 						
 						// Affectation des variables selon la main de l'arme (gauche ou droite => 0 ou 1)
-						$image_armes[$mains[$i]] = $image_arme[$i];
-						$nom_armes[$mains[$i]] = $nom_arme[$i];
-						$description_armes[$mains[$i]] = $description_arme[$i];
+						$image_armes[$i] = $image_arme[$i];
+						$nom_armes[$i] = $nom_arme[$i];
+						$description_armes[$i] = $description_arme[$i];
 						// Portee de l'arme
-						$portee_armes[$mains[$i]] = $porteeMin_arme[$i]." - ".$porteeMax_arme[$i];						
-						
-						// Cas particulier : arme a 2 mains
-						if($mains[$i] == 2){
-							$image_armes[0] = "vide";
-							$image_armes[1] = $image_arme[$i];
-							$nom_armes[1] = $nom_arme[$i];
-							$description_armes[1] = $description_arme[$i];
-							$portee_armes[1] = $portee_armes[2];
-							$degats_armes[1] = $degats_armes[2];
-						}
+						$portee_armes[$i] = $porteeMin_arme[$i]." - ".$porteeMax_arme[$i];
 						
 						$i++;
 					}
@@ -148,7 +138,6 @@ if($dispo){
 						$description_armure[$j] = $t_e_a2["description_armure"];
 						$pvMax_armure[$j] = $t_e_a2["pvMax_armure"];
 						$image_armure[$j] = $t_e_a2["image_armure"];
-						$corps_armure[$j] = $t_e_a2["corps_armure"];
 						
 						// Affectation des variables selon la position de l'armure ( 1 => tete, 2 => Collier, 3 => Corps, 6 => Gants, 7 => ceinture, 8 => Pantalon, 9 => Bottes, 10 => Item, 11 => Bagues )
 						$image_armures[$corps_armure[$j]] = $image_armure[$j];

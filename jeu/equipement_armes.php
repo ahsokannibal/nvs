@@ -255,15 +255,15 @@ if($dispo){
 			while ($tab = $res->fetch_assoc()) {
 				if ($tab["est_portee"]) {
 					for ($k = 0; $k < $nb_champ; $k++) {
-						$nom = $res->field_name($k);
-						$t_porte[$nom][$i] = $tab[$nom];
+						$nom = $res->fetch_field_direct($k);
+						$t_porte[$nom->name][$i] = $tab[$nom->name];
 					}
 					$i++;
 				}
 				else {
 					for ($k = 0; $k < $nb_champ; $k++) {
-						$nom = $res->field_name($k);
-						$t_equip[$nom][$j] = $tab[$nom];
+						$nom = $res->fetch_field_direct($k);
+						$t_equip[$nom->name][$j] = $tab[$nom->name];
 					}
 					$j++;
 				}
@@ -306,12 +306,20 @@ if($dispo){
 					}
 					else {
 						echo "<td align=\"center\">D";
-						if($t_equip["multiplicateurMin_degats"][$l] != 1)
+						
+						if($t_equip["multiplicateurMin_degats"][$l] != 1) {
 							echo "*".$t_equip["multiplicateurMin_degats"][$l];
+						}
+						
 						echo " + ".$t_equip["additionMin_degats"][$l]." -- D";
-						if($t_equip["multiplicateurMax_degats"][$l] != 1)
+						
+						if($t_equip["multiplicateurMax_degats"][$l] != 1) {
 							echo "*".$t_equip["multiplicateurMin_degats"][$l];
-						echo " + ".$t_equip["additionMax_degats"][$l]."</td>";
+						}
+						
+						echo " + ".$t_equip["additionMax_degats"][$l];
+						
+						echo "</td>";
 					}
 					
 					// Degats de zone ?
@@ -341,20 +349,13 @@ if($dispo){
 			<?php
 			$poids_final += $poids_total;
 			$poids_total = 0.0;
-			echo "<tr><th>main</th><th>nom</th><th>portee</th><th>cout en pa</th><th>degats</th><th>degats de zone ?</th><th>poids</th><th>description</th></tr>"; 
+			echo "<tr><th>nom</th><th>portee</th><th>cout en pa</th><th>degats</th><th>degats de zone ?</th><th>poids</th><th>description</th></tr>"; 
 			if ($i == 0){
 				echo "<tr><td colspan=8><i>Vous n'étes pas equipé.</i></td></tr>";
 			}
 			else {
 				for ($l = 0; $l < $i; $l++) {
 					echo "<tr>";
-					// Main
-					if($t_porte["mains"][$l] == "0")
-						echo "<td align=\"center\">main gauche</td>";
-					if($t_porte["mains"][$l] == "1")
-						echo "<td align=\"center\">main droite</td>";
-					if($t_porte["mains"][$l] == "2")
-						echo "<td align=\"center\">2 mains</td>";
 					// Nom de l'arme
 					echo "<td align=\"center\">".stripslashes($t_porte["nom_arme"][$l])."</td>";
 					// Portee de l'arme
@@ -369,16 +370,33 @@ if($dispo){
 					
 					// Degats de l'arme
 					if($t_porte["degatMin_arme"][$l] && $t_porte["degatMax_arme"][$l]){
-						echo "<td align=\"center\">".$t_porte["degatMin_arme"][$l]." - ".$t_porte["degatMax_arme"][$l]."</td>";
+						echo "<td align=\"center\">";
+						
+						if ($t_porte["valeur_des_arme"][$l]) {
+							echo $t_porte["degatMin_arme"][$l] . "D".$t_porte["valeur_des_arme"][$l];
+						} else {
+							echo $t_porte["degatMin_arme"][$l]." - ".$t_porte["degatMax_arme"][$l];
+						}
+						
+						echo "</td>";
 					}
 					else {
+						
 						echo "<td align=\"center\">D";
-						if($t_porte["multiplicateurMin_degats"][$l] != 1)
+						
+						if($t_porte["multiplicateurMin_degats"][$l] != 1) {
 							echo "*".$t_porte["multiplicateurMin_degats"][$l];
+						}
+						
 						echo " + ".$t_porte["additionMin_degats"][$l]." -- D";
-						if($t_porte["multiplicateurMax_degats"][$l] != 1)
+						
+						if($t_porte["multiplicateurMax_degats"][$l] != 1) {
 							echo "*".$t_porte["multiplicateurMin_degats"][$l];
-						echo " + ".$t_porte["additionMax_degats"][$l]."</td>";
+						}
+						
+						echo " + ".$t_porte["additionMax_degats"][$l];
+						
+						echo "</td>";
 					}
 					
 					// Degats de zone ?
@@ -392,7 +410,7 @@ if($dispo){
 					echo "</tr>";
 					$poids_total = $poids_total + $t_porte["poids_arme"][$l];
 				}
-				echo "<tr><td align=\"center\">total</td><td colspan='5'>&nbsp;</td><td align=\"center\">$poids_total</td><td>&nbsp;</td></tr>";
+				echo "<tr><td align=\"center\">total</td><td colspan='4'>&nbsp;</td><td align=\"center\">$poids_total</td><td>&nbsp;</td></tr>";
 			}
 			$poids_final += $poids_total;
 			?>
