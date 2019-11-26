@@ -24,6 +24,7 @@ $id = $_SESSION["id_perso"];
 $sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
 $res = $mysqli->query($sql);
 $t = $res->fetch_assoc();
+
 $pseudo = $t["nom_perso"];
 
 $sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."'";

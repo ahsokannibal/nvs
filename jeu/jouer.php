@@ -91,12 +91,6 @@ if($dispo || !$admin){
 	}
 	</SCRIPT>
 	
-	<SCRIPT LANGUAGE="JavaScript" SRC="javascript/infobulle.js"></script>
-	<SCRIPT language="JavaScript">
-	InitBulle("#000000","#f4f4f4","000000",1);
-	// InitBulle(couleur de texte, couleur de fond, couleur de contour taille contour)
-	</SCRIPT>
-				
 				<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 				<html>
 				<head>
@@ -104,9 +98,8 @@ if($dispo || !$admin){
 				<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 				<link href="../style2.css" rel="stylesheet" type="text/css">
 				</head>
-	
-				<script src="fr.js" type=text/javascript></script>
-				<body onload="start()">
+
+					<body>
 				<?php
 				
 				// recuperation des anciennes données du perso
@@ -1060,7 +1053,7 @@ if($dispo || !$admin){
 						</td>
 						<td align=center>
 							<form method='post' action='jouer.php'>
-								Personnage : <select name='liste_perso'>
+								Nom : <select name='liste_perso'>
 						<?php 
 						while($t_liste_perso = $res->fetch_assoc()) {
 							
@@ -1078,16 +1071,16 @@ if($dispo || !$admin){
 								<input type='submit' name='select_perso' value='ok' />
 							</form>
 						</td>
-						<td align=center>xp: <?php echo "$xp_perso";?> / pi: <?php echo "$pi_perso";?> / pc: <?php echo "$pc_perso";?> / Grade : <?php echo $nom_grade_perso; ?>
+						<td align=center>Grade : <?php echo $nom_grade_perso; ?>
 							<img alt="<?php echo $nom_grade_perso; ?>" title="<?php echo $nom_grade_perso; ?>" src="../images/grades/<?php echo $id_grade_perso . ".gif";?>" width=40 height=40>
 						</td>
 						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 					</tr>
 					<tr>
-						<td align=center>pa: <?php echo "".$pa_perso."/".$paMax_perso."";?></td>
-						<td align=center>perception: <?php echo "$perception_perso"; if($bonusPerception_perso){ if($bonusPerception_perso>0) echo "(+".$bonusPerception_perso.")"; else echo "(".$bonusPerception_perso.")";}?></td>
-						<td align=center>pm: <?php echo "".$pm_perso."/".$pmMax_perso.""; if($malus_pm){ echo "<font color='red'> ($malus_pm)</font>";}?></td>
-						<td align=center>position : <?php echo "".$t_perso2["x_perso"]."/".$t_perso2["y_perso"]."";?></td>
+						<td align=center>Chef : <?php echo "";?></td>
+						<td align=center>Bataillon : <?php echo ""; ?></td>
+						<td align=center>Compagnie : <?php echo ""; ?></td>
+						<td align=center>Section : <?php echo ""; ?></td>
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
@@ -1140,11 +1133,72 @@ if($dispo || !$admin){
 				// recuperation des données de la carte
 				$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc AND y_carte <= $y_perso + $perc AND y_carte >= $y_perso - $perc ORDER BY y_carte DESC, x_carte";
 				$res = $mysqli->query($sql);
-				$tab = $res->fetch_assoc();
+				$tab = $res->fetch_assoc();				
 				
-				echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
-				echo '<tr><td valign="top">';
+				?>
+				<table border=0 align="center" cellspacing="0" cellpadding="10" style:no-padding>
+					<tr>
+						<td valign="top">
+						
+							<table style="border:0px; background-color: cornflowerblue;">
+								<tr>
+									<td>
+										<table border="2" bordercolor="white" > <!-- border-collapse:collapse -->
+											<tr>
+												<td><b>XP</b></td>
+												<td><?php echo $xp_perso; ?>&nbsp;</td>
+											</tr>
+											<tr>
+												<td><b>XPI</b></td>
+												<td><?php echo $pi_perso; ?>&nbsp;</td>
+											</tr>
+											<tr>
+												<td><b>PC</b></td>
+												<td><?php echo $pc_perso; ?>&nbsp;</td>
+											</tr>
+										</table>
+									</td>
+									
+									<td>
+										<table border="2" bordercolor="white">
+											<tr>
+												<td><b>Perception</b></td>
+												<td align='center'><?php echo $perception_perso; ?>&nbsp;</td>
+											</tr>
+											<tr>
+												<td><b>PA</b></td>
+												<td><?php echo $pa_perso . ' / ' . $paMax_perso; ?>&nbsp;</td>
+											</tr>
+											<tr>
+												<td><b>PM</b></td>
+												<td><?php echo $pm_perso . ' / ' . $pmMax_perso; ?>&nbsp;</td>
+											</tr>
+										</table>
+									</td>
+									
+									<td>
+										<table border="2" bordercolor="white">
+											<tr>
+												<td><b>Protection</b></td>
+												<td><?php echo ""; ?>&nbsp;</td>
+											</tr>
+											<tr>
+												<td><b>Recuperation</b></td>
+												<td><?php echo ""; ?>&nbsp;</td>
+											</tr>
+											<tr>
+												<td><b>Bonus / Malus</b></td>
+												<td><?php echo ""; ?>&nbsp;</td>
+											</tr>
+										</table>
+									</td>
+								</tr>
+							</table>
+					
+						</td>
+						<td valign="top">
 				
+				<?php
 				//<!--Génération de la carte-->
 				echo '<table style="border:1px solid black; border-collapse: collapse;"><tr><td>';
 				
@@ -1659,12 +1713,12 @@ if($dispo || !$admin){
 		header("Location: ../index.php");
 	}
 	?>
-	<table border='0'>
-		<tr>
-			<td height='100'>&nbsp;</td>
-		</tr>
-	</table>
-	</body>
+		<table border='0'>
+			<tr>
+				<td height='100'>&nbsp;</td>
+			</tr>
+		</table>
+		</body>
 	</html>
 <?php
 }
