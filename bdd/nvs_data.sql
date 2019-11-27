@@ -123,7 +123,7 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 (7, 'Hopital', 1000, 'Un hopital de campagne permet de soigner des blessers'),
 (8, 'Fortin', 6000, 'Un fortin permet de prendre position sur une partie de la carte'),
 (9, 'Fort', 10000, 'Un fort, à defendre coute que coute'),
-(10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels')
+(10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels'),
 (11, 'Gare', 5000, 'Une gare'),
 (12, 'Train', 2500, 'Un train');
 
