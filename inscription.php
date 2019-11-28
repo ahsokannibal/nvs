@@ -128,6 +128,14 @@ if(config_dispo_jeu($mysqli)){
 							// grade Chef = Caporal
 							$sql_i = "INSERT INTO perso_as_grade VALUES ('$id','2')";
 							$mysqli->query($sql_i);
+							
+							// Arme Cac : sabre
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id','1','1')";
+							$mysqli->query($sql);
+							
+							// Arme distance : pistolet 
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id','4','1')";
+							$mysqli->query($sql);
 						
 							// insertion du Chef sur la carte
 							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id', image_carte='$image_chef' WHERE x_carte=$x AND y_carte=$y";
@@ -157,6 +165,14 @@ if(config_dispo_jeu($mysqli)){
 							// grade Grouillot = 2nd classe
 							$sql_i = "INSERT INTO perso_as_grade VALUES ('$id_g','1')";
 							$mysqli->query($sql_i);
+							
+							// Arme Cac : baillonette
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_g','6','1')";
+							$mysqli->query($sql);
+							
+							// Arme distance : fusil 
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_g','7','1')";
+							$mysqli->query($sql);
 							
 							// Insertion competence construction barricades
 							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','33','1')";
