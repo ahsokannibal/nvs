@@ -1527,14 +1527,6 @@ if($dispo || !$admin){
 														else {
 															echo "<option value=\"145\">Bousculer (3 pa)</option>";
 														}
-														
-														// Construction barricade = 33
-														if($pa_perso < 10){
-															echo "<option value=\"PA\">Construction - Barricade (10 pa)</option>";
-														}
-														else {
-															echo "<option value=\"33\">Construction - Barricade (10 pa)</option>";
-														}
 													}
 													
 													// Cavalerie et cavalerie lourde

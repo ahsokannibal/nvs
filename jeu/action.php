@@ -26,6 +26,7 @@ if($dispo){
 	
 	// Traitement action construction batiment
 	if(isset($_POST['image_bat'])){
+		
 		$ok = construire_bat($mysqli, $_POST['image_bat'], $id_perso, $carte);
 		
 		if($ok){
@@ -37,6 +38,7 @@ if($dispo){
 		// traitement action construction batiment
 		// passage par le champ cache pour IE
 		if(isset($_POST['hid_image_bat'])){
+			
 			$ok = construire_bat($mysqli, $_POST['hid_image_bat'], $id_perso, $carte);
 			
 			if($ok){
@@ -517,7 +519,7 @@ if($dispo){
 			$res_v = $mysqli->query($sql_v);
 			$verif = $res_v->num_rows;
 			
-			if($verif || $id_action=='65' || $id_action=='110' || $id_action=='111' || $id_action=='139'){
+			if($verif || $id_action=='65' || $id_action=='110' || $id_action=='111' || $id_action=='139' || $id_action == '33'){
 			
 				// recuperation des effet et du type d'action
 				$sql = "SELECT * FROM action WHERE id_action='$id_action'";

@@ -147,7 +147,7 @@ if(config_dispo_jeu($mysqli)){
 							}
 							
 							// Insertion grouillot
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$protec_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, type_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','3','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$protec_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -157,6 +157,10 @@ if(config_dispo_jeu($mysqli)){
 							// grade Grouillot = 2nd classe
 							$sql_i = "INSERT INTO perso_as_grade VALUES ('$id_g','1')";
 							$mysqli->query($sql_i);
+							
+							// Insertion competence construction barricades
+							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','33','1')";
+							$mysqli->query($sql_c);
 							
 							// insertion du Grouillot sur la carte
 							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id_g', image_carte='$image_g' WHERE x_carte=$x_g AND y_carte=$y_g";
