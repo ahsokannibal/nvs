@@ -163,7 +163,7 @@ if(config_dispo_jeu($mysqli)){
 							$mysqli->query($sql_c);
 							
 							// Insertion competence marche forcée
-							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','6','0')";
+							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','6','1')";
 							$mysqli->query($sql_c);
 							
 							// insertion du Grouillot sur la carte

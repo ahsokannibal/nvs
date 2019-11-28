@@ -1100,7 +1100,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 
-	$cout_pv = 10 - (2 * $nb_points_action);
+	$cout_pv = 10 - (2 * ($nb_points_action - 1));
 	
 	// test pa
 	if($pa_perso >= $coutPa_action){
