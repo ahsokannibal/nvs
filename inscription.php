@@ -110,7 +110,7 @@ if(config_dispo_jeu($mysqli)){
 							$IDJoueur_perso = $mysqli->insert_id;
 							
 							// insertion nouveau perso / Chef
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1, '$nom_bataillon')";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$protec_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1, '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -147,7 +147,7 @@ if(config_dispo_jeu($mysqli)){
 							}
 							
 							// Insertion grouillot
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$protec_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
