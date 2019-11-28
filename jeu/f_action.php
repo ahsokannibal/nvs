@@ -1083,12 +1083,12 @@ function action_dormir($mysqli, $id_perso, $nb_points_action){
   * @param $coutPa_action	: Le cout en Pa de l'action
   * @return	Void
   */
-function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_action){
+function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_action){
 	
 	// recuperation des infos du perso
 	$sql = "SELECT nom_perso, clan, pv_perso, x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
-	$t_p = $res->fetch_assoc($res);
+	$t_p = $res->fetch_assoc();
 	
 	$nom_perso = $t_p["nom_perso"];
 	$pv_perso = $t_p["pv_perso"];
@@ -1120,13 +1120,17 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
 			//mise a jour de la table evenement
 			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est tué en effectuant une marche forcée... ',NULL,'',' : Bravo !',NOW(),'0')";
 			$mysqli->query($sql);
+			
+			echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
+			echo "<center>Vous êtes Mort !</center><br />";
+			echo "<center><a href='jouer.php'>[retour]</a></center>";
 		}
 		else {	
 			//mise a jour de la table evenement
 			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a effectué une marche forcée ',NULL,'',' : +1 PM',NOW(),'0')";
 			$mysqli->query($sql);
 		
-			echo "<center>Vous gagnez 1 PM contre 3PA et $cout_pv PV</center><br />";
+			echo "<center>Vous vous êtes dépassé et gagnez 1PM ! ($cout_pv PV perdu)</center><br />";
 			echo "<a href='jouer.php'>[ retour ]</a>";
 		}
 	}

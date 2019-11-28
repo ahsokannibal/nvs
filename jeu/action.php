@@ -566,7 +566,7 @@ if($dispo){
 					}
 					
 					// traitement de l'action marche forcee
-					if($nom_action == 'Marche forcée'){
+					if($id_action == 4){
 						action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_action);
 					}
 				}
