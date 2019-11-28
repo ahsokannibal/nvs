@@ -519,7 +519,7 @@ if($dispo){
 			$res_v = $mysqli->query($sql_v);
 			$verif = $res_v->num_rows;
 			
-			if($verif || $id_action=='65' || $id_action=='110' || $id_action=='111' || $id_action=='139' || $id_action == '33'){
+			if($verif || $id_action=='65' || $id_action=='110' || $id_action=='111' || $id_action=='139'){
 			
 				// recuperation des effet et du type d'action
 				$sql = "SELECT * FROM action WHERE id_action='$id_action'";
