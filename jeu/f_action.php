@@ -138,10 +138,11 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 					$gain_xp = max(2, $niveau_bat/2);
 				}
 				
-				$autorisation_construction = '0';
+				$autorisation_construction = false;
 				
 				// verif distance de construction pour entrepot/hopital/fortin
 				if($id_bat == 6 || $id_bat == 7 || $id_bat == 8){
+					
 					//calcul distance possible
 					$distance_max = calcul_distance_construction($niveau_bat);
 					
@@ -149,11 +150,11 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 					$distance = calcul_nb_cases($x_fort, $y_fort, $x_bat, $y_bat);
 					
 					if($distance_max > $distance){
-						$autorisation_construction = '1';
+						$autorisation_construction = true;
 					}
 				}
 				else {
-					$autorisation_construction = '1';
+					$autorisation_construction = true;
 				}
 				
 				if($autorisation_construction){
@@ -193,6 +194,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 						$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
 						$mysqli->query($sql);
 					}
+					
 					// recuperation des infos du perso
 					$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
 					$res = $mysqli->query($sql);
@@ -288,7 +290,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 		if($pv_instance_bat < $pv_max_bat){
 		
 			// calcul gain xp
-			$gain_xp = rand(2,6);
+			$gain_xp = rand(2,5);
 			
 			if($camp_bat != $camp_perso){
 				$gain_xp = floor($gain_xp / 2);
