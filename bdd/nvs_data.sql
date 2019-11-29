@@ -31,10 +31,10 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 (4, 'Marche forc&eacute;e', 1, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -10, -10, 0, 0, 0, 0, 1, 1, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (11, 'Soins', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures', 1, 0, 0, 0, 0, 20, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
 (33, 'Construire - Barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 100, 250, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(38, 'Construire - Pont', 1, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 750, 750, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(43, 'Construire - Tour de guet', 1, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 250, 250, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(54, 'Construire - Hopital', 1, 'Permet de construire un hôpital', 1, 0, 0, 1000, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(59, 'Construire - Fortin', 1, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 6000, 6000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(38, 'Construire - Pont', 1, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 100, 750, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(43, 'Construire - Tour de guet', 1, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 100, 250, 0, 0, 0, 0, 0, 0, 0, 0, 12, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(54, 'Construire - Hopital', 1, 'Permet de construire un hôpital', 1, 0, 0, 200, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 14, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(59, 'Construire - Fortin', 1, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 1000, 6000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (64, 'Construire - Fort', 1, 'Permet de construire un fort. Les persos peuvent respawn dedans. Accessible seulement aux anims', 1, 0, 0, 10000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (65, 'Entrainement', 1, 'Permet de s\'entrainer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (76, 'R&eacute;parer bâtiment', 1, 'Permet de r&eacute;parer un bâtiment dans lequel on se trouve ou à  port&eacute; de main (adjacent d\'une case)', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
@@ -74,15 +74,15 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 --
 
 INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `coutPa_arme`, `coutOr_arme`, `additionMin_degats`, `additionMax_degats`, `multiplicateurMin_degats`, `multiplicateurMax_degats`, `degatMin_arme`, `degatMax_arme`, `valeur_des_arme`, `precision_arme`, `degatZone_arme`, `bonusPM_arme`, `poids_arme`, `pvMax_arme`, `description_arme`, `qualite_arme`, `main`, `image_arme`) VALUES
-(1, 'sabre', 1, 1, 4, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.2', 0, '', 0, 1, NULL),
-(2, 'Sabre lourd', 1, 1, 5, 200, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '1.5', 0, '', 0, 1, NULL),
-(3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, NULL),
-(4, 'Pistolet', 1, 2, 3, 100, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.2', 0, '', 0, 1, NULL),
-(5, 'Pistolet Canon Long', 1, 3, 3, 200, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '1.3', 0, '', 0, 1, NULL),
-(6, 'Baïonette', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, NULL),
-(7, 'Fusil ', 1, 3, 4, 0, 0, 0, 0, 0, 20, 20, 6, 70, '0', 0, '1.6', 0, '', 0, 1, NULL),
-(8, 'Fusil Précision ', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, NULL),
-(9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, NULL);
+(1, 'sabre', 1, 1, 4, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.2', 0, '', 0, 1, 'sabre.jpg'),
+(2, 'Sabre lourd', 1, 1, 5, 200, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '1.5', 0, '', 0, 1, 'sabre_lourd.jpg'),
+(3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.jpg'),
+(4, 'Pistolet', 1, 2, 3, 100, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.2', 0, '', 0, 1, 'pistolet.jpg'),
+(5, 'Pistolet Canon Long', 1, 3, 3, 200, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '1.3', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
+(6, 'Baïonette', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
+(7, 'Fusil ', 1, 3, 4, 0, 0, 0, 0, 0, 20, 20, 6, 70, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
+(8, 'Fusil Précision ', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
+(9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'canines.jpg');
 
 -- --------------------------------------------------------
 
@@ -123,7 +123,7 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 (7, 'Hopital', 1000, 'Un hopital de campagne permet de soigner des blessers'),
 (8, 'Fortin', 6000, 'Un fortin permet de prendre position sur une partie de la carte'),
 (9, 'Fort', 10000, 'Un fort, à defendre coute que coute'),
-(10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels')
+(10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels'),
 (11, 'Gare', 5000, 'Une gare'),
 (12, 'Train', 2500, 'Un train');
 

@@ -15,7 +15,9 @@ $t_dispo = $res->fetch_assoc();
 $dispo = $t_dispo["disponible"];
 
 if($dispo){
+	
 	if(isset($_SESSION["id_perso"])){
+		
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
@@ -58,12 +60,6 @@ if($dispo){
 	  </ul>
 	</div>
 	
-	<SCRIPT LANGUAGE="JavaScript" SRC="javascript/infobulle.js"></script>
-	<SCRIPT language="JavaScript">
-		InitBulle("#000000","#f4f4f4","000000",1);
-		// InitBulle(couleur de texte, couleur de fond, couleur de contour taille contour)
-	</SCRIPT>	
-	
 	<br /><br /><br /><br />
 	<div align=center><input type="button" value="Fermer la page équipement" onclick="window.close()"></div>
 	<center><h2>Equipement</h2></center>
@@ -85,21 +81,22 @@ if($dispo){
 					$res_e_a = $mysqli->query($sql_e_a);
 					
 					$i = 0;
+					
 					while($t_e_a = $res_e_a->fetch_assoc()){
 						
-						$nom_arme[$i] = $t_e_a["nom_arme"];
-						$porteeMin_arme[$i] = $t_e_a["porteeMin_arme"];
-						$porteeMax_arme[$i] = $t_e_a["porteeMax_arme"];
-						$additionMin_degats[$i] = $t_e_a["additionMin_degats"];
-						$additionMax_degats[$i] = $t_e_a["additionMax_degats"];
-						$multiplicateurMin_degats[$i] = $t_e_a["multiplicateurMin_degats"];
-						$multiplicateurMax_degats[$i] = $t_e_a["multiplicateurMax_degats"];
-						$degatMin_arme[$i] = $t_e_a["degatMin_arme"];
-						$degatMax_arme[$i] = $t_e_a["degatMax_arme"];
-						$valeur_des_arme[$i] = $t_e_a["valeur_des_arme"];
-						$pvMax_arme[$i] = $t_e_a["pvMax_arme"];
-						$image_arme[$i] = $t_e_a["image_arme"];
-						$description_arme[$i] = $t_e_a["description_arme"];
+						$nom_arme[$i] 					= $t_e_a["nom_arme"];
+						$porteeMin_arme[$i] 			= $t_e_a["porteeMin_arme"];
+						$porteeMax_arme[$i] 			= $t_e_a["porteeMax_arme"];
+						$additionMin_degats[$i] 		= $t_e_a["additionMin_degats"];
+						$additionMax_degats[$i] 		= $t_e_a["additionMax_degats"];
+						$multiplicateurMin_degats[$i] 	= $t_e_a["multiplicateurMin_degats"];
+						$multiplicateurMax_degats[$i] 	= $t_e_a["multiplicateurMax_degats"];
+						$degatMin_arme[$i] 				= $t_e_a["degatMin_arme"];
+						$degatMax_arme[$i] 				= $t_e_a["degatMax_arme"];
+						$valeur_des_arme[$i] 			= $t_e_a["valeur_des_arme"];
+						$pvMax_arme[$i] 				= $t_e_a["pvMax_arme"];
+						$image_arme[$i] 				= $t_e_a["image_arme"];
+						$description_arme[$i] 			= $t_e_a["description_arme"];
 						
 						// Calcul des degats de l'arme
 						if($degatMin_arme[$i] && $degatMax_arme[$i]){
@@ -112,9 +109,10 @@ if($dispo){
 						}
 						
 						// Affectation des variables selon la main de l'arme (gauche ou droite => 0 ou 1)
-						$image_armes[$i] = $image_arme[$i];
-						$nom_armes[$i] = $nom_arme[$i];
-						$description_armes[$i] = $description_arme[$i];
+						$image_armes[$i] 		= $image_arme[$i];
+						$nom_armes[$i] 			= $nom_arme[$i];
+						$description_armes[$i] 	= $description_arme[$i];
+						
 						// Portee de l'arme
 						$portee_armes[$i] = $porteeMin_arme[$i]." - ".$porteeMax_arme[$i];
 						
@@ -126,6 +124,7 @@ if($dispo){
 					$res_e_a2 = $mysqli->query($sql_e_a2);
 					
 					$j = 0;
+					
 					while($t_e_a2 = $res_e_a2->fetch_assoc()){
 						
 						$nom_armure[$j] = $t_e_a2["nom_armure"];
@@ -319,7 +318,10 @@ if($dispo){
 									$compteur = 0;
 									
 									// recuperation des armes du perso
-									$sql_a = "SELECT perso_as_arme.id_arme, nom_arme, description_arme, porteeMin_arme, porteeMax_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, pvMax_arme, image_arme FROM perso_as_arme, arme WHERE perso_as_arme.id_arme = arme.id_arme AND est_portee='0' AND id_perso='$id_perso' ORDER BY perso_as_arme.id_arme LIMIT 9";
+									$sql_a = "SELECT perso_as_arme.id_arme, nom_arme, description_arme, porteeMin_arme, porteeMax_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, pvMax_arme, image_arme 
+												FROM perso_as_arme, arme 
+												WHERE perso_as_arme.id_arme = arme.id_arme AND est_portee='0' AND id_perso='$id_perso' 
+												ORDER BY perso_as_arme.id_arme LIMIT 9";
 									$res_a = $mysqli->query($sql_a);
 									
 									while($t_a = $res_a->fetch_assoc()){

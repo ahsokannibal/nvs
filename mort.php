@@ -32,7 +32,7 @@ if(isset($_SESSION["id_perso"])){
 	$clan = $t_perso["clan"];
 	$est_gele = $t_perso["est_gele"];
 	$date_gele = $t_perso["DG"];
-	$_SESSION["nom_perso"] = $pseudo = $t_id["nom_perso"];
+	$_SESSION["nom_perso"] = $pseudo = $t_perso["nom_perso"];
 
 	$date = time();
 	
@@ -72,12 +72,16 @@ if(isset($_SESSION["id_perso"])){
 		else {
 			echo "<div class=\"infoi\" align=\"center\">Vous êtes mort !</div><br />";
 			echo "<center><img src=\"images/mort.gif\" alt='mort'/></center><br /><br />";
-			echo "Vous devez attendre votre prochain tour (";
+			echo "<center>Vous devez attendre votre prochain tour (";
 			echo get_date($dla);
-			echo ").";
-			echo "<br /><br /><div align=\"center\"><a href=\"forum2/index.php\">acceder au forum</a></div>";
-			echo "<br /><div align=\"center\"><a href=\"logout.php\">retour</a></div>";
+			echo ").</center>";		
+			echo "<br /><div align=\"center\"><a href=\"jeu/jouer.php\">retour page de jeu</a></div>";
+			
+			
+			
+			echo "<br /><div align=\"center\"><a href=\"logout.php\">logout</a></div>";
 		}
+	}
 }
 else{
 	echo "<font color=red>Vous ne pouvez pas acceder a cette page, veuillez vous logguer.</font>";

@@ -7,7 +7,6 @@ body
 	margin-top: 0px; /* Pour éviter de coller avec le haut de la fenêtre du navigateur. Essayez d'enlever pour voir ! */
 	margin-bottom: 0px;    /* Idem pour le bas du navigateur */
 	background-color: #EEEEEE; /*#200000*/ 
-	background-image:url('./images/texture_parchemin.gif');
 }
 
 #en_tete

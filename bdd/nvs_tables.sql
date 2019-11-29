@@ -89,6 +89,7 @@ CREATE TABLE `arme` (
   `degatMin_arme` int(11) NOT NULL DEFAULT '0',
   `degatMax_arme` int(11) NOT NULL DEFAULT '0',
   `valeur_des_arme` int(11) NOT NULL DEFAULT '0',
+  `precision_arme` int(11) NOT NULL DEFAULT '0',
   `degatZone_arme` enum('0','1') NOT NULL DEFAULT '0',
   `bonusPM_arme` int(11) NOT NULL DEFAULT '0',
   `poids_arme` decimal(10,1) NOT NULL DEFAULT '0.0',

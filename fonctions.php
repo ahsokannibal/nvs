@@ -9,7 +9,9 @@ function db_connexion() //CONNEXION A LA DB
 	$connexion = mysqli_connect("localhost","root","","nvs");
 	//$connexion = mysqli_connect("localhost","root","eptm","nvs");
 	
-	if (!$connexion) {echo "Désolé, connexion à la bdd impossible"; exit(); }
+	if (!$connexion) {
+		echo "DÃ©solÃ©, connexion Ã  la bdd impossible"; exit(); 
+	}
 	
 	return $connexion;
 }
@@ -140,12 +142,12 @@ function bbcode($text)
 }
 
 function get_date($timestamp) {
-	$monthes = array('', 'Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
-								'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre');
+	$monthes = array('', 'Janvier', 'FÃ©vrier', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet',
+								'AoÃ»t', 'Septembre', 'Octobre', 'Novembre', 'DÃ©cembre');
 	$days = array('Dimanche', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi');
 	$date_first = $days[date('w', $timestamp)];
 	$date_second = $monthes[date('n', $timestamp)];
-	echo $date_first.' '.date('d', $timestamp).' '.$date_second.' '.date('Y', $timestamp).' à '.date('H:i:s', $timestamp); 
+	echo $date_first.' '.date('d', $timestamp).' '.$date_second.' '.date('Y', $timestamp).' Ã  '.date('H:i:s', $timestamp); 
 }
   
 //**********************************//
@@ -197,7 +199,7 @@ function afficheResultat($resultat)
 {
 	if (mysql_num_rows($resultat) == 0) 
 	{
-		echo "<B><FONT color='black'>Aucun résultat trouvé</B></FONT>"; 
+		echo "<B><FONT color='black'>Aucun rÃ©sultat trouvÃ©</B></FONT>"; 
 		exit();
 	}
 	$cols = 4;
@@ -261,7 +263,7 @@ function pos_perso_rand_y (){ // position y
 	return $y;
 }
 
-//renvoie 1 si la case est occupée, 0 sinon
+//renvoie 1 si la case est occupÃ©e, 0 sinon
 function verif_pos_libre($mysqli, $x, $y){ 
 	$sql = "SELECT occupee_carte FROM carte WHERE x_carte='".$x."' AND y_carte='".$y."'";
 	$res = $mysqli->query($sql);
@@ -348,24 +350,24 @@ function affiche_jauge_inverse ($p, $p_max){
 }
 // autres
 
-// Fonction qui vérifie s'il reste des pv
+// Fonction qui vÃ©rifie s'il reste des pv
 function reste_pv($pv) {
 	return $pv <= 0;
 }
 
-// Fonction qui vérifie si il y a nouveau tour
+// Fonction qui vÃ©rifie si il y a nouveau tour
 function nouveau_tour($date, $dla) {
 	return $date >= $dla;
 } 
 
-// Fonction qui récupére la nouvelle DLA
+// Fonction qui rÃ©cupÃ©re la nouvelle DLA
 function get_new_dla($date, $dla) {
 	$ecart = $date - $dla;
 	$nb_tour = intval($ecart / DUREE_TOUR);
 	return $dla + $nb_tour * DUREE_TOUR;
 }
 
-// Fonction qui vérifie si le temps passé après l'activation du gel est essez grand pour accepter le degel
+// Fonction qui vÃ©rifie si le temps passÃ© aprÃ©s l'activation du gel est essez grand pour accepter le degel
 function temp_degele($date, $date_gele){
 	return $date - $date_gele >= 3*60*60*24; // 3 jours
 }
@@ -376,7 +378,7 @@ function temp_restant($date, $date_gele){
 	return $temp_gele_min - ($date - $date_gele); 
 }
 
-// Fonction qui récupére l'adresse IP de l'utilisateur
+// Fonction qui rÃ©cupÃ©re l'adresse IP de l'utilisateur
 function realip() {
    if (isSet($_SERVER)) {
     if (isSet($_SERVER["HTTP_X_FORWARDED_FOR"])) {
@@ -400,7 +402,7 @@ function realip() {
 }
 
 /**
-  * Fonction qui vérifie si un perso est admin
+  * Fonction qui vÃ©rifie si un perso est admin
   * @param $id_perso	: l'identifiant du perso
   * @return Bool		: Si oui ou non le perso est admin
   */
@@ -412,7 +414,7 @@ function admin_perso($mysqli, $id_perso){
 }
 
 /**
-  * Fonction qui retourne la configuration de disponibilité du jeu
+  * Fonction qui retourne la configuration de disponibilitÃ© du jeu
   * @return Bool	: Si oui ou non le jeu est disponible
   */
 function config_dispo_jeu($mysqli){
@@ -423,13 +425,13 @@ function config_dispo_jeu($mysqli){
 }
 
 /**
-  * Fonction qui envoi un mail au perso qui est gelé pour inactivité
+  * Fonction qui envoi un mail au perso qui est gelÃ© pour inactivitÃ©
   * @param $id_perso		: identifiant du perso inactif
   * @ return void
   */
 function mail_gele_zombie($id_perso){
 	
-	// Recupération du mail de la cible
+	// RecupÃ©ration du mail de la cible
 	$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE id_perso='$id_perso' AND id_joueur=idJoueur_perso";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
@@ -445,10 +447,10 @@ function mail_gele_zombie($id_perso){
 	$nom_perso = $t['nom_perso'];
 	
 	// Titre du mail
-	$titre = 'Géle de votre perso pour inactivité';
+	$titre = 'GÃ©le de votre perso pour inactivitÃ©';
 	
 	// Contenu du mail
-	$message = "Votre personnage $nom_perso a été placé en géle et retiré de la carte pour son inactivité. Si votre perso ne reprend pas d'activité d'ici 90 jours, il sera définitivement supprimé.";
+	$message = "Votre personnage $nom_perso a Ã©tÃ© placÃ© en gÃ©le et retirÃ© de la carte pour son inactivitÃ©. Si votre perso ne reprend pas d'activitÃ© d'ici 90 jours, il sera dÃ©finitivement supprimÃ©.";
 	
 	// Envoie du mail
 	mail($destinataire, $titre, $message, $headers);

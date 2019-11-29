@@ -110,7 +110,7 @@ if(config_dispo_jeu($mysqli)){
 							$IDJoueur_perso = $mysqli->insert_id;
 							
 							// insertion nouveau perso / Chef
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1, '$nom_bataillon')";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$protec_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1, '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -128,6 +128,14 @@ if(config_dispo_jeu($mysqli)){
 							// grade Chef = Caporal
 							$sql_i = "INSERT INTO perso_as_grade VALUES ('$id','2')";
 							$mysqli->query($sql_i);
+							
+							// Arme Cac : sabre
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id','1','1')";
+							$mysqli->query($sql);
+							
+							// Arme distance : pistolet 
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id','4','1')";
+							$mysqli->query($sql);
 						
 							// insertion du Chef sur la carte
 							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id', image_carte='$image_chef' WHERE x_carte=$x AND y_carte=$y";
@@ -147,7 +155,7 @@ if(config_dispo_jeu($mysqli)){
 							}
 							
 							// Insertion grouillot
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
+							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, type_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','3','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$protec_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -157,6 +165,22 @@ if(config_dispo_jeu($mysqli)){
 							// grade Grouillot = 2nd classe
 							$sql_i = "INSERT INTO perso_as_grade VALUES ('$id_g','1')";
 							$mysqli->query($sql_i);
+							
+							// Arme Cac : baillonette
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_g','6','1')";
+							$mysqli->query($sql);
+							
+							// Arme distance : fusil 
+							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_g','7','1')";
+							$mysqli->query($sql);
+							
+							// Insertion competence construction barricades
+							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','33','1')";
+							$mysqli->query($sql_c);
+							
+							// Insertion competence marche forcée
+							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','6','1')";
+							$mysqli->query($sql_c);
 							
 							// insertion du Grouillot sur la carte
 							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id_g', image_carte='$image_g' WHERE x_carte=$x_g AND y_carte=$y_g";

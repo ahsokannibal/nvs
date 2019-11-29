@@ -138,10 +138,11 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 					$gain_xp = max(2, $niveau_bat/2);
 				}
 				
-				$autorisation_construction = '0';
+				$autorisation_construction = false;
 				
 				// verif distance de construction pour entrepot/hopital/fortin
 				if($id_bat == 6 || $id_bat == 7 || $id_bat == 8){
+					
 					//calcul distance possible
 					$distance_max = calcul_distance_construction($niveau_bat);
 					
@@ -149,11 +150,11 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 					$distance = calcul_nb_cases($x_fort, $y_fort, $x_bat, $y_bat);
 					
 					if($distance_max > $distance){
-						$autorisation_construction = '1';
+						$autorisation_construction = true;
 					}
 				}
 				else {
-					$autorisation_construction = '1';
+					$autorisation_construction = true;
 				}
 				
 				if($autorisation_construction){
@@ -193,6 +194,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 						$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
 						$mysqli->query($sql);
 					}
+					
 					// recuperation des infos du perso
 					$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
 					$res = $mysqli->query($sql);
@@ -288,7 +290,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 		if($pv_instance_bat < $pv_max_bat){
 		
 			// calcul gain xp
-			$gain_xp = rand(2,6);
+			$gain_xp = rand(2,5);
 			
 			if($camp_bat != $camp_perso){
 				$gain_xp = floor($gain_xp / 2);
@@ -1081,12 +1083,12 @@ function action_dormir($mysqli, $id_perso, $nb_points_action){
   * @param $coutPa_action	: Le cout en Pa de l'action
   * @return	Void
   */
-function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_action){
+function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_action){
 	
 	// recuperation des infos du perso
 	$sql = "SELECT nom_perso, clan, pv_perso, x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
-	$t_p = $res->fetch_assoc($res);
+	$t_p = $res->fetch_assoc();
 	
 	$nom_perso = $t_p["nom_perso"];
 	$pv_perso = $t_p["pv_perso"];
@@ -1098,7 +1100,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 
-	$cout_pv = 10 - (2 * $nb_points_action);
+	$cout_pv = 10 - (2 * ($nb_points_action - 1));
 	
 	// test pa
 	if($pa_perso >= $coutPa_action){
@@ -1118,13 +1120,17 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action,$coutPa_actio
 			//mise a jour de la table evenement
 			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est tué en effectuant une marche forcée... ',NULL,'',' : Bravo !',NOW(),'0')";
 			$mysqli->query($sql);
+			
+			echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
+			echo "<center>Vous êtes Mort !</center><br />";
+			echo "<center><a href='jouer.php'>[retour]</a></center>";
 		}
 		else {	
 			//mise a jour de la table evenement
 			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a effectué une marche forcée ',NULL,'',' : +1 PM',NOW(),'0')";
 			$mysqli->query($sql);
 		
-			echo "<center>Vous gagnez 1 PM contre 3PA et $cout_pv PV</center><br />";
+			echo "<center>Vous vous êtes dépassé et gagnez 1PM ! ($cout_pv PV perdu)</center><br />";
 			echo "<a href='jouer.php'>[ retour ]</a>";
 		}
 	}
