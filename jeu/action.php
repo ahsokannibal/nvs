@@ -60,8 +60,135 @@ if($dispo){
 		if(isset($_POST['hid_action_charge'])){
 			
 			$direction_charge = $_POST['hid_action_charge'];
-		
-			// TODO
+			
+			// Recup infos perso
+			$sql = "SELECT x_perso, y_perso, nom_perso, pv_perso, clan FROM perso WHERE id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_perso = $res->fetch_assoc();
+			
+			$nom_perso 	= $t_perso['nom_perso'];
+			$x_perso 	= $t_perso['x_perso'];
+			$y_perso 	= $t_perso['y_perso'];
+			$pv_perso	= $t_perso['pv_perso'];
+			$clan		= $t_perso['clan'];
+			
+			if ($clan == 1) {
+				$couleur_clan_perso = 'blue';
+			} else if ($clan == 2) {
+				$couleur_clan_perso = 'red';
+			}
+			
+			// Déplacement du perso dans l'axe choisi
+			if ($direction_charge == 'haut') {
+				
+				// y + 1
+				
+				for ($i = 1; $i <= 5; $i++) {
+					
+					$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, idPerso_carte FROM $carte WHERE x_carte = $x_perso AND y_carte = $y_perso + $i";
+					$res = $mysqli->query($sql);
+					$t_charge = $res->fetch_assoc();
+					
+					$x_carte 		= $t_charge['x_carte'];
+					$y_carte		= $t_charge['y_carte'];
+					$fond_carte 	= $t_charge['fond_carte'];
+					$occupee_carte	= $t_charge['occupee_carte'];
+					$idPerso_carte	= $t_charge['idPerso_carte'];
+					
+					if ($occupee_carte || $fond_carte != '1.gif') {
+						// Charge terminée
+						
+						if ($i <= 3) {
+							
+							// TODO 
+							// Mise à jour position perso
+							
+							// Charge incomplete => pas d'attaques
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' n\'a pas pu terminer sa charge ',NULL,'','',NOW(),'0')";
+							$mysqli->query($sql);
+							
+						} else {
+							// Charge complète => attaque si cible sur plaine
+							if ($fond_carte != '1.gif') {
+								
+								// TODO 
+								// Mise à jour position perso
+								
+								// cible pas sur plaine => charge ratée
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté sa charge, le terrain étant impraticable! ',NULL,'','',NOW(),'0')";
+								$mysqli->query($sql);
+								
+							} else if ($idPerso_carte >= 50000) {
+								
+								// TODO 
+								// Mise à jour position perso
+								
+								// Batiment
+								// Le perso perd 40PV et pas de degats sur le bat
+								$sql = "UPDATE perso SET pv_perso = pv_perso - 40 WHERE id_perso = $id_perso";
+								$mysqli->query($sql);
+								
+								if ($pv_perso <= 40) {
+									// Perso rapatrié - TODO
+									
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est écrasé contre un batiment suite a sa charge et a perdu connaissance ! ',NULL,'','',NOW(),'0')";
+									$mysqli->query($sql);
+									
+								} else {
+								
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est écrasé contre un batiment suite a sa charge ! ',NULL,'','',NOW(),'0')";
+									$mysqli->query($sql);
+									
+								}
+								
+							} else {
+								// Charge compléte et réussi 
+								// On utilise tous les PA dispo pour faire les attaques
+								// +30 degats première attaque, +20 seconde, etc...
+								
+								// TODO 
+								// Mise à jour position perso
+								
+							}
+						}
+					}
+				}
+			}
+			
+			if ($direction_charge == 'haut_gauche') {
+				
+				// x - 1 et y + 1
+			}
+			
+			if ($direction_charge == 'gauche') {
+				
+				// x - 1
+			}
+			
+			if ($direction_charge == 'bas_gauche') {
+				
+				// x - 1 et y - 1
+			}
+			
+			if ($direction_charge == 'bas') {
+				
+				// y - 1
+			}
+			
+			if ($direction_charge == 'bas_droite') {
+				
+				// x + 1 et y - 1
+			}
+			
+			if ($direction_charge == 'droite') {
+				
+				// x + 1
+			}
+			
+			if ($direction_charge == 'haut_droite') {
+				
+				// x + 1 et y + 1
+			}
 		}
 	}
 	
@@ -546,7 +673,7 @@ if($dispo){
 					echo "<center><h1>Charger !</h1></center>";
 					
 					//recuperation des coordonnees du perso
-					$sql = "SELECT x_perso, y_perso, perception_perso, clan FROM perso WHERE id_perso='$id_perso'";
+					$sql = "SELECT x_perso, y_perso, perception_perso, pa_perso, paMax_perso, pm_perso, clan FROM perso WHERE id_perso='$id_perso'";
 					$res = $mysqli->query($sql);
 					$t_coord = $res->fetch_assoc();
 						
@@ -554,116 +681,134 @@ if($dispo){
 					$y_perso 			= $t_coord['y_perso'];
 					$perception_perso 	= $t_coord['perception_perso'];
 					$clan_perso 		= $t_coord['clan'];
-						
-					// recuperation des donnees de la carte
-					$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perception_perso AND x_carte <= $x_perso + $perception_perso AND y_carte <= $y_perso + $perception_perso AND y_carte >= $y_perso - $perception_perso ORDER BY y_carte DESC, x_carte";
+					$pa_perso 			= $t_coord['pa_perso'];
+					$paMax_perso		= $t_coord['paMax_perso'];
+					$pm_perso			= $t_coord['pm_perso'];
+					
+					// Récupération du type de terrain sur lequel se trouve le perso
+					$sql = "SELECT fond_carte FROM $carte WHERE x_carte = $x_perso AND y_carte = $y_perso";
 					$res = $mysqli->query($sql);
-					$tab = $res->fetch_assoc(); 
+					$tab = $res->fetch_assoc();
+					
+					$fond_carte_perso = $tab['fond_carte'];
+					
+					// Pour pouvoir charger, il faut avoir tout ses PA, 40 PM et être sur de la plaine
+					if ($pa_perso == $paMax_perso && $pm_perso >= 40 && $fond_carte_perso == '1.gif') {
 						
-					//<!--Generation de la carte-->
-					echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
-						
-					echo "<tr><td>y \ x</td>";  //affichage des abscisses
-					for ($i = $x_perso - $perception_perso; $i <= $x_perso + $perception_perso; $i++) {
-						echo "<th width=40 height=40>$i</th>";
-					}
-					echo "</tr>";
-						
-					for ($y = $y_perso + $perception_perso; $y >= $y_perso - $perception_perso; $y--) {
-						
-						echo "<th>$y</th>";
-						
-						for ($x = $x_perso - $perception_perso; $x <= $x_perso + $perception_perso; $x++) {
+						// recuperation des donnees de la carte
+						$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perception_perso AND x_carte <= $x_perso + $perception_perso AND y_carte <= $y_perso + $perception_perso AND y_carte >= $y_perso - $perception_perso ORDER BY y_carte DESC, x_carte";
+						$res = $mysqli->query($sql);
+						$tab = $res->fetch_assoc(); 
 							
-							//les coordonnees sont dans les limites
-							if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
-								
-								if ($tab["occupee_carte"]){
-									
-									$image_perso = $tab["image_carte"];
-									$id_perso_carte = $tab["idPerso_carte"];
-										
-									if(isset($id_perso_carte)){
-										echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../images_perso/".$image_perso."\" width=40 height=40></td>";
-									}
-									else {
-										echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-									}
-								}
-								else{
-									
-									// autour du perso
-									if ($x >= $x_perso - 1 && $x <= $x_perso + 1 && $y >= $y_perso - 1 && $y <= $y_perso + 1) {
-										
-										echo "<form method='POST' action='action.php'>";
-										
-										if ($x == $x_perso - 1 && $y == $y_perso - 1) {
-										
-											// fleche bas gauche
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"bas_gauche\" border=0 src=\"../fond_carte/fleche6.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"bas_gauche\" ></td>";
-										
-										} else if ($x == $x_perso - 1 && $y == $y_perso) {
-											
-											// fleche gauche
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"gauche\" border=0 src=\"../fond_carte/fleche4.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"gauche\" ></td>";
-											
-										} else if ($x == $x_perso - 1 && $y == $y_perso + 1) {
-											
-											// fleche haut gauche
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"haut_gauche\" border=0 src=\"../fond_carte/fleche1.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"haut_gauche\" ></td>";
-											
-										} else if ($x == $x_perso && $y == $y_perso - 1) {
-											
-											// fleche bas
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"bas\" border=0 src=\"../fond_carte/fleche7.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"bas\" ></td>";
-											
-										} else if ($x == $x_perso && $y == $y_perso + 1) {
-											
-											// fleche haut
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"haut\" border=0 src=\"../fond_carte/fleche2.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"haut\" ></td>";
-											
-										} else if ($x == $x_perso + 1 && $y == $y_perso + 1) {
-											
-											// fleche haut droite
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"haut_droite\" border=0 src=\"../fond_carte/fleche3.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"haut_droite\" ></td>";
-											
-										} else if ($x == $x_perso + 1 && $y == $y_perso) {
-											
-											// fleche droite
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"droite\" border=0 src=\"../fond_carte/fleche5.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"droite\" ></td>";
-											
-										} else if ($x == $x_perso + 1 && $y == $y_perso - 1) {
-											
-											// fleche bas droite
-											echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"bas_droite\" border=0 src=\"../fond_carte/fleche8.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"bas_droite\" ></td>";
-											
-										}
-										
-										echo "</form>";
-										
-									} else {
-									
-										//positionnement du fond
-										$fond_carte = $tab["fond_carte"];
-											
-										echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
-									}
-								}
-								$tab = $res->fetch_assoc();
-							}
-							else {
-								//les coordonnees sont hors limites
-								echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
-							}
+						//<!--Generation de la carte-->
+						echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
+							
+						echo "<tr><td>y \ x</td>";  //affichage des abscisses
+						for ($i = $x_perso - $perception_perso; $i <= $x_perso + $perception_perso; $i++) {
+							echo "<th width=40 height=40>$i</th>";
 						}
 						echo "</tr>";
-					}
-					echo "</table>";
-					// fin de la generation de la carte
+							
+						for ($y = $y_perso + $perception_perso; $y >= $y_perso - $perception_perso; $y--) {
+							
+							echo "<th>$y</th>";
+							
+							for ($x = $x_perso - $perception_perso; $x <= $x_perso + $perception_perso; $x++) {
+								
+								//les coordonnees sont dans les limites
+								if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+									
+									if ($tab["occupee_carte"]){
+										
+										$image_perso = $tab["image_carte"];
+										$id_perso_carte = $tab["idPerso_carte"];
+											
+										if(isset($id_perso_carte)){
+											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../images_perso/".$image_perso."\" width=40 height=40></td>";
+										}
+										else {
+											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+										}
+									}
+									else{
+										
+										// autour du perso
+										if ($x >= $x_perso - 1 && $x <= $x_perso + 1 && $y >= $y_perso - 1 && $y <= $y_perso + 1) {
+											
+											echo "<form method='POST' action='action.php'>";
+											
+											if ($x == $x_perso - 1 && $y == $y_perso - 1) {
+											
+												// fleche bas gauche
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"bas_gauche\" border=0 src=\"../fond_carte/fleche6.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"bas_gauche\" ></td>";
+											
+											} else if ($x == $x_perso - 1 && $y == $y_perso) {
+												
+												// fleche gauche
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"gauche\" border=0 src=\"../fond_carte/fleche4.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"gauche\" ></td>";
+												
+											} else if ($x == $x_perso - 1 && $y == $y_perso + 1) {
+												
+												// fleche haut gauche
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"haut_gauche\" border=0 src=\"../fond_carte/fleche1.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"haut_gauche\" ></td>";
+												
+											} else if ($x == $x_perso && $y == $y_perso - 1) {
+												
+												// fleche bas
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"bas\" border=0 src=\"../fond_carte/fleche7.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"bas\" ></td>";
+												
+											} else if ($x == $x_perso && $y == $y_perso + 1) {
+												
+												// fleche haut
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"haut\" border=0 src=\"../fond_carte/fleche2.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"haut\" ></td>";
+												
+											} else if ($x == $x_perso + 1 && $y == $y_perso + 1) {
+												
+												// fleche haut droite
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"haut_droite\" border=0 src=\"../fond_carte/fleche3.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"haut_droite\" ></td>";
+												
+											} else if ($x == $x_perso + 1 && $y == $y_perso) {
+												
+												// fleche droite
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"droite\" border=0 src=\"../fond_carte/fleche5.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"droite\" ></td>";
+												
+											} else if ($x == $x_perso + 1 && $y == $y_perso - 1) {
+												
+												// fleche bas droite
+												echo "<td width=40 height=40> <input type=\"image\" name=\"action_charge\" value=\"bas_droite\" border=0 src=\"../fond_carte/fleche8.png\" width=40 height=40><input type=\"hidden\" name=\"hid_action_charge\" value=\"bas_droite\" ></td>";
+												
+											}
+											
+											echo "</form>";
+											
+										} else {
+										
+											//positionnement du fond
+											$fond_carte = $tab["fond_carte"];
+												
+											echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
+										}
+									}
+									$tab = $res->fetch_assoc();
+								}
+								else {
+									//les coordonnees sont hors limites
+									echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
+								}
+							}
+							echo "</tr>";
+						}
+						echo "</table>";
+						// fin de la generation de la carte
+							
+						// lien annuler
+						echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
+					} else {
 						
-					// lien annuler
-					echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
-					
+						// Besoin de 40PM, de tout ses PA et être sur de la plaine pour pouvoir charger
+						echo "<br /><center>Vous avez besoin de tous vos PA, de 40PM et d'être sur de la plaine afin de pouvoir charger !</center>";
+						echo "<br /><br /><center><a href='jouer.php'><b>[ retour ]</b></a></center>";
+					}
 				} else {
 			
 					// recuperation des effet et du type d'action
