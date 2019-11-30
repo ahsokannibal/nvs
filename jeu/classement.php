@@ -292,13 +292,26 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
 	
 	// bleus
-	$sql = "SELECT max(niveau_perso) as niveau_max, max(xp_perso) as xp_max, max(pvMax_perso) as pv_max, max(deAttaque_perso+deDefense_perso) as des_max, max(pmMax_perso) as pm_max, max(perception_perso) as perception_max, max(recup_perso) as recup_max, max(paMax_perso) as pa_max, max(nb_kill) as kill_max, max(nb_pnj) as pnj_max FROM perso WHERE id_perso!='15' AND id_perso!='1' AND id_perso!='424' AND clan='1'";
+	$sql = "SELECT 	max(id_grade) as id_grade_max, 
+					max(xp_perso) as xp_max, 
+					max(pvMax_perso) as pv_max, 
+					max(pmMax_perso) as pm_max, 
+					max(perception_perso) as perception_max, 
+					max(recup_perso) as recup_max, 
+					max(paMax_perso) as pa_max, 
+					max(nb_kill) as kill_max, 
+					max(nb_pnj) as pnj_max 
+			FROM perso, perso_as_grade
+			WHERE perso.id_perso!='1' 
+			AND perso_as_grade.id_perso = perso.id_perso 
+			AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
+			AND clan='1'";
 	$res = $mysqli->query($sql);
 	$t_b = $res->fetch_assoc();
-	$niveau_max_b = $t_b['niveau_max'];
+	
+	$id_grade_max_b = $t_b['id_grade_max'];
 	$xp_max_b = $t_b['xp_max'];
 	$pv_max_b = $t_b['pv_max'];
-	$des_max_b = $t_b['des_max'];
 	$pm_max_b = $t_b['pm_max'];
 	$perception_max_b = $t_b['perception_max'];
 	$recup_max_b = $t_b['recup_max'];
@@ -306,14 +319,33 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	$kill_max_b = $t_b['kill_max'];
 	$pnj_max_b = $t_b['pnj_max'];
 	
+	$sql = "SELECT nom_grade FROM grades WHERE id_grade = '$id_grade_max_b'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$nom_grade_b = $t['nom_grade'];
+	
 	// rouges
-	$sql = "SELECT max(niveau_perso) as niveau_max, max(xp_perso) as xp_max, max(pvMax_perso) as pv_max, max(deAttaque_perso+deDefense_perso) as des_max, max(pmMax_perso) as pm_max, max(perception_perso) as perception_max, max(recup_perso) as recup_max, max(paMax_perso) as pa_max, max(nb_kill) as kill_max, max(nb_pnj) as pnj_max FROM perso WHERE id_perso!='16' AND id_perso!='425' AND clan='2'";
+	$sql = "SELECT 	max(id_grade) as id_grade_max, 
+					max(xp_perso) as xp_max, 
+					max(pvMax_perso) as pv_max, 
+					max(pmMax_perso) as pm_max, 
+					max(perception_perso) as perception_max, 
+					max(recup_perso) as recup_max, 
+					max(paMax_perso) as pa_max, 
+					max(nb_kill) as kill_max, 
+					max(nb_pnj) as pnj_max 
+			FROM perso, perso_as_grade
+			WHERE perso.id_perso!='2' 
+			AND perso_as_grade.id_perso = perso.id_perso 
+			AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
+			AND clan='2'";
 	$res = $mysqli->query($sql);
 	$t_r = $res->fetch_assoc();
-	$niveau_max_r = $t_r['niveau_max'];
+	
+	$id_grade_max_r = $t_r['id_grade_max'];
 	$xp_max_r = $t_r['xp_max'];
 	$pv_max_r = $t_r['pv_max'];
-	$des_max_r = $t_r['des_max'];
 	$pm_max_r = $t_r['pm_max'];
 	$perception_max_r = $t_r['perception_max'];
 	$recup_max_r = $t_r['recup_max'];
@@ -321,10 +353,16 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	$kill_max_r = $t_r['kill_max'];
 	$pnj_max_r = $t_r['pnj_max'];
 	
+	$sql = "SELECT nom_grade FROM grades WHERE id_grade = '$id_grade_max_r'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$nom_grade_r = $t['nom_grade'];
+	
 	echo "<table align='center' border='1'>";
-	echo "<tr><th>Nom</th><th>niveau</th><th>Xp</th><th>Pv</th><th>Pm</th><th>Des</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Nombre de kills</th><th>Nombre de pnj tués</th></tr>";
-	echo "<tr><td align='center'><font color='blue'>SuperBleu</font></td><td align='center'>$niveau_max_b</td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$des_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
-	echo "<tr><td align='center'><font color='red'>SuperRouge</font></td><td align='center'>$niveau_max_r</td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$des_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
+	echo "<tr><th>Nom</th><th>id grade max</th><th>Xp</th><th>Pv</th><th>Pm</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Nombre de kills</th><th>Nombre de pnj tués</th></tr>";
+	echo "<tr><td align='center'><font color='blue'>SuperBleu</font></td><td align='center'>$nom_grade_b <img src=\"../images/grades/" . $id_grade_max_b . ".gif\" /></td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
+	echo "<tr><td align='center'><font color='red'>SuperRouge</font></td><td align='center'>$nom_grade_r <img src=\"../images/grades/" . $id_grade_max_r . ".gif\" /></td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
 	echo "</table>";
 }
 
