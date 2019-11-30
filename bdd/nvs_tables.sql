@@ -328,7 +328,8 @@ CREATE TABLE `instance_pnj` (
   `deplace_i` enum('0','1') NOT NULL DEFAULT '0',
   `dernierAttaquant_i` int(11) NOT NULL DEFAULT '0',
   `x_i` int(11) DEFAULT '0',
-  `y_i` int(11) DEFAULT '0'
+  `y_i` int(11) DEFAULT '0',
+  `bonus_i` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1011,7 +1012,7 @@ ALTER TABLE `instance_batiment`
 -- AUTO_INCREMENT pour la table `instance_pnj`
 --
 ALTER TABLE `instance_pnj`
-  MODIFY `idInstance_pnj` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `idInstance_pnj` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=200000;
 --
 -- AUTO_INCREMENT pour la table `joueur`
 --

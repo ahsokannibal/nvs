@@ -54,6 +54,7 @@ if($dispo){
 		$direction_charge = $_POST['action_charge'];
 		
 		// TODO
+		echo "TEST";
 		
 	} else {
 		
@@ -62,133 +63,57 @@ if($dispo){
 			$direction_charge = $_POST['hid_action_charge'];
 			
 			// Recup infos perso
-			$sql = "SELECT x_perso, y_perso, nom_perso, pv_perso, clan FROM perso WHERE id_perso='$id_perso'";
+			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pv_perso, xp_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+					WHERE perso_as_grade.id_perso = perso.id_perso
+					AND perso.id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
 			$t_perso = $res->fetch_assoc();
 			
-			$nom_perso 	= $t_perso['nom_perso'];
-			$x_perso 	= $t_perso['x_perso'];
-			$y_perso 	= $t_perso['y_perso'];
-			$pv_perso	= $t_perso['pv_perso'];
-			$clan		= $t_perso['clan'];
-			
-			if ($clan == 1) {
-				$couleur_clan_perso = 'blue';
-			} else if ($clan == 2) {
-				$couleur_clan_perso = 'red';
-			}
+			$nom_perso 		= $t_perso['nom_perso'];
+			$x_perso 		= $t_perso['x_perso'];
+			$y_perso 		= $t_perso['y_perso'];
+			$pa_perso 		= $t_perso['pa_perso'];
+			$pv_perso		= $t_perso['pv_perso'];
+			$xp_perso		= $t_perso['xp_perso'];
+			$clan			= $t_perso['clan'];
+			$image_perso	= $t_perso["image_perso"];
+			$grade_perso	= $t_perso["id_grade"];
 			
 			// Déplacement du perso dans l'axe choisi
 			if ($direction_charge == 'haut') {
-				
-				// y + 1
-				
-				for ($i = 1; $i <= 5; $i++) {
-					
-					$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, idPerso_carte FROM $carte WHERE x_carte = $x_perso AND y_carte = $y_perso + $i";
-					$res = $mysqli->query($sql);
-					$t_charge = $res->fetch_assoc();
-					
-					$x_carte 		= $t_charge['x_carte'];
-					$y_carte		= $t_charge['y_carte'];
-					$fond_carte 	= $t_charge['fond_carte'];
-					$occupee_carte	= $t_charge['occupee_carte'];
-					$idPerso_carte	= $t_charge['idPerso_carte'];
-					
-					if ($occupee_carte || $fond_carte != '1.gif') {
-						// Charge terminée
-						
-						if ($i <= 3) {
-							
-							// TODO 
-							// Mise à jour position perso
-							
-							// Charge incomplete => pas d'attaques
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' n\'a pas pu terminer sa charge ',NULL,'','',NOW(),'0')";
-							$mysqli->query($sql);
-							
-						} else {
-							// Charge complète => attaque si cible sur plaine
-							if ($fond_carte != '1.gif') {
-								
-								// TODO 
-								// Mise à jour position perso
-								
-								// cible pas sur plaine => charge ratée
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté sa charge, le terrain étant impraticable! ',NULL,'','',NOW(),'0')";
-								$mysqli->query($sql);
-								
-							} else if ($idPerso_carte >= 50000) {
-								
-								// TODO 
-								// Mise à jour position perso
-								
-								// Batiment
-								// Le perso perd 40PV et pas de degats sur le bat
-								$sql = "UPDATE perso SET pv_perso = pv_perso - 40 WHERE id_perso = $id_perso";
-								$mysqli->query($sql);
-								
-								if ($pv_perso <= 40) {
-									// Perso rapatrié - TODO
-									
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est écrasé contre un batiment suite a sa charge et a perdu connaissance ! ',NULL,'','',NOW(),'0')";
-									$mysqli->query($sql);
-									
-								} else {
-								
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' s\'est écrasé contre un batiment suite a sa charge ! ',NULL,'','',NOW(),'0')";
-									$mysqli->query($sql);
-									
-								}
-								
-							} else {
-								// Charge compléte et réussi 
-								// On utilise tous les PA dispo pour faire les attaques
-								// +30 degats première attaque, +20 seconde, etc...
-								
-								// TODO 
-								// Mise à jour position perso
-								
-							}
-						}
-					}
-				}
+				charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
 			
 			if ($direction_charge == 'haut_gauche') {
-				
-				// x - 1 et y + 1
+				charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
 			
 			if ($direction_charge == 'gauche') {
-				
-				// x - 1
+				charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
 			
 			if ($direction_charge == 'bas_gauche') {
-				
-				// x - 1 et y - 1
+				charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
 			
 			if ($direction_charge == 'bas') {
-				
-				// y - 1
+				charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
 			
 			if ($direction_charge == 'bas_droite') {
-				
-				// x + 1 et y - 1
+				charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
 			
 			if ($direction_charge == 'droite') {
-				
-				// x + 1
+				charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
 			
 			if ($direction_charge == 'haut_droite') {
-				
-				// x + 1 et y + 1
+				charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 			}
+			
+			// retour a la page de jeu
+			header("location:jouer.php");
 		}
 	}
 	
@@ -693,7 +618,7 @@ if($dispo){
 					$fond_carte_perso = $tab['fond_carte'];
 					
 					// Pour pouvoir charger, il faut avoir tout ses PA, 40 PM et être sur de la plaine
-					if ($pa_perso == $paMax_perso && $pm_perso >= 40 && $fond_carte_perso == '1.gif') {
+					if ($pa_perso == $paMax_perso && $pm_perso >= 4 && $fond_carte_perso == '1.gif') {
 						
 						// recuperation des donnees de la carte
 						$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perception_perso AND x_carte <= $x_perso + $perception_perso AND y_carte <= $y_perso + $perception_perso AND y_carte >= $y_perso - $perception_perso ORDER BY y_carte DESC, x_carte";
@@ -806,7 +731,7 @@ if($dispo){
 					} else {
 						
 						// Besoin de 40PM, de tout ses PA et être sur de la plaine pour pouvoir charger
-						echo "<br /><center>Vous avez besoin de tous vos PA, de 40PM et d'être sur de la plaine afin de pouvoir charger !</center>";
+						echo "<br /><center>Vous avez besoin de tous vos PA, de 4PM et d'être sur de la plaine afin de pouvoir charger !</center>";
 						echo "<br /><br /><center><a href='jouer.php'><b>[ retour ]</b></a></center>";
 					}
 				} else {

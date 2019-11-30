@@ -134,7 +134,7 @@ if(isset($id)){
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 10000) {
 				$count++;
-				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
+				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a capturé ";
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 			}
 		}
@@ -152,7 +152,7 @@ if(isset($id)){
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDCible_cv'] == $id) {
 				$count++;
-				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>] a été tué par ";
+				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>] a été capturé par ";
 				echo $t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>]</td>";
 			}
 		}

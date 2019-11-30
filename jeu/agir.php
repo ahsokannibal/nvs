@@ -408,7 +408,7 @@ if($verif){
 								$mysqli->query($sql);
 								
 								// maj cv
-								$sql = "INSERT INTO `cv` VALUES ('',$id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
+								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 			
 								// maj stats de la cible
@@ -1097,7 +1097,7 @@ if($verif){
 							$mysqli->query($sql);
 							
 							// maj cv
-							$sql = "INSERT INTO `cv` VALUES ('',$id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','$nom_cible',NOW())"; //mise a jour de la table cv
+							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','$nom_cible',NOW())"; //mise a jour de la table cv
 							$mysqli->query($sql);
 							
 							echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
@@ -1430,7 +1430,7 @@ if($verif){
 								$mysqli->query($sql);
 									
 								// maj cv
-								$sql = "INSERT INTO `cv` VALUES ('',$id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_p','<font color=$couleur_clan_p>$nom_p</font>',NOW())"; 
+								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_p','<font color=$couleur_clan_p>$nom_p</font>',NOW())"; 
 								$mysqli->query($sql);
 								
 							}
@@ -1460,7 +1460,7 @@ if($verif){
 						$mysqli->query($sql);
 							
 						// maj cv
-						$sql = "INSERT INTO `cv` VALUES ('',$id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',NOW())"; 
+						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',NOW())"; 
 						$mysqli->query($sql);
 							
 						echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
