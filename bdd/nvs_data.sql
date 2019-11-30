@@ -320,6 +320,14 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 -- --------------------------------------------------------
 
 --
+-- Contenu de la table `stats_camp_kill`
+--
+
+INSERT INTO `stats_camp_kill` (`id_camp`, `nb_kill`) VALUES ('1', '0'), ('2', '0');
+
+-- --------------------------------------------------------
+
+--
 -- Contenu de la table `type_unite`
 --
 
