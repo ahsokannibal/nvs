@@ -374,7 +374,10 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
 	
 	// recuperation des valeurs en excluant les persos pnj
-	$sql = "SELECT id_perso, nom_perso, xp_perso, niveau_perso, clan FROM perso ORDER BY xp_perso DESC";
+	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade FROM perso, perso_as_grade, grades 
+			WHERE perso.id_perso = perso_as_grade.id_perso 
+			AND perso_as_grade.id_grade = grades.id_grade
+			ORDER BY xp_perso DESC";
 	$res = $mysqli->query($sql);
 	echo "<table align=center width='500' border=1> <tr><th><font color=darkred>position</font></th><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>xp</font></th><th><font color=darkred>niveau</font></th></tr>";
 	$cc = 0;
@@ -393,7 +396,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 		echo "<tr><td width=10>$cc</td>";
 		echo "<td align=center><font color=$couleur_camp>".$t2['nom_perso']."</font>[<a href=\"evenement.php?infoid=".$t2['id_perso']."\">" .$t2['id_perso']. "</a>]</td>";
 		echo "<td align=center>".$t2['xp_perso']."</td>";
-		echo "<td align=center>".$t2['niveau_perso']."</td></tr>";
+		echo "<td align=center>".$t2['nom_grade']."</td></tr>";
 	}
 	
 	echo "</table>";

@@ -3168,8 +3168,12 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
@@ -3505,8 +3509,12 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
@@ -3842,8 +3850,12 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
@@ -4179,8 +4191,12 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
@@ -4516,8 +4532,12 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
@@ -4853,8 +4873,12 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
@@ -5190,8 +5214,12 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
@@ -5527,8 +5555,12 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats de la cible
+								// maj stats du perso
 								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+								$mysqli->query($sql);
+								
+								// maj stats de la cible
+								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 								$mysqli->query($sql);
 								
 								// maj stats camp
