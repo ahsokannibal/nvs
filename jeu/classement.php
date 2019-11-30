@@ -254,7 +254,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
 
-	echo "<table align=center width='500' border=1> <tr><th><font color=darkred>Camp[id]</font></th><th><font color=darkred>Nombre de kills ennemis</font></th><th><font color=darkred>Nombre de meutres</font></th><th><font color=darkred>Nombre de persos</font></th></tr>";
+	echo "<table align=center width='500' border=1> <tr><th><font color=darkred>Camp[id]</font></th><th><font color=darkred>Nombre de captures ennemis</font></th><th><font color=darkred>Nombre de captures alliés</font></th><th><font color=darkred>Nombre de persos</font></th></tr>";
 
 	while ($tc_kill = $res->fetch_assoc()){
 		$id_camp = $tc_kill["id_camp"];
@@ -360,9 +360,9 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	$nom_grade_r = $t['nom_grade'];
 	
 	echo "<table align='center' border='1'>";
-	echo "<tr><th>Nom</th><th>id grade max</th><th>Xp</th><th>Pv</th><th>Pm</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Nombre de kills</th><th>Nombre de pnj tués</th></tr>";
-	echo "<tr><td align='center'><font color='blue'>SuperBleu</font></td><td align='center'>$nom_grade_b <img src=\"../images/grades/" . $id_grade_max_b . ".gif\" /></td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
-	echo "<tr><td align='center'><font color='red'>SuperRouge</font></td><td align='center'>$nom_grade_r <img src=\"../images/grades/" . $id_grade_max_r . ".gif\" /></td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
+	echo "<tr><th>Nom</th><th>grade max</th><th>Xp</th><th>Pv</th><th>Pm</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Nombre de kills</th><th>Nombre de pnj tués</th></tr>";
+	echo "<tr><td align='center'><font color='blue'>Super Unioniste</font></td><td align='center'>$nom_grade_b <img src=\"../images/grades/" . $id_grade_max_b . ".gif\" /></td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
+	echo "<tr><td align='center'><font color='red'>Super Confédéré</font></td><td align='center'>$nom_grade_r <img src=\"../images/grades/" . $id_grade_max_r . ".gif\" /></td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
 	echo "</table>";
 }
 
