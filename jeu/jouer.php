@@ -100,6 +100,7 @@ if($dispo || !$admin){
 					</head>
 
 					<body>
+					
 				<?php
 				
 				// recuperation des anciennes données du perso
