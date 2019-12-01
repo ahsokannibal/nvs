@@ -640,6 +640,7 @@ CREATE TABLE `pnj` (
   `degatMax_pnj` int(11) NOT NULL DEFAULT '0',
   `pm_pnj` int(11) NOT NULL DEFAULT '0',
   `recup_pnj` int(11) NOT NULL DEFAULT '0',
+  `protec_pnj` int(11) NOT NULL DEFAULT '0',
   `perception_pnj` int(11) NOT NULL DEFAULT '0',
   `aggressivite_pnj` int(11) NOT NULL DEFAULT '0',
   `de_pnj` int(11) NOT NULL DEFAULT '0',

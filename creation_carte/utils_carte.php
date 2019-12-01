@@ -208,34 +208,51 @@ for ($p = 1; $p <= max($X_MAXD, $Y_MAXD); $p++)
         <img src="../fond_carte/9.gif" width="34" height="34"><br>Eau_profonde</td>
     </tr>
 	<tr>
-      <td width="5%"><b><font color="#660000">pnj et autre :</font></b></td>
-      <td> 
-        <input type="radio" name="pnj" value="1" id="sangsue">
-        <img src="../images/pnj/Sangsue.png" width="34" height="34"><br>Sangsue</td>
-      <td>
-		 <input type="radio" name="pnj" value="2" id="loup">
-        <img src="../images/pnj/loup.gif" width="34" height="34"><br>Loup</td>
-	  <td>
-		 <input type="radio" name="pnj" value="3" id="crotale">
-        <img src="../images/pnj/Crotale.gif" width="34" height="34"><br>Crotale</td>
-	  <td>
-		 <input type="radio" name="pnj" value="4" id="caiman">
-        <img src="../images/pnj/Caiman.png" width="34" height="34"><br>Caïman</td>
-	  <td>
-		 <input type="radio" name="pnj" value="5" id="bison">
-        <img src="../images/pnj/Bison.png" width="34" height="34"><br>Bison</td>
-	  <td>
-		 <input type="radio" name="pnj" value="6" id="bison_blanc">
-        <img src="../images/pnj/Bison_blanc.gif" width="34" height="34"><br>Bison blanc</td>
-	  <td>
-		 <input type="radio" name="pnj" value="7" id="scorpion">
-        <img src="../images/pnj/Scorpion.png" width="34" height="34"><br>Scorpion</td>
-	  <td>
-		 <input type="radio" name="pnj" value="10" id="mur">
-        <img src="../images_perso/murt.png" width="34" height="34"><br>Mur</td>
-	  <td>
-		 <input type="radio" name="pnj" value="11" id="coffre">
-        <img src="../images_perso/coffre1t.png" width="34" height="34"><br>Coffre</td>	
+		<td width="5%"><b><font color="#660000">pnj et autre :</font></b></td>
+		<td> 
+			<input type="radio" name="pnj" value="1" id="sangsue">
+			<img src="../images/pnj/pnj1t.png" width="34" height="34"><br>Sangsue
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="2" id="loup">
+			<img src="../images/pnj/pnj2t.gif" width="34" height="34"><br>Loup
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="3" id="crotale">
+			<img src="../images/pnj/pnj3t.gif" width="34" height="34"><br>Crotale
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="4" id="caiman">
+			<img src="../images/pnj/pnj4t.png" width="34" height="34"><br>Caïman
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="5" id="bison">
+			<img src="../images/pnj/pnj5t.png" width="34" height="34"><br>Bison
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="6" id="bison_blanc">
+			<img src="../images/pnj/pnj6t.gif" width="34" height="34"><br>Bison blanc
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="7" id="scorpion">
+			<img src="../images/pnj/pnj7t.png" width="34" height="34"><br>Scorpion
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="8" id="aigle">
+			<img src="../images/pnj/pnj8t.png" width="34" height="34"><br>Aigle
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="9" id="ours">
+			<img src="../images/pnj/pnj9t.png" width="34" height="34"><br>Ours
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="10" id="mur">
+			<img src="../images_perso/murt.png" width="34" height="34"><br>Mur
+		</td>
+		<td>
+			<input type="radio" name="pnj" value="11" id="coffre">
+			<img src="../images_perso/coffre1t.png" width="34" height="34"><br>Coffre
+		</td>	
   </table>
 <?php
 if (isset($_POST["eval_pate"]) && $_POST["eval_pate"] == "ok"){

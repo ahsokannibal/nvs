@@ -320,6 +320,21 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 -- --------------------------------------------------------
 
 --
+-- Contenu de la table `pnj`
+--
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('1', 'Sangsue', '40', '8', '40', '4', '10', '2', '0', '0', 'Petit animal suceur de sang, très gênant et particulièrement peu ragoutant, la sangsue se trouve dans le marais. Attention à leurs tares !');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('2', 'Loup', '300', '20', '120', '8', '30', '0', '4', '0', '0', 'Chasseur des forêts, cousin éloigné du coyote, le loup n\'est plus à présenter.');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('3', 'Crotale', '100', '20', '160', '5', '20', '0', '3', '0', '0', 'Les crotales sont des animaux qui peuvent s\'avérer très dangereux de par leurs terribles morsures infligeant des tares... Attention à na pas les sous estimer, tout comme les serpents !');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('4', 'Caïman', '500', '30', '150', '5', '40', '20', '3', '0', '0', 'Redoutable prédateur des rivières, le caïman est synonyme d\'effroi pour beaucoup');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('5', 'Bison', '1500', '48', '280', '5', '50', '20', '3', '0', '0', 'Noble herbivore des plaines, le bison n\'en demeure pas moins un animal extrêmement résistant. Attention à ne pas trop les énerver...');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('6', 'Bison Blanc', '2000', '60', '300', '5', '60', '20', '3', '0', '0', 'Bison très rare et encore plus résistant que le bison normal. Attention à ne pas trop les énerver...');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('7', 'Scorpion', '40', '15', '120', '4', '10', '0', '2', '0', '0', 'Le scorpion se trouve essentiellement dans les régions désolées. Sa faiblesse n\'est que relative lorsque l\'on voit les effets de son venin... là encore, attention aux tares !');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('8', 'Aigle', '100', '10', '40', '20', '2', '0', '6', '0', '0', 'Animal majestueux mais fragile, l\'aigle sera rencontré essentiellement dans les montagnes.');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('9', 'Ours', '1000', '50', '240', '8', '50', '20', '3', '0', '0', 'Animal très robuste et que l\'on rencontre en forêt, l\'ours est capable de donner des coups de griffes meurtriers.');
+
+-- --------------------------------------------------------
+
+--
 -- Contenu de la table `stats_camp_kill`
 --
 
