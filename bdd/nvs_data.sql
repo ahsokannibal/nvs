@@ -318,6 +318,44 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 (102, 'Grouillot d\'élite', 0, 0);
 
 -- --------------------------------------------------------
+-- INSERTION DES 2 GENERAUX
+
+--
+-- Contenu de la table `joueur`
+--
+INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES ('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1'), ('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
+INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES ('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1'), ('2', NULL, 'romshunter@msn.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
+
+--
+-- Contenu de la table `perso`
+--
+INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x_perso`, `y_perso`, `xp_perso`, `pi_perso`, `pc_perso`, `or_perso`, `pvMax_perso`, `pm_perso`, `pmMax_perso`, `pv_perso`, `perception_perso`, `recup_perso`, `pa_perso`, `paMax_perso`, `protec_perso`, `charge_perso`, `chargeMax_perso`, `bonusPerception_perso`, `bonusRecup_perso`, `bonusPM_perso`, `bonus_perso`, `image_perso`, `message_perso`, `bourre_perso`, `nb_kill`, `nb_mort`, `nb_pnj`, `dateCreation_perso`, `DLA_perso`, `description_perso`, `clan`, `a_gele`, `est_gele`, `date_gele`, `chef`, `bataillon`) VALUES ('1', '1', 'Abraham Lincoln', '1', '10', '10', '0', '0', '999999999', '0', '7500', '100', '100', '7500', '10', '100', '100', '100', '20', '0', '50', '0', '0', '0', '0', 'cavalerie_nord.gif', 'Général des armées du Nord', '0', '0', '0', '0', NOW(), NOW(), 'Général des armées du Nord', '1', '0', '0', NULL, '1', 'Général de l\'Union');
+INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x_perso`, `y_perso`, `xp_perso`, `pi_perso`, `pc_perso`, `or_perso`, `pvMax_perso`, `pm_perso`, `pmMax_perso`, `pv_perso`, `perception_perso`, `recup_perso`, `pa_perso`, `paMax_perso`, `protec_perso`, `charge_perso`, `chargeMax_perso`, `bonusPerception_perso`, `bonusRecup_perso`, `bonusPM_perso`, `bonus_perso`, `image_perso`, `message_perso`, `bourre_perso`, `nb_kill`, `nb_mort`, `nb_pnj`, `dateCreation_perso`, `DLA_perso`, `description_perso`, `clan`, `a_gele`, `est_gele`, `date_gele`, `chef`, `bataillon`) VALUES ('2', '2', 'Jefferson Davis', '1', '20', '20', '0', '0', '999999999', '0', '7500', '100', '100', '7500', '10', '100', '100', '100', '20', '0', '5', '0', '0', '0', '0', 'cavalerie_sud.gif', 'Général des armées du Sud', '0', '0', '0', '0', NOW(), NOW(), 'Général des armées du Sud', '2', '0', '0', NULL, '1', 'Général du Sud');
+
+--
+-- Contenu de la table `perso_as_arme`
+--
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('1', '1', '1');
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('1', '4', '1');
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('2', '1', '1');
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('2', '4', '1');
+
+--
+-- Contenu de la table `perso_as_grade`
+--
+INSERT INTO `perso_as_grade` (`id_perso`, `id_grade`) VALUES ('1', '22');
+INSERT INTO `perso_as_grade` (`id_perso`, `id_grade`) VALUES ('2', '22');
+
+--
+-- Contenu de la table `perso_as_dossiers`
+--
+INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('1', '1');
+INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('1', '2');
+INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '1');
+INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '2');
+
+-- --------------------------------------------------------
+-- FIN INSERTION DES 2 GENERAUX
 
 --
 -- Contenu de la table `pnj`
