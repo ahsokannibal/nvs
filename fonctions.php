@@ -13,6 +13,9 @@ function db_connexion() //CONNEXION A LA DB
 		echo "Désolé, connexion à la bdd impossible"; exit(); 
 	}
 	
+	// Pour les soucis d'encodage
+	$connexion->query("SET NAMES UTF8");
+	
 	return $connexion;
 }
 
