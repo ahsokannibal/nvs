@@ -2928,6 +2928,11 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso;
 				$y_perso_final = $y_perso + $nb_deplacements;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -2938,6 +2943,8 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -3211,6 +3218,8 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 					}
 					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
@@ -3269,6 +3278,11 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso - $nb_deplacements;
 				$y_perso_final = $y_perso + $nb_deplacements;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -3279,6 +3293,8 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -3552,6 +3568,8 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 					}
 					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
@@ -3610,6 +3628,11 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso - $nb_deplacements;
 				$y_perso_final = $y_perso;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -3620,6 +3643,8 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -3893,6 +3918,8 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 					}
 					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
@@ -3951,6 +3978,11 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso - $nb_deplacements;
 				$y_perso_final = $y_perso - $nb_deplacements;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -3961,6 +3993,8 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -4232,8 +4266,9 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 							$nb_attaque++;
 						}
 					}
-					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
@@ -4292,6 +4327,11 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso;
 				$y_perso_final = $y_perso - $nb_deplacements;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -4302,6 +4342,8 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -4573,8 +4615,9 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 							$nb_attaque++;
 						}
 					}
-					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
@@ -4633,6 +4676,11 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso + $nb_deplacements;
 				$y_perso_final = $y_perso - $nb_deplacements;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -4643,6 +4691,8 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -4914,8 +4964,9 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 							$nb_attaque++;
 						}
 					}
-					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
@@ -4974,6 +5025,11 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso + $nb_deplacements;
 				$y_perso_final = $y_perso;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -4984,6 +5040,8 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -5255,8 +5313,9 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 							$nb_attaque++;
 						}
 					}
-					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
@@ -5315,6 +5374,11 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 				$nb_deplacements = $i - 1;
 				$x_perso_final = $x_perso + $nb_deplacements;
 				$y_perso_final = $y_perso + $nb_deplacements;
+				
+				// MAJ perso sur carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 					
@@ -5325,6 +5389,8 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 				// Charge incomplete => pas d'attaques
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a rencontré un obstacle ne lui permettant pas de terminer sa charge ',NULL,'','',NOW(),'0')";
 				$mysqli->query($sql);
+				
+				break;
 				
 			} else {
 				
@@ -5596,8 +5662,9 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 							$nb_attaque++;
 						}
 					}
-					
 				}
+				
+				break;
 			}
 		} else {
 			if ($i == 5) {
