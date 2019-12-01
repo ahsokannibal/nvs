@@ -15,13 +15,13 @@ for ($x = 0; $x <= $X_MAX; $x++)
 {
 	for ($y = 0; $y <= $Y_MAX; $y++)
 	{
-		$sql2 = "INSERT INTO `carte` VALUES ($x, $y, 0, '1.gif', NULL, NULL)";
+		$sql2 = "INSERT INTO `carte` VALUES ($x, $y, '0', '1.gif', NULL, NULL)";
 		$mysqli->query($sql2);
 	}
 }
 
 // creation d'un pnj
-$sql = "INSERT INTO `instance_pnj` VALUES ('200000','1','8','2','0','0','0','0')";
+$sql = "INSERT INTO `instance_pnj` VALUES ('200000','2','300','8','1','0','0','0','0')";
 $mysqli->query($sql);
 
 // insertion du pnj sur la carte

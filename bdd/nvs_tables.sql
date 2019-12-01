@@ -167,6 +167,32 @@ CREATE TABLE `carte` (
   `image_carte` varchar(100) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+--
+-- Structure de la table `carte2`
+--
+
+CREATE TABLE `carte2` (
+  `x_carte` int(11) NOT NULL DEFAULT '0',
+  `y_carte` int(11) NOT NULL DEFAULT '0',
+  `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
+  `fond_carte` varchar(20) NOT NULL DEFAULT '',
+  `idPerso_carte` int(11) DEFAULT '0',
+  `image_carte` varchar(100) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Structure de la table `carte3`
+--
+
+CREATE TABLE `carte3` (
+  `x_carte` int(11) NOT NULL DEFAULT '0',
+  `y_carte` int(11) NOT NULL DEFAULT '0',
+  `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
+  `fond_carte` varchar(20) NOT NULL DEFAULT '',
+  `idPerso_carte` int(11) DEFAULT '0',
+  `image_carte` varchar(100) DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 -- --------------------------------------------------------
 
 --
