@@ -167,8 +167,9 @@ if(isset($id)){
 			
 			if(isset($_GET['infoid'])) {
 			
-				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY date_evenement DESC LIMIT 100";
+				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
 				$res = $mysqli->query($sql);
+				
 				while ($t = $res->fetch_assoc()) {
 					echo "<tr><td>".$t['date_evenement']."</td><td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
 					if ($t['IDCible_evenement'] == 0) {
@@ -186,10 +187,13 @@ if(isset($id)){
 			}
 			else {
 			
-				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY date_evenement DESC LIMIT 100";
+				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
 				$res = $mysqli->query($sql);
+				
 				while ($t = $res->fetch_assoc()) {
+					
 					echo "<tr><td>".$t['date_evenement']."</td><td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					
 					if ($t['IDCible_evenement'] == 0)
 						echo stripslashes($t['effet_evenement'])."</td>";
 					else {
