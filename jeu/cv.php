@@ -11,13 +11,16 @@ if(@$_SESSION["id_perso"]){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<title>CV</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="../style.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-<div align="center"><h2>CV</h2></div>
+	<head>
+		<title>CV</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="../style.css" rel="stylesheet" type="text/css">
+	</head>
+	
+	<body>
+		<div align="center">
+			<h2>CV</h2>
+		</div>
 <?php 
 if(isset($_POST["id_info"])){
 	// verifier que la valeur est valide
@@ -51,14 +54,14 @@ else {
 <?php
 if(isset($id)){
 	
-	if($id < 10000){
+	if($id < 50000){
 		// verifier que le perso existe
 		$sql = "SELECT id_perso FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$nb_p = $res->num_rows;
 	}
 	else {
-		if($id < 50000){
+		if($id >= 200000){
 			// verifier que le pnj existe
 			$sql = "SELECT idInstance_pnj FROM instance_pnj WHERE idInstance_pnj='$id'";
 			$res = $mysqli->query($sql);
@@ -132,7 +135,7 @@ if(isset($id)){
 		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
 		
 		while ($t = $res->fetch_assoc()) {
-			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 10000) {
+			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 50000) {
 				$count++;
 				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a capturé ";
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
@@ -168,7 +171,7 @@ if(isset($id)){
 		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
 		
 		while ($t = $res->fetch_assoc()) {
-			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 10000 && $t['IDCible_cv'] < 50000) {
+			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
 				$count++;
 				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
@@ -186,7 +189,7 @@ if(isset($id)){
 		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
 		
 		while ($t = $res->fetch_assoc()) {
-			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000) {
+			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000 && $t['IDCible_cv'] < 200000) {
 				$count++;
 				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";

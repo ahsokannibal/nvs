@@ -1142,18 +1142,83 @@ if($dispo || !$admin){
 						echo "<center><a href=\"jouer.php?coffre=ok\">Ouvrir le coffre</a></center>";
 					}
 				}
-					
-				// recuperation des données de la carte
-				$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc AND y_carte <= $y_perso + $perc AND y_carte >= $y_perso - $perc ORDER BY y_carte DESC, x_carte";
+				
+				// Récupération de l'arme de CaC équipé sur le perso
+				$sql = "SELECT nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
+						FROM arme, perso_as_arme
+						WHERE arme.id_arme = perso_as_arme.id_arme
+						AND porteeMax_arme = 1
+						AND perso_as_arme.est_portee = '1'
+						AND id_perso = '$id_perso'";
 				$res = $mysqli->query($sql);
-				$tab = $res->fetch_assoc();				
+				$t_cac = $res->fetch_assoc();
+				
+				if ($t_cac != NULL) {
+					$nom_arme_cac 			= $t_cac["nom_arme"];
+					$porteeMin_arme_cac 	= $t_cac["porteeMin_arme"];
+					$porteeMax_arme_cac 	= $t_cac["porteeMax_arme"];
+					$coutPa_arme_cac 		= $t_cac["coutPa_arme"];
+					$degatMin_arme_cac 		= $t_cac["degatMin_arme"];
+					$valeur_des_arme_cac 	= $t_cac["valeur_des_arme"];
+					$precision_arme_cac 	= $t_cac["precision_arme"];
+					$degatZone_arme_cac 	= $t_cac["degatZone_arme"];
+				} else {
+					$nom_arme_cac 			= "Poings";
+					$porteeMin_arme_cac 	= 1;
+					$porteeMax_arme_cac 	= 1;
+					$coutPa_arme_cac 		= 3;
+					$degatMin_arme_cac 		= 4;
+					$valeur_des_arme_cac 	= 6;
+					$precision_arme_cac 	= 30;
+					$degatZone_arme_cac 	= 0;
+				}
+				
+				$degats_arme_cac = $degatMin_arme_cac."D".$valeur_des_arme_cac;
+				
+				// Récupération de la liste des persos à portée d'attaque arme CaC
+				$res_portee_cac = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perception_perso);
+				
+				// Récupération de l'arme à distance sur le perso
+				$sql = "SELECT nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
+						FROM arme, perso_as_arme
+						WHERE arme.id_arme = perso_as_arme.id_arme
+						AND porteeMax_arme > 1
+						AND perso_as_arme.est_portee = '1'
+						AND id_perso = '$id_perso'";
+				$res = $mysqli->query($sql);
+				$t_dist = $res->fetch_assoc();
+				
+				if ($t_dist != NULL) {
+					$nom_arme_dist 			= $t_dist["nom_arme"];
+					$porteeMin_arme_dist 	= $t_dist["porteeMin_arme"];
+					$porteeMax_arme_dist 	= $t_dist["porteeMax_arme"];
+					$coutPa_arme_dist 		= $t_dist["coutPa_arme"];
+					$degatMin_arme_dist 	= $t_dist["degatMin_arme"];
+					$valeur_des_arme_dist 	= $t_dist["valeur_des_arme"];
+					$precision_arme_dist 	= $t_dist["precision_arme"];
+					$degatZone_arme_dist 	= $t_dist["degatZone_arme"];
+				} else {
+					$nom_arme_dist 			= "Cailloux";
+					$porteeMin_arme_dist 	= 1;
+					$porteeMax_arme_dist 	= 2;
+					$coutPa_arme_dist 		= 3;
+					$degatMin_arme_dist 	= 5;
+					$valeur_des_arme_dist 	= 6;
+					$precision_arme_dist 	= 25;
+					$degatZone_arme_dist 	= 0;
+				}
+				
+				$degats_arme_dist = $degatMin_arme_dist."D".$valeur_des_arme_dist;
+				
+				// Récupération de la liste des persos à portée d'attaque arme dist
+				$res_portee_dist = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_dist, $porteeMax_arme_dist, $perception_perso);
 				
 				?>
 				<table border=0 align="center" cellspacing="0" cellpadding="10" style:no-padding>
 					<tr>
 						<td valign="top">
 						
-							<table style="border:0px; background-color: cornflowerblue;">
+							<table style="border:0px; background-color: cornflowerblue; min-width: 375;">
 								<tr>
 									<td>
 										<table border="2" bordercolor="white" > <!-- border-collapse:collapse -->
@@ -1200,20 +1265,109 @@ if($dispo || !$admin){
 												<td><?php echo $recup_perso; ?>&nbsp;</td>
 											</tr>
 											<tr>
-												<td><b>Bonus / Malus</b></td>
+												<td><b>Malus Defense</b></td>
 												<td><?php echo $bonus_perso; ?>&nbsp;</td>
 											</tr>
 										</table>
 									</td>
 								</tr>
 							</table>
+							
+							<br />
+							
+							<table border="2" style="background-color: palevioletred; min-width: 430;">
+								<tr>
+									<td colspan='3'bgcolor="lightgrey"><center><b>Caractèristiques de combat</b></center></td>
+								</tr>
+								<tr>
+									<td width='20%'></td>
+									<td width='40%'><center><b>Rapproché</b></center></td>
+									<td width='40%'><center><b>A distance</b></center></td>
+								</tr>
+								<tr>
+									<td><b>Armes</b></td>
+									<td><center><?php echo $nom_arme_cac; ?></center></td>
+									<td><center><?php echo $nom_arme_dist; ?></center></td>
+								</tr>
+								<tr>
+									<td><b>Coût en PA</b></td>
+									<td><center><?php echo $coutPa_arme_cac; ?></center></td>
+									<td><center><?php echo $coutPa_arme_dist; ?></center></td>
+								</tr>
+								<tr>
+									<td><b>Dégats</b></td>
+									<td><center><?php echo $degats_arme_cac; ?></center></td>
+									<td><center><?php echo $degats_arme_dist; ?></center></td>
+								</tr>
+								<tr>
+									<td><b>Portée</b></td>
+									<td><center><?php echo $porteeMax_arme_cac; ?></center></td>
+									<td><center><?php echo $porteeMax_arme_dist; ?></center></td>
+								</tr>
+								<tr>
+									<td><b>Précision</b></td>
+									<td><center><?php echo $precision_arme_cac . "%"; ?></center></td>
+									<td><center><?php echo $precision_arme_dist . "%"; ?></center></td>
+								</tr>
+								<tr>
+									<form method="post" action="agir.php" target='_main'>
+									<td><input type="submit" value="Attaquer"></td>
+									<td>
+										<select name='id_attaque_cac' style="width: -moz-available;">
+											<option value="invalide">Personne</option>
+											<?php
+											while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
+												
+												$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
+												
+												$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_cac'";
+												$res = $mysqli->query($sql);
+												$tab = $res->fetch_assoc();
+												
+												$nom_cible_cac = $tab["nom_perso"];
+												
+												echo "<option value='".$id_cible_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+											}
+											?>
+										</select>
+									</td>
+									<td>
+										<select name='id_attaque_dist' style="width: -moz-available;">
+											<option value="invalide">Personne</option>
+											<?php
+											while($t_cible_portee_dist = $res_portee_dist->fetch_assoc()) {
+												
+												$id_cible_dist = $t_cible_portee_dist["idPerso_carte"];
+												
+												$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_dist'";
+												$res = $mysqli->query($sql);
+												$tab = $res->fetch_assoc();
+												
+												$nom_cible_dist = $tab["nom_perso"];
+												
+												echo "<option value='".$id_cible_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
+											}
+											?>
+										</select>
+									</td>
+									</form>
+								</tr>
+							</table>
 					
 						</td>
+						
 						<td valign="top">
+							<table style="border:1px solid black; border-collapse: collapse;">
+								<tr>
+									<td>
 				
 				<?php
 				//<!--Génération de la carte-->
-				echo '<table style="border:1px solid black; border-collapse: collapse;"><tr><td>';
+				
+				// recuperation des données de la carte
+				$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc AND y_carte <= $y_perso + $perc AND y_carte >= $y_perso - $perc ORDER BY y_carte DESC, x_carte";
+				$res = $mysqli->query($sql);
+				$tab = $res->fetch_assoc();		
 				
 				// calcul taille table
 				$taille_table = ($perception_perso + $bonusPerception_perso) * 2 + 2;
@@ -1221,21 +1375,30 @@ if($dispo || !$admin){
 				
 				echo "<table border=0 width=\"$taille_table\" height=\"$taille_table\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" style:no-padding>";
 				
-				echo "<tr><td width='40' heigth='40' background=\"../images/background.jpg\" align='center'>y \ x</td>";  //affichage des abscisses
+				//affichage des abscisses
+				echo "	<tr>
+							<td width='40' heigth='40' background=\"../images/background.jpg\" align='center'>y \ x</td>";  
+				
 				for ($i = $x_perso - $perc; $i <= $x_perso + $perc; $i++) {
 					if ($i == $x_perso)
 						echo "<th width=40 height=40 background=\"../images/background3.jpg\">$i</th>";
 					else
 						echo "<th width=40 height=40 background=\"../images/background.jpg\">$i</th>";
 				}
-				echo "</tr>";
+				
+				echo "	</tr>";
 				
 				for ($y = $y_perso + $perc; $y >= $y_perso - $perc; $y--) {
+					
 					echo "<tr align=\"center\" >";
-					if ($y == $y_perso)
+					
+					if ($y == $y_perso) {
 						echo "<th width=40 height=40 background=\"../images/background3.jpg\">$y</th>";
-					else
+					}
+					else {
 						echo "<th width=40 height=40 background=\"../images/background.jpg\">$y</th>";
+					}
+					
 					for ($x = $x_perso - $perc; $x <= $x_perso + $perc; $x++) {
 						
 						//les coordonnées sont dans les limites
@@ -1263,7 +1426,7 @@ if($dispo || !$admin){
 										}
 										else{
 											// recuperation de l'image du pnj
-											if($tab['idPerso_carte'] >= 10000 && $tab['idPerso_carte'] < 50000){
+											if($tab['idPerso_carte'] >= 200000){
 												
 												$idI_pnj = $tab['idPerso_carte'];
 												
@@ -1273,13 +1436,17 @@ if($dispo || !$admin){
 												$t_im = $res_im->fetch_assoc();
 												
 												$id_pnj_im = $t_im["id_pnj"];
-												$im_pnj="Monstre".$id_pnj_im."t.png";
+												$im_pnj="pnj".$id_pnj_im."t.png";
+												
+												$dossier_pnj = "images/pnj";
 	
-												echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<img src=../images/$im_pnj>')\" onMouseOut=\"HideBulle()\" title=\"pnj mat ".$tab["idPerso_carte"]."\"></a></td>";
+												echo "	<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> 
+															<a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../".$dossier_pnj."/".$tab["image_carte"]."\" width=40 height=40 title=\"pnj mat ".$tab["idPerso_carte"]."\"></a>
+														</td>";
 											}
 											else{
 												//  traitement Batiment
-												if($tab['idPerso_carte'] >= 50000){
+												if($tab['idPerso_carte'] >= 50000 && $tab['idPerso_carte'] < 200000){
 													
 													$idI_bat = $tab['idPerso_carte'];
 													
@@ -1463,8 +1630,10 @@ if($dispo || !$admin){
 					echo "</tr>";
 				}
 				?>
-				</table>
-				</td></tr></table>
+								</table>
+							</td>
+						</tr>
+					</table>
 				</td>
 				<!--Fin de la génération de la carte-->
 				
@@ -1474,7 +1643,8 @@ if($dispo || !$admin){
 				}
 				?>
 				
-				<td>
+				<!--Debut tableau des actions -->
+				<td valign="top">
 					<table style="border:1px solid black; border-collapse: collapse;">
 						<tr>
 							<td>

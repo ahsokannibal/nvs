@@ -29,14 +29,29 @@ if(isset($_POST["re_attaque"])){
 	$id_c = $t_id_c[1];
 	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_c");
 }
-else {
+else if (isset($_POST["id_attaque"])) {
 	$id_attaque = $_POST["id_attaque"];
 	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_attaque");
+} 
+else if (isset($_POST["id_attaque_cac"])) {
+	$id_attaque = $_POST["id_attaque_cac"];
+	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_attaque");
+}
+else if (isset($_POST["id_attaque_dist"])) {
+	$id_attaque = $_POST["id_attaque_dist"];
+	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_attaque");
+}
+else {
+	// triche
+	header("Location: ../jouer.php");
 }
 
+echo $id_attaque;
+
 if($verif){
+	
 	//traitement de l'attaque sur un perso
-	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] < 10000) || (isset($_POST["re_attaque"]) && $id_c < 10000) ) { 
+	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] < 50000) || (isset($_POST["re_attaque"]) && $id_c < 50000) ) { 
 	
 		if(!in_bat($mysqli, $id)){
 	
@@ -54,7 +69,8 @@ if($verif){
 			if($id_arme_equipee) {
 				
 				// Recupération des caracs de l'arme
-				$sql = "SELECT nom_arme, coutPa_arme, porteeMin_arme, porteeMax_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, degatZone_arme, main FROM arme WHERE id_arme='$id_arme_equipee'";
+				$sql = "SELECT nom_arme, coutPa_arme, porteeMin_arme, porteeMax_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, degatZone_arme, main 
+						FROM arme WHERE id_arme='$id_arme_equipee'";
 				$res = $mysqli->query($sql);
 				$t_a = $res->fetch_assoc();
 				
@@ -78,7 +94,8 @@ if($verif){
 			}
 			
 			// recup des données du perso
-			$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+			$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan 
+					FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_perso = $res->fetch_assoc();
 			
@@ -115,7 +132,8 @@ if($verif){
 				}
 				
 				// recuperation des données du perso cible
-				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan FROM perso WHERE ID_perso='$id_cible'";
+				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan 
+						FROM perso WHERE ID_perso='$id_cible'";
 				$res = $mysqli->query($sql);
 				$t_cible = $res->fetch_assoc();
 				
@@ -471,12 +489,14 @@ if($verif){
 	}
 	
 	//traitement de l'attaque sur un pnj
-	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] >= 10000 && $_POST["id_attaque"] < 50000) || ( isset($_POST["re_attaque"]) && $id_c >= 10000 && $id_c < 50000) ) { 
+	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] >= 200000) || ( isset($_POST["re_attaque"]) && $id_c >= 200000) ) {
 	
-		if(isset($_POST["re_attaque"]))
+		if(isset($_POST["re_attaque"])) {
 			$id_cible = $id_c;
-		else
+		}
+		else {
 			$id_cible =  $_POST["id_attaque"];
+		}
 		
 		// Recupération de l'arme équipée
 		$id_arme_equipee = id_arme_equipee($mysqli, $id);
@@ -545,7 +565,9 @@ if($verif){
 			}
 				
 			// recuperation des données du pnj		
-			$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pnj.id_pnj, pv_i, de_pnj, x_i, y_i, pm_pnj, pv_i, pvMax_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj='$id_cible'";
+			$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pnj.id_pnj, pv_i, de_pnj, x_i, y_i, pm_pnj, pv_i, pvMax_pnj 
+					FROM pnj, instance_pnj 
+					WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj='$id_cible'";
 			$res = $mysqli->query($sql);
 			$t_cible = $res->fetch_assoc();
 			
@@ -1136,7 +1158,7 @@ if($verif){
 	}
 	
 	// Traitement attaque Batiment
-	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] >= 50000) || (isset($_POST["re_attaque"]) && $id_c >= 50000) ) {
+	if ((isset($_POST["id_attaque"]) && $_POST["id_attaque"]!="" && $_POST["id_attaque"] >= 50000 && $_POST["id_attaque"] < 200000) || (isset($_POST["re_attaque"]) && $id_c >= 50000 && $id_c <= 200000) ) {
 		
 		if(isset($_POST["re_attaque"]))
 			$id_cible = $id_c;
@@ -1150,7 +1172,8 @@ if($verif){
 		if($id_arme_equipee) {
 			
 			// Recupération des caracs de l'arme
-			$sql = "SELECT nom_arme, coutPa_arme, porteeMin_arme, porteeMax_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, degatZone_arme, main FROM arme WHERE id_arme='$id_arme_equipee'";
+			$sql = "SELECT nom_arme, coutPa_arme, porteeMin_arme, porteeMax_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, degatZone_arme, main 
+					FROM arme WHERE id_arme='$id_arme_equipee'";
 			$res = $mysqli->query($sql);
 			$t_a = $res->fetch_assoc();
 			
@@ -1174,7 +1197,8 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan 
+				FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		

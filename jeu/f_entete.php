@@ -5,7 +5,7 @@ function entete($mysqli, $id) {
 	if ($id) {
 		
 		// Perso
-		if($id < 10000){
+		if($id < 50000) {
 			
 			$sql = "SELECT nom_perso, xp_perso, image_perso, clan FROM perso WHERE id_perso ='$id'";
 			$result = $mysqli->query($sql);
@@ -80,15 +80,17 @@ function entete($mysqli, $id) {
 		}
 		else {
 			// PNJ
-			if($id<50000) {
+			if($id >= 200000) {
+				
 				$sql = "SELECT pnj.id_pnj,nom_pnj FROM pnj, instance_pnj WHERE instance_pnj.id_pnj=pnj.id_pnj AND idInstance_pnj=$id";
 				$res = $mysqli->query($sql);
 				$pnj = $res->fetch_assoc();
+				
 				$nom_pnj = $pnj["nom_pnj"];
 				$id_pnj = $pnj["id_pnj"];
-				$image_pnj = "monstre".$id_pnj."t.png";
+				$image_pnj = "pnj".$id_pnj."t.png";
 				
-				echo "<center><img src=\"../images_perso/$image_pnj\" width=\"40\" height=\"40\"><table border=\"1\"><tr><td width=\"60%\"><center>pnj : $nom_pnj [$id] </center></td></tr>";
+				echo "<center><img src=\"../images/pnj/$image_pnj\" width=\"40\" height=\"40\"><table border=\"1\"><tr><td width=\"60%\"><center>pnj : $nom_pnj [$id] </center></td></tr>";
 				
 				echo "<center><table border=0>";
 				echo "<td><a href='evenement.php?infoid=$id'>Évènement</a>&nbsp;&nbsp;</td>";
@@ -103,14 +105,15 @@ function entete($mysqli, $id) {
 						AND id_instanceBat=$id";
 				$res = $mysqli->query($sql);
 				$bat = $res->fetch_assoc();
-				$id_batiment = $bat['id_batiment'];
-				$nom_batiment = $bat['nom_batiment'];
-				$description_batiment = $bat['description'];
-				$nom_instance_batiment = $bat['nom_instance'];
-				$pv_instance = $bat['pv_instance'];
-				$pvMax_instance = $bat['pvMax_instance'];
-				$camp_instance = $bat['camp_instance'];
-				$contenance_instance = $bat['contenance_instance'];
+				
+				$id_batiment 			= $bat['id_batiment'];
+				$nom_batiment 			= $bat['nom_batiment'];
+				$description_batiment 	= $bat['description'];
+				$nom_instance_batiment 	= $bat['nom_instance'];
+				$pv_instance 			= $bat['pv_instance'];
+				$pvMax_instance 		= $bat['pvMax_instance'];
+				$camp_instance 			= $bat['camp_instance'];
+				$contenance_instance 	= $bat['contenance_instance'];
 				
 				if($camp_instance == '1'){
 					$couleur_camp_instance = 'blue';
@@ -129,9 +132,11 @@ function entete($mysqli, $id) {
 				
 				//recup du camp du perso
 				$id_perso = $_SESSION["id_perso"];
+				
 				$sql = "select clan from perso where id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
 				$cp = $res->fetch_assoc();
+				
 				$camp_perso = $cp["clan"];
 				
 				echo "<center>";
@@ -139,11 +144,13 @@ function entete($mysqli, $id) {
 				echo "<table border=\"1\">";
 				echo "  <tr><td width=\"60%\" align='center'>Batiment : $nom_batiment [$id]</td></tr>";
 				echo "  <tr><td align='center'>Camp : <font color=\"$couleur_camp_instance\">$nom_clan</font></td></tr>";
+				
 				if($camp_perso == $camp_instance){
 					echo "<tr><td align='center'>";
 					$pourc = affiche_jauge($pv_instance, $pvMax_instance); 
 					echo "".round($pourc)."% ou $pv_instance/$pvMax_instance PV</td></tr>";
 				}
+				
 				echo "</table>";
 				echo "</center>";
 				
@@ -152,15 +159,17 @@ function entete($mysqli, $id) {
 					echo "<tr><td><a href='evenement.php?infoid=$id&liste=ok'>Liste des persos</a>&nbsp;&nbsp;</td>";
 				}
 				echo "<td><a href='evenement.php?infoid=$id'>Evènement</a>&nbsp;&nbsp;</td>";
+				
 				if($id < 50000){
 					echo "<td><a href='cv.php?infoid=$id'>CV</a>&nbsp;&nbsp;</td>";
 				}
+				
 				echo "<td><a href='description.php?infoid=$id'>Description</a></td></tr></table></center><br>";
 			}
 		}	
 	}
-	
-	else 
+	else {
 		echo "<center>aucun perso selectionné</center>";
+	}
 }
 ?>

@@ -142,6 +142,55 @@ function is_a_portee_attaque($mysqli, $carte, $id_perso, $id_cible, $portee_min,
 }
 
 /**
+ *
+ */
+function resource_liste_cibles_a_portee_attaque($mysqli, $carte, $id_perso, $portee_min, $portee_max, $per_perso) {
+	
+	if($per_perso < $portee_max){
+		$portee_max = $per_perso;
+	}
+	
+	if($portee_max < $portee_min){
+		return;
+	}
+
+	// Requete qui recupere les cases a portee d'attaque
+	$sql = "(SELECT idPerso_carte
+			FROM $carte, perso 
+			WHERE id_perso='$id_perso'
+			AND x_carte>=x_perso+$portee_min AND x_carte<=x_perso+$portee_max
+			AND y_carte>=y_perso-$portee_max AND y_carte<=y_perso+$portee_max
+			AND occupee_carte = '1')
+			UNION (
+				SELECT idPerso_carte
+				FROM $carte, perso 
+				WHERE id_perso='$id_perso'
+				AND x_carte>=x_perso-$portee_max AND x_carte<=x_perso-$portee_min
+				AND y_carte>=y_perso-$portee_max AND y_carte<=y_perso+$portee_max
+				AND occupee_carte = '1'
+			)
+			UNION (
+				SELECT idPerso_carte
+				FROM $carte, perso 
+				WHERE id_perso='$id_perso'
+				AND y_carte>=y_perso+$portee_min AND y_carte<=y_perso+$portee_max
+				AND x_carte>=x_perso-$portee_max AND x_carte<=x_perso+$portee_max
+				AND occupee_carte = '1'
+			)
+			UNION (
+				SELECT idPerso_carte
+				FROM $carte, perso 
+				WHERE id_perso='$id_perso'
+				AND y_carte>=y_perso-$portee_max AND y_carte<=y_perso-$portee_min
+				AND x_carte>=x_perso-$portee_max AND x_carte<=x_perso+$portee_max
+				AND occupee_carte = '1'
+			)";
+	$res = $mysqli->query($sql);
+	
+	return $res;
+}
+
+/**
   * Fonction qui renvoie le gain d'xp lors d'une attaque en fonction des levels des deux protagonistes (attaquant et cible)
   * @param $clan_perso	: Le clan du perso
   * @param $clan_cible	: Le clan de la cible

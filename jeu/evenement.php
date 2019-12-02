@@ -46,7 +46,7 @@ else {
 			if(isset($_GET["liste"]) && $_GET["liste"] == "ok") { // on souhaite connaitre la liste des persos d'un batiment par exemple.
 			
 				// test si c'est bien un batiment
-				if ($_GET['infoid'] >= 50000) {
+				if ($_GET['infoid'] >= 50000 && $_GET['infoid'] < 200000) {
 					
 					// test si le batiment existe
 					$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id'";
@@ -82,14 +82,14 @@ else {
 <p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 <?php
 if(isset($id)){
-	if($id < 10000){
+	if($id < 50000){
 		// verifier que le perso existe
 		$sql = "SELECT id_perso FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$nb_p = $res->num_rows;
 	}
 	else {
-		if($id < 50000){
+		if($id >= 200000){
 			// verifier que le pnj existe
 			$sql = "SELECT idInstance_pnj FROM instance_pnj WHERE idInstance_pnj='$id'";
 			$res = $mysqli->query($sql);
