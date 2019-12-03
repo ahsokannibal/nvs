@@ -669,7 +669,6 @@ CREATE TABLE `pnj` (
   `protec_pnj` int(11) NOT NULL DEFAULT '0',
   `perception_pnj` int(11) NOT NULL DEFAULT '0',
   `aggressivite_pnj` int(11) NOT NULL DEFAULT '0',
-  `de_pnj` int(11) NOT NULL DEFAULT '0',
   `description_pnj` text CHARACTER SET utf8 COLLATE utf8_unicode_ci
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

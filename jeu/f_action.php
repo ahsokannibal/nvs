@@ -5552,7 +5552,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
-						$precision_final = $precision_arme + $bonus_cible;
+						$precision_final = $precision_arme - $bonus_cible;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -5560,6 +5560,10 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
 							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							
+							if($degats < 0) {
+								$degats = 0;
+							}
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -5578,9 +5582,9 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								if ($calcul_des_xp < 0) {
 									$valeur_des_xp = 0;
 								} else {
-									$valeur_des_xp = mt_rand(1, $calcul_des_xp);
+									$valeur_des_xp = mt_rand(0, $calcul_des_xp);
 								}
-								$gain_experience = ($degats / 2) + $valeur_des_xp;
+								$gain_experience = ceil(($degats / 20) + $valeur_des_xp);
 								
 								if ($gain_experience > 15) {
 									$gain_experience = 15;

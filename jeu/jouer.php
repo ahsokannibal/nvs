@@ -1144,7 +1144,7 @@ if($dispo || !$admin){
 				}
 				
 				// Récupération de l'arme de CaC équipé sur le perso
-				$sql = "SELECT nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
+				$sql = "SELECT arme.id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
 						FROM arme, perso_as_arme
 						WHERE arme.id_arme = perso_as_arme.id_arme
 						AND porteeMax_arme = 1
@@ -1154,6 +1154,7 @@ if($dispo || !$admin){
 				$t_cac = $res->fetch_assoc();
 				
 				if ($t_cac != NULL) {
+					$id_arme_cac			= $t_cac["id_arme"];
 					$nom_arme_cac 			= $t_cac["nom_arme"];
 					$porteeMin_arme_cac 	= $t_cac["porteeMin_arme"];
 					$porteeMax_arme_cac 	= $t_cac["porteeMax_arme"];
@@ -1163,6 +1164,7 @@ if($dispo || !$admin){
 					$precision_arme_cac 	= $t_cac["precision_arme"];
 					$degatZone_arme_cac 	= $t_cac["degatZone_arme"];
 				} else {
+					$id_arme_cac			= 1000;
 					$nom_arme_cac 			= "Poings";
 					$porteeMin_arme_cac 	= 1;
 					$porteeMax_arme_cac 	= 1;
@@ -1179,7 +1181,7 @@ if($dispo || !$admin){
 				$res_portee_cac = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perception_perso);
 				
 				// Récupération de l'arme à distance sur le perso
-				$sql = "SELECT nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
+				$sql = "SELECT arme.id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
 						FROM arme, perso_as_arme
 						WHERE arme.id_arme = perso_as_arme.id_arme
 						AND porteeMax_arme > 1
@@ -1189,6 +1191,7 @@ if($dispo || !$admin){
 				$t_dist = $res->fetch_assoc();
 				
 				if ($t_dist != NULL) {
+					$id_arme_dist 			= $t_dist["id_arme"];
 					$nom_arme_dist 			= $t_dist["nom_arme"];
 					$porteeMin_arme_dist 	= $t_dist["porteeMin_arme"];
 					$porteeMax_arme_dist 	= $t_dist["porteeMax_arme"];
@@ -1198,6 +1201,7 @@ if($dispo || !$admin){
 					$precision_arme_dist 	= $t_dist["precision_arme"];
 					$degatZone_arme_dist 	= $t_dist["degatZone_arme"];
 				} else {
+					$id_arme_dist			= 2000;
 					$nom_arme_dist 			= "Cailloux";
 					$porteeMin_arme_dist 	= 1;
 					$porteeMax_arme_dist 	= 2;
@@ -1314,38 +1318,80 @@ if($dispo || !$admin){
 									<td><input type="submit" value="Attaquer"></td>
 									<td>
 										<select name='id_attaque_cac' style="width: -moz-available;">
-											<option value="invalide">Personne</option>
+											<option value="personne">Personne</option>
 											<?php
 											while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
 												
 												$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
 												
-												$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_cac'";
-												$res = $mysqli->query($sql);
-												$tab = $res->fetch_assoc();
+												if ($id_cible_cac < 50000) {
+													
+													// Un autre perso
+													$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_cac'";
+													$res = $mysqli->query($sql);
+													$tab = $res->fetch_assoc();
+													
+													$nom_cible_cac = $tab["nom_perso"];
+													
+												} else if ($id_cible_cac >= 200000) {
+													
+													// Un PNJ
+													$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
+													$res = $mysqli->query($sql);
+													$tab = $res->fetch_assoc();
+													
+													$nom_cible_cac = $tab["nom_pnj"];
+												} else {
+													
+													// Un Batiment
+													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_nstanceBat = '$id_cible_cac'";
+													$res = $mysqli->query($sql);
+													$tab = $res->fetch_assoc();
+													
+													$nom_cible_cac = $tab["nom_batiment"];
+												}
 												
-												$nom_cible_cac = $tab["nom_perso"];
-												
-												echo "<option value='".$id_cible_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+												echo "<option value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
 											}
 											?>
 										</select>
 									</td>
 									<td>
 										<select name='id_attaque_dist' style="width: -moz-available;">
-											<option value="invalide">Personne</option>
+											<option value="personne">Personne</option>
 											<?php
 											while($t_cible_portee_dist = $res_portee_dist->fetch_assoc()) {
 												
 												$id_cible_dist = $t_cible_portee_dist["idPerso_carte"];
 												
-												$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_dist'";
-												$res = $mysqli->query($sql);
-												$tab = $res->fetch_assoc();
+												if ($id_cible_dist < 50000) {
+
+													// Un autre perso
+													$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_dist'";
+													$res = $mysqli->query($sql);
+													$tab = $res->fetch_assoc();
+													
+													$nom_cible_dist = $tab["nom_perso"];
+													
+												} else if ($id_cible_dist >= 200000) {
+													
+													// Un PNJ
+													$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_dist'";
+													$res = $mysqli->query($sql);
+													$tab = $res->fetch_assoc();
+													
+													$nom_cible_dist = $tab["nom_pnj"];
+												} else {
+													
+													// Un Batiment
+													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_nstanceBat = '$id_cible_dist'";
+													$res = $mysqli->query($sql);
+													$tab = $res->fetch_assoc();
+													
+													$nom_cible_dist = $tab["nom_batiment"];
+												}
 												
-												$nom_cible_dist = $tab["nom_perso"];
-												
-												echo "<option value='".$id_cible_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
+												echo "<option value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
 											}
 											?>
 										</select>
@@ -1810,12 +1856,6 @@ if($dispo || !$admin){
 															echo "Envoyer un message</a>";
 														}
 														?>
-													</td>
-													<td valign='top'>
-														<form method="post" action="agir.php" target='_main'>
-															<input type="text" maxlength="6" size="6" name="id_attaque" value="<?php if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) echo $infoid; elseif(isset($_GET["infoid"]) && $_GET["infoid"] >= 10000) echo $_GET["infoid"];?>"style="background-image:url('../images/background3.jpg');">
-															<input type="submit" value="Attaquer">
-														</form>
 													</td>
 												</tr>
 												<tr>
