@@ -44,6 +44,7 @@ if($dispo || !$admin){
 		$sql = "SELECT pv_perso FROM perso WHERE ID_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
+		
 		$testpv = $tpv['pv_perso'];
 		
 		$config = '1';
@@ -133,9 +134,12 @@ if($dispo || !$admin){
 				$malus_pm = $bonusPM_perso_p;
 				
 				// traitement entrée dans un batiment
-				if(isset($_GET["bat"])){
+				if(isset($_GET["bat"])) {
+					
 					$id_inst = $_GET["bat"];
-					if(isset($_GET["out"]) && $_GET["out"] == "ok"){ // on veut sortir du batiment
+					
+					// on veut sortir du batiment
+					if(isset($_GET["out"]) && $_GET["out"] == "ok") {
 					
 						// verification que le perso est bien dans un batiment...
 						if(in_bat($mysqli, $id_perso)){
@@ -211,10 +215,11 @@ if($dispo || !$admin){
 							$erreur .= "Vous n'êtes pas dans le batiment donc vous ne pouvez pas en sortir";
 						}
 					}
-					else { // on veut rentrer dans le batiment
+					else {
+						// on veut rentrer dans le batiment
 					
 						// traitement du cas tour de visu et de la tour de garde où il ne peut y avoir qu'un seul perso dedans !
-						if(isset($_GET["bat2"]) && ($_GET["bat2"] == 2 || $_GET["bat2"] == 3) && isset($_GET["bat"]) && $_GET["bat"]!=""){
+						if(isset($_GET["bat2"]) && ($_GET["bat2"] == 2 || $_GET["bat2"] == 3) && isset($_GET["bat"]) && $_GET["bat"]!="") {
 						
 							// Vérification que le perso soit pas déjà dans un bâtiment
 							if(!in_bat($mysqli, $id_perso)){
@@ -231,7 +236,9 @@ if($dispo || !$admin){
 											$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat=".$_GET["bat"]."";
 											$res = $mysqli->query($sql);
 											$nbp = $res->fetch_row();
-											if($nbp[0] != 0){ // si la tour est occupee
+											
+											if($nbp[0] != 0){
+												// si la tour est occupee
 												$erreur .= "Vous ne pouvez pas entrée, la tour est déjà occupée";
 											}
 											else { // la tour est vide
@@ -282,18 +289,10 @@ if($dispo || !$admin){
 														
 														echo "<font color = red>Felicitation, vous venez de capturer un batiment ennemi !</font><br>";
 													}
+													
 													// mise a jour de la carte
-													$sql = "UPDATE $carte SET occupee_carte='0' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+													$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
 													$res = $mysqli->query($sql);
-														
-													// verification si le perso a des pnj
-													/*
-													if (possede_animaux($id)){
-														// maj des coordonnées des pnj
-														$sql = "UPDATE instance_pnj,perso_as_pnj SET x_pnj=$x_persoN, y_pnj=$y_persoN WHERE perso_as_pnj.id_instance_pnj=instance_pnj.id_instance_pnj";
-														$mysqli->query($sql);
-													}
-													*/
 														
 													// mise a jour des coordonnées du perso
 													$sql = "UPDATE perso SET x_perso='$x_bat', y_perso='$y_bat', pm_perso=pm_perso-1 WHERE id_perso='$id_perso'";
@@ -427,7 +426,7 @@ if($dispo || !$admin){
 														}
 													
 														// mise a jour des coordonnées du perso sur la carte
-														$sql = "UPDATE $carte SET occupee_carte='0' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+														$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
 														$res = $mysqli->query($sql);
 														
 														// mise a jour des coordonnées du perso

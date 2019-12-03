@@ -11,172 +11,329 @@ if(isset($_SESSION["ID_joueur"])){
 	
 	$id_joueur = $_SESSION['ID_joueur']; 
 	
-	// recuperation de l'id et du nom du perso
-	$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso=$id_joueur AND chef=1";
+	// recuperation de l'id et du nom du chef
+	$sql = "SELECT id_perso, nom_perso, clan, est_gele, UNIX_TIMESTAMP(DLA_perso) as DLA, UNIX_TIMESTAMP(date_gele) as DG FROM perso WHERE idJoueur_perso=$id_joueur AND chef=1";
 	$res = $mysqli->query($sql);
-	$t_id = $res->fetch_assoc();
+	$t_chef = $res->fetch_assoc();
 	
-	$_SESSION["id_perso"] = $id = $t_id["id_perso"];
-	$_SESSION["nom_perso"] = $pseudo = $t_id["nom_perso"];
-
-	// recuperation des infos sur le perso
-	$sql = "SELECT x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, pa_perso, paMax_perso, pm_perso, image_perso, pmMax_perso, bourre_perso, clan, est_gele, UNIX_TIMESTAMP(DLA_perso) as DLA, UNIX_TIMESTAMP(date_gele) as DG FROM perso WHERE ID_perso='$id'";
-	$res = $mysqli->query($sql);
-	$t_perso = $res->fetch_assoc();
-	$x_perso = $t_perso["x_perso"];
-	$y_perso = $t_perso["y_perso"];
-	$pv = $t_perso["pv_perso"];
-	$pv_max = $t_perso["pvMax_perso"];
-	$recup = $t_perso["recup_perso"] + $t_perso["bonusRecup_perso"];
-	$dla = $t_perso["DLA"];
-	$pa = $t_perso["pa_perso"];
-	$pa_max = $t_perso["paMax_perso"];
-	$pm = $t_perso["pm_perso"];
-	$pm_max = $t_perso["pmMax_perso"];
-	$bourre = $t_perso["bourre_perso"];
-	$bonus_recup = $t_perso["bonusRecup_perso"];
-	$bonus = $t_perso["bonus_perso"];
-	$image = $t_perso["image_perso"];
-	$clan = $t_perso["clan"];
-	$est_gele = $t_perso["est_gele"];
-	$date_gele = $t_perso["DG"];
-
-	$date = time();
+	$id 		= $t_chef["id_perso"];
+	$dla 		= $t_chef["DLA"];
+	$clan 		= $t_chef["clan"];
+	$est_gele 	= $t_chef["est_gele"];
+	$date_gele 	= $t_chef["DG"];
+	$pseudo 	= $t_chef["nom_perso"];
 	
-	// Perso gele et il peut se degeler
-	if($est_gele && temp_degele($date, $date_gele)){
+	if (isset($_SESSION["id_perso"]) && $_SESSION["id_perso"] != $id) {
+		// on a switch sur un perso mort ?
 		
-		// degele du perso
-		$sql = "UPDATE perso SET est_gele='0', date_gele=NULL, a_gele='0' WHERE id_perso='$id'";
-		$mysqli->query($sql);
+		$id_perso = $_SESSION["id_perso"];
 		
-		// Récupération du batiment de rappatriement le plus proche du perso
-		$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
+		// recuperation des infos du perso
+		$sql = "SELECT idJoueur_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso FROM perso WHERE id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t_perso = $res->fetch_assoc();
 		
-		// récupération coordonnées batiment
-		$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
-		$res_b = $mysqli->query($sql_b);
-		$t_b = $res_b->fetch_assoc();
+		$id_joueur_perso 	= $t_perso["idJoueur_perso"];
+		$x_perso			= $t_perso["x_perso"];
+		$y_perso			= $t_perso["y_perso"];
+		$pv_perso			= $t_perso["pv_perso"];
+		$pvMax_perso		= $t_perso["pvMax_perso"];
+		$recup_perso		= $t_perso["recup_perso"] + $t_perso["bonusRecup_perso"];
+		$image_perso		= $t_perso["image_perso"];
 		
-		$x = $t_b['x_instance'];
-		$y = $t_b['y_instance'];
-		
-		// On met le perso dans le batiment
-		$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
-		$mysqli->query($sql);
-		
-		// MAJ perso
-		$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
-		$mysqli->query($sql);
-		
-		//redirection
-		header("location:jeu/jouer.php"); 
-	}
-	else {
-		
-		if($est_gele && !temp_degele($date, $date_gele)){
+		// Le perso appartient-il bien au joueur ?
+		if ($id_joueur_perso == $id_joueur) {
 			
-			$tr = temp_restant($date, $date_gele);
-			$jours = floor ($tr/(3600*24));
-			$heures = floor (($tr%(3600*24))/3600);
-			$min = floor ((($tr%(3600*24))%3600)/60);
-			$sec = (((($tr%(3600*24))%3600)%60));
+			if ($pv_perso <= 0) {
+				
+				// Le perso est bien mort
+				//    RESPAWN BATIMENT    //
+							
+				// Récupération du batiment de rappatriement le plus proche du perso
+				$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
+				
+				if ($id_bat != null) {
+					
+					// récupération coordonnées batiment
+					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+					$res_b = $mysqli->query($sql_b);
+					$t_b = $res_b->fetch_assoc();
+					
+					$x = $t_b['x_instance'];
+					$y = $t_b['y_instance'];
+					
+					// On met le perso dans le batiment
+					$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_bat')";
+					$mysqli->query($sql);
+					
+				} else {
+					
+					// Respawn aleatoire
+					if($clan == 1){
+						// bleu
+						$x_min_respawn = 0;
+						$x_max_respawn = 40;
+						$y_min_respawn = 0;
+						$y_max_respawn = 40;
+					}
+					if($clan == 2){
+						// rouge
+						$x_min_respawn = 160;
+						$x_max_respawn = 200;
+						$y_min_respawn = 160;
+						$y_max_respawn = 200;
+					}
+							
+					// on le replace aleatoirement sur la carte
+					$occup = 1;
+					while ($occup == 1)
+					{
+						$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
+						$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
+						$occup = verif_pos_libre($mysqli, $x, $y);
+					}
+					
+					$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x' AND y_carte='$y'";
+					$mysqli->query($sql);
+				}
+				
+				// MAJ perso
+				$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso'";
+				$mysqli->query($sql);
+	
+				//redirection
+				header("location:jeu/jouer.php");
+				
+			} else {
+				// Le perso est vivant
+				// redirection
+				header("location:jeu/jouer.php"); 
+			}
+		} else {
 			
-			echo "Vous devez attendre $jours jours, $heures heures, $min minutes et $sec secondes encore avant de pouvoir vous degeler<br /><br />";
-			echo "<a href=\"logout.php\">[ retour ]</a>";
+			// Tentative de triche !
+			// TODO report 
+		}
+	} else {
+	
+		$_SESSION["id_perso"] = $id;
+		$_SESSION["nom_perso"] = $pseudo;
+
+		$date = time();
+		
+		// Perso gele et il peut se degeler
+		if($est_gele && temp_degele($date, $date_gele)){
+			
+			// Récupération de tous les perso du joueur
+			$sql = "SELECT id_perso, x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
+			$res = $mysqli->query($sql);
+			
+			while ($t_persos = $res->fetch_assoc()) {
+				
+				$id_perso_degele 	= $t_persos["id_perso"];
+				$x_perso_degele		= $t_persos["x_perso"];
+				$y_perso_degele		= $t_persos["y_perso"];
+				
+				// degele du perso
+				$sql = "UPDATE perso SET est_gele='0', date_gele=NULL, a_gele='0' WHERE id_perso='$id_perso_degele'";
+				$mysqli->query($sql);
+				
+				// Récupération du batiment de rappatriement le plus proche du perso
+				$id_bat = selection_bat_rapat($mysqli, $x_perso_degele, $y_perso_degele, $clan);
+				
+				// récupération coordonnées batiment
+				$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+				$res_b = $mysqli->query($sql_b);
+				$t_b = $res_b->fetch_assoc();
+				
+				$x = $t_b['x_instance'];
+				$y = $t_b['y_instance'];
+				
+				// On met le perso et ses grouillots dans le batiment
+				$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_degele','$id_bat')";
+				$mysqli->query($sql);
+				
+				// MAJ perso
+				$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso_degele'";
+				$mysqli->query($sql);
+			}
+			
+			//redirection
+			header("location:jeu/jouer.php"); 
 		}
 		else {
 			
-			//c'est un nouveau tour et le perso n'est pas gele
-			if (!$est_gele && nouveau_tour($date, $dla)) {
-			
-				// calcul du prochain tour
-				$new_dla = get_new_dla($date, $dla);
-				$new_dla = $new_dla + DUREE_TOUR;
+			if($est_gele && !temp_degele($date, $date_gele)){
 				
-				// Calcul Or perso nouveau tour
-				// Récupération du nombre de grouillots du perso
-				$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_joueur' and chef='0' ";
-				$res = $mysqli->query($sql);
-				$num_grouillots = $res->num_rows;
+				$tr = temp_restant($date, $date_gele);
+				$jours = floor ($tr/(3600*24));
+				$heures = floor (($tr%(3600*24))/3600);
+				$min = floor ((($tr%(3600*24))%3600)/60);
+				$sec = (((($tr%(3600*24))%3600)%60));
 				
-				$gain_or = 3 + $num_grouillots;
-				
-				//il est encore en vie
-				if ($pv > 0) {
-					
-					$pv_after_recup = $pv + $recup;
-					
-					if ($pv_after_recup > $pv_max) {
-						$pv_after_recup = $pv_max;
-					}
-					
-					$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id'";
-					$mysqli->query($sql);
-	
-					// redirection
-					header("location:jeu/jouer.php");			
-				}
-				else { 
-					//il est mort
-					
-					//    RESPAWN BATIMENT    //
-					
-					// Récupération du batiment de rappatriement le plus proche du perso
-					$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
-					
-					// récupération coordonnées batiment
-					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
-					$res_b = $mysqli->query($sql_b);
-					$t_b = $res_b->fetch_assoc();
-					
-					$x = $t_b['x_instance'];
-					$y = $t_b['y_instance'];
-					
-					// On met le perso dans le batiment
-					$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
-					$mysqli->query($sql);
-					
-					// MAJ perso
-					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id'";
-					$mysqli->query($sql);
-		
-					//redirection
-					header("location:jeu/jouer.php");
-				}
+				echo "Vous devez attendre $jours jours, $heures heures, $min minutes et $sec secondes encore avant de pouvoir vous degeler<br /><br />";
+				echo "<a href=\"logout.php\">[ retour ]</a>";
 			}
-			else {			
-				if ($pv > 0) { 
-					// il est encore en vie
-					// redirection
-					header("location:jeu/jouer.php");
+			else {
+				
+				//c'est un nouveau tour et le perso n'est pas gele
+				if (!$est_gele && nouveau_tour($date, $dla)) {
+				
+					// calcul du prochain tour
+					$new_dla = get_new_dla($date, $dla);
+					$new_dla = $new_dla + DUREE_TOUR;
+					
+					// Calcul Or perso nouveau tour
+					// Récupération du nombre de grouillots du perso
+					$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_joueur' and chef='0' ";
+					$res = $mysqli->query($sql);
+					$num_grouillots = $res->num_rows;
+					
+					$gain_or = 3 + $num_grouillots;
+					
+					
+					// Récupération de tous les perso du joueur
+					$sql = "SELECT id_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+					$res = $mysqli->query($sql);
+					
+					while ($t_persos = $res->fetch_assoc()) {
+				
+						$id_perso_nouveau_tour 		= $t_persos["id_perso"];
+						$pv_perso_nouveau_tour 		= $t_persos["pv_perso"];
+						$pv_max_perso_nouveau_tour	= $t_persos["pvMax_perso"];
+						$recup_perso_nouveau_tour 	= $t_persos["recup_perso"] + $t_persos["bonusRecup_perso"];
+						$x_perso_nouveau_tour		= $t_persos["x_perso"];
+						$y_perso_nouveau_tour		= $t_persos["y_perso"];
+						$chef_perso_nouveau_tour	= $t_persos["chef"];
+						$image_perso_nouveau_tour	= $t_persos["image_perso"];
+						
+						//il est encore en vie
+						if ($pv_perso_nouveau_tour > 0) {
+							
+							$pv_after_recup = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour;
+							
+							if ($pv_after_recup > $pv_max_perso_nouveau_tour) {
+								$pv_after_recup = $pv_max_perso_nouveau_tour;
+							}
+							
+							if ($chef_perso_nouveau_tour == '1') {
+								
+								// C'est le chef => gain or et PC
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$mysqli->query($sql);
+								
+							} else {
+								
+								// C'est un grouillot
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, pi_perso=pi_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$mysqli->query($sql);
+								
+							}
+			
+							// redirection
+							header("location:jeu/jouer.php");			
+						}
+						else { 							
+							//    RESPAWN BATIMENT    //
+							
+							// Récupération du batiment de rappatriement le plus proche du perso
+							$id_bat = selection_bat_rapat($mysqli, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
+							
+							if ($id_bat != null) {
+							
+								// récupération coordonnées batiment
+								$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+								$res_b = $mysqli->query($sql_b);
+								$t_b = $res_b->fetch_assoc();
+								
+								$x = $t_b['x_instance'];
+								$y = $t_b['y_instance'];
+								
+								// On met le perso dans le batiment
+								$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_nouveau_tour','$id_bat')";
+								$mysqli->query($sql);
+								
+							} else {
+								
+								// Respawn aleatoire
+								if($clan == 1){
+									// bleu
+									$x_min_respawn = 0;
+									$x_max_respawn = 40;
+									$y_min_respawn = 0;
+									$y_max_respawn = 40;
+								}
+								if($clan == 2){
+									// rouge
+									$x_min_respawn = 160;
+									$x_max_respawn = 200;
+									$y_min_respawn = 160;
+									$y_max_respawn = 200;
+								}
+										
+								// on le replace aleatoirement sur la carte
+								$occup = 1;
+								while ($occup == 1)
+								{
+									$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
+									$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
+									$occup = verif_pos_libre($mysqli, $x, $y);
+								}
+								
+								$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso_nouveau_tour', idPerso_carte='$id_perso_nouveau_tour' WHERE x_carte='$x' AND y_carte='$y'";
+								$mysqli->query($sql);
+							}
+							
+							// MAJ perso
+							if ($chef_perso_nouveau_tour == '1') {
+								
+								// C'est le chef => gain or et PC
+								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, xp_perso=xp_perso+1, pi_perso=pi_perso+1, pc_perso=pc_perso+1, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$mysqli->query($sql);
+								
+							} else {
+								
+								// Grouillot
+								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, xp_perso=xp_perso+1, pi_perso=pi_perso+1, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$mysqli->query($sql);
+							}
+				
+							//redirection
+							header("location:jeu/jouer.php");
+						}
+					}
 				}
-				else {
-					//il est mort
-					
-					//    RESPAWN BATIMENT    //
-					
-					// Récupération du batiment de rappatriement le plus proche du perso
-					$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
-					
-					// récupération coordonnées batiment
-					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
-					$res_b = $mysqli->query($sql_b);
-					$t_b = $res_b->fetch_assoc();
-					
-					$x = $t_b['x_instance'];
-					$y = $t_b['y_instance'];
-					
-					// On met le perso dans le batiment
-					$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
-					$mysqli->query($sql);
-					
-					// MAJ perso
-					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
-					$mysqli->query($sql);
-		
-					//redirection
-					header("location:jeu/jouer.php");
+				else {	
+					if ($pv > 0) { 
+						// il est encore en vie
+						// redirection
+						header("location:jeu/jouer.php");
+					}
+					else {
+						//    RESPAWN BATIMENT    //
+						
+						// Récupération du batiment de rappatriement le plus proche du perso
+						$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
+						
+						// récupération coordonnées batiment
+						$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+						$res_b = $mysqli->query($sql_b);
+						$t_b = $res_b->fetch_assoc();
+						
+						$x = $t_b['x_instance'];
+						$y = $t_b['y_instance'];
+						
+						// On met le perso dans le batiment
+						$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
+						$mysqli->query($sql);
+						
+						// MAJ perso
+						$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
+						$mysqli->query($sql);
+			
+						//redirection
+						header("location:jeu/jouer.php");
+					}
 				}
 			}
 		}

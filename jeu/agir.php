@@ -295,7 +295,7 @@ if($verif){
 				else { 
 					// le perso a assez de pa
 					// la cible est encore en vie
-					if ($pv_cible > 0) { 
+					if ($pv_cible > 0) {
 						
 						// Vérifie si le joueur attaqué a coché l'envoi de mail
 						$mail_info_joueur = verif_coche_mail($mysqli, $id_joueur_cible);
@@ -379,7 +379,7 @@ if($verif){
 							$pi_cible 	= $tab["pi_perso"];
 								
 							// il est mort
-							if ($pv_cible <= 0) { 
+							if ($pv_cible <= 0) {
 							
 								// on l'efface de la carte
 								$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -445,8 +445,7 @@ if($verif){
 							<br /><br />
 							<center><a href="jouer.php"><font color="#000000" size="1" face="Verdana, Arial, Helvetica, sans-serif">[ retour ]</font></a></center>
 						<?php
-					}
-									
+					}			
 					else {//la cible est déjà morte
 						echo "Erreur : La cible est déjà morte !";
 						echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
