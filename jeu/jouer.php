@@ -38,8 +38,9 @@ if($dispo || !$admin){
 		$sql_dla = "SELECT UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
 		$res_dla = $mysqli->query($sql_dla);
 		$t_dla = $res_dla->fetch_assoc();
-		$dla = $t_dla["DLA"];
-		$est_gele = $t_dla["est_gele"];
+		
+		$dla 		= $t_dla["DLA"];
+		$est_gele 	= $t_dla["est_gele"];
 	
 		$sql = "SELECT pv_perso FROM perso WHERE ID_perso='$id_perso'";
 		$res = $mysqli->query($sql);
@@ -109,15 +110,15 @@ if($dispo || !$admin){
 				$res = $mysqli->query($sql);
 				$t_perso1 = $res->fetch_assoc();
 				
-				$id_joueur_perso = $t_perso1["idJoueur_perso"];
-				$nom_perso = $t_perso1["nom_perso"];
-				$x_persoN = $t_perso1["x_perso"];
-				$y_persoN = $t_perso1["y_perso"];
-				$pm_perso = $t_perso1["pm_perso"];
-				$n_dla = $t_perso1["DLA_perso"];
-				$image_perso = $t_perso1["image_perso"];
-				$bonusPM_perso_p = $t_perso1["bonusPM_perso"];
-				$clan_p = $t_perso1["clan"];
+				$id_joueur_perso 	= $t_perso1["idJoueur_perso"];
+				$nom_perso 			= $t_perso1["nom_perso"];
+				$x_persoN 			= $t_perso1["x_perso"];
+				$y_persoN 			= $t_perso1["y_perso"];
+				$pm_perso 			= $t_perso1["pm_perso"];
+				$n_dla 				= $t_perso1["DLA_perso"];
+				$image_perso 		= $t_perso1["image_perso"];
+				$bonusPM_perso_p 	= $t_perso1["bonusPM_perso"];
+				$clan_p 			= $t_perso1["clan"];
 				
 				// récupération de la couleur du camp
 				$couleur_clan_p = couleur_clan($clan_p);
@@ -146,19 +147,27 @@ if($dispo || !$admin){
 							
 							// verification des pm du perso
 							if($pm_perso + $malus_pm >= 1){
+								
 								$oc = 1;
 								$seek = 1;
-								while ($oc != 0){ // tant que les cases sont occupees
+								
+								// tant que les cases sont occupees
+								while ($oc != 0){
+								
 									// recuperation des coordonnees des cases et de leur etat (occupee ou non)
 									$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN + $seek";
 									$res = $mysqli->query($sql);
+									
 									while($t = $res->fetch_assoc()){
-										$oc = $t["occupee_carte"];
-										$xs = $t["x_carte"];
-										$ys = $t["y_carte"];
+										
+										$oc 	= $t["occupee_carte"];
+										$xs 	= $t["x_carte"];
+										$ys 	= $t["y_carte"];
 										$fond_c = $t["fond_carte"];
-										if($oc == 0)
+										
+										if($oc == 0) {
 											break;
+										}
 									}
 									$seek++; // on elargie la recherche
 								}
@@ -169,15 +178,6 @@ if($dispo || !$admin){
 								
 								$x_persoN = $xs;
 								$y_persoN = $ys;
-								
-								// verification si le perso a des pnj
-								/*
-								if (possede_animaux($id_perso)){
-									// maj des coordonnées des pnj
-									$sql = "UPDATE instance_pnj,perso_as_pnj SET x_pnj=$xs, y_pnj=$ys WHERE perso_as_pnj.id_instance_pnj=instance_pnj.id_instance_pnj";
-									$mysqli->query($sql);
-								}
-								*/
 								
 								// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
 								$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
@@ -195,15 +195,18 @@ if($dispo || !$admin){
 								$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
 								$res_map = $mysqli->query ($sql);
 								$t_carte1 = $res_map->fetch_assoc();
+								
 								$fond = $t_carte1["fond_carte"];
 								
 								// mise a jour du bonus de perception
 								$bonus_visu = get_malus_visu($fond);
 								if(bourre($mysqli, $id_perso)){
-									if(!endurance_alcool($mysqli, $id_perso))
+									if(!endurance_alcool($mysqli, $id_perso)) {
 										$malus_bourre = bourre($mysqli, $id_perso) * 2;
 										$bonus_visu -= $malus_bourre;
-								}				
+									}
+								}
+								
 								$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
 								$mysqli->query($sql);
 							}
@@ -251,11 +254,11 @@ if($dispo || !$admin){
 													$res = $mysqli->query($sql);
 													$coordonnees_instance = $res->fetch_assoc();
 													
-													$x_bat = $coordonnees_instance["x_instance"];
-													$y_bat = $coordonnees_instance["y_instance"];
-													$nom_bat = $coordonnees_instance["nom_instance"];
-													$niveau_instance = $coordonnees_instance["niveau_instance"];
-													$id_inst_bat = $_GET["bat"];
+													$x_bat 				= $coordonnees_instance["x_instance"];
+													$y_bat 				= $coordonnees_instance["y_instance"];
+													$nom_bat 			= $coordonnees_instance["nom_instance"];
+													$niveau_instance 	= $coordonnees_instance["niveau_instance"];
+													$id_inst_bat 		= $_GET["bat"];
 													
 													// verification si le perso est de la même nation ou non que le batiment
 													if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) { // pas même nation
@@ -267,7 +270,9 @@ if($dispo || !$admin){
 														$sql = "select clan from perso where id_perso='$id_perso'";
 														$res = $mysqli->query($sql);
 														$t_c = $res->fetch_assoc();
+														
 														$camp = $t_c["clan"];
+														
 														if($camp == "1"){
 															$couleur_c = "b";
 														}
@@ -301,6 +306,7 @@ if($dispo || !$admin){
 													// insertion du perso dans la table perso_in_batiment
 													$sql = "INSERT INTO `perso_in_batiment` VALUES ('$id_perso','$id_inst_bat')";
 													$mysqli->query($sql);
+													
 													echo"<font color = blue>vous êtes entrée dans le batiment $id_inst_bat</font><br>";
 														
 													// mise a jour table evenement
@@ -319,9 +325,10 @@ if($dispo || !$admin){
 													$bonus_visu = $bonus_perc;
 													
 													if(bourre($mysqli, $id_perso)){
-														if(!endurance_alcool($mysqli, $id_perso))
+														if(!endurance_alcool($mysqli, $id_perso)) {
 															$malus_bourre = bourre($mysqli, $id_perso) * 2;
 															$bonus_visu -= $malus_bourre;
+														}
 													}
 													// maj bonus perception et -1 pm pour rentrer dans le batiment
 													$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu, pm_perso=pm_perso-1 WHERE id_perso='$id_perso'";
@@ -380,11 +387,11 @@ if($dispo || !$admin){
 													$res = $mysqli->query($sql);
 													$coordonnees_instance = $res->fetch_assoc();
 													
-													$x_bat = $coordonnees_instance["x_instance"];
-													$y_bat = $coordonnees_instance["y_instance"];
-													$nom_bat = $coordonnees_instance["nom_instance"];
-													$id_inst_bat = $coordonnees_instance["id_instanceBat"];
-													$contenance_inst_bat = $coordonnees_instance["contenance_instance"];
+													$x_bat 					= $coordonnees_instance["x_instance"];
+													$y_bat 					= $coordonnees_instance["y_instance"];
+													$nom_bat 				= $coordonnees_instance["nom_instance"];
+													$id_inst_bat 			= $coordonnees_instance["id_instanceBat"];
+													$contenance_inst_bat 	= $coordonnees_instance["contenance_instance"];
 													
 													// verification contenance batiment
 													if($nb_perso_bat < $contenance_inst_bat){
@@ -394,6 +401,7 @@ if($dispo || !$admin){
 														
 															// verification que le batiment est vide
 															if(batiment_vide($mysqli, $id_inst_bat)) {
+																
 																// capture du batiment, il devient de la nation du perso
 																$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
 																$mysqli->query($sql);
@@ -401,7 +409,9 @@ if($dispo || !$admin){
 																$sql = "select clan from perso where id_perso='$id_perso'";
 																$res = $mysqli->query($sql);
 																$t_c = $res->fetch_assoc();
+																
 																$camp = $t_c["clan"];
+																
 																if($camp == "1"){
 																	$couleur_c = "b";
 																}
@@ -433,18 +443,10 @@ if($dispo || !$admin){
 														$sql = "UPDATE perso SET x_perso='$x_bat', y_perso='$y_bat' WHERE id_perso='$id_perso'";
 														$res = $mysqli->query($sql);
 														
-														// verification si le perso a des pnj
-														/*
-														if (possede_animaux($id_perso)){
-															// maj des coordonnées des pnj
-															$sql = "UPDATE instance_pnj,perso_as_pnj SET x_pnj='$x_bat', y_pnj='$y_bat' WHERE perso_as_pnj.id_instance_pnj=instance_pnj.id_instance_pnj";
-															$mysqli->query($sql);
-														}
-														*/
-														
 														// insertion du perso dans la table perso_in_batiment
 														$sql = "INSERT INTO `perso_in_batiment` VALUES ('$id_perso','$id_inst_bat')";
 														$mysqli->query($sql);
+														
 														echo"<font color = blue>vous êtes entrée dans le batiment $nom_bat</font>";
 														
 														// mise a jour table evenement
@@ -458,11 +460,14 @@ if($dispo || !$admin){
 														
 														if(bourre($mysqli, $id_perso)){
 															
-															if(!endurance_alcool($mysqli, $id_perso))
+															if(!endurance_alcool($mysqli, $id_perso)) {
 																
 																$malus_bourre = bourre($mysqli, $id_perso) * 2;
 																$bonus_visu -= $malus_bourre;
+																
+															}
 														}
+														
 														// maj bonus perception et -1 pm pour l'entrée dans le batiment
 														$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu, pm_perso=pm_perso-1 WHERE id_perso='$id_perso'";
 														$mysqli->query($sql);
@@ -500,19 +505,22 @@ if($dispo || !$admin){
 				}
 				
 				if(in_bat($mysqli, $id_perso)){
+					
 					// Récupération des infos sur l'instance du batiment dans lequel le perso se trouve
 					$sql = "SELECT id_instanceBat, id_batiment, nom_instance, niveau_instance FROM instance_batiment WHERE x_instance='$x_persoN' AND y_instance='$y_persoN'";
 					$res = $mysqli->query($sql);
 					$t = $res->fetch_assoc();
-					$id_bat = $t["id_instanceBat"];
-					$bat = $t["id_batiment"];
-					$niveau_instance = $t["niveau_instance"];
-					$nom_ibat = $t["nom_instance"];
+					
+					$id_bat 			= $t["id_instanceBat"];
+					$bat 				= $t["id_batiment"];
+					$niveau_instance 	= $t["niveau_instance"];
+					$nom_ibat 			= $t["nom_instance"];
 					
 					//recuperation du nom du batiment
 					$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
 					$res_n = $mysqli->query($sql_n);
 					$t_n = $res_n->fetch_assoc();
+					
 					$nom_bat = $t_n["nom_batiment"];
 					
 					$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
@@ -531,9 +539,10 @@ if($dispo || !$admin){
 					// mise a jour du bonus de perception du perso
 					$bonus_visu = $bonus_perc;
 					if(bourre($mysqli, $id_perso)){
-						if(!endurance_alcool($mysqli, $id_perso))
+						if(!endurance_alcool($mysqli, $id_perso)) {
 							$malus_bourre = bourre($mysqli, $id_perso) * 2;
 							$bonus_visu -= $malus_bourre;
+						}
 					}
 					
 					$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
@@ -549,18 +558,25 @@ if($dispo || !$admin){
 					$res = $mysqli->query($sql);
 						
 					while ($t_c = $res->fetch_assoc()){
+						
 						$oc_c = $t_c['occupee_carte'];
+						
 						if($oc_c){
+							
 							$im_c = $t_c["image_carte"];
+							
 							if($im_c == "coffre1t.png"){
+								
 								$x_c = $t_c["x_carte"];
 								$y_c = $t_c["y_carte"];
 								$ok_c = 1;
+								
 								break;
 							}
 						}
 					}
 					if($ok_c){
+						
 						// on met à jour l'image du coffre
 						$sql = "UPDATE $carte SET image_carte='coffre2t.png' WHERE x_carte='$x_c' AND y_carte='$y_c'";
 						$mysqli->query($sql);
@@ -576,8 +592,9 @@ if($dispo || !$admin){
 						$sql = "SELECT nom_objet, poids_objet FROM objet WHERE id_objet='$contenu_c'";
 						$res = $mysqli->query($sql);
 						$info_c = $res->fetch_assoc();
-						$nom_o_c = $info_c["nom_objet"];
-						$poids_o_c = $info_c["poids_objet"];
+						
+						$nom_o_c 	= $info_c["nom_objet"];
+						$poids_o_c 	= $info_c["poids_objet"];
 						
 						// MAj malus charge
 						$malus_pm = $bonusPM_perso_p;
@@ -622,16 +639,18 @@ if($dispo || !$admin){
 								$sql = "SELECT occupee_carte, fond_carte, image_carte FROM $carte WHERE x_carte=$x_persoN AND y_carte=$y_persoN";
 								$res_map = $mysqli->query($sql);
 								$t_carte1 = $res_map->fetch_assoc();
-								$case_occupee = $t_carte1["occupee_carte"];
-								$fond = $t_carte1["fond_carte"];
 								
-								$cout_pm = cout_pm($fond);
+								$case_occupee 	= $t_carte1["occupee_carte"];
+								$fond 			= $t_carte1["fond_carte"];
+								
+								$cout_pm 	= cout_pm($fond);
 								$bonus_visu = get_malus_visu($fond);
 								
 								if(bourre($mysqli, $id_perso)){
-									if(!endurance_alcool($mysqli, $id_perso))
+									if(!endurance_alcool($mysqli, $id_perso)){
 										$malus_bourre = bourre($mysqli, $id_perso) * 2;
 										$bonus_visu -= $malus_bourre;
+									}
 								}
 		
 								if (!is_eau_p($fond)) {
@@ -678,6 +697,7 @@ if($dispo || !$admin){
 													$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
 													$res_n = $mysqli->query($sql_n);
 													$t_n = $res_n->fetch_assoc();
+													
 													$nom_bat = $t_n["nom_batiment"];
 													
 													// verification si le batiment est de la même nation que le perso
@@ -721,6 +741,7 @@ if($dispo || !$admin){
 													$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
 													$res_n = $mysqli->query($sql_n);
 													$t_n = $res_n->fetch_assoc();
+													
 													$nom_bat = $t_n["nom_batiment"];
 													
 													// verification si le batiment est de la même nation que le perso
@@ -766,6 +787,7 @@ if($dispo || !$admin){
 												$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
 												$res_n = $mysqli->query($sql_n);
 												$t_n = $res_n->fetch_assoc();
+												
 												$nom_bat = $t_n["nom_batiment"];
 													
 												// verification si le batiment est de la même nation que le perso
@@ -810,6 +832,7 @@ if($dispo || !$admin){
 											$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
 											$res_n = $mysqli->query($sql_n);
 											$t_n = $res_n->fetch_assoc();
+											
 											$nom_bat = $t_n["nom_batiment"];
 											
 											// verification si le batiment est de la même nation que le perso
@@ -854,6 +877,7 @@ if($dispo || !$admin){
 										$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
 										$res_n = $mysqli->query($sql_n);
 										$t_n = $res_n->fetch_assoc();
+										
 										$nom_bat = $t_n["nom_batiment"];
 											
 										// verification si le batiment est de la même nation que le perso
@@ -947,6 +971,7 @@ if($dispo || !$admin){
 							$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
 							$res_n = $mysqli->query($sql_n);
 							$t_n = $res_n->fetch_assoc();
+							
 							$nom_bat = $t_n["nom_batiment"];
 							
 							// verification si le batiment est de la même nation que le perso
@@ -983,30 +1008,30 @@ if($dispo || !$admin){
 					</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, or_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
-				$x_perso = $t_perso2["x_perso"];
-				$y_perso = $t_perso2["y_perso"];
-				$image_perso = $t_perso2["image_perso"];
-				$perc = $t_perso2["perception_perso"] + $t_perso2["bonusPerception_perso"];
-				$pa_perso = $t_perso2["pa_perso"];
-				$paMax_perso = $t_perso2["paMax_perso"];
-				$pi_perso = $t_perso2["pi_perso"];
-				$xp_perso = $t_perso2["xp_perso"];
-				$pc_perso = $t_perso2["pc_perso"];
-				$pv_perso = $t_perso2["pv_perso"];
-				$pvMax_perso = $t_perso2["pvMax_perso"];
-				$pm_perso = $t_perso2["pm_perso"] + $malus_pm;
-				$pmMax_perso = $t_perso2["pmMax_perso"];
-				$perception_perso = $t_perso2["perception_perso"];
-				$bonusPerception_perso = $t_perso2["bonusPerception_perso"];
-				$recup_perso = $t_perso2["recup_perso"];
-				$protec_perso = $t_perso2["protec_perso"];
-				$bonus_perso = $t_perso2["bonus_perso"];
-				$type_perso = $t_perso2["type_perso"];
-				$bataillon_perso = $t_perso2["bataillon"];
+				$x_perso 				= $t_perso2["x_perso"];
+				$y_perso 				= $t_perso2["y_perso"];
+				$image_perso 			= $t_perso2["image_perso"];
+				$perc 					= $t_perso2["perception_perso"] + $t_perso2["bonusPerception_perso"];
+				$pa_perso 				= $t_perso2["pa_perso"];
+				$paMax_perso 			= $t_perso2["paMax_perso"];
+				$pi_perso 				= $t_perso2["pi_perso"];
+				$xp_perso 				= $t_perso2["xp_perso"];
+				$pc_perso 				= $t_perso2["pc_perso"];
+				$pv_perso 				= $t_perso2["pv_perso"];
+				$pvMax_perso 			= $t_perso2["pvMax_perso"];
+				$pm_perso 				= $t_perso2["pm_perso"] + $malus_pm;
+				$pmMax_perso 			= $t_perso2["pmMax_perso"];
+				$perception_perso 		= $t_perso2["perception_perso"];
+				$bonusPerception_perso 	= $t_perso2["bonusPerception_perso"];
+				$recup_perso 			= $t_perso2["recup_perso"];
+				$protec_perso 			= $t_perso2["protec_perso"];
+				$bonus_perso 			= $t_perso2["bonus_perso"];
+				$type_perso 			= $t_perso2["type_perso"];
+				$bataillon_perso 		= $t_perso2["bataillon"];
 				
 				$clan_perso = $t_perso2["clan"];
 				
@@ -1026,8 +1051,8 @@ if($dispo || !$admin){
 				$res_grade = $mysqli->query($sql_grade);
 				$t_grade = $res_grade->fetch_assoc();
 				
-				$id_grade_perso = $t_grade["id_grade"];
-				$nom_grade_perso = $t_grade["nom_grade"];
+				$id_grade_perso 	= $t_grade["id_grade"];
+				$nom_grade_perso 	= $t_grade["nom_grade"];
 				
 				// cas particuliers grouillot
 				if ($id_grade_perso == 101) {
@@ -1340,6 +1365,7 @@ if($dispo || !$admin){
 													$tab = $res->fetch_assoc();
 													
 													$nom_cible_cac = $tab["nom_pnj"];
+													
 												} else {
 													
 													// Un Batiment
@@ -1529,26 +1555,27 @@ if($dispo || !$admin){
 														$res_perso_im = $mysqli->query($sql_perso_im);
 														$t_perso_im = $res_perso_im->fetch_assoc();
 														
-														$im_perso = $t_perso_im["image_perso"];
+														$im_perso 	= $t_perso_im["image_perso"];
 														$nom_ennemi = $t_perso_im['nom_perso'];
-														$id_ennemi = $t_perso_im['id_perso'];
-														$clan_e = $t_perso_im['clan'];
+														$id_ennemi 	= $t_perso_im['id_perso'];
+														$clan_e 	= $t_perso_im['clan'];
 														
 														if($clan_e == 1){
-															$clan_ennemi = 'rond_b.png';
+															$clan_ennemi 	= 'rond_b.png';
 															$couleur_clan_e = 'blue';
-															$image_profil = "nord.gif";
+															$image_profil 	= "nord.gif";
 														}
 														if($clan_e == 2){
-															$clan_ennemi = 'rond_r.png';
+															$clan_ennemi 	= 'rond_r.png';
 															$couleur_clan_e = 'red';
-															$image_profil = "sud.gif";
+															$image_profil 	= "sud.gif";
 														}
 														
 														// recuperation de l'id de la section 
 														$sql_groupe = "SELECT id_section from perso_in_section where id_perso='$id_perso_im' and attenteValidation_section='0'";
 														$res_groupe = $mysqli->query($sql_groupe);
 														$t_groupe = $res_groupe->fetch_assoc();
+														
 														$id_groupe = $t_groupe['id_section'];
 														
 														if(isset($groupe)){
@@ -1585,7 +1612,8 @@ if($dispo || !$admin){
 										}
 									}
 								}
-								else{
+								else {
+									
 									// verification s'il y a un objet sur cette case
 									$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
 									$res_o = $mysqli->query($sql_o);
@@ -1784,9 +1812,9 @@ if($dispo || !$admin){
 													
 													while ($t_ac = $res->fetch_assoc()) {
 														
-														$id_ac = $t_ac["id_action"];
-														$cout_PA = $t_ac["coutPa_action"];
-														$nom_ac = $t_ac["nom_action"];
+														$id_ac 		= $t_ac["id_action"];
+														$cout_PA 	= $t_ac["coutPa_action"];
+														$nom_ac 	= $t_ac["nom_action"];
 													
 														if ($cout_PA == -1){
 															$cout_PA = $paMax_perso;
