@@ -15,6 +15,7 @@ if(isset($_SESSION["ID_joueur"])){
 	$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso=$id_joueur AND chef=1";
 	$res = $mysqli->query($sql);
 	$t_id = $res->fetch_assoc();
+	
 	$_SESSION["id_perso"] = $id = $t_id["id_perso"];
 	$_SESSION["nom_perso"] = $pseudo = $t_id["nom_perso"];
 
@@ -49,39 +50,24 @@ if(isset($_SESSION["ID_joueur"])){
 		$sql = "UPDATE perso SET est_gele='0', date_gele=NULL, a_gele='0' WHERE id_perso='$id'";
 		$mysqli->query($sql);
 		
-		// reapparition sur la carte
-		$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id', image_carte='$image' WHERE x_carte=$x_perso AND y_carte=$y_perso";
+		// Récupération du batiment de rappatriement le plus proche du perso
+		$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
+		
+		// récupération coordonnées batiment
+		$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+		$res_b = $mysqli->query($sql_b);
+		$t_b = $res_b->fetch_assoc();
+		
+		$x = $t_b['x_instance'];
+		$y = $t_b['y_instance'];
+		
+		// On met le perso dans le batiment
+		$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
 		$mysqli->query($sql);
 		
-		/*
-		// On degele le perso
-		if($clan == 1){ // bleu
-			$x_min_respawn = 0;
-			$x_max_respawn = 40;
-			$y_min_respawn = 0;
-			$y_max_respawn = 40;
-		}
-		if($clan == 2){ // rouge
-			$x_min_respawn = 160;
-			$x_max_respawn = 200;
-			$y_min_respawn = 160;
-			$y_max_respawn = 200;
-		}
-				
-		// on le replace aleatoirement sur la carte
-		$occup = 1;
-		while ($occup == 1)
-		{
-			$x = pos_zone_rand_x($x_min_respawn,$x_max_respawn); 
-			$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
-			$occup = verif_pos_libre($x,$y);
-		}
-		$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image', idPerso_carte='$id' WHERE x_carte='$x' AND y_carte='$y'";
-		exec_requete($sql);
-			
-		$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', arene='0', changementDe_perso='0' ,pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
-		exec_requete($sql, __LINE__, __FILE__);
-		*/
+		// MAJ perso
+		$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
+		$mysqli->query($sql);
 		
 		//redirection
 		header("location:jeu/jouer.php"); 
@@ -108,46 +94,32 @@ if(isset($_SESSION["ID_joueur"])){
 				$new_dla = get_new_dla($date, $dla);
 				$new_dla = $new_dla + DUREE_TOUR;
 				
-				if ($pv > 0) { //il est encore en vie
+				// Calcul Or perso nouveau tour
+				// Récupération du nombre de grouillots du perso
+				$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_joueur' and chef='0' ";
+				$res = $mysqli->query($sql);
+				$num_grouillots = $res->num_rows;
+				
+				$gain_or = 3 + $num_grouillots;
+				
+				//il est encore en vie
+				if ($pv > 0) {
 					
-					if ($pv + $recup >= $pv_max) { //il aurait recup plus de pv que son maximum
-						if($bonus < -1){
-							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=bonus_perso+2, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
-							$mysqli->query($sql);
-							$recup = $pv_max - $pv;
-			
-							// redirection
-							header("location:jeu/jouer.php");
-						}
-						else {
-							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
-							$mysqli->query($sql);
-							$recup = $pv_max - $pv;
-			
-							// redirection
-							header("location:jeu/jouer.php");
-						}
+					$pv_after_recup = $pv + $recup;
+					
+					if ($pv_after_recup > $pv_max) {
+						$pv_after_recup = $pv_max;
 					}
-					else {
-						if($bonus < -1){
-							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pv_perso+recup_perso+$bonus_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=bonus_perso+2, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+1, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
-							$mysqli->query($sql);
-			
-							// redirection
-							header("location:jeu/jouer.php");
-						}
-						else {
-							$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pv_perso+recup_perso+$bonus_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+1, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
-							$mysqli->query($sql);
-			
-							// redirection
-							header("location:jeu/jouer.php");
-						}
-					}				
-				}
-				else { //il est mort
 					
-					// NOUVEAU FONCTIONNEMENT //
+					$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, pi_perso=pi_perso+1, bourre_perso=0, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id'";
+					$mysqli->query($sql);
+	
+					// redirection
+					header("location:jeu/jouer.php");			
+				}
+				else { 
+					//il est mort
+					
 					//    RESPAWN BATIMENT    //
 					
 					// Récupération du batiment de rappatriement le plus proche du perso
@@ -157,6 +129,7 @@ if(isset($_SESSION["ID_joueur"])){
 					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
 					$res_b = $mysqli->query($sql_b);
 					$t_b = $res_b->fetch_assoc();
+					
 					$x = $t_b['x_instance'];
 					$y = $t_b['y_instance'];
 					
@@ -165,26 +138,45 @@ if(isset($_SESSION["ID_joueur"])){
 					$mysqli->query($sql);
 					
 					// MAJ perso
-					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', arene='0', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE ID_perso='$id'";
+					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id'";
 					$mysqli->query($sql);
 		
 					//redirection
 					header("location:jeu/jouer.php");
 				}
 			}
-			else {				
-				if ($pv > 0) { //il est encore en vie
+			else {			
+				if ($pv > 0) { 
+					// il est encore en vie
 					// redirection
 					header("location:jeu/jouer.php");
 				}
-				else { //il est mort
-					echo "<div class=\"infoi\" align=\"center\">Vous êtes mort !</div><br />";
-					echo "<center><img src=\"images/mort.gif\" alt='mort'/></center><br /><br />";
-					echo "Vous devez attendre votre prochain tour (";
-					echo get_date($dla);
-					echo ").";
-					echo "<br /><br /><div align=\"center\"><a href=\"forum2/index.php\">acceder au forum</a></div>";
-					echo "<br /><div align=\"center\"><a href=\"logout.php\">retour</a></div>";
+				else {
+					//il est mort
+					
+					//    RESPAWN BATIMENT    //
+					
+					// Récupération du batiment de rappatriement le plus proche du perso
+					$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
+					
+					// récupération coordonnées batiment
+					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+					$res_b = $mysqli->query($sql_b);
+					$t_b = $res_b->fetch_assoc();
+					
+					$x = $t_b['x_instance'];
+					$y = $t_b['y_instance'];
+					
+					// On met le perso dans le batiment
+					$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
+					$mysqli->query($sql);
+					
+					// MAJ perso
+					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
+					$mysqli->query($sql);
+		
+					//redirection
+					header("location:jeu/jouer.php");
 				}
 			}
 		}

@@ -51,7 +51,7 @@ if($dispo || !$admin){
 		// verification si le perso est encore en vie
 		if ($testpv <= 0) {
 			// le perso est mort
-			header("Location: ../mort.php"); 
+			header("Location: ../tour.php"); 
 		}
 		else { 
 			// le perso est vivant
@@ -1344,7 +1344,7 @@ if($dispo || !$admin){
 												} else {
 													
 													// Un Batiment
-													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_nstanceBat = '$id_cible_cac'";
+													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
 													$res = $mysqli->query($sql);
 													$tab = $res->fetch_assoc();
 													
@@ -1384,7 +1384,7 @@ if($dispo || !$admin){
 												} else {
 													
 													// Un Batiment
-													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_nstanceBat = '$id_cible_dist'";
+													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
 													$res = $mysqli->query($sql);
 													$tab = $res->fetch_assoc();
 													

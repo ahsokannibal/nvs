@@ -613,7 +613,12 @@ if($verif){
 								<td width=25%>	
 									<table border=0 width=100%>
 										<tr>
-											<td align="center"><img src="../images_perso/<?php echo $image_perso; ?>"></td>
+											<td align="center">
+												<div width=40 height=40 style="position: relative;">
+													<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id; ?></div>
+													<img class="" border=0 src="../images_perso/<?php echo $image_perso; ?>" width=40 height=40 />
+												</div>
+											</td>
 										</tr>
 									</table>
 								</td>
@@ -703,7 +708,6 @@ if($verif){
 						if ($touche <= 2) {
 							// Coup critique ! Dégats et Gains PC X 2
 							$degats_final = $degats_final * 2;
-							$gain_pc = $gain_pc * 2;
 						}
 						
 						// TODO - calcul gain XP selon pnj
@@ -752,6 +756,10 @@ if($verif){
 							$res_v = $mysqli->query($sql_v);
 							$verif_pnj = $res_v->num_rows;
 							
+							// nb_pnj 
+							$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso='$id'";
+							$mysqli->query($sql);
+							
 							if($verif_pnj == 0){
 								// il n'a jamais tué de pnj de ce type => insert
 								$sql = "INSERT INTO perso_as_killpnj VALUES('$id','$id_pnj','1')";
@@ -774,6 +782,18 @@ if($verif){
 							echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 						}
 						
+						if ($pv_cible > 0) {
+						?>
+							<br />
+							<form action="agir.php" method="post">
+								<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
+								<input type="submit" name="re_attaque" value="attaquer à nouveau" />
+							</form> 
+							
+							<br />
+						<?php
+							echo "<br/><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						}						
 					}
 					else { // la cible a esquivé l'attaque
 		
@@ -782,25 +802,25 @@ if($verif){
 						// maj evenement
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_cible','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso>$nom_perso</font>','',NOW(),'0')";
 						$mysqli->query($sql);
+						
+						if ($pv_cible > 0) {
+						?>
+							<br />
+							<form action="agir.php" method="post">
+								<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
+								<input type="submit" name="re_attaque" value="attaquer à nouveau" />
+							</form> 
+							
+							<br />
+						<?php
+							echo "<br/><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						}
 		
 					}
 					
 					//mise à jour des pa
 					$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_arme_attaque WHERE id_perso='$id'";
 					$res = $mysqli->query($sql);
-					
-					if ($pv_cible > 0) {
-					?>
-						<br />
-						<form action="agir.php" method="post">
-							<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
-							<input type="submit" name="re_attaque" value="attaquer à nouveau" />
-						</form> 
-						
-						<br />
-					<?php
-						echo "<br/><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
-					}
 				}			
 				else {
 					
@@ -915,6 +935,9 @@ if($verif){
 		$clan_perso 	= $t_perso["clan"];
 		$grade_perso 	= $t_perso["id_grade"];
 		
+		// Récupération de la couleur associée au clan du perso
+		$couleur_clan_perso = couleur_clan($clan_perso);
+		
 		if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {	
 		
 			$coutPa_attaque='5';
@@ -927,16 +950,16 @@ if($verif){
 			$res = $mysqli->query($sql);
 			$bat = $res->fetch_assoc();
 			
-			$id_batiment = $bat['id_batiment'];
-			$nom_batiment = $bat['nom_batiment'];
-			$description_batiment = $bat['description'];
-			$nom_instance_batiment = $bat['nom_instance'];
-			$pv_instance = $bat['pv_instance'];
-			$pvMax_instance = $bat['pvMax_instance'];
-			$x_instance = $bat['x_instance'];
-			$y_instance = $bat['y_instance'];
-			$camp_instance = $bat['camp_instance'];
-			$contenance_instance = $bat['contenance_instance'];
+			$id_batiment 			= $bat['id_batiment'];
+			$nom_batiment 			= $bat['nom_batiment'];
+			$description_batiment 	= $bat['description'];
+			$nom_instance_batiment 	= $bat['nom_instance'];
+			$pv_instance 			= $bat['pv_instance'];
+			$pvMax_instance 		= $bat['pvMax_instance'];
+			$x_instance 			= $bat['x_instance'];
+			$y_instance 			= $bat['y_instance'];
+			$camp_instance 			= $bat['camp_instance'];
+			$contenance_instance 	= $bat['contenance_instance'];
 			
 			if($camp_instance == '1'){
 				$camp_bat = 'b';
@@ -949,13 +972,12 @@ if($verif){
 			
 			$image_bat = "b".$id_batiment."".$camp_bat.".png";
 			
-			// Récupération de la couleur associée au clan du perso
-			$couleur_clan_perso = couleur_clan($clan_perso);
-			
 			$pa_restant = $pa_perso - $coutPa_attaque;
+			
 			if($pa_restant <= 0){
 				$pa_restant = 0;
 			}
+			
 			?>
 			<table border=0 width=100%>
 				<tr height=50%>
@@ -965,7 +987,12 @@ if($verif){
 								<td width=25%>	
 									<table border=0 width=100%>
 										<tr>
-											<td align="center"><img src="../images_perso/<?php echo $image_perso; ?>"></td>
+											<td align="center">
+												<div width=40 height=40 style="position: relative;">
+													<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id; ?></div>
+													<img class="" border=0 src="../images_perso/<?php echo $image_perso; ?>" width=40 height=40 />
+												</div>
+											</td>
 										</tr>
 									</table>
 								</td>
@@ -1019,181 +1046,206 @@ if($verif){
 					</td>
 				</tr>
 			</table>
-			<?php					
-			if ($pa_perso < $coutPa_attaque) { //le perso n'a pas assez de pa pour faire cette attaque
+			<?php
+			
+			//le perso n'a pas assez de pa pour faire cette attaque
+			if ($pa_perso < $coutPa_attaque) {
 				echo "<div class=\"erreur\" align=\"center\">Vous n'avez pas assez de pa pour effectuer cette action !</div>";
 				echo "<a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a>";
 			}
-			else { //le perso a assez de pa
+			else {
+				//le perso a assez de pa
 					
-				if ($pv_instance > 0) { //la cible est encore en vie
+				//la cible est encore en vie
+				if ($pv_instance > 0) {
 							
 					echo "Vous avez lancé une attaque sur <b>$nom_batiment [$id_cible]</b>.<br>";
 					
-					$gain_xp = 2;
+					$gain_xp = mt_rand(1,3);
 		
-					// Si le perso est équipée d'une arme => On prend les dégats de l'arme
-					if($id_arme_attaque){
-						
-						// Calcul des degats de l'arme
-						if($degatMin_arme_equipee && $degatMax_arme_equipee){
-							$min_degats_arme = $degatMin_arme_equipee;
-							$max_degats_arme = $degatMax_arme_equipee;
-						}
-						else {
-							$min_degats_arme = $degats_perso * $multiplicateurMin_degats_equipee + $additionMin_degats_equipee;
-							$max_degats_arme = $degats_perso * $multiplicateurMax_degats_equipee + $additionMax_degats_equipee;
-						}
-						
-						$degats = rand($min_degats_arme, $max_degats_arme);
-						
-					} else {
-						$degats = 1;
-					}
-						
-					// mise à jour des pv du pnj
-					$sql = "UPDATE instance_batiment SET pv_instance=pv_instance-$degats WHERE id_instanceBat='$id_cible'";
-					$mysqli->query($sql);
-					echo "<br>Vous avez infligé <b>$degats</b> degats à la cible.<br><br>";
-					echo "Vous avez gagné <b>$gain_xp</b> xp<br>";
-						
-					// maj gain xp, pi perso
-					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id'";
-					$mysqli->query($sql);
-						
-					// maj evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',': $degats degats',NOW(),'0')";
-					$mysqli->query($sql);					
-						
-					// recuperation des données du batiment aprés attaque
-					$sql = "SELECT id_batiment, pv_instance, x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_cible'";
-					$res = $mysqli->query($sql);
-					$tab = $res->fetch_assoc();
+					// Calcul touche
+					$touche = mt_rand(0,100);
+					$precision_final = $precision_arme_attaque;
 					
-					$pv_cible = $tab["pv_instance"];
-					$x_cible = $tab["x_instance"];
-					$y_cible = $tab["y_instance"];
-					$id_batiment = $tab["id_batiment"];
-							
-					$gain_obj="";
+					echo "Votre score de touche : ".$touche."<br>";
 					
-					/* Début du traitement de la destruction du batiment*/
-					// il est detruit
-					if ($pv_cible <= 0) { 
-						// on efface le batiment de la carte
-						$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-						$mysqli->query($sql);
-					
-						// Récupération des persos dans le batiment
-						$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
-						$res = $mysqli->query($sql);
-						while ($t = $res->fetch_assoc()){
-							$id_p = $t['id_perso'];
-							
-							// perte entre 10 et 50 pv
-							$perte_pv = mt_rand(10,50);
-							
-							// Traitement persos dans le batiment qui perdent des pv 
-							$sql_p = "UPDATE perso SET pv_perso=pv_perso-$perte_pv WHERE id_perso='$id_p'";
-							$mysqli->query($sql_p);
-							
-							// recup des infos du perso
-							$sql_i = "SELECT nom_perso, pv_perso, image_perso, clan FROM perso WHERE id_perso='$id_p'";
-							$res_i = $mysqli->query($sql_i);
-							$t_i = $res_i->fetch_assoc();
-							$nom_p = $t_i["nom_perso"];
-							$pv_p = $t_i["pv_perso"];
-							$image_p = $t_i["image_perso"];
-							$clan_p = $t_i["clan"];
-							
-							// Récupération de la couleur associée au clan du perso
-							$couleur_clan_p = couleur_clan($clan_p);
-							
-							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p>$nom_p</font>','a été bléssé suite à la destruction du bâtiment',NULL,'',' : - $perte_pv',NOW(),'0')";
-							$mysqli->query($sql);
-							
-							// Le perso est encore vivant
-							if($pv_p > 0){
-								// Traitement répartissement des persos sur la carte
-								$occup = 1;
-								while ($occup == 1)
-								{
-									$x = pos_zone_rand_x($x_cible-5,$x_cible+5); 
-									$y = pos_zone_rand_y($y_cible-5,$y_cible+5);
-									$occup = verif_pos_libre($x,$y);
-								}
-								// MAJ du perso sur la carte
-								$sql_u = "UPDATE carte SET occupee_carte = '1', image_carte='$image_p', idPerso_carte='$id_p' WHERE x_carte='$x' AND y_carte='$y'";
-								$mysqli->query($sql_u);
-								
-								// MAJ des coordonnées du perso
-								$sql_u2 = "UPDATE perso SET x_perso='$x' AND y_perso='$y' WHERE id_perso='$id_p'";
-								$mysqli->query($sql_u2);
-							}
-							else {
-								// Le perso est mort
-																
-								// Ajout du kill
-								$sql_u2 = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso='$id'";
-								$mysqli->query($sql_u2);
-								
-								$sql_u2 = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$id_p'";
-								$mysqli->query($sql_u2);
-								
-								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a tué','$id_p','<font color=$couleur_clan_p>$nom_p</font>',' : mort suite à l\'explosion du bâtiment $id_cible',NOW(),'0')";
-								$mysqli->query($sql);
-									
-								// maj cv
-								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_p','<font color=$couleur_clan_p>$nom_p</font>',NOW())"; 
-								$mysqli->query($sql);
-								
-							}
+					// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
+					if ($touche <= $precision_final) {
+		
+						// calcul degats arme
+						$degats_final = mt_rand($degatMin_arme_attaque, $degatMin_arme_attaque * $valeur_des_arme_attaque);
+						
+						if($degats_final < 0) {
+							$degats_final = 0;
 						}
-						// on supprime les persos du batiment
-						$sql = "DELETE FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
+						
+						if ($touche <= 2) {
+							// Coup critique ! Dégats et Gains PC X 2
+							$degats_final = $degats_final * 2;
+						}
+						
+						// mise à jour des pv du batiment
+						$sql = "UPDATE instance_batiment SET pv_instance=pv_instance-$degats_final WHERE id_instanceBat='$id_cible'";
 						$mysqli->query($sql);
 						
-						// on delete le bâtiment
-						$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_cible'";
+						echo "<br>Vous avez infligé <b>$degats_final</b> degats à la cible.<br><br>";
+						echo "Vous avez gagné <b>$gain_xp</b> xp<br>";
+							
+						// maj gain xp, pi perso
+						$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id'";
 						$mysqli->query($sql);
-						
-						$gain_xp = '2';
-						$gain_po = '10'; //-- TODO -- Adapter gain or selon batiment
-						
-						// gain xp/or/stat perso
-						$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, or_perso=or_perso+$gain_po WHERE id_perso='$id'";
-						$mysqli->query($sql);
-				
-						echo "Vous avez détruit votre cible ! <font color=red>Félicitations.</font>";
-						
-						echo "Vous gagnez <b>$gain_xp</b> xp et vous récupérez dans les décombres <b>$gain_po</b> piece(s) d'or.<br/>";
-						echo $gain_obj."<br/>";
 							
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a détruit','$id_cible','<font color=$couleur_bat>$nom_batiment</font>','',NOW(),'0')";
-						$mysqli->query($sql);
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',': $degats_final degats',NOW(),'0')";
+						$mysqli->query($sql);					
 							
-						// maj cv
-						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',NOW())"; 
-						$mysqli->query($sql);
-							
-						echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
-					}
-					/* Fin du traitement de la destruction du bâtiment*/
-					
-					//mise à jour des pa
-					$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_attaque WHERE id_perso='$id'";
-					$res = $mysqli->query($sql); 
-					
-					?>
-						<form action="agir.php" method="post">
-							<input type="submit" name="re_attaque" value="attaquer à nouveau">
-						</form> 
+						// recuperation des données du batiment aprés attaque
+						$sql = "SELECT id_batiment, pv_instance, x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_cible'";
+						$res = $mysqli->query($sql);
+						$tab = $res->fetch_assoc();
 						
-					<?php
-					echo "<br/><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						$pv_cible 		= $tab["pv_instance"];
+						$x_cible 		= $tab["x_instance"];
+						$y_cible 		= $tab["y_instance"];
+						$id_batiment 	= $tab["id_batiment"];
+						
+						/* Début du traitement de la destruction du batiment*/
+						// il est detruit
+						if ($pv_cible <= 0) { 
+						
+							// on efface le batiment de la carte
+							$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+							$mysqli->query($sql);
+						
+							// Récupération des persos dans le batiment
+							$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()){
+								
+								$id_p = $t['id_perso'];
+								
+								// perte entre 10 et 50 pv
+								$perte_pv = mt_rand(10,50);
+								
+								// Traitement persos dans le batiment qui perdent des pv 
+								$sql_p = "UPDATE perso SET pv_perso=pv_perso-$perte_pv WHERE id_perso='$id_p'";
+								$mysqli->query($sql_p);
+								
+								// recup des infos du perso
+								$sql_i = "SELECT nom_perso, pv_perso, image_perso, clan FROM perso WHERE id_perso='$id_p'";
+								$res_i = $mysqli->query($sql_i);
+								$t_i = $res_i->fetch_assoc();
+								
+								$nom_p 		= $t_i["nom_perso"];
+								$pv_p 		= $t_i["pv_perso"];
+								$image_p 	= $t_i["image_perso"];
+								$clan_p 	= $t_i["clan"];
+								
+								// Récupération de la couleur associée au clan du perso
+								$couleur_clan_p = couleur_clan($clan_p);
+								
+								// maj evenement
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p>$nom_p</font>','a été bléssé suite à la destruction du bâtiment',NULL,'',' : - $perte_pv',NOW(),'0')";
+								$mysqli->query($sql);
+								
+								// Le perso est encore vivant
+								if($pv_p > 0){
+									
+									// Traitement répartissement des persos sur la carte
+									$occup = 1;
+									while ($occup == 1)
+									{
+										// TODO - changer façon de faire 
+										// TODO - Tourner autour de la position du batiment jusqu'à ce qu'on trouve une position libre
+										$x = pos_zone_rand_x($x_cible-5, $x_cible+5); 
+										$y = pos_zone_rand_y($y_cible-5, $y_cible+5);
+										$occup = verif_pos_libre($mysqli, $x, $y);
+									}
+									
+									// MAJ du perso sur la carte
+									$sql_u = "UPDATE carte SET occupee_carte = '1', image_carte='$image_p', idPerso_carte='$id_p' WHERE x_carte='$x' AND y_carte='$y'";
+									$mysqli->query($sql_u);
+									
+									// MAJ des coordonnées du perso
+									$sql_u2 = "UPDATE perso SET x_perso='$x' AND y_perso='$y' WHERE id_perso='$id_p'";
+									$mysqli->query($sql_u2);
+								}
+								else {
+									// Le perso est mort
+																	
+									// Ajout du kill
+									$sql_u2 = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso='$id'";
+									$mysqli->query($sql_u2);
+									
+									$sql_u2 = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$id_p'";
+									$mysqli->query($sql_u2);
+									
+									// maj evenement
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a capturé','$id_p','<font color=$couleur_clan_p>$nom_p</font>',' : mort suite à l\'explosion du bâtiment $id_cible',NOW(),'0')";
+									$mysqli->query($sql);
+										
+									// maj cv
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_p','<font color=$couleur_clan_p>$nom_p</font>',NOW())"; 
+									$mysqli->query($sql);
+									
+								}
+							}
+							
+							// on supprime les persos du batiment
+							$sql = "DELETE FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
+							$mysqli->query($sql);
+							
+							// on delete le bâtiment
+							$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_cible'";
+							$mysqli->query($sql);
+					
+							echo "Vous avez détruit votre cible ! <font color=red>Félicitations.</font>";
+								
+							// maj evenement
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a détruit','$id_cible','<font color=$couleur_bat>$nom_batiment</font>','',NOW(),'0')";
+							$mysqli->query($sql);
+								
+							// maj cv
+							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',NOW())"; 
+							$mysqli->query($sql);
+								
+							echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						}
+						/* Fin du traitement de la destruction du bâtiment*/
+						
+						//mise à jour des pa
+						$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_attaque WHERE id_perso='$id'";
+						$res = $mysqli->query($sql);
+						
+						if ($pv_cible > 0) { 
+							?>
+								<form action="agir.php" method="post">
+									<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
+									<input type="submit" name="re_attaque" value="attaquer à nouveau">
+								</form> 
+								
+							<?php
+							echo "<br/><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						}
+					}
+					else {
+						
+						echo "<br>Vous avez raté votre cible.<br><br>";
+							
+						// maj evenement
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_batiment','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso>$nom_perso</font>','',NOW(),'0')";
+						$mysqli->query($sql);
+						
+						?>
+							<form action="agir.php" method="post">
+								<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
+								<input type="submit" name="re_attaque" value="attaquer à nouveau">
+							</form> 
+							
+						<?php
+						echo "<br/><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+					}					
 				}
 				else {
 					
