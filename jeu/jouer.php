@@ -29,7 +29,7 @@ if($dispo || !$admin){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 		
-		$sql_joueur = "SELECT idJoueur_perso FROM perso WHERE ID_perso='$id_perso'";
+		$sql_joueur = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
 		$res_joueur = $mysqli->query($sql_joueur);
 		$t_joueur = $res_joueur->fetch_assoc();
 		
@@ -42,7 +42,7 @@ if($dispo || !$admin){
 		$dla 		= $t_dla["DLA"];
 		$est_gele 	= $t_dla["est_gele"];
 	
-		$sql = "SELECT pv_perso FROM perso WHERE ID_perso='$id_perso'";
+		$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		

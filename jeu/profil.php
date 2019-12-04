@@ -10,29 +10,11 @@ include ('../nb_online.php');
 $sql = "SELECT disponible FROM config_jeu";
 $res = $mysqli->query($sql);
 $t_dispo = $res->fetch_assoc();
+
 $dispo = $t_dispo["disponible"];
 
 if($dispo){
 
-	?>
-	<html>
-	<head>
-	  <title>Nord VS Sud</title>
-	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	   <meta http-equiv="Content-Language" content="fr" />
-	  <link rel="stylesheet" type="text/css" media="screen" href="onglet.css" title="Version 1" />
-	
-	</head>
-	<body>
-	<div id="header">
-	  <ul>
-		<li id="current"><a href="#">Profil</a></li>
-		<li><a href="ameliorer.php">Améliorer son perso</a></li>
-		<li><a href="equipement.php">Equiper son perso</a></li>
-		<li><a href="compte.php">Gérer son Compte</a></li>
-	  </ul>
-	</div>
-	<?php
 	if (@$_SESSION["id_perso"]) {
 		
 		//recuperation des variables de sessions
@@ -53,9 +35,10 @@ if($dispo){
 			if ($testpv <= 0) {
 				echo "<font color=red>Vous êtes mort...</font>";
 			}
-			else {			
+			else {
+			
 				// recuperation des infos du perso
-				$sql = "SELECT nom_perso, image_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan FROM perso WHERE id_perso='$id'";
+				$sql = "SELECT nom_perso, image_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, chef FROM perso WHERE id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$t_i = $res->fetch_assoc();
 				
@@ -82,6 +65,7 @@ if($dispo){
 				$chM_p 		= $t_i["chargeMax_perso"];
 				$dc_p 		= $t_i["dateCreation_perso"];
 				$clan_perso = $t_i["clan"];
+				$chef		= $t_i["chef"];
 				
 				if($clan_perso == '1'){
 					$couleur_clan_perso = 'blue';
@@ -102,7 +86,31 @@ if($dispo){
 				$im_p = $nom_clan.".gif";
 				
 		?>
+<html>
+	<head>
+		<title>Nord VS Sud</title>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<meta http-equiv="Content-Language" content="fr" />
+		<link rel="stylesheet" type="text/css" media="screen" href="onglet.css" title="Version 1" />
+	</head>
+	
+	<body>
+		<div id="header">
+			<ul>
+				<li id="current"><a href="#">Profil</a></li>
+				<li><a href="ameliorer.php">Améliorer son perso</a></li>
+				<?php
+				if($chef) {
+					echo "<li><a href=\"recrutement.php\">Recruter des grouillots</a></li>";
+				}
+				?>
+				<li><a href="equipement.php">Equiper son perso</a></li>
+				<li><a href="compte.php">Gérer son Compte</a></li>
+			</ul>
+		</div>
+		
 		<br /><br /><br /><br />
+		
 		<div align=center><input type="button" value="Fermer le profil" onclick="window.close()"></div>
 		
 		<table border=0 width=100%>

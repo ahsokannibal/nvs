@@ -21,7 +21,7 @@ if($dispo){
 		//recuperation des varaibles de sessions
 		$id = $_SESSION["id_perso"];
 		
-		$sql = "SELECT pv_perso FROM perso WHERE ID_perso='$id'";
+		$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		
@@ -31,44 +31,49 @@ if($dispo){
 			echo "<font color=red>Vous êtes mort...</font>";
 		}
 		else {
+			
+			$sql = "SELECT pi_perso, pvMax_perso, pmMax_perso, paMax_perso, perception_perso, recup_perso, type_perso, chef FROM perso WHERE id_perso ='$id'";
+			$res = $mysqli->query($sql);
+			$tab = $res->fetch_assoc();
+			
+			$pm 	= $tab["pmMax_perso"];
+			$pa 	= $tab["paMax_perso"];
+			$per 	= $tab["perception_perso"];
+			$pv 	= $tab["pvMax_perso"];
+			$rec 	= $tab["recup_perso"];
+			$pi 	= $tab["pi_perso"];
+			$type	= $tab["type_perso"];
+			$chef 	= $tab["chef"];
+	
 	?>
-	<html>
+<html>
+	<head>
+		<title>Nord VS Sud</title>
+			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+			<meta http-equiv="Content-Language" content="fr" />
+		<link rel="stylesheet" type="text/css" media="screen" href="onglet.css" title="Version 1" />
+	</head>
 	
-		<head>
-			<title>Nord VS Sud</title>
-				<meta charset="utf-8"/>
-				<meta http-equiv="Content-Language" content="fr" />
-			<link rel="stylesheet" type="text/css" media="screen" href="onglet.css" title="Version 1" />
-		</head>
+	<body>
+		<div id="header">
+			<ul>
+				<li><a href="profil.php">Profil</a></li>
+				<li id="current"><a href="#">Améliorer son perso</a></li>
+				<?php
+				if($chef) {
+					echo "<li><a href=\"recrutement.php\">Recruter des grouillots</a></li>";
+				}
+				?>
+				<li><a href="equipement.php">Equiper son perso</a></li>
+				<li><a href="compte.php">Gérer son Compte</a></li>
+			</ul>
+		</div>
 		
-		<body>
-		
-			<div id="header">
-				<ul>
-					<li><a href="profil.php">Profil</a></li>
-					<li id="current"><a href="ameliorer.php">Améliorer son perso</a></li>
-					<li><a href="equipement.php">Equiper son perso</a></li>
-					<li><a href="compte.php">Gérer son Compte</a></li>
-				</ul>
-			</div>
+		<br /><br /><br /><br />
 			
-			<br /><br /><br /><br />
-			
-			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
-			<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
+		<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+		<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
 	<?php
-	$sql = "SELECT pi_perso, pvMax_perso, pmMax_perso, paMax_perso, perception_perso, recup_perso, type_perso FROM perso WHERE id_perso ='$id'";
-	$res = $mysqli->query($sql);
-	$tab = $res->fetch_assoc();
-	
-	$pm 	= $tab["pmMax_perso"];
-	$pa 	= $tab["paMax_perso"];
-	$per 	= $tab["perception_perso"];
-	$pv 	= $tab["pvMax_perso"];
-	$rec 	= $tab["recup_perso"];
-	$pi 	= $tab["pi_perso"];
-	$type	= $tab["type_perso"];
-	
 	if (isset($_POST["pv"])) {
 		
 		// calcul du nombre de pi necessaire
