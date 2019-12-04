@@ -79,12 +79,12 @@ if(config_dispo_jeu($mysqli)){
 						$dla = $date + DUREE_TOUR; // calcul dla
 				
 						// Caracs Chef
-						$pvMax_chef = 750;
+						$pvMax_chef = 850;
 						$pmMax_chef = 10;
 						$pamax_chef = 10;
 						$recup_chef = 40;
 						$perc_chef = 5;
-						$protec_chef = 20;
+						$protec_chef = 30;
 						
 						// Carac grouillot
 						$pvMax_g = 500;
