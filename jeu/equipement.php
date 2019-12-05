@@ -69,10 +69,9 @@ if($dispo){
 			// InitBulle(couleur de texte, couleur de fond, couleur de contour taille contour)
 		</SCRIPT>
 		
-		<br /><br /><br /><br />
+		<br /><br /><center><h1>Equipement</h1></center><br /><br />
 		
 		<div align=center><input type="button" value="Fermer la page équipement" onclick="window.close()"></div>
-		<center><h2>Equipement</h2></center>
 
 		<?php
 		$mess = "";

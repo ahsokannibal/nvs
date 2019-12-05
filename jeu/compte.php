@@ -173,7 +173,7 @@ if($dispo){
 			</ul>
 		</div>
 		
-		<br /><br /><br /><br />
+		<br /><br /><center><h1>Mon Compte</h1></center><br /><br />
 	
 		<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
 		<br />

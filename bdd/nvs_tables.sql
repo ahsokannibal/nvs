@@ -748,6 +748,7 @@ CREATE TABLE `type_unite` (
   `pv_unite` int(11) NOT NULL,
   `pa_unite` int(11) NOT NULL,
   `pm_unite` int(11) NOT NULL,
+  `image_unite` VARCHAR(255) NULL,
   `cout_pg` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

@@ -109,7 +109,7 @@ if($dispo){
 			</ul>
 		</div>
 		
-		<br /><br /><br /><br />
+		<br /><br /><center><h1>Profil</h1></center><br /><br />
 		
 		<div align=center><input type="button" value="Fermer le profil" onclick="window.close()"></div>
 		

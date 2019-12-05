@@ -69,7 +69,9 @@ if($dispo){
 			</ul>
 		</div>
 		
-		<br /><br /><br /><br />
+		<br /><br /><center><h1>Améliorer ce perso</h1></center>
+		
+		<br /><br />
 			
 		<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 		<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>

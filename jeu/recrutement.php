@@ -32,12 +32,22 @@ if($dispo){
 		}
 		else {
 			
-			$sql = "SELECT pc_perso, chef FROM perso WHERE id_perso ='$id'";
+			$sql = "SELECT pc_perso, chef, clan FROM perso WHERE id_perso ='$id'";
 			$res = $mysqli->query($sql);
 			$tab = $res->fetch_assoc();
 			
 			$pc 	= $tab["pc_perso"];
 			$chef 	= $tab["chef"];
+			$clan	= $tab["clan"];
+			
+			if ($clan == 1) {
+				$camp = "nord";
+			} else if ($clan == 2) {
+				$camp = "sud";
+			} else {
+				// ???
+				$camp = "nord";
+			}
 	
 	?>
 <html>
@@ -63,15 +73,59 @@ if($dispo){
 			</ul>
 		</div>
 	
-	</body>
-</html>
+		<br /><br /><center><h1>Recruter un grouillot</h1></center>
+		
+		<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
+		<br />
 <?php
+			// Récupération des grouillots recrutable
+			$sql = "SELECT * FROM type_unite WHERE id_unite != '1'";
+			$res = $mysqli->query($sql);
+			
+			echo "<table align='center' border='1'>";
+			echo "	<tr>";
+			echo "		<th></th><th>Unité</th><th>PA</th><th>PV</th><th>PM</th><th>Recupération</th><th>Perception</th><th>Protection</th><th>Description</th><th>Cout PG</th>";
+			echo "	</tr>";
+			
+			while ($tab = $res->fetch_assoc()) {
+				
+				$nom_unite 			= $tab["nom_unite"];
+				$description_unite 	= $tab["description_unite"];
+				$perception_unite 	= $tab["perception_unite"];
+				$protection_unite 	= $tab["protection_unite"];
+				$recup_unite 		= $tab["recup_unite"];
+				$pv_unite 			= $tab["pv_unite"];
+				$pa_unite 			= $tab["pa_unite"];
+				$pm_unite 			= $tab["pm_unite"];
+				$image_unite 		= $tab["image_unite"];
+				$cout_pg_unite 		= $tab["cout_pg"];
+				
+				$image_affiche = $image_unite."_".$camp.".gif";
+				
+				echo "	<tr>";
+				echo "		<td align='center'><img src='../images_perso/".$image_affiche."' alt='".$nom_unite."'/></td>";
+				echo "		<td align='center'>$nom_unite</td>";
+				echo "		<td align='center'>$pa_unite</td>";
+				echo "		<td align='center'>$pv_unite</td>";
+				echo "		<td align='center'>$pm_unite</td>";
+				echo "		<td align='center'>$recup_unite</td>";
+				echo "		<td align='center'>$perception_unite</td>";
+				echo "		<td align='center'>$protection_unite</td>";
+				echo "		<td align='center'>$description_unite</td>";
+				echo "		<td align='center'>$cout_pg_unite PG</td>";
+				echo "	</tr>";
+				
+			}
+			
+			echo "</table>";
 		}
 	}
 	else{
 		echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
 	}
 	?>
+	</body>
+</html>
 <?php
 }
 else {

@@ -384,13 +384,13 @@ INSERT INTO `stats_camp_kill` (`id_camp`, `nb_kill`) VALUES ('1', '0'), ('2', '0
 -- Contenu de la table `type_unite`
 --
 
-INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `perception_unite`, `protection_unite`, `recup_unite`, `pv_unite`, `pa_unite`, `pm_unite`, `cout_pg`) VALUES
-(1, 'Chef', 'Chef d\'unité, cavalier', 5, 30, 40, 850, 10, 10, 0),
-(2, 'Cavalerie lourde', 'Cavalerie lourde', 5, 10, 30, 700, 10, 10, 4),
-(3, 'Infanterie', 'Infanterie', 4, 10, 30, 500, 10, 5, 2),
-(4, 'Soigneur', 'Soigneur', 4, 10, 30, 500, 10, 6, 3),
-(5, 'Artillerie', 'Artillerie', 6, 10, 30, 500, 10, 3, 5),
-(6, 'Toutou', 'Toutou', 5, 10, 20, 200, 10, 10, 1);
+INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `perception_unite`, `protection_unite`, `recup_unite`, `pv_unite`, `pa_unite`, `pm_unite`, `image_unite`, `cout_pg`) VALUES
+(1, 'Chef', 'Chef d\'unité, cavalier', 5, 30, 40, 850, 10, 10, 'cavalerie', 0),
+(2, 'Cavalerie lourde', 'Cavalerie lourde', 5, 10, 30, 700, 10, 10, 'cavalerie', 4),
+(3, 'Infanterie', 'Infanterie', 4, 10, 30, 500, 10, 5, 'infanterie', 2),
+(4, 'Soigneur', 'Soigneur', 4, 10, 30, 500, 10, 6, 'soigneur', 3),
+(5, 'Artillerie', 'Artillerie', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
+(6, 'Toutou', 'Toutou', 5, 10, 20, 200, 10, 10, 'toutou', 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
