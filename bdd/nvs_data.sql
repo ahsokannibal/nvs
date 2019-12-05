@@ -80,9 +80,12 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (4, 'Pistolet', 1, 2, 3, 100, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.2', 0, '', 0, 1, 'pistolet.jpg'),
 (5, 'Pistolet Canon Long', 1, 3, 3, 200, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '1.3', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
 (6, 'Baïonette', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
-(7, 'Fusil ', 1, 3, 4, 0, 0, 0, 0, 0, 20, 20, 6, 70, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
+(7, 'Fusil ', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (8, 'Fusil Précision ', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
-(9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'canines.jpg');
+(9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'canines.jpg'),
+(10, 'Seringue', '1', '1', '5', '50', '0', '0', '0', '0', '200', '20', '6', '90', '0', '0', '0.1', '0', 'Seringue pour soigner', '0', '1', "seringue.jpg"), 
+(11, 'Bandages', '1', '1', '3', '50', '0', '0', '0', '0', '2', '2', '10', '35', '0', '0', '0.2', '0', 'Bandages permettant de récupérer des malus de defense', '0', '1', "bandage.jpg");
+
 
 -- --------------------------------------------------------
 
@@ -102,12 +105,11 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (5, 1),
 (5, 2),
 (6, 3),
-(6, 4),
 (7, 3),
-(7, 4),
 (8, 3),
-(8, 4),
-(9, 6);
+(9, 6),
+(10, 4),
+(11, 4);
 
 -- --------------------------------------------------------
 
@@ -386,11 +388,11 @@ INSERT INTO `stats_camp_kill` (`id_camp`, `nb_kill`) VALUES ('1', '0'), ('2', '0
 
 INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `perception_unite`, `protection_unite`, `recup_unite`, `pv_unite`, `pa_unite`, `pm_unite`, `image_unite`, `cout_pg`) VALUES
 (1, 'Chef', 'Chef d\'unité, cavalier', 5, 30, 40, 850, 10, 10, 'cavalerie', 0),
-(2, 'Cavalerie lourde', 'Cavalerie lourde', 5, 10, 30, 700, 10, 10, 'cavalerie', 4),
-(3, 'Infanterie', 'Infanterie', 4, 10, 30, 500, 10, 5, 'infanterie', 2),
-(4, 'Soigneur', 'Soigneur', 4, 10, 30, 500, 10, 6, 'soigneur', 3),
-(5, 'Artillerie', 'Artillerie', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
-(6, 'Toutou', 'Toutou', 5, 10, 20, 200, 10, 10, 'toutou', 1);
+(2, 'Cavalerie lourde', 'La cavalerie lourde est sans doute l\'unité nordiste/sudiste courante la plus redoutée sur les champs de bataille. Comparables aux chef en tout point excpeté sa résistance, la cavalerie lourde peut faire de véritables saignées dans les rangs adverses notament grâce à leurs charges.', 5, 10, 30, 700, 10, 10, 'cavalerie', 4),
+(3, 'Infanterie', 'Il s\'agit du plus courant des grouillots présents dans les armées nordistes et sudistes. Les infanteries représentent la masse de ces armées. Leur réputation n\'est pas toujours la meilleure et leur faible mobilité amène bien souvent des à priori négatifs à leur encontre. Pourtant les infanteries, lorsqu\'elles sont coordonnées et regroupées sont extrèmement redoutables et peuvent faire des ravages dans les rangs énnemis. Ce sont avant tout des unités de tir.', 4, 10, 30, 500, 10, 5, 'infanterie', 2),
+(4, 'Soigneur', 'Les soigneurs sont des unités nordistes/sudistes non combattantes dont le rôle est uniquement de soigner les troupes parties sur le front. Plus rapides que des infanteries classiques, elles doivent malgré tout rester prudentes sur le front.', 4, 10, 30, 500, 10, 6, 'soigneur', 3),
+(5, 'Artillerie', 'La plus puissante de toutes les unités combattantes. L\'artillerie est tout simplement extrèmement puissante, pouvant réduire en miette tout un bataillon en très peu de temps. Mais c\'est une unité extrèmement peu mobile et qui ne peut se battre au corps à corps et donc qui nécessite beaucoup d\'attention et de protection.', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
+(6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 10, 20, 200, 10, 10, 'toutou', 1);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

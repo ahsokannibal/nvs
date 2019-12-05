@@ -48,7 +48,10 @@ if($dispo){
 				// ???
 				$camp = "nord";
 			}
-	
+			
+			// TODO
+			// Verifier si on est bien dans un fort / fortin et que celui-ci à plus de 90% de ses PV
+			
 	?>
 <html>
 	<head>
@@ -78,17 +81,55 @@ if($dispo){
 		<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
 		<br />
 <?php
+			// Cavalerie Lourde
+			if (isset($_POST["2"])) {
+				
+				// TODO - Verifier si possibilité de recruter
+				
+				// Récupérer coût PG unite 
+				
+				// Calculer PG restant au joueur
+				
+				// Reste t-il assez de PG ?
+				
+				// Créer nouveau Perso
+				
+			}
+			
+			// Infanterie
+			if (isset($_POST["3"])) {
+				
+			}
+			
+			// Soigneur
+			if (isset($_POST["4"])) {
+				
+			}
+			
+			// Artillerie
+			if (isset($_POST["5"])) {
+				
+			}
+			
+			// Toutou
+			if (isset($_POST["6"])) {
+				
+			}
+
 			// Récupération des grouillots recrutable
 			$sql = "SELECT * FROM type_unite WHERE id_unite != '1'";
 			$res = $mysqli->query($sql);
 			
-			echo "<table align='center' border='1'>";
+			echo "<form method=\"post\" action=\"recrutement.php\">";
+			
+			echo "<table align='center' border='1' width='70%'>";
 			echo "	<tr>";
-			echo "		<th></th><th>Unité</th><th>PA</th><th>PV</th><th>PM</th><th>Recupération</th><th>Perception</th><th>Protection</th><th>Description</th><th>Cout PG</th>";
+			echo "		<th></th><th>Unité</th><th>PA</th><th>PV</th><th>PM</th><th>Recupération</th><th>Perception</th><th>Protection</th><th>Description</th><th>Cout PG</th><th>Action</th>";
 			echo "	</tr>";
 			
 			while ($tab = $res->fetch_assoc()) {
 				
+				$id_unite			= $tab["id_unite"];
 				$nom_unite 			= $tab["nom_unite"];
 				$description_unite 	= $tab["description_unite"];
 				$perception_unite 	= $tab["perception_unite"];
@@ -113,11 +154,16 @@ if($dispo){
 				echo "		<td align='center'>$protection_unite</td>";
 				echo "		<td align='center'>$description_unite</td>";
 				echo "		<td align='center'>$cout_pg_unite PG</td>";
+				
+				// TODO - Condition si Possibilité de recruter
+				echo "		<td align='center'><input type=\"submit\" name=\"".$id_unite."\" value=\">> Recruter !\"></td>";
 				echo "	</tr>";
 				
 			}
 			
 			echo "</table>";
+			
+			echo "</form>";
 		}
 	}
 	else{
