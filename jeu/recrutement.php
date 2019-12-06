@@ -92,12 +92,10 @@ if($dispo){
 			</ul>
 		</div>
 	
-		<br /><br /><center><h1>Recruter un grouillot</h1></center>
+		<br /><br /><center><h1>Recrutement et gestion de ses grouillots</h1></center>
 		
 		<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
 		<br />
-		
-		<center>Le recrutement d'un grouillot coute 3PA, il vous reste <?php echo $pa_perso; ?> PA</center>
 <?php
 				if ($id_instance_bat == NULL) {
 					
@@ -169,6 +167,11 @@ if($dispo){
 									
 									// Verifier si possibilité de recruter
 									if ($pg_restant >= $cout_pg_recrutement) {
+										
+										// MAJ des PA du chef 
+										$pa_perso = $pa_perso - 3;
+										$sql = "UPDATE perso SET pa_perso=pa_perso-3 WHERE id_perso='$id'";
+										$mysqli->query($sql);
 										
 										// Recupération caracs de base du perso 
 										$nom_unite 			= $tab["nom_unite"];
@@ -270,6 +273,11 @@ if($dispo){
 									
 									// Verifier si possibilité de recruter
 									if ($pg_restant >= $cout_pg_recrutement) {
+										
+										// MAJ des PA du chef 
+										$pa_perso = $pa_perso - 3;
+										$sql = "UPDATE perso SET pa_perso=pa_perso-3 WHERE id_perso='$id'";
+										$mysqli->query($sql);
 										
 										// Recupération caracs de base du perso 
 										$nom_unite 			= $tab["nom_unite"];
@@ -382,6 +390,11 @@ if($dispo){
 									// Verifier si possibilité de recruter
 									if ($pg_restant >= $cout_pg_recrutement) {
 										
+										// MAJ des PA du chef 
+										$pa_perso = $pa_perso - 3;
+										$sql = "UPDATE perso SET pa_perso=pa_perso-3 WHERE id_perso='$id'";
+										$mysqli->query($sql);
+										
 										// Recupération caracs de base du perso 
 										$nom_unite 			= $tab["nom_unite"];
 										$perception_unite 	= $tab["perception_unite"];
@@ -492,6 +505,11 @@ if($dispo){
 									// Verifier si possibilité de recruter
 									if ($pg_restant >= $cout_pg_recrutement) {
 										
+										// MAJ des PA du chef 
+										$pa_perso = $pa_perso - 3;
+										$sql = "UPDATE perso SET pa_perso=pa_perso-3 WHERE id_perso='$id'";
+										$mysqli->query($sql);
+										
 										// Recupération caracs de base du perso 
 										$nom_unite 			= $tab["nom_unite"];
 										$perception_unite 	= $tab["perception_unite"];
@@ -588,6 +606,11 @@ if($dispo){
 									// Verifier si possibilité de recruter
 									if ($pg_restant >= $cout_pg_recrutement) {
 										
+										// MAJ des PA du chef 
+										$pa_perso = $pa_perso - 3;
+										$sql = "UPDATE perso SET pa_perso=pa_perso-3 WHERE id_perso='$id'";
+										$mysqli->query($sql);
+										
 										// Recupération caracs de base du perso 
 										$nom_unite 			= $tab["nom_unite"];
 										$perception_unite 	= $tab["perception_unite"];
@@ -652,6 +675,12 @@ if($dispo){
 									echo "<center><font color=red>Vous n'avez pas assez de point d'action pour recruter un grouillot, il vous reste $pa_perso points d'action</font></center>";
 								}
 							}
+							
+							?>
+							
+							<center>Le recrutement d'un grouillot coute 3PA, il vous reste <?php echo $pa_perso; ?> PA</center>
+							
+							<?php
 
 							// Récupération des grouillots recrutable
 							$sql = "SELECT * FROM type_unite WHERE id_unite != '1'";
