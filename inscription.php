@@ -105,17 +105,30 @@ if(config_dispo_jeu($mysqli)){
 						else {
 									
 							// insertion du nouveau joueur
+							$lock = "LOCK TABLE (joueur) WRITE";
+							$mysqli->query($lock);
+							
 							$insert_j = "INSERT INTO joueur (email_joueur, mdp_joueur) VALUES ('$email_joueur', '$mdp_joueur')";
 							$result_j = $mysqli->query($insert_j);
 							$IDJoueur_perso = $mysqli->insert_id;
 							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
+							
 							// insertion nouveau perso / Chef
-							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$protec_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1, '$nom_bataillon')";
-
+							$lock = "LOCK TABLE (perso) WRITE";
+							$mysqli->query($lock);
+							
+							$insert_sql = "	INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+											VALUES ('$IDJoueur_perso','$nom_perso','$x','$y','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$protec_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), $camp, '', 1, '$nom_bataillon')";
+							
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
 							}
 							$id = $mysqli->insert_id;
+							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
 							
 							// dossier courant
 							$sql_i = "INSERT INTO perso_as_dossiers VALUES ('$id','1')";
@@ -155,12 +168,26 @@ if(config_dispo_jeu($mysqli)){
 							}
 							
 							// Insertion grouillot
+							$lock = "LOCK TABLE (perso) WRITE";
+							$mysqli->query($lock);
+							
 							$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, type_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) VALUES ('$IDJoueur_perso','$nom_g','3','$x_g','$y_g','$pvMax_g','$pvMax_g','$pmMax_g','$pmMax_g','$perc_g','$recup_g','$protec_g','$pamax_g','$image_g',NOW(),FROM_UNIXTIME($dla), $camp, '', '$nom_bataillon')";
 
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
 							}
 							$id_g = $mysqli->insert_id;
+							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
+							
+							// dossier courant
+							$sql_i = "INSERT INTO perso_as_dossiers VALUES ('$id_g','1')";
+							$mysqli->query($sql_i);
+							
+							// dossier archives
+							$sql_i = "INSERT INTO perso_as_dossiers VALUES ('$id_g','2')";
+							$mysqli->query($sql_i);
 							
 							// grade Grouillot = 2nd classe
 							$sql_i = "INSERT INTO perso_as_grade VALUES ('$id_g','1')";
@@ -222,16 +249,21 @@ if(config_dispo_jeu($mysqli)){
 							L\'admin de Nord VS Sud";
 							
 							// création du message
+							$lock = "LOCK TABLE (message) WRITE";
+							$mysqli->query($lock);
+							
 							$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message , objet_message ) VALUES ('" . $expediteur . "', NOW(), '" . $message . "', '" . $objet . "')";
 							$mysqli->query($sql);
 							$id_message = $mysqli->insert_id;
+							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
 							
 							// assignation du message au perso
 							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id', '1', '0', '0')";
 							$mysqli->query($sql);
 							
-							// TODO - Insertion evenement suivant :
-							// $nom_perso vient tout juste de sortir des jupons de sa maman pour venir grossir les rangs du $ncamp
+							// Evenement spécial inscription
 							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
 									VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>',' vient tout juste de sortir des jupons de sa maman pour venir grossir les rangs de l\'armée du $ncamp ',NULL,'','',NOW(),'0')";
 							$mysqli->query($sql);
