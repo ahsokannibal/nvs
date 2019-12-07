@@ -1309,7 +1309,10 @@ if($dispo || !$admin){
 								</tr>
 								<tr>
 									<td width='20%'></td>
+									<?php 
+									if ($type_perso != 5) { ?>
 									<td width='40%'><center><b>Rapproché</b></center></td>
+									<?php } ?>
 									<td width='40%'><center><b>A distance</b></center></td>
 								</tr>
 								<tr>
