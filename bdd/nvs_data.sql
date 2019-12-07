@@ -83,7 +83,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (7, 'Fusil ', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (8, 'Fusil Précision ', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
 (9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'canines.jpg'),
-(10, 'Seringue', '1', '1', '5', '50', '0', '0', '0', '0', '200', '20', '6', '90', '0', '0', '0.1', '0', 'Seringue pour soigner', '0', '1', "seringue.jpg"), 
+(10, 'Seringue', '1', '1', '5', '50', '0', '0', '0', '0', '20', '20', '6', '90', '0', '0', '0.1', '0', 'Seringue pour soigner', '0', '1', "seringue.jpg"), 
 (11, 'Bandages', '1', '1', '3', '50', '0', '0', '0', '0', '2', '2', '10', '35', '0', '0', '0.2', '0', 'Bandages permettant de récupérer des malus de defense', '0', '1', "bandage.jpg"),
 (12, 'Griffes', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'griffes.jpg'),
 (13, 'Canon', '2', '5', '6', '200', '0', '0', '0', '0', '75', '75', '6', '65', '1', '0', '0.0', '0', 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', '0', '1', 'canon.jpg'), 

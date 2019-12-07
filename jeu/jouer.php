@@ -1310,39 +1310,125 @@ if($dispo || !$admin){
 								<tr>
 									<td width='20%'></td>
 									<?php 
-									if ($type_perso != 5) { ?>
+									if ($type_perso != 5) { 
+									?>
 									<td width='40%'><center><b>Rapproché</b></center></td>
-									<?php } ?>
+									<?php 
+									}
+									
+									if ($type_perso != 6 && $type_perso != 4) { 
+									?>
 									<td width='40%'><center><b>A distance</b></center></td>
+									<?php 
+									}
+									?>
 								</tr>
 								<tr>
 									<td><b>Armes</b></td>
+									<?php 
+									if ($type_perso != 5) { 
+									?>
 									<td><center><?php echo $nom_arme_cac; ?></center></td>
+									<?php 
+									}
+									
+									if ($type_perso != 6 && $type_perso != 4) { 
+									?>
 									<td><center><?php echo $nom_arme_dist; ?></center></td>
+									<?php 
+									}
+									?>
 								</tr>
 								<tr>
 									<td><b>Coût en PA</b></td>
+									<?php 
+									if ($type_perso != 5) { 
+									?>
 									<td><center><?php echo $coutPa_arme_cac; ?></center></td>
+									<?php 
+									}
+									
+									if ($type_perso != 6 && $type_perso != 4) { 
+									?>
 									<td><center><?php echo $coutPa_arme_dist; ?></center></td>
+									<?php 
+									}
+									?>
 								</tr>
 								<tr>
+									<?php 
+									if ($type_perso != 4) { 
+									?>
 									<td><b>Dégats</b></td>
+									<?php 
+									} else {
+									?>
+									<td><b>Soins</b></td>
+									<?php 
+									}
+									?>
+									<?php 
+									if ($type_perso != 5) { 
+									?>
 									<td><center><?php echo $degats_arme_cac; ?></center></td>
+									<?php 
+									}
+									
+									if ($type_perso != 6 && $type_perso != 4) { 
+									?>
 									<td><center><?php echo $degats_arme_dist; ?></center></td>
+									<?php 
+									}
+									?>
 								</tr>
 								<tr>
 									<td><b>Portée</b></td>
+									<?php 
+									if ($type_perso != 5) { 
+									?>
 									<td><center><?php echo $porteeMax_arme_cac; ?></center></td>
+									<?php 
+									}
+									
+									if ($type_perso != 6 && $type_perso != 4) { 
+									?>
 									<td><center><?php echo $porteeMax_arme_dist; ?></center></td>
+									<?php 
+									}
+									?>
 								</tr>
 								<tr>
 									<td><b>Précision</b></td>
+									<?php 
+									if ($type_perso != 5) { 
+									?>
 									<td><center><?php echo $precision_arme_cac . "%"; ?></center></td>
+									<?php 
+									}
+									
+									if ($type_perso != 6 && $type_perso != 4) { 
+									?>
 									<td><center><?php echo $precision_arme_dist . "%"; ?></center></td>
+									<?php 
+									}
+									?>
 								</tr>
+								<?php 
+								if ($type_perso == 5) { 
+								?>
+								<tr>
+									<td><b>Spécial</b></td>
+									<td colspan='2'><center>Dégâts de zone et bonus de dégâts sur bâtiments</center></td>
+								</tr>
+								<?php 
+								}
+								?>
 								<tr>
 									<form method="post" action="agir.php" target='_main'>
 									<td><input type="submit" value="Attaquer"></td>
+									<?php 
+									if ($type_perso != 5) { 
+									?>
 									<td>
 										<select name='id_attaque_cac' style="width: -moz-available;">
 											<option value="personne">Personne</option>
@@ -1384,6 +1470,11 @@ if($dispo || !$admin){
 											?>
 										</select>
 									</td>
+									<?php 
+									}
+									
+									if ($type_perso != 6 && $type_perso != 4) { 
+									?>
 									<td>
 										<select name='id_attaque_dist' style="width: -moz-available;">
 											<option value="personne">Personne</option>
@@ -1424,6 +1515,9 @@ if($dispo || !$admin){
 											?>
 										</select>
 									</td>
+									<?php 
+									}
+									?>
 									</form>
 								</tr>
 							</table>
