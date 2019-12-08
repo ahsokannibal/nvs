@@ -126,7 +126,7 @@ if($verif){
 			}
 			
 			// recup des données du perso
-			$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan, id_grade
+			$sql = "SELECT nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan, id_grade
 					FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id'";
@@ -152,6 +152,7 @@ if($verif){
 			$ch_perso 		= $t_perso["charge_perso"];
 			$chM_perso 		= $t_perso["chargeMax_perso"];
 			$dc_perso 		= $t_perso["dateCreation_perso"];
+			$id_j_perso		= $t_perso["idJoueur_perso"];
 			$clan_perso 	= $t_perso["clan"];
 			$grade_perso 	= $t_perso["id_grade"];
 			
@@ -360,8 +361,8 @@ if($verif){
 							}
 							
 							if ($id_arme_attaque == 10) {
-								// Seringue
 								
+								// Seringue
 								if ($pv_cible + $degats_final >= $pvM_cible) {
 									$degats_final = $pvM_cible - $pv_cible;
 								}
@@ -373,8 +374,8 @@ if($verif){
 								echo "<br>Vous avez soigné $degats_final dégâts à la cible.<br><br>";
 								
 							} else if ($id_arme_attaque == 11) {
-								// Bandage
 								
+								// Bandage
 								if ($bonus_perso + $degats_final > 0) {
 									$sql = "UPDATE perso SET bonus_perso=0 WHERE id_perso='$id_cible'";
 									echo "<br>Vous avez soigné tous les malus de la cible.<br><br>";
@@ -394,8 +395,18 @@ if($verif){
 							
 							echo "Vous avez gagné $gain_xp xp.<br>";
 							
-							// mise a jour des xp/pi/pc
+							// mise a jour des xp/pi
 							$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id'"; 
+							$mysqli->query($sql);
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
 							$mysqli->query($sql);
 							
 							// mise a jour de la table evenement
