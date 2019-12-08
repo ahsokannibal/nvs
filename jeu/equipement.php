@@ -56,6 +56,7 @@ if($dispo){
 				<?php
 				if($chef) {
 					echo "<li><a href=\"recrutement.php\">Recruter des grouillots</a></li>";
+					echo "<li><a href=\"gestion_grouillot.php\">Gérer ses grouillots</a></li>";
 				}
 				?>
 				<li id="current"><a href="#">Equiper son perso</a></li>

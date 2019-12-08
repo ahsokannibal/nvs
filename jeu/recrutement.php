@@ -1,7 +1,6 @@
 <?php
 session_start();
 require_once("../fonctions.php");
-require_once("f_ameliore.php");
 
 $mysqli = db_connexion();
 
@@ -85,6 +84,7 @@ if($dispo){
 				<?php
 				if($chef) {
 					echo "<li id=\"current\"><a href=\"#\">Recruter des grouillots</a></li>";
+					echo "<li><a href=\"gestion_grouillot.php\">Gérer ses grouillots</a></li>";
 				}
 				?>
 				<li><a href="equipement.php">Equiper son perso</a></li>
@@ -92,7 +92,7 @@ if($dispo){
 			</ul>
 		</div>
 	
-		<br /><br /><center><h1>Recrutement et gestion de ses grouillots</h1></center>
+		<br /><br /><center><h1>Recrutement des grouillots</h1></center>
 		
 		<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
 		<br />
