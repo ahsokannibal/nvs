@@ -1433,39 +1433,102 @@ if($dispo || !$admin){
 										<select name='id_attaque_cac' style="width: -moz-available;">
 											<option value="personne">Personne</option>
 											<?php
-											while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
+											// Soigneur
+											if ($type_perso == 4) {
 												
-												$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
-												
-												if ($id_cible_cac < 50000) {
+												while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
 													
-													// Un autre perso
-													$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_cac'";
-													$res = $mysqli->query($sql);
-													$tab = $res->fetch_assoc();
+													$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
 													
-													$nom_cible_cac = $tab["nom_perso"];
-													
-												} else if ($id_cible_cac >= 200000) {
-													
-													// Un PNJ
-													$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
-													$res = $mysqli->query($sql);
-													$tab = $res->fetch_assoc();
-													
-													$nom_cible_cac = $tab["nom_pnj"];
-													
-												} else {
-													
-													// Un Batiment
-													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
-													$res = $mysqli->query($sql);
-													$tab = $res->fetch_assoc();
-													
-													$nom_cible_cac = $tab["nom_batiment"];
+													if ($id_cible_cac < 50000) {
+														
+														// Un autre perso
+														$sql = "SELECT nom_perso, pv_perso, pvMax_perso, bonus_perso, clan FROM perso WHERE id_perso='$id_cible_cac'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_cac 		= $tab["nom_perso"];
+														$pv_cible_cac		= $tab["pv_perso"];
+														$pv_max_cible_cac	= $tab["pvMax_perso"];
+														$bonus_cible_cac	= $tab["bonus_perso"];
+														$camp_cible_cac		= $tab["clan"];
+														
+														$couleur_clan_cible = couleur_clan($camp_cible_cac);
+														
+														if ($id_arme_cac == 10) {
+															// seringue
+															// On affiche que les persos blessés
+															if ($pv_cible_cac < $pv_max_cible_cac) {
+																echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+															}
+														} else if ($id_arme_cac == 11) {
+															// bandage
+															// On affiche que les persos avec malus
+															if ($bonus_cible_cac < 0) {
+																echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+															}
+														}
+													} else if ($id_cible_cac >= 200000) {
+														
+														// Un PNJ
+														$sql = "SELECT nom_pnj, pv_i, pvMax_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_cac 		= $tab["nom_pnj"];
+														$pv_cible_cac		= $tab["pv_i"];
+														$pv_max_cible_cac	= $tab["pvMax_pnj"];
+														
+														if ($pv_cible_cac < $pv_max_cible_cac) {
+															echo "<option style=\"color:grey\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+														}														
+													} else {
+														// Un Batiment => on ne veut pas l'afficher !
+													}
 												}
-												
-												echo "<option value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+											}
+											else {
+												while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
+													
+													$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
+													
+													if ($id_cible_cac < 50000) {
+														
+														// Un autre perso
+														$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_cac'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_cac 	= $tab["nom_perso"];
+														$camp_cible_cac	= $tab["clan"];
+														
+														$couleur_clan_cible = couleur_clan($camp_cible_cac);
+														
+													} else if ($id_cible_cac >= 200000) {
+														
+														// Un PNJ
+														$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_cac = $tab["nom_pnj"];
+														
+														$couleur_clan_cible = "grey";
+														
+													} else {
+														
+														// Un Batiment
+														$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_cac = $tab["nom_batiment"];
+														
+														$couleur_clan_cible = "black";
+													}
+													
+													echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+												}
 											}
 											?>
 										</select>
@@ -1486,11 +1549,14 @@ if($dispo || !$admin){
 												if ($id_cible_dist < 50000) {
 
 													// Un autre perso
-													$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible_dist'";
+													$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_dist'";
 													$res = $mysqli->query($sql);
 													$tab = $res->fetch_assoc();
 													
 													$nom_cible_dist = $tab["nom_perso"];
+													$camp_cible_cac	= $tab["clan"];
+														
+													$couleur_clan_cible = couleur_clan($camp_cible_cac);
 													
 												} else if ($id_cible_dist >= 200000) {
 													
@@ -1500,6 +1566,9 @@ if($dispo || !$admin){
 													$tab = $res->fetch_assoc();
 													
 													$nom_cible_dist = $tab["nom_pnj"];
+													
+													$couleur_clan_cible = "grey";
+													
 												} else {
 													
 													// Un Batiment
@@ -1508,9 +1577,11 @@ if($dispo || !$admin){
 													$tab = $res->fetch_assoc();
 													
 													$nom_cible_dist = $tab["nom_batiment"];
+													
+													$couleur_clan_cible = "black";
 												}
 												
-												echo "<option value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
+												echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
 											}
 											?>
 										</select>
