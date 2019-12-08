@@ -3080,7 +3080,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -3190,9 +3190,48 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible
@@ -3430,7 +3469,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -3540,9 +3579,48 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible
@@ -3780,7 +3858,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -3890,9 +3968,48 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible
@@ -4130,7 +4247,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -4240,9 +4357,48 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible
@@ -4479,7 +4635,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -4589,9 +4745,48 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible
@@ -4828,7 +5023,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -4938,9 +5133,48 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible
@@ -5177,7 +5411,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -5287,9 +5521,48 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible
@@ -5526,7 +5799,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -5640,9 +5913,48 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								}
 							}
 							
-							// MAJ xp/pi/pc perso
-							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso'";
+							// MAJ xp/pi
+							$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
+							
+							// recup id joueur perso
+							$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_j = $res->fetch_assoc();
+							
+							$id_j_perso = $t_j["idJoueur_perso"];
+							
+							// mise à jour des PC du chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
 							
 						} else {
 							// Le perso rate sa cible

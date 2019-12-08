@@ -308,7 +308,7 @@ if($verif){
 						
 						// Si perso ou cible est une infanterie 
 						// ou si grade perso >= grade cible - 1
-						if ($grade_perso >= $grade_cible - 1 
+						if ($grade_perso <= $grade_cible + 1 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
@@ -400,18 +400,50 @@ if($verif){
 							$mysqli->query($sql);
 							
 							// mise à jour des PC du chef
-							$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_j_perso' AND chef='1'";
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
 							$res = $mysqli->query($sql);
 							$t_chef = $res->fetch_assoc();
 							
 							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
 							
 							$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
 							$mysqli->query($sql);
 							
-							// mise a jour de la table evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',': $degats_final degats',NOW(),'0')";
-							$mysqli->query($sql);
+							$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+								
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+								$mysqli->query($sql);
+								
+								echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+								
+							}
+							
+							if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
+								
+								// mise a jour de la table evenement
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',': $degats_final soins',NOW(),'0')";
+								$mysqli->query($sql);
+								
+							} else {
+							
+								// mise a jour de la table evenement
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',': $degats_final degats',NOW(),'0')";
+								$mysqli->query($sql);
+							
+							}
 							
 							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso FROM perso WHERE id_perso='$id_cible'";
 							$res = $mysqli->query($sql);
@@ -486,13 +518,16 @@ if($verif){
 							$texte_submit = "attaquer à nouveau";
 						}
 						
-						?>
-							<br />
-							<form action="agir.php" method="post">
-								<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
-								<input type="submit" name="re_attaque" value="<?php echo $texte_submit; ?>" />
-							</form> 
-							
+						if ($pv_cible > 0) {
+							?>
+								<br />
+								<form action="agir.php" method="post">
+									<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
+									<input type="submit" name="re_attaque" value="<?php echo $texte_submit; ?>" />
+								</form> 
+							<?php
+						}
+							?>
 							<br /><br />
 							<center><a href="jouer.php"><font color="#000000" size="1" face="Verdana, Arial, Helvetica, sans-serif">[ retour ]</font></a></center>
 						<?php
@@ -763,9 +798,30 @@ if($verif){
 						// TODO - calcul gain XP selon pnj
 						$gain_xp = mt_rand(1, 12);
 						
-						// mise a jour des pv du pnj
-						$sql = "UPDATE instance_pnj SET pv_i = pv_i - $degats_final WHERE idInstance_pnj = '$id_cible'";
-						$mysqli->query($sql);
+						if ($id_arme_attaque == 10) {
+								
+							// Seringue
+							if ($pv_cible + $degats_final >= $pvM_cible) {
+								$degats_final = $pvM_cible - $pv_cible;
+							}
+								
+							// mise a jour des pv
+							$sql = "UPDATE instance_pnj SET pv_i = pv_i + $degats_final WHERE idInstance_pnj = '$id_cible'";
+							$mysqli->query($sql);
+								
+							echo "<br>Vous avez soigné $degats_final dégâts à la cible.<br><br>";
+								
+						} else if ($id_arme_attaque == 11) {
+								
+							// Bandage
+							echo "<br>Vous avez soigné $degats_final malus à la cible.<br><br>";
+								
+						} else {
+						
+							// mise a jour des pv du pnj
+							$sql = "UPDATE instance_pnj SET pv_i = pv_i - $degats_final WHERE idInstance_pnj = '$id_cible'";
+							$mysqli->query($sql);
+						}
 						
 						echo "<br>Vous avez infligé <b>$degats_final</b> dégâts à la cible.<br><br>";
 						echo "Vous avez gagné <b>$gain_xp</b> xp.";
@@ -774,9 +830,19 @@ if($verif){
 						$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id'";
 						$mysqli->query($sql);
 						
-						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','$nom_cible',': $degats_final degats',NOW(),'0')";
-						$mysqli->query($sql);					
+						if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
+							
+							// maj evenement
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a soigné ','$id_cible','$nom_cible',': $degats_final soins',NOW(),'0')";
+							$mysqli->query($sql);
+							
+						} else {
+							
+							// maj evenement
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','$nom_cible',': $degats_final degats',NOW(),'0')";
+							$mysqli->query($sql);
+							
+						}			
 						
 						// recuperation des données du pnj aprés attaque
 						$sql = "SELECT id_pnj, pv_i, x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
@@ -854,11 +920,17 @@ if($verif){
 						$mysqli->query($sql);
 						
 						if ($pv_cible > 0) {
+							
+							if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
+								$texte_submit = "soigner à nouveau";
+							} else {
+								$texte_submit = "attaquer à nouveau";
+							}
 						?>
 							<br />
 							<form action="agir.php" method="post">
 								<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
-								<input type="submit" name="re_attaque" value="attaquer à nouveau" />
+								<input type="submit" name="re_attaque" value="<?php echo $texte_submit; ?>" />
 							</form> 
 							
 							<br />
