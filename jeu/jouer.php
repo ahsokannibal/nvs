@@ -1425,8 +1425,16 @@ if($dispo || !$admin){
 								?>
 								<tr>
 									<form method="post" action="agir.php" target='_main'>
+									<?php 
+									if ($type_perso != 4) { 
+									?>
 									<td><input type="submit" value="Attaquer"></td>
 									<?php 
+									} else {
+									?>
+									<td><input type="submit" value="Soigner"></td>
+									<?php 
+									}
 									if ($type_perso != 5) { 
 									?>
 									<td>

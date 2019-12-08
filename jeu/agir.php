@@ -316,7 +316,12 @@ if($verif){
 							$gain_pc = 0;
 						}
 						
-						echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
+						// Seringue ou bandage
+						if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
+							echo "Vous avez lancé un soin sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
+						} else {
+							echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
+						}						
 						
 						// Calcul touche
 						$touche = mt_rand(0,100);
@@ -354,10 +359,39 @@ if($verif){
 								$gain_xp = 15;
 							}
 							
-							// mise a jour des pv et des malus de la cible
-							$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_final, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible'";
-							$mysqli->query($sql);
-							echo "<br>Vous avez infligé $degats_final dégâts à la cible.<br><br>";
+							if ($id_arme_attaque == 10) {
+								// Seringue
+								
+								if ($pv_cible + $degats_final >= $pvM_cible) {
+									$degats_final = $pvM_cible - $pv_cible;
+								}
+								
+								// mise a jour des pv
+								$sql = "UPDATE perso SET pv_perso=pv_perso+$degats_final WHERE id_perso='$id_cible'";
+								$mysqli->query($sql);
+								
+								echo "<br>Vous avez soigné $degats_final dégâts à la cible.<br><br>";
+								
+							} else if ($id_arme_attaque == 11) {
+								// Bandage
+								
+								if ($bonus_perso + $degats_final > 0) {
+									$sql = "UPDATE perso SET bonus_perso=0 WHERE id_perso='$id_cible'";
+									echo "<br>Vous avez soigné tous les malus de la cible.<br><br>";
+								} else {
+									$sql = "UPDATE perso SET bonus_perso=bonus_perso+$degats_final WHERE id_perso='$id_cible'";
+									echo "<br>Vous avez soigné $degats_final malus à la cible.<br><br>";
+								}
+								
+								$mysqli->query($sql);
+								
+							} else {
+								// mise a jour des pv et des malus de la cible
+								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_final, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible'";
+								$mysqli->query($sql);
+								echo "<br>Vous avez infligé $degats_final dégâts à la cible.<br><br>";
+							}
+							
 							echo "Vous avez gagné $gain_xp xp.<br>";
 							
 							// mise a jour des xp/pi/pc
@@ -435,11 +469,17 @@ if($verif){
 						$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_arme_attaque WHERE id_perso='$id'";
 						$res = $mysqli->query($sql); 
 						
+						if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
+							$texte_submit = "soigner à nouveau";
+						} else {
+							$texte_submit = "attaquer à nouveau";
+						}
+						
 						?>
 							<br />
 							<form action="agir.php" method="post">
 								<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
-								<input type="submit" name="re_attaque" value="attaquer à nouveau" />
+								<input type="submit" name="re_attaque" value="<?php echo $texte_submit; ?>" />
 							</form> 
 							
 							<br /><br />
