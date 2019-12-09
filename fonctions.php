@@ -164,7 +164,6 @@ function filtre($chaine,$lenghtMin,$lenghtMax)
 	"," => "error",
 	";" => "error",
 	":" => "error",
-	" " => "error",
 	"!" => "error",
 	"@" => "error",
 	"|" => "error",
@@ -175,7 +174,6 @@ function filtre($chaine,$lenghtMin,$lenghtMax)
 	"#" => "error",
 	"'" => "error",
 	"&" => "error",
-	//" " => "error",
 	);
 	$chaine = strtr($chaine,$caracteres);	
 	$chaine = trim(htmlentities($chaine) );
