@@ -84,6 +84,86 @@ if($dispo){
 						echo "<center><b><font color='red'>Veuillez rentrer une valeur correcte sans caractères spéciaux comprise entre 1 et 25 caractères pour le nom de votre grouillot</font></b></center>";
 					}
 				}
+				
+				// On souhaite renvoyer un grouillot
+				if (isset($_POST["renvoyer"]) && isset($_POST["matricule_renvoi_hidden"])) {
+					
+					$matricule_grouillot_renvoi = $_POST["matricule_renvoi_hidden"];
+					
+					// controle matricule perso
+					$verif_matricule = preg_match("#^[0-9]*[0-9]$#i","$matricule_grouillot_renvoi");
+					
+					if ($verif_matricule) {
+						
+						// On vérifie que le grouillot lui appartient bien
+						$sql = "SELECT count(id_perso) as nb_perso FROM perso WHERE id_perso='$matricule_grouillot_renvoi' AND idJoueur_perso='$id_joueur'";
+						
+						if($res = $mysqli->query($sql)) {
+							
+							$tab = $res->fetch_assoc();
+							
+							$nb = $tab["nb_perso"];
+							
+							if ($nb == 1) {
+								
+								// Ok - renvoi du perso						
+								$sql = "DELETE FROM perso WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_arme WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_armure WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_contact WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_dossiers WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_grade WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_objet WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_in_section WHERE id_perso='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								echo "<center><font color='blue'>Le grouillot avec la matricule $matricule_grouillot_renvoi a bien été renvoyé de votre bataillon.</font></center><br/>";
+								
+							} else {
+								// Tentative de triche ?!
+								echo "<font color='red'>Le perso n'a pas pu être renvoyé, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+							}
+						} else {
+							// Tentative de triche ?!
+							echo "<font color='red'>Le perso n'a pas pu être renvoyé, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						}
+					} else {
+						// Tentative de triche ?!
+						echo "<font color='red'>Le matricule du perso à renvoyer est mal renseigné, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
+						echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+					}
+				}
 			
 				echo "<table align='center' border='1' width='70%'>";
 				echo "	<tr>";
@@ -116,7 +196,7 @@ if($dispo){
 					echo "	<td align='center'><input type='text' maxlength='25' name='nom_grouillot' value='". $nom_grouillot ."'><input type='hidden' name='matricule_hidden' value='$matricule_grouillot'> <input type='submit' name='renommer' value='renommer'></td>";
 					echo "</form>";
 					echo "<form method=\"post\" action=\"gestion_grouillot.php\">";
-					echo "	<td align='center'><input type='submit' name='$matricule_grouillot' value='renvoyer'></td>";
+					echo "	<td align='center'><input type='hidden' name='matricule_renvoi_hidden' value='$matricule_grouillot'><input type='submit' name='renvoyer' value='renvoyer'></td>";
 					echo "</form>";
 					echo "</tr>";
 				}

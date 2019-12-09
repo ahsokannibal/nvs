@@ -9,7 +9,7 @@ include ('nb_online.php');
 
 if(isset($_SESSION["ID_joueur"])){
 	
-	$id_joueur = $_SESSION['ID_joueur']; 
+	$id_joueur = $_SESSION['ID_joueur'];
 	
 	// recuperation de l'id et du nom du chef
 	$sql = "SELECT id_perso, nom_perso, clan, est_gele, UNIX_TIMESTAMP(DLA_perso) as DLA, UNIX_TIMESTAMP(date_gele) as DG FROM perso WHERE idJoueur_perso=$id_joueur AND chef=1";
@@ -28,91 +28,108 @@ if(isset($_SESSION["ID_joueur"])){
 		
 		$id_perso = $_SESSION["id_perso"];
 		
-		// recuperation des infos du perso
-		$sql = "SELECT idJoueur_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso FROM perso WHERE id_perso='$id_perso'";
+		// Ce perso existe t-il toujours ?
+		$sql = "SELECT count(id_perso) as nb_perso FROM perso WHERE id_perso = '$id_perso'";
 		$res = $mysqli->query($sql);
-		$t_perso = $res->fetch_assoc();
+		$tab = $res->fetch_assoc();
 		
-		$id_joueur_perso 	= $t_perso["idJoueur_perso"];
-		$x_perso			= $t_perso["x_perso"];
-		$y_perso			= $t_perso["y_perso"];
-		$pv_perso			= $t_perso["pv_perso"];
-		$pvMax_perso		= $t_perso["pvMax_perso"];
-		$recup_perso		= $t_perso["recup_perso"] + $t_perso["bonusRecup_perso"];
-		$image_perso		= $t_perso["image_perso"];
+		$nb_perso = $tab["nb_perso"];
 		
-		// Le perso appartient-il bien au joueur ?
-		if ($id_joueur_perso == $id_joueur) {
+		if ($nb_perso == 1) {
 			
-			if ($pv_perso <= 0) {
+			// recuperation des infos du perso
+			$sql = "SELECT idJoueur_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso FROM perso WHERE id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_perso = $res->fetch_assoc();
+			
+			$id_joueur_perso 	= $t_perso["idJoueur_perso"];
+			$x_perso			= $t_perso["x_perso"];
+			$y_perso			= $t_perso["y_perso"];
+			$pv_perso			= $t_perso["pv_perso"];
+			$pvMax_perso		= $t_perso["pvMax_perso"];
+			$recup_perso		= $t_perso["recup_perso"] + $t_perso["bonusRecup_perso"];
+			$image_perso		= $t_perso["image_perso"];
+			
+			// Le perso appartient-il bien au joueur ?
+			if ($id_joueur_perso == $id_joueur) {
 				
-				// Le perso est bien mort
-				//    RESPAWN BATIMENT    //
-							
-				// Récupération du batiment de rappatriement le plus proche du perso
-				$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
-				
-				if ($id_bat != null) {
+				if ($pv_perso <= 0) {
 					
-					// récupération coordonnées batiment
-					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
-					$res_b = $mysqli->query($sql_b);
-					$t_b = $res_b->fetch_assoc();
+					// Le perso est bien mort
+					//    RESPAWN BATIMENT    //
+								
+					// Récupération du batiment de rappatriement le plus proche du perso
+					$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
 					
-					$x = $t_b['x_instance'];
-					$y = $t_b['y_instance'];
+					if ($id_bat != null) {
+						
+						// récupération coordonnées batiment
+						$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+						$res_b = $mysqli->query($sql_b);
+						$t_b = $res_b->fetch_assoc();
+						
+						$x = $t_b['x_instance'];
+						$y = $t_b['y_instance'];
+						
+						// On met le perso dans le batiment
+						$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_bat')";
+						$mysqli->query($sql);
+						
+					} else {
+						
+						// Respawn aleatoire
+						if($clan == 1){
+							// bleu
+							$x_min_respawn = 0;
+							$x_max_respawn = 40;
+							$y_min_respawn = 0;
+							$y_max_respawn = 40;
+						}
+						if($clan == 2){
+							// rouge
+							$x_min_respawn = 160;
+							$x_max_respawn = 200;
+							$y_min_respawn = 160;
+							$y_max_respawn = 200;
+						}
+								
+						// on le replace aleatoirement sur la carte
+						$occup = 1;
+						while ($occup == 1)
+						{
+							$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
+							$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
+							$occup = verif_pos_libre($mysqli, $x, $y);
+						}
+						
+						$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x' AND y_carte='$y'";
+						$mysqli->query($sql);
+					}
 					
-					// On met le perso dans le batiment
-					$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_bat')";
+					// MAJ perso
+					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
+		
+					//redirection
+					header("location:jeu/jouer.php");
 					
 				} else {
-					
-					// Respawn aleatoire
-					if($clan == 1){
-						// bleu
-						$x_min_respawn = 0;
-						$x_max_respawn = 40;
-						$y_min_respawn = 0;
-						$y_max_respawn = 40;
-					}
-					if($clan == 2){
-						// rouge
-						$x_min_respawn = 160;
-						$x_max_respawn = 200;
-						$y_min_respawn = 160;
-						$y_max_respawn = 200;
-					}
-							
-					// on le replace aleatoirement sur la carte
-					$occup = 1;
-					while ($occup == 1)
-					{
-						$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
-						$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
-						$occup = verif_pos_libre($mysqli, $x, $y);
-					}
-					
-					$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x' AND y_carte='$y'";
-					$mysqli->query($sql);
+					// Le perso est vivant
+					// redirection
+					header("location:jeu/jouer.php"); 
 				}
-				
-				// MAJ perso
-				$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso'";
-				$mysqli->query($sql);
-	
-				//redirection
-				header("location:jeu/jouer.php");
-				
 			} else {
-				// Le perso est vivant
-				// redirection
-				header("location:jeu/jouer.php"); 
+				
+				// Tentative de triche !
+				// TODO report 
 			}
 		} else {
+			// Le perso a été supprimé / renvoyé
+			// On se remet sur le chef
+			$_SESSION["id_perso"] = $id;
 			
-			// Tentative de triche !
-			// TODO report 
+			//redirection
+			header("location:jeu/jouer.php");
 		}
 	} else {
 	
