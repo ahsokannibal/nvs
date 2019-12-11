@@ -114,7 +114,7 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (10, 4),
 (11, 4),
 (9, 6),
-(12, 6)
+(12, 6),
 (13, 5),
 (14, 5);
 
@@ -332,8 +332,9 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 --
 -- Contenu de la table `joueur`
 --
-INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES ('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1'), ('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
-INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES ('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1'), ('2', NULL, 'romshunter@msn.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
+INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES 
+('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1'), 
+('2', NULL, 'romshunter@msn.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
 
 --
 -- Contenu de la table `perso`
@@ -369,7 +370,7 @@ INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '2');
 --
 -- Contenu de la table `pnj`
 --
-INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `perception_pnj`, `aggressivite_pnj`, `de_pnj`, `description_pnj`) VALUES ('1', 'Sangsue', '40', '8', '40', '4', '10', '2', '0', 'Petit animal suceur de sang, très gênant et particulièrement peu ragoutant, la sangsue se trouve dans le marais. Attention à leurs tares !');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('1', 'Sangsue', '40', '8', '40', '4', '10', '2', '0', '0', 'Petit animal suceur de sang, très gênant et particulièrement peu ragoutant, la sangsue se trouve dans le marais. Attention à leurs tares !');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('2', 'Loup', '300', '20', '120', '8', '30', '0', '4', '0', 'Chasseur des forêts, cousin éloigné du coyote, le loup n\'est plus à présenter.');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('3', 'Crotale', '100', '20', '160', '5', '20', '0', '3', '0', 'Les crotales sont des animaux qui peuvent s\'avérer très dangereux de par leurs terribles morsures infligeant des tares... Attention à na pas les sous estimer, tout comme les serpents !');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('4', 'Caïman', '500', '30', '150', '5', '40', '20', '3', '0', 'Redoutable prédateur des rivières, le caïman est synonyme d\'effroi pour beaucoup');
