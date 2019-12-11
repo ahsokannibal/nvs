@@ -204,90 +204,7 @@ if($verif){
 				if($pa_restant <= 0){
 					$pa_restant = 0;
 				}				
-				?>
-				<table border=0 width=100%>
-					<tr height=50%>
-						<td width=50%>
-							<table border=1 height=100% width=100%>		
-								<tr>
-									<td width=25%>	
-										<table border=0 width=100%>
-											<tr>
-												<td align="center">
-													<div width=40 height=40 style="position: relative;">
-														<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id; ?></div>
-														<img class="" border=0 src="../images_perso/<?php echo $image_perso; ?>" width=40 height=40 />
-													</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-									<td width=75%>
-										<table border=0 width=100%>
-											<tr>
-												<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo "<u><b>Xp :</b></u> ".$xp_perso." - <u><b>Pi :</b></u> ".$pi_perso.""; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_restant."/".$paM_perso; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo "<u><b>Recup :</b></u> ".$rec_perso; if($br_perso) echo " (+".$br_perso.")"; ?><?php echo " - <u><b>Perception :</b></u> ".$per_perso; if($bp_perso) {if($bp_perso>0) echo " (+".$bp_perso.")"; else echo " (".$bp_perso.")";} ?></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</td>
-						<td width=50%>	
-							<table border=1 height=100% width=100%>		
-								<tr>
-									<td width=25%>	
-										<table border=0 width=100%>
-											<tr>												
-												<td align="center">
-													<div width=40 height=40 style="position: relative;">
-														<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id_cible; ?></div>
-														<img class="" border=0 src="../images_perso/<?php echo $image_perso_cible; ?>" width=40 height=40 />
-													</div>
-												</td>
-											</tr>
-										</table>
-									</td>
-									<td width=75%>
-										<table border=0 width=100%>
-											<tr>
-												<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_cible; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo "<u><b>Xp :</b></u> ".$xp_cible.""; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_cible."/".$y_cible; ?></td>
-											</tr>
-											<tr>
-												<td><?php echo"<u><b>Camp :</b></u> ".$couleur_clan_cible; ?></td>
-											</tr>
-										</table>
-									</td>
-								</tr>
-							</table>
-						</td>
-					</tr>
-		
-					<tr height=50%>
-						<td></td>
-					</tr>	
-				</table>		
-				<?php					
+									
 				// le perso n'a pas assez de pa pour faire cette attaque
 				if ($pa_perso < $coutPa_arme_attaque) {
 					echo "<div class=\"erreur\" align=\"center\">Vous n'avez pas assez de pa pour effectuer cette action !</div>";
@@ -297,6 +214,91 @@ if($verif){
 					// le perso a assez de pa
 					// la cible est encore en vie
 					if ($pv_cible > 0) {
+						
+						?>
+						<table border=0 width=100%>
+							<tr height=50%>
+								<td width=50%>
+									<table border=1 height=100% width=100%>		
+										<tr>
+											<td width=25%>	
+												<table border=0 width=100%>
+													<tr>
+														<td align="center">
+															<div width=40 height=40 style="position: relative;">
+																<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id; ?></div>
+																<img class="" border=0 src="../images_perso/<?php echo $image_perso; ?>" width=40 height=40 />
+															</div>
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td width=75%>
+												<table border=0 width=100%>
+													<tr>
+														<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_perso; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo "<u><b>Xp :</b></u> ".$xp_perso." - <u><b>Pi :</b></u> ".$pi_perso.""; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_restant."/".$paM_perso; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo "<u><b>Recup :</b></u> ".$rec_perso; if($br_perso) echo " (+".$br_perso.")"; ?><?php echo " - <u><b>Perception :</b></u> ".$per_perso; if($bp_perso) {if($bp_perso>0) echo " (+".$bp_perso.")"; else echo " (".$bp_perso.")";} ?></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+								<td width=50%>	
+									<table border=1 height=100% width=100%>		
+										<tr>
+											<td width=25%>	
+												<table border=0 width=100%>
+													<tr>												
+														<td align="center">
+															<div width=40 height=40 style="position: relative;">
+																<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id_cible; ?></div>
+																<img class="" border=0 src="../images_perso/<?php echo $image_perso_cible; ?>" width=40 height=40 />
+															</div>
+														</td>
+													</tr>
+												</table>
+											</td>
+											<td width=75%>
+												<table border=0 width=100%>
+													<tr>
+														<td><?php echo "<u><b>Pseudo :</b></u> ".$nom_cible; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo "<u><b>Xp :</b></u> ".$xp_cible.""; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_cible."/".$y_cible; ?></td>
+													</tr>
+													<tr>
+														<td><?php echo"<u><b>Camp :</b></u> ".$couleur_clan_cible; ?></td>
+													</tr>
+												</table>
+											</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+				
+							<tr height=50%>
+								<td></td>
+							</tr>	
+						</table>		
+						<?php
 						
 						// Vérifie si le joueur attaqué a coché l'envoi de mail
 						$mail_info_joueur = verif_coche_mail($mysqli, $id_joueur_cible);
@@ -360,6 +362,10 @@ if($verif){
 								$gain_xp = 15;
 							}
 							
+							if ($gain_xp > 4 && $degatZone_arme_attaque) {
+								$gain_xp = 4;
+							}
+							
 							if ($id_arme_attaque == 10) {
 								
 								// Seringue
@@ -390,7 +396,7 @@ if($verif){
 								// mise a jour des pv et des malus de la cible
 								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_final, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible'";
 								$mysqli->query($sql);
-								echo "<br>Vous avez infligé $degats_final dégâts à la cible.<br><br>";
+								echo "<br>Vous avez infligé $degats_final dégâts à la cible.<br>";
 							}
 							
 							echo "Vous avez gagné $gain_xp xp.<br>";
@@ -444,6 +450,159 @@ if($verif){
 								$mysqli->query($sql);
 							
 							}
+							
+							// L'arme fait des dégats de zone
+							if ($degatZone_arme_attaque) {
+								
+								$degats_collat = floor($degats_final / 2);
+								
+								// Récupération des cibles potentielles autour de la cible principale
+								$sql = "SELECT idPerso_carte FROM carte 
+										WHERE x_carte >= $x_cible - 1 AND x_carte <= $x_cible + 1 AND y_carte >= $y_cible - 1 AND y_carte <= $y_cible + 1
+										AND occupee_carte = '1'
+										AND idPerso_carte != '$id_cible'";
+								$res_recherche_collat = $mysqli->query($sql);
+								
+								// On parcours les cibles pour degats collateraux
+								while ($t_recherche_collat = $res_recherche_collat->fetch_assoc()) {
+									
+									$id_cible_collat = $t_recherche_collat["idPerso_carte"];
+									
+									if ($id_cible_collat < 50000) {
+										
+										// Perso
+										// Récupération des infos du perso
+										$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pv_perso, pvMax_perso, or_perso, clan, id_grade
+												FROM perso, perso_as_grade 
+												WHERE perso_as_grade.id_perso = perso.id_perso
+												AND perso.id_perso='$id_cible_collat'";
+										$res = $mysqli->query($sql);
+										$t_collat = $res->fetch_assoc();
+										
+										$id_joueur_collat 	= $t_collat["idJoueur_perso"];
+										$nom_collat			= $t_collat["nom_perso"];
+										$xp_collat 			= $t_collat["xp_perso"];
+										$x_collat 			= $t_collat["x_perso"];
+										$y_collat 			= $t_collat["y_perso"];
+										$pv_collat 			= $t_collat["pv_perso"];
+										$pvM_collat 		= $t_collat["pvMax_perso"];
+										$or_collat 			= $t_collat["or_perso"];
+										$image_perso_collat = $t_collat["image_perso"];
+										$clan_collat 		= $t_collat["clan"];
+										$grade_collat		= $t_collat['id_grade'];
+										
+										// Récupération de la couleur associée au clan de la cible
+										$couleur_clan_collat = couleur_clan($clan_collat);
+										
+										$gain_pc_collat = 1;
+										$gain_xp_collat = 1;
+										
+										// mise a jour des pv et des malus de la cible
+										$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_collat, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible_collat'";
+										$mysqli->query($sql);
+										
+										echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat.<br>";
+										echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
+										
+										// mise a jour des xp/pi
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+										$mysqli->query($sql);
+										
+										// mise à jour des PC du chef
+										$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+										$res = $mysqli->query($sql);
+										$t_chef = $res->fetch_assoc();
+										
+										$id_perso_chef = $t_chef["id_perso"];
+										$pc_perso_chef = $t_chef["pc_perso"];
+										$id_grade_chef = $t_chef["id_grade"];
+										
+										$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc_collat WHERE id_perso='$id_perso_chef'";
+										$mysqli->query($sql);
+										
+										$pc_perso_chef_final = $pc_perso_chef + $gain_pc_collat;
+										
+										// Verification passage de grade 
+										$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+										$res = $mysqli->query($sql);
+										$t_grade = $res->fetch_assoc();
+										
+										$id_grade_final 	= $t_grade["id_grade"];
+										$nom_grade_final	= $t_grade["nom_grade"];
+										
+										if ($id_grade_chef < $id_grade_final) {
+											
+											// Passage de grade								
+											$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
+											$mysqli->query($sql);
+											
+											echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
+											
+										}
+										
+										// mise a jour de la table evenement
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>',': $degats_collat degats',NOW(),'0')";
+										$mysqli->query($sql);
+										
+										$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso FROM perso WHERE id_perso='$id_cible_collat'";
+										$res = $mysqli->query($sql);
+										$tab = $res->fetch_assoc();
+										
+										$pv_collat_fin 	= $tab["pv_perso"];
+										$x_collat_fin 	= $tab["x_perso"];
+										$y_collat_fin 	= $tab["y_perso"];
+										$xp_collat_fin 	= $tab["xp_perso"];
+										$pi_collat_fin 	= $tab["pi_perso"];
+											
+										// il est mort
+										if ($pv_collat_fin <= 0) {
+										
+											// on l'efface de la carte
+											$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_collat_fin' AND y_carte='$y_collat_fin'";
+											$mysqli->query($sql);
+						
+											// Calcul gains (po et xp)
+											$perte_po = gain_po_mort($or_collat);
+											
+											// TODO
+											$perte_xp_collat = 0;
+						
+											// MAJ perte xp/po/stat cible
+											$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$perte_xp_collat, pi_perso=0, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
+											$mysqli->query($sql);
+						
+											echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
+											
+											// maj evenements
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a capturé','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>','',NOW(),'0')";
+											$mysqli->query($sql);
+											
+											// maj cv
+											$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>',NOW())";
+											$mysqli->query($sql);
+						
+											// maj stats de la cible
+											$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id";
+											$mysqli->query($sql);
+											
+											// maj stats camp
+											if($clan_cible != $clan_perso){
+												$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+												$mysqli->query($sql);
+											}
+										}
+										
+									} else if ($id_cible_collat >= 200000) {
+										// PNJ
+										// Récupération des infos du PNJ
+										
+										
+									} else {
+										// Batiment => pas de collat sur batiment
+									}
+								}
+							}
+							
 							
 							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso FROM perso WHERE id_perso='$id_cible'";
 							$res = $mysqli->query($sql);

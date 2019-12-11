@@ -7,6 +7,7 @@ define ("DUREE_TOUR", 24*60*60);//12*60*60);
 function db_connexion() //CONNEXION A LA DB
 {
 	$connexion = mysqli_connect("localhost","root","","nvs");
+	//$connexion = mysqli_connect("localhost","lokarugp_loka","archimede2891","lokarugp_nvs");
 	//$connexion = mysqli_connect("localhost","root","eptm","nvs");
 	
 	if (!$connexion) {
