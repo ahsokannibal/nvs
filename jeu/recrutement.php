@@ -557,7 +557,9 @@ if($dispo){
 										$mysqli->query($sql_i);
 										
 										//------- Ajout des armes à l'artillerie
-										// TODO
+										// Arme : Canon
+										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','13','1')";
+										$mysqli->query($sql);
 										
 										
 										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";

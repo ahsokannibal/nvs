@@ -163,7 +163,7 @@ if($verif){
 			if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
 				
 				// recuperation des données du perso cible
-				$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, protec_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan, id_grade
+				$sql = "SELECT idJoueur_perso, nom_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, protec_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan, id_grade
 						FROM perso, perso_as_grade 
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso.id_perso='$id_cible'";
@@ -172,6 +172,7 @@ if($verif){
 				
 				$id_joueur_cible 	= $t_cible["idJoueur_perso"];
 				$nom_cible 			= $t_cible["nom_perso"];
+				$type_perso_cible	= $t_cible["type_perso"];
 				$xp_cible 			= $t_cible["xp_perso"];
 				$x_cible 			= $t_cible["x_perso"];
 				$y_cible 			= $t_cible["y_perso"];
@@ -337,6 +338,13 @@ if($verif){
 			
 							// calcul degats arme
 							$degats_final = mt_rand($degatMin_arme_attaque, $degatMin_arme_attaque * $valeur_des_arme_attaque) - $protec_cible;
+							
+							// Canon d'artillerie et cible autre artillerie
+							if ($id_arme_attaque == 13 && $type_perso_cible == 5) {
+								// Bonus dégats 13D10
+								$bonus_degats_canon = mt_rand(13, 130);
+								$degats_final = $degats_final + $bonus_degats_canon;
+							}
 							
 							if($degats_final < 0) {
 								$degats_final = 0;
@@ -593,10 +601,94 @@ if($verif){
 										}
 										
 									} else if ($id_cible_collat >= 200000) {
+										
 										// PNJ
-										// Récupération des infos du PNJ
+										// Récupération des infos du PNJ	
+										$sql = "SELECT pnj.id_pnj, nom_pnj, pv_i, x_i, y_i, pv_i, pvMax_pnj, protec_pnj 
+												FROM pnj, instance_pnj 
+												WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj='$id_cible_collat'";
+										$res = $mysqli->query($sql);
+										$t_cible = $res->fetch_assoc();
 										
+										$id_pnj_collat 			= $t_cible["id_pnj"];
+										$nom_cible_collat 		= $t_cible["nom_pnj"];
+										$pv_cible_collat 		= $t_cible["pv_i"];
+										$x_cible_collat 		= $t_cible["x_i"];
+										$y_cible_collat 		= $t_cible["y_i"];
+										$pv_cible_collat 		= $t_cible["pv_i"];
+										$pvMax_cible_collat 	= $t_cible["pvMax_pnj"];
+										$protec_cible_collat	= $t_cible["protec_pnj"];
+										$image_pnj_collat 		= "pnj".$t_cible["id_pnj"]."t.png";
 										
+										$gain_xp_collat = 1;
+										
+										// mise a jour des pv de la cible
+										$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat WHERE idInstance_pnj='$id_cible_collat'";
+										$mysqli->query($sql);
+										
+										echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
+										echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
+										
+										// mise a jour des xp/pi
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+										$mysqli->query($sql);
+										
+										// maj evenement
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a infligé des dégâts collatéraux ','$id_cible_collat','$nom_cible_collat',': $degats_collat degats',NOW(),'0')";
+										$mysqli->query($sql);
+										
+										// recuperation des données du pnj aprés attaque
+										$sql = "SELECT pv_i, x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_cible_collat'";
+										$res = $mysqli->query($sql);
+										$tab = $res->fetch_assoc();
+										
+										$pv_cible_collat 	= $tab["pv_i"];
+										$x_cible_collat 	= $tab["x_i"];
+										$y_cible_collat 	= $tab["y_i"];
+											
+										// il est mort
+										if ($pv_cible_collat <= 0) {
+										
+											echo "Vous avez tué $nom_cible_collat avec des dégâts collatéraux ! <font color=red>Félicitations.</font>";
+										
+											// on l'efface de la carte
+											$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible_collat' AND y_carte='$y_cible_collat'";
+											$mysqli->query($sql);
+											
+											// on le delete
+											$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_cible_collat'";
+											$mysqli->query($sql);
+											
+											// verification que le perso n'a pas déjà tué ce type de pnj
+											$sql_v = "SELECT id_pnj FROM perso_as_killpnj WHERE id_pnj='$id_pnj_collat' AND id_perso='$id'";
+											$res_v = $mysqli->query($sql_v);
+											$verif_pnj = $res_v->num_rows;
+											
+											// nb_pnj 
+											$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso='$id'";
+											$mysqli->query($sql);
+											
+											if($verif_pnj == 0){
+												// il n'a jamais tué de pnj de ce type => insert
+												$sql = "INSERT INTO perso_as_killpnj VALUES('$id','$id_pnj_collat','1')";
+												$mysqli->query($sql);
+											}
+											else { 
+												// il en a déjà tué => update
+												$sql = "UPDATE perso_as_killpnj SET nb_pnj=nb_pnj+1 WHERE id_perso='$id' AND id_pnj='$id_pnj_collat'";
+												$mysqli->query($sql);
+											}
+											
+											// maj evenement
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a tué','$id_cible_collat','$nom_cible_collat','',NOW(),'0')";
+											$mysqli->query($sql);
+											
+											// maj cv
+											$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','$nom_cible_collat',NOW())";
+											$mysqli->query($sql);
+											
+											echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+										}
 									} else {
 										// Batiment => pas de collat sur batiment
 									}
@@ -1146,10 +1238,94 @@ if($verif){
 									}
 									
 								} else if ($id_cible_collat >= 200000) {
+									
 									// PNJ
-									// Récupération des infos du PNJ
+									// Récupération des infos du PNJ	
+									$sql = "SELECT pnj.id_pnj, nom_pnj, pv_i, x_i, y_i, pv_i, pvMax_pnj, protec_pnj 
+											FROM pnj, instance_pnj 
+											WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj='$id_cible_collat'";
+									$res = $mysqli->query($sql);
+									$t_cible = $res->fetch_assoc();
 									
+									$id_pnj_collat 			= $t_cible["id_pnj"];
+									$nom_cible_collat 		= $t_cible["nom_pnj"];
+									$pv_cible_collat 		= $t_cible["pv_i"];
+									$x_cible_collat 		= $t_cible["x_i"];
+									$y_cible_collat 		= $t_cible["y_i"];
+									$pv_cible_collat 		= $t_cible["pv_i"];
+									$pvMax_cible_collat 	= $t_cible["pvMax_pnj"];
+									$protec_cible_collat	= $t_cible["protec_pnj"];
+									$image_pnj_collat 		= "pnj".$t_cible["id_pnj"]."t.png";
 									
+									$gain_xp_collat = 1;
+									
+									// mise a jour des pv de la cible
+									$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat WHERE idInstance_pnj='$id_cible_collat'";
+									$mysqli->query($sql);
+									
+									echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
+									echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
+									
+									// mise a jour des xp/pi
+									$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+									$mysqli->query($sql);
+									
+									// maj evenement
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a infligé des dégâts collatéraux ','$id_cible_collat','$nom_cible_collat',': $degats_collat degats',NOW(),'0')";
+									$mysqli->query($sql);
+									
+									// recuperation des données du pnj aprés attaque
+									$sql = "SELECT pv_i, x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_cible_collat'";
+									$res = $mysqli->query($sql);
+									$tab = $res->fetch_assoc();
+									
+									$pv_cible_collat 	= $tab["pv_i"];
+									$x_cible_collat 	= $tab["x_i"];
+									$y_cible_collat 	= $tab["y_i"];
+										
+									// il est mort
+									if ($pv_cible_collat <= 0) {
+									
+										echo "Vous avez tué $nom_cible_collat avec des dégâts collatéraux ! <font color=red>Félicitations.</font>";
+									
+										// on l'efface de la carte
+										$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible_collat' AND y_carte='$y_cible_collat'";
+										$mysqli->query($sql);
+										
+										// on le delete
+										$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_cible_collat'";
+										$mysqli->query($sql);
+										
+										// verification que le perso n'a pas déjà tué ce type de pnj
+										$sql_v = "SELECT id_pnj FROM perso_as_killpnj WHERE id_pnj='$id_pnj_collat' AND id_perso='$id'";
+										$res_v = $mysqli->query($sql_v);
+										$verif_pnj = $res_v->num_rows;
+										
+										// nb_pnj 
+										$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso='$id'";
+										$mysqli->query($sql);
+										
+										if($verif_pnj == 0){
+											// il n'a jamais tué de pnj de ce type => insert
+											$sql = "INSERT INTO perso_as_killpnj VALUES('$id','$id_pnj_collat','1')";
+											$mysqli->query($sql);
+										}
+										else { 
+											// il en a déjà tué => update
+											$sql = "UPDATE perso_as_killpnj SET nb_pnj=nb_pnj+1 WHERE id_perso='$id' AND id_pnj='$id_pnj_collat'";
+											$mysqli->query($sql);
+										}
+										
+										// maj evenement
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a tué','$id_cible_collat','$nom_cible_collat','',NOW(),'0')";
+										$mysqli->query($sql);
+										
+										// maj cv
+										$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','$nom_cible_collat',NOW())";
+										$mysqli->query($sql);
+										
+										echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+									}
 								} else {
 									// Batiment => pas de collat sur batiment
 								}
@@ -1516,6 +1692,13 @@ if($verif){
 						if ($touche <= 2) {
 							// Coup critique ! Dégats et Gains PC X 2
 							$degats_final = $degats_final * 2;
+						}
+						
+						// Canon d'artillerie
+						if ($id_arme_attaque == 13) {
+							// Bonus dégats 20D10
+							$bonus_degats_canon = mt_rand(20, 200);
+							$degats_final = $degats_final + $bonus_degats_canon;
 						}
 						
 						// mise à jour des pv du batiment
