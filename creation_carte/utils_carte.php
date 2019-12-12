@@ -518,7 +518,7 @@ else {
 							$pmPnj = $t["pm_pnj"];
 							
 							// creation du pnj
-							$sql = "INSERT INTO instance_pnj (id_pnj, pv_i, pm_i, deplace_i, dernierAttaquant_i, x_i, y_i, bonus_i) VALUES ('$pnj','$pvMaxPnj','$pmPnj','1','','$tabcase_x','$tabcase_y','0')";
+							$sql = "INSERT INTO instance_pnj (id_pnj, pv_i, pm_i, deplace_i, dernierAttaquant_i, x_i, y_i, bonus_i) VALUES ('$pnj','$pvMaxPnj','$pmPnj','1','0','$tabcase_x','$tabcase_y','0')";
 							$mysqli->query($sql);
 							$id_instance = $mysqli->insert_id;
 							
