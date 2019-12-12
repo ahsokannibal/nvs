@@ -1063,7 +1063,7 @@ if($dispo || !$admin){
 				}
 				
 				// Récupération de tous les persos du joueur
-				$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso'";
+				$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso' ORDER BY id_perso";
 				$res = $mysqli->query($sql);
 				
 				// init vide

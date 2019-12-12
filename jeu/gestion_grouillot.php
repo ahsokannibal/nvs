@@ -174,7 +174,7 @@ if($dispo){
 				echo "";
 			
 				// Récupération des persos du joueur
-				$sql = "SELECT id_perso, nom_perso, type_perso, image_perso FROM perso WHERE idJoueur_perso = '$id_joueur' AND chef = '0'";
+				$sql = "SELECT id_perso, nom_perso, type_perso, image_perso FROM perso WHERE idJoueur_perso = '$id_joueur' AND chef = '0' ORDER BY id_perso";
 				$res = $mysqli->query($sql);
 				while ($tab = $res->fetch_assoc()) {
 					
