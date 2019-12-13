@@ -55,7 +55,7 @@ if (isset($_POST["id_attaque_dist"]) && $_POST["id_attaque_dist"] != "personne")
 if($verif){
 	
 	//traitement de l'attaque sur un perso
-	if ((isset($id_attaque) && $id_attaque != "" && $id_attaque != "personne" && $id_attaque < 50000)) { 
+	if ((isset($id_attaque) && $id_attaque != "" && $id_attaque != "personne" && $id_attaque < 50000)) {
 	
 		if(!in_bat($mysqli, $id)){
 	
@@ -1746,7 +1746,7 @@ if($verif){
 								$perte_pv = mt_rand(10,50);
 								
 								// Traitement persos dans le batiment qui perdent des pv 
-								$sql_p = "UPDATE perso SET pv_perso=pv_perso-$perte_pv WHERE id_perso='$id_p'";
+								$sql_p = "UPDATE perso SET pv_perso=pv_perso - $perte_pv WHERE id_perso='$id_p'";
 								$mysqli->query($sql_p);
 								
 								// recup des infos du perso
@@ -1768,6 +1768,10 @@ if($verif){
 								
 								// Le perso est encore vivant
 								if($pv_p > 0){
+									
+									// pv/2
+									$sql_p = "UPDATE perso SET pv_perso=pv_perso/2 WHERE id_perso='$id_p'";
+									$mysqli->query($sql_p);
 									
 									// Traitement répartissement des persos sur la carte
 									$occup = 1;
