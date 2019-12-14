@@ -154,6 +154,30 @@ CREATE TABLE `batiment` (
 
 -- --------------------------------------------------------
 
+-- 
+-- Structure de la table `banque_as_compagnie`
+-- 
+
+CREATE TABLE `banque_as_compagnie` (
+  `id_compagnie` int(11) NOT NULL default '0',
+  `montant` int(11) NOT NULL default '0'
+);
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table `banque_compagnie`
+-- 
+
+CREATE TABLE `banque_compagnie` (
+  `id_perso` int(11) NOT NULL default '0',
+  `montant` int(11) NOT NULL default '0',
+  `demande_emprunt` int(11) NOT NULL default '0',
+  `montant_emprunt` int(11) NOT NULL default '0'
+);
+
+-- --------------------------------------------------------
+
 --
 -- Structure de la table `carte`
 --
@@ -347,6 +371,20 @@ CREATE TABLE `grades` (
   `pc_grade` int(11) NOT NULL,
   `point_armee_grade` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table `histobanque_compagnie`
+-- 
+
+CREATE TABLE `histobanque_compagnie` (
+  `id_histo` int(11) NOT NULL default '0',
+  `id_compagnie` int(11) NOT NULL default '0',
+  `id_perso` int(11) NOT NULL default '0',
+  `operation` int(11) NOT NULL default '0',
+  `montant` int(11) NOT NULL default '0'
+);
 
 -- --------------------------------------------------------
 
@@ -720,6 +758,17 @@ CREATE TABLE `pnj_in_zone` (
   `id_pnj` int(11) NOT NULL DEFAULT '0',
   `id_zone` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `poste`
+--
+
+CREATE TABLE `poste` (
+  `id_poste` int(11) NOT NULL default '0',
+  `nom_poste` varchar(25) NOT NULL default ''
+);
 
 -- --------------------------------------------------------
 

@@ -47,7 +47,7 @@ if($dispo){
 		
 		$id_compagnie = $_GET["id_compagnie"];
 		
-		$verif = ereg("^[0-9]+$",$_GET["id_compagnie"]);
+		$verif = preg_match("#^[0-9]+$#i",$_GET["id_compagnie"]);
 		
 		if($verif){
 			

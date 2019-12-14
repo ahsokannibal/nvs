@@ -22,6 +22,7 @@ if(config_dispo_jeu($mysqli)){
 		else {
 			$sql = "SELECT nom_perso FROM perso WHERE nom_perso='".$nom_perso."'";
 			$resultat_user = $mysqli->query($sql);
+			
 			$sql2 = "SELECT email_joueur FROM joueur WHERE email_joueur='".$email_joueur."'";
 			$resultat_user2 = $mysqli->query($sql2);
 				

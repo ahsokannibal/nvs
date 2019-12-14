@@ -50,20 +50,18 @@ if($dispo){
 			$id_compagnie = $_SESSION["id_compagnie"] = $_GET["id_compagnie"];
 			
 			// vérification que la compagnie existe
-			$sql = "SELECT id_compagnie, id_clan from compagnies where id_compagnie='$id_compagnie'";
-			$res = $mysqli->query($sql);
-			$exist = $res->num_rows;
-			
-			// récupération du camp de la compagnie
 			$sql = "SELECT id_clan from compagnies where id_compagnie='$id_compagnie'";
 			$res = $mysqli->query($sql);
 			$t_c = $res->fetch_assoc();
+			
+			$exist = $res->num_rows;
 			$clan_compagnie = $t_c["id_clan"];
 			
 			// récupération du clan du perso
 			$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_cp = $res->fetch_assoc();
+			
 			$clan_perso = $t_cp["clan"];
 			
 			if($exist){
@@ -105,20 +103,37 @@ if($dispo){
 								// si il peut postuler
 								if($ok_n == 1) {
 									
-									// mise a jour de la table perso_in_compagnie
-									$sql = "INSERT INTO perso_in_compagnie VALUES ('$id','$id_compagnie','5','1')";
-									$mysqli->query($sql);
+									// Verification que le type de perso peut postuler dans cette compagnie
+									$sql = "SELECT type_perso FROM perso WHERE id_perso='$id'";
+									$res = $mysqli->query($sql);
+									$t_type = $res->fetch_assoc();
 									
-									echo "Vous venez de poser votre candidature dans une compagnie<br>";
+									$type_perso = $t_type["type_perso"];
+									
+									$sql = "SELECT * FROM compagnie_as_contraintes WHERE id_compagnie='$id_compagnie' AND contrainte_type_perso='$type_perso'";
+									$res = $mysqli->query($sql);
+									$nb_res = $res->num_rows;
+									
+									if ($nb_res >= 1) {
+										
+										// mise a jour de la table perso_in_compagnie
+										$sql = "INSERT INTO perso_in_compagnie VALUES ('$id','$id_compagnie','5','1')";
+										$mysqli->query($sql);
+										
+										echo "<center><font color='blue'>Vous venez de poser votre candidature dans une compagnie, vous devez attendre que le chef de compagnie ou le recruteur valide votre adhésion</font></center><br>";
+										
+									} else {
+										echo "<center><font color='red'>Vous ne pouvez pas postuler dans cette compagnie, contraintes non respectées</font></center>";
+									}
 					
 									echo "<a href='compagnie.php'> [retour] </a>";
 								}
 								else {
-									echo "<font color = res>Vous êtes déjà inscrit dans une compagnie</font>";
+									echo "<center><font color='red'>Vous êtes déjà inscrit dans une compagnie</font></center>";
 								}
 							}
 							else {
-								echo "<center>Vous n'avez pas le droit de postuler dans une compagnie adverse...</center>";
+								echo "<center><font color='red'>Vous n'avez pas le droit de postuler dans une compagnie adverse...</font></center>";
 							}
 						}
 						
@@ -155,9 +170,11 @@ if($dispo){
 								$nb = $res->fetch_row();
 								
 								if ($nb == 0){ 
+								
 									// il n'y a plus de membres
 									$sql = "DELETE FROM compagnies WHERE id_compagnie=$id_compagnie";
 									$mysqli->query($sql);
+									
 									echo "Votre depart a detruit la compagnie (il n y a plus de membres)<br>";
 								}
 								echo "<center><a href='compagnie.php'> [retour] </a></center>";
@@ -170,11 +187,12 @@ if($dispo){
 						$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie";
 						$res = $mysqli->query($sql);
 						$sec = $res->fetch_assoc();
-						$id_compagnie = $sec["id_compagnie"];
-						$nom_compagnie = $sec["nom_compagnie"];
-						$image_compagnie = $sec["image_compagnie"];
-						$resume_compagnie = $sec["resume_compagnie"];
-						$description_compagnie = $sec["description_compagnie"];
+						
+						$id_compagnie 			= $sec["id_compagnie"];
+						$nom_compagnie 			= $sec["nom_compagnie"];
+						$image_compagnie 		= $sec["image_compagnie"];
+						$resume_compagnie 		= $sec["resume_compagnie"];
+						$description_compagnie 	= $sec["description_compagnie"];
 						
 						// affichage des information de la compagnie
 						echo "<center><b>$nom_compagnie</b></center>";
@@ -184,10 +202,14 @@ if($dispo){
 						// recuperation de la liste des membres de la compagnie
 						$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='0' ORDER BY poste_compagnie";
 						$res = $mysqli->query($sql);
+						
 						while ($membre = $res->fetch_assoc()) {
-							$poste_compagnie = $membre["poste_compagnie"];
-							$nom_membre = $membre["nom_perso"];
+							
+							$poste_compagnie 	= $membre["poste_compagnie"];
+							$nom_membre 		= $membre["nom_perso"];
+							
 							if($poste_compagnie != 5){
+								
 								// recuperation du nom de poste
 								$sql2 = "SELECT nom_poste FROM poste WHERE id_poste=$poste_compagnie";
 								$res2 = $mysqli->query($sql2);
@@ -213,15 +235,15 @@ if($dispo){
 					}
 				}
 				else {
-					echo "<center>Vous n'avez pas accés aux informations de cette compagnie</center>";
+					echo "<center><center><font color = 'red'>Vous n'avez pas accés aux informations de cette compagnie</font></center>";
 				}
 			}
 			else {
-				echo "<center>La compagnie demandé n'existe pas</center>";
+				echo "<center><center><font color = 'red'>La compagnie demandé n'existe pas</font></center>";
 			}
 		}
 		else {
-			echo "<center>La compagnie demandé n'existe pas</center>";
+			echo "<center><center><font color = 'red'>La compagnie demandé n'existe pas</font></center>";
 		}
 	}
 	else {
@@ -233,12 +255,14 @@ if($dispo){
 			// recuperation des compagnies existantes
 			$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan";
 			$res = $mysqli->query($sql);
+			
 			while ($sec = $res->fetch_assoc()) {
-				$id_compagnie = $sec["id_compagnie"];
-				$nom_compagnie = $sec["nom_compagnie"];
-				$image_compagnie = $sec["image_compagnie"];
-				$resume_compagnie = $sec["resume_compagnie"];
-				$description_compagnie = $sec["description_compagnie"];
+				
+				$id_compagnie 			= $sec["id_compagnie"];
+				$nom_compagnie 			= $sec["nom_compagnie"];
+				$image_compagnie 		= $sec["image_compagnie"];
+				$resume_compagnie 		= $sec["resume_compagnie"];
+				$description_compagnie 	= $sec["description_compagnie"];
 						
 				// creation des tableau avec les compagnies existantes
 				echo "<table border=\"1\" width = 100%><tr>
@@ -250,6 +274,7 @@ if($dispo){
 			}
 		}
 		else {
+			
 			// verification si le perso appartient deja a une compagnie
 			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' and attenteValidation_compagnie='0'";
 			$res = $mysqli->query($sql);
@@ -381,17 +406,22 @@ if($dispo){
 						// il n'appartient a aucune compagnie					
 						echo "<br/><center><b><u>Liste des compagnies déjà existants</u></b></center><br/>";
 						
-						// recuperation des compagnies existantes
-						$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan";
+						// recuperation des compagnies existantes dans lesquels il peut postuler
+						$sql = "SELECT compagnies.id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie 
+								FROM compagnies, perso, compagnie_as_contraintes
+								WHERE id_perso = $id 
+								AND compagnies.id_compagnie = compagnie_as_contraintes.id_compagnie
+								AND compagnies.id_clan = perso.clan
+								AND compagnie_as_contraintes.contrainte_type_perso = perso.type_perso";
 						$res = $mysqli->query($sql);
 						
 						while ($sec = $res->fetch_assoc()) {
 							
-							$id_compagnie = $sec["id_compagnie"];
-							$nom_compagnie = $sec["nom_compagnie"];
-							$image_compagnie = $sec["image_compagnie"];
-							$resume_compagnie = $sec["resume_compagnie"];
-							$description_compagnie = $sec["description_compagnie"];
+							$id_compagnie 			= $sec["id_compagnie"];
+							$nom_compagnie 			= $sec["nom_compagnie"];
+							$image_compagnie 		= $sec["image_compagnie"];
+							$resume_compagnie 		= $sec["resume_compagnie"];
+							$description_compagnie 	= $sec["description_compagnie"];
 						
 							// creation des tableau avec les compagnies existantes
 							echo "<table border=\"1\" width = 100%><tr>
@@ -414,7 +444,7 @@ if($dispo){
 		}
 	}
 	else{
-		echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
+		echo "<center><font color='red'>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font></center>";
 	}?>
 <?php
 }

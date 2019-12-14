@@ -139,6 +139,16 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 -- --------------------------------------------------------
 
 --
+-- Contenu de la table `banque_as_compagnie`
+--
+
+INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES 
+('1', '0'), 
+('2', '0');
+
+-- --------------------------------------------------------
+
+--
 -- Contenu de la table `compagnies`
 --
 
@@ -403,6 +413,18 @@ INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_p
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('7', 'Scorpion', '40', '15', '120', '4', '10', '0', '2', '0', 'Le scorpion se trouve essentiellement dans les régions désolées. Sa faiblesse n\'est que relative lorsque l\'on voit les effets de son venin... là encore, attention aux tares !');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('8', 'Aigle', '100', '10', '40', '20', '2', '0', '6', '0', 'Animal majestueux mais fragile, l\'aigle sera rencontré essentiellement dans les montagnes.');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('9', 'Ours', '1000', '50', '240', '8', '50', '20', '3', '0', 'Animal très robuste et que l\'on rencontre en forêt, l\'ours est capable de donner des coups de griffes meurtriers.');
+
+-- --------------------------------------------------------
+
+-- 
+-- Contenu de la table `poste`
+-- 
+
+INSERT INTO `poste` VALUES (1, 'chef');
+INSERT INTO `poste` VALUES (2, 'tresorier');
+INSERT INTO `poste` VALUES (3, 'recruteur');
+INSERT INTO `poste` VALUES (4, 'diplomate');
+INSERT INTO `poste` VALUES (5, 'membre');
 
 -- --------------------------------------------------------
 
