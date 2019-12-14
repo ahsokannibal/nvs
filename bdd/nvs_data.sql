@@ -381,8 +381,8 @@ INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x
 --
 INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('1', '1', '1');
 INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('1', '4', '1');
-INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('2', '1', '1');
-INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('2', '4', '1');
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('3', '1', '1');
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('3', '4', '1');
 
 --
 -- Contenu de la table `perso_as_grade`
@@ -397,6 +397,12 @@ INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('1', '1');
 INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('1', '2');
 INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '1');
 INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '2');
+
+--
+-- Contenu de la table `perso_in_compagnie`
+--
+INSERT INTO `perso_in_compagnie` (`id_perso`, `id_compagnie`, `poste_compagnie`, `attenteValidation_compagnie`) VALUES ('1', '1', '1', '0');
+INSERT INTO `perso_in_compagnie` (`id_perso`, `id_compagnie`, `poste_compagnie`, `attenteValidation_compagnie`) VALUES ('2', '2', '1', '0');
 
 -- --------------------------------------------------------
 -- FIN INSERTION DES 2 GENERAUX
