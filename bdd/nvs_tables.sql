@@ -206,6 +206,33 @@ CREATE TABLE `carte_time` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `compagnies`
+--
+
+CREATE TABLE `compagnies` (
+  `id_compagnie` int(11) NOT NULL,
+  `nom_compagnie` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
+  `image_compagnie` varchar(255) NOT NULL DEFAULT '0',
+  `resume_compagnie` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `description_compagnie` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `id_clan` tinyint(4) NOT NULL,
+  `genie_civil` tinyint(1) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `compagnie_as_contraintes`
+--
+
+CREATE TABLE `compagnie_as_contraintes` (
+  `id_compagnie` int(11) NOT NULL,
+  `contrainte_type_perso` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `competence`
 --
 
@@ -642,14 +669,14 @@ CREATE TABLE `perso_in_batiment` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `perso_in_section`
+-- Structure de la table `perso_in_compagnie`
 --
 
-CREATE TABLE `perso_in_section` (
+CREATE TABLE `perso_in_compagnie` (
   `id_perso` int(11) NOT NULL DEFAULT '0',
-  `id_section` int(11) NOT NULL DEFAULT '0',
-  `poste_section` int(11) NOT NULL DEFAULT '0',
-  `attenteValidation_section` int(11) NOT NULL DEFAULT '1'
+  `id_compagnie` int(11) NOT NULL DEFAULT '0',
+  `poste_compagnie` int(11) NOT NULL DEFAULT '0',
+  `attenteValidation_compagnie` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -704,21 +731,6 @@ CREATE TABLE `ressources_entrepot` (
   `id_entrepot` int(11) NOT NULL DEFAULT '0',
   `id_ressource` int(11) NOT NULL DEFAULT '0',
   `nb_ressource` int(11) NOT NULL DEFAULT '0'
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- --------------------------------------------------------
-
---
--- Structure de la table `sections`
---
-
-CREATE TABLE `sections` (
-  `id_section` int(11) NOT NULL,
-  `nom_section` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '0',
-  `image_section` varchar(255) NOT NULL DEFAULT '0',
-  `resume_section` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `description_section` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `id_clan` tinyint(4) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -958,11 +970,11 @@ ALTER TABLE `ressources_entrepot`
   ADD UNIQUE KEY `id_entrepot` (`id_entrepot`,`id_ressource`);
 
 --
--- Index pour la table `sections`
+-- Index pour la table `compagnie`
 --
-ALTER TABLE `sections`
-  ADD PRIMARY KEY (`id_section`),
-  ADD UNIQUE KEY `nom_section` (`nom_section`);
+ALTER TABLE `compagnie`
+  ADD PRIMARY KEY (`id_compagnie`),
+  ADD UNIQUE KEY `nom_compagnie` (`nom_compagnie`);
   
 --
 -- Index pour la table `type_unite`
@@ -1071,10 +1083,10 @@ ALTER TABLE `perso`
 ALTER TABLE `pnj`
   MODIFY `id_pnj` int(11) NOT NULL AUTO_INCREMENT;
 --
--- AUTO_INCREMENT pour la table `sections`
+-- AUTO_INCREMENT pour la table `compagnies`
 --
-ALTER TABLE `sections`
-  MODIFY `id_section` int(11) NOT NULL AUTO_INCREMENT;
+ALTER TABLE `compagnies`
+  MODIFY `id_compagnie` int(11) NOT NULL AUTO_INCREMENT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

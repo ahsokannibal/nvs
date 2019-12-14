@@ -139,6 +139,30 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 -- --------------------------------------------------------
 
 --
+-- Contenu de la table `compagnies`
+--
+
+INSERT INTO `compagnies` (`id_compagnie`, `nom_compagnie`, `image_compagnie`, `resume_compagnie`, `description_compagnie`, `id_clan`, `genie_civil`) VALUES 
+('1', 'Génie et Infrastructures Nordistes ', '', 'Compagnie GIN : : construction des infrastructures des nordistes', 'La compagnie du GIN a une double vocation.
+Elle existe pour permettre la construction des nouveaux bâtiments nordistes qui assureront la conquête définitive des territoires gagnés ou nettoyés. Elle est aussi chargé de la surveillance des infrastructures existantes.
+Ses membres sont formés à des techniques spécifiques de construction et de surveillance. ', '1', '1'), 
+('2', 'TIG-RES ', '', 'Compagnie TIG-RES : construction des infrastructures des confédérés', 'Réparation des anciens bâtiments et supervision de la construction des nouveaux.
+Même et surtout en situation de crise quand les troupes du génie conventionnel seront dépassées et qu\'il faudra oeuvrer sous le feu de l\'ennemi. ', '2', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Contenu de la table `compagnie_as_contraintes`
+--
+
+
+INSERT INTO `compagnie_as_contraintes` (`id_compagnie`, `contrainte_type_perso`) VALUES 
+('1', '3'), 
+('2', '3');
+
+-- --------------------------------------------------------
+
+--
 -- Contenu de la table `competence`
 --
 
