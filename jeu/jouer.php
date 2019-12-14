@@ -1131,7 +1131,7 @@ if($dispo || !$admin){
 							<td align="center" width=14%><a href="carte2.php" target='_blank'><img width=83 height=83 border=0 src="../images/world.png"></a></td>
 							<td align="center" width=14%><a href="messagerie.php" target='_blank'><img width=83 height=75 border=0 src="../images/messagerie2.gif"></a></td>
 							<td align="center" width=14%><a href="classement.php" target='_blank'><img width=83 height=58 border=0 src="../images/classement2.gif"></a></td>
-							<td align="center" width=14%><a href="section.php" target='_blank'><img width=83 height=83 border=0 src="../images/groupe2.gif"></a></td>
+							<td align="center" width=14%><a href="compagnie.php" target='_blank'><img width=112 height=70 border=0 src="../images/groupe2.gif"></a></td>
 						</tr>
 						<tr>
 							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/profil_titre.gif"> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
@@ -1747,23 +1747,24 @@ if($dispo || !$admin){
 															$image_profil 	= "sud.gif";
 														}
 														
-														// recuperation de l'id de la section 
-														$sql_groupe = "SELECT id_section from perso_in_section where id_perso='$id_perso_im' and attenteValidation_section='0'";
+														// recuperation de l'id de la compagnie 
+														$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso_im' and attenteValidation_compagnie='0'";
 														$res_groupe = $mysqli->query($sql_groupe);
 														$t_groupe = $res_groupe->fetch_assoc();
 														
-														$id_groupe = $t_groupe['id_section'];
+														$id_groupe = $t_groupe['id_compagnie'];
 														
 														if(isset($groupe)){
 															$groupe = '';
 														}
 														
 														if(isset($id_groupe) && $id_groupe != ''){
-															// recuperation des infos sur la section (dont le nom)
-															$sql_groupe2 = "SELECT * FROM sections WHERE id_section='$id_groupe'";
+															// recuperation des infos sur la compagnie (dont le nom)
+															$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_groupe'";
 															$res_groupe2 = $mysqli->query($sql_groupe2);
 															$t_groupe2 = $res_groupe2->fetch_assoc();
-															$groupe = addslashes($t_groupe2['nom_section']);
+															
+															$groupe = addslashes($t_groupe2['nom_compagnie']);
 														}
 														
 														if(isset($groupe) && $groupe != ''){

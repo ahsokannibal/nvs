@@ -140,7 +140,7 @@ if($dispo){
 								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
 								$mysqli->query($sql);
 								
-								$sql = "DELETE FROM perso_in_section WHERE id_perso='$matricule_grouillot_renvoi'";
+								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
 								$mysqli->query($sql);
 								
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_grouillot_renvoi'";

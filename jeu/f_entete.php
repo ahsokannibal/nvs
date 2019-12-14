@@ -41,18 +41,18 @@ function entete($mysqli, $id) {
 				$id_grade_perso = "1.2";
 			}
 			
-			// recuperation de l'id de la section 
-			$sql_groupe = "SELECT id_section from perso_in_section where id_perso='$id' and attenteValidation_section='0'";
+			// recuperation de l'id de la compagnie 
+			$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' and attenteValidation_compagnie='0'";
 			$res_groupe = $mysqli->query($sql_groupe);
 			$t_groupe = $res_groupe->fetch_assoc();
-			$id_groupe = $t_groupe['id_section'];
+			$id_groupe = $t_groupe['id_compagnie'];
 												
 			if(isset($id_groupe) && $id_groupe != ''){
-				// recuperation des infos sur la section (dont le nom)
-				$sql_groupe2 = "SELECT * FROM sections WHERE id_section='$id_groupe'";
+				// recuperation des infos sur la compagnie (dont le nom)
+				$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_groupe'";
 				$res_groupe2 = $mysqli->query($sql_groupe2);
 				$t_groupe2 = $res_groupe2->fetch_assoc();
-				$groupe = addslashes($t_groupe2['nom_section']);
+				$groupe = addslashes($t_groupe2['nom_compagnie']);
 			}
 			
 			echo "<center>
@@ -69,7 +69,7 @@ function entete($mysqli, $id) {
 						</tr>";
 			echo "<tr><td><b>Camp :</b> <font color=\"$couleur_clan_perso\">$nom_clan</font></td></tr>";
 			if(isset($groupe) && $groupe != ''){
-				echo "<tr><td><b>Groupe :</b> <a href=\"section.php?id_section=$id_groupe&voir_groupe=ok\">". stripslashes($groupe) ."</a></td></tr>";
+				echo "<tr><td><b>Groupe :</b> <a href=\"compagnie.php?id_compagnie=$id_groupe&voir_groupe=ok\">". stripslashes($groupe) ."</a></td></tr>";
 			}
 			echo "</table></center>";
 	

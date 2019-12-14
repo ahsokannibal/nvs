@@ -193,11 +193,11 @@ if(isset($_GET["visu"]) && $_GET["visu"] == "ok"){
 	}
 }
 
-if(isset($_GET["id_section"])) {
-	$id_section = $_GET["id_section"];
+if(isset($_GET["id_compagnie"])) {
+	$id_compagnie = $_GET["id_compagnie"];
 	//-- TODO -- //
-	// Sécurité : verif $id_section correct
-	//                   verif identité joueur qui veut envoyer le message => fait-il bien partie de la section ?
+	// Sécurité : verif $id_compagnie correct
+	//                   verif identité joueur qui veut envoyer le message => fait-il bien partie de la compagnie ?
 	// -- TODO -- //
 	
 	if(isset($_POST["contenu"])) {
@@ -207,8 +207,8 @@ if(isset($_GET["id_section"])) {
 		$contenu = "";
 	}
 	
-	// recuperation des persos de la section
-	$sql = "SELECT nom_perso FROM perso, perso_in_section WHERE perso.id_perso=perso_in_section.id_perso AND attenteValidation_section='0' AND id_section='$id_section'";
+	// recuperation des persos de la compagnie
+	$sql = "SELECT nom_perso FROM perso, perso_in_compagnie WHERE perso.id_perso=perso_in_compagnie.id_perso AND attenteValidation_compagnie='0' AND id_compagnie='$id_compagnie'";
 	$res = $mysqli->query($sql);
 	
 	$dest = "";
@@ -293,7 +293,7 @@ if(!isset($_GET["id"]) || (isset($_GET["id"]) && $verif && $verif_id)){
 	if(isset($_GET["visu"])){
 		echo 'value="'.$visu.'"';
 	}
-	if(isset($_GET["id_section"])){
+	if(isset($_GET["id_compagnie"])){
 		echo 'value="'.$dest.'"';
 	}
 	if(isset($_GET['id_contact'])){
@@ -307,8 +307,8 @@ if(!isset($_GET["id"]) || (isset($_GET["id"]) && $verif && $verif_id)){
 	if(isset($_GET["id"])){ 
 		echo 'value="Re: '.stripslashes($tabMess["objet_message"]).'"';
 	}
-	if(isset($_GET["id_section"])){
-		echo 'value="message du chef de la section"';
+	if(isset($_GET["id_compagnie"])){
+		echo 'value="message du chef de la compagnie"';
 	}?>></td></tr>
 	<tr class="messl"><td>Message : </td> <td colspan=3 align="center"><TEXTAREA NAME="message" rows=15 cols=50 >
 <?php
@@ -319,7 +319,7 @@ if(!isset($_GET["id"]) || (isset($_GET["id"]) && $verif && $verif_id)){
 		echo "\n\n****************************\n".stripslashes($tabMess["expediteur_message"])." wrote :\n****************************\n"; 
 		echo stripslashes($tabMess["contenu_message"]);
 	}
-	if(isset($_GET["id_section"])){
+	if(isset($_GET["id_compagnie"])){
 		echo "".stripslashes($contenu);
 	} ?></TEXTAREA></td></tr>
 	</table>
