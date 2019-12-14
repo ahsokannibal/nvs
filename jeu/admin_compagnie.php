@@ -28,8 +28,7 @@ if (@$_SESSION["id_perso"]) {
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link href="../style.css" rel="stylesheet" type="text/css">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	</head>
 	<body>
 <?php
@@ -128,13 +127,17 @@ if(isset($_GET["id_compagnie"])) {
 			echo "<center><a href='description_compagnie.php?id_compagnie=$id_compagnie'>changer la description de la compagnie</a></center>";
 			echo "<center><a href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa compagnie</a></center>";
 			
+			echo "<hr>";
+			
 			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"image\">";
 			echo "<div align=\"center\"><br>";
 			echo "changer l'image de la compagnie (adresse internet) :<br>";
-			echo "<input name=\"image\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+			echo "<input name=\"image\" type=\"text\" value=\"\" onFocus=\"this.value=''\" style=\"width: 400px;\" maxlength=\"200\">";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"ok\">";
 			echo "</div>";
 			echo "</form>";
+			
+			echo "<br /><br />";
 			
 			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"virer\">";
 			echo "<div align=\"center\">";
@@ -144,6 +147,8 @@ if(isset($_GET["id_compagnie"])) {
 			echo "</div>";
 			echo "</form>";
 			
+			echo "<br /><br />";
+			
 			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"detruire\">";
 			echo "<div align=\"center\">";
 			echo "<u>Pour detruire sa compagnie, tapez la phrase suivante dans le champ qui suit :</u><br>";
@@ -152,6 +157,8 @@ if(isset($_GET["id_compagnie"])) {
 			echo "<input type=\"submit\" name=\"Submit\" value=\"detruire!\">";
 			echo "</div>";
 			echo "</form>";
+			
+			echo "<br /><br />";
 			
 			echo "<form action=\"nouveau_message.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"mail\">";
 			echo "<div align=\"center\"><br>";

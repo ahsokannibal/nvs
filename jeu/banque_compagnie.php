@@ -37,8 +37,7 @@ if($dispo){
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link href="../style.css" rel="stylesheet" type="text/css">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	</head>
 	<body>
 		<div align="center"><h2>Banque de la compagnie</h2></div>
@@ -109,15 +108,15 @@ if($dispo){
 								if($du) {
 									
 									// maj bourse perso
-									$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso=$id";
+									$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso='$id'";
 									$mysqli->query($sql);
 									
 									// maj banque_as_compagnie
-									$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie=$id_compagnie";
+									$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie='$id_compagnie'";
 									$mysqli->query($sql);
 									
 									// maj histoBanque_compagnie : remboursement dette (3)
-									$sql = "INSERT INTO histobanque_compagnie VALUES ('','$id_compagnie','$id','3','$montant')";						
+									$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant) VALUES ('$id_compagnie','$id','3','$montant')";						
 									$mysqli->query($sql);
 									
 									if($montant > $du) {

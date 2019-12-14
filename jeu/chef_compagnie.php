@@ -37,8 +37,7 @@ if($dispo){
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link href="../style.css" rel="stylesheet" type="text/css">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	</head>
 	
 	<body>
@@ -81,14 +80,16 @@ if($dispo){
 						$sql = "UPDATE perso_in_compagnie SET poste_compagnie=0 WHERE id_perso=$id";
 						$mysqli->query($sql);
 						
-						echo "<br><center>$nom_p devient le nouveau chef de votre compagnie</center><br>";
+						echo "<br><center><font color='blue'>$nom_p devient le nouveau chef de votre compagnie</font></center><br>";
+						
+						echo "<center><a href='compagnie.php'> [retour a la page de compagnie] </a></center>";
 					}
 					else {
-						echo "Ce perso n'existe pas ou n'appartient pas a votre compagnie.";
+						echo "<center><font color='red'>Ce perso n'existe pas ou n'appartient pas a votre compagnie.</font></center>";
 					}
 				}
 				else {
-					echo "<font color = red>Veuillez remplir le champ pour designer un nouveau chef</font>";
+					echo "<center><font color='red'>Veuillez remplir le champ pour designer un nouveau chef</font></center>";
 				}
 			}
 			else {
@@ -114,12 +115,12 @@ if($dispo){
 					echo "<a href='compagnie.php'> [retour a la page de compagnie] </a>";
 				}
 				else {
-					echo "<font color = red>Vous n'avez pas le droit d'acceder à cette page !</font>";
+					echo "<center><font color='red'>Vous n'avez pas le droit d'acceder à cette page !</font></center>";
 				}
 			}
 		}
 		else {
-			echo "<center>La compagnie demandé n'existe pas</center>";
+			echo "<center><font color='red'>La compagnie demandé n'existe pas</font></center>";
 		}
 	}
 	?>

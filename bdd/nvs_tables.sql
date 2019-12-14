@@ -916,6 +916,12 @@ ALTER TABLE `grades`
   ADD PRIMARY KEY (`id_grade`); 
   
 --
+-- Index pour la table `histobanque_compagnie`
+--
+ALTER TABLE `histobanque_compagnie`
+  ADD PRIMARY KEY (`id_histo`);
+  
+--
 -- Index pour la table `instance_batiment`
 --
 ALTER TABLE `instance_batiment`
@@ -1085,12 +1091,17 @@ ALTER TABLE `dossier`
 -- AUTO_INCREMENT pour la table `evenement`
 --
 ALTER TABLE `evenement`
-  MODIFY `ID_evenement` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `ID_evenement` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `grades`
 --
 ALTER TABLE `grades`
   MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+--
+-- AUTO_INCREMENT pour la table `histobanque_compagnie`
+--
+ALTER TABLE `histobanque_compagnie`
+  MODIFY `id_histo` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `instance_batiment`
 --
