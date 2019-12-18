@@ -7,7 +7,7 @@ if (@$_SESSION["id_perso"]) {
 	
 	//ensuite on defini la taille de l'image
 	$perso_carte = imagecreate(603,603)  or die ("Cannot Initialize new GD image stream");
-	$legende_carte = imagecreatefrompng("carte_tmp/legende.png");
+	//$legende_carte = imagecreatefrompng("carte_tmp/legende.png");
 	$image_carte = imagecreatefrompng("carte_tmp/carte.png");
 
 	//maintenant on donne une couleur a notre image (ici un fond noir)
@@ -88,7 +88,7 @@ if (@$_SESSION["id_perso"]) {
 	imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
 	imagepng($image_carte, "carte_tmp/carte_sl$id.png");
 	
-	imagecopymerge ($image_carte, $legende_carte, 0, 0, 0, 0, 603, 603, 40);
+	//imagecopymerge ($image_carte, $legende_carte, 0, 0, 0, 0, 603, 603, 40);
 	
 	// on affiche l'image
 	imagepng($image_carte, "carte_tmp/carte$id.png");
