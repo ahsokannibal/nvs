@@ -100,6 +100,30 @@ if($dispo){
 									$ok_n = 0;
 								}
 								
+								// Verification nombre dans la compagnie
+								// recuperation des information sur la compagnie
+								$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
+								$res = $mysqli->query($sql);
+								$sec = $res->fetch_assoc();
+								$genie_compagnie		= $sec["genie_civil"];
+								
+								if ($genie_compagnie) {
+									$nb_persos_compagnie_max = 60;
+								} else {
+									$nb_persos_compagnie_max = 80;
+								}
+								
+								// Récupération nombre perso dans la compagnie
+								$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND attenteValidation_compagnie='0'";
+								$res = $mysqli->query($sql);
+								$tab = $res->fetch_assoc();
+								
+								$nb_persos_compagnie = $tab["nb_persos_compagnie"];
+								
+								if ($nb_persos_compagnie >= $nb_persos_compagnie_max) {
+									$ok_n = 0;
+								}
+								
 								// si il peut postuler
 								if($ok_n == 1) {
 									
@@ -184,7 +208,7 @@ if($dispo){
 					else { 
 						// on souhaite juste avoir des infos sur la compagnie
 						// recuperation des information sur la compagnie
-						$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie";
+						$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
 						$res = $mysqli->query($sql);
 						$sec = $res->fetch_assoc();
 						
@@ -193,10 +217,24 @@ if($dispo){
 						$image_compagnie 		= $sec["image_compagnie"];
 						$resume_compagnie 		= $sec["resume_compagnie"];
 						$description_compagnie 	= $sec["description_compagnie"];
+						$genie_compagnie		= $sec["genie_civil"];
+						
+						if ($genie_compagnie) {
+							$nb_persos_compagnie_max = 60;
+						} else {
+							$nb_persos_compagnie_max = 80;
+						}
+						
+						// Récupération nombre perso dans la compagnie
+						$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND attenteValidation_compagnie='0'";
+						$res = $mysqli->query($sql);
+						$tab = $res->fetch_assoc();
+						
+						$nb_persos_compagnie = $tab["nb_persos_compagnie"];
 						
 						// affichage des information de la compagnie
 						echo "<center><b>$nom_compagnie</b></center>";
-						echo "<table border=\"1\" width = 100%><tr><td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td><td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td><td width=20%><center>Liste des membres</center></td>";
+						echo "<table border=\"1\" width = 100%><tr><td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td><td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td><td width=20%><center>Liste des membres (". $nb_persos_compagnie ."/".$nb_persos_compagnie_max.")</center></td>";
 						echo "</tr><tr><td></td><td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td><td>";
 						
 						// recuperation de la liste des membres de la compagnie
@@ -229,7 +267,9 @@ if($dispo){
 							echo "";
 						}
 						else {
-							echo "<center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'> >>Rejoindre</a></center>";
+							if ($nb_persos_compagnie < $nb_persos_compagnie_max) {
+								echo "<center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'> >>Rejoindre</a></center>";
+							}
 						}
 						echo "<br><center><a href=\"compagnie.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 					}
