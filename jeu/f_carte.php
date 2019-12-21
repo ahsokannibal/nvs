@@ -238,9 +238,18 @@ function prox_bat($mysqli, $x, $y, $id_perso){
 function prox_instance_bat($mysqli, $x, $y, $instance){
 	
 	if($instance >= 50000){
-		$sql = "SELECT image_carte FROM carte, instance_batiment WHERE x_instance >= $x - 1 AND x_instance <= $x + 1 AND y_instance >= $y - 1 AND y_instance <= $y + 1 AND idPerso_carte='$instance' AND carte.idPerso_carte=instance_batiment.id_instanceBat";
+		
+		$sql = "SELECT image_carte 
+				FROM carte
+				WHERE x_carte >= $x - 1 
+				AND x_carte <= $x + 1 
+				AND y_carte >= $y - 1 
+				AND y_carte <= $y + 1 
+				AND idPerso_carte='$instance'
+				AND occupee_carte='1'";
 		$res = $mysqli->query($sql);
 		$nb = $res->fetch_row();
+		
 		return $nb != 0;
 	}
 	else {

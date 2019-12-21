@@ -153,9 +153,9 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 				
 				$autorisation_construction_taille = true;
 				
+				$taille_search = floor($taille_bat / 2);
+				
 				if ($taille_bat > 1) {
-					
-					$taille_search = floor($taille_bat / 2);
 					
 					// verification carte pour construction 
 					$sql = "SELECT occupee_carte, fond_carte FROM carte WHERE x_carte <= $x_bat + $taille_search AND x_carte >= $x_bat - $taille_search AND y_carte <= $y_bat + $taille_search AND y_carte >= $y_bat - $taille_search";
@@ -207,8 +207,20 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 							$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) VALUES ('$niveau_bat', '$id_bat', '', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
 							$mysqli->query($sql);
 							$id_i_bat = $mysqli->insert_id;
+							
+							$img_bat_sup = $bat_camp.".png";
+							
+							for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
+								for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
+									
+									// mise a jour de la carte
+									$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
+									$mysqli->query($sql);
+									
+								}
+							}
 						
-							// mise a jour de la carte
+							// mise a jour de la carte image centrale
 							$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
 							$mysqli->query($sql);
 						}
