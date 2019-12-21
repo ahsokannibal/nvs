@@ -118,32 +118,58 @@ if($dispo){
 					}
 				}
 				
-				// recuperation de tout les persos qui sont en attente de validation pour entrer dans la compagnie
-				$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
+				// recuperation des information sur la compagnie
+				$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
 				$res = $mysqli->query($sql);
-				$num_a = $res->num_rows;
+				$sec = $res->fetch_assoc();
+				$genie_compagnie = $sec["genie_civil"];
 				
-				// il y a des persos en attente de validation
-				if($num_a) { 
-				
-					echo "<center><form method=\"post\" action=\"recrut_compagnie.php?id_compagnie=$id_compagnie\">";
-					echo "liste des persos en attente :";
-					echo "<select name=\"recrut\">";
-					
-					while ($t_a = $res->fetch_assoc()){
-						
-						$id_p 	= $t_a["id_perso"];
-						$nom_p 	= $t_a["nom_perso"];
-						
-						echo "<center><OPTION value=".$id_p.",".$nom_p.">".$nom_p."[".$id_p."]</option><br></center>";
-					}
-					
-					echo "</select>";
-					echo "&nbsp;<input type=\"submit\" name=\"rec\" value=\"recruter\">&nbsp;<input type=\"submit\" name=\"ref\" value=\"refuser\">";
-					echo "</form></center>";
+				if ($genie_compagnie) {
+					$nb_persos_compagnie_max = 60;
+				} else {
+					$nb_persos_compagnie_max = 80;
 				}
-				else {
-					echo "<center><font color = blue>Il n y a aucun perso en attente de validation</font></center>";
+				
+				// Récupération nombre perso dans la compagnie
+				$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND attenteValidation_compagnie='0'";
+				$res = $mysqli->query($sql);
+				$tab = $res->fetch_assoc();
+				
+				$nb_persos_compagnie = $tab["nb_persos_compagnie"];
+				
+				if ($nb_persos_compagnie < $nb_persos_compagnie_max) {
+					
+					echo "<center>Votre compagnie possède ". $nb_persos_compagnie . " pour une capacité maximale de ". $nb_persos_compagnie_max . " membres</center><br />" ;
+					
+					// recuperation de tout les persos qui sont en attente de validation pour entrer dans la compagnie
+					$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
+					$res = $mysqli->query($sql);
+					$num_a = $res->num_rows;
+					
+					// il y a des persos en attente de validation
+					if($num_a) { 
+					
+						echo "<center><form method=\"post\" action=\"recrut_compagnie.php?id_compagnie=$id_compagnie\">";
+						echo "liste des persos en attente :";
+						echo "<select name=\"recrut\">";
+						
+						while ($t_a = $res->fetch_assoc()){
+							
+							$id_p 	= $t_a["id_perso"];
+							$nom_p 	= $t_a["nom_perso"];
+							
+							echo "<center><OPTION value=".$id_p.",".$nom_p.">".$nom_p."[".$id_p."]</option><br></center>";
+						}
+						
+						echo "</select>";
+						echo "&nbsp;<input type=\"submit\" name=\"rec\" value=\"recruter\">&nbsp;<input type=\"submit\" name=\"ref\" value=\"refuser\">";
+						echo "</form></center>";
+					}
+					else {
+						echo "<center><font color = blue>Il n y a aucun perso en attente de validation</font></center>";
+					}
+				} else {
+					echo "<center><font color = blue>Votre compagnie a déjà atteind le nombre maximum de membres</font></center>";
 				}
 				echo "<a href='compagnie.php'> [acceder a la page de la compagnie] </a>";
 			}
