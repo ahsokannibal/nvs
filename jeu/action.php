@@ -1030,7 +1030,7 @@ if($dispo){
 									|| $nom_action == 'Construire - Pont' || $nom_action == 'Construire - Barricade'){
 									
 									// recuperation du batiment
-									$sql = "SELECT batiment.id_batiment, batiment.nom_batiment, clan 
+									$sql = "SELECT batiment.id_batiment, batiment.nom_batiment, batiment.taille_batiment, clan 
 											FROM action_as_batiment, batiment, perso
 											WHERE id_action='$id_action'
 											AND id_perso='$id_perso'
@@ -1038,12 +1038,16 @@ if($dispo){
 									$res = $mysqli->query($sql);
 									$num_bat = $res->num_rows;
 									
+									$taille_batiment = 1;
+									
 									if($num_bat){
 										
 										$t_bat = $res->fetch_assoc();
-										$id_bat = $t_bat['id_batiment'];
-										$nom_batiment = $t_bat['nom_batiment'];
-										$camp_batiment = $t_bat['clan'];
+										
+										$id_bat 		= $t_bat['id_batiment'];
+										$nom_batiment 	= $t_bat['nom_batiment'];
+										$taille_batiment= $t_bat['taille_batiment'];
+										$camp_batiment 	= $t_bat['clan'];
 										
 										if($camp_batiment == '1'){
 											$camp_b = 'b';
@@ -1066,7 +1070,9 @@ if($dispo){
 									$y_perso = $t_coord['y_perso'];
 									
 									// recuperation des donnees de la carte
-									$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - 1 AND x_carte <= $x_perso + 1 AND y_carte <= $y_perso + 1 AND y_carte >= $y_perso - 1 ORDER BY y_carte DESC, x_carte";
+									$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
+											FROM $carte WHERE x_carte >= $x_perso - $taille_batiment AND x_carte <= $x_perso + $taille_batiment AND y_carte <= $y_perso + $taille_batiment AND y_carte >= $y_perso - $taille_batiment 
+											ORDER BY y_carte DESC, x_carte";
 									$res = $mysqli->query($sql);
 									$tab = $res->fetch_assoc(); 
 									
@@ -1074,14 +1080,14 @@ if($dispo){
 									echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 									
 									echo "<tr><td>y \ x</td>";  //affichage des abscisses
-									for ($i = $x_perso - 1; $i <= $x_perso + 1; $i++) {
+									for ($i = $x_perso - $taille_batiment; $i <= $x_perso + $taille_batiment; $i++) {
 										echo "<th width=40 height=40>$i</th>";
 									}
 									echo "</tr>";
 									
-									for ($y = $y_perso + 1; $y >= $y_perso - 1; $y--) {
+									for ($y = $y_perso + $taille_batiment; $y >= $y_perso - $taille_batiment; $y--) {
 										echo "<th>$y</th>";
-										for ($x = $x_perso - 1; $x <= $x_perso + 1; $x++) {
+										for ($x = $x_perso - $taille_batiment; $x <= $x_perso + $taille_batiment; $x++) {
 											
 											//les coordonnees sont dans les limites
 											if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
@@ -1098,7 +1104,13 @@ if($dispo){
 													//barricade, tours, batiments => constructibles sur plaine seulement
 													if($id_bat == '1' || $id_bat == '2' || $id_bat == '3' || $id_bat == '6' || $id_bat == '7' || $id_bat == '8' || $id_bat == '9'){
 														if($fond_carte == '1.gif'){
-															echo "<td width=40 height=40> <input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../images_perso/$image_bat';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" ></td>";
+															echo "
+																<td width=40 height=40> 
+																	<input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																		onMouseOver=\"this.src='../images_perso/$image_bat';\" 
+																		onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
+																	<input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" >
+																</td>";
 														}
 														else {
 															echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";

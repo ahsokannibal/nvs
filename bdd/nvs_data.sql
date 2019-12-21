@@ -124,17 +124,17 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 -- Contenu de la table `batiment`
 --
 
-INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `description`) VALUES
-(1, 'Barricade', 250, 'Une barricade permet de tenir des positions defensives'),
-(2, 'Tour de guet', 250, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis'),
-(5, 'Pont', 750, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau'),
-(6, 'Entrepot', 1000, 'Un entrepot permet de stocker et vendre du mat&eacute;riel'),
-(7, 'Hopital', 1000, 'Un hopital de campagne permet de soigner des blessers'),
-(8, 'Fortin', 6000, 'Un fortin permet de prendre position sur une partie de la carte'),
-(9, 'Fort', 10000, 'Un fort, à defendre coute que coute'),
-(10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels'),
-(11, 'Gare', 5000, 'Une gare'),
-(12, 'Train', 2500, 'Un train');
+INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `description`, `taille_batiment`) VALUES
+(1, 'Barricade', 250, 'Une barricade permet de tenir des positions defensives', 1),
+(2, 'Tour de guet', 250, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis', 1),
+(5, 'Pont', 750, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau', 1),
+(6, 'Entrepot', 1000, 'Un entrepot permet de stocker et vendre du mat&eacute;riel', 1),
+(7, 'Hopital', 1000, 'Un hopital de campagne permet de soigner des blessers', 1),
+(8, 'Fortin', 6000, 'Un fortin permet de prendre position sur une partie de la carte', 3),
+(9, 'Fort', 10000, 'Un fort, à defendre coute que coute', 5),
+(10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels', 3),
+(11, 'Gare', 5000, 'Une gare', 3),
+(12, 'Train', 2500, 'Un train', 1);
 
 -- --------------------------------------------------------
 
@@ -349,6 +349,23 @@ INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('1', '1');
 INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('1', '2');
 INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '1');
 INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '2');
+
+-- perso_as_competence
+--
+
+INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VALUES 
+('1', '22', '1'), 
+('1', '23', '1'), 
+('1', '24', '1'),
+('1', '27', '1'),
+('1', '28', '1'),
+('1', '29', '1'),
+('2', '22', '1'), 
+('2', '23', '1'), 
+('2', '24', '1'),
+('2', '27', '1'),
+('2', '28', '1'),
+('2', '29', '1');
 
 --
 -- Contenu de la table `perso_in_compagnie`
