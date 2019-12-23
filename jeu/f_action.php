@@ -37,6 +37,26 @@ function image_action($id_action){
 	}
 }
 
+function construire_rail($mysqli, $t_bat, $id_perso, $carte){
+	
+	if(isset($_POST['pose_rail'])){
+		$t_rail = $_POST['pose_rail'];
+	}
+	else {
+		$t_rail = $_POST['hid_pose_rail'];
+	}
+
+	$t_rail2 = explode(',',$t_rail);
+	$x_rail = $t_rail2[0];
+	$y_rail = $t_rail2[1];
+	
+	// mise a jour de la carte
+	$sql = "UPDATE $carte SET fond_carte='rail.gif' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
+	$mysqli->query($sql);
+	
+	return 1;
+}
+
 /**
   * Fonction qui permet de construire un batiment sur une case
   * @param $t_bat	: Un tableau contenant les coordonnees ou le batiement doit etre construit ainsi que l'identifiant du batiment

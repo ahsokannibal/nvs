@@ -43,6 +43,7 @@ if(isset($_POST['creation_dossier'])){
 	
 	$nom_dossier = $_POST['nom_dossier'];
 	if(filtre($nom_dossier,0,25) && $nom_dossier != ''){
+		
 		// creation du dossier
 		$sql = "INSERT INTO dossier VALUES ('','$nom_dossier')";
 		$mysqli->query($sql);
@@ -61,8 +62,9 @@ if(isset($_POST['creation_dossier'])){
 $sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id'";
 $res = $mysqli->query($sql);
 $t = $res->fetch_assoc();
+
 $pseudo = $t["nom_perso"];
-$camp = $t["clan"];
+$camp 	= $t["clan"];
 
 if($camp == "1"){
 	$couleur = "blue";
@@ -112,9 +114,11 @@ $a_lire = $res_a_lire->num_rows;
 <?php
 $sql = "SELECT dossier.id_dossier, dossier.nom_dossier FROM dossier, perso_as_dossiers WHERE dossier.id_dossier=perso_as_dossiers.id_dossier AND id_perso='$id'";
 $res = $mysqli->query($sql);
+
 while ($t = $res->fetch_assoc()){
-	$id_dossier = $t["id_dossier"];
-	$nom_dossier = $t["nom_dossier"];
+	
+	$id_dossier 	= $t["id_dossier"];
+	$nom_dossier 	= $t["nom_dossier"];
 	
 	if(isset($_GET["id_dossier"])){
 		if($dossier == $id_dossier){
