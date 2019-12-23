@@ -191,6 +191,8 @@ CREATE TABLE `carte` (
   `image_carte` varchar(100) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+ALTER TABLE `carte` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
+
 --
 -- Structure de la table `carte2`
 --
@@ -204,6 +206,8 @@ CREATE TABLE `carte2` (
   `image_carte` varchar(100) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+ALTER TABLE `carte2` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
+
 --
 -- Structure de la table `carte3`
 --
@@ -216,6 +220,8 @@ CREATE TABLE `carte3` (
   `idPerso_carte` int(11) DEFAULT '0',
   `image_carte` varchar(100) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE `carte3` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
 
 -- --------------------------------------------------------
 

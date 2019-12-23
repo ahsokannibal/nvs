@@ -614,14 +614,17 @@ if($dispo || !$admin){
 				if (isset($_GET["mouv"])) {
 					
 					$mouv = $_GET["mouv"];
+					
 					$x_persoE = $t_perso1["x_perso"];
 					$y_persoE = $t_perso1["y_perso"];
 					$pm_perso = $t_perso1["pm_perso"];
 					
-					if(!in_bat($mysqli, $id_perso)){
+					if (!in_bat($mysqli, $id_perso)) {
 					
 						if (reste_pm($pm_perso + $malus_pm)) {
-							switch($mouv){ //on modifie les coordonnées du perso suivant le deplacement qu'il a effectué
+							
+							//on modifie les coordonnées du perso suivant le deplacement qu'il a effectué
+							switch($mouv){ 
 								case 1: $x_persoN=$x_persoE-1; $y_persoN=$y_persoE+1; break;
 								case 2: $x_persoN=$x_persoE; $y_persoN=$y_persoE+1; break;
 								case 3: $x_persoN=$x_persoE+1; $y_persoN=$y_persoE+1; break;
@@ -668,8 +671,7 @@ if($dispo || !$admin){
 											$mysqli->query($dep);
 											
 											// maj carte
-											// on met à jour le nombre de perso sur son ancien emplacement
-											$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=NULL WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
+											$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
 											$mysqli->query($sql);
 											
 											// on met à jour le nombre de perso sur son nouvel emplacement
@@ -680,7 +682,8 @@ if($dispo || !$admin){
 											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>','s\'est deplacé',NULL,'','en $x_persoN/$y_persoN',NOW(),'0')";
 											$mysqli->query($sql);
 	
-											if(prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso) && !in_bat($mysqli, $id_perso)){ // verification si il y a un batiment a proximite du perso
+											// verification si il y a un batiment a proximite du perso
+											if(prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso) && !in_bat($mysqli, $id_perso)){ 
 											
 												// recuperation des id et noms des batiments dans lesquels le perso peut entrer
 												$res_bat = id_prox_bat($mysqli, $x_persoN, $y_persoN);
@@ -767,6 +770,11 @@ if($dispo || !$admin){
 															$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 														}
 													}
+													
+													// pont
+													if ($bat == 5) {
+														$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+													}
 												}
 											}
 										}
@@ -811,6 +819,11 @@ if($dispo || !$admin){
 													if ($pv_instance < $pvMax_instance) {
 														$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 													}
+												}
+												
+												// pont
+												if ($bat == 5) {
+													$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 												}
 											}
 										}
@@ -857,6 +870,11 @@ if($dispo || !$admin){
 													$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 												}
 											}
+											
+											// pont
+											if ($bat == 5) {
+												$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+											}
 										}
 									}
 								}
@@ -902,6 +920,11 @@ if($dispo || !$admin){
 												$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 											}
 										}
+										
+										// pont
+										if ($bat == 5) {
+											$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+										}
 									}
 								}
 							}
@@ -945,6 +968,11 @@ if($dispo || !$admin){
 										if ($pv_instance < $pvMax_instance) {
 											$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 										}
+									}
+									
+									// pont
+									if ($bat == 5) {
+										$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 									}
 								}
 							}
@@ -995,6 +1023,11 @@ if($dispo || !$admin){
 								if ($pv_instance < $pvMax_instance) {
 									$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 								}
+							}
+							
+							// pont
+							if ($bat == 5) {
+								$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 							}
 						}
 					}
