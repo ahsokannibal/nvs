@@ -77,8 +77,58 @@ if($dispo){
 		
 		$direction_charge = $_POST['action_charge'];
 		
-		// TODO
-		echo "TEST";
+		// Recup infos perso
+		$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pv_perso, xp_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+				WHERE perso_as_grade.id_perso = perso.id_perso
+				AND perso.id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t_perso = $res->fetch_assoc();
+		
+		$nom_perso 		= $t_perso['nom_perso'];
+		$x_perso 		= $t_perso['x_perso'];
+		$y_perso 		= $t_perso['y_perso'];
+		$pa_perso 		= $t_perso['pa_perso'];
+		$pv_perso		= $t_perso['pv_perso'];
+		$xp_perso		= $t_perso['xp_perso'];
+		$clan			= $t_perso['clan'];
+		$image_perso	= $t_perso["image_perso"];
+		$grade_perso	= $t_perso["id_grade"];
+		
+		// Déplacement du perso dans l'axe choisi
+		if ($direction_charge == 'haut') {
+			charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		if ($direction_charge == 'haut_gauche') {
+			charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		if ($direction_charge == 'gauche') {
+			charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		if ($direction_charge == 'bas_gauche') {
+			charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		if ($direction_charge == 'bas') {
+			charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		if ($direction_charge == 'bas_droite') {
+			charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		if ($direction_charge == 'droite') {
+			charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		if ($direction_charge == 'haut_droite') {
+			charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+		}
+		
+		// retour a la page de jeu
+		header("location:jouer.php");
 		
 	} else {
 		
@@ -177,6 +227,22 @@ if($dispo){
 				// Lancement de la réparation
 				action_reparer_bat($mysqli, $id_perso, $id_bat, 76);
 			}
+		}
+	}
+	
+	if (isset($_GET['bat']) && $_GET['bat'] != '' && isset($_GET['saboter']) && $_GET['saboter'] == 'ok') {
+	
+		$id_bat = $_GET['bat'];
+		
+		// verification bat est un id correct
+		$verif_idBat = preg_match("#^[0-9]*[0-9]$#i","$id_bat");
+		
+		if ($verif_idBat && isset($_SESSION["id_perso"])) {
+	
+			$id_perso = $_SESSION["id_perso"];
+			
+			action_saboter($mysqli, $id_perso, $id_bat, 104);
+		
 		}
 	}
 	
@@ -1143,7 +1209,13 @@ if($dispo){
 													// ponts => constructibles sur eau seulement
 													else if($id_bat == '5'){
 														if($fond_carte == '8.gif' || $fond_carte == '9.gif'){
-															echo "<td width=40 height=40> <input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 onMouseOver=\"this.src='../images_perso/$image_bat';\" onMouseOut=\"this.src='../fond_carte/$fond_carte';\" ><input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" ></td>";
+															echo "
+																<td width=40 height=40> 
+																	<input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																		onMouseOver=\"this.src='../images_perso/$image_bat';\" 
+																		onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
+																	<input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" >
+																</td>";
 														}
 														else {
 															echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";

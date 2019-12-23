@@ -184,11 +184,11 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 						$pv_bat = rand($pvMin, $pvMax);
 						$img_bat = "b".$id_bat."".$bat_camp.".png";
 						
-						if($id_bat == 4 || $id_bat == 5){
+						if ($id_bat == 4){
 							// route et pont
 							// mise a jour de la carte
 							$sql = "UPDATE $carte SET occupee_carte='0', fond_carte='$img_bat' WHERE x_carte=$x_bat AND y_carte=$y_bat";
-							$mysqli->query($sql);
+							$mysqli->query($sql);							
 						}
 						else {
 							// mise a jour de la table instance_bat
@@ -197,21 +197,30 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 							$mysqli->query($sql);
 							$id_i_bat = $mysqli->insert_id;
 							
-							$img_bat_sup = $bat_camp.".png";
+							if ($id_bat == 5) {
+								
+								// mise a jour de la carte
+								$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte='$id_i_bat', fond_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
+								$mysqli->query($sql);
+								
+							} else {
 							
-							for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
-								for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
-									
-									// mise a jour de la carte
-									$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
-									$mysqli->query($sql);
-									
+								$img_bat_sup = $bat_camp.".png";
+								
+								for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
+									for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
+										
+										// mise a jour de la carte
+										$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
+										$mysqli->query($sql);
+										
+									}
 								}
+							
+								// mise a jour de la carte image centrale
+								$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
+								$mysqli->query($sql);
 							}
-						
-							// mise a jour de la carte image centrale
-							$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
-							$mysqli->query($sql);
 						}
 						
 						// recuperation des infos du perso
@@ -1667,27 +1676,30 @@ function action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action){
 /**
   * Fonction qui permet d'effectuer l'action de sabotage
   * @param $id_perso	: L'identifiant du personnage qui veut saboter
+  * @param $id_bat		: identifiant du batiment à saboter
   * @param $id_action	: L'identifiant de l'action
-  * @param $nb_points_action	: le niveau de l'action
   * @return Void
   */
-function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
+function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 	
 	// recuperation des donnees correspondant a l'action
 	$sql = "SELECT pvMin_action, pvMax_action, coutPa_action FROM action WHERE id_action='$id_action'";
 	$res = $mysqli->query($sql);
 	$t_action = $res->fetch_assoc();
+	
 	$coutPa = $t_action["coutPa_action"];
-
-	// Recuperation des donnees de la case ou se trouve le perso
-	$sql = "SELECT fond_carte FROM carte,perso WHERE x_carte=x_perso AND y_carte=y_perso AND id_perso='$id_perso'";
-	$res = $mysqli->query($sql);
-	$t_fond = $res->fetch_assoc();
-	$fond_carte = $t_fond['fond_carte'];
 	
 	// verification que le perso est sur un pont ou une route
-	if($fond_carte == 'b4b.png' || $fond_carte == 'b4r.png' || // routes
-	   $fond_carte == 'b5b.png' || $fond_carte == 'b5r.png'){  // ponts
+	if(prox_bat_perso($mysqli, $id_perso, $id_bat)){ 
+	
+		// récupération des infos du pont 
+		$sql = "SELECT x_instance, y_instance, pv_instance FROM instance_batiment WHERE id_instanceBat = '$id_bat'";
+		$res = $mysqli->query($sql);
+		$t_bat = $res->fetch_assoc();
+		
+		$x_bat 	= $t_bat["x_instance"];
+		$y_bat 	= $t_bat["y_instance"];
+		$pv_bat = $t_bat["pv_instance"];
 	   
 		// recuperation des infos du perso
 		$sql = "SELECT nom_perso, clan, x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
@@ -1696,8 +1708,6 @@ function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 		
 		$nom_perso = $t_perso['nom_perso'];
 		$camp_perso = $t_perso['clan'];
-		$x_perso = $t_perso['x_perso'];
-		$y_perso = $t_perso['y_perso'];
 		$pa_perso = $t_perso['pa_perso'];
 		
 		// recuperation de la couleur du camp du perso
@@ -1709,12 +1719,12 @@ function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 			$gain_xp = rand(1,3);
 			
 			// calcul pourcentage de reussite
-			$pourcentage_reussite = 20 + 30 * ($nb_points_action - 1);
+			$pourcentage_reussite = 60;
 			
 			$reussite = rand(0,100);
 			
 			// chance
-			if(est_chanceux($id_perso)){
+			if(est_chanceux($mysqli, $id_perso)){
 				$bonus_chance = 2 * est_chanceux($id_perso);
 			}
 			else {
@@ -1724,33 +1734,29 @@ function action_saboter($mysqli, $id_perso, $id_action, $nb_points_action){
 			if($reussite <= $pourcentage_reussite + $bonus_chance){
 				
 				// MAJ carte
-				$sql = "UPDATE carte SET fond_carte='1.gif' WHERE x_carte=$x_perso AND y_carte=$y_perso";
+				$sql = "UPDATE carte SET fond_carte='8.gif', idPerso_carte=NULL WHERE x_carte=$x_bat AND y_carte=$y_bat";
 				$mysqli->query($sql);
 				
-				if($fond_carte == 'b4b.png' || $fond_carte == 'b4r.png'){
-					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté une route ',NULL,'',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
-					$mysqli->query($sql);
+				// Suppression instance bat 
+				$sql = "DELETE FROM instance_batiment WHERE id_instanceBat = '$id_bat'";
+				$mysqli->query($sql);
 				
-					echo "<center>Vous avez saboté une route en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
-				}
-				if($fond_carte == 'b5b.png' || $fond_carte == 'b5r.png'){
-					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté un pont ',NULL,'',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
-					$mysqli->query($sql);
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté un pont ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
+				$mysqli->query($sql);
 				
-					echo "<center>Vous avez saboté un pont en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
-				}
+				echo "<center>Vous avez saboté un pont en $x_bat / $y_bat</center>";
 			}
 			else {
 				$gain_xp = 1;
 				
 				//mise a jour de la table evenement
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son sabotage ',NULL,'',' en $x_perso / $y_perso (reussite : $reussite / $pourcentage_reussite + $bonus_chance)',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son sabotage ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
 				$mysqli->query($sql);
 				
-				echo "<center>Vous avez raté votre sabotage (reussite : $reussite / $pourcentage_reussite + $bonus_chance)</center>";
+				echo "<center>Vous avez raté votre sabotage</center>";
 			}
+			
 			// MAJ xp/pi/pa/pm/x et y perso
 			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);

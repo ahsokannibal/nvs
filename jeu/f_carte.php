@@ -234,6 +234,19 @@ function prox_bat($mysqli, $x, $y, $id_perso){
 	
 }
 
+// fonction qui retourne un booleen : vrai si il y a un batiment a coté de ces coordonnées, faux sinon
+function prox_bat_perso($mysqli, $id_perso, $id_bat){
+	
+	$sql = "SELECT idPerso_carte FROM carte, perso 
+			WHERE x_carte >= x_perso - 1 AND x_carte <= x_perso + 1 AND y_carte >= y_perso - 1 AND y_carte <= y_perso + 1 
+			AND idPerso_carte = $id_bat
+			AND perso.id_perso = $id_perso";
+	$res = $mysqli->query($sql);
+	$nb = $res->fetch_row();
+	return $nb != 0;
+	
+}
+
 // fonction qui retourne un booleen : vrai si le batiment concerné est a coté de ces coordonnées, faux sinon
 function prox_instance_bat($mysqli, $x, $y, $instance){
 	
@@ -245,8 +258,7 @@ function prox_instance_bat($mysqli, $x, $y, $instance){
 				AND x_carte <= $x + 1 
 				AND y_carte >= $y - 1 
 				AND y_carte <= $y + 1 
-				AND idPerso_carte='$instance'
-				AND occupee_carte='1'";
+				AND idPerso_carte='$instance'";
 		$res = $mysqli->query($sql);
 		$nb = $res->fetch_row();
 		
