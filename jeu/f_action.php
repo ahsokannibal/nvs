@@ -116,28 +116,11 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 		if($camp_perso == '1'){
 			
 			$bat_camp = "b";
-			
-			// recuperation de la position du fort
-			$sql = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_batiment='9' AND camp_instance='1'";
-			$res = $mysqli->query($sql);
-			$t_fort_b = $res->fetch_assoc();
-			$nb_fort = $res->num_rows;
-			$x_fort = $t_fort_b['x_instance'];
-			$y_fort = $t_fort_b['y_instance'];
 		}
 		
 		if($camp_perso == '2'){
 			
 			$bat_camp = "r";
-			
-			// recuperation de la position du fort
-			$sql = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_batiment='9' AND camp_instance='2'";
-			$res = $mysqli->query($sql);
-			$t_fort_r = $res->fetch_assoc();
-			$nb_fort = $res->num_rows;
-			
-			$x_fort = $t_fort_r['x_instance'];
-			$y_fort = $t_fort_r['y_instance'];
 		}
 		
 		// test pa
@@ -152,24 +135,8 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 				
 				$gain_xp = 1;
 				
-				$autorisation_construction = false;
-				
-				// verif distance de construction pour entrepot/hopital/fortin
-				if($id_bat == 6 || $id_bat == 7 || $id_bat == 8){
-					
-					//calcul distance possible
-					$distance_max = calcul_distance_construction($niveau_bat);
-					
-					//calcul distance de construction
-					$distance = calcul_nb_cases($x_fort, $y_fort, $x_bat, $y_bat);
-					
-					if($distance_max > $distance){
-						$autorisation_construction = true;
-					}
-				}
-				else {
-					$autorisation_construction = true;
-				}
+				// TODO - verification distance entre nouveau bat et batiments existant
+				$autorisation_construction = true;
 				
 				$autorisation_construction_taille = true;
 				
@@ -178,7 +145,8 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 				if ($taille_bat > 1) {
 					
 					// verification carte pour construction 
-					$sql = "SELECT occupee_carte, fond_carte FROM carte WHERE x_carte <= $x_bat + $taille_search AND x_carte >= $x_bat - $taille_search AND y_carte <= $y_bat + $taille_search AND y_carte >= $y_bat - $taille_search";
+					$sql = "SELECT occupee_carte, fond_carte FROM carte 
+							WHERE x_carte <= $x_bat + $taille_search AND x_carte >= $x_bat - $taille_search AND y_carte <= $y_bat + $taille_search AND y_carte >= $y_bat - $taille_search";
 					$res = $mysqli->query($sql);
 					
 					while ($t = $res->fetch_assoc()) {
@@ -224,7 +192,8 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 						}
 						else {
 							// mise a jour de la table instance_bat
-							$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) VALUES ('$niveau_bat', '$id_bat', '', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
+							$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
+									VALUES ('$niveau_bat', '$id_bat', '', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
 							$mysqli->query($sql);
 							$id_i_bat = $mysqli->insert_id;
 							

@@ -1,6 +1,8 @@
 <?php
 session_start();
+
 if (@$_SESSION["id_perso"]) {
+	
 	$id = $_SESSION["id_perso"];
 
 	header("Content-type: image/png");//on va commencer par declarer que l'on veut creer une image
@@ -21,17 +23,33 @@ if (@$_SESSION["id_perso"]) {
 	
 	$mysqli = db_connexion();
 	
-	$noir = Imagecolorallocate($perso_carte, 0, 0, 0); // noir
-	$couleur_pnj = Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
-	$couleur_perso_clan1 = Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
-	$couleur_perso_clan2 = Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
-	$couleur_bat_clan1 = Imagecolorallocate($perso_carte, 176, 176, 254); // lightsteelblue
-	$couleur_bat_clan2 = Imagecolorallocate($perso_carte, 254, 176, 176); // 
+	$noir 					= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
+	$couleur_pnj 			= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
+	$couleur_perso_clan1 	= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
+	$couleur_perso_clan2 	= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
+	$couleur_bat_clan1 		= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
+	$couleur_bat_clan2 		= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
+	$couleur_rail			= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
+	
+	// je vais chercher les rails dans ma table
+	$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif'";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()){
+		
+		$x = $t["x_carte"];
+		$y = $t["y_carte"];
+		
+		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_rail);
+		
+	}
 	
 	// je vais chercher les pnj dans ma table
 	$sql = "SELECT x_i, y_i FROM instance_pnj WHERE pv_i>0";
 	$res = $mysqli->query($sql);
+	
 	while ($t = $res->fetch_assoc()){
+		
 		$x = $t["x_i"];
 		$y = $t["y_i"];
 		$color = $couleur_pnj;
@@ -42,7 +60,9 @@ if (@$_SESSION["id_perso"]) {
 	// je vais chercher les perso dans ma table
 	$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE pv_perso>0 and est_gele='0'";
 	$res = $mysqli->query($sql);
+	
 	while ($t = $res->fetch_assoc()){
+		
 		$x = $t["x_perso"];
 		$y = $t["y_perso"];
 		$clan = $t["clan"];
@@ -58,13 +78,15 @@ if (@$_SESSION["id_perso"]) {
 	}
 	
 	// je vais chercher les batiments dans ma table
-	$sql = "SELECT x_instance, y_instance, camp_instance FROM instance_batiment WHERE pv_instance>0";
+	$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND pv_instance>0";
 	$res = $mysqli->query($sql);
+	
 	while ($t = $res->fetch_assoc()){
 		
-		$x = $t["x_instance"];
-		$y = $t["y_instance"];
-		$camp = $t["camp_instance"];
+		$x 			= $t["x_instance"];
+		$y 			= $t["y_instance"];
+		$camp 		= $t["camp_instance"];
+		$taille_bat = $t["taille_batiment"];
 		
 		if($camp == '1'){
 			$color = $couleur_bat_clan1;
@@ -73,15 +95,17 @@ if (@$_SESSION["id_perso"]) {
 			$color = $couleur_bat_clan2;
 		}
 		
-		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $color);
+		imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 	}
 
 	// je vais chercher le perso qui est connecté dans ma table
 	$sql2 = "SELECT x_perso, y_perso FROM perso WHERE id_perso=$id";
 	$res2 = $mysqli->query($sql2);
 	$t2 = $res2->fetch_assoc();
+	
 	$x2 = $t2["x_perso"];
 	$y2 = $t2["y_perso"];
+	
 	imageellipse($perso_carte, 3*$x2, 600-3*$y2, 20, 20, $noir);
 	imagepng($perso_carte, "carte_tmp/perso$id.png");
 	

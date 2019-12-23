@@ -352,12 +352,7 @@ function calcul_nb_cases($x_depart, $y_depart, $x_arrivee, $y_arrivee){
 // fontion qui calcule la distance de construction possible d'un bâtiment selon le nombre de points
 function calcul_distance_construction($nombre_points){
 	
-	if($nombre_points == 1){
-		return 50;
-	}
-	else {
-		return $nombre_points * 10;
-	}
+	return 200;
 }
 
 // fonction qui récupère le batiment de rapatriement le plus proche d'un perso
