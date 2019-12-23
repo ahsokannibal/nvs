@@ -282,6 +282,16 @@ INSERT INTO `competence_as_action` (`id_competence`, `id_action`) VALUES
 INSERT INTO `config_jeu` (`disponible`) VALUES
 (1);
 
+-- 
+-- Contenu de la table `dossier`
+-- 
+INSERT INTO `dossier` ( `id_dossier` , `nom_dossier` )
+VALUES (
+'1', 'courant'
+), (
+'2', 'archive'
+);
+
 --
 -- Contenu de la table `grades`
 --
@@ -333,8 +343,8 @@ INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x
 --
 INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('1', '1', '1');
 INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('1', '4', '1');
-INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('3', '1', '1');
-INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('3', '4', '1');
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('2', '1', '1');
+INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('2', '4', '1');
 
 --
 -- Contenu de la table `perso_as_grade`
@@ -360,12 +370,16 @@ INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VAL
 ('1', '27', '1'),
 ('1', '28', '1'),
 ('1', '29', '1'),
+('1', '63', '1'),
+('1', '64', '1'),
 ('2', '22', '1'), 
 ('2', '23', '1'), 
 ('2', '24', '1'),
 ('2', '27', '1'),
 ('2', '28', '1'),
-('2', '29', '1');
+('2', '29', '1'),
+('2', '63', '1'),
+('2', '64', '1');
 
 --
 -- Contenu de la table `perso_in_compagnie`
