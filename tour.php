@@ -12,7 +12,7 @@ if(isset($_SESSION["ID_joueur"])){
 	$id_joueur = $_SESSION['ID_joueur'];
 	
 	// recuperation de l'id et du nom du chef
-	$sql = "SELECT id_perso, nom_perso, clan, est_gele, UNIX_TIMESTAMP(DLA_perso) as DLA, UNIX_TIMESTAMP(date_gele) as DG FROM perso WHERE idJoueur_perso=$id_joueur AND chef=1";
+	$sql = "SELECT id_perso, nom_perso, pv_perso, clan, image_perso, est_gele, UNIX_TIMESTAMP(DLA_perso) as DLA, UNIX_TIMESTAMP(date_gele) as DG FROM perso WHERE idJoueur_perso=$id_joueur AND chef=1";
 	$res = $mysqli->query($sql);
 	$t_chef = $res->fetch_assoc();
 	
@@ -22,6 +22,8 @@ if(isset($_SESSION["ID_joueur"])){
 	$est_gele 	= $t_chef["est_gele"];
 	$date_gele 	= $t_chef["DG"];
 	$pseudo 	= $t_chef["nom_perso"];
+	$pv			= $t_chef["pv_perso"];
+	$image_perso= $t_chef["image_perso"];
 	
 	if (isset($_SESSION["id_perso"]) && $_SESSION["id_perso"] != $id) {
 		// on a switch sur un perso mort ?
@@ -61,7 +63,7 @@ if(isset($_SESSION["ID_joueur"])){
 					// Récupération du batiment de rappatriement le plus proche du perso
 					$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
 					
-					if ($id_bat != null) {
+					if ($id_bat != null && $id_bat != 0) {
 						
 						// récupération coordonnées batiment
 						$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
@@ -78,19 +80,20 @@ if(isset($_SESSION["ID_joueur"])){
 					} else {
 						
 						// Respawn aleatoire
-						if($clan == 1){
+						if ($clan == 1){
 							// bleu
-							$x_min_respawn = 0;
-							$x_max_respawn = 40;
-							$y_min_respawn = 0;
-							$y_max_respawn = 40;
-						}
-						if($clan == 2){
-							// rouge
 							$x_min_respawn = 160;
 							$x_max_respawn = 200;
 							$y_min_respawn = 160;
 							$y_max_respawn = 200;
+						}
+						
+						if ($clan == 2){
+							// rouge
+							$x_min_respawn = 0;
+							$x_max_respawn = 40;
+							$y_min_respawn = 0;
+							$y_max_respawn = 40;
 						}
 								
 						// on le replace aleatoirement sur la carte
@@ -158,21 +161,27 @@ if(isset($_SESSION["ID_joueur"])){
 				// Récupération du batiment de rappatriement le plus proche du perso
 				$id_bat = selection_bat_rapat($mysqli, $x_perso_degele, $y_perso_degele, $clan);
 				
-				// récupération coordonnées batiment
-				$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
-				$res_b = $mysqli->query($sql_b);
-				$t_b = $res_b->fetch_assoc();
+				if ($id_bat != null && $id_bat != 0) {
 				
-				$x = $t_b['x_instance'];
-				$y = $t_b['y_instance'];
-				
-				// On met le perso et ses grouillots dans le batiment
-				$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_degele','$id_bat')";
-				$mysqli->query($sql);
-				
-				// MAJ perso
-				$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso_degele'";
-				$mysqli->query($sql);
+					// récupération coordonnées batiment
+					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+					$res_b = $mysqli->query($sql_b);
+					$t_b = $res_b->fetch_assoc();
+					
+					$x = $t_b['x_instance'];
+					$y = $t_b['y_instance'];
+					
+					// On met le perso et ses grouillots dans le batiment
+					$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_degele','$id_bat')";
+					$mysqli->query($sql);
+					
+					// MAJ perso
+					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso_degele'";
+					$mysqli->query($sql);
+				}
+				else {
+					echo "<center>Aucun batiment disponible pour le dégèle de votre perso</center>";
+				}
 			}
 			
 			//redirection
@@ -256,7 +265,7 @@ if(isset($_SESSION["ID_joueur"])){
 							// Récupération du batiment de rappatriement le plus proche du perso
 							$id_bat = selection_bat_rapat($mysqli, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
 							
-							if ($id_bat != null) {
+							if ($id_bat != null && $id_bat != 0) {
 							
 								// récupération coordonnées batiment
 								$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
@@ -275,17 +284,17 @@ if(isset($_SESSION["ID_joueur"])){
 								// Respawn aleatoire
 								if($clan == 1){
 									// bleu
-									$x_min_respawn = 0;
-									$x_max_respawn = 40;
-									$y_min_respawn = 0;
-									$y_max_respawn = 40;
-								}
-								if($clan == 2){
-									// rouge
 									$x_min_respawn = 160;
 									$x_max_respawn = 200;
 									$y_min_respawn = 160;
 									$y_max_respawn = 200;
+								}
+								if($clan == 2){
+									// rouge
+									$x_min_respawn = 0;
+									$x_max_respawn = 40;
+									$y_min_respawn = 0;
+									$y_max_respawn = 40;
 								}
 										
 								// on le replace aleatoirement sur la carte
@@ -332,24 +341,57 @@ if(isset($_SESSION["ID_joueur"])){
 						// Récupération du batiment de rappatriement le plus proche du perso
 						$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
 						
-						// récupération coordonnées batiment
-						$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
-						$res_b = $mysqli->query($sql_b);
-						$t_b = $res_b->fetch_assoc();
+						if ($id_bat != null && $id_bat != 0) {
 						
-						$x = $t_b['x_instance'];
-						$y = $t_b['y_instance'];
-						
-						// On met le perso dans le batiment
-						$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
-						$mysqli->query($sql);
-						
-						// MAJ perso
-						$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
-						$mysqli->query($sql);
-			
-						//redirection
-						header("location:jeu/jouer.php");
+							// récupération coordonnées batiment
+							$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+							$res_b = $mysqli->query($sql_b);
+							$t_b = $res_b->fetch_assoc();
+							
+							$x = $t_b['x_instance'];
+							$y = $t_b['y_instance'];
+							
+							// On met le perso dans le batiment
+							$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
+							$mysqli->query($sql);
+							
+							// MAJ perso
+							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
+							$mysqli->query($sql);
+				
+							//redirection
+							header("location:jeu/jouer.php");
+							
+						}
+						else {
+							// Respawn aleatoire
+							if($clan == 1){
+								// bleu
+								$x_min_respawn = 160;
+								$x_max_respawn = 200;
+								$y_min_respawn = 160;
+								$y_max_respawn = 200;
+							}
+							if($clan == 2){
+								// rouge
+								$x_min_respawn = 0;
+								$x_max_respawn = 40;
+								$y_min_respawn = 0;
+								$y_max_respawn = 40;
+							}
+									
+							// on le replace aleatoirement sur la carte
+							$occup = 1;
+							while ($occup == 1)
+							{
+								$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
+								$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
+								$occup = verif_pos_libre($mysqli, $x, $y);
+							}
+							
+							$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id' WHERE x_carte='$x' AND y_carte='$y'";
+							$mysqli->query($sql);
+						}
 					}
 				}
 			}

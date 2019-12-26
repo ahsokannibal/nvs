@@ -47,33 +47,21 @@ if(config_dispo_jeu($mysqli)){
 						$mdp_joueur = md5($mdp_joueur);
 						
 						if($camp == 1){ // bleu
-							$x_min_spawn = 0;
-							$x_max_spawn = 50;
-							$y_min_spawn = 0;
-							$y_max_spawn = 50;
+							$x_min_spawn = 150;
+							$x_max_spawn = 200;
+							$y_min_spawn = 150;
+							$y_max_spawn = 200;
 							$image_chef = "cavalerie_nord.gif";
 							$image_g = "infanterie_nord.gif";
 						}
 						
 						if($camp == 2){ // rouge
-							$x_min_spawn = 150;
-							$x_max_spawn = 200;
-							$y_min_spawn = 110;
-							$y_max_spawn = 160;
+							$x_min_spawn = 0;
+							$x_max_spawn = 50;
+							$y_min_spawn = 0;
+							$y_max_spawn = 50;
 							$image_chef = "cavalerie_sud.gif";
 							$image_g = "infanterie_sud.gif";
-						}
-						
-						$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn); //placement du perso position x
-						$y = pos_zone_rand_y($y_min_spawn, $y_max_spawn); //placement du perso position y
-					
-						// verification si la position est libre
-						$libre = verif_pos_libre($mysqli, $x, $y); 
-						while ($libre == 1) {
-							// position pas libre => on rechoisit de nouvelles coordonnées
-							$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn); 
-							$y = pos_zone_rand_y($y_min_spawn, $y_max_spawn);
-							$libre = verif_pos_libre($mysqli, $x, $y);
 						}
 					
 						$date = time();
@@ -116,6 +104,91 @@ if(config_dispo_jeu($mysqli)){
 							$unlock = "UNLOCK TABLES";
 							$mysqli->query($unlock);
 							
+							$bat_spawn_dispo = false;
+							
+							// verification si fort pas en siége présent pour spawn
+							$sql = "SELECT x_instance, y_instance, id_instanceBat, contenance_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE camp_instance='$camp' AND id_batiment='9'";
+							$res = $mysqli->query($sql);
+							
+							while($t = $res->fetch_assoc()) {
+							
+								$x 				= $t['x_instance'];
+								$y 				= $t['y_instance'];
+								$id_bat 		= $t['id_instanceBat'];
+								$contenance_bat = $t['contenance_instance'];
+								$pv_bat 		= $t['pv_instance'];
+								$pvMax_bat 		= $t['pvMax_instance'];
+								
+								// calcul pourcentage pv bat 
+								$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
+								
+								// Récupération du nombre de perso dans ce batiment
+								$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
+								$res_n = $mysqli->query($sql_n);
+								$t_n = $res_n->fetch_assoc();
+								$nb_perso_bat = $t_n['nb_perso_bat'];
+								
+								if($contenance_bat > $nb_perso_bat + 1 && $pourcentage_pv_bat >= 90){
+									// Le perso peut spawn dans le fort avec son grouillot
+									$bat_spawn_dispo = true;
+									
+									break;
+								}
+							}
+							
+							// Le perso ne peut pas respawn dans les forts
+							if (!$bat_spawn_dispo) {
+								
+								// Verification des fortins
+								$sql = "SELECT x_instance, y_instance, id_instanceBat, contenance_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE camp_instance='$camp' AND id_batiment='8'";
+								$res = $mysqli->query($sql);
+								
+								while($t = $res->fetch_assoc()) {
+								
+									$x 				= $t['x_instance'];
+									$y 				= $t['y_instance'];
+									$id_bat 		= $t['id_instanceBat'];
+									$contenance_bat = $t['contenance_instance'];
+									$pv_bat 		= $t['pv_instance'];
+									$pvMax_bat 		= $t['pvMax_instance'];
+									
+									// calcul pourcentage pv bat 
+									$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
+									
+									// Récupération du nombre de perso dans ce batiment
+									$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
+									$res_n = $mysqli->query($sql_n);
+									$t_n = $res_n->fetch_assoc();
+									$nb_perso_bat = $t_n['nb_perso_bat'];
+									
+									if($contenance_bat > $nb_perso_bat + 1 && $pourcentage_pv_bat >= 90){
+										// Le perso peut spawn dans le fortin avec son grouillot
+										$bat_spawn_dispo = true;
+										
+										break;
+									}
+									
+								}
+							}
+							
+							// Impossible de spawn dans un fort ou fortin => spawn aléatoire sur la carte
+							if (!$bat_spawn_dispo) {
+								
+								$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn);
+								$y = pos_zone_rand_y($y_min_spawn, $y_max_spawn);
+							
+								// verification si la position est libre
+								$libre = verif_pos_libre($mysqli, $x, $y); 
+								
+								while ($libre == 1) {
+									
+									// position pas libre => on rechoisit de nouvelles coordonnées
+									$x = pos_zone_rand_x($x_min_spawn, $x_max_spawn); 
+									$y = pos_zone_rand_y($y_min_spawn, $y_max_spawn);
+									$libre = verif_pos_libre($mysqli, $x, $y);
+								}
+							}					
+							
 							// insertion nouveau perso / Chef
 							$lock = "LOCK TABLE (perso) WRITE";
 							$mysqli->query($lock);
@@ -130,6 +203,16 @@ if(config_dispo_jeu($mysqli)){
 							
 							$unlock = "UNLOCK TABLES";
 							$mysqli->query($unlock);
+							
+							if ($bat_spawn_dispo) {
+								// On met le perso dans le batiment
+								$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
+								$mysqli->query($sql);
+							} else {
+								// insertion du Chef sur la carte
+								$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id', image_carte='$image_chef' WHERE x_carte=$x AND y_carte=$y";
+								$mysqli->query($sql);
+							}
 							
 							// dossier courant
 							$sql_i = "INSERT INTO perso_as_dossiers VALUES ('$id','1')";
@@ -150,22 +233,28 @@ if(config_dispo_jeu($mysqli)){
 							// Arme distance : pistolet 
 							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id','4','1')";
 							$mysqli->query($sql);
-						
-							// insertion du Chef sur la carte
-							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id', image_carte='$image_chef' WHERE x_carte=$x AND y_carte=$y";
-							$mysqli->query($sql);
 							
-							// Positionnement grouillot
-							$x_g = pos_zone_rand_x($x_min_spawn, $x_max_spawn); //placement du perso position x
-							$y_g = pos_zone_rand_y($y_min_spawn, $y_max_spawn); //placement du perso position y
-						
-							// verification si la position est libre
-							$libre = verif_pos_libre($mysqli, $x_g, $y_g); 
-							while ($libre == 1) {
-								// position pas libre => on rechoisit de nouvelles coordonnées
-								$x_g = pos_zone_rand_x($x_min_spawn, $x_max_spawn); 
-								$y_g = pos_zone_rand_y($y_min_spawn, $y_max_spawn);
-								$libre = verif_pos_libre($x_g, $y_g);
+							if (!$bat_spawn_dispo) {
+								
+								// Positionnement grouillot
+								$x_g = pos_zone_rand_x($x_min_spawn, $x_max_spawn); //placement du perso position x
+								$y_g = pos_zone_rand_y($y_min_spawn, $y_max_spawn); //placement du perso position y
+							
+								// verification si la position est libre
+								$libre = verif_pos_libre($mysqli, $x_g, $y_g); 
+								
+								while ($libre == 1) {
+									
+									// position pas libre => on rechoisit de nouvelles coordonnées
+									$x_g = pos_zone_rand_x($x_min_spawn, $x_max_spawn); 
+									$y_g = pos_zone_rand_y($y_min_spawn, $y_max_spawn);
+									$libre = verif_pos_libre($x_g, $y_g);
+								}
+							} else {
+								// Les coordonnées du grouillot sont les même que le chef
+								// Coordonnées du batiment de spawn
+								$x_g = $x;
+								$y_g = $y;
 							}
 							
 							// Insertion grouillot
@@ -181,6 +270,16 @@ if(config_dispo_jeu($mysqli)){
 							
 							$unlock = "UNLOCK TABLES";
 							$mysqli->query($unlock);
+							
+							if ($bat_spawn_dispo) {
+								// On met le perso dans le batiment
+								$sql = "INSERT INTO perso_in_batiment VALUES('$id_g','$id_bat')";
+								$mysqli->query($sql);
+							} else {
+								// insertion du Grouillot sur la carte
+								$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id_g', image_carte='$image_g' WHERE x_carte=$x_g AND y_carte=$y_g";
+								$mysqli->query($sql);
+							}
 							
 							// dossier courant
 							$sql_i = "INSERT INTO perso_as_dossiers VALUES ('$id_g','1')";
@@ -209,10 +308,6 @@ if(config_dispo_jeu($mysqli)){
 							// Insertion competence marche forcée
 							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','6','1')";
 							$mysqli->query($sql_c);
-							
-							// insertion du Grouillot sur la carte
-							$sql = "UPDATE carte SET occupee_carte='1' , idPerso_carte='$id_g', image_carte='$image_g' WHERE x_carte=$x_g AND y_carte=$y_g";
-							$mysqli->query($sql);
 					
 							$_SESSION["ID_joueur"] = $IDJoueur_perso;
 

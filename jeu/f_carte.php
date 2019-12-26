@@ -370,6 +370,7 @@ function calcul_distance_construction($nombre_points){
 
 // fonction qui récupère le batiment de rapatriement le plus proche d'un perso
 function selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan){
+	
 	// init variables
 	$min_distance = 200;
 	$min_id_bat = 0;
@@ -378,11 +379,18 @@ function selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan){
 	// Fort : 9 - Fortin : 8 - Hopital : 7
 	$sql_b = "SELECT * FROM instance_batiment WHERE camp_instance='$clan' AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9')";
 	$res_b = $mysqli->query($sql_b);
+	
 	while ($t_b = $res_b->fetch_assoc()){
-		$x_bat = $t_b['x_instance'];
-		$y_bat = $t_b['y_instance'];
-		$id_bat = $t_b['id_instanceBat'];
+		
+		$x_bat 			= $t_b['x_instance'];
+		$y_bat 			= $t_b['y_instance'];
+		$id_bat 		= $t_b['id_instanceBat'];
+		$pv_bat			= $t_b['pv_instance'];
+		$pvMax_bat		= $t_b['pvMax_instance'];
 		$contenance_bat = $t_b['contenance_instance'];
+		
+		// calcul pourcentage pv bat 
+		$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
 		
 		// Récupération du nombre de perso dans ce batiment
 		$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
@@ -390,14 +398,14 @@ function selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan){
 		$t_n = $res_n->fetch_assoc();
 		$nb_perso_bat = $t_n['nb_perso_bat'];
 		
-		if($contenance_bat > $nb_perso_bat){
+		if ($contenance_bat > $nb_perso_bat && $pourcentage_pv_bat >= 90){
 			// Le perso peut respawn dans ce batiment
 			
 			// Calcul de la distance entre le batiment et le perso
 			$distance = calcul_nb_cases($x_perso, $y_perso, $x_bat, $y_bat);
 			
-			// Si la distance est moindre, on selectionne ce batiment
-			if($distance < $min_distance){
+			// Si la distance est moindre mais qu'on est toujours à plus de 20 cases, on selectionne ce batiment
+			if ($distance < $min_distance && $distance > 20){
 				$min_id_bat = $id_bat;
 			}
 		}
