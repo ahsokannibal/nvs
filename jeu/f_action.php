@@ -1733,19 +1733,38 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 			
 			if($reussite <= $pourcentage_reussite + $bonus_chance){
 				
-				// MAJ carte
-				$sql = "UPDATE carte SET fond_carte='8.gif', idPerso_carte=NULL WHERE x_carte=$x_bat AND y_carte=$y_bat";
-				$mysqli->query($sql);
+				$degats_sabotage = rand(50,200);
 				
-				// Suppression instance bat 
-				$sql = "DELETE FROM instance_batiment WHERE id_instanceBat = '$id_bat'";
-				$mysqli->query($sql);
+				$pv_final_bat = $pv_bat - $degats_sabotage;
 				
-				//mise a jour de la table evenement
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté un pont ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
-				$mysqli->query($sql);
+				if ($pv_final_bat <= 0) {
 				
-				echo "<center>Vous avez saboté un pont en $x_bat / $y_bat</center>";
+					// MAJ carte
+					$sql = "UPDATE carte SET fond_carte='8.gif', idPerso_carte=NULL WHERE x_carte=$x_bat AND y_carte=$y_bat";
+					$mysqli->query($sql);
+					
+					// Suppression instance bat 
+					$sql = "DELETE FROM instance_batiment WHERE id_instanceBat = '$id_bat'";
+					$mysqli->query($sql);
+					
+					//mise a jour de la table evenement
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a détruit un pont ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
+					$mysqli->query($sql);
+					
+					echo "<center>Vous avez détruit un pont en $x_bat / $y_bat</center>";
+				} 
+				else {
+					
+					// mise à jour pv pont
+					$sql = "UPDATE instance_batiment SET pv_instance = $pv_final_bat WHERE id_instanceBat = '$id_bat'";
+					$mysqli->query($sql);
+					
+					//mise a jour de la table evenement
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>',' a saboté un pont ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
+					$mysqli->query($sql);
+					
+					echo "<center>Vous avez saboté un pont en $x_bat / $y_bat : $degats_sabotage dégats</center>";
+				}
 			}
 			else {
 				$gain_xp = 1;
@@ -1757,7 +1776,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 				echo "<center>Vous avez raté votre sabotage</center>";
 			}
 			
-			// MAJ xp/pi/pa/pm/x et y perso
+			// MAJ xp/pi/pa perso
 			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
