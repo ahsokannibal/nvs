@@ -42,7 +42,7 @@ function entete($mysqli, $id) {
 			}
 			
 			// recuperation de l'id de la compagnie 
-			$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' and attenteValidation_compagnie='0'";
+			$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res_groupe = $mysqli->query($sql_groupe);
 			$t_groupe = $res_groupe->fetch_assoc();
 			$id_groupe = $t_groupe['id_compagnie'];
@@ -69,7 +69,7 @@ function entete($mysqli, $id) {
 						</tr>";
 			echo "<tr><td><b>Camp :</b> <font color=\"$couleur_clan_perso\">$nom_clan</font></td></tr>";
 			if(isset($groupe) && $groupe != ''){
-				echo "<tr><td><b>Groupe :</b> <a href=\"compagnie.php?id_compagnie=$id_groupe&voir_groupe=ok\">". stripslashes($groupe) ."</a></td></tr>";
+				echo "<tr><td><b>Compagnie :</b> <a href=\"compagnie.php?id_compagnie=$id_groupe&voir_groupe=ok\">". stripslashes($groupe) ."</a></td></tr>";
 			}
 			echo "</table></center>";
 	

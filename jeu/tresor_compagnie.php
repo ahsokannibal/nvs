@@ -51,7 +51,7 @@ if($dispo){
 		if($verif1){
 		
 			// verification que le perso appartient bien a la compagnie
-			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND attenteValidation_compagnie='0'";
+			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res = $mysqli->query($sql);
 			$verif = $res->num_rows;
 				

@@ -1100,6 +1100,26 @@ if($dispo || !$admin){
 					$id_grade_perso = "1.2";
 				}
 				
+				$nom_compagnie_perso = "";
+				
+				// recuperation de l'id de la compagnie du perso
+				$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+				$res_groupe = $mysqli->query($sql_groupe);
+				$t_groupe = $res_groupe->fetch_assoc();
+				
+				$id_compagnie = $t_groupe['id_compagnie'];
+													
+				if(isset($id_compagnie) && $id_compagnie != ''){
+					
+					// recuperation des infos sur la compagnie (dont le nom)
+					$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_compagnie'";
+					$res_groupe2 = $mysqli->query($sql_groupe2);
+					$t_groupe2 = $res_groupe2->fetch_assoc();
+					
+					$nom_compagnie_perso = addslashes($t_groupe2['nom_compagnie']);
+					
+				}
+				
 				// Récupération de tous les persos du joueur
 				$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso' ORDER BY id_perso";
 				$res = $mysqli->query($sql);
@@ -1154,7 +1174,7 @@ if($dispo || !$admin){
 					<tr>
 						<td align=center><b>Chef : </b><?php echo $nom_perso_chef;?></td>
 						<td align=center><b>Bataillon : </b><?php echo $bataillon_perso; ?></td>
-						<td align=center><b>Compagnie : </b><?php echo ""; ?></td>
+						<td align=center><b>Compagnie : </b><?php echo $nom_compagnie_perso; ?></td>
 						<td align=center><b>Section : </b><?php echo ""; ?></td>
 					</tr>
 				</table>
@@ -1786,7 +1806,7 @@ if($dispo || !$admin){
 														}
 														
 														// recuperation de l'id de la compagnie 
-														$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso_im' and attenteValidation_compagnie='0'";
+														$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso_im' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 														$res_groupe = $mysqli->query($sql_groupe);
 														$t_groupe = $res_groupe->fetch_assoc();
 														

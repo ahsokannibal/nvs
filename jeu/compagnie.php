@@ -114,7 +114,7 @@ if($dispo){
 								}
 								
 								// Récupération nombre perso dans la compagnie
-								$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND attenteValidation_compagnie='0'";
+								$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 								$res = $mysqli->query($sql);
 								$tab = $res->fetch_assoc();
 								
@@ -178,29 +178,11 @@ if($dispo){
 							}
 							else { 
 						
-								// on peut le delete
-								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso=$id";
+								// MAJ demande de sortie de la compagnie 
+								$sql = "UPDATE perso_in_compagnie SET attenteValidation_compagnie = '2' WHERE id_perso='$id'";
 								$mysqli->query($sql);
-								
-								// on enleve le perso de la banque
-								$sql = "DELETE FROM banque_compagnie WHERE id_perso=$id";
-								$mysqli->query($sql);
-								
-								echo "Vous venez de quitter votre compagnie<br>";
 							
-								// verification du nombre de membres dans la compagnie : si la compagnie n'a plus de membre => delete
-								$sql = "SELECT id_perso, poste_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie";
-								$res = $mysqli->query($sql);
-								$nb = $res->fetch_row();
-								
-								if ($nb == 0){ 
-								
-									// il n'y a plus de membres
-									$sql = "DELETE FROM compagnies WHERE id_compagnie=$id_compagnie";
-									$mysqli->query($sql);
-									
-									echo "Votre depart a detruit la compagnie (il n y a plus de membres)<br>";
-								}
+								echo "<center><font color='blue'>Votre demande pour quitter la compagnie a bien été effectuée</font></center>";
 								echo "<center><a href='compagnie.php'> [retour] </a></center>";
 							}
 						}
@@ -226,7 +208,7 @@ if($dispo){
 						}
 						
 						// Récupération nombre perso dans la compagnie
-						$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND attenteValidation_compagnie='0'";
+						$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 						$res = $mysqli->query($sql);
 						$tab = $res->fetch_assoc();
 						
@@ -238,7 +220,9 @@ if($dispo){
 						echo "</tr><tr><td></td><td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td><td>";
 						
 						// recuperation de la liste des membres de la compagnie
-						$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='0' ORDER BY poste_compagnie";
+						$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
+								WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
+								ORDER BY poste_compagnie";
 						$res = $mysqli->query($sql);
 						
 						while ($membre = $res->fetch_assoc()) {
@@ -316,7 +300,7 @@ if($dispo){
 		else {
 			
 			// verification si le perso appartient deja a une compagnie
-			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' and attenteValidation_compagnie='0'";
+			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res = $mysqli->query($sql);
 			$c = $res->fetch_row();
 			
@@ -342,7 +326,9 @@ if($dispo){
 				echo "</tr><tr><td></td><td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td><td>";
 					
 				// recuperation de la liste des membres de la compagnie
-				$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='0' ORDER BY poste_compagnie";
+				$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
+						WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
+						ORDER BY poste_compagnie";
 				$res = $mysqli->query($sql);
 				
 				while ($membre = $res->fetch_assoc()) {
@@ -401,11 +387,22 @@ if($dispo){
 					if($poste_s == 3 || $poste_s == 1){ 
 					
 						// on verifie si il y a des nouveau persos qui veulent integrer la compagnie
-						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
+						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
+								WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
 						$res = $mysqli->query($sql);
 						
-						// nombre de persos en attente
-						$num_a = $res->num_rows; 
+						// nombre de persos en attente de validation pour rentrer
+						$num_e = $res->num_rows; 
+						
+						// on verifie si il y a des nouveau persos qui veulent quitter la compagnie
+						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
+								WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='2'";
+						$res = $mysqli->query($sql);
+						
+						// nombre de persos en attente pour quitter la compagnie
+						$num_q = $res->num_rows; 
+						
+						$num_a = $num_e + $num_q;
 						
 						echo "<center><a href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie</a><font color=red>($num_a persos en attente)</font></center>";
 					}
@@ -416,7 +413,7 @@ if($dispo){
 					}
 				}
 				
-				echo "<br/><center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b> >>Quitter la compagnie (ATTENTION : Cette action vous fera quitter definitivement la compagnie)</b></a></center>";
+				echo "<br/><center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b> >>Demander à quitter la compagnie</b></a></center>";
 				echo "<br/><br/><a href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a>";
 			}
 			else { 

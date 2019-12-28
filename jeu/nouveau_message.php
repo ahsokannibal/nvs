@@ -208,7 +208,7 @@ if(isset($_GET["id_compagnie"])) {
 	}
 	
 	// recuperation des persos de la compagnie
-	$sql = "SELECT nom_perso FROM perso, perso_in_compagnie WHERE perso.id_perso=perso_in_compagnie.id_perso AND attenteValidation_compagnie='0' AND id_compagnie='$id_compagnie'";
+	$sql = "SELECT nom_perso FROM perso, perso_in_compagnie WHERE perso.id_perso=perso_in_compagnie.id_perso AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') AND id_compagnie='$id_compagnie'";
 	$res = $mysqli->query($sql);
 	
 	$dest = "";

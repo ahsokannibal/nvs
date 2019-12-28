@@ -122,7 +122,7 @@ if($dispo){
 				$sql = "SELECT perso_in_compagnie.id_perso, nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
 						WHERE perso_in_compagnie.id_perso=perso.ID_perso 
 						AND id_compagnie=$id_compagnie 
-						AND attenteValidation_compagnie='0' 
+						AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')
 						AND poste_compagnie!='1' 
 						ORDER BY poste_compagnie";
 				$res = $mysqli->query($sql);
@@ -171,7 +171,9 @@ if($dispo){
 				echo "<table border=1>";
 		
 				// recuperation de la liste des membres de la compagnie
-				$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='0' ORDER BY poste_compagnie";
+				$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
+						WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
+						ORDER BY poste_compagnie";
 				$res = $mysqli->query($sql);
 				
 				while ($membre = $res->fetch_assoc()) {
