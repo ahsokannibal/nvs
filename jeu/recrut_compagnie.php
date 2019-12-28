@@ -199,7 +199,7 @@ if($dispo){
 				
 				if ($nb_persos_compagnie < $nb_persos_compagnie_max) {
 					
-					echo "<center>Votre compagnie possède ". $nb_persos_compagnie . " pour une capacité maximale de ". $nb_persos_compagnie_max . " membres</center><br />" ;
+					echo "<center>Votre compagnie possède ". $nb_persos_compagnie . " unités pour une capacité maximale de ". $nb_persos_compagnie_max . " unités</center><br />" ;
 					
 					// recuperation de tout les persos qui sont en attente de validation pour entrer dans la compagnie
 					$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 

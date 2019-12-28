@@ -48,32 +48,6 @@ if(isset($_GET["id_compagnie"])) {
 		$ok_chef = $ch["poste_compagnie"];
 		
 		if($ok_chef == 1) {
-			
-			if(isset($_POST["detruire"])){
-				
-				if($_POST["detruire"] != ""){
-					
-					// verification de la phrase
-					if($_POST["detruire"] == "destruction du groupe"){
-						
-						// on vire les membres de la compagnie
-						$sql = "DELETE FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie";
-						$mysqli->query($sql);
-						
-						// on detruit la compagnie
-						$sql = "DELETE FROM compagnies WHERE id_compagnie=$id_compagnie";
-						$mysqli->query($sql);
-						
-						echo "<font color=blue>Destruction de la compagnie terminée</font>";
-					}
-					else {
-						echo "<font color = red>La phrase entrée pour detruire votre compagnie est incorrecte</font>";
-					}
-				}
-				else {
-					echo "<font color = red>Si vous souhaitez detruire votre compagnie, rentrez la phrase approprie dans le champ correspondant</font>";
-				}
-			}
 		
 			if(isset($_POST["image"])){
 				
@@ -144,17 +118,6 @@ if(isset($_GET["id_compagnie"])) {
 			echo "Virer un membre de sa compagnie (taper le pseudo) : ";
 			echo "<input name=\"virer\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"virer!\">";
-			echo "</div>";
-			echo "</form>";
-			
-			echo "<br /><br />";
-			
-			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"detruire\">";
-			echo "<div align=\"center\">";
-			echo "<u>Pour detruire sa compagnie, tapez la phrase suivante dans le champ qui suit :</u><br>";
-			echo "<font color = red>destruction du groupe</font><br>";
-			echo "<input name=\"detruire\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-			echo "<input type=\"submit\" name=\"Submit\" value=\"detruire!\">";
 			echo "</div>";
 			echo "</form>";
 			

@@ -404,7 +404,7 @@ if($dispo){
 						
 						$num_a = $num_e + $num_q;
 						
-						echo "<center><a href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie</a><font color=red>($num_a persos en attente)</font></center>";
+						echo "<center><a href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie</a><font color=red> ($num_a persos en attente)</font></center>";
 					}
 					
 					// c'est le diplomate
