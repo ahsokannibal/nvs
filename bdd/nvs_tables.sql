@@ -361,6 +361,19 @@ CREATE TABLE `em_creer_compagnie` (
   `camp` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `em_vote_creer_compagnie`
+--
+
+CREATE TABLE `em_vote_creer_compagnie` (
+  `id_em_creer_compagnie` int(11) NOT NULL,
+  `id_em_perso` int(11) NOT NULL,
+  `vote` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
 
 --
 -- Structure de la table `evenement`
@@ -908,6 +921,12 @@ ALTER TABLE `carte`
   ADD UNIQUE KEY `x_carte` (`x_carte`,`y_carte`);
 
 --
+-- Index pour la table `compagnies`
+--
+ALTER TABLE `compagnies`
+  ADD PRIMARY KEY (`id_compagnie`);
+  
+--
 -- Index pour la table `competence`
 --
 ALTER TABLE `competence`
@@ -1113,6 +1132,11 @@ ALTER TABLE `armure`
 --
 ALTER TABLE `batiment`
   MODIFY `id_batiment` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `compagnies`
+--
+ALTER TABLE `compagnies`
+  MODIFY `id_compagnie` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `competence`
 --

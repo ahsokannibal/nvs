@@ -149,6 +149,16 @@ INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Contenu de la table `banque_compagnie`
+--
+
+INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES 
+('1', '0', '0', '0'), 
+('2', '0', '0', '0');
+
+-- --------------------------------------------------------
+
+--
 -- Contenu de la table `carte_time`
 --
 
