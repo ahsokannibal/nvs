@@ -440,36 +440,49 @@ if($dispo){
 					else {
 				
 						// il n'appartient a aucune compagnie
-
-						echo "<center><a href='creer_compagnie.php'>Créer une nouvelle compagnie</a></center>";
 						
-						echo "<br/><center><b><u>Liste des compagnies déjà existants</u></b></center><br/>";
-						
-						// recuperation des compagnies existantes dans lesquels il peut postuler
-						$sql = "SELECT compagnies.id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie 
-								FROM compagnies, perso, compagnie_as_contraintes
-								WHERE id_perso = $id 
-								AND compagnies.id_compagnie = compagnie_as_contraintes.id_compagnie
-								AND compagnies.id_clan = perso.clan
-								AND compagnie_as_contraintes.contrainte_type_perso = perso.type_perso";
+						// A t-il demandé la création d'une compagie ?
+						$sql = "SELECT count(id_em_creer_compagnie) as verif_creer_comp FROM em_creer_compagnie WHERE id_perso='$id'";
 						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
 						
-						while ($sec = $res->fetch_assoc()) {
+						$verif_creer_comp = $t["verif_creer_comp"];
+						
+						if ($verif_creer_comp > 0) {
+							echo "<center>Vous avez demandé la création d'un nouvelle compagnie, vous devez attendre la délibération de votre état major</a></center>";
+						}
+						else {
+
+							echo "<center><a href='creer_compagnie.php'>Créer une nouvelle compagnie</a></center>";
 							
-							$id_compagnie 			= $sec["id_compagnie"];
-							$nom_compagnie 			= $sec["nom_compagnie"];
-							$image_compagnie 		= $sec["image_compagnie"];
-							$resume_compagnie 		= $sec["resume_compagnie"];
-							$description_compagnie 	= $sec["description_compagnie"];
-						
-							// creation des tableau avec les compagnies existantes
-							echo "<table border=\"1\" width = 100%><tr>
-							<td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td>
-							<th width=25%>$nom_compagnie</th>
-							<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>
-							<td width=80><a href='compagnie.php?id_compagnie=$id_compagnie'><center>Plus d'infos</center></a></td>
-							<td width=100><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'><center> >>Rejoindre</center></a></td>";
-							echo "</tr></table>";
+							echo "<br/><center><b><u>Liste des compagnies déjà existants</u></b></center><br/>";
+							
+							// recuperation des compagnies existantes dans lesquels il peut postuler
+							$sql = "SELECT compagnies.id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie 
+									FROM compagnies, perso, compagnie_as_contraintes
+									WHERE id_perso = $id 
+									AND compagnies.id_compagnie = compagnie_as_contraintes.id_compagnie
+									AND compagnies.id_clan = perso.clan
+									AND compagnie_as_contraintes.contrainte_type_perso = perso.type_perso";
+							$res = $mysqli->query($sql);
+							
+							while ($sec = $res->fetch_assoc()) {
+								
+								$id_compagnie 			= $sec["id_compagnie"];
+								$nom_compagnie 			= $sec["nom_compagnie"];
+								$image_compagnie 		= $sec["image_compagnie"];
+								$resume_compagnie 		= $sec["resume_compagnie"];
+								$description_compagnie 	= $sec["description_compagnie"];
+							
+								// creation des tableau avec les compagnies existantes
+								echo "<table border=\"1\" width = 100%><tr>
+								<td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td>
+								<th width=25%>$nom_compagnie</th>
+								<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>
+								<td width=80><a href='compagnie.php?id_compagnie=$id_compagnie'><center>Plus d'infos</center></a></td>
+								<td width=100><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'><center> >>Rejoindre</center></a></td>";
+								echo "</tr></table>";
+							}
 						}
 					}
 				}
