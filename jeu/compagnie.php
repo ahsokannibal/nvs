@@ -31,15 +31,14 @@ if($dispo){
 			$erreur = "<div class=\"erreur\">";
 	
 	?>
-	<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-	<html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
 	<head>
-	<title>Nord VS Sud</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link href="../style.css" rel="stylesheet" type="text/css">
+		<title>Nord VS Sud</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	</head>
 	<body>
-	<p align="center"><input type="button" value="Fermer la fenêtre de compagnie" onclick="window.close()"></p>
+		<p align="center"><input type="button" value="Fermer la fenêtre de compagnie" onclick="window.close()"></p>
 	<?php
 	if (isset($_GET["id_compagnie"])){
 		
@@ -305,7 +304,7 @@ if($dispo){
 			$c = $res->fetch_row();
 			
 			// il appartient a une compagnie
-			if ($c != 0) { 
+			if ($c != 0) {
 				
 				// recuperation de la compagnie a laquelle on appartient
 				$id_compagnie = $c[0];
@@ -416,7 +415,7 @@ if($dispo){
 				echo "<br/><center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b> >>Demander à quitter la compagnie</b></a></center>";
 				echo "<br/><br/><a href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a>";
 			}
-			else { 
+			else {
 			
 				// verification si le perso est en attente de validation
 				$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' and attenteValidation_compagnie='1'";
@@ -438,9 +437,12 @@ if($dispo){
 						echo "<br/><a href='compagnie.php?annuler=ok'>annuler sa candidature</a>";
 						echo "<br/><br/><a href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a>";
 					}
-					else { 
+					else {
 				
-						// il n'appartient a aucune compagnie					
+						// il n'appartient a aucune compagnie
+
+						echo "<center><a href='creer_compagnie.php'>Créer une nouvelle compagnie</a></center>";
+						
 						echo "<br/><center><b><u>Liste des compagnies déjà existants</u></b></center><br/>";
 						
 						// recuperation des compagnies existantes dans lesquels il peut postuler
@@ -476,7 +478,7 @@ if($dispo){
 	}
 	?>
 	</body>
-	</html>
+</html>
 	<?php
 		}
 	}

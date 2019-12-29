@@ -350,6 +350,19 @@ CREATE TABLE `dossier` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `em_creer_compagnie`
+--
+
+CREATE TABLE `em_creer_compagnie` (
+  `id_em_creer_compagnie` int(11) NOT NULL,
+  `id_perso` int(11) NOT NULL,
+  `nom_compagnie` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `description_compagnie` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `camp` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+
+--
 -- Structure de la table `evenement`
 --
 
@@ -726,6 +739,16 @@ CREATE TABLE `perso_in_compagnie` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `perso_in_em`
+--
+CREATE TABLE `perso_in_em` (
+  `id_perso` int(11) NOT NULL,
+  `camp_em` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `pnj`
 --
 
@@ -800,6 +823,17 @@ CREATE TABLE `stats_camp_kill` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
+
+--
+-- Structure de la table `tentative_triche`
+--
+CREATE TABLE `nvs`.`tentative_triche` ( 
+	`id_tentative` INT NOT NULL AUTO_INCREMENT , 
+	`id_perso` INT NULL , 
+	`texte_tentative` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL , 
+	PRIMARY KEY (`id_tentative`)
+) ENGINE = MyISAM;
+
 
 --
 -- Structure de la table `type_unite`
@@ -909,6 +943,12 @@ ALTER TABLE `cv`
 ALTER TABLE `dossier`
   ADD PRIMARY KEY (`id_dossier`);
 
+--
+-- Index pour la table `em_creer_compagnie`
+--
+ALTER TABLE `em_creer_compagnie`
+  ADD PRIMARY KEY (`id_em_creer_compagnie`);  
+  
 --
 -- Index pour la table `evenement`
 --
@@ -1057,7 +1097,7 @@ ALTER TABLE `zones`
 -- AUTO_INCREMENT pour la table `action`
 --
 ALTER TABLE `action`
-  MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=145;
+  MODIFY `id_action` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `arme`
 --
@@ -1072,12 +1112,12 @@ ALTER TABLE `armure`
 -- AUTO_INCREMENT pour la table `batiment`
 --
 ALTER TABLE `batiment`
-  MODIFY `id_batiment` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id_batiment` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `competence`
 --
 ALTER TABLE `competence`
-  MODIFY `id_competence` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id_competence` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `contact`
 --
@@ -1092,7 +1132,12 @@ ALTER TABLE `cv`
 -- AUTO_INCREMENT pour la table `dossier`
 --
 ALTER TABLE `dossier`
-  MODIFY `id_dossier` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id_dossier` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `em_creer_compagnie`
+--
+ALTER TABLE `em_creer_compagnie`
+  MODIFY `id_em_creer_compagnie` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `evenement`
 --
@@ -1102,7 +1147,7 @@ ALTER TABLE `evenement`
 -- AUTO_INCREMENT pour la table `grades`
 --
 ALTER TABLE `grades`
-  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=103;
+  MODIFY `id_grade` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `histobanque_compagnie`
 --
@@ -1122,12 +1167,12 @@ ALTER TABLE `instance_pnj`
 -- AUTO_INCREMENT pour la table `joueur`
 --
 ALTER TABLE `joueur`
-  MODIFY `id_joueur` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id_joueur` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `message`
 --
 ALTER TABLE `message`
-  MODIFY `id_message` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id_message` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `news`
 --

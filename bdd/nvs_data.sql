@@ -387,6 +387,13 @@ INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VAL
 INSERT INTO `perso_in_compagnie` (`id_perso`, `id_compagnie`, `poste_compagnie`, `attenteValidation_compagnie`) VALUES ('1', '1', '1', '0');
 INSERT INTO `perso_in_compagnie` (`id_perso`, `id_compagnie`, `poste_compagnie`, `attenteValidation_compagnie`) VALUES ('2', '2', '1', '0');
 
+--
+-- Contenu de la table `perso_in_em`
+--
+INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES 
+('1', '1'), 
+('2', '2');
+
 -- --------------------------------------------------------
 -- FIN INSERTION DES 2 GENERAUX
 

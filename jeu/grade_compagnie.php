@@ -205,10 +205,21 @@ if($dispo){
 			}
 			else {
 				echo "<center><font color='red'>Vous n'avez pas le droit d'acceder à cette page !</font></center>";
+				
+				$text_triche = "Tentative accés page grade compagnie [$id_compagnie] sans y avoir les droits !";
+			
+				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+				$mysqli->query($sql);
 			}
 		}
 		else {
 			echo "<center><font color='red'>Le groupe demandé n'existe pas</font></center>";
+			
+			$param_test 	= addslashes($id_compagnie);
+			$text_triche 	= "Test parametre sur page grade compagnie, parametre id_compagnie invalide tenté : $param_test";
+				
+			$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+			$mysqli->query($sql);
 		}
 	} ?>
 	</body>

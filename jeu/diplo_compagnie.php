@@ -162,10 +162,20 @@ if($dispo){
 			}
 			else {
 				echo "<font color='red'><b>Vous n'avez pas les accréditations nécéssaires pour accéder à cette page !</b></font>";
+				
+				$text_triche = "Tentative accés page diplo compagnie [$id_compagnie] sans y avoir les droits !";
+			
+				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+				$mysqli->query($sql);
 			}		
 		}
 		else {
 			echo "<font color='red'><b>Vous ne faite pas parti de cette compagnie !</b></font>";
+			
+			$text_triche = "Tentative accés page diplo compagnie [$id_compagnie] sans même faire partie de la compagnie !";
+			
+			$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+			$mysqli->query($sql);
 		}	
 	}
 	?>

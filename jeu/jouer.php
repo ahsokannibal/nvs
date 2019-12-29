@@ -1120,6 +1120,17 @@ if($dispo || !$admin){
 					
 				}
 				
+				// Le perso est-il membre de l'etat major de son camp ?
+				$sql_em = "SELECT * FROM perso_in_em WHERE id_perso='$id_perso' AND camp_em='$clan_perso'";
+				$res_em = $mysqli->query($sql_em);
+				$nb_em = $res_em->num_rows;
+				
+				if ($nb_em) {
+					$pourc_icone = "12%";
+				} else {
+					$pourc_icone = "14%";
+				}
+				
 				// Récupération de tous les persos du joueur
 				$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso' ORDER BY id_perso";
 				$res = $mysqli->query($sql);
@@ -1183,28 +1194,43 @@ if($dispo || !$admin){
 				<center>
 					<table border=0 align="center" width=100%>
 						<tr>
-							<td align="center" width=14%><a href="profil.php" target='_blank'><img width=40 height=50 border=0 src="../images/<?php echo "$image_profil";?>"></a></td>
-							<td align="center" width=14%><a href="evenement.php" target='_blank'><img width=83 height=66 border=0 src="../images/evenement2.gif"></a></td>
-							<td align="center" width=14%><a href="sac.php" target='_blank'><img width=36 height=50 border=0 src="../images/sac.png"></a></td>
-							<td align="center" width=14%><a href="carte2.php" target='_blank'><img width=83 height=83 border=0 src="../images/world.png"></a></td>
-							<td align="center" width=14%><a href="messagerie.php" target='_blank'><img width=83 height=75 border=0 src="../images/messagerie2.gif"></a></td>
-							<td align="center" width=14%><a href="classement.php" target='_blank'><img width=83 height=58 border=0 src="../images/classement2.gif"></a></td>
-							<td align="center" width=14%><a href="compagnie.php" target='_blank'><img width=112 height=70 border=0 src="../images/groupe2.gif"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=40 height=50 border=0 src="../images/<?php echo "$image_profil";?>" alt="profil"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=66 border=0 src="../images/evenement2.gif" alt="evenement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=36 height=50 border=0 src="../images/sac.png" alt="sac"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=83 border=0 src="../images/world.png" alt="mini map"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=83 height=75 border=0 src="../images/messagerie2.gif" alt="messagerie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=58 border=0 src="../images/classement2.gif" alt="classement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=112 height=70 border=0 src="../images/groupe2.gif" alt="compagnie"></a></td>
+							<?php
+							if ($nb_em) {
+							?>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=70 border=0 src="../images/em.gif" alt="etat major"></a></td>
+							<?php
+							}
+							?>
 						</tr>
 						<tr>
-							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/profil_titre.gif"> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
-							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/evenement_titre.gif"></td>
-							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/sac_titre.gif"></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/profil_titre.gif"> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/evenement_titre.gif"></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/sac_titre.gif"></td>
 							<?php 
 							$sql_mes = "SELECT count(id_message) as nb_mes from message_perso where id_perso='$id_perso' and lu_message='0' AND supprime_message='0'";
 							$res_mes = $mysqli->query($sql_mes);
 							$t_mes = $res_mes->fetch_assoc();
+							
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
-							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/carte_titre.gif"></td>
-							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/messagerie_titre.gif"> <?php if($nb_nouveaux_mes) { echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; if($nb_nouveaux_mes > 1) echo "x"; echo " message"; if($nb_nouveaux_mes > 1) echo "s"; echo ")</font>"; } ?></td>
-							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/classement_titre.gif"></td>
-							<td align="center" width=14%><img width=83 height=16 border=0 src="../images/groupe_titre.gif"></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/carte_titre.gif"></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/messagerie_titre.gif"> <?php if($nb_nouveaux_mes) { echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; if($nb_nouveaux_mes > 1) echo "x"; echo " message"; if($nb_nouveaux_mes > 1) echo "s"; echo ")</font>"; } ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/classement_titre.gif"></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/groupe_titre.gif"></td>
+							<?php
+							if ($nb_em) {
+							?>
+							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/em_titre.gif" alt="etat major"></a></td>
+							<?php
+							}
+							?>
 						</tr>
 						<tr>
 							<td colspan='7' align='center'>&nbsp;</td>

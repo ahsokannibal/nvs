@@ -267,6 +267,12 @@ if($dispo){
 		}
 		else {
 			echo "<center>La compagnie demandé n'existe pas</center>";
+			
+			$param_test 	= addslashes($id_compagnie);
+			$text_triche 	= "Test parametre sur page recrut compagnie, parametre id_compagnie invalide tenté : $param_test";
+				
+			$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+			$mysqli->query($sql);
 		}
 	}	
 	?>
