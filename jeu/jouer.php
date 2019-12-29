@@ -1077,11 +1077,13 @@ if($dispo || !$admin){
 					$clan = 'rond_b.png';
 					$couleur_clan_perso = 'blue';
 					$image_profil = "nord.gif";
+					$image_em = "em_nord.png";
 				}
 				if($clan_perso == 2){
 					$clan = 'rond_r.png';
 					$couleur_clan_perso = 'red';
 					$image_profil = "sud.gif";
+					$image_em = "em_sud.png";
 				}
 				
 				// récupération du grade du perso 
@@ -1204,7 +1206,7 @@ if($dispo || !$admin){
 							<?php
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=70 border=0 src="../images/em.gif" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=70 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
 							<?php
 							}
 							?>
