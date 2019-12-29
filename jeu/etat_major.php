@@ -107,6 +107,21 @@ if($dispo){
 				
 				$id_em_creer_comp = $_POST['refuser_comp'];
 				
+				$sql = "SELECT nom_compagnie, id_perso FROM em_creer_compagnie WHERE id_em_creer_compagnie = '$id_em_creer_comp' ";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$id_perso_comp 	= $t["id_perso"];
+				$nom_comp		= addslashes($t["nom_compagnie"]);
+				
+				// Suppression de la demande
+				$sql = "DELETE FROM em_creer_compagnie WHERE id_em_creer_compagnie = '$id_em_creer_comp'";
+				$mysqli->query($sql);
+				
+				// TODO - envoyer un MP de refus de création
+				
+				echo "<center><font color='blue'>Vous avez refusé la création de la compagnie $nom_comp</font></center>";
+				
 			}
 		
 ?>
