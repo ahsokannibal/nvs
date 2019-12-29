@@ -50,6 +50,13 @@ if($dispo){
 			}
 		}
 		
+		// A t-il demandé la création d'une compagie ?
+		$sql = "SELECT count(id_em_creer_compagnie) as verif_creer_comp FROM em_creer_compagnie WHERE id_perso='$id'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+						
+		$verif_creer_comp = $t["verif_creer_comp"];
+		
 		?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -69,6 +76,13 @@ if($dispo){
 		
 			<p align="center"><input type="button" value="Fermer la fenêtre de création de compagnie" onclick="window.close()"></p>
 			
+			<?php
+			if ($verif_creer_comp > 0) {
+				echo "<center>Vous avez demandé la création d'un nouvelle compagnie, vous devez attendre la délibération de votre état major</a></center>";
+			}
+			else {
+			?>
+			
 			<form method='post' action='creer_compagnie.php'>
 				<div class="form-group col-md-6">
 					<label for="nomCompagnie">Nom compagnie</label>
@@ -82,6 +96,10 @@ if($dispo){
 					<input type="submit" name="enregistrer" value="enregistrer">
 				</div>
 			</form>
+			
+			<?php
+			}
+			?>
 		</div>
 	</body>
 </html>
