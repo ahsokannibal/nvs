@@ -3,7 +3,7 @@ require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
-// fonction qui retourne l'id du perso collé au pnj, 0 sinon
+// fonction qui retourne l'id du perso collÃ© au pnj, 0 sinon
 function proxi_perso($mysqli, $x_pnj, $y_pnj){
 	
 	$id_pj = 0;
@@ -26,7 +26,7 @@ function proxi_perso($mysqli, $x_pnj, $y_pnj){
 	return $id_pj;
 }
 
-// fonction qui retourne l'id du perso à proximité du pnj afin de vérifier si celui ci est bien sa cible ou non
+// fonction qui retourne l'id du perso a proximitÃ© du pnj afin de vÃ©rifier si celui ci est bien sa cible ou non
 function proxi_perso_cible($mysqli, $x_pnj, $y_pnj, $id_cible){
 	
 	$id_pj = 0;
@@ -107,12 +107,12 @@ function perso_visu_pnj($mysqli, $x_pnj, $y_pnj, $perception_pnj, $id_perso) {
 	return $id_p;
 }
 
-// fonction de calcul de la coordonnée x du vecteur de depacement
+// fonction de calcul de la coordonnÃ©e x du vecteur de depacement
 function calcul_vecteur_x($x_pnj,$x_pj) {
 	return $x_pj-$x_pnj;
 }
 
-// fonction de calcule de la coordonnée y du vecteur de deplacement
+// fonction de calcule de la coordonnÃ©e y du vecteur de deplacement
 function calcul_vecteur_y($y_pnj,$y_pj) {
 	return $y_pj-$y_pnj;
 }
@@ -127,7 +127,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 		
 		while ($pm_pnj) {
 			
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -145,7 +145,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 			// la case est occupee
 			if($oc || (!in_map($x_pnj-1,$y_pnj))) {
 				
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
 				$res = $mysqli->query($sql);
 				
@@ -162,7 +162,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					
 					// on s'y deplace
@@ -177,15 +177,15 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					//echo " deplacement en $x_ok/$y_ok ";
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 						
 					// MAJ pm du pnj
 					$pm_pnj--;
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 					$pm_pnj=0;
 				}
 			}
@@ -206,14 +206,14 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					$x_pnjj = $x_pnj-1;
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 						
 					// MAJ pm du pnj
 					$pm_pnj--;
 				}
 				else {
-					// on a pas trouvé de case libre
+					// on a pas trouvÃ© de case libre
 					echo "bizarre<br>";
 					break;
 				}
@@ -226,7 +226,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 		
 		while ($pm_pnj) {
 			
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_pnj'";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -244,7 +244,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 			// la case est occupee
 			if($oc || (!in_map($x_pnj+1,$y_pnj))) {
 				
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj+1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
 				$res = $mysqli->query($sql);
 				
@@ -261,7 +261,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					
 					// on s'y deplace
@@ -275,15 +275,15 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					$mysqli->query($sql);
 					
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 						
 					// MAJ pm du pnj
 					$pm_pnj--;
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué2<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©2<br>";
 					$pm_pnj=0;
 				}
 			}
@@ -305,14 +305,14 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					//echo "deplacement en $x_pnjj/$y_pnj<br>";
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 							
 					// MAJ pm du pnj
 					$pm_pnj--;
 				}
 				else { 
-					// on a pas trouvé de case libre
+					// on a pas trouvÃ© de case libre
 					echo "bizare<br>";
 					break;
 				}
@@ -320,7 +320,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 		}
 	}
 	
-	// pnj se trouve sur le même x que le pj
+	// pnj se trouve sur le meme x que le pj
 	if($x_d==0){
 		
 		// deplacement vers le haut
@@ -328,7 +328,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 			
 			while ($pm_pnj) {
 				
-				// on recupere les coordonnées du pnj
+				// on recupere les coordonnÃ©es du pnj
 				$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_pnj'";
 				$res = $mysqli->query($sql);
 				$t_coor = $res->fetch_assoc();
@@ -346,7 +346,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 				// la case est occupee
 				if($oc || (!in_map($x_pnj,$y_pnj+1))) {
 					
-					// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
+					// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du cotÃ© de la fuite
 					$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
 					$res = $mysqli->query($sql);
 					
@@ -363,7 +363,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						}
 					}
 					
-					// on a trouvé une case libre
+					// on a trouvÃ© une case libre
 					if(isset($x_ok) && isset($y_ok)) {
 						
 						// on s'y deplace
@@ -377,15 +377,15 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						$mysqli->query($sql);
 						
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 						$mysqli->query($sql);
 							
 						// MAJ pm du pnj
 						$pm_pnj--;
 					}
 					else {
-						// on a pas trouvé de case libre
-						//echo "Le pnj est bloqué3<br>";
+						// on a pas trouvÃ© de case libre
+						//echo "Le pnj est bloquÃ©3<br>";
 						$pm_pnj=0;
 					}
 				}
@@ -407,14 +407,14 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						//echo "deplacement en $x_pnj/$y_pnjj<br>";	
 						
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 						$mysqli->query($sql);
 								
 						// MAJ pm du pnj
 						$pm_pnj--;
 					}
 					else {
-						// on a pas trouvé de case libre
+						// on a pas trouvÃ© de case libre
 						echo "Bizare<br>";
 						break;
 					}
@@ -424,7 +424,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 		else { 
 			// deplacement vers le bas
 			while ($pm_pnj) {
-				// on recupere les coordonnées du pnj
+				// on recupere les coordonnÃ©es du pnj
 				$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_pnj'";
 				$res = $mysqli->query($sql);
 				$t_coor = $res->fetch_assoc();
@@ -442,7 +442,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 				// la case est occupee
 				if($oc || (!in_map($x_pnj,$y_pnj-1))) {
 					
-					// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
+					// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du cotÃ© de la fuite
 					$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte<=$y_pnj AND y_carte>=$y_pnj-1";
 					$res = $mysqli->query($sql);
 					
@@ -459,7 +459,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						}
 					}
 					
-					// on a trouvé une case libre
+					// on a trouvÃ© une case libre
 					if(isset($x_ok) && isset($y_ok)) {
 						
 						// on s'y deplace
@@ -474,15 +474,15 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						//echo "deplacement en $x_ok/$y_ok<br>";
 						
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 						$mysqli->query($sql);
 							
 						// MAJ pm du pnj
 						$pm_pnj--;
 					}
 					else {
-						// on a pas trouvé de case libre
-						//echo "Le pnj est bloqué4<br>";
+						// on a pas trouvÃ© de case libre
+						//echo "Le pnj est bloquÃ©4<br>";
 						$pm_pnj=0;
 					}
 				}
@@ -503,14 +503,14 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						$y_pnjj = $y_pnj-1;
 								
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 						$mysqli->query($sql);
 							
 						// MAJ pm du pnj
 						$pm_pnj--;
 					}
 					else {
-						// on a pas trouvé de case libre
+						// on a pas trouvÃ© de case libre
 						echo "Bizare<br>";
 						break;
 					}		
@@ -534,7 +534,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		if($y_d > 0) {
 			
 			//echo "deplacement vers la diagonale haut-gauche<br>";
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -552,7 +552,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj-1,$y_pnj+1))) {
 				
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
 				$res = $mysqli->query($sql);
 				
@@ -570,7 +570,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					
 					// on s'y deplace
@@ -584,13 +584,13 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -610,13 +610,13 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj+1;
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}
@@ -624,7 +624,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		if ($y_d < 0) {
 			
 			//echo "deplacement vers la diagonale bas-gauche<br>";	
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -642,7 +642,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj-1,$y_pnj-1))) {
 				
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj";
 				$res = $mysqli->query($sql);
 				
@@ -660,7 +660,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					// on s'y deplace
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
@@ -673,12 +673,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -698,12 +698,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj-1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);	
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}
@@ -711,7 +711,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		if($y_d == 0) {
 			
 			//echo "deplacement vers la gauche<br>";
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -729,7 +729,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj-1,$y_pnj))) {
 			
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
 				$res = $mysqli->query($sql);
 				
@@ -747,7 +747,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					// on s'y deplace
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
@@ -760,12 +760,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -784,12 +784,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$x_pnjj = $x_pnj-1;
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}
@@ -799,7 +799,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		
 		if($y_d > 0) {
 			//echo "deplacement vers la diagonale haut-droite<br>";
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -817,7 +817,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj+1,$y_pnj+1))) {
 				
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj+1 AND x_carte>=$x_pnj AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
 				$res = $mysqli->query($sql);
 				
@@ -835,7 +835,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					
 					// on s'y deplace
@@ -849,12 +849,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -874,19 +874,19 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj+1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}
 		
 		if($y_d < 0) {
 			//echo "deplacement vers la diagonale bas-droite<br>";
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -904,7 +904,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj+1,$y_pnj-1))) {
 				
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj+1 AND x_carte>=$x_pnj AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj";
 				$res = $mysqli->query($sql);
 				
@@ -922,7 +922,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					// on s'y deplace
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
@@ -935,12 +935,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -960,19 +960,19 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj-1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}
 		
 		if($y_d == 0) {
 			//echo "deplacement vers la droite<br>";
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -990,7 +990,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj+1,$y_pnj))) {
 				
-				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj+1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
 				$res = $mysqli->query($sql);
 				
@@ -1008,7 +1008,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					// on s'y deplace
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
@@ -1021,12 +1021,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -1046,24 +1046,24 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$x_pnjj = $x_pnj+1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}
 	}
 	
-	// pnj se trouve sur le même x que le pj
+	// pnj se trouve sur le meme x que le pj
 	if($x_d==0){
 		
 		// deplacement vers le haut
 		if($y_d > 0) {
 			//echo "deplacement vers le haut<br>";
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -1081,7 +1081,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj,$y_pnj+1))) {
 				
-				// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
 				$res = $mysqli->query($sql);
 				
@@ -1099,7 +1099,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					}
 				}
 				
-				// on a trouvé une case libre
+				// on a trouvÃ© une case libre
 				if(isset($x_ok) && isset($y_ok)) {
 					// on s'y deplace
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
@@ -1112,12 +1112,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -1137,12 +1137,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj+1;	
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}
@@ -1150,7 +1150,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		// deplacement vers le bas
 		if($y_d < 0) {
 			
-			// on recupere les coordonnées du pnj
+			// on recupere les coordonnÃ©es du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
 			$t_coor = $res->fetch_assoc();
@@ -1168,7 +1168,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			// la case est occupee
 			if($oc || (!in_map($x_pnj,$y_pnj-1))) {
 				
-				// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
+				// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du cotÃ© de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte<=$y_pnj AND y_carte>=$y_pnj-1";
 				$res = $mysqli->query($sql);
 				
@@ -1199,12 +1199,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 			else {
@@ -1224,12 +1224,12 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj-1;
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
-					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					// on a pas trouvÃ© de case libre
+					//echo "Le pnj est bloquÃ©<br>";
 				}
 			}
 		}	
@@ -1245,7 +1245,7 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 	$x_h=$x;
 	$y_h=$y;
 	
-	// eviter de se deplacer sur soi-même...
+	// eviter de se deplacer sur soi-meme...
 	while($ok){ 
 	
 		if($essai >= 10){
@@ -1280,7 +1280,7 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 	}
 	
 	if($ok) {
-		//echo "deplacement au hasard bloqué<br>";
+		//echo "deplacement au hasard bloquÃ©<br>";
 	}
 	else {
 		// on s'y deplace
@@ -1294,7 +1294,7 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 		$mysqli->query($sql);
 							
 		// MAJ des evenements
-		$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_h/$y_h',now(),'0')";
+		$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacÃ©',NULL,'','en $x_h/$y_h',now(),'0')";
 		$mysqli->query($sql);
 	}
 }

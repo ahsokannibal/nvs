@@ -11,7 +11,7 @@ define ("NB_PNJ_MAX_TYPE", 30);
 
 
 //*********************************
-//Traitement des persos ‡ mettre en gel
+//Traitement des persos a mettre en gel
 //*********************************
 $sql = "SELECT id_perso FROM perso WHERE a_gele='1'";
 $res = $mysqli->query($sql);
@@ -30,7 +30,7 @@ while ($t = $res->fetch_assoc()){
 	$sql = "UPDATE carte SET occupee_carte='0' WHERE idPerso_carte='$id_perso'";
 	$mysqli->query($sql);
 }
-// Fin traitement des persos ‡ mettre en gel
+// Fin traitement des persos a mettre en gel
 
 
 //************************************
@@ -59,10 +59,10 @@ while ($t_nb = $res_nb->fetch_assoc()){
 
 if ( $t_i < NB_MAX_PNJ) {
 	
-	// le nombre de pnj ‡ creer + le nombre actuel de pnj est superieur au nombre max de pnj
+	// le nombre de pnj a creer + le nombre actuel de pnj est superieur au nombre max de pnj
 	if($t_i + NB_PNJ_A_CREER > NB_MAX_PNJ ) {
 		
-		// on se limite ‡ creer des pnj jusqu'au nombre max
+		// on se limite a creer des pnj jusqu'au nombre max
 		for ($i=$t_i; $i< NB_MAX_PNJ ; $i++) {
 			
 			// on choisit un pnj au hasard
@@ -85,7 +85,7 @@ if ( $t_i < NB_MAX_PNJ) {
 				$pv_pnj = $t["pvMax_pnj"];
 				$pm_pnj = $t["pm_pnj"];
 				
-				// rÈcupÈration du nombre de zones 
+				// r√©cup√©ration du nombre de zones 
 				$sql = "SELECT count(zones.id_zone) as nb_zone FROM zones, pnj_in_zone WHERE zones.id_zone=pnj_in_zone.id_zone AND id_pnj='$nb_aleatoire'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
@@ -124,7 +124,7 @@ if ( $t_i < NB_MAX_PNJ) {
 					// recherche d'une case libre pour mettre le pnj sur la carte dans sa zone
 					$occup = 1;
 					$ok = 1;
-					// nombre d'essai pour placer le pnj -- Evite les boucles infini si pnj impossible ‡ placer
+					// nombre d'essai pour placer le pnj -- Evite les boucles infini si pnj impossible a placer
 					// Evites aussi que trop de pnj se trouvent dans une zone
 					$essai = 10; 
 					while ($occup == 1)
@@ -147,12 +147,12 @@ if ( $t_i < NB_MAX_PNJ) {
 						$sql = "UPDATE carte SET idPerso_carte=$id_i, occupee_carte='1', image_carte='$image_pnj' WHERE x_carte='$x' AND y_carte='$y'";
 						$mysqli->query($sql);
 					
-						// mise a jour des coordonnÈes de l'instance du pnj
+						// mise a jour des coordonn√©es de l'instance du pnj
 						$sql = "UPDATE instance_pnj SET x_i='$x', y_i='$y' WHERE idInstance_pnj=$id_i";
 						$mysqli->query($sql);
 					}
 					else {
-						// on efface l'instance qu'on a essayÈ de placÈ
+						// on efface l'instance qu'on a essay√© de plac√©
 						$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_i'";
 						$mysqli->query($sql);
 					}
@@ -186,7 +186,7 @@ if ( $t_i < NB_MAX_PNJ) {
 				$pv_pnj = $t["pvMax_pnj"];
 				$pm_pnj = $t["pm_pnj"];
 				
-				// rÈcupÈration du nombre de zones 
+				// r√©cup√©ration du nombre de zones 
 				$sql = "SELECT count(zones.id_zone) as nb_zone FROM zones, pnj_in_zone WHERE zones.id_zone=pnj_in_zone.id_zone AND id_pnj='$nb_aleatoire'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
@@ -219,7 +219,7 @@ if ( $t_i < NB_MAX_PNJ) {
 					// creation d'une nouvelle instance de pnj
 					$sql = "INSERT INTO instance_pnj (id_pnj, pv_i, pm_i, deplace_i, dernierAttaquant_i, x_i, y_i) VALUES('$nb_aleatoire','$pv_pnj','$pm_pnj','1',0,NULL,NULL)";
 					$mysqli->query($sql);
-					$id_i = $mysqli->insert_id; // recuperation de l'id de l'instance crÈÈe
+					$id_i = $mysqli->insert_id; // recuperation de l'id de l'instance cr√©√©e
 					
 					// recherche d'une case libre pour mettre le pnj sur la carte dans sa zone
 					$occup = 1;
@@ -245,12 +245,12 @@ if ( $t_i < NB_MAX_PNJ) {
 						$sql = "UPDATE carte SET idPerso_carte=$id_i, occupee_carte='1', image_carte='$image_pnj' WHERE x_carte='$x' AND y_carte='$y'";
 						$mysqli->query($sql);
 					
-						// mise a jour des coordonnÈes de l'instance du pnj
+						// mise a jour des coordonn√©es de l'instance du pnj
 						$sql = "UPDATE instance_pnj SET x_i='$x', y_i='$y' WHERE idInstance_pnj='$id_i'";
 						$mysqli->query($sql);
 					}
 					else {
-						// on efface l'instance qu'on a essayÈ de placÈ
+						// on efface l'instance qu'on a essay√© de plac√©
 						$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_i'";
 						$mysqli->query($sql);
 					}
