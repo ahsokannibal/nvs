@@ -1,27 +1,16 @@
 <?php
 /**
   * Fonction de combat d'un pnj
-  * @param $de_pnj	: Le nombre de des du pnj
-  * @param $de_pj	: Le nombre de des du pj
-  * @return bool	  	: Si le pnj a touche le pj
+  * @param $precision_pnj	: La precision d'attaque du pnj
+  * @param $bonus_pj		: Les bonus / malus de defense du pj
+  * @return bool			: Si le pnj a touche le pj
   */
-function combat_pnj($de_pnj, $de_pj){
-	// Score du pj
-	srand((double) microtime() * 1000000);
-	$score_pj = rand($de_pj, $de_pj*3);
-	echo "score joueur : <b>".$score_pj."</b>";
+function combat_pnj($precision_pnj, $bonus_pj){
 	
-	// Score du pnj
-	srand((double) microtime() * 1000000);
-	$score_pnj = rand($de_pnj, $de_pnj*3);
-	echo "<br>score pnj : <b>".$score_pnj."</b><br>";
+	$touche = mt_rand(0,100);
+	$precision_final = $precision_pnj - $bonus_pj;
 	
-	// Si le score du pnj est superieur au score du pj
-	if ($score_pnj > $score_pj) { // touche
-		return 1;
-	}
-	else
-		return 0;
+	return ($precision_final <= $precision_pnj);
 }
 
 /**
@@ -31,9 +20,11 @@ function combat_pnj($de_pnj, $de_pj){
   * @return int		: Le nombre de pnj du type demande deja tue
   */
 function is_deja_tue_pnj($mysqli, $id_perso, $id_pnj){
+	
 	$sql = "SELECT nb_pnj FROM perso_as_killpnj WHERE id_perso='$id_perso' and id_pnj='$id_pnj'";
 	$res = $mysqli->query($sql);
 	$t_verif_t = $res->fetch_assoc();
+	
 	return $t_verif_t["nb_pnj"];
 }
 

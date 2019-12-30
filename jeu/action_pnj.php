@@ -11,19 +11,19 @@ define ("NB_PNJ_A_DEPLACER", 50);
 
 $nb_deplacer = 0;
 
-// recuperation de pnj qui ne se sont pas encore deplacés
+// recuperation de pnj qui ne se sont pas encore deplacÃ©s
 $sql = "SELECT idInstance_pnj, pv_i FROM instance_pnj WHERE deplace_i='0' ORDER BY idInstance_pnj";
 $res = $mysqli->query($sql);
 $num = $res->num_rows;
 
 echo $num."<br>";
 
-// tout les pnj se sont deplacés
+// tout les pnj se sont deplacÃ©s
 if ($num == 0){
 
-	echo "tout les pnj se sont deplacés<br>";
+	echo "tout les pnj se sont deplacÃ©s<br>";
 	
-	// on remet les pnj a l'etat non deplacé
+	// on remet les pnj a l'etat non deplacÃ©
 	$sql = "UPDATE instance_pnj SET deplace_i='0'";
 	$mysqli->query($sql);
 }
@@ -43,7 +43,7 @@ while ($t_id = $res->fetch_assoc()) {
 	echo "$nb_deplacer | id pnj : $id_i_pnj<br>";
 	
 	//recuperation des infos du pnj
-	$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pvMax_pnj, perception_pnj, recup_pnj, aggressivite_pnj, degatMin_pnj, degatMax_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj=$id_i_pnj";
+	$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pvMax_pnj, perception_pnj, recup_pnj, aggressivite_pnj, degatMin_pnj, degatMax_pnj, precision_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj=$id_i_pnj";
 	$res3 = $mysqli->query($sql);
 	$info_pnj = $res3->fetch_assoc();
 	
@@ -57,6 +57,7 @@ while ($t_id = $res->fetch_assoc()) {
 	$type_pnj 		= $info_pnj["id_pnj"];
 	$degatMin_pnj 	= $info_pnj["degatMin_pnj"];
 	$degatMax_pnj 	= $info_pnj["degatMax_pnj"];
+	$precision_pnj	= $info_pnj["precision_pnj"];
 	
 	// on met a jour les pv et les pm de l'instance
 	if ($pv_i+$recup < $pvMax) {
@@ -84,30 +85,30 @@ while ($t_id = $res->fetch_assoc()) {
 		// pnj fuyant / peureux
 		case(0):
 			
-			// si il se trouve a coté d'un pj
+			// si il se trouve a cotÃ© d'un pj
 			if ($id_cible = proxi_perso($mysqli,$x_i,$y_i)){
 				
 				// recuperation du nom et de la nation de la cible
-				$sql = "SELECT nom_perso, x_perso, y_perso, deDefense_perso FROM perso WHERE id_perso=$id_cible";
+				$sql = "SELECT nom_perso, x_perso, y_perso, bonus_perso FROM perso WHERE id_perso=$id_cible";
 				$res5 = $mysqli->query($sql);
 				$t_n = $res5->fetch_assoc();
 				
-				$nom_cible 	= $t_n["nom_perso"];
-				$x_cible 	= $t_n["x_perso"];
-				$y_cible 	= $t_n["y_perso"];
-				$de_pj 		= $t_n["deDefense_perso"];
+				$nom_cible 		= $t_n["nom_perso"];
+				$x_cible 		= $t_n["x_perso"];
+				$y_cible 		= $t_n["y_perso"];
+				$bonus_def_pj 	= $t_n["bonus_perso"];
 			
 				// on l'attaque
-				if (combat_pnj($de_pnj,	$de_pj)) {
+				if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-					// Calcul des dégats
-					$degats = rand($degatMin, $degatMax);
+					// Calcul des dÃ©gats
+					$degats = mt_rand($degatMin, $degatMax);
 					
 					$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE id_perso='$id_cible'";
 					$mysqli->query($sql);		
 					
 					// maj evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_i_pnj','$nom_pnj','a attaqué ','$id_cible','$nom_cible',': $degats degats',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_i_pnj','$nom_pnj','a attaquÃ© ','$id_cible','$nom_cible',': $degats degats',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					// verification si la cible est morte ou non
@@ -126,27 +127,27 @@ while ($t_id = $res->fetch_assoc()) {
 						$mysqli->query($sql);
 						
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$id_cible','$nom_cible','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$id_cible','$nom_cible','',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						// maj cv
-						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_cible','$nom_cible',NOW())"; //mise à jour de la table cv
+						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_cible','$nom_cible',NOW())";
 						$mysqli->query($sql);
 					}	
 				}
 				else { 
 				
-					// la cible a esquivé l'attaque
+					// la cible a esquivÃ© l'attaque
 					$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$id_cible'";
 					$mysqli->query($sql);
 					
 					// maj evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 					$mysqli->query($sql);
 				}
 				
-				// après l'attaque : on fuit du coté opposé à la cible
-				// calcul des coordonnées de deplacement
+				// aprÃ¨s l'attaque : on fuit du cotÃ© opposÃ© Ã  la cible
+				// calcul des coordonnÃ©es de deplacement
 				$x_d = calcul_vecteur_x($x_i,$x_cible);
 				$y_d = calcul_vecteur_y($y_i,$y_cible);
 				
@@ -154,10 +155,10 @@ while ($t_id = $res->fetch_assoc()) {
 				deplacement_fuite($mysqli, $x_d, $y_d, $x_cible, $y_cible, $pm_i, $id_i_pnj, $nom_pnj, $type_pnj);
 			}
 			else {
-				// on se trouve pas a coté d'un pj
+				// on se trouve pas a cotÃ© d'un pj
 				// on regarde si il y a un pj dans la visu du pnj
 				if ($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){			
-					// on se deplace dans le sens opposé de ce pj
+					// on se deplace dans le sens opposÃ© de ce pj
 					
 					$sql5 = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
 					$res5 = $mysqli->query($sql5);
@@ -166,7 +167,7 @@ while ($t_id = $res->fetch_assoc()) {
 					$x_cible = $tpj["x_perso"];
 					$y_cible = $tpj["y_perso"];
 					
-					// calcul des coordonnées de deplacement
+					// calcul des coordonnÃ©es de deplacement
 					$x_d = calcul_vecteur_x($x_i,$x_cible);
 					$y_d = calcul_vecteur_y($y_i,$y_cible);
 					
@@ -177,7 +178,7 @@ while ($t_id = $res->fetch_assoc()) {
 					
 					while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){
 						
-						// recuperation des nouvelles coordonées du pnj
+						// recuperation des nouvelles coordonÃ©es du pnj
 						$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 						$res9 = $mysqli->query($sql);
 						$t_copnj = $res9->fetch_assoc();
@@ -194,36 +195,36 @@ while ($t_id = $res->fetch_assoc()) {
 			
 		// pnj normal
 		case(1):
-			// on regarde si il a été attaqué au tour d'avant
+			// on regarde si il a Ã©tÃ© attaquÃ© au tour d'avant
 			if ($dernier_a_i) {
 				
 				//on verifie si le perso est toujours dans la visu du pnj
 				if ($id_pj = perso_visu_pnj($mysqli,$x_i,$y_i,$perception,$dernier_a_i)) {
 					
-					// on regarde si le perso est au CàC
+					// on regarde si le perso est au CaC
 					if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)){
 						
 						// on l'attaque
 						// recuperation du nom de la cible
-						$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
+						$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
 						$res5 = $mysqli->query($sql);
 						$t_n = $res5->fetch_assoc();
 						
-						$nom_cible 	= $t_n["nom_perso"];
-						$x_cible 	= $t_n["x_perso"];
-						$y_cible 	= $t_n["y_perso"];
-						$de_pj 		= $t_n["deDefense_perso"];
+						$nom_cible 		= $t_n["nom_perso"];
+						$x_cible 		= $t_n["x_perso"];
+						$y_cible 		= $t_n["y_perso"];
+						$bonus_def_pj 	= $t_n["bonus_perso"];
 					
 						// on l'attaque
-						if (combat_pnj($de_pnj,	$de_pj)) {
+						if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-							$degats = rand($degatMin, $degatMax);
+							$degats = mt_rand($degatMin, $degatMax);
 							
 							$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$dernier_a_i'";
 							$mysqli->query($sql);		
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_cible','$nom_cible',': $degats degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$id_cible','$nom_cible',': $degats degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
@@ -242,27 +243,27 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$dernier_a_i','$nom_cible','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$dernier_a_i','$nom_cible','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// maj cv
-								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())"; //mise à jour de la table cv
+								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
 								$mysqli->query($sql);
 							}	
 						}
 						else {
-							// la cible a esquivé l'attaque
+							// la cible a esquivÃ© l'attaque
 							$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$dernier_a_i'";
 							$mysqli->query($sql);
 						
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 					}
 					else {
-						// il n'est pas au CàC
-						// recuperation des coordonnées de la cible
+						// il n'est pas au CaC
+						// recuperation des coordonnÃ©es de la cible
 						$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso=$id_pj";
 						$res6 = $mysqli->query($sql);
 						$t_cpj = $res6->fetch_assoc();
@@ -273,7 +274,7 @@ while ($t_id = $res->fetch_assoc()) {
 						// on se deplace vers ce perso
 						while($pm_i > 0){
 							
-							// recuperation des nouvelles coordonées du pnj
+							// recuperation des nouvelles coordonÃ©es du pnj
 							$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 							$res8 = $mysqli->query($sql);
 							$t_copnj = $res8->fetch_assoc();
@@ -281,12 +282,12 @@ while ($t_id = $res->fetch_assoc()) {
 							$x_i = $t_copnj["x_i"];
 							$y_i = $t_copnj["y_i"];
 							
-							// si proximité de la cible perso, plus besoin de bouger
+							// si proximitÃ© de la cible perso, plus besoin de bouger
 							if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)){
 								break;
 							}
 							
-							// calcul des coordonnées de deplacement
+							// calcul des coordonnÃ©es de deplacement
 							$x_d = calcul_vecteur_x($x_i,$x_cible);
 							$y_d = calcul_vecteur_y($y_i,$y_cible);
 						
@@ -295,28 +296,28 @@ while ($t_id = $res->fetch_assoc()) {
 							$pm_i--;
 						}
 						
-						// on est arrivé a proximité de la cible
+						// on est arrivÃ© a proximitÃ© de la cible
 						if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)) {
 							// on l'attaque
 							// recuperation du nom et de la nation de la cible
-							$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
+							$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
 							$res5 = $mysqli->query($sql);
 							$t_n = $res5->fetch_assoc();
 							
-							$nom_cible 	= $t_n["nom_perso"];
-							$x_cible 	= $t_n["x_perso"];
-							$y_cible 	= $t_n["y_perso"];
-							$de_pj 	= $t_n["deDefense_perso"];
+							$nom_cible 		= $t_n["nom_perso"];
+							$x_cible 		= $t_n["x_perso"];
+							$y_cible 		= $t_n["y_perso"];
+							$bonus_def_pj 	= $t_n["bonus_perso"];
 						
-							if (combat_pnj($de_pnj,	$de_pj)) {
+							if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-								$degats = rand($degatMin, $degatMax);
+								$degats = mt_rand($degatMin, $degatMax);
 								
 								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$dernier_a_i'";
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -335,21 +336,21 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$dernier_a_i','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$dernier_a_i','$nom_cible','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())"; //mise à jour de la table cv
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
 									$mysqli->query($sql);
 								}	
 							}
 							else {
-								// la cible a esquivé l'attaque
+								// la cible a esquivÃ© l'attaque
 								$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$dernier_a_i'";
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -360,7 +361,7 @@ while ($t_id = $res->fetch_assoc()) {
 					// on recupere le perso le plus proche du pnj
 					if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
 					
-						// recuperation des coordonnées de la cible
+						// recuperation des coordonnÃ©es de la cible
 						$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso=$id_pj";
 						$res7 = $mysqli->query($sql);
 						$t_cpj = $res7->fetch_assoc();
@@ -371,7 +372,7 @@ while ($t_id = $res->fetch_assoc()) {
 						// on se deplace vers ce perso
 						while($pm_i > 0){
 							
-							// recuperation des nouvelles coordonées du pnj
+							// recuperation des nouvelles coordonÃ©es du pnj
 							$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 							$res8 = $mysqli->query($sql);
 							$t_copnj = $res8->fetch_assoc();
@@ -383,7 +384,7 @@ while ($t_id = $res->fetch_assoc()) {
 								break;
 							}
 							
-							// calcul des coordonnées de deplacement
+							// calcul des coordonnÃ©es de deplacement
 							$x_d = calcul_vecteur_x($x_i,$x_cible);
 							$y_d = calcul_vecteur_y($y_i,$y_cible);
 							
@@ -392,28 +393,28 @@ while ($t_id = $res->fetch_assoc()) {
 							$pm_i--;
 						}
 						
-						// on est arrivé a proximité de la cible
+						// on est arrivÃ© a proximitÃ© de la cible
 						if(proxi_perso_cible($mysqli,$x_i,$y_i,$id_pj)) {
 							// on l'attaque
 							// recuperation du nom et de la nation de la cible
-							$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
+							$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
 							$res5 = $mysqli->query($sql);
 							$t_n = $res5->fetch_assoc();
 							
-							$nom_cible 	= $t_n["nom_perso"];
-							$x_cible 	= $t_n["x_perso"];
-							$y_cible 	= $t_n["y_perso"];
-							$de_pj 		= $t_n["deDefense_perso"];
+							$nom_cible 		= $t_n["nom_perso"];
+							$x_cible 		= $t_n["x_perso"];
+							$y_cible 		= $t_n["y_perso"];
+							$bonus_def_pj 	= $t_n["bonus_perso"];
 						
-							if (combat_pnj($de_pnj,	$de_pj)) {
+							if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-								$degats = rand($degatMin, $degatMax);
+								$degats = mt_rand($degatMin, $degatMax);
 								
 								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$id_pj'";
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -432,20 +433,20 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$id_pj','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$id_pj','$nom_cible','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())"; //mise à jour de la table cv
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
 									$mysqli->query($sql);
 								}	
 							}
-							else { // la cible a esquivé l'attaque
+							else { // la cible a esquivÃ© l'attaque
 								$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$id_pj'";
 								$mysqli->query($sql);
 							
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -455,7 +456,7 @@ while ($t_id = $res->fetch_assoc()) {
 						// il bouge au hasard
 						while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){
 							
-							// recuperation des nouvelles coordonées du pnj
+							// recuperation des nouvelles coordonÃ©es du pnj
 							$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 							$res8 = $mysqli->query($sql);
 							$t_copnj = $res8->fetch_assoc();
@@ -470,11 +471,11 @@ while ($t_id = $res->fetch_assoc()) {
 				}
 			}
 			else {
-				// il n'a pas été attaqué
+				// il n'a pas Ã©tÃ© attaquÃ©
 				// deplacement du pnj au hasard
 				while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){
 					
-					// recuperation des nouvelles coordonées du pnj
+					// recuperation des nouvelles coordonÃ©es du pnj
 					$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 					$res8 = $mysqli->query($sql);
 					$t_copnj = $res8->fetch_assoc();
@@ -491,35 +492,35 @@ while ($t_id = $res->fetch_assoc()) {
 		// pnj agressif
 		case(2):
 			
-			// on regarde si il a été attaqué au tour d'avant
+			// on regarde si il a Ã©tÃ© attaquÃ© au tour d'avant
 			if ($dernier_a_i) {
 				
 				//on verifie si le perso est toujours dans la visu du pnj
 				if ($id_pj = perso_visu_pnj($x_i,$y_i,$perception,$dernier_a_i)) {
 				
-					// on regarde si le perso est au CàC
+					// on regarde si le perso est au CaC
 					if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)){
 						
 						// on l'attaque
 						// recuperation du nom et de la nation de la cible
-						$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
+						$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
 						$res5 = $mysqli->query($sql);
 						$t_n = $res5->fetch_assoc();
 						
-						$nom_cible 	= $t_n["nom_perso"];
-						$x_cible 	= $t_n["x_perso"];
-						$y_cible 	= $t_n["y_perso"];
-						$de_pj 		= $y_n["deDefense_perso"];
+						$nom_cible 		= $t_n["nom_perso"];
+						$x_cible 		= $t_n["x_perso"];
+						$y_cible 		= $t_n["y_perso"];
+						$bonus_def_pj 	= $t_n["bonus_perso"];
 						
-						if (combat_pnj($de_pnj,	$de_pj)) {
+						if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-							$degats = rand($degatMin, $degatMax);
+							$degats = mt_rand($degatMin, $degatMax);
 							
 							$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE id_perso='$dernier_a_i'";
 							$mysqli->query($sql);		
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
@@ -538,27 +539,27 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$dernier_a_i','$nom_cible','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$dernier_a_i','$nom_cible','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// maj cv
-								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())"; //mise à jour de la table cv
+								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
 								$mysqli->query($sql);
 							}	
 						}
 						else {
-							// la cible a esquivé l'attaque
+							// la cible a esquivÃ© l'attaque
 							$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$dernier_a_i'";
 							$mysqli->query($sql);
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 					}
 					else {
-						// il n'est pas au CàC
-						// recuperation des coordonnées de la cible
+						// il n'est pas au CaC
+						// recuperation des coordonnÃ©es de la cible
 						$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso=$id_pj";
 						$res6 = $mysqli->query($sql);
 						$t_cpj = $res6->fetch_assoc();
@@ -569,7 +570,7 @@ while ($t_id = $res->fetch_assoc()) {
 						// on se deplace vers ce perso
 						while($pm_i > 0){
 							
-							// recuperation des nouvelles coordonées du pnj
+							// recuperation des nouvelles coordonÃ©es du pnj
 							$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 							$res8 = $mysqli->query($sql);
 							$t_copnj = $res8->fetch_assoc();
@@ -581,7 +582,7 @@ while ($t_id = $res->fetch_assoc()) {
 								break;
 							}
 							
-							// calcul des coordonnées de deplacement
+							// calcul des coordonnÃ©es de deplacement
 							$x_d = calcul_vecteur_x($x_i,$x_cible);
 							$y_d = calcul_vecteur_y($y_i,$y_cible);
 						
@@ -590,28 +591,28 @@ while ($t_id = $res->fetch_assoc()) {
 							$pm_i--;
 						}
 						
-						// on est arrivé a proximité de la cible
+						// on est arrivÃ© a proximitÃ© de la cible
 						if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)) {
 							// on l'attaque
 							// recuperation du nom et de la nation de la cible
-							$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
+							$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$dernier_a_i'";
 							$res5 = $mysqli->query($sql);
 							$t_n = $res5->fetch_assoc();
 							
-							$nom_cible 	= $t_n["nom_perso"];
-							$x_cible 	= $t_n["x_perso"];
-							$y_cible 	= $t_n["y_perso"];
-							$de_pj 		= $t_n["deDefense_perso"];
+							$nom_cible 		= $t_n["nom_perso"];
+							$x_cible 		= $t_n["x_perso"];
+							$y_cible 		= $t_n["y_perso"];
+							$bonus_def_pj 	= $t_n["bonus_perso"];
 							
-							if (combat_pnj($de_pnj,	$de_pj)) {
+							if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-								$degats = rand($degatMin, $degatMax);
+								$degats = mt_rand($degatMin, $degatMax);
 								
 								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$dernier_a_i'";
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -630,21 +631,21 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$dernier_a_i','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$dernier_a_i','$nom_cible','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())"; //mise à jour de la table cv
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
 									$mysqli->query($sql);
 								}	
 							}
 							else {
-								// la cible a esquivé l'attaque
+								// la cible a esquivÃ© l'attaque
 								$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$dernier_a_i'";
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -653,7 +654,7 @@ while ($t_id = $res->fetch_assoc()) {
 				else {
 					// il n'est plus dans la visu
 					// on recupere le perso le plus proche du pnj
-					if($id_pj = proche_perso($x_i,$y_i,$perception)){
+					if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
 					
 						// -- TODO -- //
 						// verif ami des animaux //
@@ -661,7 +662,7 @@ while ($t_id = $res->fetch_assoc()) {
 						//
 						//}
 					
-						// recuperation des coordonnées de la cible
+						// recuperation des coordonnÃ©es de la cible
 						$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso=$id_pj";
 						$res7 = $mysqli->query($sql);
 						$t_cpj = $res7->fetch_assoc();
@@ -672,7 +673,7 @@ while ($t_id = $res->fetch_assoc()) {
 						// on se deplace vers ce perso
 						while($pm_i > 0){
 							
-							// recuperation des nouvelles coordonées du pnj
+							// recuperation des nouvelles coordonÃ©es du pnj
 							$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_i_pnj'";
 							$res8 = $mysqli->query($sql);
 							$t_copnj = $res8->fetch_assoc();
@@ -684,7 +685,7 @@ while ($t_id = $res->fetch_assoc()) {
 								break;
 							}
 							
-							// calcul des coordonnées de deplacement
+							// calcul des coordonnÃ©es de deplacement
 							$x_d = calcul_vecteur_x($x_i,$x_cible);
 							$y_d = calcul_vecteur_y($y_i,$y_cible);
 							
@@ -693,29 +694,29 @@ while ($t_id = $res->fetch_assoc()) {
 							$pm_i--;
 						}
 						
-						// on est arrivé a proximité de la cible
+						// on est arrivÃ© a proximitÃ© de la cible
 						if(proxi_perso_cible($mysqli, $x_i,$y_i,$id_pj)) {
 							
 							// on l'attaque
 							// recuperation du nom et de la nation de la cible
-							$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
+							$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
 							$res5 = $mysqli->query($sql);
 							$t_n = $res5->fetch_assoc();
 							
-							$nom_cible 	= $t_n["nom_perso"];
-							$x_cible 	= $t_n["x_perso"];
-							$y_cible 	= $t_n["y_perso"];
-							$de_pj 		= $t_n["deDefense_perso"];
+							$nom_cible 		= $t_n["nom_perso"];
+							$x_cible 		= $t_n["x_perso"];
+							$y_cible 		= $t_n["y_perso"];
+							$bonus_def_pj 	= $t_n["bonus_perso"];
 							
-							if (combat_pnj($de_pnj,	$de_pj)) {
+							if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-								$degats = rand($degatMin, $degatMax);
+								$degats = mt_rand($degatMin, $degatMax);
 								
 								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$id_pj'";
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -735,21 +736,21 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$id_pj','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$id_pj','$nom_cible','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())"; //mise à jour de la table cv
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
 									$mysqli->query($sql);
 								}	
 							}
 							else {
-								// la cible a esquivé l'attaque
+								// la cible a esquivÃ© l'attaque
 								$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$id_pj'";
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -757,8 +758,8 @@ while ($t_id = $res->fetch_assoc()) {
 					else {
 						// il n y a pas de perso dans sa visu
 						// il bouge au hasard
-						while($pm_i > 0 && !proche_perso($x_i,$y_i,$perception)){
-							// recuperation des nouvelles coordonées du pnj
+						while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){
+							// recuperation des nouvelles coordonÃ©es du pnj
 							$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 							$res8 = $mysqli->query($sql);
 							$t_copnj = $res8->fetch_assoc();
@@ -771,9 +772,9 @@ while ($t_id = $res->fetch_assoc()) {
 						}
 						
 						// on recupere le perso le plus proche du pnj
-						if($id_pj = proche_perso($x_i,$y_i,$perception)){
+						if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
 						
-							// recuperation des coordonnées de la cible
+							// recuperation des coordonnÃ©es de la cible
 							$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso=$id_pj";
 							$res7 = $mysqli->query($sql);
 							$t_cpj = $res7->fetch_assoc();
@@ -784,7 +785,7 @@ while ($t_id = $res->fetch_assoc()) {
 							// on se deplace vers ce perso
 							while($pm_i > 0){
 								
-								// recuperation des nouvelles coordonées du pnj
+								// recuperation des nouvelles coordonÃ©es du pnj
 								$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 								$res8 = $mysqli->query($sql);
 								$t_copnj = $res8->fetch_assoc();
@@ -796,7 +797,7 @@ while ($t_id = $res->fetch_assoc()) {
 									break;
 								}
 								
-								// calcul des coordonnées de deplacement
+								// calcul des coordonnÃ©es de deplacement
 								$x_d = calcul_vecteur_x($x_i,$x_cible);
 								$y_d = calcul_vecteur_y($y_i,$y_cible);
 								
@@ -805,29 +806,29 @@ while ($t_id = $res->fetch_assoc()) {
 								$pm_i--;
 							}
 							
-							// on est arrivé a proximité de la cible
+							// on est arrivÃ© a proximitÃ© de la cible
 							if(proxi_perso_cible($mysqli, $x_i,$y_i,$id_pj)) {
 								
 								// on l'attaque
 								// recuperation du nom et de la nation de la cible
-								$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
+								$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
 								$res5 = $mysqli->query($sql);
 								$t_n = $res5->fetch_assoc();
 								
-								$nom_cible 	= $t_n["nom_perso"];
-								$x_cible 	= $t_n["x_perso"];
-								$y_cible 	= $t_n["y_perso"];
-								$de_pj 		= $t_n["deDefense_perso"];
+								$nom_cible 		= $t_n["nom_perso"];
+								$x_cible 		= $t_n["x_perso"];
+								$y_cible 		= $t_n["y_perso"];
+								$bonus_def_pj 	= $t_n["bonus_perso"];
 								
-								if (combat_pnj($de_pnj,	$de_pj)) {
+								if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-									$degats = rand($degatMin, $degatMax);
+									$degats = mt_rand($degatMin, $degatMax);
 									
 									$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$id_pj'";
 									$mysqli->query($sql);		
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// verification si la cible est morte ou non
@@ -847,21 +848,21 @@ while ($t_id = $res->fetch_assoc()) {
 										$mysqli->query($sql);
 										
 										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$id_pj','$nom_cible','',NOW(),'0')";
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$id_pj','$nom_cible','',NOW(),'0')";
 										$mysqli->query($sql);
 										
 										// maj cv
-										$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())"; //mise à jour de la table cv
+										$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
 										$mysqli->query($sql);
 									}	
 								}
 								else {
-									// la cible a esquivé l'attaque
+									// la cible a esquivÃ© l'attaque
 									$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$id_pj'";
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 									$mysqli->query($sql);
 								}
 							}
@@ -870,9 +871,9 @@ while ($t_id = $res->fetch_assoc()) {
 				}
 			}
 			else {
-				// il n'a pas été attaqué
+				// il n'a pas Ã©tÃ© attaquÃ©
 				// on recupere le perso le plus proche du pnj
-				if($id_pj = proche_perso($x_i,$y_i,$perception)){
+				if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
 					
 					// -- TODO -- //
 					// verif ami des animaux //
@@ -880,7 +881,7 @@ while ($t_id = $res->fetch_assoc()) {
 					//
 					//}
 					
-					// recuperation des coordonnées de la cible
+					// recuperation des coordonnÃ©es de la cible
 					$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso='$id_pj'";
 					$res7 = $mysqli->query($sql);
 					$t_cpj = $res7->fetch_assoc();
@@ -891,7 +892,7 @@ while ($t_id = $res->fetch_assoc()) {
 					// on se deplace vers ce perso
 					while($pm_i > 0){
 							
-						// recuperation des nouvelles coordonées du pnj
+						// recuperation des nouvelles coordonÃ©es du pnj
 						$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_i_pnj'";
 						$res8 = $mysqli->query($sql);
 						$t_copnj = $res8->fetch_assoc();
@@ -903,7 +904,7 @@ while ($t_id = $res->fetch_assoc()) {
 							break;
 						}
 							
-						// calcul des coordonnées de deplacement
+						// calcul des coordonnÃ©es de deplacement
 						$x_d = calcul_vecteur_x($x_i,$x_cible);
 						$y_d = calcul_vecteur_y($y_i,$y_cible);
 						
@@ -912,28 +913,28 @@ while ($t_id = $res->fetch_assoc()) {
 						$pm_i--;
 					}
 					
-					// on est arrivé a proximité de la cible
+					// on est arrivÃ© a proximitÃ© de la cible
 					if(proxi_perso_cible($mysqli, $x_i,$y_i,$id_pj)) {
 						// on l'attaque
 						// recuperation du nom et de la nation de la cible
-						$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
+						$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
 						$res5 = $mysqli->query($sql);
 						$t_n = $res5->fetch_assoc();
 						
-						$nom_cible 	= $t_n["nom_perso"];
-						$x_cible 	= $t_n["x_perso"];
-						$y_cible 	= $t_n["y_perso"];
-						$de_pj 		= $t_n["deDefense_perso"];
+						$nom_cible 		= $t_n["nom_perso"];
+						$x_cible 		= $t_n["x_perso"];
+						$y_cible 		= $t_n["y_perso"];
+						$bonus_def_pj 	= $t_n["bonus_perso"];
 							
-						if (combat_pnj($de_pnj,	$de_pj)) {
+						if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-							$degats = rand($degatMin, $degatMax);
+							$degats = mt_rand($degatMin, $degatMax);
 							
 							$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$id_pj'";
 							$mysqli->query($sql);		
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
@@ -952,21 +953,21 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$id_pj','$nom_cible','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$id_pj','$nom_cible','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// maj cv
-								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())"; //mise à jour de la table cv
+								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
 								$mysqli->query($sql);
 							}	
 						}
 						else {
-							// la cible a esquivé l'attaque
+							// la cible a esquivÃ© l'attaque
 							$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$id_pj'";
 							$mysqli->query($sql);
 						
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 					}
@@ -975,8 +976,8 @@ while ($t_id = $res->fetch_assoc()) {
 					
 					// il n y a pas de perso dans sa visu
 					// il bouge au hasard
-					while($pm_i > 0 && !proche_perso($x_i,$y_i,$perception)){
-						// recuperation des nouvelles coordonées du pnj
+					while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){
+						// recuperation des nouvelles coordonÃ©es du pnj
 						$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_i_pnj'";
 						$res8 = $mysqli->query($sql);
 						$t_copnj = $res8->fetch_assoc();
@@ -989,9 +990,9 @@ while ($t_id = $res->fetch_assoc()) {
 					}
 					
 					// on recupere le perso le plus proche du pnj
-					if($id_pj = proche_perso($x_i,$y_i,$perception)){
+					if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
 					
-						// recuperation des coordonnées de la cible
+						// recuperation des coordonnÃ©es de la cible
 						$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso='$id_pj'";
 						$res7 = $mysqli->query($sql);
 						$t_cpj = $res7->fetch_assoc();
@@ -1002,7 +1003,7 @@ while ($t_id = $res->fetch_assoc()) {
 						// on se deplace vers ce perso
 						while($pm_i > 0){
 								
-							// recuperation des nouvelles coordonées du pnj
+							// recuperation des nouvelles coordonÃ©es du pnj
 							$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_i_pnj'";
 							$res8 = $mysqli->query($sql);
 							$t_copnj = $res8->fetch_assoc();
@@ -1014,7 +1015,7 @@ while ($t_id = $res->fetch_assoc()) {
 								break;
 							}
 							
-							// calcul des coordonnées de deplacement
+							// calcul des coordonnÃ©es de deplacement
 							$x_d = calcul_vecteur_x($x_i,$x_cible);
 							$y_d = calcul_vecteur_y($y_i,$y_cible);
 							
@@ -1023,29 +1024,29 @@ while ($t_id = $res->fetch_assoc()) {
 							$pm_i--;
 						}
 						
-						// on est arrivé a proximité de la cible
+						// on est arrivÃ© a proximitÃ© de la cible
 						if(proxi_perso_cible($mysqli, $x_i,$y_i,$id_pj)) {
 							
 							// on l'attaque
 							// recuperation du nom et de la nation de la cible
-							$sql = "SELECT nom_perso, deDefense_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
+							$sql = "SELECT nom_perso, bonus_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_pj'";
 							$res5 = $mysqli->query($sql);
 							$t_n = $res5->fetch_assoc();
 							
-							$nom_cible 	= $t_n["nom_perso"];
-							$x_cible 	= $t_n["x_perso"];
-							$y_cible 	= $t_n["y_perso"];
-							$de_pj 		= $t_n["deDefense_perso"];
+							$nom_cible 		= $t_n["nom_perso"];
+							$x_cible 		= $t_n["x_perso"];
+							$y_cible 		= $t_n["y_perso"];
+							$bonus_def_pj 	= $t_n["bonus_perso"];
 							
-							if (combat_pnj($de_pnj,	$de_pj)) {
+							if (combat_pnj($precision_pnj,	$bonus_def_pj)) {
 					
-								$degats = rand($degatMin, $degatMax);
+								$degats = mt_rand($degatMin, $degatMax);
 								
 								$sql = "UPDATE perso SET pv_perso=pv_perso-$degats WHERE ID_perso='$id_pj'";
 								$mysqli->query($sql);		
 								
 								// maj evenement									
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaquÃ© ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -1064,11 +1065,11 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a tué','$id_pj','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturÃ©','$id_pj','$nom_cible','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())"; //mise à jour de la table cv
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
 									$mysqli->query($sql);
 								}	
 							}
@@ -1078,7 +1079,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 							
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivÃ© l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}

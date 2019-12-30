@@ -1257,8 +1257,8 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 		else {
 			
 			if(($x_h == $x && $y_h == $y) || $essai > 0){
-				$x_h = rand($x-1,$x+1);
-				$y_h = rand($y-1,$y+1);
+				$x_h = mt_rand($x-1,$x+1);
+				$y_h = mt_rand($y-1,$y+1);
 				$essai++;
 			}
 			
