@@ -1074,7 +1074,7 @@ while ($t_id = $res->fetch_assoc()) {
 								}	
 							}
 							else {
-								// la cible a esquivé l'attaque
+								// la cible a esquivÃ© l'attaque
 								$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1 WHERE ID_perso='$id_pj'";
 								$mysqli->query($sql);
 							
