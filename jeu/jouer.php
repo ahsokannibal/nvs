@@ -810,7 +810,7 @@ if($dispo || !$admin){
 																		$mysqli->query($sql);
 																		
 																	} else {
-																		$erreur .= "Votre allié ne possède plus suffisamment de PA pour être bousculer (demande 10 PA à votre allié) !";
+																		$erreur .= "Votre allié ne possède plus suffisamment de PA pour être bousculer (demande 1 PA à votre allié) !";
 																	}
 																} else {
 																	// Camps différents
