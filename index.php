@@ -1,3 +1,54 @@
+<?php
+session_start();
+require_once("fonctions.php");
+
+$mysqli = db_connexion();
+
+include ('nb_online.php');
+
+// récupération nombre de joueurs inscrit
+$sql = "SELECT id_joueur FROM joueur";
+$res = $mysqli->query($sql);
+$nb_inscrit = $res->num_rows;
+
+// dernier inscrit
+$sql = "SELECT nom_perso, clan FROM perso, joueur 
+		WHERE perso.idJoueur_perso = joueur.id_joueur 
+		ORDER BY id_joueur DESC, id_perso ASC LIMIT 1";
+$res = $mysqli->query($sql);
+$t = $res->fetch_assoc();
+
+$pseudo_last_inscrit 	= $t['nom_perso'];
+$clan_last_inscrit 		= $t['clan'];
+
+// Nombre de persos actifs 
+$sql = "SELECT count(id_perso) as nb_persos_actifs FROM perso WHERE est_gele='0'";
+$res = $mysqli->query($sql);
+$t = $res->fetch_assoc();
+
+$nb_persos_actifs = $t['nb_persos_actifs'];
+
+// Nombre de persos actif nordistes
+$sql = "SELECT count(id_perso) as nb_persos_nord_actifs FROM perso WHERE est_gele='0' AND clan='1'";
+$res = $mysqli->query($sql);
+$t = $res->fetch_assoc();
+
+$nb_persos_nord_actifs = $t['nb_persos_nord_actifs'];
+
+// Nombre de persos actif sudistes
+$sql = "SELECT count(id_perso) as nb_persos_sud_actifs FROM perso WHERE est_gele='0' AND clan='2'";
+$res = $mysqli->query($sql);
+$t = $res->fetch_assoc();
+
+$nb_persos_sud_actifs = $t['nb_persos_sud_actifs'];
+
+
+// on prépare une requête SQL permettant de compter le nombre de tuples (soit le nombre de clients connectés au site) contenu dans la table
+$sql = 'SELECT count(*) FROM nb_online';
+$res = $mysqli->query($sql);
+$count_online = $res->fetch_array();
+
+?>
 <html>
 	<head>
 		<title>Nord VS Sud</title>
@@ -42,7 +93,7 @@
 							<hr />
 							<a href="faq.php" style="color: white;">FAQ - Régles</b></a>
 							<hr />
-							<a href="forum/forum.php" style="color: white;">Le Forum</b></a>
+							<a href="http://nordvssud-creation.forumactif.com/" style="color: white;">Le Forum</b></a>
 						</div>
 						
 						<div class="col-8">
@@ -53,15 +104,20 @@
 										<th bgcolor="#FFFACD" style="text-align: center;">Quelques informations</th>
 									</tr>
 									<tr>
-										<td><b>Nombre de joueurs inscrit : <br />Nombre de joueurs connectés :<br />Dernier inscrit :</b></td>
+										<td><b>Nombre de joueurs inscrit : <?php echo $nb_inscrit; ?> <br />Nombre de joueurs connectés : <?php echo $count_online[0];?><br />Dernier inscrit : <?php echo couleur_nation($clan_last_inscrit, $pseudo_last_inscrit); ?></b></td>
 									</tr>
 									<tr>
-										<td><b>Persos actifs : <font color='blue'>nordistes : </font> / <font color='red'>sudistes : </font></b></td>
+										<td><b>Persos actifs : <?php echo $nb_persos_actifs; ?> -- <font color='blue'>nordistes : <?php echo $nb_persos_nord_actifs; ?></font> / <font color='red'>sudistes : <?php echo $nb_persos_sud_actifs; ?></font></b></td>
 									</tr>
 								</table>
 							</div>
 							
 							<br />
+							<?php
+							// récupération des news
+							$sql_news = "SELECT date, contenu FROM news ORDER BY date DESC LIMIT 10";
+							$res_news = $mysqli->query($sql_news);
+							?>
 							
 							<div class='d-none d-md-block d-lg-block d-xl-block'>
 								<table border='1' width='100%'>
@@ -69,7 +125,24 @@
 										<th bgcolor="#FFFACD" style="text-align: center;">L'encre est encore fraiche</th>
 									</tr>
 									<tr>
-										<td><b>Lancement de la version Alpha !</b></td>
+										<td>
+											<marquee onMouseOver=this.stop() onMouseOut=this.start() scrollAmount='2'  direction='up'>
+											<?php
+											while ($t_news = $res_news->fetch_assoc()){
+								
+												$date_news 		= $t_news["date"];
+												$contenu_news 	= br2nl4(stripslashes($t_news["contenu"]));
+												
+												$date_news = new DateTime($date_news);
+												
+												echo "<br />";
+												echo "<b>- <u>" . $date_news->format('d-m-Y') . "</u> : </b><br />";
+												echo "<b>".nl2br($contenu_news)."</b>";
+												echo "<br />";
+											}
+											?>
+											</marquee>
+										</td>
 									</tr>
 								</table>
 							</div>
