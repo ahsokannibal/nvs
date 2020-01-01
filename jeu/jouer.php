@@ -684,7 +684,7 @@ if($dispo || !$admin){
 											$mysqli->query($sql);
 	
 											// verification si il y a un batiment a proximite du perso
-											$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso);
+											$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso);
 										}
 										else{
 										
