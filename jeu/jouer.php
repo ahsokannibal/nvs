@@ -695,6 +695,8 @@ if($dispo || !$admin){
 									}
 									else if($case_occupee){
 									
+										// Verification de qui / quoi occupe la case pour voir si on peut le bousculer
+									
 										$erreur .= "Cette case est déjà occupée !";
 										
 										// verification si il y a un batiment a proximite du perso
@@ -735,7 +737,7 @@ if($dispo || !$admin){
 				}
 				else {
 					// verification si il y a un batiment a proximite du perso
-					$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);
+					$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso, $mess_bat);
 				}
 				
 				//affichage de l'heure serveur et de nouveau tour
