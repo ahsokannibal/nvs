@@ -189,7 +189,7 @@ if($dispo){
 			
 			$nb_objets = $t_nb_objets[0];
 			
-			// recuperation de l'or que possede le perso
+			// recuperation de la thune que possede le perso
 			$sql = "SELECT or_perso, charge_perso, chargeMax_perso FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_or = $res->fetch_assoc();
@@ -217,7 +217,7 @@ if($dispo){
 					}
 					echo "".$charge_perso."</font> / ".$chargeMax_reel."</p>"; 
 					?>
-					<img src="../images/or.png" align="middle">Vous possédez <b><?php echo $or_p; ?></b> piéce<?php if($or_p > 1){echo "s";}?> d'or.<br>
+					<img src="../images/or.png" align="middle">Vous possédez <b><?php echo $or_p; ?></b> thune<?php if($or_p > 1){echo "s";}?><br>
 					</center>
 				</td>
 			</tr>

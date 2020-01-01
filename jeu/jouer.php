@@ -106,7 +106,7 @@ if($dispo || !$admin){
 				<?php
 				
 				// recuperation des anciennes données du perso
-				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, image_perso, pa_perso, recup_perso, bonusRecup_perso, bonusPM_perso, paMax_perso, pv_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
+				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, image_perso, pa_perso, recup_perso, bonusRecup_perso, bonusPM_perso, type_perso, paMax_perso, pv_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
 				$t_perso1 = $res->fetch_assoc();
 				
@@ -119,6 +119,8 @@ if($dispo || !$admin){
 				$image_perso 		= $t_perso1["image_perso"];
 				$bonusPM_perso_p 	= $t_perso1["bonusPM_perso"];
 				$clan_p 			= $t_perso1["clan"];
+				$type_perso			= $t_perso1["type_perso"];
+				$pa_perso			= $t_perso1["pa_perso"];
 				
 				// récupération de la couleur du camp
 				$couleur_clan_p = couleur_clan($clan_p);
@@ -696,8 +698,100 @@ if($dispo || !$admin){
 									else if($case_occupee){
 									
 										// Verification de qui / quoi occupe la case pour voir si on peut le bousculer
-									
-										$erreur .= "Cette case est déjà occupée !";
+										$sql = "SELECT idPerso_carte FROM $carte WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$idPerso_carte = $t['idPerso_carte'];
+										
+										// Batiment
+										if ($idPerso_carte < 200000 && $idPerso_carte >= 50000) {
+											$erreur .= "Cette case est déjà occupée par un batiment !";
+										}
+										else if ($idPerso_carte >= 200000) {
+											// PNJ
+											$erreur .= "Cette case est déjà occupée par un pnj !";
+										} else {
+											// Perso 
+											// Récupération des informations du perso
+											$sql = "SELECT clan, pm_perso, pa_perso, type_perso FROM perso WHERE id_perso='$idPerso_carte'";
+											$res = $mysqli->query($sql);
+											$t = $res->fetch_assoc();
+											
+											$camp_perso_b 	= $t['clan'];
+											$pm_perso_b		= $t['pm_perso'];
+											$pa_perso_b		= $t['pa_perso'];
+											$type_perso_b	= $t['type_perso'];
+											
+											// Calcul case cible bousculade
+											switch($mouv){ 
+												case 1: $x_persoB=$x_persoE-2; $y_persoB=$y_persoE+2; break;
+												case 2: $x_persoB=$x_persoE; $y_persoB=$y_persoE+2; break;
+												case 3: $x_persoB=$x_persoE+2; $y_persoB=$y_persoE+2; break;
+												case 4: $x_persoB=$x_persoE-2; $y_persoB=$y_persoE; break;
+												case 5: $x_persoB=$x_persoE+2; $y_persoB=$y_persoE; break;
+												case 6: $x_persoB=$x_persoE-2; $y_persoB=$y_persoE-2; break;
+												case 7: $x_persoB=$x_persoE; $y_persoB=$y_persoE-2; break;
+												case 8: $x_persoB=$x_persoE+2; $y_persoB=$y_persoE-2; break;
+											}
+											
+											// Est ce que le perso peut être bousculer par mon perso											
+											
+											// types perso compatible pour bousculade ?
+											if (isTypePersoBousculable($type_perso, $type_perso_b)) {
+											
+												// Ai-je suffisamment de PA / PM pour effectuer la bousculade ?
+												if($pm_perso  + $malus_pm >= $cout_pm && $pa_perso >= 3){
+												
+													// Case cible de la bousculade est-elle hors carte ?
+													if (in_map($x_persoB, $y_persoB)) {
+														
+														$sql = "SELECT occupee_carte, fond_carte, image_carte FROM $carte WHERE x_carte=$x_persoB AND y_carte=$y_persoB";
+														$res_map = $mysqli->query($sql);
+														$t_carteB = $res_map->fetch_assoc();
+														
+														$case_occupeeB 	= $t_carteB["occupee_carte"];
+														$fondB 			= $t_carteB["fond_carte"];
+														
+														// Case cible de la bousculade est-elle déjà occupée ?
+														if (!$case_occupeeB) {
+															// Case cible eau profonde ?
+															if (!is_eau_p($fondB)) {
+																
+																// Même camp ou non ?
+																if ($camp_perso_b == $clan_p) {
+																	// Même camp
+																	// Si allié, mon allié possède t-il encore 1PA ?
+																	if ($pa_perso_b >= 1) {
+																		
+																		// OK => On bouscule !
+																		$erreur .= "BOUSCULADE OK !!";
+																		
+																	} else {
+																		$erreur .= "Votre allié ne possède plus suffisamment de PA pour être bousculer (demande 10 PA à votre allié) !";
+																	}
+																} else {
+																	// Camps différents
+																	// OK => On bouscule !
+																	$erreur .= "BOUSCULADE OK !!";
+																}
+															} else {
+																$erreur .= "Impossible de bousculer un perso dans de l'eau profonde !";
+															}
+														} else {
+															$erreur .= "La case cible de la bousculade est déjà occupée !";
+														}														
+													} else {
+														$erreur .= "Impossible de bousculer un perso hors map !";
+													}
+												} 
+												else {
+													$erreur .= "Vous n'avez pas assez de PA/PM pour bousculer un perso !";
+												}
+											} else {
+												$erreur .= "Impossible de bousculer ce type de perso !";
+											}										
+										}										
 										
 										// verification si il y a un batiment a proximite du perso
 										$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);

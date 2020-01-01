@@ -762,6 +762,17 @@ CREATE TABLE `perso_in_em` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `perso_in_train`
+--
+
+CREATE TABLE `perso_in_train` (
+  `id_train` int(11) NOT NULL,
+  `id_perso` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `pnj`
 --
 

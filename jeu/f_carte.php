@@ -416,7 +416,7 @@ function selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan){
 
 /**
  * Fonction permettant d'afficher les liens utiles lorsqu'un perso se retrouve à proximité d'un batiment
- *
+ * @return $mess_bat contenant les liens
  */
 function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat) {
 	
@@ -466,5 +466,57 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_
 	}
 	
 	return $mess_bat;
+}
+
+/**
+ * Fonction permettant de determiner si un type de perso peut ou non bousculer un type de perso cible
+ * @return boolean
+ */
+function isTypePersoBousculable($type_perso, $type_perso_b) {
+	
+	// Cavalier
+	if ($type_perso == 1 || $type_perso == 2) {
+		// Peut bousculer infanterie et autres cavaliers
+		if ($type_perso_b == 1 || $type_perso_b == 2 || $type_perso_b == 3) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// Infanterie
+	else if ($type_perso == 3) {
+		// Peut bousculer infanterie, soigneur et artillerie
+		if ($type_perso_b == 3 || $type_perso_b == 4 || $type_perso_b == 5) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	// Soigneur
+	else if ($type_perso == 4) {
+		// Peut bousculer infanterie et autres soigneur
+		if ($type_perso_b == 3 || $type_perso_b == 4) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	// Artillerie
+	else if ($type_perso == 5) {
+		// Peut bousculer infanterie et soigneur
+		if ($type_perso_b == 3 || $type_perso_b == 4) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	else {
+		// les autres type de perso (toutou par exemple) ne peuvent pas bousculer
+		return false;
+	}
 }
 ?>
