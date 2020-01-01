@@ -60,11 +60,11 @@ if($dispo){
 						$res = $mysqli->query($sql);
 						$t = $res->fetch_assoc();
 						
-						$id_bat = $t["id_batiment"];
-						$camp_bat = $t["camp_instance"];
-						$pv_bat = $t["pv_instance"];
-						$pvMax_bat = $t["pvMax_instance"];
-						$nom_i_bat = $t["nom_instance"];
+						$id_bat 	= $t["id_batiment"];
+						$camp_bat 	= $t["camp_instance"];
+						$pv_bat 	= $t["pv_instance"];
+						$pvMax_bat 	= $t["pvMax_instance"];
+						$nom_i_bat 	= $t["nom_instance"];
 						
 						$pourcentage_rabais = 0;
 						
@@ -1502,6 +1502,12 @@ if($dispo){
 									}
 								}
 							}
+						}
+						
+						//////////////
+						// Gare
+						if($id_bat == '11'){
+							
 						}
 					}
 					else {
