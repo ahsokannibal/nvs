@@ -418,7 +418,9 @@ function selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan){
  * Fonction permettant d'afficher les liens utiles lorsqu'un perso se retrouve à proximité d'un batiment
  * @return $mess_bat contenant les liens
  */
-function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat) {
+function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) {
+	
+	$new_mess_bat = "";
 	
 	if(prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) && !in_bat($mysqli, $id_perso)){
 										
@@ -445,27 +447,27 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_
 			
 				// verification si le batiment est vide
 				if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
-					$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 			}
 			else {
 				if($bat != 1 && $bat != 5){
-					$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 				
 				if ($pv_instance < $pvMax_instance) {
-					$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+					$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 			}
 			
 			// pont
 			if ($bat == 5) {
-				$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+				$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 			}
 		}
 	}
 	
-	return $mess_bat;
+	return $new_mess_bat;
 }
 
 /**

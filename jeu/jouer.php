@@ -676,7 +676,6 @@ if($dispo || !$admin){
 											$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
 											$mysqli->query($sql);
 											
-											// on met à jour le nombre de perso sur son nouvel emplacement
 											$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'"; 
 											$mysqli->query($sql);
 											
@@ -685,17 +684,17 @@ if($dispo || !$admin){
 											$mysqli->query($sql);
 	
 											// verification si il y a un batiment a proximite du perso
-											$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);
+											$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso);
 										}
 										else{
 										
 											$erreur .= "Vous n'avez pas assez de pm !";
 											
 											// verification si il y a un batiment a proximite du perso
-											$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);
+											$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso);
 										}
 									}
-									else if($case_occupee){
+									else {
 									
 										// Verification de qui / quoi occupe la case pour voir si on peut le bousculer
 										$sql = "SELECT idPerso_carte FROM $carte WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
@@ -714,7 +713,7 @@ if($dispo || !$admin){
 										} else {
 											// Perso 
 											// Récupération des informations du perso
-											$sql = "SELECT clan, pm_perso, pa_perso, type_perso FROM perso WHERE id_perso='$idPerso_carte'";
+											$sql = "SELECT clan, pm_perso, pa_perso, type_perso, image_perso, nom_perso FROM perso WHERE id_perso='$idPerso_carte'";
 											$res = $mysqli->query($sql);
 											$t = $res->fetch_assoc();
 											
@@ -722,6 +721,11 @@ if($dispo || !$admin){
 											$pm_perso_b		= $t['pm_perso'];
 											$pa_perso_b		= $t['pa_perso'];
 											$type_perso_b	= $t['type_perso'];
+											$image_perso_b	= $t['image_perso'];
+											$nom_perso_b	= $t['nom_perso'];
+											$id_perso_b 	= $idPerso_carte;
+											
+											$couleur_clan_p_b = couleur_clan($camp_perso_b);
 											
 											// Calcul case cible bousculade
 											switch($mouv){ 
@@ -753,6 +757,9 @@ if($dispo || !$admin){
 														$case_occupeeB 	= $t_carteB["occupee_carte"];
 														$fondB 			= $t_carteB["fond_carte"];
 														
+														$cout_pmB 		= cout_pm($fondB);
+														$bonus_visuB 	= get_malus_visu($fondB);
+														
 														// Case cible de la bousculade est-elle déjà occupée ?
 														if (!$case_occupeeB) {
 															// Case cible eau profonde ?
@@ -765,7 +772,42 @@ if($dispo || !$admin){
 																	if ($pa_perso_b >= 1) {
 																		
 																		// OK => On bouscule !
-																		$erreur .= "BOUSCULADE OK !!";
+																		
+																		//-------------------------------------
+																		// On déplace en premier le bousculé 
+																		$sql = "UPDATE perso SET pa_perso = $pa_perso_b-1, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
+																		$mysqli->query($sql);
+																		
+																		//mise à jour des coordonnées du perso 
+																		$dep = "UPDATE perso SET x_perso=$x_persoB, y_perso=$y_persoB WHERE id_perso ='$id_perso_b'"; 
+																		$mysqli->query($dep);
+																		
+																		// maj carte
+																		$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+																		$mysqli->query($sql);
+																		
+																		$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso_b', idPerso_carte='$id_perso_b' WHERE x_carte='$x_persoB' AND y_carte='$y_persoB'"; 
+																		$mysqli->query($sql);
+																	
+																		//-----------------------
+																		// On se déplace ensuite
+																		$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pm, pa_perso = $pa_perso-3, bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'"; 
+																		$mysqli->query($sql);
+																		
+																		//mise à jour des coordonnées du perso 
+																		$dep = "UPDATE perso SET x_perso=$x_persoN, y_perso=$y_persoN WHERE id_perso ='$id_perso'"; 
+																		$mysqli->query($dep);
+																		
+																		// maj carte
+																		$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
+																		$mysqli->query($sql);
+																		
+																		$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'"; 
+																		$mysqli->query($sql);
+																		
+																		// maj evenement
+																		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>','a bousculé ',$id_perso_b,'<font color=$couleur_clan_p_b>$nom_perso_b</font>','en $x_persoB/$y_persoB',NOW(),'0')";
+																		$mysqli->query($sql);
 																		
 																	} else {
 																		$erreur .= "Votre allié ne possède plus suffisamment de PA pour être bousculer (demande 10 PA à votre allié) !";
@@ -773,7 +815,51 @@ if($dispo || !$admin){
 																} else {
 																	// Camps différents
 																	// OK => On bouscule !
-																	$erreur .= "BOUSCULADE OK !!";
+																	
+																	//-------------------------------------
+																	// On déplace en premier le bousculé 
+																	// maj perso : mise à jour des pm et du bonus de perception
+																	if ($pm_perso_b >= $cout_pmB) {
+																		$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pmB, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
+																		$mysqli->query($sql);
+																	} else {
+																		// calcul des malus de pm
+																		$malus_pmB = $cout_pmB - $pm_perso_b;
+																		
+																		$sql = "UPDATE perso SET pm_perso = 0, bonusPM_perso-=$malus_pmB, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
+																		$mysqli->query($sql);
+																	}
+																	
+																	//mise à jour des coordonnées du perso 
+																	$dep = "UPDATE perso SET x_perso=$x_persoB, y_perso=$y_persoB WHERE id_perso ='$id_perso_b'"; 
+																	$mysqli->query($dep);
+																	
+																	// maj carte
+																	$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+																	$mysqli->query($sql);
+																	
+																	$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso_b', idPerso_carte='$id_perso_b' WHERE x_carte='$x_persoB' AND y_carte='$y_persoB'"; 
+																	$mysqli->query($sql);
+																	
+																	//-----------------------
+																	// On se déplace ensuite
+																	$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pm, pa_perso = $pa_perso-3, bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'"; 
+																	$mysqli->query($sql);
+																	
+																	//mise à jour des coordonnées du perso 
+																	$dep = "UPDATE perso SET x_perso=$x_persoN, y_perso=$y_persoN WHERE id_perso ='$id_perso'"; 
+																	$mysqli->query($dep);
+																	
+																	// maj carte
+																	$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
+																	$mysqli->query($sql);
+																	
+																	$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'"; 
+																	$mysqli->query($sql);
+																	
+																	// maj evenement
+																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>','a bousculé ',$id_perso_b,'<font color=$couleur_clan_p_b>$nom_perso_b</font>','en $x_persoB/$y_persoB',NOW(),'0')";
+																	$mysqli->query($sql);
 																}
 															} else {
 																$erreur .= "Impossible de bousculer un perso dans de l'eau profonde !";
@@ -794,7 +880,7 @@ if($dispo || !$admin){
 										}										
 										
 										// verification si il y a un batiment a proximite du perso
-										$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);
+										$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso);
 									}
 								}
 								else if (is_eau_p($fond)) {
@@ -802,7 +888,7 @@ if($dispo || !$admin){
 									$erreur .= "Vous ne pouvez pas vous deplacer en eau profonde !";
 									
 									// verification si il y a un batiment a proximite du perso
-									$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);
+									$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso);
 								}
 							}
 							else if (!in_map($x_persoN, $y_persoN)){
@@ -810,7 +896,7 @@ if($dispo || !$admin){
 								$erreur .= "Vous ne pouvez pas vous déplacer sur cette case, elle est hors limites !";
 								
 								// verification si il y a un batiment a proximite du perso
-								$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);
+								$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso);
 							}
 						}
 						else if(!reste_pm($pm_perso + $malus_pm)){
@@ -818,7 +904,7 @@ if($dispo || !$admin){
 							$erreur .= "Vous n'avez plus de pm !";
 							
 							// verification si il y a un batiment a proximite du perso
-							$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat);
+							$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso);
 						}
 						else {
 							// normalement impossible
@@ -831,7 +917,7 @@ if($dispo || !$admin){
 				}
 				else {
 					// verification si il y a un batiment a proximite du perso
-					$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso, $mess_bat);
+					$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso);
 				}
 				
 				//affichage de l'heure serveur et de nouveau tour
