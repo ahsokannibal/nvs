@@ -413,4 +413,58 @@ function selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan){
 	
 	return $min_id_bat;
 }
+
+/**
+ * Fonction permettant d'afficher les liens utiles lorsqu'un perso se retrouve à proximité d'un batiment
+ *
+ */
+function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $mess_bat) {
+	
+	if(prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) && !in_bat($mysqli, $id_perso)){
+										
+		// recuperation des id et noms des batiments dans lesquels le perso peut entrer
+		$res_bat = id_prox_bat($mysqli, $x_persoE, $y_persoE); 
+		
+		while ($bat1 = $res_bat->fetch_assoc()) {
+			
+			$nom_ibat 		= $bat1["nom_instance"];
+			$id_bat 		= $bat1["id_instanceBat"];
+			$bat 			= $bat1["id_batiment"];
+			$pv_instance 	= $bat1["pv_instance"];
+			$pvMax_instance = $bat1["pvMax_instance"];
+				
+			//recuperation du nom du batiment
+			$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
+			$res_n = $mysqli->query($sql_n);
+			$t_n = $res_n->fetch_assoc();
+			
+			$nom_bat = $t_n["nom_batiment"];
+				
+			// verification si le batiment est de la même nation que le perso
+			if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+			
+				// verification si le batiment est vide
+				if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
+					$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+				}
+			}
+			else {
+				if($bat != 1 && $bat != 5){
+					$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+				}
+				
+				if ($pv_instance < $pvMax_instance) {
+					$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+				}
+			}
+			
+			// pont
+			if ($bat == 5) {
+				$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+			}
+		}
+	}
+	
+	return $mess_bat;
+}
 ?>
