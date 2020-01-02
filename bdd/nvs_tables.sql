@@ -566,7 +566,8 @@ CREATE TABLE `objet` (
   `coutOr_objet` int(11) NOT NULL DEFAULT '0',
   `poids_objet` decimal(10,1) NOT NULL DEFAULT '0.0',
   `description_objet` text NOT NULL,
-  `type_objet` varchar(3) NOT NULL DEFAULT 'N'
+  `type_objet` varchar(3) NOT NULL DEFAULT 'N',
+  `capacite_objet` varchar(250) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
