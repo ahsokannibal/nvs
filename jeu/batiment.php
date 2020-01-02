@@ -109,7 +109,7 @@ if($dispo){
 <link href="../style.css" rel="stylesheet" type="text/css">
 </head>
 <body>
-<div align="center"><h2>Page du bâtiment : <?php echo $nom_bat; ?></h2></div>
+<div align="center"><h2><?php echo $nom_bat." ".$nom_i_bat; ?></h2></div>
 <center><img src="../images/<?php echo $blason; ?>" alt="blason"/></center><br />
 <center><a href="evenement.php?infoid=<?php echo $id_i_bat; ?>">Voir les évènements du bâtiment</a></center>
 <?php
@@ -161,7 +161,7 @@ if($dispo){
 										echo "<font color=blue>Vous venez de vous offrir l'arme $nom_arme pour $coutOr_arme Or</font>";
 									}
 									else {
-										echo "<font color=red>Vous n'avez pas assez d'or pour vous offrir cette arme</font>";
+										echo "<font color=red>Vous n'avez pas assez de thunes pour vous offrir cette arme</font>";
 									}
 								}
 								else {
@@ -219,10 +219,10 @@ if($dispo){
 										// MAJ or perso pour affichage
 										$or = $or - $coutOr_armure;
 										
-										echo "<font color=blue>Vous venez de vous offrir l'armure $nom_armure pour $coutOr_armure Or</font>";
+										echo "<font color=blue>Vous venez de vous offrir l'armure $nom_armure pour $coutOr_armure Thunes</font>";
 									}
 									else {
-										echo "<font color=red>Vous n'avez pas assez d'or pour vous offrir cette arme</font>";
+										echo "<font color=red>Vous n'avez pas assez de thunes pour vous offrir cette arme</font>";
 									}
 								}
 								else {
@@ -278,10 +278,10 @@ if($dispo){
 										// MAJ or perso pour affichage
 										$or = $or - $coutOr_o;
 										
-										echo "<font color=blue>Vous avez acheter l'objet $nom_o pour $coutOr_o or</font>";
+										echo "<font color=blue>Vous avez acheter l'objet $nom_o pour $coutOr_o thunes</font>";
 									}
 									else {
-										echo "<font color=red>Vous ne possédez pas assez d'or pour acheter l'objet $nom_o</font>";
+										echo "<font color=red>Vous ne possédez pas assez de thunes pour acheter l'objet $nom_o</font>";
 									}
 								}
 								else {
@@ -337,7 +337,7 @@ if($dispo){
 											  WHERE id_perso='$id_perso'";
 									$mysqli->query($sql_u);
 									
-									echo "<br /><center><font color='blue'>Vous avez vendu votre armure <b>$nom_armure</b> pour <b>$prix_vente_final</b> Or</font></center>";
+									echo "<br /><center><font color='blue'>Vous avez vendu votre armure <b>$nom_armure</b> pour <b>$prix_vente_final</b> Thunes</font></center>";
 									
 									// MAJ affichage or perso
 									$or = $or + $prix_vente_final;
@@ -393,7 +393,7 @@ if($dispo){
 											  WHERE id_perso='$id_perso'";
 									$mysqli->query($sql_u);
 									
-									echo "<br /><center><font color='blue'>Vous avez vendu votre arme <b>$nom_arme</b> pour <b>$prix_vente_final</b> Or</font></center>";
+									echo "<br /><center><font color='blue'>Vous avez vendu votre arme <b>$nom_arme</b> pour <b>$prix_vente_final</b> Thunes</font></center>";
 									
 									// MAJ affichage or perso
 									$or = $or + $prix_vente_final;
@@ -457,7 +457,7 @@ if($dispo){
 									else {
 										echo " objet ";
 									}
-									echo "<b>$nom_objet</b> pour <b>$prix_vente_final</b> Or</font></center>";
+									echo "<b>$nom_objet</b> pour <b>$prix_vente_final</b> Thunes</font></center>";
 									
 									// MAJ affichage or perso
 									$or = $or + $prix_vente_final;
@@ -622,7 +622,7 @@ if($dispo){
 							}
 						}
 						
-						echo "<br /><div align=\"center\">Vous possédez <b>$or</b> po</div><br />";
+						echo "<br /><div align=\"center\">Vous possédez <b>$or</b> thune(s)</div><br />";
 						
 						/////////////////
 						// On veut vendre
@@ -1507,6 +1507,41 @@ if($dispo){
 						//////////////
 						// Gare
 						if($id_bat == '11'){
+							
+							// Récupération des liaisons depuis cette gare
+							$sql = "SELECT * FROM liaisons_gare WHERE id_gare1='$id_i_bat' OR id_gare2='$id_i_bat'";
+							$res = $mysqli->query($sql);
+							
+							echo "<table width='50%' border='1' align='center'>";
+							echo "<tr bgcolor=\"lightgrey\"><th>Destination</th><th>Action</th></tr>";
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_gare1 = $t['id_gare1'];
+								$id_gare2 = $t['id_gare2'];
+								
+								if ($id_gare1 == $id_i_bat) {
+									$destination = $id_gare2;
+								} else {
+									$destination = $id_gare1;
+								}
+								
+								// Récupération infos destination
+								$sql_dest = "SELECT nom_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
+								$res_dest = $mysqli->query($sql_dest);
+								$t_dest = $res_dest->fetch_assoc();
+								
+								$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $destination . "]";
+								
+								// Achat de tickets
+								echo "<tr>";
+								echo "	<td align='center'>$nom_destination</td>";
+								echo "	<td align='center'>Achater ticket (5 thunes)</td>";
+								echo "</tr>";
+							}
+							
+							echo "</table>";
+							
 							
 						}
 					}

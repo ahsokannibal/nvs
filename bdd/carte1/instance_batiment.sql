@@ -47,6 +47,18 @@ INSERT INTO `instance_batiment` (`id_instanceBat`, `niveau_instance`, `id_batime
 (50021, 1, 8, '', 3406, 6000, 43, 193, 1, 50);
 
 --
+-- Contenu de la table `liaisons_gare`
+--
+
+INSERT INTO `liaisons_gare` (`id_gare1`, `id_gare2`) VALUES
+(50007, 50008),
+(50008, 50009),
+(50009, 50012),
+(50015, 50016),
+(50016, 50018),
+(50018, 50020);
+
+--
 -- AUTO_INCREMENT pour la table `instance_batiment`
 --
 ALTER TABLE `instance_batiment`

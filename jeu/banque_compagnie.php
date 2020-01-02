@@ -146,7 +146,7 @@ if($dispo){
 									$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso=$id";
 									$mysqli->query($sql);
 									
-									echo "Vous venez de deposer $montant po en banque";
+									echo "Vous venez de deposer $montant thune(s) en banque";
 								}
 							}
 							else {
@@ -205,7 +205,7 @@ if($dispo){
 								echo "Vous venez de retirer $montant de la banque";
 							}
 							else {
-								echo "<font color = red>Vous ne possedez pas assez en banque pour retirer $montant po</font>";
+								echo "<font color = red>Vous ne possedez pas assez en banque pour retirer $montant thune(s)</font>";
 							}
 						}
 						else {
@@ -234,7 +234,7 @@ if($dispo){
 							if($emp) { 
 							
 								// il a deja demande un emprunt
-								echo "Vous avez déjà demandé un emprunt d'un montant de $mont po<br>";
+								echo "Vous avez déjà demandé un emprunt d'un montant de $mont thune(s)<br>";
 								echo "Vous n'avez le droit qu'à une seule demande d'argent à la fois<br>";
 								echo "Souhaitez vous annuler votre ancienne demande ?<br>";
 								
@@ -259,7 +259,7 @@ if($dispo){
 									$sql = "UPDATE banque_compagnie SET demande_emprunt='1', montant_emprunt='$montant' WHERE id_perso='$id'";
 									$mysqli->query($sql);
 									
-									echo "Vous avez demander un emprunt de $montant po<br>";
+									echo "Vous avez demander un emprunt de $montant thune(s)<br>";
 								}
 								else {
 									echo "Votre compagnie ne possede pas l'argent necessaire pour satisfaire votre demande.";
@@ -290,7 +290,7 @@ if($dispo){
 				$du = $du_t - $du_r;	
 				
 				if ($du) {
-					echo "<center><font color=red>Vous devez <b>$du</b> po à votre compagnie</font></center>";
+					echo "<center><font color=red>Vous devez <b>$du</b> thune(s) à votre compagnie</font></center>";
 				}
 				
 				// recuperation des sous de la compagnie
@@ -300,7 +300,7 @@ if($dispo){
 				
 				$sum = $t_sum["montant"];
 				
-				echo "<center><font color=green>Votre compagnie possede <b>$sum</b> po</font></center><br>";
+				echo "<center><font color=green>Votre compagnie possede <b>$sum</b> thune(s)</font></center><br>";
 				
 				// recuperation des sous que le perso a sur lui
 				$sql = "SELECT or_perso FROM perso WHERE id_perso=$id";
@@ -309,7 +309,7 @@ if($dispo){
 				
 				$bourse = $t_bourse["or_perso"];
 				
-				echo "<center><font color=blue>Vous avez <b>$bourse</b> po sur vous</font></center>";
+				echo "<center><font color=blue>Vous avez <b>$bourse</b> thune(s) sur vous</font></center>";
 				
 				// recuperation de ce qu'il possede en banque
 				$sql = "SELECT montant FROM banque_compagnie WHERE id_perso=$id";
@@ -318,7 +318,7 @@ if($dispo){
 				
 				$banque = $t_b["montant"];
 				
-				echo "<center><font color=blue>Vous avez <b>$banque</b> po en banque</font></center><br>";
+				echo "<center><font color=blue>Vous avez <b>$banque</b> thune(s) en banque</font></center><br>";
 				
 				echo "<br><form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"deposer\">";
 				echo "<div align=\"center\">";

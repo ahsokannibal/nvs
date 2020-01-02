@@ -488,6 +488,17 @@ CREATE TABLE `joueur_as_ip` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `liaisons_gare`
+--
+
+CREATE TABLE `liaisons_gare` (
+  `id_gare1` int(11) NOT NULL,
+  `id_gare2` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `message`
 --
 
