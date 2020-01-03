@@ -242,11 +242,11 @@ if($dispo){
 					// recuperation des carac de l'objet
 					$sql1 = "SELECT nom_objet, poids_objet, description_objet FROM objet WHERE id_objet='$id_obj'";
 					$res1 = $mysqli->query($sql1);
-					$t_o = $resl->fetch_assoc();
+					$t_o = $res1->fetch_assoc();
 					
-					$nom_o = $t_o["nom_objet"];
-					$poids_o = $t_o["poids_objet"];
-					$description_o = $t_o["description_objet"];
+					$nom_o 			= $t_o["nom_objet"];
+					$poids_o 		= $t_o["poids_objet"];
+					$description_o 	= $t_o["description_objet"];
 					
 					// recuperation du nombre d'objet de ce type que possede le perso
 					$sql2 = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj'";
@@ -258,13 +258,13 @@ if($dispo){
 					
 					// affichage
 					echo "<tr>";
-					echo "<td align='center'><img src=\"../images/objet".$id_obj.".png\"></td>";
+					echo "<td align='center'><img src=\"../images/objets/objet".$id_obj.".png\"></td>";
 					echo "<td align='center'><font color=green><b>".$nom_o."</b></font><br>".stripslashes($description_o)."</td>";
 					echo "<td align='center'>Vous possédez <b>".$nb_o."</b> ".$nom_o."";
 					if($nb_o > 1 && $id_obj != 6 && $id_obj != 7){ 
 						echo "s";
 					}
-					if($id_obj != 6 && $id_obj != 7 && $id_obj != 8 && $id_obj != 10){
+					if($id_obj != 1){
 						echo "<br /><a href=\"sac.php?id_obj=".$id_obj."\">utiliser</a>";
 					}
 					echo "<br /><u>Poids total :</u> <b>$poids_total_o</b></td>";

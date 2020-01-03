@@ -26,10 +26,10 @@ if($dispo){
 		$res = $mysqli->query($sql );
 		$tpv = $res->fetch_assoc();
 		
-		$testpv = $tpv['pv_perso'];
-		$or = $tpv["or_perso"];
-		$dla = $tpv["DLA"];
-		$est_gele = $tpv["est_gele"];
+		$testpv 	= $tpv['pv_perso'];
+		$or 		= $tpv["or_perso"];
+		$dla 		= $tpv["DLA"];
+		$est_gele 	= $tpv["est_gele"];
 		
 		$config = '1';
 		
@@ -621,6 +621,55 @@ if($dispo){
 								echo "<center><font color='red'><b>Vous ne pouvez pas récupérer des ressources dans un autre batiment que l'entrepôt</b></font></center>";
 							}
 						}
+						
+						// traitement des formulaires prèsent uniquement en gare
+						if($id_bat == '11'){
+							
+							// Achat d'un ticket de train
+							if (isset($_POST["acheter_ticket"]) && isset($_POST["ticket_hidden"]) && trim($_POST["ticket_hidden"]) != "") {
+								
+								$ticket_dest = $_POST["ticket_hidden"];
+								
+								$sql_dest = "SELECT nom_instance FROM instance_batiment WHERE id_instanceBat='$ticket_dest'";
+								$res_dest = $mysqli->query($sql_dest);
+								$t_dest = $res_dest->fetch_assoc();
+								
+								$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $ticket_dest . "]";
+								
+								// On vérifie que le perso possède bien 5 thunes 
+								if ($or >= 5) {
+									
+									// On vérifie si le perso n'a pas déjà un ticket pour la même destination
+									$sql = "SELECT count(*) as nb_ticket FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='1' AND capacite_objet='$ticket_dest'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$possede_deja_ticket = $t['nb_ticket'];
+									
+									if ($possede_deja_ticket == 0) {
+										
+										// MAJ thune perso
+										$sql = "UPDATE perso SET or_perso=or_perso-5 WHERE id_perso='$id_perso'";
+										$mysqli->query($sql);
+										
+										// Ajout de l'objet ticket de train dans l'inventaire du perso
+										$sql = "INSERT INTO perso_as_objet (id_perso, id_objet, capacite_objet) VALUES ('$id_perso', '1', '$ticket_dest')";
+										$mysqli->query($sql);
+										
+										// Maj thune pour affichage 
+										$or = $or - 5;
+										
+										echo "<center><font color='blue'>Vous avez acheté un ticket de train en destination de $nom_destination</font></center>";
+									}
+									else {
+										echo "<center><font color='red'>Vous possédez déjà un ticket de train pour cette destination</font></center>";
+									}
+								} 
+								else {
+									echo "<center><font color='red'>Vous n'avez pas suffisamment de thunes pour vous acheter un ticket de train</font></center>";
+								}
+							}
+						}						
 						
 						echo "<br /><div align=\"center\">Vous possédez <b>$or</b> thune(s)</div><br />";
 						
@@ -1533,11 +1582,15 @@ if($dispo){
 								
 								$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $destination . "]";
 								
+								echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+								
 								// Achat de tickets
 								echo "<tr>";
 								echo "	<td align='center'>$nom_destination</td>";
-								echo "	<td align='center'>Achater ticket (5 thunes)</td>";
+								echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$destination'> <input type='submit' name='acheter_ticket' value='Acheter un ticket (5 thunes)'></td>";
 								echo "</tr>";
+								
+								echo "</form>";
 							}
 							
 							echo "</table>";
