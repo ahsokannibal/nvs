@@ -353,6 +353,15 @@ while ($t = $res->fetch_assoc()) {
 	
 	if (est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee)) {
 		echo "<br/>***** Train arrivée à destination<br/>";
+		
+		// On décharge les persos dans la gare
+		
+		// On change la destination du train
+		
+		// On charge les persos présent dans la gare ayant un ticket vers la nouvelle destination
+		
+		
+		
 	}
 }
 
