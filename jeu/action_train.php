@@ -19,6 +19,19 @@ while ($t = $res->fetch_assoc()) {
 	$camp_train			= $t['camp_instance'];
 	$contenance_train	= $t['contenance_instance'];
 	
+	if ($camp_train == 1) {
+		// Nord
+		$image_train = "b12b.png";
+	}
+	else if ($camp_train == 2) {
+		// Sud
+		$image_train = "b12r.png";
+	}
+	else {
+		// Ne devrait pas arriver
+		$image_train = "b12.png";
+	}	
+	
 	// récupération de la direction de ce train
 	$sql_dir = "SELECT direction FROM liaisons_gare WHERE id_train='$id_instance_train'";
 	$res_dir = $mysqli->query($sql_dir);
@@ -113,6 +126,20 @@ while ($t = $res->fetch_assoc()) {
 					// Le rail est trouvé => on se déplace dessus
 					echo "Rail trouvé en $x_r / $y_r<br />";
 					
+					// Modification coordonnées instance train
+					$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+					$mysqli->query($sql_t);
+					
+					$x_train = $x_r;
+					$y_train = $y_r;
+					
+					// Modification carte 
+					$sql_c1 = "UPDATE carte SET idPerso_carte=NULL, occupee_carte='0', image_carte=NULL WHERE idPerso_carte='$id_instance_train'";
+					$mysqli->query($sql_c1);
+					
+					$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
+					$mysqli->query($sql_c2);	
+					
 					$dep_restant--;
 				}
 			}
@@ -120,11 +147,25 @@ while ($t = $res->fetch_assoc()) {
 				// Le rail est trouvé => on se déplace dessus
 				echo "Rail trouvé en $x_r / $y_r<br />";
 				
+				// Modification coordonnées instance train
+				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+				$mysqli->query($sql_t);
+				
+				$x_train = $x_r;
+				$y_train = $y_r;
+				
+				// Modification carte 
+				$sql_c1 = "UPDATE carte SET idPerso_carte=NULL, occupee_carte='0', image_carte=NULL WHERE idPerso_carte='$id_instance_train'";
+				$mysqli->query($sql_c1);
+				
+				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
+				$mysqli->query($sql_c2);				
+				
 				$dep_restant--;
 			}
 			
 		}
-		else {
+		else if ($x_train < $x_gare_arrivee) {
 			// Déplacement vers la droite
 			echo "Déplacement vers la droite : ";
 			
@@ -199,6 +240,20 @@ while ($t = $res->fetch_assoc()) {
 					// Le rail est trouvé => on se déplace dessus
 					echo "Rail trouvé en $x_r / $y_r<br />";
 					
+					// Modification coordonnées instance train
+					$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+					$mysqli->query($sql_t);
+					
+					$x_train = $x_r;
+					$y_train = $y_r;
+					
+					// Modification carte 
+					$sql_c1 = "UPDATE carte SET idPerso_carte=NULL, occupee_carte='0', image_carte=NULL WHERE idPerso_carte='$id_instance_train'";
+					$mysqli->query($sql_c1);
+					
+					$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
+					$mysqli->query($sql_c2);	
+					
 					$dep_restant--;
 				}
 			}
@@ -206,10 +261,98 @@ while ($t = $res->fetch_assoc()) {
 				// Le rail est trouvé => on se déplace dessus
 				echo "Rail trouvé en $x_r / $y_r<br />";
 				
+				// Modification coordonnées instance train
+				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+				$mysqli->query($sql_t);
+				
+				$x_train = $x_r;
+				$y_train = $y_r;
+				
+				// Modification carte 
+				$sql_c1 = "UPDATE carte SET idPerso_carte=NULL, occupee_carte='0', image_carte=NULL WHERE idPerso_carte='$id_instance_train'";
+				$mysqli->query($sql_c1);
+				
+				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
+				$mysqli->query($sql_c2);
+				
 				$dep_restant--;
 			}
 		}
-		
+		else {
+			// $x_train == $x_gare_arrivee
+			
+			if ($y_train > $y_gare_arrivee) {
+				// Déplacement vers le bas
+				echo "Déplacement vers le bas : ";
+				
+				// Récupération des rails en bas
+				$sql_r2 = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE y_carte=$y_train-1 AND (x_carte=$x_train OR x_carte=$x_train-1 OR x_carte=$x_train+1)";
+				$res_r2 = $mysqli->query($sql_r2);
+				
+				while ($t_r2 = $res_r2->fetch_assoc()) {
+			
+					$x_r 	= $t_r2['x_carte'];
+					$y_r 	= $t_r2['y_carte'];
+					$fond_r	= $t_r2['fond_carte'];
+					
+					// Rail trouvé
+					if ($fond_r == "rail.gif") {
+						$rail_trouve = true;
+						break;
+					}
+				}
+			}
+			else {
+				// Déplacement vers le haut
+				echo "Déplacement vers le haut : ";
+				
+				// Récupération des rails en haut
+				$sql_r2 = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE y_carte=$y_train+1 AND (x_carte=$x_train OR x_carte=$x_train-1 OR x_carte=$x_train+1)";
+				$res_r2 = $mysqli->query($sql_r2);
+				
+				while ($t_r2 = $res_r2->fetch_assoc()) {
+			
+					$x_r 	= $t_r2['x_carte'];
+					$y_r 	= $t_r2['y_carte'];
+					$fond_r	= $t_r2['fond_carte'];
+					
+					// Rail trouvé
+					if ($fond_r == "rail.gif") {
+						$rail_trouve = true;
+						break;
+					}
+				}
+			}
+			
+			if (!$rail_trouve) {
+				echo "Rail non trouvé !!! (problème à corriger)";
+				
+			} else {
+				// Le rail est trouvé => on se déplace dessus
+				echo "Rail trouvé en $x_r / $y_r<br />";
+				
+				// Modification coordonnées instance train
+				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+				$mysqli->query($sql_t);
+				
+				$x_train = $x_r;
+				$y_train = $y_r;
+				
+				// Modification carte 
+				$sql_c1 = "UPDATE carte SET idPerso_carte=NULL, occupee_carte='0', image_carte=NULL WHERE idPerso_carte='$id_instance_train'";
+				$mysqli->query($sql_c1);
+				
+				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
+				$mysqli->query($sql_c2);	
+				
+				$dep_restant--;
+			}
+			
+		}
+	}
+	
+	if (est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee)) {
+		echo "<br/>***** Train arrivée à destination<br/>";
 	}
 }
 
