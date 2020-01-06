@@ -1,7 +1,7 @@
 <?php
 @session_start();
 
-require_once("fonctions.php");
+require_once("../fonctions.php");
 
 $mysqli = db_connexion();
 
@@ -22,7 +22,7 @@ $mysqli = db_connexion();
 
 		<div class="container">
 			<br/>
-			<center><p><b>Page à faire</b></p></center>
+			<center><p><b>A venir</b></p></center>
 		</div>
 		
 		<!-- Optional JavaScript -->
