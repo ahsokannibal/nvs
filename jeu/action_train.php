@@ -57,7 +57,6 @@ while ($t = $res->fetch_assoc()) {
 		// On déplace le train
 		if ($x_train > $x_gare_arrivee) {
 			// Déplacement vers la gauche
-			echo "Déplacement vers la gauche : ";
 			
 			$rail_trouve = false;
 			
@@ -124,7 +123,6 @@ while ($t = $res->fetch_assoc()) {
 					
 				} else {
 					// Le rail est trouvé => on se déplace dessus
-					echo "Rail trouvé en $x_r / $y_r<br />";
 					
 					// Modification coordonnées instance train
 					$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
@@ -149,7 +147,6 @@ while ($t = $res->fetch_assoc()) {
 			}
 			else {
 				// Le rail est trouvé => on se déplace dessus
-				echo "Rail trouvé en $x_r / $y_r<br />";
 				
 				// Modification coordonnées instance train
 				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
@@ -175,7 +172,6 @@ while ($t = $res->fetch_assoc()) {
 		}
 		else if ($x_train < $x_gare_arrivee) {
 			// Déplacement vers la droite
-			echo "Déplacement vers la droite : ";
 			
 			$rail_trouve = false;
 			
@@ -200,7 +196,6 @@ while ($t = $res->fetch_assoc()) {
 				// Le rail ne se trouvait pas à gauche => on cherche la direction nord ou sud
 				if ($y_train > $y_gare_arrivee) {
 					// Déplacement vers le bas
-					echo "Déplacement vers le bas : ";
 					
 					// Récupération des rails en bas
 					$sql_r2 = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE y_carte=$y_train-1 AND (x_carte=$x_train OR x_carte=$x_train-1 OR x_carte=$x_train+1)";
@@ -221,7 +216,6 @@ while ($t = $res->fetch_assoc()) {
 				}
 				else {
 					// Déplacement vers le haut
-					echo "Déplacement vers le haut : ";
 					
 					// Récupération des rails en haut
 					$sql_r2 = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE y_carte=$y_train+1 AND (x_carte=$x_train OR x_carte=$x_train-1 OR x_carte=$x_train+1)";
@@ -246,7 +240,6 @@ while ($t = $res->fetch_assoc()) {
 					
 				} else {
 					// Le rail est trouvé => on se déplace dessus
-					echo "Rail trouvé en $x_r / $y_r<br />";
 					
 					// Modification coordonnées instance train
 					$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
@@ -271,7 +264,6 @@ while ($t = $res->fetch_assoc()) {
 			}
 			else {
 				// Le rail est trouvé => on se déplace dessus
-				echo "Rail trouvé en $x_r / $y_r<br />";
 				
 				// Modification coordonnées instance train
 				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
@@ -299,7 +291,6 @@ while ($t = $res->fetch_assoc()) {
 			
 			if ($y_train > $y_gare_arrivee) {
 				// Déplacement vers le bas
-				echo "Déplacement vers le bas : ";
 				
 				// Récupération des rails en bas
 				$sql_r2 = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE y_carte=$y_train-1 AND (x_carte=$x_train OR x_carte=$x_train-1 OR x_carte=$x_train+1)";
@@ -320,7 +311,6 @@ while ($t = $res->fetch_assoc()) {
 			}
 			else {
 				// Déplacement vers le haut
-				echo "Déplacement vers le haut : ";
 				
 				// Récupération des rails en haut
 				$sql_r2 = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE y_carte=$y_train+1 AND (x_carte=$x_train OR x_carte=$x_train-1 OR x_carte=$x_train+1)";
@@ -345,7 +335,6 @@ while ($t = $res->fetch_assoc()) {
 				
 			} else {
 				// Le rail est trouvé => on se déplace dessus
-				echo "Rail trouvé en $x_r / $y_r<br />";
 				
 				// Modification coordonnées instance train
 				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
@@ -372,8 +361,6 @@ while ($t = $res->fetch_assoc()) {
 	}
 	
 	if (est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee)) {
-		
-		echo "<br/>***** Train arrivée à destination<br/>";
 		
 		// Récupération des persos dans le train 
 		$sql_pt = "SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train'";
@@ -417,7 +404,7 @@ while ($t = $res->fetch_assoc()) {
 		$sql_perso_ticket_dest = "SELECT id_perso FROM perso_as_objet 
 									WHERE id_objet='1' 
 									AND capacite_objet='$nouvelle_direction' 
-									AND id_perso IN (SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat = '50007')";
+									AND id_perso IN (SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat = '$gare_arrivee')";
 		$res_perso_ticket_dest = $mysqli->query($sql_perso_ticket_dest);
 			
 		while ($t_perso_ticket_dest = $res_perso_ticket_dest->fetch_assoc()) {

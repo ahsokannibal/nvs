@@ -271,6 +271,7 @@ function prox_instance_bat($mysqli, $x, $y, $instance){
 }
 
 // fonction qui recupere les infos sur les batiments a proximité
+// on ne prend pas en compte les trains
 function id_prox_bat($mysqli, $x, $y){
 	
 	$sql = "SELECT DISTINCT(id_instanceBat), nom_instance, id_batiment, pv_instance, pvMax_instance
@@ -279,6 +280,7 @@ function id_prox_bat($mysqli, $x, $y){
 			AND x_carte <= $x + 1 
 			AND y_carte >= $y - 1 
 			AND y_carte <= $y + 1 
+			AND id_batiment != 12
 			AND idPerso_carte=id_instanceBat 
 			ORDER BY id_instanceBat";
 			
