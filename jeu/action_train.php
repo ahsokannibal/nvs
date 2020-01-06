@@ -138,7 +138,9 @@ while ($t = $res->fetch_assoc()) {
 					$mysqli->query($sql_c1);
 					
 					$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
-					$mysqli->query($sql_c2);	
+					$mysqli->query($sql_c2);
+					
+					// TODO - MAJ coordonnées persos dans le train
 					
 					$dep_restant--;
 				}
@@ -159,7 +161,9 @@ while ($t = $res->fetch_assoc()) {
 				$mysqli->query($sql_c1);
 				
 				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
-				$mysqli->query($sql_c2);				
+				$mysqli->query($sql_c2);
+
+				// TODO - MAJ coordonnées persos dans le train
 				
 				$dep_restant--;
 			}
@@ -254,6 +258,8 @@ while ($t = $res->fetch_assoc()) {
 					$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
 					$mysqli->query($sql_c2);	
 					
+					// TODO - MAJ coordonnées persos dans le train
+					
 					$dep_restant--;
 				}
 			}
@@ -274,6 +280,8 @@ while ($t = $res->fetch_assoc()) {
 				
 				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
 				$mysqli->query($sql_c2);
+				
+				// TODO - MAJ coordonnées persos dans le train
 				
 				$dep_restant--;
 			}
@@ -343,7 +351,9 @@ while ($t = $res->fetch_assoc()) {
 				$mysqli->query($sql_c1);
 				
 				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
-				$mysqli->query($sql_c2);	
+				$mysqli->query($sql_c2);
+				
+				// TODO - MAJ coordonnées persos dans le train
 				
 				$dep_restant--;
 			}
@@ -352,16 +362,74 @@ while ($t = $res->fetch_assoc()) {
 	}
 	
 	if (est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee)) {
+		
 		echo "<br/>***** Train arrivée à destination<br/>";
 		
-		// On décharge les persos dans la gare
+		// Récupération des persos dans le train 
+		$sql_pt = "SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train'";
+		$res_pt = $mysqli->query($sql_pt);
+		
+		while ($t_pt = $res_pt->fetch_assoc()) {
+			
+			$id_perso_dechargement = $t_pt['id_perso'];
+			
+			// On le supprime du train
+			$sql_dt = "DELETE FROM perso_in_train WHERE id_perso='$id_perso_dechargement'";
+			$mysqli->query($sql_dt);
+			
+			// On décharge le perso dans la gare
+			$sql_pg = "INSERT INTO perso_in_batiment VALUES ('$id_perso_dechargement','$gare_arrivee')";
+			$mysqli->query($sql_pg);
+			
+			$sql_p = "UPDATE perso SET x_perso='$x_gare_arrivee', y_perso='$y_gare_arrivee' WHERE id_perso='$id_perso_dechargement'";
+			$mysqli->query($sql_p);
+			
+		}		
 		
 		// On change la destination du train
+		$sql_dt = "SELECT id_gare1, id_gare2 FROM liaisons_gare WHERE id_train='$id_instance_train'";
+		$res_dt = $mysqli->query($sql_dt);
+		$t_dt = $res_dt->fetch_assoc();
 		
-		// On charge les persos présent dans la gare ayant un ticket vers la nouvelle destination
+		$id_gare1 = $t_dt['id_gare1'];
+		$id_gare2 = $t_dt['id_gare2'];
 		
+		if ($gare_arrivee == $id_gare1) {
+			$nouvelle_direction = $id_gare2;
+		} else {
+			$nouvelle_direction = $id_gare1;
+		}
 		
+		$sql_lg = "UPDATE liaisons_gare SET direction='$nouvelle_direction' WHERE id_train='$id_instance_train'";
+		$mysqli->query($sql_lg);
 		
+		// récupération des persos dans cette gare ayant un ticket pour la nouvelle direction
+		$sql_perso_ticket_dest = "SELECT id_perso FROM perso_as_objet 
+									WHERE id_objet='1' 
+									AND capacite_objet='$nouvelle_direction' 
+									AND id_perso IN (SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat = '50007')";
+		$res_perso_ticket_dest = $mysqli->query($sql_perso_ticket_dest);
+			
+		while ($t_perso_ticket_dest = $res_perso_ticket_dest->fetch_assoc()) {
+				
+			$id_perso_chargement = $t_perso_ticket_dest['id_perso'];
+			
+			// On supprime le ticket de l'inventaire
+			$sql_delete_ticket = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso_chargement' AND id_objet='1' AND capacite_objet='$nouvelle_direction' LIMIT 1";
+			$mysqli->query($sql_delete_ticket);
+			
+			// On supprime le perso du batiment
+			$sql_delete_bat = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_chargement'";
+			$mysqli->query($sql_delete_bat);
+			
+			// On charge les persos dans le train
+			$sql_chargement_train = "INSERT INTO perso_in_train VALUES ('$id_instance_train','$id_perso_chargement')";
+			$mysqli->query($sql_chargement_train);
+			
+			// MAJ coordonnées perso chargés sur les coordonnées du train 
+			$sql_maj_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso='$id_perso_chargement'";
+			$mysqli->query($sql_maj_perso);
+		}	
 	}
 }
 
