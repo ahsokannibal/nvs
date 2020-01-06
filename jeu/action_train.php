@@ -140,7 +140,9 @@ while ($t = $res->fetch_assoc()) {
 					$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
 					$mysqli->query($sql_c2);
 					
-					// TODO - MAJ coordonnées persos dans le train
+					// MAJ coordonnées persos dans le train
+					$sql_u_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
+					$mysqli->query($sql_u_perso);
 					
 					$dep_restant--;
 				}
@@ -163,7 +165,9 @@ while ($t = $res->fetch_assoc()) {
 				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
 				$mysqli->query($sql_c2);
 
-				// TODO - MAJ coordonnées persos dans le train
+				// MAJ coordonnées persos dans le train
+				$sql_u_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
+				$mysqli->query($sql_u_perso);
 				
 				$dep_restant--;
 			}
@@ -258,7 +262,9 @@ while ($t = $res->fetch_assoc()) {
 					$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
 					$mysqli->query($sql_c2);	
 					
-					// TODO - MAJ coordonnées persos dans le train
+					// MAJ coordonnées persos dans le train
+					$sql_u_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
+					$mysqli->query($sql_u_perso);
 					
 					$dep_restant--;
 				}
@@ -281,7 +287,9 @@ while ($t = $res->fetch_assoc()) {
 				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
 				$mysqli->query($sql_c2);
 				
-				// TODO - MAJ coordonnées persos dans le train
+				// MAJ coordonnées persos dans le train
+				$sql_u_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
+				$mysqli->query($sql_u_perso);
 				
 				$dep_restant--;
 			}
@@ -353,7 +361,9 @@ while ($t = $res->fetch_assoc()) {
 				$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_r' AND y_carte='$y_r'";
 				$mysqli->query($sql_c2);
 				
-				// TODO - MAJ coordonnées persos dans le train
+				// MAJ coordonnées persos dans le train
+				$sql_u_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
+				$mysqli->query($sql_u_perso);
 				
 				$dep_restant--;
 			}
