@@ -230,11 +230,11 @@ function afficheResultat($resultat)
 
 function couleur_nation($nb, $nom) {
 	if ($nb == 1)
-		$color = "#FF0000"; //rouge
+		$color = "#0000FF"; // bleu
 	elseif ($nb == 2)
-		$color = "darkgreen"; // vert
+		$color = "#FF0000"; // rouge
 	elseif ($nb == 3)
-		$color = "#0000FF"; //bleu
+		$color = "darkgreen"; //vert
 	else
 		$color = "#CCCCCC";	
 	return "<b><font color=\"$color\">$nom</font></b>";
