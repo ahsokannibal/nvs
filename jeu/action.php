@@ -977,49 +977,56 @@ if($dispo){
 						// action ne pouvant pas cibler son propre perso
 						else {
 							//recuperation des coordonnees du perso
-							$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso'";
+							$sql = "SELECT x_perso, y_perso, pa_perso, clan FROM perso WHERE id_perso='$id_perso'";
 							$res = $mysqli->query($sql);
 							$t_coord = $res->fetch_assoc();
 							
-							$x_perso = $t_coord['x_perso'];
-							$y_perso = $t_coord['y_perso'];
+							$x_perso 	= $t_coord['x_perso'];
+							$y_perso 	= $t_coord['y_perso'];
 							$clan_perso = $t_coord['clan'];
+							$pa_perso	= $t_coord['pa_perso'];
 							
 							// Donner objet
 							if($nom_action == 'Donner objet'){
 								
-								echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Personnage à qui donner l'objet</th></tr>";
-								echo "<tr>";
+								if ($pa_perso >= 1) {
+									
+									echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Personnage à qui donner l'objet</th></tr>";
+									echo "<tr>";
+									
+									// Recuperation des persos au CaC
+									$sql_c = "SELECT idPerso_carte FROM $carte WHERE x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte>=$y_perso-1 AND y_carte<=$y_perso+1 AND occupee_carte='1' AND idPerso_carte!='$id_perso' AND idPerso_carte < 10000";
+									$res_c = $mysqli->query($sql_c);
+									
+									while($t_c = $res_c->fetch_assoc()){
+										
+										$id_cible = $t_c['idPerso_carte'];
+										
+										// Recuperation infos cible
+										$sql_cible = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
+										$res_cible = $mysqli->query($sql_cible);
+										$t_cible = $res_cible->fetch_assoc();
+										$nom_cible = $t_cible['nom_perso'];
+										$camp_cible = $t_cible['clan'];
+										
+										// recuperation de la couleur du camp
+										$couleur_clan_cible = couleur_clan($camp_cible);
+										
+										echo "<form method='post' action='action.php'>";
+										echo "<td align='center'><select name=\"select_perso_don\">";
+										echo "<option style=\"color:$couleur_clan_cible\" value=\"$id_cible\">$nom_cible</option>";
+										echo "</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' /><input type='hidden' name='hid_valid_perso_don' value='valider' /></td>";
+										echo "";
+										echo "</form>";
+									}
+									
+									echo "</tr></table>";
+									
+								} else {
 								
-								// Recuperation des persos au CaC
-								$sql_c = "SELECT idPerso_carte FROM $carte WHERE x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte>=$y_perso-1 AND y_carte<=$y_perso+1 AND occupee_carte='1' AND idPerso_carte!='$id_perso' AND idPerso_carte < 10000";
-								$res_c = $mysqli->query($sql_c);
+									echo "<center><font color='red'>Vous n'avez pas assez de PA pour donner un objet (cout : 1 PA)</font></center>";
 								
-								while($t_c = $res_c->fetch_assoc()){
-									
-									$id_cible = $t_c['idPerso_carte'];
-									
-									// Recuperation infos cible
-									$sql_cible = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
-									$res_cible = $mysqli->query($sql_cible);
-									$t_cible = $res_cible->fetch_assoc();
-									$nom_cible = $t_cible['nom_perso'];
-									$camp_cible = $t_cible['clan'];
-									
-									// recuperation de la couleur du camp
-									$couleur_clan_cible = couleur_clan($camp_cible);
-									
-									echo "<form method='post' action='action.php'>";
-									echo "<td align='center'><select name=\"select_perso_don\">";
-									echo "<option style=\"color:$couleur_clan_cible\" value=\"$id_cible\">$nom_cible</option>";
-									echo "</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' /><input type='hidden' name='hid_valid_perso_don' value='valider' /></td>";
-									echo "";
-									echo "</form>";
 								}
-								
-								echo "</tr></table>";
-								
-								
 							}
 							else {
 								// Soins							

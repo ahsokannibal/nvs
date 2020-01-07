@@ -2289,8 +2289,8 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 						
 						if($or_perso >= $quantite){
 								
-							// On met a jour l'or du perso
-							$sql_u = "UPDATE perso SET or_perso=or_perso-$quantite WHERE id_perso='$id_perso'";
+							// On met a jour l'or et les PA du perso
+							$sql_u = "UPDATE perso SET pa_perso=pa_perso-1, or_perso=or_perso-$quantite WHERE id_perso='$id_perso'";
 							$mysqli->query($sql_u);
 								
 							// On met a jour l'or de la cible
