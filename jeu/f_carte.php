@@ -295,6 +295,14 @@ function in_bat($mysqli, $id){
 	return $nb != 0;
 }
 
+// fonction qui verifie si le perso est dans un train ou non
+function in_train($mysqli, $id){
+	$sql = "SELECT id_perso FROM perso_in_train WHERE id_perso='$id'";
+	$res = $mysqli->query($sql);
+	$nb = $res->fetch_row();
+	return $nb != 0;
+}
+
 // fonction qui verifie si le perso est dans un batiment precis ou non
 function in_instance_bat($mysqli, $id_perso, $id_i_bat){
 	$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_perso='$id_perso' AND id_instanceBat='$id_i_bat'";

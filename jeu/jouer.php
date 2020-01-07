@@ -227,7 +227,7 @@ if($dispo || !$admin){
 						if(isset($_GET["bat2"]) && ($_GET["bat2"] == 2 || $_GET["bat2"] == 3) && isset($_GET["bat"]) && $_GET["bat"]!="") {
 						
 							// Vérification que le perso soit pas déjà dans un bâtiment
-							if(!in_bat($mysqli, $id_perso)){
+							if(!in_bat($mysqli, $id_perso) && !in_train($mysqli, $id_perso)){
 						
 								// verification que l'instance du batiment existe
 								if (existe_instance_bat($mysqli, $_GET["bat"])){
@@ -366,7 +366,7 @@ if($dispo || !$admin){
 							if(isset($_GET["bat"]) && $_GET["bat"]!="" && isset($_GET["bat2"]) && $_GET["bat2"]!="" && $_GET["bat2"] != 1){
 								
 								// Vérification que le perso soit pas déjà dans un bâtiment
-								if(!in_bat($mysqli, $id_perso)){
+								if(!in_bat($mysqli, $id_perso) && !in_train($mysqli, $id_perso)){
 								
 									// verification que l'instance du batiment existe
 									if (existe_instance_bat($mysqli, $_GET["bat"])){
@@ -506,6 +506,7 @@ if($dispo || !$admin){
 					}
 				}
 				
+				// On se trouve dans un batiment
 				if(in_bat($mysqli, $id_perso)){
 					
 					// Récupération des infos sur l'instance du batiment dans lequel le perso se trouve
@@ -549,6 +550,11 @@ if($dispo || !$admin){
 					
 					$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
+				}
+				
+				// On se trouve dans un train
+				if (in_train($mysqli, $id_perso)) {
+					// TODO
 				}
 				
 				// traitement de l'ouverture du coffre
@@ -621,7 +627,7 @@ if($dispo || !$admin){
 					$y_persoE = $t_perso1["y_perso"];
 					$pm_perso = $t_perso1["pm_perso"];
 					
-					if (!in_bat($mysqli, $id_perso)) {
+					if (!in_bat($mysqli, $id_perso) && !in_train($mysqli, $id_perso)) {
 					
 						if (reste_pm($pm_perso + $malus_pm)) {
 							
@@ -912,12 +918,14 @@ if($dispo || !$admin){
 						}
 					}
 					else {
-						$erreur .= "Vous ne pouvez pas vous déplacer si vous êtes dans un bâtiment";
+						$erreur .= "Vous ne pouvez pas vous déplacer si vous êtes dans un bâtiment ou un train";
 					}
 				}
 				else {
-					// verification si il y a un batiment a proximite du perso
-					$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso);
+					if (!in_train($mysqli, $id_perso)) {
+						// verification si il y a un batiment a proximite du perso
+						$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso);
+					}
 				}
 				
 				//affichage de l'heure serveur et de nouveau tour
