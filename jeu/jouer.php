@@ -971,13 +971,13 @@ if($dispo || !$admin){
 				if($clan_perso == 1){
 					$clan = 'rond_b.png';
 					$couleur_clan_perso = 'blue';
-					$image_profil = "nord.gif";
+					$image_profil = "Nord.gif";
 					$image_em = "em_nord.png";
 				}
 				if($clan_perso == 2){
 					$clan = 'rond_r.png';
 					$couleur_clan_perso = 'red';
-					$image_profil = "sud.gif";
+					$image_profil = "Sud.gif";
 					$image_em = "em_sud.png";
 				}
 				
@@ -1720,12 +1720,12 @@ if($dispo || !$admin){
 														if($clan_e == 1){
 															$clan_ennemi 	= 'rond_b.png';
 															$couleur_clan_e = 'blue';
-															$image_profil 	= "nord.gif";
+															$image_profil 	= "Nord.gif";
 														}
 														if($clan_e == 2){
 															$clan_ennemi 	= 'rond_r.png';
 															$couleur_clan_e = 'red';
-															$image_profil 	= "sud.gif";
+															$image_profil 	= "Sud.gif";
 														}
 														
 														// recuperation de l'id de la compagnie 
