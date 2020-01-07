@@ -1550,7 +1550,7 @@ if($verif){
 		
 		if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {	
 		
-			$coutPa_attaque='5';
+			$coutPa_attaque=$coutPa_arme_attaque;
 					
 			// recuperation des données du batiment	
 			$sql = "SELECT batiment.id_batiment, nom_batiment, description, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance 
