@@ -149,7 +149,8 @@ CREATE TABLE `batiment` (
   `id_batiment` int(11) NOT NULL,
   `nom_batiment` varchar(125) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `pvMax_batiment` int(11) NOT NULL DEFAULT '20',
-  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL
+  `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `taille_batiment` int(11) NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -866,7 +867,7 @@ CREATE TABLE `stats_camp_kill` (
 --
 -- Structure de la table `tentative_triche`
 --
-CREATE TABLE `nvs`.`tentative_triche` ( 
+CREATE TABLE `tentative_triche` ( 
 	`id_tentative` INT NOT NULL AUTO_INCREMENT , 
 	`id_perso` INT NULL , 
 	`texte_tentative` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL , 
@@ -1114,13 +1115,6 @@ ALTER TABLE `pnj_in_zone`
 --
 ALTER TABLE `ressources_entrepot`
   ADD UNIQUE KEY `id_entrepot` (`id_entrepot`,`id_ressource`);
-
---
--- Index pour la table `compagnie`
---
-ALTER TABLE `compagnie`
-  ADD PRIMARY KEY (`id_compagnie`),
-  ADD UNIQUE KEY `nom_compagnie` (`nom_compagnie`);
   
 --
 -- Index pour la table `type_unite`

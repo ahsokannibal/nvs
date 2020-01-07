@@ -343,6 +343,13 @@ INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `
 ('2', NULL, 'romshunter@msn.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
 
 --
+-- Contenu de la table `objet`
+--
+
+INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `type_objet`) VALUES
+(1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 5, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 'T');
+
+--
 -- Contenu de la table `perso`
 --
 INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x_perso`, `y_perso`, `xp_perso`, `pi_perso`, `pc_perso`, `or_perso`, `pvMax_perso`, `pm_perso`, `pmMax_perso`, `pv_perso`, `perception_perso`, `recup_perso`, `pa_perso`, `paMax_perso`, `protec_perso`, `charge_perso`, `chargeMax_perso`, `bonusPerception_perso`, `bonusRecup_perso`, `bonusPM_perso`, `bonus_perso`, `image_perso`, `message_perso`, `bourre_perso`, `nb_kill`, `nb_mort`, `nb_pnj`, `dateCreation_perso`, `DLA_perso`, `description_perso`, `clan`, `a_gele`, `est_gele`, `date_gele`, `chef`, `bataillon`) VALUES ('1', '1', 'Abraham Lincoln', '1', '10', '10', '0', '0', '999999999', '0', '7500', '100', '100', '7500', '10', '100', '100', '100', '20', '0', '50', '0', '0', '0', '0', 'cavalerie_nord.gif', 'Général des armées du Nord', '0', '0', '0', '0', NOW(), NOW(), 'Général des armées du Nord', '1', '0', '0', NULL, '1', 'Général de l\'Union');
