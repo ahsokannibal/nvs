@@ -1920,31 +1920,6 @@ if($dispo || !$admin){
 														}
 													}
 													
-													// Infanterie et soigneur
-													if ($type_perso == 3 || $type_perso == 4) {
-														// Bousculer = 145
-														if($pa_perso < 3){
-															echo "<option value=\"PA\">Bousculer (3 pa)</option>";
-														}
-														else {
-															echo "<option value=\"145\">Bousculer (3 pa)</option>";
-														}
-													}
-													
-													// Cavalerie et cavalerie lourde
-													if ($type_perso == 1 || $type_perso == 2) {
-														// Charge = 999
-														echo "<option value=\"999\">Charger (0 pa)</option>";
-														
-														// Bousculer = 145
-														if($pa_perso < 3){
-															echo "<option value=\"PA\">Bousculer (3 pa)</option>";
-														}
-														else {
-															echo "<option value=\"145\">Bousculer (3 pa)</option>";
-														}
-													}
-													
 													// verification s'il y a un objet sur la case du perso
 													$sql_op = "SELECT id_objet FROM objet_in_carte, perso WHERE x_carte=x_perso AND y_carte=y_perso";
 													$res_op = $mysqli->query($sql_op);
