@@ -336,7 +336,7 @@ if($dispo){
 										
 										//------- Competences
 										// Insertion competence construction barricades
-										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','33','1')";
+										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','22','1')";
 										$mysqli->query($sql_c);
 										
 										// Insertion competence marche forcée

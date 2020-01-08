@@ -302,7 +302,7 @@ if(config_dispo_jeu($mysqli)){
 							$mysqli->query($sql);
 							
 							// Insertion competence construction barricades
-							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','33','1')";
+							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','22','1')";
 							$mysqli->query($sql_c);
 							
 							// Insertion competence marche forcée
