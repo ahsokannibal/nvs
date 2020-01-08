@@ -265,11 +265,13 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		
 		if($id_camp == "1"){
 			$couleur_camp = "blue";
+			$nom_camp = "Nord";
 			$nb = $nbb;
 			$meutre = $meutre_b;
 		}
 		if($id_camp == "2"){
 			$couleur_camp = "red";
+			$nom_camp = "Sud";
 			$nb = $nbr;
 			$meutre = $meutre_r;
 		}
@@ -277,7 +279,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$couleur_camp = "green";
 		}
 		
-		echo "<tr><td align=center><font color=\"$couleur_camp\">".$couleur_camp."</font> [".$id_camp."]</td><td align=center>$nb_kill</td><td align=center>$meutre</td><td align=center>$nb</td></tr>";
+		echo "<tr><td align=center><font color=\"$couleur_camp\">".$nom_camp."</font> [".$id_camp."]</td><td align=center>$nb_kill</td><td align=center>$meutre</td><td align=center>$nb</td></tr>";
 	}
 	echo "</table>";
 }

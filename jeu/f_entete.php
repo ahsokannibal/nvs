@@ -117,11 +117,11 @@ function entete($mysqli, $id) {
 				
 				if($camp_instance == '1'){
 					$couleur_camp_instance = 'blue';
-					$nom_clan = 'Bleus';
+					$nom_clan = 'Nord';
 				}
 				if($camp_instance == '2'){
 					$couleur_camp_instance = 'red';
-					$nom_clan = 'Rouges';
+					$nom_clan = 'Sud';
 				}
 				if($camp_instance == '3'){
 					$couleur_camp_instance = 'purple';

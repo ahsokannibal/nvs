@@ -1923,6 +1923,12 @@ if($dispo || !$admin){
 														}
 													}
 													
+													// Cavalerie et cavalerie lourde
+													if ($type_perso == 1 || $type_perso == 2) {
+														// Charge = 999
+														echo "<option value=\"999\">Charger (tous les pa)</option>";
+													}
+													
 													// verification s'il y a un objet sur la case du perso
 													$sql_op = "SELECT id_objet FROM objet_in_carte, perso WHERE x_carte=x_perso AND y_carte=y_perso";
 													$res_op = $mysqli->query($sql_op);
@@ -1962,6 +1968,7 @@ if($dispo || !$admin){
 														else {
 															echo "<option value=\"PA\">* ".$nom_ac." (";
 														}
+														
 														echo "". $cout_PA . "pa)</option>";
 													}
 													?>
