@@ -510,14 +510,15 @@ if($dispo || !$admin){
 				if(in_bat($mysqli, $id_perso)){
 					
 					// Récupération des infos sur l'instance du batiment dans lequel le perso se trouve
-					$sql = "SELECT id_instanceBat, id_batiment, nom_instance, niveau_instance FROM instance_batiment WHERE x_instance='$x_persoN' AND y_instance='$y_persoN'";
+					$sql = "SELECT id_instanceBat, id_batiment, nom_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE x_instance='$x_persoN' AND y_instance='$y_persoN'";
 					$res = $mysqli->query($sql);
 					$t = $res->fetch_assoc();
 					
-					$id_bat 			= $t["id_instanceBat"];
-					$bat 				= $t["id_batiment"];
-					$niveau_instance 	= $t["niveau_instance"];
-					$nom_ibat 			= $t["nom_instance"];
+					$id_bat 	= $t["id_instanceBat"];
+					$bat 		= $t["id_batiment"];
+					$nom_ibat 	= $t["nom_instance"];
+					$pv_bat		= $t['pv_instance'];
+					$pvMax_bat	= $t['pvMax_instance'];
 					
 					//recuperation du nom du batiment
 					$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
@@ -526,16 +527,18 @@ if($dispo || !$admin){
 					
 					$nom_bat = $t_n["nom_batiment"];
 					
+					if ($pv_bat < $pvMax_bat) {
+						$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+					}
+					
 					$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
 					$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat&out=ok\" > sortir du batiment $nom_bat $nom_ibat</a>~~</font></center>";
 					
 					$bonus_perc = 0;
 					
 					// calcul du bonus de perception
+					// Tour de guet
 					if($bat == 2){
-						$bonus_perc += $niveau_instance;
-					}
-					if($bat == 3){
 						$bonus_perc += 2;
 					}
 					
