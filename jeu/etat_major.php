@@ -82,6 +82,18 @@ if($dispo){
 				$unlock = "UNLOCK TABLES";
 				$mysqli->query($unlock);
 				
+				// Insertion compagnie_as_contraintes
+				$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '1')";
+				$mysqli->query($sql);
+				$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '2')";
+				$mysqli->query($sql);
+				$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '3')";
+				$mysqli->query($sql);
+				$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '4')";
+				$mysqli->query($sql);
+				$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '5')";
+				$mysqli->query($sql);
+				
 				// Insertion de perso dans la compagnie en tant que chef
 				$sql = "INSERT INTO perso_in_compagnie (id_perso, id_compagnie, poste_compagnie, attenteValidation_compagnie) VALUES ('$id_perso_comp', '$id_new_comp', '1', '0')";
 				$mysqli->query($sql);
