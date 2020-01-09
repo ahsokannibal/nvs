@@ -466,13 +466,13 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) {
 				}
 				
 				if ($pv_instance < $pvMax_instance) {
-					$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+					$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat] (5 PA)</a>~~</font></center>";
 				}
 			}
 			
 			// pont
 			if ($bat == 5) {
-				$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+				$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat] (10 PA)</a>~~</font></center>";
 			}
 		}
 	}
