@@ -477,7 +477,7 @@ if($dispo){
 												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
 										$mysqli->query($sql);
 										
-										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";
+										echo "<center><font color=blue>Vous venez de recruter un $nom_unite</font></center>";
 										
 									} else {
 										echo "<center><font color=red>Vous n'avez pas assez de point de grouillot pour pouvoir recruter cette unité. Il vous reste $pg_restant points de grouillot</font></center>";
@@ -694,7 +694,7 @@ if($dispo){
 												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
 										$mysqli->query($sql);
 										
-										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";
+										echo "<center><font color=blue>Vous venez de recruter un $nom_unite</font></center>";
 										
 									} else {
 										echo "<center><font color=red>Vous n'avez pas assez de point de grouillot pour pouvoir recruter cette unité. Il vous reste $pg_restant points de grouillot</font></center>";
