@@ -704,9 +704,31 @@ if($dispo){
 								}
 							}
 							
+							
+							// Calculer PG déjà utilisés par le joueur
+							$pg_utilise = 0;
+							
+							$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
+							$res = $mysqli->query($sql);
+							while ($tab = $res->fetch_assoc()) {
+								
+								$type_perso_joueur = $tab["type_perso"];
+								
+								$sql_u = "SELECT cout_pg FROM type_unite WHERE id_unite='$type_perso_joueur'";
+								$res_u = $mysqli->query($sql_u);
+								$t_u = $res_u->fetch_assoc();
+								
+								$pg_utilise += $t_u["cout_pg"];
+								
+							}
+							
+							// Calcul PG restant au joueur
+							$pg_restant = $pg - $pg_utilise;
+							
 							?>
 							
-							<center>Le recrutement d'un grouillot coute 3PA, il vous reste <?php echo $pa_perso; ?> PA</center>
+							<center>Vous avez utilisé <b><?php echo $pg_utilise; ?> PG</b> sur un total de <b><?php echo $pg; ?>PG (PG restant : <?php echo $pg_restant; ?>)</b></center>
+							<center>Le recrutement d'un grouillot coute <b>3PA</b>, il vous reste <b><?php echo $pa_perso; ?> PA</b></center>
 							
 							<?php
 
