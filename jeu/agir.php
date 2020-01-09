@@ -1548,7 +1548,7 @@ if($verif){
 		// Récupération de la couleur associée au clan du perso
 		$couleur_clan_perso = couleur_clan($clan_perso);
 		
-		if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {	
+		if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
 		
 			$coutPa_attaque=$coutPa_arme_attaque;
 					
@@ -1853,6 +1853,10 @@ if($verif){
 					else {
 						
 						echo "<br>Vous avez raté votre cible.<br><br>";
+						
+						//mise à jour des pa
+						$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_attaque WHERE id_perso='$id'";
+						$res = $mysqli->query($sql);
 							
 						// maj evenement
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_batiment','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso>$nom_perso</font>','',NOW(),'0')";
