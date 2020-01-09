@@ -69,8 +69,8 @@ function ameliore_perc($mysqli, $per_courant, $type_perso){
 	$per_base_unite = $tab["perception_unite"];
 	
 	$per_ameliore_cible = $per_courant - $per_base_unite;
-	$base_cout_per = 175;
-	$cout_achat_per = 53;
+	$base_cout_per = 150;
+	$cout_achat_per = 45;
 	
 	$resultat = $base_cout_per + $per_ameliore_cible * $cout_achat_per;
 	return $resultat;
@@ -88,8 +88,8 @@ function ameliore_recup($mysqli, $rec_courant, $type_perso){
 	$rec_base_unite = $tab["recup_unite"];
 	
 	$rec_ameliore_cible = $rec_courant - $rec_base_unite;
-	$base_cout_rec = 175;
-	$cout_achat_rec = 53;
+	$base_cout_rec = 100;
+	$cout_achat_rec = 30;
 	
 	$resultat = $base_cout_rec + $rec_ameliore_cible * $cout_achat_rec;
 	return $resultat;
