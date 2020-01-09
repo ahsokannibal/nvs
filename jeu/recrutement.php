@@ -49,11 +49,14 @@ if($dispo){
 			
 			if ($clan == 1) {
 				$camp = "nord";
+				$couleur_clan_perso = "blue";
 			} else if ($clan == 2) {
 				$camp = "sud";
+				$couleur_clan_perso = "red";
 			} else {
 				// ???
 				$camp = "nord";
+				$couleur_clan_perso = "blue";
 			}
 			
 			// Seul le chef peut recruter des grouillots
@@ -228,6 +231,11 @@ if($dispo){
 										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','4','1')";
 										$mysqli->query($sql);
 										
+										// Evenement grouillot rejoint bataillon
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
+										$mysqli->query($sql);
+										
 										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";
 										
 									} else {
@@ -342,6 +350,11 @@ if($dispo){
 										// Insertion competence marche forcée
 										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','6','1')";
 										$mysqli->query($sql_c);
+										
+										// Evenement grouillot rejoint bataillon
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
+										$mysqli->query($sql);
 										
 										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";
 										
@@ -459,6 +472,11 @@ if($dispo){
 										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','6','1')";
 										$mysqli->query($sql_c);
 										
+										// Evenement grouillot rejoint bataillon
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
+										$mysqli->query($sql);
+										
 										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";
 										
 									} else {
@@ -561,6 +579,10 @@ if($dispo){
 										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','13','1')";
 										$mysqli->query($sql);
 										
+										// Evenement grouillot rejoint bataillon
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
+										$mysqli->query($sql);
 										
 										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";
 										
@@ -667,6 +689,10 @@ if($dispo){
 										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','12','1')";
 										$mysqli->query($sql);
 										
+										// Evenement grouillot rejoint bataillon
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
+										$mysqli->query($sql);
 										
 										echo "<center><font color=blue>Vous venez de recruter une $nom_unite</font></center>";
 										
