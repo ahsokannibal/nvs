@@ -108,15 +108,15 @@ if($dispo){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<title>Nord VS Sud</title>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-<link href="../style.css" rel="stylesheet" type="text/css">
-</head>
-<body>
-<div align="center"><h2><?php echo $nom_bat." ".$nom_i_bat; ?></h2></div>
-<center><img src="../images/<?php echo $blason; ?>" alt="blason"/></center><br />
-<center><a href="evenement.php?infoid=<?php echo $id_i_bat; ?>">Voir les évènements du bâtiment</a></center>
+	<head>
+	<title>Nord VS Sud</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	
+	<body>
+		<div align="center"><h2><?php echo $nom_bat." ".$nom_i_bat; ?></h2></div>
+		<center><img src="../images/<?php echo $blason; ?>" alt="blason"/></center><br />
+		<center><a href="evenement.php?infoid=<?php echo $id_i_bat; ?>">Voir les évènements du bâtiment</a></center>
 <?php
 						/////////////////////
 						// on achete une arme
@@ -134,14 +134,13 @@ if($dispo){
 								if(existe_arme($mysqli, $id_arme)){
 								
 									// recuperation des données de l'arme
-									$sql_a = "SELECT nom_arme, coutOr_arme, pvMax_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
+									$sql_a = "SELECT nom_arme, coutOr_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
 									$res_a = $mysqli->query($sql_a);
 									$t_a = $res_a->fetch_assoc();
 									
-									$nom_arme = $t_a["nom_arme"];
-									$coutOr_arme = $t_a["coutOr_arme"];
-									$pvMax_arme = $t_a["pvMax_arme"];
-									$poids_arme = $t_a["poids_arme"];
+									$nom_arme 		= $t_a["nom_arme"];
+									$coutOr_arme 	= $t_a["coutOr_arme"];
+									$poids_arme 	= $t_a["poids_arme"];
 									
 									// calcul rabais
 									if($nb_points_marchandage){
@@ -153,7 +152,7 @@ if($dispo){
 									if($or >= $coutOr_arme){
 										
 										// insertion perso_as_arme
-										$sql_i = "INSERT INTO perso_as_arme VALUES('$id_perso','$id_arme','0','$pvMax_arme','0')";
+										$sql_i = "INSERT INTO perso_as_arme VALUES('$id_perso','$id_arme','0')";
 										$mysqli->query($sql_i);
 									
 										// mis à jour or/charge perso

@@ -326,7 +326,7 @@ if($dispo){
 								$sql_a2 = "SELECT perso_as_arme.id_arme, nom_arme, description_arme, porteeMin_arme, porteeMax_arme, degatMin_arme, degatMax_arme, degatMax_arme, valeur_des_arme, degatZone_arme, image_arme 
 											FROM perso_as_arme, arme
 											WHERE perso_as_arme.id_arme = arme.id_arme 
-											AND est_portee='0' AND perso_as_arme.id_perso='2' 
+											AND est_portee='0' AND perso_as_arme.id_perso='$id_perso' 
 											AND perso_as_arme.id_arme NOT IN 
 												(
 													SELECT perso_as_arme.id_arme
@@ -335,7 +335,7 @@ if($dispo){
 													AND perso_as_arme.id_perso = perso.id_perso 
 													AND perso.type_perso = arme_as_type_unite.id_type_unite
 													AND arme_as_type_unite.id_arme = arme.id_arme
-													AND est_portee='0' AND perso_as_arme.id_perso='2'
+													AND est_portee='0' AND perso_as_arme.id_perso='$id_perso'
 												)
 											ORDER BY perso_as_arme.id_arme";
 											
