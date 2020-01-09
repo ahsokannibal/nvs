@@ -22,11 +22,12 @@ if($dispo){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
-		$sql = "SELECT pv_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT pv_perso, type_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql );
 		$tpv = $res->fetch_assoc();
 		
 		$testpv 	= $tpv['pv_perso'];
+		$type_perso	= $tpv['type_perso'];
 		$or 		= $tpv["or_perso"];
 		$dla 		= $tpv["DLA"];
 		$est_gele 	= $tpv["est_gele"];
@@ -34,13 +35,16 @@ if($dispo){
 		$config = '1';
 		
 		// verification si le perso est encore en vie
-		if ($testpv <= 0) { // le perso est mort
-			// unset($_SESSION['ma_variable']); 
+		if ($testpv <= 0) {
+			// le perso est mort
 			session_unregister('deDefense');
 			session_unregister('deAttaque');
-			header("Location: ../tour.php"); //tour.php se charge de verifier si nouveau tour
+			
+			header("Location: ../tour.php");
 		}
-		else { // le perso est vivant
+		else {
+			
+			// le perso est vivant
 			if(isset($_GET['bat'])){
 				
 				// Recuperation de l'id du batiment
@@ -50,6 +54,7 @@ if($dispo){
 				$verif = preg_match("#^[0-9]*[0-9]$#i","$id_i_bat");
 				
 				if($verif){
+					
 					//verification que le perso est bien dans le batiment
 					if (in_instance_bat($mysqli, $id_perso, $id_i_bat)){
 					
@@ -966,6 +971,7 @@ if($dispo){
 							echo "</form>";
 							
 							if (isset($_POST["ch"])){
+								
 								$choix = $_POST["choix"];
 								
 								// Armes
@@ -1279,6 +1285,7 @@ if($dispo){
 							echo "</form>";
 							
 							if (isset($_POST["ch"])){
+								
 								$choix = $_POST["choix"];
 						
 								// Objets
@@ -1353,8 +1360,13 @@ if($dispo){
 									echo "</tr>";
 								
 									// Récupération des données des armes de CàC de niveau égal à 6
-									$sql = "SELECT id_arme, nom_arme, coutPa_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, poids_arme, coutOr_arme, image_arme FROM arme 
-											WHERE porteeMin_arme = 1 AND porteeMax_arme = 1 AND qualite_arme = 6";
+									$sql = "SELECT arme.id_arme, nom_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, poids_arme, coutOr_arme, image_arme 
+											FROM arme, arme_as_type_unite
+											WHERE arme.id_arme = arme_as_type_unite.id_arme
+											AND porteeMin_arme = 1 
+											AND porteeMax_arme = 1
+											AND id_type_unite=$type_perso
+											AND coutOr_arme > 0";
 									$res = $mysqli->query($sql);
 									$nb = $res->num_rows;
 									
@@ -1363,40 +1375,27 @@ if($dispo){
 											
 											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 										
-											$id_arme = $t["id_arme"];
-											$nom_arme = $t["nom_arme"];
-											$coutPa_arme = $t["coutPa_arme"];
-											$additionMinDegats_arme = $t["additionMin_degats"];
-											$additionMaxDegats_arme = $t["additionMax_degats"];
-											$multiplicateurMinDegats_arme = $t["multiplicateurMin_degats"];
-											$multiplicateurMaxDegats_arme = $t["multiplicateurMax_degats"];
-											$degatMin_arme = $t["degatMin_arme"];
-											$degatMax_arme = $t["degatMax_arme"];
-											$poids_arme = $t["poids_arme"];
-											$coutOr_arme = $t["coutOr_arme"];
-											$image_arme = $t["image_arme"];
+											$id_arme 			= $t["id_arme"];
+											$nom_arme 			= $t["nom_arme"];
+											$coutPa_arme 		= $t["coutPa_arme"];
+											$degatMin_arme 		= $t["degatMin_arme"];
+											$degatMax_arme 		= $t["degatMax_arme"];
+											$valeur_des_arme 	= $t["valeur_des_arme"];
+											$precision_arme		= $t["precision_arme"];
+											$coutOr_arme 		= $t["coutOr_arme"];
+											$image_arme 		= $t["image_arme"];
+											$poids_arme			= $t["poids_arme"];
 											
 											// rabais
 											$rabais = floor(($coutOr_arme * $pourcentage_rabais)/100);
 											
 											if($nom_arme != "poing") {
 												echo "<tr><td><center>$nom_arme</center></td><td><center>$coutPa_arme</center></td>";
-												if($degatMin_arme && $degatMax_arme){
-													echo "<td><center>$degatMin_arme -- $degatMax_arme</center></td>";
+												if($degatMin_arme && $valeur_des_arme){
+													echo "<td><center>" . $degatMin_arme . "D". $valeur_des_arme ."</center></td>";
 												}
 												else {
-													if($multiplicateurMinDegats_arme || $multiplicateurMaxDegats_arme){
-														echo "<td><center>D";
-														if($multiplicateurMinDegats_arme != 1)
-															echo "*".$multiplicateurMinDegats_arme;
-														echo " + $additionMinDegats_arme -- D";
-														if($multiplicateurMaxDegats_arme != 1)
-															echo "*".$multiplicateurMaxDegats_arme;
-														echo " + $additionMaxDegats_arme</center></td>";
-													}
-													else {
-														echo "<td><center> - </center></td>";
-													}
+													echo "<td><center> - </center></td>";
 												}
 												echo "<td><center>$poids_arme</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme\" width=\"40\" height=\"40\"></td>";?>
 												<td><?php echo "<center>".$coutOr_arme;
@@ -1433,8 +1432,12 @@ if($dispo){
 									echo "<th>achat</th>";
 									
 									// Récupération des données des armes à distance de qualité égal à 6
-									$sql2 = "SELECT id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, additionMin_degats, additionMax_degats, multiplicateurMin_degats, multiplicateurMax_degats, degatMin_arme, degatMax_arme, degatZone_arme, poids_arme, coutOr_arme, image_arme FROM arme 
-											 WHERE porteeMax_arme > 1 AND qualite_arme = 6";
+									$sql2 = "SELECT arme.id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, degatZone_arme, poids_arme, coutOr_arme, image_arme 
+												FROM arme, arme_as_type_unite
+												WHERE arme.id_arme = arme_as_type_unite.id_arme
+												AND porteeMax_arme > 1
+												AND id_type_unite=$type_perso
+												AND coutOr_arme > 0";
 									$res2 = $mysqli->query($sql2);
 									$nb2 = $res2->num_rows;
 									
@@ -1443,37 +1446,29 @@ if($dispo){
 											
 											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 										
-											$id_arme2 = $t2["id_arme"];
-											$nom_arme2 = $t2["nom_arme"];
-											$porteeMin_arme2 = $t2["porteeMin_arme"];
-											$porteeMax_arme2 = $t2["porteeMax_arme"];
-											$coutPa_arme2 = $t2["coutPa_arme"];
-											$additionMinDegats_arme2 = $t2["additionMin_degats"];
-											$additionMaxDegats_arme2 = $t2["additionMax_degats"];
-											$multiplicateurMinDegats_arme2 = $t2["multiplicateurMin_degats"];
-											$multiplicateurMaxDegats_arme2 = $t2["multiplicateurMax_degats"];
-											$degatMin_arme2 = $t2["degatMin_arme"];
-											$degatMax_arme2 = $t2["degatMax_arme"];
-											$degatZone_arme2 = $t2["degatZone_arme"];
-											$poids_arme2 = $t2["poids_arme"];
-											$coutOr_arme2 = $t2["coutOr_arme"];
-											$image_arme2 = $t2["image_arme"];
+											$id_arme2 			= $t2["id_arme"];
+											$nom_arme2 			= $t2["nom_arme"];
+											$porteeMin_arme2 	= $t2["porteeMin_arme"];
+											$porteeMax_arme2 	= $t2["porteeMax_arme"];
+											$coutPa_arme2 		= $t2["coutPa_arme"];
+											$valeur_des_arme2 	= $t2["valeur_des_arme"];
+											$precision_arme2 	= $t2["precision_arme"];
+											$degatMin_arme2 	= $t2["degatMin_arme"];
+											$degatMax_arme2 	= $t2["degatMax_arme"];
+											$degatZone_arme2 	= $t2["degatZone_arme"];
+											$poids_arme2 		= $t2["poids_arme"];
+											$coutOr_arme2 		= $t2["coutOr_arme"];
+											$image_arme2 		= $t2["image_arme"];
 											
 											// Calcul rabais
 											$rabais = floor(($coutOr_arme2 * $pourcentage_rabais)/100);
 											
 											echo "<tr><td><center>$nom_arme2</center></td><td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td><td><center>$coutPa_arme2</center></td>";
-											if($degatMin_arme2 && $degatMax_arme2){
-												echo "<td><center>$degatMin_arme2 -- $degatMax_arme2</center></td>";
+											if($degatMin_arme2 && $valeur_des_arme2){
+												echo "<td><center>" . $degatMin_arme2 . "D" . $valeur_des_arme2 . "</center></td>";
 											}
 											else {
-												echo "<td><center>D";
-												if($multiplicateurMinDegats_arme2 != 1)
-													echo "*".$multiplicateurMinDegats_arme2;
-												echo " + $additionMinDegats_arme2 -- D";
-												if($multiplicateurMaxDegats_arme2 != 1)
-													echo "*".$multiplicateurMaxDegats_arme2;
-												echo " + $additionMaxDegats_arme2</center></td>";
+												echo "<td><center> - </center></td>";
 											}
 											echo "<td>";
 											if ($degatZone_arme2){

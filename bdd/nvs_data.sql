@@ -74,11 +74,11 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 --
 
 INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `coutPa_arme`, `coutOr_arme`, `additionMin_degats`, `additionMax_degats`, `multiplicateurMin_degats`, `multiplicateurMax_degats`, `degatMin_arme`, `degatMax_arme`, `valeur_des_arme`, `precision_arme`, `degatZone_arme`, `bonusPM_arme`, `poids_arme`, `pvMax_arme`, `description_arme`, `qualite_arme`, `main`, `image_arme`) VALUES
-(1, 'sabre', 1, 1, 4, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.2', 0, '', 0, 1, 'sabre.jpg'),
-(2, 'Sabre lourd', 1, 1, 5, 200, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '1.5', 0, '', 0, 1, 'sabre_lourd.jpg'),
+(1, 'sabre', 1, 1, 4, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.jpg'),
+(2, 'Sabre lourd', 1, 1, 5, 250, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '2.5', 0, '', 0, 1, 'sabre_lourd.jpg'),
 (3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.gif'),
-(4, 'Pistolet', 1, 2, 3, 100, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.2', 0, '', 0, 1, 'pistolet.jpg'),
-(5, 'Pistolet Canon Long', 1, 3, 3, 200, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '1.3', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
+(4, 'Pistolet', 1, 2, 3, 0, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
+(5, 'Pistolet Canon Long', 1, 3, 3, 100, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '2.0', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
 (6, 'Baïonette', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (7, 'Fusil ', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (8, 'Fusil Précision ', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
@@ -87,7 +87,8 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (11, 'Bandages', 1, 1, 3, 50, 0, 0, 0, 0, 2, 2, 10, 35, '0', 0, '0.2', 0, 'Bandages permettant de récupérer des malus de defense', 0, 1, 'bandage.jpg'),
 (12, 'Griffes', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'griffe.png'),
 (13, 'Canon', 2, 5, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
-(14, 'Gatling', 1, 4, 4, 250, 0, 0, 0, 0, 40, 40, 6, 75, '0', 0, '0.0', 0, '', 0, 1, 'gatling.png');
+(14, 'Gatling', 1, 4, 4, 250, 0, 0, 0, 0, 40, 40, 6, 75, '0', 0, '0.0', 0, '', 0, 1, 'gatling.png'),
+(15, 'Magnum', '1', '2', '3', '100', '0', '0', '0', '0', '20', '20', '6', '65', '0', '0', '2.0', '0', '', '0', '1', 'magnum.jpg');
 
 
 -- --------------------------------------------------------
@@ -116,7 +117,9 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (9, 6),
 (12, 6),
 (13, 5),
-(14, 5);
+(14, 5),
+(15, 1),
+(15, 2);
 
 -- --------------------------------------------------------
 
