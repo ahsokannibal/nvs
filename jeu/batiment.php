@@ -1360,12 +1360,10 @@ if($dispo){
 									echo "</tr>";
 								
 									// Récupération des données des armes de CàC de niveau égal à 6
-									$sql = "SELECT arme.id_arme, nom_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, poids_arme, coutOr_arme, image_arme 
-											FROM arme, arme_as_type_unite
-											WHERE arme.id_arme = arme_as_type_unite.id_arme
-											AND porteeMin_arme = 1 
+									$sql = "SELECT id_arme, nom_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, poids_arme, coutOr_arme, image_arme 
+											FROM arme
+											WHERE porteeMin_arme = 1 
 											AND porteeMax_arme = 1
-											AND id_type_unite=$type_perso
 											AND coutOr_arme > 0";
 									$res = $mysqli->query($sql);
 									$nb = $res->num_rows;
@@ -1432,11 +1430,9 @@ if($dispo){
 									echo "<th>achat</th>";
 									
 									// Récupération des données des armes à distance de qualité égal à 6
-									$sql2 = "SELECT arme.id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, degatZone_arme, poids_arme, coutOr_arme, image_arme 
-												FROM arme, arme_as_type_unite
-												WHERE arme.id_arme = arme_as_type_unite.id_arme
-												AND porteeMax_arme > 1
-												AND id_type_unite=$type_perso
+									$sql2 = "SELECT id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, degatZone_arme, poids_arme, coutOr_arme, image_arme 
+												FROM arme
+												WHERE porteeMax_arme > 1
 												AND coutOr_arme > 0";
 									$res2 = $mysqli->query($sql2);
 									$nb2 = $res2->num_rows;

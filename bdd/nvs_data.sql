@@ -86,7 +86,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (10, 'Seringue', 1, 1, 5, 50, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '0.1', 0, 'Seringue pour soigner', 0, 1, 'seringue.jpg'),
 (11, 'Bandages', 1, 1, 3, 50, 0, 0, 0, 0, 2, 2, 10, 35, '0', 0, '0.2', 0, 'Bandages permettant de récupérer des malus de defense', 0, 1, 'bandage.jpg'),
 (12, 'Griffes', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'griffe.png'),
-(13, 'Canon', 2, 5, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
+(13, 'Canon', 2, 5, 6, 0, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
 (14, 'Gatling', 1, 4, 4, 250, 0, 0, 0, 0, 40, 40, 6, 75, '0', 0, '0.0', 0, '', 0, 1, 'gatling.png'),
 (15, 'Magnum', '1', '2', '3', '100', '0', '0', '0', '0', '20', '20', '6', '65', '0', '0', '2.0', '0', '', '0', '1', 'magnum.jpg');
 
