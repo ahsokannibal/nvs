@@ -1110,9 +1110,9 @@ if($dispo || !$admin){
 							?>
 						</tr>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/profil_titre.gif"> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/evenement_titre.gif"></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/sac_titre.gif"></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titre.gif"></a> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=16 border=0 src="../images/evenement_titre.gif"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titre.gif"></a></td>
 							<?php 
 							$sql_mes = "SELECT count(id_message) as nb_mes from message_perso where id_perso='$id_perso' and lu_message='0' AND supprime_message='0'";
 							$res_mes = $mysqli->query($sql_mes);
@@ -1120,14 +1120,14 @@ if($dispo || !$admin){
 							
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/carte_titre.gif"></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/messagerie_titre.gif"> <?php if($nb_nouveaux_mes) { echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; if($nb_nouveaux_mes > 1) echo "x"; echo " message"; if($nb_nouveaux_mes > 1) echo "s"; echo ")</font>"; } ?></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/classement_titre.gif"></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/groupe_titre.gif"></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=16 border=0 src="../images/carte_titre.gif"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titre.gif"></a> <?php if($nb_nouveaux_mes) { echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; if($nb_nouveaux_mes > 1) echo "x"; echo " message"; if($nb_nouveaux_mes > 1) echo "s"; echo ")</font>"; } ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=16 border=0 src="../images/classement_titre.gif"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/groupe_titre.gif"></a></td>
 							<?php
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><img width=83 height=16 border=0 src="../images/em_titre.gif" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=16 border=0 src="../images/em_titre.gif" alt="etat major"></a></td>
 							<?php
 							}
 							?>
