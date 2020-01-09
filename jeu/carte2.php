@@ -11,6 +11,7 @@ if (@$_SESSION["id_perso"]) {
 	$perso_carte = imagecreate(603,603)  or die ("Cannot Initialize new GD image stream");
 	//$legende_carte = imagecreatefrompng("carte_tmp/legende.png");
 	$image_carte = imagecreatefrompng("carte_tmp/carte.png");
+	$image_carte_bataillon = imagecreatefrompng("carte_tmp/carte.png");
 
 	//maintenant on donne une couleur a notre image (ici un fond noir)
 	$fond_perso=Imagecolorallocate($perso_carte, 250, 250, 250);
@@ -30,6 +31,7 @@ if (@$_SESSION["id_perso"]) {
 	$couleur_bat_clan1 		= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
 	$couleur_bat_clan2 		= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
 	$couleur_rail			= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
+	$couleur_bataillon		= Imagecolorallocate($perso_carte, 10, 10, 10); // 
 	
 	// je vais chercher les rails dans ma table
 	$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif'";
@@ -99,12 +101,13 @@ if (@$_SESSION["id_perso"]) {
 	}
 
 	// je vais chercher le perso qui est connecté dans ma table
-	$sql2 = "SELECT x_perso, y_perso FROM perso WHERE id_perso=$id";
+	$sql2 = "SELECT x_perso, y_perso, idJoueur_perso FROM perso WHERE id_perso=$id";
 	$res2 = $mysqli->query($sql2);
 	$t2 = $res2->fetch_assoc();
 	
 	$x2 = $t2["x_perso"];
 	$y2 = $t2["y_perso"];
+	$id_joueur = $t2["idJoueur_perso"];
 	
 	imageellipse($perso_carte, 3*$x2, 600-3*$y2, 20, 20, $noir);
 	imagepng($perso_carte, "carte_tmp/perso$id.png");
@@ -112,12 +115,32 @@ if (@$_SESSION["id_perso"]) {
 	imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
 	imagepng($image_carte, "carte_tmp/carte_sl$id.png");
 	
-	//imagecopymerge ($image_carte, $legende_carte, 0, 0, 0, 0, 603, 603, 40);
-	
 	// on affiche l'image
 	imagepng($image_carte, "carte_tmp/carte$id.png");
+	
+	// Je vais chercher les persos du même joueur (même bataillon)
+	$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()) {
+		
+		$x = $t['x_perso'];
+		$y = $t['y_perso'];
+		
+		imageellipse($image_carte, 3*$x, 600-3*$y, 20, 20, $couleur_bataillon);
+		imagepng($image_carte, "carte_tmp/bataillon$id_joueur.png");
+		imagepng($image_carte, "carte_tmp/carte_bataillon$id.png");
+		
+		imagecopymerge ($image_carte_bataillon, $image_carte, 0, 0, 0, 0, 603, 603, 100);
+		imagepng($image_carte_bataillon, "carte_tmp/carte_bataillon_sl$id.png");
+	}
+	
+	//imagecopymerge ($image_carte, $legende_carte, 0, 0, 0, 0, 603, 603, 40);
+	
+	
 	ImageDestroy ($perso_carte);
 	ImageDestroy ($image_carte);
+	ImageDestroy ($image_carte_bataillon);
 	ImageDestroy ($legende_carte);
 
 	header("Location: afficher_carte.php");

@@ -1,6 +1,8 @@
 <?php
 session_start();
+
 if (@$_SESSION["id_perso"]) {
+	
 	$id = $_SESSION["id_perso"];
 
 	require_once "../fonctions.php";
@@ -8,8 +10,8 @@ if (@$_SESSION["id_perso"]) {
 	$mysqli = db_connexion();
 	
 	//dans la page qui doit afficher la carte:
-	$requete = $mysqli->query("SELECT * FROM carte_time") or die (mysql_error());
-	$sql = $requete->fetch_array ();
+	$requete = $mysqli->query("SELECT * FROM carte_time");
+	$sql = $requete->fetch_array();
 	$timerefresh = $sql['timerefresh'];
 					  
 	$Tpsrestant = Floor(($timerefresh-time())/60);
@@ -23,6 +25,8 @@ if (@$_SESSION["id_perso"]) {
 	}
 	else {
 		if(isset($_POST['Submit'])){
+			
+			// Enlever le fond
 			if($_POST['Submit'] == "enlever le fond"){
 				echo "<center><img src=\"carte_tmp/perso$id.png\"></center>"; 
 				echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
@@ -35,6 +39,8 @@ if (@$_SESSION["id_perso"]) {
 				echo "</form>";
 			}
 			else {
+				
+				// Enlever la legende
 				if($_POST['Submit'] == "enlever la legende"){
 					echo "<center><img src=\"carte_tmp/carte_sl$id.png\"></center>"; 
 					echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
@@ -47,6 +53,8 @@ if (@$_SESSION["id_perso"]) {
 					echo "</form>";
 				}
 				else {
+					
+					// Remettre la legende
 					if($_POST['Submit'] == "remettre la legende"){
 						echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
 						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
@@ -59,15 +67,31 @@ if (@$_SESSION["id_perso"]) {
 						echo "</form>";
 					}
 					else {
-						echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
-						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
-					
-						echo "<div align=\"center\"><br>";
-						echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
-						echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\">";
-						echo "</div>";
-						echo "</form>";
+						
+						if ($_POST['Submit'] == "cercles sur mon bataillon") {
+							echo "<center><img src=\"carte_tmp/carte_bataillon_sl$id.png\"></center>"; 
+							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						
+							echo "<div align=\"center\"><br>";
+							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
+							echo "</div>";
+							echo "</form>";
+						}
+						else {
+							echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
+							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						
+							echo "<div align=\"center\"><br>";
+							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
+							echo "</div>";
+							echo "</form>";
+						}
 					}
 				}
 			}
@@ -80,7 +104,8 @@ if (@$_SESSION["id_perso"]) {
 			echo "<div align=\"center\"><br>";
 			echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
 			echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-			echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\">";
+			echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\"><br />";
+			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 			echo "</div>";
 			echo "</form>";
 			

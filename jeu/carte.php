@@ -18,12 +18,12 @@ session_start();
 	
 	$mysqli = db_connexion();
 	
-	$noir = Imagecolorallocate($perso_carte, 0, 0, 0); // noir
-	$couleur_pnj = Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
-	$couleur_perso_clan1 = Imagecolorallocate($perso_carte, 14, 18, 254); // bleu bien voyant
-	$couleur_perso_clan2 = Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
+	$noir 					= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
+	$couleur_pnj 			= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
+	$couleur_perso_clan1 	= Imagecolorallocate($perso_carte, 14, 18, 254); // bleu bien voyant
+	$couleur_perso_clan2 	= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
 	
-	// je vais chercher les pnjdans ma table
+	// je vais chercher les pnj dans ma table
 	$sql = "SELECT x_i, y_i FROM instance_pnj WHERE pv_i>0";
 	$res = $mysqli->query($sql);
 	while ($t = $res->fetch_assoc()){
@@ -53,12 +53,12 @@ session_start();
 	}
 
 	imagepng($perso_carte, "carte_tmp/perso.png");
-	
 	imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 303, 303, 100);
 	
-	// on affiche l'image
+	// Creation de la carte histo
 	$date = date('D-d-M-Y-H-i-s');
 	imagepng($image_carte, "histo_carte/carte-$date.png");
+	
 	ImageDestroy ($perso_carte);
 	ImageDestroy ($image_carte);
 
