@@ -364,6 +364,11 @@ if(config_dispo_jeu($mysqli)){
 									VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>',' vient tout juste de sortir des jupons de sa maman pour venir grossir les rangs de l\'armée du $ncamp ',NULL,'','',NOW(),'0')";
 							$mysqli->query($sql);
 							
+							// Evenement grouillot 
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+									VALUES ($id_g,'<font color=$couleur_clan_perso>$nom_g</font>',' a rejoint le bataillon $nom_bataillon',NULL,'','',NOW(),'0')";
+							$mysqli->query($sql);
+							
 							header("location:index.php?creation=ok");
 						}
 						
