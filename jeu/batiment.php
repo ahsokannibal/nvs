@@ -193,15 +193,13 @@ if($dispo){
 								if(existe_armure($mysqli, $id_armure)){
 								
 									// recuperation des données de l'armure
-									$sql_a = "SELECT nom_armure, coutOr_armure, pvMax_armure, corps_armure, poids_armure FROM armure WHERE id_armure='$id_armure'";
+									$sql_a = "SELECT nom_armure, coutOr_armure, poids_armure FROM armure WHERE id_armure='$id_armure'";
 									$res_a = $mysqli->query($sql_a);
 									$t_a = $res_a->fetch_assoc();
 									
-									$nom_armure = $t_a["nom_armure"];
-									$coutOr_armure = $t_a["coutOr_armure"];
-									$pvMax_armure = $t_a["pvMax_armure"];
-									$corps_armure = $t_a["corps_armure"];
-									$poids_armure = $t_a["poids_armure"];
+									$nom_armure 	= $t_a["nom_armure"];
+									$coutOr_armure 	= $t_a["coutOr_armure"];
+									$pvMax_armure 	= $t_a["pvMax_armure"];
 									
 									// calcul rabais
 									if($nb_points_marchandage){
@@ -213,7 +211,7 @@ if($dispo){
 									if($or >= $coutOr_armure){
 										
 										// insertion perso_as_armure
-										$sql_i = "INSERT INTO perso_as_armure VALUES('$id_perso','$id_armure','0','$corps_armure','$pvMax_armure')";
+										$sql_i = "INSERT INTO perso_as_armure VALUES('$id_perso','$id_armure','0')";
 										$mysqli->query($sql_i);
 									
 										// mis à jour or et charge perso
@@ -258,9 +256,9 @@ if($dispo){
 									$res = $mysqli->query($sql);
 									$t_o = $res->fetch_assoc();
 									
-									$nom_o = $t_o["nom_objet"];
-									$poids_o = $t_o["poids_objet"];
-									$coutOr_o = $t_o["coutOr_objet"];
+									$nom_o 		= $t_o["nom_objet"];
+									$poids_o 	= $t_o["poids_objet"];
+									$coutOr_o 	= $t_o["coutOr_objet"];
 									
 									// calcul rabais
 									if($nb_points_marchandage){
