@@ -208,7 +208,7 @@ else {
 }
 
 ?>
-</body>
+	</body>
 </html>
 <?php
 }

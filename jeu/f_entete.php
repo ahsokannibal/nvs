@@ -7,14 +7,16 @@ function entete($mysqli, $id) {
 		// Perso
 		if($id < 50000) {
 			
-			$sql = "SELECT nom_perso, xp_perso, image_perso, clan FROM perso WHERE id_perso ='$id'";
+			$sql = "SELECT nom_perso, xp_perso, idJoueur_perso, image_perso, bataillon, clan FROM perso WHERE id_perso ='$id'";
 			$result = $mysqli->query($sql);
 			$tabAttr = $result->fetch_assoc();
 			
-			$nom_perso = $tabAttr['nom_perso'];
-			$xp = $tabAttr['xp_perso'];
-			$image_perso = $tabAttr['image_perso'];
-			$clan_perso = $tabAttr["clan"];
+			$nom_perso 		= $tabAttr['nom_perso'];
+			$xp 			= $tabAttr['xp_perso'];
+			$image_perso 	= $tabAttr['image_perso'];
+			$clan_perso 	= $tabAttr["clan"];
+			$bataillon		= $tabAttr["bataillon"];
+			$id_joueur		= $tabAttr["idJoueur_perso"];
 			
 			if($clan_perso == '1'){
 				$couleur_clan_perso = 'blue';
@@ -68,6 +70,11 @@ function entete($mysqli, $id) {
 							<td><b>Grade : </b><img src=\"../images/grades/" . $id_grade_perso . ".gif\" width=\"40\" height=\"40\">  " . $nom_grade_perso . "</td>
 						</tr>";
 			echo "<tr><td><b>Camp :</b> <font color=\"$couleur_clan_perso\">$nom_clan</font></td></tr>";
+			
+			echo "<tr>";
+			echo "	<td><b>Bataillon :</b> <a href=\"bataillon.php?id_bataillon=$id_joueur\">" . $bataillon . "</a></td>";
+			echo "</tr>";
+			
 			if(isset($groupe) && $groupe != ''){
 				echo "<tr><td><b>Compagnie :</b> <a href=\"compagnie.php?id_compagnie=$id_groupe&voir_groupe=ok\">". stripslashes($groupe) ."</a></td></tr>";
 			}

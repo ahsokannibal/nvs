@@ -24,13 +24,13 @@ if (isset($_POST["ch_c"])){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<title>Classement</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="../style3.css" rel="stylesheet" type="text/css">
-</head>
+	<head>
+		<title>Classement</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="../style3.css" rel="stylesheet" type="text/css">
+	</head>
 
-<body background="../images/background.jpg">
+	<body background="../images/background.jpg">
 
 <?php
 if(isset($erreur)){
@@ -442,5 +442,5 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "</table>";
 }
 ?>
-</body>
+	</body>
 </html>
