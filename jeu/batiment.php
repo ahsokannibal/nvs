@@ -1310,11 +1310,11 @@ if($dispo){
 											
 											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 										
-											$id_objet = $t["id_objet"];
-											$nom_objet = $t["nom_objet"];
-											$poids_objet = $t["poids_objet"];
-											$coutOr_objet = $t["coutOr_objet"];
-											$description_objet = $t["description_objet"];
+											$id_objet 			= $t["id_objet"];
+											$nom_objet 			= $t["nom_objet"];
+											$poids_objet 		= $t["poids_objet"];
+											$coutOr_objet 		= $t["coutOr_objet"];
+											$description_objet 	= $t["description_objet"];
 											
 											$image_objet = "objet".$id_objet.".png";
 											
@@ -1345,10 +1345,11 @@ if($dispo){
 								
 									// Armes au CaC
 									echo "<table width=100% border=1>";
-									echo "<tr><th colspan=7>Armes CàC</th></tr>";
+									echo "<tr><th colspan=8>Armes CàC</th></tr>";
 									echo "<tr bgcolor=\"lightgreen\">";
 									echo "<th>arme</th>";
 									echo "<th>coût PA</th>";
+									echo "<th>précision</th>";
 									echo "<th>dégats</th>";
 									echo "<th>poids</th>";
 									echo "<th>image</th>";
@@ -1385,7 +1386,7 @@ if($dispo){
 											$rabais = floor(($coutOr_arme * $pourcentage_rabais)/100);
 											
 											if($nom_arme != "poing") {
-												echo "<tr><td><center>$nom_arme</center></td><td><center>$coutPa_arme</center></td>";
+												echo "<tr><td><center>$nom_arme</center></td><td><center>$coutPa_arme</center></td><td><center>$precision_arme</center></td>";
 												if($degatMin_arme && $valeur_des_arme){
 													echo "<td><center>" . $degatMin_arme . "D". $valeur_des_arme ."</center></td>";
 												}
@@ -1414,11 +1415,12 @@ if($dispo){
 									echo "<table width=100% border=1>";
 									
 									// Armes à Distance
-									echo "<tr><th colspan=9>Armes Dist</th></tr>";
+									echo "<tr><th colspan=10>Armes Dist</th></tr>";
 									echo "<tr bgcolor=\"lightgreen\">";
 									echo "<th>arme</th>";
 									echo "<th>portée</th>";
 									echo "<th>coût PA</th>";
+									echo "<th>précision</th>";
 									echo "<th>dégats</th>";
 									echo "<th>dégats de zone ?</th>";
 									echo "<th>poids</th>";
@@ -1456,7 +1458,7 @@ if($dispo){
 											// Calcul rabais
 											$rabais = floor(($coutOr_arme2 * $pourcentage_rabais)/100);
 											
-											echo "<tr><td><center>$nom_arme2</center></td><td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td><td><center>$coutPa_arme2</center></td>";
+											echo "<tr><td><center>$nom_arme2</center></td><td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td><td><center>$coutPa_arme2</center></td><td><center>$precision_arme2</center></td>";
 											if($degatMin_arme2 && $valeur_des_arme2){
 												echo "<td><center>" . $degatMin_arme2 . "D" . $valeur_des_arme2 . "</center></td>";
 											}
