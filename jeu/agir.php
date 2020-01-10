@@ -882,7 +882,7 @@ if($verif){
 			
 							echo "<br>Vous avez raté votre cible.<br><br>";
 							
-							$gain_xp + 1;
+							$gain_xp = 1;
 							
 							// gain xp esquive et ajout malus
 							$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, bonus_perso=bonus_perso-1 WHERE id_perso='$id_cible'";
