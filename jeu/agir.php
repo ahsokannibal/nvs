@@ -630,6 +630,32 @@ if($verif){
 											// MAJ perte xp/po/stat cible
 											$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$perte_xp_collat, pi_perso=0, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
 											$mysqli->query($sql);
+											
+											if ($perte_po > 0) {
+												// On dépose la perte de PO par terre
+												// Verification si l'objet existe deja sur cette case
+												$sql = "SELECT nb_objet FROM objet_in_carte 
+														WHERE objet_in_carte.x_carte = $x_collat_fin 
+														AND objet_in_carte.y_carte = $y_collat_fin 
+														AND type_objet = '1' AND id_objet = '0'";
+												$res = $mysqli->query($sql);
+												$to = $res->fetch_assoc();
+												
+												$nb_o = $to["nb_objet"];
+												
+												if($nb_o){
+													// On met a jour le nombre
+													$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
+															WHERE type_objet='1' AND id_objet='0'
+															AND x_carte='$x_collat_fin' AND y_carte='$y_collat_fin'";
+													$mysqli->query($sql);
+												}
+												else {
+													// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+													$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat_fin','$y_collat_fin')";
+													$mysqli->query($sql);
+												}
+											}
 						
 											echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
 											
@@ -805,6 +831,32 @@ if($verif){
 								$mysqli->query($sql);
 			
 								echo "<div class=\"infoi\">Vous avez capturé votre cible ! <font color=red>Félicitations.</font></div>";
+								
+								if ($perte_po > 0) {
+									// On dépose la perte de thune par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible 
+											AND objet_in_carte.y_carte = $y_cible 
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
+									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
+								}
 								
 								// maj evenements
 								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a capturé','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>','',NOW(),'0')";

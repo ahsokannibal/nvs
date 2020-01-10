@@ -3214,15 +3214,39 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// MAJ perte PO cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de PO par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
@@ -3603,15 +3627,39 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// Maj perte po cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de PO par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
@@ -3992,15 +4040,39 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// MAJ perte thunes cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de thune par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
@@ -4381,15 +4453,39 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// MAJ perte thune cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de thune par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
@@ -4769,15 +4865,39 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// MAJ perte thune cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de thune par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
@@ -5157,15 +5277,39 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// MAJ perte thune cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de thune par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
@@ -5545,15 +5689,39 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// MAJ perte thune cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de thune par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
@@ -5937,15 +6105,39 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								
 								// Perte or 
 								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								
+								// MAJ perte thune cible
 								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
 								if ($calcul_perte_or > 0) {
-									// TODO : On met de l'or sur la carte
+									// On dépose la perte de thune par terre
+									// Verification si l'objet existe deja sur cette case
+									$sql = "SELECT nb_objet FROM objet_in_carte 
+											WHERE objet_in_carte.x_carte = $x_cible
+											AND objet_in_carte.y_carte = $y_cible
+											AND type_objet = '1' AND id_objet = '0'";
+									$res = $mysqli->query($sql);
+									$to = $res->fetch_assoc();
 									
+									$nb_o = $to["nb_objet"];
+									
+									if($nb_o){
+										// On met a jour le nombre
+										$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+												WHERE type_objet='1' AND id_objet='0'
+												AND x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+										// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+										$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+										$mysqli->query($sql);
+									}
 								}
 								
 								// evenement perso capture
