@@ -66,7 +66,10 @@ $count_online = $res->fetch_array();
 		<div class="container-fluid">
 			
 			<div class="row">
-				<div class="col-12">
+				<div class="col-4">
+					<img src="images/accueil/logo_NVS_lee.png" alt='baniere NVS' class="img-fluid" />
+				</div>
+				<div class="col-8">
 					<div align='center'><img src="images/accueil/baniere_accueil.jpg" alt='baniere NVS' class="img-fluid" /></div>
 				</div>
 			</div>
