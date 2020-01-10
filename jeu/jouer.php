@@ -1196,7 +1196,7 @@ if($dispo || !$admin){
 				<center>
 					<table border=0 align="center" width=100%>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=83 border=0 src="../images/<?php echo "$image_profil";?>" alt="profil"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=84 height=83 border=0 src="../images/<?php echo "$image_profil";?>" alt="profil"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=66 border=0 src="../images/evenement2.gif" alt="evenement"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=96 height=82 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=82 height=83 border=0 src="../images/carte.png" alt="mini map"></a></td>
@@ -1206,7 +1206,7 @@ if($dispo || !$admin){
 							<?php
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=70 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=100 height=83 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
 							<?php
 							}
 							?>

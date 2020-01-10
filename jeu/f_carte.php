@@ -9,7 +9,8 @@ define ("Y_MAX", 200);
 define ("I_PLAINE", "1.gif");
 define ("I_COLLINE", "2.gif");
 define ("I_MONTAGNE", "3.gif");
-
+define ("I_DESERT", "4.gif");
+define ("I_NEIGE", "5.gif");
 define ("I_MARECAGE", "6.gif");
 define ("I_FORET", "7.gif");
 define ("I_EAU", "8.gif");
@@ -54,12 +55,14 @@ function is_pont($image) //vérifie si l'image de la carte occupée (passée en arg
 function cout_pm($fond) //donne le nombre de pm que coute le deplacement suivant le terrain
 {
 	switch($fond) {
-		case(I_FORET): return 2; break; //foret
-		case(I_EAU): return 2; break; //eau
-		case(I_COLLINE): return 2; break; //colline
-		case(I_MONTAGNE): return 4; break; // montagne
-		case(I_ROUTE_B): return 0.5; break; // route bleu
-		case(I_ROUTE_R): return 0.5; break; // route rouge
+		case(I_FORET): return 2; break; 	//foret
+		case(I_EAU): return 4; break; 		//eau
+		case(I_MARECAGE): return 2; break; 	//marecage
+		case(I_DESERT): return 4; break; 	//desert
+		case(I_COLLINE): return 2; break; 	//colline
+		case(I_MONTAGNE): return 4; break; 	// montagne
+		case(I_ROUTE_B): return 1; break; 	// route bleu
+		case(I_ROUTE_R): return 1; break; 	// route rouge
 		default: return 1;
 	}
 }
