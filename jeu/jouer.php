@@ -1072,13 +1072,17 @@ if($dispo || !$admin){
 				if($clan_perso == 1){
 					$clan = 'rond_b.png';
 					$couleur_clan_perso = 'blue';
-					$image_profil = "Nord.gif";
+					$image_profil = "profil_nord.png";
+					$image_sac = "sac_nord.png";
+					$image_compagnie = "compagnie_nord.png";
 					$image_em = "em_nord.png";
 				}
 				if($clan_perso == 2){
 					$clan = 'rond_r.png';
 					$couleur_clan_perso = 'red';
-					$image_profil = "Sud.gif";
+					$image_profil = "profil_sud.png";
+					$image_sac = "sac_sud.png";
+					$image_compagnie = "compagnie_sud.png";
 					$image_em = "em_sud.png";
 				}
 				
@@ -1192,13 +1196,13 @@ if($dispo || !$admin){
 				<center>
 					<table border=0 align="center" width=100%>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=40 height=50 border=0 src="../images/<?php echo "$image_profil";?>" alt="profil"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=83 border=0 src="../images/<?php echo "$image_profil";?>" alt="profil"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=66 border=0 src="../images/evenement2.gif" alt="evenement"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=36 height=50 border=0 src="../images/sac.png" alt="sac"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=83 border=0 src="../images/world.png" alt="mini map"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=83 height=75 border=0 src="../images/messagerie2.gif" alt="messagerie"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=58 border=0 src="../images/classement2.gif" alt="classement"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=112 height=70 border=0 src="../images/groupe2.gif" alt="compagnie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=96 height=82 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=82 height=83 border=0 src="../images/carte.png" alt="mini map"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=96 height=83 border=0 src="../images/messagerie.png" alt="messagerie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=80 height=83 border=0 src="../images/classement.png" alt="classement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=159 height=72 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a></td>
 							<?php
 							if ($nb_em) {
 							?>
