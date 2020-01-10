@@ -2553,24 +2553,29 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 		$res = $mysqli->query($sql);
 		$t = $res->fetch_assoc();
 		
-		$x_perso = $t["x_perso"];
-		$y_perso = $t["y_perso"];
-		$pa_perso = $t["pa_perso"];
+		$x_perso 	= $t["x_perso"];
+		$y_perso 	= $t["y_perso"];
+		$pa_perso 	= $t["pa_perso"];
 		
 		if($pa_perso >= $coutPa){
 			// On depose l'objet
 			
-			if($type_objet == 2){ // Objet
+			// Objet
+			if($type_objet == 2){
 				// Suppression de l'inventaire du perso
 				$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' LIMIT 1";
 				$mysqli->query($sql);
 			}
-			if($type_objet == 3){ // Arme
+			
+			// Arme
+			if($type_objet == 3){
 				// Suppression de l'inventaire du perso
 				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' LIMIT 1";
 				$mysqli->query($sql);
 			}
-			if($type_objet == 4){ // Armure
+			
+			// Armure
+			if($type_objet == 4){
 				// Suppression de l'inventaire du perso
 				$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' LIMIT 1";
 				$mysqli->query($sql);

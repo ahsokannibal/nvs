@@ -487,9 +487,11 @@ if($dispo){
 	
 	// Deposer objet
 	if(isset($_POST['valid_objet_depo']) && isset($_POST['id_objet_depo'])){
+		
 		$t_objet = $_POST['id_objet_depo'];
 		$t2 = explode(',',$t_objet);
-		$id_objet = $t2[0];
+		
+		$id_objet 	= $t2[0];
 		$type_objet = $t2[1];
 		
 		action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet);
@@ -1462,11 +1464,11 @@ if($dispo){
 										$nb_o = $res2_o->num_rows;
 										
 										echo "<tr>";
-										echo "<td align='center'><dl><dd><a href='#'><img src='../images/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
-										echo "<td align='center'>$poids_o</td>";
-										echo "<td align='center'>$nb_o</td>";
+										echo "	<td align='center'><dl><dd><a href='#'><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
+										echo "	<td align='center'>$poids_o</td>";
+										echo "	<td align='center'>$nb_o</td>";
 										echo "<form method='post' action='action.php'>";
-										echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_objet,2,0' /></td>";
+										echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_objet,2,0' /></td>";
 										echo "</form>";
 										echo "</tr>";
 									}
@@ -1493,11 +1495,11 @@ if($dispo){
 										$nb_a1 = $res2_a1->num_rows;
 										
 										echo "<tr>";
-										echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
-										echo "<td align='center'>$poids_a1</td>";
-										echo "<td align='center'>$nb_a1</td>";
+										echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
+										echo "	<td align='center'>$poids_a1</td>";
+										echo "	<td align='center'>$nb_a1</td>";
 										echo "<form method='post' action='action.php'>";
-										echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_arme,3' /></td>";
+										echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_arme,3' /></td>";
 										echo "</form>";
 										echo "</tr>";
 									}
@@ -1523,11 +1525,11 @@ if($dispo){
 										$nb_a2 = $res2_a2->num_rows;
 										
 										echo "<tr>";
-										echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b></span></a></dd></dl></td>";
-										echo "<td align='center'>$poids_a2</td>";
-										echo "<td align='center'>$nb_a2</td>";
+										echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b></span></a></dd></dl></td>";
+										echo "	<td align='center'>$poids_a2</td>";
+										echo "	<td align='center'>$nb_a2</td>";
 										echo "<form method='post' action='action.php'>";
-										echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_armure,4' /></td>";
+										echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_armure,4' /></td>";
 										echo "</form>";
 										echo "</tr>";
 									}
