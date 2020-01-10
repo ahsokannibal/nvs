@@ -560,6 +560,104 @@ if($dispo || !$admin){
 					// TODO
 				}
 				
+				// Traitement ramasser objets à terre
+				if(isset($_GET['ramasser']) && $_GET['ramasser'] == "ok"){
+					
+					if ($pa_perso > 1) {
+						
+						// MAJ pa perso
+						$sql = "UPDATE perso SET pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
+						$mysqli->query($sql);
+						
+						$liste_ramasse = "";
+						
+						// récupération de la liste des objets à terre
+						$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+						$res = $mysqli->query($sql);
+						
+						while ($t = $res->fetch_assoc()) {
+								
+							$type_objet = $t['type_objet'];
+							$id_objet	= $t['id_objet'];
+							$nb_objet	= $t['nb_objet'];
+							
+							// Suppression de l'objet par terre
+							$sql_d = "DELETE FROM objet_in_carte WHERE type_objet='$type_objet' AND id_objet='$id_objet' AND x_carte='$x_persoN' AND y_carte='$y_persoN'";
+							$mysqli->query($sql_d);
+							
+							// Récupération poid objet
+							// Thunes
+							if ($type_objet == 1) {
+								$poid_objet = 0;
+								
+								// Ajout de la thune au perso 
+								$sql_t = "UPDATE perso SET or_perso=or_perso+$nb_objet WHERE id_perso='$id_perso'";
+								$mysqli->query($sql_t);
+								
+								$liste_ramasse .= $nb_objet . " Thune";
+								if ($nb_objet > 1) {
+									$liste_ramasse .= "s";
+								}
+							}
+							
+							// Objet
+							if ($type_objet == 2) {
+								$sql_obj = "SELECT nom_objet, poids_objet FROM objet WHERE id_objet='$id_objet'";
+								$res_obj = $mysqli->query($sql_obj);
+								$t_obj = $res_obj->fetch_assoc();
+								
+								$nom_objet	= $t_obj['nom_objet'];
+								$poid_objet = $t_obj['poids_objet'];
+								
+								for ($i = 0; $i < $nb_objet; $i++) {
+									// Ajout de l'objet dans l'inventaire du perso
+									$sql_o = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso', '$id_objet')";
+									$mysqli->query($sql_o);								
+								}
+								
+								// calcul charge objets
+								$charge_objets_total = $poid_objet * $nb_objet;
+								
+								// MAJ charge perso 
+								$sql_c = "UPDATE perso SET charge_perso = charge_perso + $charge_objets_total WHERE id_perso='$id_perso'";
+								$mysqli->query($sql_c);
+								
+								$liste_ramasse .= " -- ". $nb_objet . " " . $nom_objet;
+							}
+							
+							// Arme 
+							if ($type_objet == 3) {
+								$sql_obj = "SELECT nom_arme, poids_arme FROM arme WHERE id_arme='$id_objet'";
+								$res_obj = $mysqli->query($sql_obj);
+								$t_obj = $res_obj->fetch_assoc();
+								
+								$nom_arme	= $t_obj['nom_arme'];
+								$poid_objet = $t_obj['poids_arme'];
+								
+								for ($i = 0; $i < $nb_objet; $i++) {
+									// Ajout de l'arme dans l'inventaire du perso
+									$sql_a = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso', '$id_objet', '0')";
+									$mysqli->query($sql_a);								
+								}
+								
+								// calcul charge armes
+								$charge_objets_total = $poid_objet * $nb_objet;
+								
+								// MAJ charge perso 
+								$sql_c = "UPDATE perso SET charge_perso = charge_perso + $charge_objets_total WHERE id_perso='$id_perso'";
+								$mysqli->query($sql_c);
+								
+								$liste_ramasse .= " -- ". $nb_objet . " " . $nom_arme;
+							}
+						}
+						
+						echo "<center><font colot='blue'>Vous avez rammasser les objets suivants : ". $liste_ramasse ."</font></center><br>";
+					}
+					else {
+						$erreur .= "Vous n'avez pas assez de PA pour rammasser les objets à terre.";
+					}
+				}
+				
 				// traitement de l'ouverture du coffre
 				if(isset($_GET['coffre']) && $_GET['coffre'] == "ok"){
 					$ok_c = 0;
@@ -1144,6 +1242,60 @@ if($dispo || !$admin){
 				<?php
 				$erreur .= "</font>";
 				echo "<center>".$erreur."</div></center><br>";
+				
+				// Traitement voir objets à terre
+				if(isset($_GET['ramasser']) && $_GET['ramasser'] == "voir"){
+					
+					$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+					$res = $mysqli->query($sql);
+					
+					echo "<center>";
+					echo "	<table border='1' width='50%'>";
+					echo "		<tr>";
+					echo "			<th>Nom objet</th><th>Quantité</th>";
+					echo "		</tr>";
+					
+					while ($t = $res->fetch_assoc()) {
+						
+						$type_objet = $t['type_objet'];
+						$id_objet 	= $t['id_objet'];
+						$nb_objet	= $t['nb_objet'];
+						
+						// Récupération du nom de l'objet 
+						// Thunes
+						if ($type_objet == '1') {
+							$nom_objet = "Thune";
+							if ($nb_objet > 1) {
+								$nom_objet = $nom_objet."s";
+							}
+						}
+						
+						// Objets
+						if ($type_objet == '2') {
+							$sql_obj = "SELECT nom_objet FROM objet WHERE id_objet='$id_objet'";
+							$res_obj = $mysqli->query($sql_obj);
+							$t_obj = $res_obj->fetch_assoc();
+							
+							$nom_objet = $t_obj['nom_objet'];
+						}
+						
+						// Armes
+						if ($type_objet == '3') {
+							$sql_obj = "SELECT nom_arme FROM arme WHERE id_arme='$id_objet'";
+							$res_obj = $mysqli->query($sql_obj);
+							$t_obj = $res_obj->fetch_assoc();
+							
+							$nom_objet = $t_obj['nom_arme'];
+						}
+						
+						echo "		<tr>";
+						echo "			<td align='center'>" . $nom_objet . "</td><td align='center'>" . $nb_objet . "</td>";
+						echo "		</tr>";
+					}
+					
+					echo "	</table>";
+					echo "</center>";
+				}
 				
 				if($nb_c = prox_coffre($mysqli, $x_perso, $y_perso)){
 					for ($c = 0; $c < $nb_c; $c++) {
@@ -1976,7 +2128,15 @@ if($dispo || !$admin){
 												</select>
 												<input type='submit' name='action' value='ok' />
 											</form>
-											<?php echo $mess_bat; ?>
+											<?php 
+											echo $mess_bat;
+											
+											if (is_objet_a_terre($mysqli, $x_perso, $y_perso)) {
+												echo "<center><font color = blue>~~<a href=\"jouer.php?ramasser=ok\">Ramasser les objets à terre (1 PA)</a>~~</font></center>";
+												echo "<center><font color = blue>~~<a href=\"jouer.php?ramasser=voir\">Voir la liste des objets à terre</a>~~</font></center>";
+											}
+											
+											?>
 										</td>
 									</tr>
 									<tr>

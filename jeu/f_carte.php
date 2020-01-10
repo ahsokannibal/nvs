@@ -161,12 +161,17 @@ function chance_objet($nb){
 
 // fonction qui verifie si le perso est à proximité d'un coffre
 function prox_coffre($mysqli, $x, $y){
+	
 	$nb = 0;
+	
 	// on regarde autour du perso
 	$sql = "SELECT occupee_carte, image_carte FROM carte WHERE x_carte >= $x - 1 AND x_carte <= $x + 1 AND y_carte >= $y - 1 AND y_carte <= $y + 1";
 	$res = $mysqli->query($sql);
+	
 	while ($t = $res->fetch_assoc()){
+		
 		$oc = $t["occupee_carte"];
+		
 		if ($oc){ // si occupee
 			$im_c = $t["image_carte"];
 			if($im_c == "coffre1t.png"){ // si c'est un coffre
@@ -178,10 +183,13 @@ function prox_coffre($mysqli, $x, $y){
 }
 
 function prox_coffre_arene($mysqli, $x, $y){
+	
 	$nb = 0;
+	
 	// on regarde autour du perso
 	$sql = "SELECT occupee_carte, image_carte FROM arene WHERE x_carte >= $x - 1 AND x_carte <= $x + 1 AND y_carte >= $y - 1 AND y_carte <= $y + 1";
 	$res = $mysqli->query($sql);
+	
 	while ($t = $res->fetch_assoc()){
 		$oc = $t["occupee_carte"];
 		if ($oc){ // si occupee
@@ -222,6 +230,21 @@ function contenu_coffre($mysqli){
 		}
 	}
 	return $id_o;
+}
+
+/**
+ * Fonction qui permet de determiner si un perso est sur un objet déposé ou drop à terre
+ *
+ */
+function is_objet_a_terre($mysqli, $x_perso, $y_perso) {
+	 
+	$sql = "SELECT count(nb_objet) as nb_objets FROM objet_in_carte WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$nb_obj = $t['nb_objets'];
+	
+	return $nb_obj > 0;
 }
 
 // fonction qui retourne un booleen : vrai si il y a un batiment a coté de ces coordonnées, faux sinon

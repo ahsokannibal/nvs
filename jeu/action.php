@@ -1443,8 +1443,8 @@ if($dispo){
 									echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>déposer à terre ?</th></tr>";
 									
 									// Recuperation des objets / armes / armures que possede le perso
-									// Objets
-									$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' ORDER BY id_objet";
+									// Objets (sauf ticket de train qui sont nomminatifs)
+									$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet != '1' ORDER BY id_objet";
 									$res_o = $mysqli->query($sql_o);
 									
 									while($t_o = $res_o->fetch_assoc()){
