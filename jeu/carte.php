@@ -19,7 +19,7 @@ session_start();
 	$mysqli = db_connexion();
 	
 	$noir 					= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
-	$couleur_pnj 			= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
+	$couleur_vert 			= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
 	$couleur_perso_clan1 	= Imagecolorallocate($perso_carte, 14, 18, 254); // bleu bien voyant
 	$couleur_perso_clan2 	= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
 	
@@ -29,7 +29,7 @@ session_start();
 	while ($t = $res->fetch_assoc()){
 		$x = $t["x_i"];
 		$y = $t["y_i"];
-		$color = $couleur_pnj;
+		$color = $noir;
 		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((300-($y*3)))-1), (($x*3)+1), (((300-($y*3)))+1), $color);
 	}

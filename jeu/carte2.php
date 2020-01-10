@@ -24,14 +24,17 @@ if (@$_SESSION["id_perso"]) {
 	
 	$mysqli = db_connexion();
 	
+	// couleurs perso_carte
 	$noir 					= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
-	$couleur_pnj 			= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
+	$couleur_vert 			= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
 	$couleur_perso_clan1 	= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
 	$couleur_perso_clan2 	= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
 	$couleur_bat_clan1 		= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
 	$couleur_bat_clan2 		= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
 	$couleur_rail			= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
-	$couleur_bataillon		= Imagecolorallocate($perso_carte, 10, 10, 10); // 
+	
+	// couleurs image_carte
+	$couleur_bataillon		= Imagecolorallocate($image_carte, 0, 0, 0); // noir
 	
 	// je vais chercher les rails dans ma table
 	$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif'";
@@ -54,7 +57,7 @@ if (@$_SESSION["id_perso"]) {
 		
 		$x = $t["x_i"];
 		$y = $t["y_i"];
-		$color = $couleur_pnj;
+		$color = $noir;
 		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $color);
 	}
