@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_action`, `portee_action`, `perceptionMin_action`, `perceptionMax_action`, `pvMin_action`, `pvMax_action`, `nb_des_action`, `valeur_des_action`, `recupMin_action`, `recupMax_action`, `pmMin_action`, `pmMax_action`, `DefMin_action`, `DefMax_action`, `coutPa_action`, `nbreTourMin`, `nbreTourMax`, `coutOr_action`, `coutBois_action`, `coutFer_action`, `reflexive_action`, `cible_action`, `case_action`, `pnj_action`, `passif_action`) VALUES
-(1, 'sieste', 1, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
+(1, 'Sieste', 1, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (4, 'Marche forc&eacute;e', 1, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -10, -10, 0, 0, 0, 0, 1, 1, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (11, 'Soins', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures', 1, 0, 0, 0, 0, 20, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
 (33, 'Construire - Barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 100, 250, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
@@ -74,7 +74,7 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 --
 
 INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `coutPa_arme`, `coutOr_arme`, `additionMin_degats`, `additionMax_degats`, `multiplicateurMin_degats`, `multiplicateurMax_degats`, `degatMin_arme`, `degatMax_arme`, `valeur_des_arme`, `precision_arme`, `degatZone_arme`, `bonusPM_arme`, `poids_arme`, `pvMax_arme`, `description_arme`, `qualite_arme`, `main`, `image_arme`) VALUES
-(1, 'sabre', 1, 1, 4, 1, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.jpg'),
+(1, 'Sabre', 1, 1, 4, 1, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.jpg'),
 (2, 'Sabre lourd', 1, 1, 5, 250, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '2.5', 0, '', 0, 1, 'sabre_lourd.jpg'),
 (3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.gif'),
 (4, 'Pistolet', 1, 2, 3, 1, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
