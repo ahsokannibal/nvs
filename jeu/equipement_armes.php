@@ -74,7 +74,7 @@ if($dispo){
 						$id_arme = $_POST["id_equip"];
 						
 						// verification si perso peut équiper cette arme 
-						$sql = "SELECT count(id_arme) as verif FROM arme_as_type_unite WHERE arme_as_type_unite.id_type_unite = '1' AND id_arme='$id_arme'";
+						$sql = "SELECT count(id_arme) as verif FROM arme_as_type_unite WHERE arme_as_type_unite.id_type_unite = '$type_perso' AND id_arme='$id_arme'";
 						$res = $mysqli->query ($sql);
 						$tab_v = $res->fetch_assoc();
 						
