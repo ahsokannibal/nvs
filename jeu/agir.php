@@ -467,13 +467,13 @@ if($verif){
 							if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
 								
 								// mise a jour de la table evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a soigné ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',': $degats_final soins',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a soigné ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',': $degats_final soins',NOW(),'0')";
 								$mysqli->query($sql);
 								
 							} else {
 							
 								// mise a jour de la table evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',': $degats_final degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',': $degats_final degats',NOW(),'0')";
 								$mysqli->query($sql);
 							
 							}
@@ -601,7 +601,7 @@ if($verif){
 										}
 										
 										// mise a jour de la table evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>',': $degats_collat degats',NOW(),'0')";
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>',': $degats_collat degats',NOW(),'0')";
 										$mysqli->query($sql);
 										
 										$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso FROM perso WHERE id_perso='$id_cible_collat'";
@@ -660,7 +660,7 @@ if($verif){
 											echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
 											
 											// maj evenements
-											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a capturé','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>','',NOW(),'0')";
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a capturé','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>','',NOW(),'0')";
 											$mysqli->query($sql);
 											
 											// maj cv
@@ -741,7 +741,7 @@ if($verif){
 										}
 										
 										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a infligé des dégâts collatéraux ','$id_cible_collat','$nom_cible_collat',': $degats_collat degats',NOW(),'0')";
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<b>$nom_cible_collat</b>',': $degats_collat degats',NOW(),'0')";
 										$mysqli->query($sql);
 										
 										// recuperation des données du pnj aprés attaque
@@ -787,7 +787,7 @@ if($verif){
 											}
 											
 											// maj evenement
-											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a tué','$id_cible_collat','$nom_cible_collat','',NOW(),'0')";
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a tué','$id_cible_collat','<b>$nom_cible_collat</b>','',NOW(),'0')";
 											$mysqli->query($sql);
 											
 											// maj cv
@@ -859,7 +859,7 @@ if($verif){
 								}
 								
 								// maj evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a capturé','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a capturé','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// maj cv
@@ -912,7 +912,7 @@ if($verif){
 							}
 								
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible>$nom_cible</font>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso>$nom_perso</font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 			
 						}
@@ -1266,13 +1266,13 @@ if($verif){
 						if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a soigné ','$id_cible','$nom_cible',': $degats_final soins',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a soigné ','$id_cible','<b>$nom_cible</b>',': $degats_final soins',NOW(),'0')";
 							$mysqli->query($sql);
 							
 						} else {
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','$nom_cible',': $degats_final degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<b>$nom_cible</b>',': $degats_final degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 						}
@@ -1390,7 +1390,7 @@ if($verif){
 									}
 									
 									// mise a jour de la table evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>',': $degats_collat degats',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>',': $degats_collat degats',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso FROM perso WHERE id_perso='$id_cible_collat'";
@@ -1423,7 +1423,7 @@ if($verif){
 										echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
 										
 										// maj evenements
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a capturé','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>','',NOW(),'0')";
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a capturé','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>','',NOW(),'0')";
 										$mysqli->query($sql);
 										
 										// maj cv
@@ -1498,7 +1498,7 @@ if($verif){
 									}
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a infligé des dégâts collatéraux ','$id_cible_collat','$nom_cible_collat',': $degats_collat degats',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<b>$nom_cible_collat</b>',': $degats_collat degats',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// recuperation des données du pnj aprés attaque
@@ -1544,7 +1544,7 @@ if($verif){
 										}
 										
 										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a tué','$id_cible_collat','$nom_cible_collat','',NOW(),'0')";
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a tué','$id_cible_collat','<b>$nom_cible_collat</b>','',NOW(),'0')";
 										$mysqli->query($sql);
 										
 										// maj cv
@@ -1603,7 +1603,7 @@ if($verif){
 							}
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a tué','$id_cible','$nom_cible','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a tué','$id_cible','<b>$nom_cible</b>','',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// maj cv
@@ -1631,7 +1631,7 @@ if($verif){
 						echo "<br>Vous avez raté votre cible.<br><br>";
 							
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_cible','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso>$nom_perso</font>','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						if ($pv_cible > 0) {
@@ -1963,7 +1963,7 @@ if($verif){
 						}
 							
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a attaqué ','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',': $degats_final degats',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',': $degats_final degats',NOW(),'0')";
 						$mysqli->query($sql);					
 							
 						// recuperation des données du batiment aprés attaque
@@ -2013,7 +2013,7 @@ if($verif){
 								$couleur_clan_p = couleur_clan($clan_p);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p>$nom_p</font>','a été bléssé suite à la destruction du bâtiment',NULL,'',' : - $perte_pv',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p><b>$nom_p</b></font>','a été bléssé suite à la destruction du bâtiment',NULL,'',' : - $perte_pv',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// Le perso est encore vivant
@@ -2053,7 +2053,7 @@ if($verif){
 									$mysqli->query($sql_u2);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a capturé','$id_p','<font color=$couleur_clan_p>$nom_p</font>',' : mort suite à l\'explosion du bâtiment $id_cible',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a capturé','$id_p','<font color=$couleur_clan_p><b>$nom_p</b></font>',' : mort suite à l\'explosion du bâtiment $id_cible',NOW(),'0')";
 									$mysqli->query($sql);
 										
 									// maj cv
@@ -2074,7 +2074,7 @@ if($verif){
 							echo "Vous avez détruit votre cible ! <font color=red>Félicitations.</font>";
 								
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','a détruit','$id_cible','<font color=$couleur_bat>$nom_batiment</font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a détruit','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 								
 							// maj cv
@@ -2109,7 +2109,7 @@ if($verif){
 						$res = $mysqli->query($sql);
 							
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>',' a raté son attaque contre','$id_cible','$nom_batiment','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a raté son attaque contre','$id_cible','<b>$nom_batiment</b>','',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						?>

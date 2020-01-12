@@ -108,7 +108,7 @@ while ($t_id = $res->fetch_assoc()) {
 					$mysqli->query($sql);		
 					
 					// maj evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_i_pnj','$nom_pnj','a attaqué ','$id_cible','$nom_cible',': $degats degats',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_i_pnj','<b>$nom_pnj</b>','a attaqué ','$id_cible','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					// verification si la cible est morte ou non
@@ -127,7 +127,7 @@ while ($t_id = $res->fetch_assoc()) {
 						$mysqli->query($sql);
 						
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$id_cible','$nom_cible','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$id_cible','<b>$nom_cible</b>','',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						// maj cv
@@ -142,7 +142,7 @@ while ($t_id = $res->fetch_assoc()) {
 					$mysqli->query($sql);
 					
 					// maj evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 					$mysqli->query($sql);
 				}
 				
@@ -224,7 +224,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);		
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_cible','$nom_cible',': $degats degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$id_cible','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
@@ -243,7 +243,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$dernier_a_i','$nom_cible','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$dernier_a_i','<b>$nom_cible</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// maj cv
@@ -257,7 +257,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);
 						
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 					}
@@ -317,7 +317,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$dernier_a_i','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -336,7 +336,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$dernier_a_i','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$dernier_a_i','<b>$nom_cible</b>','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
@@ -350,7 +350,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -414,7 +414,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$id_pj','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -433,7 +433,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$id_pj','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$id_pj','<b>$nom_cible</b>','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
@@ -446,7 +446,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 							
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -520,7 +520,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);		
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$dernier_a_i','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
@@ -539,7 +539,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$dernier_a_i','$nom_cible','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$dernier_a_i','<b>$nom_cible</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// maj cv
@@ -553,7 +553,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 					}
@@ -612,7 +612,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$dernier_a_i','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$dernier_a_i','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -631,7 +631,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$dernier_a_i','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$dernier_a_i','<b>$nom_cible</b>','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
@@ -645,7 +645,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($dernier_a_i,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -716,7 +716,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);		
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$id_pj','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -736,7 +736,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$id_pj','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$id_pj','<b>$nom_cible</b>','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
@@ -750,7 +750,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}
@@ -828,7 +828,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);		
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$id_pj','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// verification si la cible est morte ou non
@@ -848,7 +848,7 @@ while ($t_id = $res->fetch_assoc()) {
 										$mysqli->query($sql);
 										
 										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$id_pj','$nom_cible','',NOW(),'0')";
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$id_pj','<b>$nom_cible</b>','',NOW(),'0')";
 										$mysqli->query($sql);
 										
 										// maj cv
@@ -862,7 +862,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 									$mysqli->query($sql);
 								}
 							}
@@ -934,7 +934,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);		
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$id_pj','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
@@ -953,7 +953,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$id_pj','$nom_cible','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$id_pj','<b>$nom_cible</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// maj cv
@@ -967,7 +967,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);
 						
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 					}
@@ -1046,7 +1046,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);		
 								
 								// maj evenement									
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a attaqué ','$id_pj','$nom_cible',': $degats degats',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$id_pj','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
@@ -1065,7 +1065,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'$nom_pnj','a capturé','$id_pj','$nom_cible','',NOW(),'0')";
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a capturé','$id_pj','<b>$nom_cible</b>','',NOW(),'0')";
 									$mysqli->query($sql);
 									
 									// maj cv
@@ -1079,7 +1079,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 							
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'$nom_cible','a esquivé l\'attaque de','$id_i_pnj','$nom_pnj','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_pj,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_i_pnj','<b>$nom_pnj</b>','',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 						}

@@ -177,7 +177,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					//echo " deplacement en $x_ok/$y_ok ";
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 						
 					// MAJ pm du pnj
@@ -206,7 +206,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					$x_pnjj = $x_pnj-1;
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 						
 					// MAJ pm du pnj
@@ -275,7 +275,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					$mysqli->query($sql);
 					
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 						
 					// MAJ pm du pnj
@@ -305,7 +305,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					//echo "deplacement en $x_pnjj/$y_pnj<br>";
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 							
 					// MAJ pm du pnj
@@ -377,7 +377,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						$mysqli->query($sql);
 						
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 						$mysqli->query($sql);
 							
 						// MAJ pm du pnj
@@ -407,7 +407,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						//echo "deplacement en $x_pnj/$y_pnjj<br>";	
 						
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 						$mysqli->query($sql);
 								
 						// MAJ pm du pnj
@@ -474,7 +474,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						//echo "deplacement en $x_ok/$y_ok<br>";
 						
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 						$mysqli->query($sql);
 							
 						// MAJ pm du pnj
@@ -503,7 +503,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						$y_pnjj = $y_pnj-1;
 								
 						// MAJ des evenements
-						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+						$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 						$mysqli->query($sql);
 							
 						// MAJ pm du pnj
@@ -584,7 +584,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 
 				}
@@ -610,7 +610,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj+1;
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 
 				}
@@ -673,7 +673,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -698,7 +698,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj-1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);	
 				}
 				else {
@@ -760,7 +760,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -784,7 +784,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$x_pnjj = $x_pnj-1;
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -849,7 +849,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -874,7 +874,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj+1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -935,7 +935,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -960,7 +960,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj-1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -1021,7 +1021,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -1046,7 +1046,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$x_pnjj = $x_pnj+1;
 								
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnjj/$y_pnj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -1112,7 +1112,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -1137,7 +1137,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj+1;	
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -1199,7 +1199,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$mysqli->query($sql);
 						
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_ok/$y_ok',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -1224,7 +1224,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$y_pnjj = $y_pnj-1;
 							
 					// MAJ des evenements
-					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
+					$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_pnj/$y_pnjj',now(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -1294,7 +1294,7 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 		$mysqli->query($sql);
 							
 		// MAJ des evenements
-		$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','$nom_pnj','s\'est deplacé',NULL,'','en $x_h/$y_h',now(),'0')";
+		$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES('$id_i_pnj','<b>$nom_pnj</b>','s\'est deplacé',NULL,'','en $x_h/$y_h',now(),'0')";
 		$mysqli->query($sql);
 	}
 }
