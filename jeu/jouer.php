@@ -2077,16 +2077,6 @@ if($dispo || !$admin){
 													}
 													
 													// Actions selon le type d'unité
-													// Soigneurs
-													if ($type_perso == 4) {
-														// Soin = 11
-														if($pa_perso < 6){
-															echo "<option value=\"PA\">Soin (6 pa)</option>";
-														}
-														else {
-															echo "<option value=\"65\">Soin (6 pa)</option>";
-														}
-													}
 													
 													// Cavalerie et cavalerie lourde
 													if ($type_perso == 1 || $type_perso == 2) {
