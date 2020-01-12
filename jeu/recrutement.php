@@ -463,11 +463,7 @@ if($dispo){
 										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','11','1')";
 										$mysqli->query($sql);
 										
-										//------- Competences
-										// Insertion competence construction barricades
-										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','22','1')";
-										$mysqli->query($sql_c);
-										
+										//------- Competences										
 										// Insertion competence marche forcée
 										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','6','1')";
 										$mysqli->query($sql_c);
