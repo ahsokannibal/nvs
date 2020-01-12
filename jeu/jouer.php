@@ -69,39 +69,17 @@ if($dispo || !$admin){
 					echo "<center><font color=red><b>Nouveau tour</b></font></center>";
 					$_SESSION["nv_tour"] = 0;
 				}
-				?>
-				
-	<SCRIPT LANGUAGE="JavaScript" type="text/javascript">
-	function moins(){
-		if(document.change_des.valeur_defense.value > 1){
-			document.change_des.valeur_attaque.value++;
-			document.change_des.valeur_defense.value--;
-		}
-		else {
-			alert('Impossible de monter plus votre attaque');
-		}
-	}
-	
-	function plus(){
-		if(document.change_des.valeur_attaque.value > 1){
-			document.change_des.valeur_defense.value++;
-			document.change_des.valeur_attaque.value--;
-		}
-		else {
-			alert('Impossible de monter plus votre defense');
-		}
-	}
-	</SCRIPT>
-	
-				<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-				<html>
-					<head>
-						<title>Nord VS Sud</title>
-						<meta charset="utf-8"/>
-						<link href="../style2.css" rel="stylesheet" type="text/css">
-					</head>
+				?>	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Nord VS Sud</title>
+		
+		<meta charset="utf-8"/>
+		<link href="../style2.css" rel="stylesheet" type="text/css">
+	</head>
 
-					<body>
+	<body>
 					
 				<?php
 				
@@ -1035,7 +1013,7 @@ if($dispo || !$admin){
 					</tr>";
 				echo "<tr>
 						<td>Prochain tour :  ".$n_dla."</td>
-						<td align=right> <a href=\"../forum2/index.php\"><font color=blue><b>[forum]</b></font></a></td>
+						<td align=right> <a href=\"http://nordvssud-creation.forumactif.com/\"><font color=blue><b>[forum]</b></font></a></td>
 					</tr>";
 				echo "</table>";
 	
@@ -1216,9 +1194,9 @@ if($dispo || !$admin){
 							?>
 						</tr>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titre.gif"></a> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=16 border=0 src="../images/evenement_titre.gif"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titre.gif"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
 							<?php 
 							$sql_mes = "SELECT count(id_message) as nb_mes from message_perso where id_perso='$id_perso' and lu_message='0' AND supprime_message='0'";
 							$res_mes = $mysqli->query($sql_mes);
@@ -1226,14 +1204,14 @@ if($dispo || !$admin){
 							
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=16 border=0 src="../images/carte_titre.gif"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titre.gif"></a> <?php if($nb_nouveaux_mes) { echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; if($nb_nouveaux_mes > 1) echo "x"; echo " message"; if($nb_nouveaux_mes > 1) echo "s"; echo ")</font>"; } ?></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=16 border=0 src="../images/classement_titre.gif"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/groupe_titre.gif"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a> <?php if($nb_nouveaux_mes) { echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; if($nb_nouveaux_mes > 1) echo "x"; echo " message"; if($nb_nouveaux_mes > 1) echo "s"; echo ")</font>"; } ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=16 border=0 src="../images/classement_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a></td>
 							<?php
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=16 border=0 src="../images/em_titre.gif" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=16 border=0 src="../images/em_titrev2.png" alt="etat major"></a></td>
 							<?php
 							}
 							?>
