@@ -1220,7 +1220,7 @@ if($dispo || !$admin){
 							<td colspan='7' align='center'>&nbsp;</td>
 						</tr>
 						<tr>
-							<td colspan='7' align='center'>Rafraîchir la page : <a href='jouer.php'><img border=0 src='../images/refresh.png' alt='refresh' /></a></td>
+							<td colspan='7' align='center'>Rafraîchir la page : <a href='jouer.php'><img border=0 src='../images/refreshv2.png' alt='refresh' /></a></td>
 						</tr>
 					</table>
 				</center>
