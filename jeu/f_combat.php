@@ -340,7 +340,7 @@ function mail_attaque($mysqli, $nom_attaquant, $id_cible){
 	// Headers mail
 	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
 	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
-	$headers .='Content-Type: text/plain; charset="iso-8859-1"'."\n";
+	$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	
 	// Destinataire du mail
