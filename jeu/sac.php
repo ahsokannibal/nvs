@@ -227,7 +227,7 @@ if($dispo){
 				<td>
 					<table border=1 width=100%>
 						<tr>
-							<th width=25%>objet</th><th width=50%>description</th><th width=25%>nombre</th>
+							<th width='25%'><center>objet</center></th><th width='50%'><center>description</center></th><th width='25%'><center>nombre</center></th>
 						</tr>
 			<?php
 			
