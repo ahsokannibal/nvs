@@ -27,7 +27,7 @@ SET time_zone = "+00:00";
 --
 
 INSERT INTO `instance_batiment` (`id_instanceBat`, `niveau_instance`, `id_batiment`, `nom_instance`, `pv_instance`, `pvMax_instance`, `x_instance`, `y_instance`, `camp_instance`, `contenance_instance`) VALUES
-(50006, 1, 8, 'Vincibe', 6000, 6000, 13, 51, 2, 50),
+(50006, 1, 8, 'Vincible', 6000, 6000, 13, 51, 2, 50),
 (50005, 1, 9, 'Midable', 10000, 10000, 165, 173, 1, 100),
 (50004, 1, 9, 'Iche', 10000, 10000, 8, 7, 2, 100),
 (50007, 1, 11, 'Nement', 5000, 5000, 33, 55, 2, 50),

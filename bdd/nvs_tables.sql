@@ -737,7 +737,8 @@ CREATE TABLE `perso_as_killpnj` (
 CREATE TABLE `perso_as_objet` (
   `id_perso` int(11) NOT NULL DEFAULT '0',
   `id_objet` int(11) NOT NULL DEFAULT '0',
-  `capacite_objet` varchar(250) DEFAULT NULL
+  `capacite_objet` varchar(250) DEFAULT NULL,
+  `equip_objet` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
