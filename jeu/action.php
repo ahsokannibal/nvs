@@ -557,22 +557,23 @@ if($dispo){
 				// recuperation des carac de l'objet
 				$sql1_o = "SELECT nom_objet, poids_objet FROM objet WHERE id_objet='$id_objet'";
 				$res1_o = $mysqli->query($sql1_o);
-				$t1_o = $resl_o->fetch_assoc();
-				$nom_o = $t1_o["nom_objet"];
-				$poids_o = $t1_o["poids_objet"];
+				$t1_o = $res1_o->fetch_assoc();
+				
+				$nom_o 		= $t1_o["nom_objet"];
+				$poids_o 	= $t1_o["poids_objet"];
 										
 				// recuperation du nombre d'objet de ce type que possede le perso
 				$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'";
 				$res2_o = $mysqli->query($sql2_o);
-				$nb_o = $res2_o->num_rows();
+				$nb_o = $res2_o->num_rows;
 										
 				echo "<tr>";
-				echo "<td align='center'><dl><dd><a href='#'><img src='../images/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
-				echo "<td align='center'>$poids_o</td>";
-				echo "<td align='center'>$nb_o</td>";
-				echo "<form method='post' action='action.php'>";
-				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
-				echo "</form>";
+				echo "	<td align='center'><dl><dd><a href='#'><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
+				echo "	<td align='center'>$poids_o</td>";
+				echo "	<td align='center'>$nb_o</td>";
+				echo "	<form method='post' action='action.php'>";
+				echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
+				echo "	</form>";
 				echo "</tr>";
 			}
 			
@@ -588,8 +589,9 @@ if($dispo){
 				$sql1_a1 = "SELECT nom_arme, poids_arme, image_arme FROM arme WHERE id_arme='$id_arme'";
 				$res1_a1 = $mysqli->query($sql1_a1);
 				$t1_a1 = $res1_a1->fetch_assoc();
-				$nom_a1 = $t1_a1["nom_arme"];
-				$poids_a1 = $t1_a1["poids_arme"];
+				
+				$nom_a1 	= $t1_a1["nom_arme"];
+				$poids_a1 	= $t1_a1["poids_arme"];
 				$image_arme = $t1_a1["image_arme"];
 									
 				// recuperation du nombre d'armes non equipes de ce type que possede le perso 
@@ -598,12 +600,12 @@ if($dispo){
 				$nb_a1 = $res2_a1->num_rows;
 									
 				echo "<tr>";
-				echo "<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
-				echo "<td align='center'>$poids_a1</td>";
-				echo "<td align='center'>$nb_a1</td>";
-				echo "<form method='post' action='action.php'>";
-				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_arme,3,$id_cible' /></td>";
-				echo "</form>";
+				echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
+				echo "	<td align='center'>$poids_a1</td>";
+				echo "	<td align='center'>$nb_a1</td>";
+				echo "	<form method='post' action='action.php'>";
+				echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_arme,3,$id_cible' /></td>";
+				echo "	</form>";
 				echo "</tr>";
 			}
 									
@@ -619,9 +621,10 @@ if($dispo){
 				$sql1_a2 = "SELECT nom_armure, poids_armure, image_armure FROM armure WHERE id_armure='$id_armure'";
 				$res1_a2 = $mysqli->query($sql1_a2);
 				$t1_a2 = $res1_a2->fetch_assoc();
-				$nom_a2 = $t1_a2["nom_armure"];
-				$poids_a2 = $t1_a2["poids_armure"];
-				$image_armure = $t1_a2["image_armure"];
+				
+				$nom_a2 		= $t1_a2["nom_armure"];
+				$poids_a2 		= $t1_a2["poids_armure"];
+				$image_armure 	= $t1_a2["image_armure"];
 									
 				// recuperation du nombre d'armes non equipes de ce type que possede le perso 
 				$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' ";
@@ -629,12 +632,12 @@ if($dispo){
 				$nb_a2 = $res2_a2->num_rows;
 									
 				echo "<tr>";
-				echo "<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b><</span></a></dd></dl></td>";
-				echo "<td align='center'>$poids_a2</td>";
-				echo "<td align='center'>$nb_a2</td>";
-				echo "<form method='post' action='action.php'>";
-				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_armure,4,$id_cible' /></td>";
-				echo "</form>";
+				echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b><</span></a></dd></dl></td>";
+				echo "	<td align='center'>$poids_a2</td>";
+				echo "	<td align='center'>$nb_a2</td>";
+				echo "	<form method='post' action='action.php'>";
+				echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_armure,4,$id_cible' /></td>";
+				echo "	</form>";
 				echo "</tr>";
 			}
 								
@@ -996,29 +999,53 @@ if($dispo){
 									echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Personnage à qui donner l'objet</th></tr>";
 									echo "<tr>";
 									
-									// Recuperation des persos au CaC
-									$sql_c = "SELECT idPerso_carte FROM $carte WHERE x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte>=$y_perso-1 AND y_carte<=$y_perso+1 AND occupee_carte='1' AND idPerso_carte!='$id_perso' AND idPerso_carte < 10000";
-									$res_c = $mysqli->query($sql_c);
+									if (!in_bat($mysqli, $id_perso)) {
 									
+										// Recuperation des persos au CaC
+										$sql_c = "SELECT idPerso_carte as id_cible
+													FROM $carte WHERE x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte>=$y_perso-1 AND y_carte<=$y_perso+1 
+													AND occupee_carte='1' 
+													AND idPerso_carte!='$id_perso' 
+													AND idPerso_carte < 50000";
+										$res_c = $mysqli->query($sql_c);
+										
+									}
+									else {
+										
+										// Perso dans un batiment
+										$sql = "SELECT id_instanceBat FROM perso_in_batiment WHERE id_perso='$id_perso'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$id_instance_bat = $t['id_instanceBat'];
+										
+										// On récupère la liste des persos dans le même batiment
+										$sql_c = "SELECT id_perso as id_cible FROM perso_in_batiment WHERE id_instanceBat='$id_instance_bat' AND id_perso != '$id_perso'";
+										$res_c = $mysqli->query($sql_c);
+										
+									}
+										
 									while($t_c = $res_c->fetch_assoc()){
 										
-										$id_cible = $t_c['idPerso_carte'];
+										$id_cible = $t_c['id_cible'];
 										
 										// Recuperation infos cible
 										$sql_cible = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
 										$res_cible = $mysqli->query($sql_cible);
 										$t_cible = $res_cible->fetch_assoc();
-										$nom_cible = $t_cible['nom_perso'];
+										
+										$nom_cible 	= $t_cible['nom_perso'];
 										$camp_cible = $t_cible['clan'];
 										
 										// recuperation de la couleur du camp
 										$couleur_clan_cible = couleur_clan($camp_cible);
 										
 										echo "<form method='post' action='action.php'>";
-										echo "<td align='center'><select name=\"select_perso_don\">";
-										echo "<option style=\"color:$couleur_clan_cible\" value=\"$id_cible\">$nom_cible</option>";
-										echo "</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' /><input type='hidden' name='hid_valid_perso_don' value='valider' /></td>";
-										echo "";
+										echo "	<td align='center'>";
+										echo "		<select name=\"select_perso_don\">";
+										echo "			<option style=\"color:$couleur_clan_cible\" value=\"$id_cible\">$nom_cible</option>";
+										echo "		</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' /><input type='hidden' name='hid_valid_perso_don' value='valider' />";
+										echo "	</td>";
 										echo "</form>";
 									}
 									

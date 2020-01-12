@@ -2270,16 +2270,33 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 				$x_perso 	= $t_p['x_perso'];
 				$y_perso 	= $t_p['y_perso'];
 				$pa_perso	= $t_p['pa_perso'];
+				
+				// Perso dans un batiment
+				if (in_bat($mysqli, $id_perso)) {
 					
-				$sql_v = "SELECT idPerso_carte FROM carte 
+					$sql = "SELECT id_instanceBat FROM perso_in_batiment WHERE id_perso='$id_perso'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$id_instance_bat = $t['id_instanceBat'];
+					
+					// On récupère la liste des persos dans le même batiment
+					$sql_v = "SELECT id_perso as id_cible FROM perso_in_batiment WHERE id_instanceBat='$id_instance_bat' AND id_perso = '$id_cible'";
+				}
+				else {
+					// Perso sur la carte
+					
+					$sql_v = "SELECT idPerso_carte as id_cible FROM carte 
 							WHERE idPerso_carte='$id_cible' 
 							AND occupee_carte='1' 
 							AND x_carte<=$x_perso+1 AND x_carte>=$x_perso-1 AND y_carte<=$y_perso+1 AND y_carte>=$y_perso-1";
+				}
+				
 				$res_v = $mysqli->query($sql_v);
 				$verif_cac = $res_v->num_rows;
 				$t_v = $res_v->fetch_assoc();
 					
-				$verif_cac_idCible = $t_v['idPerso_carte'];
+				$verif_cac_idCible = $t_v['id_cible'];
 				
 				if($verif_cac == 1 && $verif_cac_idCible == $id_cible){
 					
