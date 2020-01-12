@@ -204,7 +204,7 @@ if($dispo || !$admin){
 								$bonus_visu = get_malus_visu($fond);
 								if(bourre($mysqli, $id_perso)){
 									if(!endurance_alcool($mysqli, $id_perso)) {
-										$malus_bourre = bourre($mysqli, $id_perso) * 2;
+										$malus_bourre = bourre($mysqli, $id_perso) * 3;
 										$bonus_visu -= $malus_bourre;
 									}
 								}
@@ -328,7 +328,7 @@ if($dispo || !$admin){
 													
 													if(bourre($mysqli, $id_perso)){
 														if(!endurance_alcool($mysqli, $id_perso)) {
-															$malus_bourre = bourre($mysqli, $id_perso) * 2;
+															$malus_bourre = bourre($mysqli, $id_perso) * 3;
 															$bonus_visu -= $malus_bourre;
 														}
 													}
@@ -461,12 +461,9 @@ if($dispo || !$admin){
 														$bonus_visu = $bonus_perc;
 														
 														if(bourre($mysqli, $id_perso)){
-															
 															if(!endurance_alcool($mysqli, $id_perso)) {
-																
-																$malus_bourre = bourre($mysqli, $id_perso) * 2;
+																$malus_bourre = bourre($mysqli, $id_perso) * 3;
 																$bonus_visu -= $malus_bourre;
-																
 															}
 														}
 														
@@ -546,7 +543,7 @@ if($dispo || !$admin){
 					$bonus_visu = $bonus_perc;
 					if(bourre($mysqli, $id_perso)){
 						if(!endurance_alcool($mysqli, $id_perso)) {
-							$malus_bourre = bourre($mysqli, $id_perso) * 2;
+							$malus_bourre = bourre($mysqli, $id_perso) * 3;
 							$bonus_visu -= $malus_bourre;
 						}
 					}
@@ -760,7 +757,7 @@ if($dispo || !$admin){
 								
 								if(bourre($mysqli, $id_perso)){
 									if(!endurance_alcool($mysqli, $id_perso)){
-										$malus_bourre = bourre($mysqli, $id_perso) * 2;
+										$malus_bourre = bourre($mysqli, $id_perso) * 3;
 										$bonus_visu -= $malus_bourre;
 									}
 								}
@@ -1042,7 +1039,7 @@ if($dispo || !$admin){
 					</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -1062,6 +1059,7 @@ if($dispo || !$admin){
 				$perception_perso 		= $t_perso2["perception_perso"];
 				$bonusPerception_perso 	= $t_perso2["bonusPerception_perso"];
 				$recup_perso 			= $t_perso2["recup_perso"];
+				$bonusRecup_perso		= $t_perso2["bonusRecup_perso"];
 				$protec_perso 			= $t_perso2["protec_perso"];
 				$bonus_perso 			= $t_perso2["bonus_perso"];
 				$type_perso 			= $t_perso2["type_perso"];
@@ -1072,18 +1070,24 @@ if($dispo || !$admin){
 				if($clan_perso == 1){
 					$clan = 'rond_b.png';
 					$couleur_clan_perso = 'blue';
-					$image_profil = "profil_nord.png";
-					$image_sac = "sac_nord.png";
-					$image_compagnie = "compagnie_nord.png";
-					$image_em = "em_nord.png";
+					
+					$image_profil 		= "profil_nord4.png";
+					$image_sac 			= "sac_nord2.png";
+					$image_compagnie 	= "compagnie_nord2.png";
+					$image_evenement 	= "evenement_nord.png";
+					$image_messagerie 	= "messagerie_nord.png";
+					$image_em 			= "em_nord2.png";
 				}
 				if($clan_perso == 2){
 					$clan = 'rond_r.png';
 					$couleur_clan_perso = 'red';
-					$image_profil = "profil_sud.png";
-					$image_sac = "sac_sud.png";
-					$image_compagnie = "compagnie_sud.png";
-					$image_em = "em_sud.png";
+					
+					$image_profil 		= "profil_sud4.png";
+					$image_sac 			= "sac_sud2.png";
+					$image_compagnie 	= "compagnie_sud2.png";
+					$image_evenement 	= "evenement_sud.png";
+					$image_messagerie 	= "messagerie_sud.png";
+					$image_em 			= "em_sud2.png";
 				}
 				
 				// récupération du grade du perso 
@@ -1196,17 +1200,17 @@ if($dispo || !$admin){
 				<center>
 					<table border=0 align="center" width=100%>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=84 height=83 border=0 src="../images/<?php echo "$image_profil";?>" alt="profil"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=66 border=0 src="../images/evenement2.gif" alt="evenement"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=96 height=82 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=82 height=83 border=0 src="../images/carte.png" alt="mini map"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=96 height=83 border=0 src="../images/messagerie.png" alt="messagerie"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=80 height=83 border=0 src="../images/classement.png" alt="classement"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=159 height=72 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_profil; ?>" alt="profil"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_messagerie; ?>" alt="messagerie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=88 height=92 border=0 src="../images/classement2.png" alt="classement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a></td>
 							<?php
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=100 height=83 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=117 height=89 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
 							<?php
 							}
 							?>
@@ -1409,7 +1413,21 @@ if($dispo || !$admin){
 										<table border="2" bordercolor="white">
 											<tr>
 												<td><b>Perception</b></td>
-												<td align='center'><?php echo $perception_perso; ?>&nbsp;</td>
+												<td align='center'>
+												<?php 
+												echo $perception_perso; 
+												
+												$bonus_perc_final = $bonusPerception_perso;
+												
+												if($bonusPerception_perso != 0) {
+													if ($bonusPerception_perso < 0) {
+														echo "<font color='red'> (";
+													} else {
+														echo "<font color='blue'> (+";
+													}
+													echo $bonusPerception_perso . ")</font>"; 
+												} 
+												?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>PA</b></td>
@@ -1430,7 +1448,20 @@ if($dispo || !$admin){
 											</tr>
 											<tr>
 												<td><b>Recuperation</b></td>
-												<td><?php echo $recup_perso; ?>&nbsp;</td>
+												<td>
+												<?php 
+												echo $recup_perso;
+												
+												if($bonusRecup_perso != 0) {
+													if ($bonusRecup_perso < 0) {
+														echo "<font color='red'> (";
+													} else {
+														echo "<font color='blue'> (+";
+													}
+													echo $bonusRecup_perso . ")</font>"; 
+												} 
+												
+												?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>Malus Defense</b></td>

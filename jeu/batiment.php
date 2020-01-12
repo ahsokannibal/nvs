@@ -246,7 +246,7 @@ if($dispo){
 							// vérifier que $id_o est une valeur numérique
 							$verif_id = preg_match("#^[0-9]+$#i",$id_o);
 							
-							if($verif_if) {
+							if($verif_id) {
 								
 								// vérification que l'objet existe bien
 								if(existe_objet($mysqli, $id_o)){
@@ -274,7 +274,7 @@ if($dispo){
 										$mysqli->query($sql);
 										
 										// On met l'objet dans le sac
-										$sql = "INSERT INTO perso_as_objet VALUES ('$id_perso','$id_o')";
+										$sql = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso','$id_o')";
 										$mysqli->query($sql);
 										
 										// MAJ or perso pour affichage
@@ -594,7 +594,7 @@ if($dispo){
 										// Ajout ressources dans inventaire perso
 										while($compteur_o < $nb_objet){
 											
-											$sql_i = "INSERT INTO perso_as_objet VALUES ('$id_perso','$id_objet')";
+											$sql_i = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso','$id_objet')";
 											$mysqli->query($sql_i);
 											
 											$compteur_o++;

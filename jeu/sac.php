@@ -30,9 +30,13 @@ if($dispo){
 		
 		// On verifie que le perso soit toujours vivant
 		if ($testpv <= 0) {
-			echo "<font color=red>Vous êtes mort...</font>";
+			echo "<font color=red>Vous avez été capturé...</font>";
 		}
 		else {
+			
+			$mess = "";
+			$mess_err = "";
+			
 			// on souhaite utiliser un objet
 			if(isset($_GET["id_obj"]) && $_GET["id_obj"] != ""){
 				
@@ -45,14 +49,15 @@ if($dispo){
 				if($verif && $id_o > 0) {
 					
 					// On verifie que l'objet soit bien utilisable
-					if($id_o != 6 && $id_o != 7 && $id_o != 8 && $id_o != 10){
+					if($id_o != 1){
 						// ok
 						//verification que le perso possede bien cet objet
 						$sql = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o'";
 						$res = $mysqli->query($sql);
 						$ok = $res->num_rows;
 						
-						if($ok) { // possede plus de 0 objets
+						// possede plus de 0 objets
+						if($ok) {
 							
 							// On verifie que le perso possede bien 1 pa pour utiliser l'objet
 							if($testpa >= 1){
@@ -62,14 +67,14 @@ if($dispo){
 								$res = $mysqli->query($sql);
 								$bonus_o = $res->fetch_assoc();
 								
-								$nom_ob = $bonus_o["nom_objet"];
-								$bonusPerception = $bonus_o["bonusPerception_objet"];
-								$bonusRecup = $bonus_o["bonusRecup_objet"];
-								$bonusPv = $bonus_o["bonusPv_objet"];
-								$bonusPm = $bonus_o["bonusPm_objet"];
-								$coutPa = $bonus_o["coutPa_objet"];
-								$poids = $bonus_o["poids_objet"];
-								$type_o = $bonus_o["type_objet"];
+								$nom_ob 			= $bonus_o["nom_objet"];
+								$bonusPerception 	= $bonus_o["bonusPerception_objet"];
+								$bonusRecup 		= $bonus_o["bonusRecup_objet"];
+								$bonusPv 			= $bonus_o["bonusPv_objet"];
+								$bonusPm 			= $bonus_o["bonusPm_objet"];
+								$coutPa 			= $bonus_o["coutPa_objet"];
+								$poids 				= $bonus_o["poids_objet"];
+								$type_o 			= $bonus_o["type_objet"];
 										
 								// on supprime l'objet de l'inventaire
 								$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
@@ -80,76 +85,35 @@ if($dispo){
 								$res = $mysqli->query($sql);
 								$t_p = $res->fetch_assoc();
 								
-								$pv_p = $t_p["pv_perso"];
-								$pvM_p = $t_p["pvMax_perso"];
-								$rec_p = $t_p["recup_perso"];
-								$br_p = $t_p["bonusRecup_perso"];
+								$pv_p 	= $t_p["pv_perso"];
+								$pvM_p 	= $t_p["pvMax_perso"];
+								$rec_p 	= $t_p["recup_perso"];
+								$br_p 	= $t_p["bonusRecup_perso"];
 									
-								// si l'objet donne des pv/pm/perception/recup
-								if($bonusPv || $bonusPerception || $bonusPm || $bonusRecup) { 
+								// si l'objet donne des bonus
+								if($bonusRecup) { 
 										
-									// l'objet lui fait recuperer un nombre de pv tel que ses pv apres soient inferieurs a ses pvmax 
-									if($pv_p + $bonusPv < $pvM_p){
+									// on applique les effets de l'objet sur le perso
+									$sql = "UPDATE perso 
+											SET pa_perso=pa_perso-1, bonusRecup_perso=bonusRecup_perso+$bonusRecup
+											WHERE id_perso='$id'";
+									$mysqli->query($sql);
 										
-										// on applique les effets de l'objet sur le perso
-										$sql = "UPDATE perso 
-												SET pa_perso=pa_perso-1, pv_perso=pv_perso+$bonusPv, bonusPerception_perso=bonusPerception_perso+$bonusPerception, pm_perso=pm_perso+$bonusPm, bonusRecup_perso=bonusRecup_perso+$bonusRecup
-												WHERE id_perso='$id'";
-										$mysqli->query($sql);
-										
-										// Affichage 
-										echo "Vous avez utilisé ".$nom_ob."<br>";
-										if($type_o == 'S' || $type_o == 'SSP' || $id_o == 4) {
-											echo "Vous gagnez ".$bonusPv." pv<br>";
-										}
-									}
-									else { // l'effet de l'objet lui rend des pv tel qu'il atteind son max de pv (ou superieur mais on ne peut pas depasser le max de pv) 
+									// Affichage 
+									$mess .= "Vous avez utilisé ".$nom_ob."<br>";
 									
-										// on applique les effets de l'objet sur le perso
-										$sql = "UPDATE perso 
-												SET pv_perso=pvMax_perso, bonusPerception_perso=bonusPerception_perso+$bonusPerception, pm_perso=pm_perso+$bonusPm, bonusRecup_perso=bonusRecup_perso+$bonusRecup 
-												WHERE id_perso='$id'";
-										$mysqli->query($sql);
-										
-										// calcul du gain de pv
-										$gain_pv = $pvM_p - $pv_p;
-											
-										// Affichage 
-										echo "Vous avez utilisé ".$nom_ob."<br>";
-										if($type_o == 'S' || $type_o == 'SSP' || $id_o == 4) {
-											echo "Vous gagnez ".$gain_pv." pv (Vous avez atteind votre maximum de points de vie)<br>";
-										}
-									}
+									if ($bonusRecup) {
+										$mess .= "Votre recuperation passe de ".$rec_p+$br_p." à ";
+										$mess .= $rec_p+$br_p+$bonusRecup."<br />";
+									}										
 								}
 								
-								// Bouteille d'alcool
-								if($id_o == 4){
+								if ($bonusPerception < 0) {
 									// le perso est bourre
 									$sql = "UPDATE perso SET bourre_perso=bourre_perso+1 WHERE id_perso='$id'";
 									$mysqli->query($sql);
 									
-									// calcul du gain de recup
-									$recup_i = $rec_p+$br_p;
-									
-									// Affichage 
-									echo "Votre recuperation passe de ".$recup_i." à ";
-									echo $rec_p+$br_p+$bonusRecup." mais il parait que l'abus d'alcool est dangereux pour la santé... (perception -2)<br>";
-								}
-								
-								// Longue vue
-								if($id_o == 5){
-									// Affichage
-									echo "Vous obtenez un bonus de perception de +".$bonusPerception.".<br>";
-								}
-								
-								// Fiole du berserker
-								if($id_o == 9){
-									// on enleve les malus de combat au perso
-									$sql = "UPDATE perso SET bonus_perso='0' WHERE id_perso='$id'";
-									$mysqli->query($sql);									
-									
-									// Affichage
-									echo "Vous ne ressentez plus aucune douleurs et vous avez l'impression de pouvoir vous mouvoir comme il vous semble<br>";
+									$mess .= "Votre perception en prend un coup temporairement : Perception ".$bonusPerception;
 								}
 								
 								// MAJ charge perso
@@ -157,27 +121,32 @@ if($dispo){
 								$mysqli->query($sql_c);
 							}
 							else {
-								echo "Vous n'avez pas assez de PA, l'utilisation d'un objet coute 1 PA.";
+								$mess_err .= "Vous n'avez pas assez de PA, l'utilisation d'un objet coute 1 PA.";
 							}
 						}
 						else {
-							echo "Vous ne possédez pas/plus cet objet...";
+							$mess_err .= "Vous ne possédez pas/plus cet objet...";
 						}
 					}
 					else {
-						echo "Impossible de consommer cet objet !";
+						$mess_err .= "Impossible de consommer cet objet !";
 					}
 				}
 				else {
-					echo "Il ne faut pas rentrer n'importe quoi dans la barre d'adresse...";
+					$mess_err .= "Il ne faut pas rentrer n'importe quoi dans la barre d'adresse...";
 				}
 			}
 		?>
-	<html>
+<html>
 	<head>
-	<title>Nord VS Sud</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link href="../style.css" rel="stylesheet" type="text/css">
+		<title>Nord VS Sud</title>
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	
 	<body>
@@ -190,43 +159,76 @@ if($dispo){
 			$nb_objets = $t_nb_objets[0];
 			
 			// recuperation de la thune que possede le perso
-			$sql = "SELECT or_perso, charge_perso, chargeMax_perso FROM perso WHERE id_perso='$id'";
+			$sql = "SELECT or_perso, charge_perso, chargeMax_perso, clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_or = $res->fetch_assoc();
 			
-			$or_p = $t_or["or_perso"];
-			$charge_perso = $t_or["charge_perso"];
-			$chargeMax_perso = $t_or["chargeMax_perso"];
-			$chargeMax_reel = $chargeMax_perso;
+			$or_p 				= $t_or["or_perso"];
+			$charge_perso 		= $t_or["charge_perso"];
+			$chargeMax_perso 	= $t_or["chargeMax_perso"];
+			$camp_perso			= $t_or["clan"];
+			
+			$chargeMax_reel 	= $chargeMax_perso;
+			
+			if ($camp_perso == 1) {
+				$image_sac = "sac_nord.png";
+			}
+			else if ($camp_perso == 2) {
+				$image_sac = "sac_sud.png";
+			}
+			else {
+				$image_sac = "";
+			}
+			
+			
 	?>
-	<table border=0 width=100%>
-		<tr><td>
-		<table border=1 width=100%>
+		<table border=0 width=100%>
 			<tr>
-				<td align=center width=25%><img src="../images/sac.png"><p align="center"><input type="button" value="Fermer mon sac" onclick="window.close()"></p></td>
-				<td width=75%>
-					<center><h2>Mon sac</h2>
-					<p>Le sac vous permet de transporter des objets et de les utiliser.<br>Vous possédez <b><?php echo $nb_objets; ?></b> objet<?php if($nb_objets > 1){echo "s";} ?> dans votre sac.</p>
-					<?php 
-					echo "<p><u><b>Charge :</b></u> ";
-					if($charge_perso > $chargeMax_reel){
-						echo "<font color='red'>";
-					}
-					else {
-						echo "<font color='blue'>";
-					}
-					echo "".$charge_perso."</font> / ".$chargeMax_reel."</p>"; 
-					?>
-					<img src="../images/or.png" align="middle">Vous possédez <b><?php echo $or_p; ?></b> thune<?php if($or_p > 1){echo "s";}?><br>
-					</center>
+				<td>
+					<table border=1 width=100%>
+						<tr>
+							<td align=center width=25%><img src="../images/<?php echo $image_sac; ?>"><p align="center"><input type="button" value="Fermer mon sac" onclick="window.close()"></p></td>
+							<td width=75%>
+								<center><h2>Mon sac</h2>
+								<p>Le sac vous permet de transporter des objets et de les utiliser.<br>Vous possédez <b><?php echo $nb_objets; ?></b> objet<?php if($nb_objets > 1){echo "s";} ?> dans votre sac.</p>
+								<?php 
+								echo "<p><u><b>Charge :</b></u> ";
+								if($charge_perso > $chargeMax_reel){
+									echo "<font color='red'>";
+								}
+								else {
+									echo "<font color='blue'>";
+								}
+								echo "".$charge_perso."</font> / ".$chargeMax_reel."</p>"; 
+								?>
+								<img src="../images/or.png" align="middle">Vous possédez <b><?php echo $or_p; ?></b> thune<?php if($or_p > 1){echo "s";}?><br>
+								</center>
+							</td>
+						</tr>
+					</table>
 				</td>
 			</tr>
-		</table>
-		</td></tr><tr><td>
-		<table border=1 width=100%>
+			
 			<tr>
-				<th width=25%>objet</th><th width=50%>description</th><th width=25%>nombre</th>
+				<td align='center'>
+				<?php
+				if (trim($mess) != "") {
+					echo "<font color='blue'>" . $mess . "</font>";
+				}
+				
+				if (trim($mess_err) != "") {
+					echo "<font color='blue'>" . $mess_err . "</font>";
+				}
+				?>
+				</td>
 			</tr>
+			
+			<tr>
+				<td>
+					<table border=1 width=100%>
+						<tr>
+							<th width=25%>objet</th><th width=50%>description</th><th width=25%>nombre</th>
+						</tr>
 			<?php
 			
 			// recuperation du nombre de type d'objets que possede le perso
@@ -258,26 +260,32 @@ if($dispo){
 					
 					// affichage
 					echo "<tr>";
-					echo "<td align='center'><img src=\"../images/objets/objet".$id_obj.".png\"></td>";
-					echo "<td align='center'><font color=green><b>".$nom_o."</b></font><br>".stripslashes($description_o)."</td>";
-					echo "<td align='center'>Vous possédez <b>".$nb_o."</b> ".$nom_o."";
+					echo "	<td align='center'><img src=\"../images/objets/objet".$id_obj.".png\"></td>";
+					echo "	<td align='center'><font color=green><b>".$nom_o."</b></font><br>".stripslashes($description_o)."</td>";
+					echo "	<td align='center'>Vous possédez <b>".$nb_o."</b> ".$nom_o."";
 					if($nb_o > 1 && $id_obj != 6 && $id_obj != 7){ 
 						echo "s";
 					}
 					if($id_obj != 1){
-						echo "<br /><a href=\"sac.php?id_obj=".$id_obj."\">utiliser</a>";
+						echo "<br /><a href=\"sac.php?id_obj=".$id_obj."\">utiliser (cout : 1 PA)</a>";
 					}
 					echo "<br /><u>Poids total :</u> <b>$poids_total_o</b></td>";
 					echo "</tr>";
 			}
 			?>
+					</table>
+				</td>
+			</tr>
 		</table>
-		</td></tr>
 	
-	</table>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	
 	</body>
-	</html>
+</html>
 	<?php
 		}
 	}
