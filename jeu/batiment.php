@@ -1321,7 +1321,7 @@ if($dispo){
 											// rabais
 											$rabais = floor(($coutOr_objet * $pourcentage_rabais)/100);
 											
-											echo "<tr><td><center>$nom_objet</center></td><td><center>$poids_objet</center></td><td align='center'><img src=\"../images/$image_objet\" width=\"40\" height=\"40\" ></td><td>$description_objet</td>";?>
+											echo "<tr><td><center>$nom_objet</center></td><td><center>$poids_objet</center></td><td align='center'><img src=\"../images/objets/$image_objet\" width=\"40\" height=\"40\" ></td><td>$description_objet</td>";?>
 											<td><?php echo "<center>".$coutOr_objet;
 											if($rabais) {
 												$new_coutOr_objet = $coutOr_objet - $rabais;
