@@ -376,10 +376,11 @@ if($dispo){
 									// recuperation des infos sur l'arme
 									$sql_a = "SELECT nom_arme, coutOr_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
 									$res_a = $mysqli->query($sql_a);
-									$t_a = mysql_fetch_assoc($res_a);
-									$nom_arme = $t_a["nom_arme"];
-									$coutOr_arme = $t_a["coutOr_arme"];
-									$poids_arme = $t_a["poids_arme"];
+									$t_a = $res_a->fetch_assoc();
+									
+									$nom_arme 		= $t_a["nom_arme"];
+									$coutOr_arme 	= $t_a["coutOr_arme"];
+									$poids_arme 	= $t_a["poids_arme"];
 									
 									// Calcul du prix de vente (selon pv)
 									$prix_vente_final = ceil($coutOr_arme / 2);
@@ -431,11 +432,12 @@ if($dispo){
 									// recuperation des infos sur l'objet
 									$sql_o = "SELECT nom_objet, coutOr_objet, poids_objet, type_objet FROM objet WHERE id_objet='$id_objet'";
 									$res_o = $mysqli->query($sql_o);
-									$t_o = mysql_fetch_assoc($res_o);
-									$nom_objet = $t_o["nom_objet"];
-									$coutOr_objet = $t_o["coutOr_objet"];
-									$poids_objet = $t_o["poids_objet"];
-									$type_objet = $t_o["type_objet"];
+									$t_o = $res_o->fetch_assoc();
+									
+									$nom_objet 		= $t_o["nom_objet"];
+									$coutOr_objet 	= $t_o["coutOr_objet"];
+									$poids_objet 	= $t_o["poids_objet"];
+									$type_objet 	= $t_o["type_objet"];
 									
 									// Calcul du prix de vente (selon pv)
 									$prix_vente_final = ceil($coutOr_objet / 2);
@@ -704,7 +706,8 @@ if($dispo){
 									$sql_ressources = "SELECT DISTINCT objet.id_objet FROM perso_as_objet, objet WHERE id_perso='$id_perso'
 											AND perso_as_objet.id_objet=objet.id_objet
 											AND type_objet!='M' AND type_objet!='MSP'
-											AND type_objet!='S' AND type_objet!='SP' AND type_objet!='SSP'";
+											AND type_objet!='S' AND type_objet!='SP' AND type_objet!='SSP'
+											AND objet.id_objet != '1'";
 								}
 								
 								$res_resources = $mysqli->query($sql_ressources);
@@ -722,7 +725,7 @@ if($dispo){
 									// recupération du nombre d'objets de ce type que posséde le perso
 									$sql_nb = "SELECT COUNT(id_objet) as nb_obj FROM perso_as_objet WHERE id_objet='$id_objet' AND id_perso='$id_perso'";
 									$res_nb = $mysqli->query($sql_nb);
-									$t_nb = $res_nb->fetch_assoc($res_nb);
+									$t_nb = $res_nb->fetch_assoc();
 									
 									$nb_obj = $t_nb['nb_obj'];
 										
@@ -739,7 +742,7 @@ if($dispo){
 									// Calcul du prix de vente
 									$prix_vente_max = round ($coutOr_objet / 2);
 										
-									echo "<tr><td align='center'><img src='../images/objet".$id_objet.".png' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_obj</td><td align='center'>$prix_vente_max</td>";
+									echo "<tr><td align='center'><img src='../images/objets/objet".$id_objet.".png' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_obj</td><td align='center'>$prix_vente_max</td>";
 									echo "<td align=\"center\"><input type='submit' name='vente_objet' value='Vendre' />";
 									echo "<input type='hidden' name='hid_vente_objet' value='".$id_objet."' />";
 									echo "</td></tr>";
