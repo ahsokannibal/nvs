@@ -1024,7 +1024,11 @@ if($dispo){
 										$res_c = $mysqli->query($sql_c);
 										
 									}
-										
+									
+									echo "<form method='post' action='action.php'>";
+									echo "	<td align='center'>";
+									echo "		<select name=\"select_perso_don\">";
+									
 									while($t_c = $res_c->fetch_assoc()){
 										
 										$id_cible = $t_c['id_cible'];
@@ -1040,14 +1044,14 @@ if($dispo){
 										// recuperation de la couleur du camp
 										$couleur_clan_cible = couleur_clan($camp_cible);
 										
-										echo "<form method='post' action='action.php'>";
-										echo "	<td align='center'>";
-										echo "		<select name=\"select_perso_don\">";
-										echo "			<option style=\"color:$couleur_clan_cible\" value=\"$id_cible\">$nom_cible</option>";
-										echo "		</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' /><input type='hidden' name='hid_valid_perso_don' value='valider' />";
-										echo "	</td>";
-										echo "</form>";
+										
+										echo "			<option style=\"color:$couleur_clan_cible\" value=\"$id_cible\">$nom_cible [$id_cible]</option>";
+										
 									}
+									
+									echo "		</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' /><input type='hidden' name='hid_valid_perso_don' value='valider' />";
+									echo "	</td>";
+									echo "</form>";
 									
 									echo "</tr></table>";
 									

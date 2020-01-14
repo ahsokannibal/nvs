@@ -2368,7 +2368,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql_u);
 									
 								// On ajoute l'objet dans l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_objet VALUES('$id_cible','$id_objet')";
+								$sql_i = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES('$id_cible','$id_objet')";
 								$mysqli->query($sql_i);
 									
 								// On met a jour le poids de la cible
@@ -2380,8 +2380,8 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$res_c = $mysqli->query($sql_c);
 								$t_c = $res_c->fetch_assoc();
 									
-								$nom_cible = $t_c['nom_perso'];
-								$clan_cible = $t_c['clan'];
+								$nom_cible 			= $t_c['nom_perso'];
+								$clan_cible 		= $t_c['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
 									
 								echo "Vous avez donné <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
@@ -2421,7 +2421,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql_u);
 									
 								// On ajoute l'arme a l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_arme VALUES('$id_cible','$id_objet','0')";
+								$sql_i = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES('$id_cible','$id_objet','0')";
 								$mysqli->query($sql_i);
 									
 								// On met a jour le poids de la cible
@@ -2476,7 +2476,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql_u);
 								
 								// On ajoute l'armure a l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_armure VALUES('$id_cible','$id_objet','0')";
+								$sql_i = "INSERT INTO perso_as_armure (id_perso, id_armure, est_portee) VALUES('$id_cible','$id_objet','0')";
 								$mysqli->query($sql_i);
 									
 								// On met a jour le poids de la cible
