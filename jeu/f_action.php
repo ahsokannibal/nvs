@@ -3359,7 +3359,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
@@ -3772,7 +3772,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
@@ -4185,7 +4185,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
@@ -4598,7 +4598,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
@@ -5010,7 +5010,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
@@ -5422,7 +5422,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
@@ -5834,7 +5834,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
@@ -6250,7 +6250,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 							$mysqli->query($sql);
 							
 							// evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
 							$mysqli->query($sql);
 						}
 						
