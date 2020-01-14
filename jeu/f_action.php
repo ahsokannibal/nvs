@@ -323,6 +323,20 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 		//calcul des reparations
 		$pv_reparation = calcul_pv_reparation($id_action);
 		
+		// Récupération si appartient génie civil
+		$sql = "SELECT count(id_perso) as verif_gc FROM perso_in_compagnie, compagnies 
+				WHERE compagnies.id_compagnie = perso_in_compagnie.id_compagnie
+				AND id_perso='$id_perso'
+				AND compagnies.genie_civil='1'";
+		$res = $mysqli->query($sql);
+		$t_gc = $res->fetch_assoc();
+		
+		$verif_gc = $t_gc['verif_gc'];
+		
+		if ($verif_gc) {
+			$pv_reparation *= 2;
+		}
+		
 		// traitement reparation
 		if($pv_instance_bat < $pv_max_bat){
 		
@@ -1733,7 +1747,21 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 			
 			if($reussite <= $pourcentage_reussite + $bonus_chance){
 				
+				// Récupération si appartient génie civil
+				$sql = "SELECT count(id_perso) as verif_gc FROM perso_in_compagnie, compagnies 
+						WHERE compagnies.id_compagnie = perso_in_compagnie.id_compagnie
+						AND id_perso='$id_perso'
+						AND compagnies.genie_civil='1'";
+				$res = $mysqli->query($sql);
+				$t_gc = $res->fetch_assoc();
+				
+				$verif_gc = $t_gc['verif_gc'];
+				
 				$degats_sabotage = rand(50,200);
+				
+				if ($verif_gc) {
+					$degats_sabotage *= 2;
+				}
 				
 				$pv_final_bat = $pv_bat - $degats_sabotage;
 				
