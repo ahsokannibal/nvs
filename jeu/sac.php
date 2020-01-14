@@ -187,7 +187,7 @@ if($dispo){
 				<td>
 					<table border=1 width=100%>
 						<tr>
-							<td align=center width=25%><img src="../images/<?php echo $image_sac; ?>"><p align="center"><input type="button" value="Fermer mon sac" onclick="window.close()"></p></td>
+							<td align=center width=25%><img src="../images/<?php echo $image_sac; ?>"><p align="center"><input type="button" value="Fermer mon sac" onclick="window.open('jouer.php', '_self', ''); window.close();"></p></td>
 							<td width=75%>
 								<center><h2>Mon sac</h2>
 								<p>Le sac vous permet de transporter des objets et de les utiliser.<br>Vous possédez <b><?php echo $nb_objets; ?></b> objet<?php if($nb_objets > 1){echo "s";} ?> dans votre sac.</p>

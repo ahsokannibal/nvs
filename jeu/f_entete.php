@@ -72,7 +72,7 @@ function entete($mysqli, $id) {
 			echo "<tr><td><b>Camp :</b> <font color=\"$couleur_clan_perso\">$nom_clan</font></td></tr>";
 			
 			echo "<tr>";
-			echo "	<td><b>Bataillon :</b> <a href=\"bataillon.php?id_bataillon=$id_joueur\">" . $bataillon . "</a></td>";
+			echo "	<td><b>Bataillon :</b> <a href=\"bataillon.php?id_bataillon=$id_joueur\" target='_blank'>" . $bataillon . "</a></td>";
 			echo "</tr>";
 			
 			if(isset($groupe) && $groupe != ''){

@@ -62,7 +62,7 @@ if(@$_SESSION["id_perso"]){
 						<h2>Bataillon <?php echo $nom_bataillon; ?></h2>
 					</div>
 					
-					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
 
 					<center>
 						<div id="table_bataillon" class="table-responsive">

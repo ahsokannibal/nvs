@@ -1168,7 +1168,7 @@ if($dispo || !$admin){
 					</tr>
 					<tr>
 						<td align=center><b>Chef : </b><?php echo $nom_perso_chef;?></td>
-						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\">" . $bataillon_perso . "</a>"; ?></td>
+						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
 						<td align=center><b>Compagnie : </b><?php echo $nom_compagnie_perso; ?></td>
 						<td align=center><b>Section : </b><?php echo ""; ?></td>
 					</tr>
