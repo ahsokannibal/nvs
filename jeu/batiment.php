@@ -22,7 +22,7 @@ if($dispo){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
-		$sql = "SELECT pv_perso, type_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT pv_perso, type_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele, clan FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql );
 		$tpv = $res->fetch_assoc();
 		
@@ -31,6 +31,7 @@ if($dispo){
 		$or 		= $tpv["or_perso"];
 		$dla 		= $tpv["DLA"];
 		$est_gele 	= $tpv["est_gele"];
+		$camp		= $tpv['clan'];
 		
 		$config = '1';
 		
@@ -1549,6 +1550,24 @@ if($dispo){
 						//////////////
 						// Gare
 						if($id_bat == '11'){
+							
+							// Plan gare 
+							if ($camp == 1) {
+								$image_plan = "plan_gare_nord.png";
+								$image_plan_sans_terrain = "gare_nord.png";
+							}
+							
+							if ($camp == 2) {
+								$image_plan = "plan_gare_sud.png";
+								$image_plan_sans_terrain = "gare_sud.png";
+							}
+							
+							echo "<center>";
+							echo "<img src='./carte_tmp/" . $image_plan . "' class=\"img-fluid\" alt='plan gares'/>";
+							echo "</center>";
+							
+							echo "<br />";
+							
 							
 							// Récupération des liaisons depuis cette gare
 							$sql = "SELECT * FROM liaisons_gare WHERE id_gare1='$id_i_bat' OR id_gare2='$id_i_bat'";
