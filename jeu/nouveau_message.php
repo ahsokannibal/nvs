@@ -247,92 +247,132 @@ $a_lire = $res_a_lire->num_rows;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<title>Messagerie</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="../style.css" rel="stylesheet" type="text/css">
-</head>
-<body>
+	<head>
+	
+		<title>Messagerie</title>
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		
+	</head>
+	
+	<body>
+	
+		<div class="container-fluid">
 
-<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
-<tr align="center" bgcolor="#EEEEDD">
-<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
-	<td><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
-	<td><a href="message_envoye.php">Messages envoyés</a></td>
-	<td>Nouveau message</td>
-</tr>
-<tr align="center" bgcolor="#EEEEDD">
-	<td><a href="messagerie_contacts.php">Contacts</a></td>
-	<td><a href="messagerie_dossiers.php">Dossiers</a></td>
-	<td></td>
-</tr>
-</table>
+			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
 
-<br>
-<?php
-if(!isset($_GET["id"]) || (isset($_GET["id"]) && $verif && $verif_id)){
-?>
-	<form method="post" action="">
-	<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
-	<tr class="messl"><td>Destinataire : </td> <td colspan=3><input type="text" name="destinataire" size=30 
-	<?php 
-	if(isset($_SESSION['destinataires'])){
-		echo 'value="'.$_SESSION['destinataires'].'"';
-	} 
-	if(isset($_GET["pseudo"])){ 
-		echo 'value="'.$_GET["pseudo"].'"';
-	}
-	if(isset($_GET["id"])){
-		if(isset($_GET["rep"]) && $_GET["rep"] == '1'){
-			echo 'value="'.$destinataires.'"';
-		}
-		else {	
-			echo 'value="'.$tabMess["expediteur_message"].'"';
-		}
-	}	
-	if(isset($_GET["visu"])){
-		echo 'value="'.$visu.'"';
-	}
-	if(isset($_GET["id_compagnie"])){
-		echo 'value="'.$dest.'"';
-	}
-	if(isset($_GET['id_contact'])){
-		echo 'value="'.$dest_contact.'"';
-	}?> ></td></tr>
-	<tr class="messl"><td>Objet : </td> <td colspan=3><input type="text" name="objet" size=30
-	<?php 
-	if(isset($_SESSION['objet'])){
-		echo 'value="'.$_SESSION['objet'].'"';
-	} 
-	if(isset($_GET["id"])){ 
-		echo 'value="Re: '.stripslashes($tabMess["objet_message"]).'"';
-	}
-	if(isset($_GET["id_compagnie"])){
-		echo 'value="message du chef de la compagnie"';
-	}?>></td></tr>
-	<tr class="messl"><td>Message : </td> <td colspan=3 align="center"><TEXTAREA NAME="message" rows=15 cols=50 >
-<?php
-	if(isset($_SESSION['message'])){
-		echo $_SESSION['message'];
-	} 
-	if(isset($_GET["id"])) {
-		echo "\n\n****************************\n".stripslashes($tabMess["expediteur_message"])." wrote :\n****************************\n"; 
-		echo stripslashes($tabMess["contenu_message"]);
-	}
-	if(isset($_GET["id_compagnie"])){
-		echo "".stripslashes($contenu);
-	} ?></TEXTAREA></td></tr>
-	</table>
-	<div align="center"><INPUT TYPE="SUBMIT" name="envoyer" VALUE="envoyer"></div>
-	</form>
+			<div class="row justify-content-center">
+				<div class="col-12">
+			
+					<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
+						<tr align="center" bgcolor="#EEEEDD">
+						
+							<td><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
+							<td><a href="message_envoye.php">Messages envoyés</a></td>
+							<td>Nouveau message</td>
+						</tr>
+						<tr align="center" bgcolor="#EEEEDD">
+							<td><a href="messagerie_contacts.php">Contacts</a></td>
+							<td><a href="messagerie_dossiers.php">Dossiers</a></td>
+							<td></td>
+						</tr>
+					</table>
+				<div>
+			</div>
+			
+			<br>
+			
+			<div class="row justify-content-center">
+				<div class="col-12">
+				
+					<?php
+					if(!isset($_GET["id"]) || (isset($_GET["id"]) && $verif && $verif_id)){
+					?>
+					
+					<form method="post" action="">
+						<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
+							<tr class="messl">
+								<td><div class="form-group"><label for="destinataireInput">Destinataire : </label></td> 
+								<td colspan=3><input type="text" class="form-control" id="destinataireInput" name="destinataire" size="30"
+								<?php 
+								if(isset($_SESSION['destinataires'])){
+									echo 'value="'.$_SESSION['destinataires'].'"';
+								} 
+								if(isset($_GET["pseudo"])){ 
+									echo 'value="'.$_GET["pseudo"].'"';
+								}
+								if(isset($_GET["id"])){
+									if(isset($_GET["rep"]) && $_GET["rep"] == '1'){
+										echo 'value="'.$destinataires.'"';
+									}
+									else {	
+										echo 'value="'.$tabMess["expediteur_message"].'"';
+									}
+								}	
+								if(isset($_GET["visu"])){
+									echo 'value="'.$visu.'"';
+								}
+								if(isset($_GET["id_compagnie"])){
+									echo 'value="'.$dest.'"';
+								}
+								if(isset($_GET['id_contact'])){
+									echo 'value="'.$dest_contact.'"';
+								}?> ></div></td>
+							</tr>
+							<tr class="messl">
+								<td><div class="form-group"><label for="inputObjet">Objet : </label></td>
+								<td colspan=3><input type="text" class="form-control" id="inputObjet" name="objet" size="30"
+								<?php 
+								if(isset($_SESSION['objet'])){
+									echo 'value="'.$_SESSION['objet'].'"';
+								} 
+								if(isset($_GET["id"])){ 
+									echo 'value="Re: '.stripslashes($tabMess["objet_message"]).'"';
+								}
+								if(isset($_GET["id_compagnie"])){
+									echo 'value="message du chef de la compagnie"';
+								}?>></div></td>
+							</tr>
+							<tr class="messl">
+								<td><div class="form-group"><label for="textareaMessageImput">Message : </label></td> 
+								<td colspan=3 align="center"><TEXTAREA class="form-control" id="textareaMessageImput" name="message" rows="15" cols="50" >
+								<?php
+									if(isset($_SESSION['message'])){
+										echo $_SESSION['message'];
+									} 
+									if(isset($_GET["id"])) {
+										echo "\n\n****************************\n".stripslashes($tabMess["expediteur_message"])." wrote :\n****************************\n"; 
+										echo stripslashes($tabMess["contenu_message"]);
+									}
+									if(isset($_GET["id_compagnie"])){
+										echo "".stripslashes($contenu);
+									} ?></TEXTAREA></div>
+								</td>
+							</tr>
+						</table>
+						<div align="center"><INPUT TYPE="SUBMIT" name="envoyer" VALUE="envoyer"></div>
+					</form>
+				</div>
+			</div>
 <?php
 }
 else {
 	echo "<center>Données incorrectes</center>";
 }
 ?>
-
-</body>
+		</div>
+		
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	</body>
 </html>
 <?php
 }
