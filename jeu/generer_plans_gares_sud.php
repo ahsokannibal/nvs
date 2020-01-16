@@ -6,6 +6,8 @@ header("Content-type: image/png");//on va commencer par declarer que l'on veut c
 //ensuite on defini la taille de l'image
 $gare_carte = imagecreate(603,603)  or die ("Cannot Initialize new GD image stream");
 $image_carte = imagecreatefrompng("carte_tmp/carte.png");
+$image_p = imagecreatetruecolor(603, 300);
+imagecopyresampled($image_p, $image_carte, 0, 0, 0, 300, 603, 603, 603, 603);
 
 //maintenant on donne une couleur a notre image (ici un fond noir)
 $fond_perso=Imagecolorallocate($gare_carte, 250, 250, 250);
@@ -61,10 +63,10 @@ while ($t = $res->fetch_assoc()){
 
 imagepng($gare_carte, "carte_tmp/gare_sud.png");
 
-imagecopymerge ($image_carte, $gare_carte, 0, 0, 0, 0, 603, 603, 100);
+imagecopymerge($image_p, $gare_carte, 0, 0, 0, 300, 603, 603, 100);
 
 // on affiche l'image
-imagepng($image_carte, "carte_tmp/plan_gare_sud.png");
+imagepng($image_p, "carte_tmp/plan_gare_sud.png");
 
 
 ImageDestroy ($gare_carte);
