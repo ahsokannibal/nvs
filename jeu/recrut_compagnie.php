@@ -57,6 +57,19 @@ if($dispo){
 			$verif = $res->num_rows;
 				
 			if($verif){
+				
+				// recuperation des information sur la compagnie
+				$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
+				$res = $mysqli->query($sql);
+				$sec = $res->fetch_assoc();
+				
+				$genie_compagnie = $sec["genie_civil"];
+				
+				if ($genie_compagnie) {
+					$nb_persos_compagnie_max = 60;
+				} else {
+					$nb_persos_compagnie_max = 80;
+				}
 			
 				if (isset($_POST["rec"]) && $_POST["rec"]=="recruter"){
 					
@@ -73,6 +86,34 @@ if($dispo){
 						// insertion dans la table banque compagnie
 						$sql = "INSERT INTO banque_compagnie VALUES ($new_recrue,'0','','')";
 						$mysqli->query($sql);
+						
+						if ($genie_compagnie) {
+							// Nouvelles compétences de construction pour le perso
+							
+							// Construire pont
+							$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$new_recrue', '23', '1')";
+							$mysqli->query($sql);
+							
+							// Construire tour de visu
+							$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$new_recrue', '24', '1')";
+							$mysqli->query($sql);
+							
+							// Construire Hopital
+							$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$new_recrue', '27', '1')";
+							$mysqli->query($sql);
+							
+							// Construire Fortin
+							$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$new_recrue', '28', '1')";
+							$mysqli->query($sql);
+							
+							// Construire Gare
+							$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$new_recrue', '63', '1')";
+							$mysqli->query($sql);
+							
+							// Construire Rails
+							$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$new_recrue', '64', '1')";
+							$mysqli->query($sql);
+						}
 						
 						echo "<center>".$nom_recrue."[".$new_recrue."] vient de rentrer dans la compagnie</center>";
 					}
@@ -135,6 +176,34 @@ if($dispo){
 						$sql = "DELETE FROM banque_compagnie WHERE id_perso=$id_recrue";
 						$mysqli->query($sql);
 						
+						if ($genie_compagnie) {
+							// On suprime les competences de construction
+							
+							// Construire pont
+							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='23'";
+							$mysqli->query($sql);
+							
+							// Construire tour de visu
+							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='24'";
+							$mysqli->query($sql);
+							
+							// Construire Hopital
+							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='27'";
+							$mysqli->query($sql);
+							
+							// Construire Fortin
+							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='28'";
+							$mysqli->query($sql);
+							
+							// Construire Gare
+							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='63'";
+							$mysqli->query($sql);
+							
+							// Construire Rails
+							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='64'";
+							$mysqli->query($sql);
+						}
+						
 						echo "<center><font color='red'>".$nom_recrue."[".$id_recrue."] a été viré de la compagnie</font></center>";
 					}
 				}
@@ -177,18 +246,6 @@ if($dispo){
 						
 						echo "<center>".$nom_recrue."[".$id_recrue."] vient d'être refusé de quitter la compagnie</center>";
 					}
-				}
-				
-				// recuperation des information sur la compagnie
-				$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
-				$res = $mysqli->query($sql);
-				$sec = $res->fetch_assoc();
-				$genie_compagnie = $sec["genie_civil"];
-				
-				if ($genie_compagnie) {
-					$nb_persos_compagnie_max = 60;
-				} else {
-					$nb_persos_compagnie_max = 80;
 				}
 				
 				// Récupération nombre perso dans la compagnie
