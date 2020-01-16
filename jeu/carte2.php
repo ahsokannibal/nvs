@@ -63,14 +63,15 @@ if (@$_SESSION["id_perso"]) {
 	}
 	
 	// je vais chercher les perso dans ma table
-	$sql = "SELECT x_perso, y_perso, clan FROM perso WHERE pv_perso>0 and est_gele='0'";
+	$sql = "SELECT id_perso, x_perso, y_perso, clan FROM perso WHERE pv_perso>0 and est_gele='0'";
 	$res = $mysqli->query($sql);
 	
 	while ($t = $res->fetch_assoc()){
 		
-		$x = $t["x_perso"];
-		$y = $t["y_perso"];
-		$clan = $t["clan"];
+		$x 		= $t["x_perso"];
+		$y 		= $t["y_perso"];
+		$id_p	= $t["id_perso"];
+		$clan 	= $t["clan"];
 		
 		if($clan == '1'){
 			$color = $couleur_perso_clan1;
@@ -79,7 +80,23 @@ if (@$_SESSION["id_perso"]) {
 			$color = $couleur_perso_clan2;
 		}
 		
-		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $color);
+		if ($id_p != $id) {
+			
+			// On regarde si le perso est en foret
+			$sql_f = "SELECT fond_carte FROM carte WHERE x_carte='$x' AND y_carte='$y'";
+			$res_f = $mysqli->query($sql_f);
+			$t_f = $res_f->fetch_assoc();
+			
+			$fond_carte = $t_f["fond_carte"];
+			
+			if ($fond_carte != '7.gif') {
+				imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $color);
+			}
+		} else {
+			imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $color);
+			
+			imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $noir);
+		}
 	}
 	
 	// je vais chercher les batiments dans ma table
@@ -103,23 +120,22 @@ if (@$_SESSION["id_perso"]) {
 		imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 	}
 
-	// je vais chercher le perso qui est connecté dans ma table
-	$sql2 = "SELECT x_perso, y_perso, idJoueur_perso FROM perso WHERE id_perso=$id";
-	$res2 = $mysqli->query($sql2);
-	$t2 = $res2->fetch_assoc();
-	
-	$x2 = $t2["x_perso"];
-	$y2 = $t2["y_perso"];
-	$id_joueur = $t2["idJoueur_perso"];
-	
-	imageellipse($perso_carte, 3*$x2, 600-3*$y2, 20, 20, $noir);
+	// creation de l'image perso
 	imagepng($perso_carte, "carte_tmp/perso$id.png");
 	
+	// creation de l'image carte_sl
 	imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
 	imagepng($image_carte, "carte_tmp/carte_sl$id.png");
 	
-	// on affiche l'image
+	// creation de l'image carte
 	imagepng($image_carte, "carte_tmp/carte$id.png");
+	
+	// je vais chercher le perso qui est connecté dans ma table
+	$sql2 = "SELECT idJoueur_perso FROM perso WHERE id_perso=$id";
+	$res2 = $mysqli->query($sql2);
+	$t2 = $res2->fetch_assoc();
+	
+	$id_joueur = $t2["idJoueur_perso"];
 	
 	// Je vais chercher les persos du même joueur (même bataillon)
 	$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
