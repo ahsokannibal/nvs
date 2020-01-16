@@ -185,7 +185,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 						$img_bat = "b".$id_bat."".$bat_camp.".png";
 						
 						if ($id_bat == 4){
-							// route et pont
+							// route
 							// mise a jour de la carte
 							$sql = "UPDATE $carte SET occupee_carte='0', fond_carte='$img_bat' WHERE x_carte=$x_bat AND y_carte=$y_bat";
 							$mysqli->query($sql);							
@@ -197,10 +197,11 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 							$mysqli->query($sql);
 							$id_i_bat = $mysqli->insert_id;
 							
+							// Cas particulier Ponts
 							if ($id_bat == 5) {
 								
 								// mise a jour de la carte
-								$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte='$id_i_bat', fond_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
+								$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte='$id_i_bat', save_info_carte='$id_i_bat', fond_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
 								$mysqli->query($sql);
 								
 							} else {
