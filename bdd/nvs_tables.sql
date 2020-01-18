@@ -602,7 +602,7 @@ CREATE TABLE `perso` (
   `xp_perso` int(11) NOT NULL DEFAULT '0',
   `pi_perso` int(11) NOT NULL DEFAULT '0',
   `pc_perso` int(11) NOT NULL DEFAULT '0',
-  `or_perso` int(11) NOT NULL DEFAULT '20',
+  `or_perso` int(11) NOT NULL DEFAULT '0',
   `pvMax_perso` int(11) NOT NULL DEFAULT '0',
   `pm_perso` int(11) NOT NULL DEFAULT '5',
   `pmMax_perso` int(11) NOT NULL DEFAULT '5',
