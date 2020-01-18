@@ -245,13 +245,13 @@ if(isset($_SESSION["ID_joueur"])){
 							if ($chef_perso_nouveau_tour == '1') {
 								
 								// C'est le chef => gain or et PC
-								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, xp_perso=xp_perso+1, pi_perso=pi_perso+1, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							} else {
 								
 								// C'est un grouillot
-								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, xp_perso=xp_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, pi_perso=pi_perso+1, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							}
