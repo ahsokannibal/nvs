@@ -441,6 +441,21 @@ CREATE TABLE `instance_batiment` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `instance_batiment_canon`
+--
+
+CREATE TABLE `instance_batiment_canon` (
+  `id_instance_canon` int(11) NOT NULL,
+  `id_instance_bat` int(11) NOT NULL,
+  `x_canon` int(11) NOT NULL,
+  `y_canon` int(11) NOT NULL,
+  `camp_canon` int(11) NOT NULL,
+  `date_activation` datetime DEFAULT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `instance_pnj`
 --
 
@@ -1019,6 +1034,12 @@ ALTER TABLE `histobanque_compagnie`
 --
 ALTER TABLE `instance_batiment`
   ADD PRIMARY KEY (`id_instanceBat`);
+  
+--
+-- Index pour la table `instance_batiment_canon`
+--
+ALTER TABLE `instance_batiment_canon`
+  ADD PRIMARY KEY (`id_instance_canon`);
 
 --
 -- Index pour la table `instance_pnj`
@@ -1203,6 +1224,11 @@ ALTER TABLE `histobanque_compagnie`
 --
 ALTER TABLE `instance_batiment`
   MODIFY `id_instanceBat` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=50000;
+--
+-- AUTO_INCREMENT pour la table `instance_batiment_canon`
+--
+ALTER TABLE `instance_batiment_canon`
+  MODIFY `id_instance_canon` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `instance_pnj`
 --

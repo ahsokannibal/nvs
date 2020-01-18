@@ -672,7 +672,7 @@ if($verif){
 											$mysqli->query($sql);
 											
 											// maj stats camp
-											if($clan_cible != $clan_perso){
+											if($clan_collat != $clan_perso){
 												$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
 												$mysqli->query($sql);
 											}
@@ -887,29 +887,6 @@ if($verif){
 							// gain xp esquive et ajout malus
 							$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, bonus_perso=bonus_perso-1 WHERE id_perso='$id_cible'";
 							$mysqli->query($sql);
-							
-							// Passage grade grouillot
-							if ($grade_perso == 1) {
-								
-								if ($xp_perso + $gain_xp >= 500) {
-									// On le passage 1ere classe
-									$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-									$mysqli->query($sql);
-									
-									echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-								}
-							}
-							
-							if ($grade_perso == 101) {
-								
-								if ($xp_perso + $gain_xp >= 1500) {
-									// On le passe élite
-									$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-									$mysqli->query($sql);
-									
-									echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-								}
-							}
 								
 							// maj evenement
 							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
