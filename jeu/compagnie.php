@@ -313,11 +313,12 @@ if($dispo){
 				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie";
 				$res = $mysqli->query($sql);
 				$sec = $res->fetch_assoc();
-				$id_compagnie = $sec["id_compagnie"];
-				$nom_compagnie = $sec["nom_compagnie"];
-				$image_compagnie = $sec["image_compagnie"];
-				$resume_compagnie = $sec["resume_compagnie"];
-				$description_compagnie = $sec["description_compagnie"];
+				
+				$id_compagnie 			= $sec["id_compagnie"];
+				$nom_compagnie 			= $sec["nom_compagnie"];
+				$image_compagnie 		= $sec["image_compagnie"];
+				$resume_compagnie 		= $sec["resume_compagnie"];
+				$description_compagnie 	= $sec["description_compagnie"];
 					
 				// affichage des information de la compagnie
 				echo "<center><b>$nom_compagnie</b></center>";
