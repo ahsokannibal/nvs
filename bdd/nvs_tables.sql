@@ -189,7 +189,9 @@ CREATE TABLE `carte` (
   `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
   `fond_carte` varchar(20) NOT NULL DEFAULT '',
   `idPerso_carte` int(11) DEFAULT '0',
-  `image_carte` varchar(100) DEFAULT NULL
+  `image_carte` varchar(100) DEFAULT NULL,
+  `vue_nord` int(11) DEFAULT '0',
+  `vue_sud` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `carte` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
@@ -204,7 +206,9 @@ CREATE TABLE `carte2` (
   `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
   `fond_carte` varchar(20) NOT NULL DEFAULT '',
   `idPerso_carte` int(11) DEFAULT '0',
-  `image_carte` varchar(100) DEFAULT NULL
+  `image_carte` varchar(100) DEFAULT NULL,
+  `vue_nord` int(11) DEFAULT '0',
+  `vue_sud` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `carte2` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
@@ -219,7 +223,9 @@ CREATE TABLE `carte3` (
   `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
   `fond_carte` varchar(20) NOT NULL DEFAULT '',
   `idPerso_carte` int(11) DEFAULT '0',
-  `image_carte` varchar(100) DEFAULT NULL
+  `image_carte` varchar(100) DEFAULT NULL,
+  `vue_nord` int(11) DEFAULT '0',
+  `vue_sud` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `carte3` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
