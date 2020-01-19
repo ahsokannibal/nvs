@@ -72,7 +72,7 @@ if(@$_SESSION["id_perso"]){
 								</tr>
 <?php		
 			// Récupération de la liste des persos du joueur 
-			$sql = "SELECT perso.id_perso, nom_perso, nom_grade, nom_unite FROM perso, perso_as_grade, grades, type_unite
+			$sql = "SELECT perso.id_perso, nom_perso, grades.id_grade, nom_grade, nom_unite FROM perso, perso_as_grade, grades, type_unite
 					WHERE perso.id_perso = perso_as_grade.id_perso 
 					AND perso_as_grade.id_grade = grades.id_grade
 					AND perso.type_perso = type_unite.id_unite
@@ -85,9 +85,23 @@ if(@$_SESSION["id_perso"]){
 				$nom_perso 	= $t['nom_perso'];
 				$nom_grade 	= $t['nom_grade'];
 				$nom_unite 	= $t['nom_unite'];
+				$id_grade	= $t['id_grade'];
+				
+				// cas particuliers grouillot
+				if ($id_grade == 101) {
+					$id_grade = "1.1";
+				}
+				if ($id_grade == 102) {
+					$id_grade = "1.2";
+				}
 				
 				echo "<tr>";
-				echo "	<td><a href=\"evenement.php?infoid=" . $id_perso . "\">". $nom_perso ." [" . $id_perso . "]</td><td>" . $nom_unite . "</td><td>" . $nom_grade . "</td>";
+				echo "	<td>";
+				echo "		<a href=\"grades.php\" target='_blank'><img alt='". $nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width='40' height='40'></a>
+							<a href=\"evenement.php?infoid=" . $id_perso . "\">". $nom_perso ." [" . $id_perso . "]";
+				echo "	</td>";
+				echo "	<td>" . $nom_unite . "</td>";
+				echo "	<td>" . $nom_grade. "</td>";
 				echo "</tr>";
 			}
 
