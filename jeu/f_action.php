@@ -490,111 +490,124 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$coutPa = $t_reparer["coutPa_action"];
 	
 	// recuperation des infos du perso
-	$sql = "SELECT nom_perso, pa_perso, clan FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, pa_perso, type_perso, clan FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_i_perso = $res->fetch_assoc();
 	
-	$nom_perso = $t_i_perso['nom_perso'];
-	$pa_perso = $t_i_perso['pa_perso'];
+	$nom_perso 	= $t_i_perso['nom_perso'];
+	$pa_perso 	= $t_i_perso['pa_perso'];
+	$type_perso	= $t_i_perso['type_perso'];
 	$camp_perso = $t_i_perso['clan'];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
 	
-	// test pa
-	if($pa_perso >= $coutPa){
-		
-		// recuperation des infos de la cible
-		$sql = "SELECT nom_batiment, pv_instance, pvMax_instance, camp_instance FROM instance_batiment, batiment WHERE id_instanceBat='$id_cible' AND batiment.id_batiment = instance_batiment.id_batiment";
-		$res = $mysqli->query($sql);
-		$t_i_cible = $res->fetch_assoc();
-		$nom_cible = $t_i_cible['nom_batiment'];
-		$pv_instance_bat = $t_i_cible['pv_instance'];
-		$pv_max_bat = $t_i_cible['pvMax_instance'];
-		$camp_bat = $t_i_cible['camp_instance'];
-		
-		// recuperation de la couleur du camp du batiment
-		$couleur_clan_cible = couleur_clan($camp_bat);
-		
-		//calcul des reparations
-		$pv_reparation = calcul_pv_reparation($id_action);
-		
-		// Récupération si appartient génie civil
-		$sql = "SELECT count(id_perso) as verif_gc FROM perso_in_compagnie, compagnies 
-				WHERE compagnies.id_compagnie = perso_in_compagnie.id_compagnie
-				AND id_perso='$id_perso'
-				AND compagnies.genie_civil='1'";
-		$res = $mysqli->query($sql);
-		$t_gc = $res->fetch_assoc();
-		
-		$verif_gc = $t_gc['verif_gc'];
-		
-		if ($verif_gc) {
-			$pv_reparation *= 2;
-		}
-		
-		// traitement reparation
-		if($pv_instance_bat < $pv_max_bat){
-		
-			// calcul gain xp
-			$gain_xp = rand(2,5);
+	// Les chiens ne peuvent pas réparer les bâtiments
+	if ($type_perso != '6') {
+	
+		// test pa
+		if($pa_perso >= $coutPa){
 			
-			if($camp_bat != $camp_perso){
-				$gain_xp = floor($gain_xp / 2);
+			// recuperation des infos de la cible
+			$sql = "SELECT nom_batiment, pv_instance, pvMax_instance, camp_instance FROM instance_batiment, batiment WHERE id_instanceBat='$id_cible' AND batiment.id_batiment = instance_batiment.id_batiment";
+			$res = $mysqli->query($sql);
+			$t_i_cible = $res->fetch_assoc();
+			$nom_cible = $t_i_cible['nom_batiment'];
+			$pv_instance_bat = $t_i_cible['pv_instance'];
+			$pv_max_bat = $t_i_cible['pvMax_instance'];
+			$camp_bat = $t_i_cible['camp_instance'];
+			
+			// recuperation de la couleur du camp du batiment
+			$couleur_clan_cible = couleur_clan($camp_bat);
+			
+			//calcul des reparations
+			$pv_reparation = calcul_pv_reparation($id_action);
+			
+			// Récupération si appartient génie civil
+			$sql = "SELECT count(id_perso) as verif_gc FROM perso_in_compagnie, compagnies 
+					WHERE compagnies.id_compagnie = perso_in_compagnie.id_compagnie
+					AND id_perso='$id_perso'
+					AND compagnies.genie_civil='1'";
+			$res = $mysqli->query($sql);
+			$t_gc = $res->fetch_assoc();
+			
+			$verif_gc = $t_gc['verif_gc'];
+			
+			if ($verif_gc) {
+				$pv_reparation *= 2;
 			}
-		
-			if($pv_instance_bat + $pv_reparation < $pv_max_bat){
-				//MAJ pv cible
-				$sql = "UPDATE instance_batiment SET pv_instance=pv_instance+$pv_reparation WHERE id_instanceBat='$id_cible'";
-				$mysqli->query($sql);
-					
-				//MAJ xp/pi perso et pa
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
-				$mysqli->query($sql);
-					
-				//MAJ evenments perso
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : reparation de $pv_reparation PV',NOW(),'0')";
-				$mysqli->query($sql);
-					
-				echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
-				echo "<center>Vous avez gagné $gain_xp XP</center>";
+			
+			// traitement reparation
+			if($pv_instance_bat < $pv_max_bat){
+			
+				// calcul gain xp
+				$gain_xp = rand(2,5);
+				
+				if($camp_bat != $camp_perso){
+					$gain_xp = floor($gain_xp / 2);
+				}
+			
+				if($pv_instance_bat + $pv_reparation < $pv_max_bat){
+					//MAJ pv cible
+					$sql = "UPDATE instance_batiment SET pv_instance=pv_instance+$pv_reparation WHERE id_instanceBat='$id_cible'";
+					$mysqli->query($sql);
+						
+					//MAJ xp/pi perso et pa
+					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+					$mysqli->query($sql);
+						
+					//MAJ evenments perso
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : reparation de $pv_reparation PV',NOW(),'0')";
+					$mysqli->query($sql);
+						
+					echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
+					echo "<center>Vous avez gagné $gain_xp XP</center>";
+				}
+				else {
+					// on met aux pvMax de la cible
+					$sql = "UPDATE instance_batiment SET pv_instance=pvMax_instance WHERE id_instanceBat='$id_cible'";
+					$mysqli->query($sql);
+						
+					//MAJ xp/pi/pa perso
+					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+					$mysqli->query($sql);
+						
+					//MAJ evenments perso
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : reparation de $pv_reparation PV',NOW(),'0')";
+					$mysqli->query($sql);
+						
+					echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
+					echo "<center>La cible est revenu à son max de vie</center><br />";
+					echo "<center>Vous avez gagné $gain_xp XP</center>";
+				}
 			}
 			else {
-				// on met aux pvMax de la cible
-				$sql = "UPDATE instance_batiment SET pv_instance=pvMax_instance WHERE id_instanceBat='$id_cible'";
-				$mysqli->query($sql);
+				// cible deja au max
+				$gain_xp = '1';
 					
-				//MAJ xp/pi/pa perso
+					//MAJ xp/pi/pa perso
 				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 					
 				//MAJ evenments perso
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a reparé le batiment ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : reparation de $pv_reparation PV',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a fait une révision sur le batiment ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : pv déjà au max...',NOW(),'0')";
 				$mysqli->query($sql);
 					
-				echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
-				echo "<center>La cible est revenu à son max de vie</center><br />";
+				echo "<center>La cible est était déjà à son max de vie</center><br />";
 				echo "<center>Vous avez gagné $gain_xp XP</center>";
 			}
 		}
 		else {
-			// cible deja au max
-			$gain_xp = '1';
-				
-				//MAJ xp/pi/pa perso
-			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
-			$mysqli->query($sql);
-				
-			//MAJ evenments perso
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a fait une révision sur le batiment ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : pv déjà au max...',NOW(),'0')";
-			$mysqli->query($sql);
-				
-			echo "<center>La cible est était déjà à son max de vie</center><br />";
-			echo "<center>Vous avez gagné $gain_xp XP</center>";
+			echo "<center>Vous n'avez pas assez de PA</center><br />";
 		}
 	}
 	else {
-		echo "<center>Vous n'avez pas assez de PA</center><br />";
+		$text_triche = "Tentative réparation bâtiment avec chien";
+			
+		$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+		$mysqli->query($sql);
+		
+		echo "<center><font color='red'>Les chiens ne peuvent pas réparer les bâtiments...</font></center><br />";
 	}
 	echo "<br /><br /><a href='jouer.php'>[ retour ]</a>";
 }

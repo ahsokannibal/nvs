@@ -547,7 +547,8 @@ if($dispo || !$admin){
 					
 					$nom_bat = $t_n["nom_batiment"];
 					
-					if ($pv_bat < $pvMax_bat) {
+					// Les chiens ne peuvent pas réparer les bâtiments
+					if ($pv_bat < $pvMax_bat && $type_perso != '6') {
 						$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat] (5 PA)</a>~~</font></center>";
 					}
 					
