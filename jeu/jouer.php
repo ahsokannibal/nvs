@@ -1150,7 +1150,7 @@ if($dispo || !$admin){
 				$type_perso 			= $t_perso2["type_perso"];
 				$bataillon_perso 		= $t_perso2["bataillon"];
 				
-				$clan_perso = $t_perso2["clan"];
+				$clan_perso = $t_perso2["clan"];				
 				
 				if($clan_perso == 1){
 					$clan = 'rond_b.png';
@@ -1162,6 +1162,11 @@ if($dispo || !$admin){
 					$image_evenement 	= "evenement_nord.png";
 					$image_messagerie 	= "messagerie_nord.png";
 					$image_em 			= "em_nord2.png";
+					
+					$sql = "UPDATE $carte SET vue_nord='1' 
+							WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
+							AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
+					$mysqli->query($sql);
 				}
 				if($clan_perso == 2){
 					$clan = 'rond_r.png';
@@ -1173,6 +1178,11 @@ if($dispo || !$admin){
 					$image_evenement 	= "evenement_sud.png";
 					$image_messagerie 	= "messagerie_sud.png";
 					$image_em 			= "em_sud2.png";
+					
+					$sql = "UPDATE $carte SET vue_sud='1' 
+							WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
+							AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
+					$mysqli->query($sql);
 				}
 				
 				// récupération du grade du perso 
@@ -1431,7 +1441,7 @@ if($dispo || !$admin){
 				$degats_arme_cac = $degatMin_arme_cac."D".$valeur_des_arme_cac;
 				
 				// Récupération de la liste des persos à portée d'attaque arme CaC
-				$res_portee_cac = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perception_perso);
+				$res_portee_cac = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perc);
 				
 				// Récupération de l'arme à distance sur le perso
 				$sql = "SELECT arme.id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
@@ -1468,7 +1478,7 @@ if($dispo || !$admin){
 				$degats_arme_dist = $degatMin_arme_dist."D".$valeur_des_arme_dist;
 				
 				// Récupération de la liste des persos à portée d'attaque arme dist
-				$res_portee_dist = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_dist, $porteeMax_arme_dist, $perception_perso);
+				$res_portee_dist = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_dist, $porteeMax_arme_dist, $perc);
 				
 				?>
 				<table border=0 align="center" cellspacing="0" cellpadding="10" style:no-padding>
