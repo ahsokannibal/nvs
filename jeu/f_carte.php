@@ -454,7 +454,7 @@ function selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan){
  * Fonction permettant d'afficher les liens utiles lorsqu'un perso se retrouve à proximité d'un batiment
  * @return $mess_bat contenant les liens
  */
-function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) {
+function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_perso) {
 	
 	$new_mess_bat = "";
 	
@@ -479,10 +479,12 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) {
 			$nom_bat = $t_n["nom_batiment"];
 				
 			// verification si le batiment est de la même nation que le perso
-			if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) { // pas même nation
+			if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) {
 			
-				// verification si le batiment est vide
-				if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5){
+				// Verification si le batiment est vide
+				// + Le lien est utile pour les batiments autre que barricade et pont 
+				// + Le lien est utile que pour les unités autre que chien et soigneur
+				if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $type_perso != '6' && $type_perso != '4'){
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 			}
@@ -491,13 +493,15 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso) {
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 				
-				if ($pv_instance < $pvMax_instance) {
+				// Les chiens ne peuvent pas réparer les batiments
+				if ($pv_instance < $pvMax_instance && $type_perso != '6') {
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat] (5 PA)</a>~~</font></center>";
 				}
 			}
 			
-			// pont
-			if ($bat == 5) {
+			// Pont
+			// Les chiens ne peuvent pas saboter les ponts
+			if ($bat == 5 && $type_perso != '6') {
 				$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat] (10 PA)</a>~~</font></center>";
 			}
 		}

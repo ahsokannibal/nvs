@@ -61,61 +61,177 @@ function construire_rail($mysqli, $t_bat, $id_perso, $carte){
  * Fonction permettant de verifier si les conditions de construction d'un batiment sont bien respectées
  * @return boolean : true si contraintes respectée, false sinon
  */
-function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_perso, $y_perso) {
+function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $y_bat) {
 	
 	// Conditions construction
 	if ($id_bat == '9') {
 		// Fort => 16 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 16;
-		$nb_cases_ennemi 	= 50;
 	}
 	else if ($id_bat == '8') {
 		// Fortin => 10 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 10;
-		$nb_cases_ennemi 	= 50;
 	}
 	else if ($id_bat == '11') {
 		// Gare => 6 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 6;
-		$nb_cases_ennemi 	= 50;
 	}
 	else if ($id_bat == '7') {
 		// Hopital => 3 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 3;
-		$nb_cases_ennemi 	= 20;
 	}
 	else {
 		$nb_genie_civil 	= 1;
-		$nb_cases_ennemi 	= 50;
 	}
 	
-	// Verification si pas d'ennemi 
-	$sql_contrainte_nb_gc = "SELECT count(perso.id_perso) as nb_gc FROM perso, perso_in_compagnie, compagnies 
+	// Verification nb genie civil
+	$sql = "SELECT count(perso.id_perso) as nb_gc FROM perso, perso_in_compagnie, compagnies 
 							WHERE perso.id_perso = perso_in_compagnie.id_perso
 							AND perso_in_compagnie.id_compagnie = compagnies.id_compagnie
-							AND compagnies.genie_civil='$camp_perso'
-							AND compagnies.id_clan = perso.clan
-							AND x_perso >= $x_perso - 10
-							AND x_perso <= $x_perso + 10
-							AND y_perso >= $y_perso - 10
-							AND y_perso <= $y_perso + 10";
-	$res_contrainte_nb_gc = $mysqli->query($sql_contrainte_nb_gc);
-	$t_contrainte_nb_gc = $res_contrainte_nb_gc->fetch_assoc();
+							AND compagnies.genie_civil='1'
+							AND compagnies.id_clan = '$camp_perso'
+							AND x_perso >= $x_bat - 10
+							AND x_perso <= $x_bat + 10
+							AND y_perso >= $y_bat - 10
+							AND y_perso <= $y_bat + 10";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
 	
-	$verif_nb_gc = $t_contrainte_nb_gc['nb_gc'];
-	
-	// TODO - verification distance avec ennemis
-	
-	// TODO - verification distance entre nouveau bat et batiments existant
+	$verif_nb_gc = $t['nb_gc'];	
 	
 	return $verif_nb_gc >= $nb_genie_civil;
 }
 
 /**
+ * Fonction permettant de verifier si les conditions de construction d'un batiment sont bien respectées
+ * @return boolean : true si contraintes respectée, false sinon
+ */
+function verif_contraintes_construction_ennemis($mysqli, $id_bat, $camp_perso, $x_bat, $y_bat) {
+	
+	// Conditions construction
+	if ($id_bat == '2') {
+		// Tour de guet
+		$nb_cases_ennemi 	= 2;
+	}
+	else if ($id_bat == '5' || $id_bat == '1') {
+		// Barricades et Ponts
+		$nb_cases_ennemi 	= 0;
+	}
+	else if ($id_bat == '7') {
+		// Hopital
+		$nb_cases_ennemi 	= 20;
+	}
+	else {
+		$nb_cases_ennemi 	= 50;
+	}
+	
+	// Verification distance avec ennemis
+	$sql = "SELECT count(perso.id_perso) as nb_ennemi FROM perso 
+			WHERE clan != '$camp_perso'
+			AND x_perso >= $x_bat - $nb_cases_ennemi
+			AND x_perso <= $x_bat + $nb_cases_ennemi
+			AND y_perso >= $y_bat - $nb_cases_ennemi
+			AND y_perso <= $y_bat + $nb_cases_ennemi";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$verif_nb_ennemis = $t['nb_ennemi'];
+	
+	return $verif_nb_ennemis == 0;
+}
+
+/**
+ * Fonction permettant de verifier si les conditions de construction d'un batiment sont bien respectées
+ * @return boolean : true si contraintes respectée, false sinon
+ */
+function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_bat, $y_bat) {
+	
+	// Conditions construction
+	if ($id_bat == '2') {
+		// Tour de guet
+		$nb_cases_bat 	= 2;
+		$nb_cases_gare	= 2;
+		$nb_cases_rapat = 2;
+	}
+	else if ($id_bat == '5' || $id_bat == '1') {
+		// Barricades et Ponts
+		$nb_cases_bat 	= 0;
+		$nb_cases_gare	= 2;
+		$nb_cases_rapat = 2;
+	}
+	else if ($id_bat == '7') {
+		// Hopital
+		$nb_cases_bat 	= 2;
+		$nb_cases_gare	= 20;
+		$nb_cases_rapat = 40;
+	}
+	else if ($id_bat == '8') {
+		// Fortin
+		$nb_cases_bat 	= 2;
+		$nb_cases_gare	= 20;
+		$nb_cases_rapat = 40;
+	}
+	else if ($id_bat == '9') {
+		// Fort
+		$nb_cases_bat 	= 2;
+		$nb_cases_gare	= 20;
+		$nb_cases_rapat = 40;
+	}
+	else if ($id_bat == '11') {
+		// Gare
+		$nb_cases_bat 	= 2;
+		$nb_cases_gare	= 40;
+		$nb_cases_rapat = 20;
+	}
+	else {
+		$nb_cases_bat 	= 2;
+		$nb_cases_gare	= 2;
+		$nb_cases_rapat = 2;
+	}
+	
+	// Verification distance avec autre batiment
+	$sql = "SELECT count(id_instanceBat) as nb_bat FROM instance_batiment 
+			WHERE x_instance >= $x_bat - $nb_cases_bat
+			AND x_instance <= $x_bat + $nb_cases_bat
+			AND y_instance >= $y_bat - $nb_cases_bat
+			AND y_instance <= $y_bat + $nb_cases_bat";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$verif_nb_bats = $t['nb_bat'];
+	
+	// Verification distance avec gare
+	$sql = "SELECT count(id_instanceBat) as nb_gare FROM instance_batiment 
+			WHERE x_instance >= $x_bat - $nb_cases_gare
+			AND x_instance <= $x_bat + $nb_cases_gare
+			AND y_instance >= $y_bat - $nb_cases_gare
+			AND y_instance <= $y_bat + $nb_cases_gare
+			AND id_batiment='11'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$verif_nb_gares = $t['nb_gare'];
+	
+	// Verification distance avec autres batiments de rapatriement
+	$sql = "SELECT count(id_instanceBat) as nb_rapat FROM instance_batiment 
+			WHERE x_instance >= $x_bat - $nb_cases_rapat
+			AND x_instance <= $x_bat + $nb_cases_rapat
+			AND y_instance >= $y_bat - $nb_cases_rapat
+			AND y_instance <= $y_bat + $nb_cases_rapat
+			AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9')";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$verif_nb_rapats = $t['nb_rapat'];
+	
+	return $verif_nb_bats == 0 && $verif_nb_gares == 0 && $verif_nb_rapats == 0;
+}
+
+/**
   * Fonction qui permet de construire un batiment sur une case
-  * @param $t_bat	: Un tableau contenant les coordonnees ou le batiement doit etre construit ainsi que l'identifiant du batiment
+  * @param $t_bat		: Un tableau contenant les coordonnees ou le batiement doit etre construit ainsi que l'identifiant du batiment
   * @param $id_perso	: L'identifiant du perso qui construit le batiment
-  * @param $carte 	: La carte sur laquelle le batiment doit etre construit
+  * @param $carte 		: La carte sur laquelle le batiment doit etre construit
   * @return Bool		: Si oui ou non le batiment est constructible
   */
 function construire_bat($mysqli, $t_bat, $id_perso, $carte){
@@ -191,7 +307,10 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 				
 				$gain_xp = 1;
 				
-				$autorisation_construction = verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_perso, $y_perso);				
+				// Autorisations de construction - vérification des contraintes
+				$autorisation_construction_gc 		= verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $y_bat);
+				$autorisation_construction_ennemis 	= verif_contraintes_construction_ennemis($mysqli, $id_bat, $camp_perso, $x_bat, $y_bat);
+				$autorisation_construction_bats 	= verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_bat, $y_bat);
 				
 				$autorisation_construction_taille = true;
 				
@@ -215,105 +334,125 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 					}
 				}
 				
-				if($autorisation_construction){
+				if($autorisation_construction_gc){
 					
-					if ($autorisation_construction_taille) {
+					if ($autorisation_construction_ennemis) {
+						
+						if ($autorisation_construction_bats) {
 					
-						if($coutPa == -1){
-							// mise a jour des pa, or et charge du perso + xp/pi
-							$sql = "UPDATE perso SET pa_perso='0' , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
-							$mysqli->query($sql);
-						}
-						else {
-							// mise a jour des pa, or et charge du perso + xp/pi
-							$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
-							$mysqli->query($sql);
-						}
-						
-						// MAJ bois
-						for($i=1; $i <= $coutBois; $i++){
-							$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='7' LIMIT 1";
-							$mysqli->query($sql);
-						}
-						
-						$pv_bat = rand($pvMin, $pvMax);
-						$img_bat = "b".$id_bat."".$bat_camp.".png";
-						
-						if ($id_bat == 4){
-							// route
-							// mise a jour de la carte
-							$sql = "UPDATE $carte SET occupee_carte='0', fond_carte='$img_bat' WHERE x_carte=$x_bat AND y_carte=$y_bat";
-							$mysqli->query($sql);							
-						}
-						else {
-							// mise a jour de la table instance_bat
-							$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
-									VALUES ('$niveau_bat', '$id_bat', '', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
-							$mysqli->query($sql);
-							$id_i_bat = $mysqli->insert_id;
+							if ($autorisation_construction_taille) {
 							
-							// Cas particulier Ponts
-							if ($id_bat == 5) {
+								if($coutPa == -1){
+									// mise a jour des pa, or et charge du perso + xp/pi
+									$sql = "UPDATE perso SET pa_perso='0' , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
+									$mysqli->query($sql);
+								}
+								else {
+									// mise a jour des pa, or et charge du perso + xp/pi
+									$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
+									$mysqli->query($sql);
+								}
 								
-								// mise a jour de la carte
-								$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte='$id_i_bat', save_info_carte='$id_i_bat', fond_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
-								$mysqli->query($sql);
+								// MAJ bois
+								for($i=1; $i <= $coutBois; $i++){
+									$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='7' LIMIT 1";
+									$mysqli->query($sql);
+								}
 								
-							} else {
-							
-								$img_bat_sup = $bat_camp.".png";
+								$pv_bat = rand($pvMin, $pvMax);
+								$img_bat = "b".$id_bat."".$bat_camp.".png";
 								
-								for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
-									for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
+								if ($id_bat == 4){
+									// route
+									// mise a jour de la carte
+									$sql = "UPDATE $carte SET occupee_carte='0', fond_carte='$img_bat' WHERE x_carte=$x_bat AND y_carte=$y_bat";
+									$mysqli->query($sql);							
+								}
+								else {
+									// mise a jour de la table instance_bat
+									$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
+											VALUES ('$niveau_bat', '$id_bat', '', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
+									$mysqli->query($sql);
+									$id_i_bat = $mysqli->insert_id;
+									
+									// Cas particulier Ponts
+									if ($id_bat == 5) {
 										
 										// mise a jour de la carte
-										$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
+										$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte='$id_i_bat', save_info_carte='$id_i_bat', fond_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
 										$mysqli->query($sql);
 										
+									} else {
+									
+										$img_bat_sup = $bat_camp.".png";
+										
+										for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
+											for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
+												
+												// mise a jour de la carte
+												$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
+												$mysqli->query($sql);
+												
+											}
+										}
+									
+										// mise a jour de la carte image centrale
+										$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
+										$mysqli->query($sql);
 									}
 								}
-							
-								// mise a jour de la carte image centrale
-								$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
-								$mysqli->query($sql);
+								
+								// recuperation des infos du perso
+								$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
+								$res = $mysqli->query($sql);
+								$t_p = $res->fetch_assoc();
+								$nom_perso = $t_p["nom_perso"];
+								$camp = $t_p["clan"];
+								
+								// recuperation de la couleur du camp du perso
+								$couleur_clan_perso = couleur_clan($camp);
+								
+								// route et pont
+								if($id_bat == 4 || $id_bat == 5){
+									//mise a jour de la table evenement
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>$nom_bat</b>',NULL,'','',NOW(),'0')";
+									$mysqli->query($sql);
+								}
+								else {
+									//mise a jour de la table evenement
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit ','$id_i_bat','<font color=$couleur_clan_perso><b>$nom_bat</b></font>','',NOW(),'0')";
+									$mysqli->query($sql);
+								}
+								
+								return 1;
+							}
+							else {
+								echo "<center>Vous ne pouvez pas construire ce bâtiment car la carte est occupée ou le terrain n'est pas que de la plaine<br />";
+								echo "<a href='jouer.php'>[ retour ]</a></center>";
+								
+								return 0;
 							}
 						}
-						
-						// recuperation des infos du perso
-						$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
-						$res = $mysqli->query($sql);
-						$t_p = $res->fetch_assoc();
-						$nom_perso = $t_p["nom_perso"];
-						$camp = $t_p["clan"];
-						
-						// recuperation de la couleur du camp du perso
-						$couleur_clan_perso = couleur_clan($camp);
-						
-						// route et pont
-						if($id_bat == 4 || $id_bat == 5){
-							//mise a jour de la table evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>$nom_bat</b>',NULL,'','',NOW(),'0')";
-							$mysqli->query($sql);
-						}
 						else {
-							//mise a jour de la table evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit ','$id_i_bat','<font color=$couleur_clan_perso><b>$nom_bat</b></font>','',NOW(),'0')";
-							$mysqli->query($sql);
+							echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte sur la distance avec un autre batiment n'a pas été respecté<br />";
+							echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
+							echo "<a href='jouer.php'>[ retour ]</a></center>";
+							
+							return 0;
 						}
-						
-						return 1;
 					}
 					else {
-						echo "<center>Vous ne pouvez pas construire ce bâtiment car la carte est occupée ou le terrain n'est pas que de la plaine</center><br />";
-						echo "<a href='jouer.php'>[ retour ]</a>";
+						echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'ennemis présent autour de la zone de construction n'a pas été respecté. Veuillez nettoyer la zone !<br />";
+						echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
+						echo "<a href='jouer.php'>[ retour ]</a></center>";
 						
 						return 0;
 					}
 				}
 				else {
-					echo "<center>Vous ne pouvez pas construire ce bâtiment car une contrainte n'a pas été respectée (nombre de personnage de génie civil, ennemis à proximité, distance avec un autre lieu de rapatriement, etc..)</center><br />";
+					echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'unités de Génie Civil qui doit être présente n'a pas été respecté<br />";
 					echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
-					echo "<a href='jouer.php'>[ retour ]</a>";
+					echo "<a href='jouer.php'>[ retour ]</a></center>";
 					
 					return 0;
 				}
