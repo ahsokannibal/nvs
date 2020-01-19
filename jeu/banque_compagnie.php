@@ -37,10 +37,25 @@ if($dispo){
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		
 	</head>
 	<body>
-		<div align="center"><h2>Banque de la compagnie</h2></div>
+		<div class="container-fluid">
+			
+			<div class="row justify-content-center">
+				<div class="col-12">
+	
+					<div align="center"><h2>Banque de la compagnie</h2></div>
+					
+				</div>
+			</div>
 	<?php
 	if(isset($_GET["id_compagnie"])) {
 		
@@ -93,64 +108,71 @@ if($dispo){
 						
 						if($verif) {
 							
-							// verification qu'il possede bien les sous qu'il souhaite deposer ^^
-							// recuperation des sous que le perso a sur lui
-							$sql = "SELECT or_perso FROM perso WHERE id_perso='$id'";
-							$res = $mysqli->query($sql);
-							$t_bourse = $res->fetch_assoc();
+							// Il faut déposer au moins 25 thunes
+							if ($montant >= 25) {
 							
-							$bourse = $t_bourse["or_perso"];
-							
-							// il possede les sous
-							if($bourse >= $montant) {
-							
-								// il doit des sous a la banque
-								if($du) {
-									
-									// maj bourse perso
-									$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso='$id'";
-									$mysqli->query($sql);
-									
-									// maj banque_as_compagnie
-									$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie='$id_compagnie'";
-									$mysqli->query($sql);
-									
-									// maj histoBanque_compagnie : remboursement dette (3)
-									$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant) VALUES ('$id_compagnie','$id','3','$montant')";						
-									$mysqli->query($sql);
-									
-									if($montant > $du) {
-										// on met la difference sur le compte du perso
-										$montant_f = $montant-$du;
+								// verification qu'il possede bien les sous qu'il souhaite deposer ^^
+								// recuperation des sous que le perso a sur lui
+								$sql = "SELECT or_perso FROM perso WHERE id_perso='$id'";
+								$res = $mysqli->query($sql);
+								$t_bourse = $res->fetch_assoc();
+								
+								$bourse = $t_bourse["or_perso"];
+								
+								// il possede les sous
+								if($bourse >= $montant) {
+								
+									// il doit des sous a la banque
+									if($du) {
+										
+										// maj bourse perso
+										$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso='$id'";
+										$mysqli->query($sql);
+										
+										// maj banque_as_compagnie
+										$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie='$id_compagnie'";
+										$mysqli->query($sql);
+										
+										// maj histoBanque_compagnie : remboursement dette (3)
+										$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant) VALUES ('$id_compagnie','$id','3','$montant')";						
+										$mysqli->query($sql);
+										
+										if($montant > $du) {
+											// on met la difference sur le compte du perso
+											$montant_f = $montant-$du;
+											
+											// maj banque_compagnie
+											$sql = "UPDATE banque_compagnie SET montant=montant+$montant_f WHERE id_perso=$id";
+											$mysqli->query($sql);	
+										}
+									}
+									else {
 										
 										// maj banque_compagnie
-										$sql = "UPDATE banque_compagnie SET montant=montant+$montant_f WHERE id_perso=$id";
-										$mysqli->query($sql);	
+										$sql = "UPDATE banque_compagnie SET montant=montant+$montant WHERE id_perso=$id";
+										$mysqli->query($sql);
+										
+										// maj banque_as_compagnie
+										$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie=$id_compagnie";
+										$mysqli->query($sql);
+										
+										// maj histoBanque_compagnie
+										$sql = "INSERT INTO histobanque_compagnie VALUES ('','$id_compagnie','$id','0','$montant')";
+										$mysqli->query($sql);
+										
+										// maj bourse perso
+										$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso=$id";
+										$mysqli->query($sql);
+										
+										echo "Vous venez de deposer $montant thune(s) en banque";
 									}
 								}
 								else {
-									
-									// maj banque_compagnie
-									$sql = "UPDATE banque_compagnie SET montant=montant+$montant WHERE id_perso=$id";
-									$mysqli->query($sql);
-									
-									// maj banque_as_compagnie
-									$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie=$id_compagnie";
-									$mysqli->query($sql);
-									
-									// maj histoBanque_compagnie
-									$sql = "INSERT INTO histobanque_compagnie VALUES ('','$id_compagnie','$id','0','$montant')";
-									$mysqli->query($sql);
-									
-									// maj bourse perso
-									$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso=$id";
-									$mysqli->query($sql);
-									
-									echo "Vous venez de deposer $montant thune(s) en banque";
+									echo "<center><font color='red'>Vous ne disposez pas de la somme que vous souhaitez deposer en banque...</font></center>";
 								}
 							}
 							else {
-								echo "<center><font color='red'>Vous ne disposez pas de la somme que vous souhaitez deposer en banque...</font></center>";
+								echo "<center><font color='red'>Vous devez déposer au moins 25 thunes</font></center>";
 							}
 						}
 						else {
@@ -234,14 +256,15 @@ if($dispo){
 							if($emp) { 
 							
 								// il a deja demande un emprunt
-								echo "Vous avez déjà demandé un emprunt d'un montant de $mont thune(s)<br>";
+								echo "<center>Vous avez déjà demandé un emprunt d'un montant de $mont thune(s)<br>";
 								echo "Vous n'avez le droit qu'à une seule demande d'argent à la fois<br>";
-								echo "Souhaitez vous annuler votre ancienne demande ?<br>";
+								echo "Souhaitez vous annuler votre ancienne demande ?</center><br>";
 								
-								echo "<br><form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"annuler_emp\">";
-								echo "<div align=\"center\">";
-								echo "<input type=\"submit\" name=\"annuler_emp\" value=\"Oui\">";
-								echo "</div>";
+								echo "<br>";
+								echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" class=\"form-group\" name=\"annuler_emp\">";
+								echo "	<div align=\"center\">";
+								echo "		<input type=\"submit\" name=\"annuler_emp\" value=\"Oui\">";
+								echo "	</div>";
 								echo "</form>";
 							}
 							else {
@@ -320,31 +343,39 @@ if($dispo){
 				
 				echo "<center><font color=blue>Vous avez <b>$banque</b> thune(s) en banque</font></center><br>";
 				
-				echo "<br><form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"deposer\">";
-				echo "<div align=\"center\">";
-				echo "Deposer de l'argent : ";
-				echo "<input name=\"deposer\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-				echo "<input type=\"submit\" name=\"Submit\" value=\"valider\">";
-				echo "</div>";
+				echo "<br>";
+				
+				echo "<div class=\"row justify-content-center\">";
+				echo "	<div class=\"col-lg-4 col-md-6 col-10\">";
+				
+				echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"deposer\">";
+				echo "	<div class=\"form-group\">";
+				echo "		<label for=\"depot\">Deposer de l'argent (25 minimum) : </label>";
+				echo "		<input name=\"deposer\" class=\"form-control\" id=\"depot\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+				echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+				echo "	</div>";
 				echo "</form>";
 				
 				echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"retirer\">";
-				echo "<div align=\"center\">";
-				echo "Retirer de l'argent : ";
-				echo "<input name=\"retirer\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-				echo "<input type=\"submit\" name=\"Submit\" value=\"valider\">";
-				echo "</div>";
+				echo "	<div class=\"form-group\">";
+				echo "		<label for=\"retrait\">Retirer de l'argent : </label>";
+				echo "		<input name=\"retirer\" class=\"form-control\" id=\"retrait\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+				echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+				echo "	</div>";
 				echo "</form>";
 				
 				echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"emprunter\">";
-				echo "<div align=\"center\">";
-				echo "Emprunter de l'argent (necessite l'accord du tresorier) : ";
-				echo "<input name=\"emprunter\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-				echo "<input type=\"submit\" name=\"Submit\" value=\"valider\">";
-				echo "</div>";
+				echo "	<div class=\"form-group\">";
+				echo "		<label for=\"emprunt\">Emprunter de l'argent (necessite l'accord du tresorier) : </label>";
+				echo "		<input name=\"emprunter\" class=\"form-control\" id=\"emprunt\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+				echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+				echo "	</div>";
 				echo "</form>";
 				
-				echo "<a href='compagnie.php'> [acceder a la page de la compagnie] </a>";
+				echo "<br /><br /><center><a href='compagnie.php'> [acceder a la page de la compagnie] </a></center>";
+				
+				echo "	</div>";
+				echo "</div>";
 			}
 			else {
 				echo "<font color=red>Vous n'avez pas accès à la banque de cette compagnie !</color>";
@@ -366,8 +397,15 @@ if($dispo){
 		}
 	}
 	?>
+		</div>
+		
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	</body>
-	</html>
+</html>
 	<?php
 		}
 	}
