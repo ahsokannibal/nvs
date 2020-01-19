@@ -206,8 +206,7 @@ if(isset($_SESSION["ID_joueur"])){
 				if (!$est_gele && nouveau_tour($date, $dla)) {
 				
 					// calcul du prochain tour
-					$new_dla = get_new_dla($date, $dla);
-					$new_dla = $new_dla + DUREE_TOUR;
+					$new_dla = $date + DUREE_TOUR;
 					
 					// Calcul Or perso nouveau tour
 					// Récupération du nombre de grouillots du perso
