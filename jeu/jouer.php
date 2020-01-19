@@ -1409,11 +1409,11 @@ if($dispo || !$admin){
 											</tr>
 											<tr>
 												<td><b>PA</b></td>
-												<td><?php echo $pa_perso . ' / ' . $paMax_perso; ?>&nbsp;</td>
+												<td nowrap="nowrap"><?php echo $pa_perso . ' / ' . $paMax_perso; ?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>PM</b></td>
-												<td><?php echo $pm_perso . ' / ' . $pmMax_perso; ?>&nbsp;</td>
+												<td nowrap="nowrap"><?php echo $pm_perso . ' / ' . $pmMax_perso; ?>&nbsp;</td>
 											</tr>
 										</table>
 									</td>
@@ -1426,7 +1426,7 @@ if($dispo || !$admin){
 											</tr>
 											<tr>
 												<td><b>Recuperation</b></td>
-												<td>
+												<td nowrap="nowrap">
 												<?php 
 												echo $recup_perso;
 												
@@ -1442,7 +1442,7 @@ if($dispo || !$admin){
 												?>&nbsp;</td>
 											</tr>
 											<tr>
-												<td><b>Malus Defense</b></td>
+												<td nowrap="nowrap"><b>Malus Defense</b></td>
 												<td><?php echo $bonus_perso; ?>&nbsp;</td>
 											</tr>
 										</table>
@@ -1467,7 +1467,7 @@ if($dispo || !$admin){
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td width='40%'><center><b>A distance</b></center></td>
+									<td width='40%' nowrap="nowrap"><center><b>A distance</b></center></td>
 									<?php 
 									}
 									?>
@@ -1477,19 +1477,19 @@ if($dispo || !$admin){
 									<?php 
 									if ($type_perso != 5) { 
 									?>
-									<td><center><?php echo $nom_arme_cac; ?></center></td>
+									<td nowrap="nowrap"><center><?php echo $nom_arme_cac; ?></center></td>
 									<?php 
 									}
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td><center><?php echo $nom_arme_dist; ?></center></td>
+									<td nowrap="nowrap"><center><?php echo $nom_arme_dist; ?></center></td>
 									<?php 
 									}
 									?>
 								</tr>
 								<tr>
-									<td><b>Coût en PA</b></td>
+									<td nowrap="nowrap"><b>Coût en PA</b></td>
 									<?php 
 									if ($type_perso != 5) { 
 									?>
