@@ -105,7 +105,7 @@ if(isset($_GET["id_compagnie"])) {
 			
 			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"image\">";
 			echo "<div align=\"center\"><br>";
-			echo "changer l'image de la compagnie (adresse internet) :<br>";
+			echo "changer l'image de la compagnie (url vers l'image) :<br>";
 			echo "<input name=\"image\" type=\"text\" value=\"\" onFocus=\"this.value=''\" style=\"width: 400px;\" maxlength=\"200\">";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"ok\">";
 			echo "</div>";
