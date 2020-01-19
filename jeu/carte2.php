@@ -32,9 +32,18 @@ if (@$_SESSION["id_perso"]) {
 	$couleur_bat_clan1 		= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
 	$couleur_bat_clan2 		= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
 	$couleur_rail			= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
+	$couleur_brouillard		= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
 	
 	// couleurs image_carte
 	$couleur_bataillon		= Imagecolorallocate($image_carte, 0, 0, 0); // noir
+	
+	// je vais chercher le perso qui est connecté dans ma table
+	$sql2 = "SELECT idJoueur_perso, clan FROM perso WHERE id_perso=$id";
+	$res2 = $mysqli->query($sql2);
+	$t2 = $res2->fetch_assoc();
+	
+	$id_joueur 	= $t2["idJoueur_perso"];
+	$camp_perso	= $t2["clan"];	
 	
 	// je vais chercher les rails dans ma table
 	$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif'";
@@ -119,6 +128,23 @@ if (@$_SESSION["id_perso"]) {
 		
 		imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 	}
+	
+	// J'ajoute le brouillard de guerre
+	if ($camp_perso == '1') {
+		$sql = "SELECT x_carte, y_carte FROM carte WHERE vue_nord='0'";
+	}
+	else if ($camp_perso == '2') {
+		$sql = "SELECT x_carte, y_carte FROM carte WHERE vue_sud='0'";
+	}
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()){
+		
+		$x 			= $t["x_carte"];
+		$y 			= $t["y_carte"];
+		
+		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
+	}
 
 	// creation de l'image perso
 	imagepng($perso_carte, "carte_tmp/perso$id.png");
@@ -129,13 +155,6 @@ if (@$_SESSION["id_perso"]) {
 	
 	// creation de l'image carte
 	imagepng($image_carte, "carte_tmp/carte$id.png");
-	
-	// je vais chercher le perso qui est connecté dans ma table
-	$sql2 = "SELECT idJoueur_perso FROM perso WHERE id_perso=$id";
-	$res2 = $mysqli->query($sql2);
-	$t2 = $res2->fetch_assoc();
-	
-	$id_joueur = $t2["idJoueur_perso"];
 	
 	// Je vais chercher les persos du même joueur (même bataillon)
 	$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
