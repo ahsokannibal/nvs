@@ -58,13 +58,67 @@ function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 }
 
 /**
+ * Fonction permettant de verifier si les conditions de construction d'un batiment sont bien respectées
+ * @return boolean : true si contraintes respectée, false sinon
+ */
+function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_perso, $y_perso) {
+	
+	// Conditions construction
+	if ($id_bat == '9') {
+		// Fort => 16 Génie civil présent à 10 cases autour du point de construction
+		$nb_genie_civil 	= 16;
+		$nb_cases_ennemi 	= 50;
+	}
+	else if ($id_bat == '8') {
+		// Fortin => 10 Génie civil présent à 10 cases autour du point de construction
+		$nb_genie_civil 	= 10;
+		$nb_cases_ennemi 	= 50;
+	}
+	else if ($id_bat == '11') {
+		// Gare => 6 Génie civil présent à 10 cases autour du point de construction
+		$nb_genie_civil 	= 6;
+		$nb_cases_ennemi 	= 50;
+	}
+	else if ($id_bat == '7') {
+		// Hopital => 3 Génie civil présent à 10 cases autour du point de construction
+		$nb_genie_civil 	= 3;
+		$nb_cases_ennemi 	= 20;
+	}
+	else {
+		$nb_genie_civil 	= 1;
+		$nb_cases_ennemi 	= 50;
+	}
+	
+	// Verification si pas d'ennemi 
+	$sql_contrainte_nb_gc = "SELECT count(perso.id_perso) as nb_gc FROM perso, perso_in_compagnie, compagnies 
+							WHERE perso.id_perso = perso_in_compagnie.id_perso
+							AND perso_in_compagnie.id_compagnie = compagnies.id_compagnie
+							AND compagnies.genie_civil='$camp_perso'
+							AND compagnies.id_clan = perso.clan
+							AND x_perso >= $x_perso - 10
+							AND x_perso <= $x_perso + 10
+							AND y_perso >= $y_perso - 10
+							AND y_perso <= $y_perso + 10";
+	$res_contrainte_nb_gc = $mysqli->query($sql_contrainte_nb_gc);
+	$t_contrainte_nb_gc = $res_contrainte_nb_gc->fetch_assoc();
+	
+	$verif_nb_gc = $t_contrainte_nb_gc['nb_gc'];
+	
+	// TODO - verification distance avec ennemis
+	
+	// TODO - verification distance entre nouveau bat et batiments existant
+	
+	return $verif_nb_gc >= $nb_genie_civil;
+}
+
+/**
   * Fonction qui permet de construire un batiment sur une case
   * @param $t_bat	: Un tableau contenant les coordonnees ou le batiement doit etre construit ainsi que l'identifiant du batiment
   * @param $id_perso	: L'identifiant du perso qui construit le batiment
   * @param $carte 	: La carte sur laquelle le batiment doit etre construit
   * @return Bool		: Si oui ou non le batiment est constructible
   */
-function construire_bat($mysqli, $t_bat, $id_perso,$carte){
+function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 	
 	if(isset($_POST['image_bat'])){
 		$t_bat = $_POST['image_bat'];
@@ -89,7 +143,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 		$taille_bat = $tb["taille_batiment"];
 		
 		// recuperation des donnees necessaires pour la construction du batiment
-		$sql = "SELECT clan, or_perso, pa_perso, pvMin_action, pvMax_action, coutPa_action, coutOr_action, coutBois_action, coutfer_action, contenance, action.nb_points as niveau_bat
+		$sql = "SELECT clan, or_perso, pa_perso, x_perso, y_perso, pvMin_action, pvMax_action, coutPa_action, coutOr_action, coutBois_action, coutfer_action, contenance, action.nb_points as niveau_bat
 				FROM action, action_as_batiment, perso_as_competence, competence_as_action, perso
 				WHERE action.id_action = action_as_batiment.id_action
 				AND perso_as_competence.nb_points = action.nb_points
@@ -109,6 +163,8 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 		$coutFer 		= $t_b['coutfer_action'];
 		$or_perso 		= $t_b["or_perso"];
 		$pa_perso 		= $t_b["pa_perso"];
+		$x_perso		= $t_b["x_perso"];
+		$y_perso		= $t_b["y_perso"];
 		$camp_perso 	= $t_b['clan'];
 		$niveau_bat 	= $t_b['niveau_bat'];
 		$contenance_bat = $t_b['contenance'];
@@ -135,8 +191,7 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 				
 				$gain_xp = 1;
 				
-				// TODO - verification distance entre nouveau bat et batiments existant
-				$autorisation_construction = true;
+				$autorisation_construction = verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_perso, $y_perso);				
 				
 				$autorisation_construction_taille = true;
 				
@@ -256,7 +311,8 @@ function construire_bat($mysqli, $t_bat, $id_perso,$carte){
 					}
 				}
 				else {
-					echo "<center>Vous ne pouvez pas construire ce bâtiment aussi loin du fort : distance = $distance ; distance max = $distance_max</center><br />";
+					echo "<center>Vous ne pouvez pas construire ce bâtiment car une contrainte n'a pas été respectée (nombre de personnage de génie civil, ennemis à proximité, distance avec un autre lieu de rapatriement, etc..)</center><br />";
+					echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 					echo "<a href='jouer.php'>[ retour ]</a>";
 					
 					return 0;
