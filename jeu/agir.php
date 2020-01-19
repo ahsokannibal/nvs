@@ -200,6 +200,16 @@ if($verif){
 				// Récupération de la couleur associée au clan de la cible
 				$couleur_clan_cible = couleur_clan($clan_cible);
 				
+				if ($clan_cible == '1') {
+					$camp = 'Nord';
+				}
+				else if ($clan_cible == '2') {
+					$camp = 'Sud';
+				}
+				else {
+					$camp = '';
+				}
+				
 				$pa_restant = $pa_perso - $coutPa_arme_attaque;
 				
 				if($pa_restant <= 0){
@@ -286,7 +296,7 @@ if($verif){
 														<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_cible."/".$y_cible; ?></td>
 													</tr>
 													<tr>
-														<td><?php echo"<u><b>Camp :</b></u> ".$couleur_clan_cible; ?></td>
+														<td><?php echo "<u><b>Camp :</b></u> <font color='".$couleur_clan_cible."'>".$camp."</font>"; ?></td>
 													</tr>
 												</table>
 											</td>

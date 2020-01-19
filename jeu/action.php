@@ -938,10 +938,10 @@ if($dispo){
 												$nom_perso_carte = $t_perso_carte["nom_perso"];
 												$clan_perso_carte = $t_perso_carte["clan"];
 												if($clan_perso_carte == $clan_perso){
-													$clan_pc = 'blue';
+													$clan_pc = 'Nord';
 												}
 												else {
-													$clan_pc = 'red';
+													$clan_pc = 'Sud';
 												}
 											
 												if($nom_action == "Apaiser"){
@@ -1100,10 +1100,10 @@ if($dispo){
 													$clan_perso_carte = $t_perso_carte["clan"];
 													
 													if($clan_perso_carte == $clan_perso){
-														$clan_pc = 'blue';
+														$clan_pc = 'Nord';
 													}
 													else {
-														$clan_pc = 'red';
+														$clan_pc = 'Sud';
 													}
 												
 													echo "<form method=\"post\" action=\"action.php\" >";
@@ -1412,10 +1412,10 @@ if($dispo){
 														$clan_bat_carte = $t_bat_carte["camp_instance"];
 														
 														if($clan_bat_carte == $clan_perso){
-															$clan_pc = 'blue';
+															$clan_pc = 'Nord';
 														}
 														else {
-															$clan_pc = 'red';
+															$clan_pc = 'Sud';
 														}
 													
 														echo "<form method=\"post\" action=\"action.php\" >";
