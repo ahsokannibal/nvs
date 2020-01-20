@@ -48,7 +48,7 @@ while ($t_b = $res_b->fetch_assoc()) {
 		
 		echo "<br />* Canon ".$id_instance_canon." du Batiment ".$id_instance_bat." :<br />";
 		
-		$perception_canon	= 6;
+		$perception_canon	= 5;
 		
 		// y a t-il un ennemi en visu
 		$sql_v = "SELECT idPerso_carte, idJoueur_perso, nom_perso, type_perso, x_perso, y_perso, pv_perso, protec_perso, bonus_perso, or_perso, clan FROM carte, perso  
