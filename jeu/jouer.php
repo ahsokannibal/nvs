@@ -618,7 +618,7 @@ if($dispo || !$admin){
 				
 				// On se trouve dans un train
 				if (in_train($mysqli, $id_perso)) {
-					// TODO
+					$mess_bat .= "<center><font color = blue><b>Vous êtes dans un train</b></font></center>";
 				}
 				
 				// Traitement ramasser objets à terre
@@ -1786,46 +1786,50 @@ if($dispo || !$admin){
 												}
 											}
 											else {
-												while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
-													
-													$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
-													
-													if ($id_cible_cac < 50000) {
+												// Impossible d'attaquer au CaC quand on est dans un train
+												if (!in_train($mysqli, $id_perso)) {
+												
+													while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
 														
-														// Un autre perso
-														$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_cac'";
-														$res = $mysqli->query($sql);
-														$tab = $res->fetch_assoc();
+														$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
 														
-														$nom_cible_cac 	= $tab["nom_perso"];
-														$camp_cible_cac	= $tab["clan"];
+														if ($id_cible_cac < 50000) {
+															
+															// Un autre perso
+															$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_cac'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_cac 	= $tab["nom_perso"];
+															$camp_cible_cac	= $tab["clan"];
+															
+															$couleur_clan_cible = couleur_clan($camp_cible_cac);
+															
+														} else if ($id_cible_cac >= 200000) {
+															
+															// Un PNJ
+															$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_cac = $tab["nom_pnj"];
+															
+															$couleur_clan_cible = "grey";
+															
+														} else {
+															
+															// Un Batiment
+															$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_cac = $tab["nom_batiment"];
+															
+															$couleur_clan_cible = "black";
+														}
 														
-														$couleur_clan_cible = couleur_clan($camp_cible_cac);
-														
-													} else if ($id_cible_cac >= 200000) {
-														
-														// Un PNJ
-														$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
-														$res = $mysqli->query($sql);
-														$tab = $res->fetch_assoc();
-														
-														$nom_cible_cac = $tab["nom_pnj"];
-														
-														$couleur_clan_cible = "grey";
-														
-													} else {
-														
-														// Un Batiment
-														$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
-														$res = $mysqli->query($sql);
-														$tab = $res->fetch_assoc();
-														
-														$nom_cible_cac = $tab["nom_batiment"];
-														
-														$couleur_clan_cible = "black";
+														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
 													}
-													
-													echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
 												}
 											}
 											?>
@@ -2198,19 +2202,12 @@ if($dispo || !$admin){
 													<?php
 													
 													// Action d'entrainement
-													if($pa_perso < 10){
-														echo "<option value=\"PA\">* Entrainement (10 pa)</option>";
-													}
-													else {
+													if($pa_perso >= 10){
 														echo "<option value=\"65\">Entrainement (10 pa)</option>";
 													}
 													
 													// Action Déposer Objet
-													if($pa_perso < 1){
-														echo "<option value=\"PA\">* Deposer objet (1 pa)</option>";
-														echo "<option value=\"PA\">* Donner objet (1 pa)</option>";
-													}
-													else {
+													if($pa_perso >= 1){
 														echo "<option value=\"110\">Deposer objet (1 pa)</option>";
 														echo "<option value=\"139\">Donner objet (1 pa)</option>";
 													}
@@ -2218,7 +2215,7 @@ if($dispo || !$admin){
 													// Actions selon le type d'unité
 													
 													// Cavalerie et cavalerie lourde
-													if ($type_perso == 1 || $type_perso == 2) {
+													if (($type_perso == 1 || $type_perso == 2) && $pm_perso >= 4 && !in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
 														// Charge = 999
 														echo "<option value=\"999\">Charger (tous les pa)</option>";
 													}
@@ -2229,15 +2226,12 @@ if($dispo || !$admin){
 													$nb_op = $res_op->num_rows;
 													if($nb_op){
 														// Action Ramasser Objet
-														if($pa_perso < 1){
-															echo "<option value=\"PA\">* Ramasser objet (1 point - 1 pa)</option>";
-														}
-														else {
+														if($pa_perso >= 1){
 															echo "<option value=\"111\">Ramasser objet (1 point - 1 pa)</option>";
 														}
 													}
 													
-													$sql = "SELECT action.id_action, nom_action, coutPa_action
+													$sql = "SELECT action.id_action, nom_action, coutPa_action, reflexive_action
 															FROM perso_as_competence, competence_as_action, action 
 															WHERE id_perso='$id_perso' 
 															AND perso_as_competence.id_competence=competence_as_action.id_competence 
@@ -2251,19 +2245,35 @@ if($dispo || !$admin){
 														$id_ac 		= $t_ac["id_action"];
 														$cout_PA 	= $t_ac["coutPa_action"];
 														$nom_ac 	= $t_ac["nom_action"];
+														$ref_ac		= $t_ac["reflexive_action"];
 													
 														if ($cout_PA == -1){
 															$cout_PA = $paMax_perso;
 														}
 														
-														if ($cout_PA <= $pa_perso){
-															echo "<option value=\"$id_ac\">".$nom_ac." (";
+														if (!in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
+															if ($cout_PA <= $pa_perso){
+																if ($id_ac == 1 && $pm_perso >= $pmMax_perso) {
+																	echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "pa)</option>";;
+																}
+																else if ($id_ac != 1) {
+																	echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "pa)</option>";;
+																}
+															}
 														}
 														else {
-															echo "<option value=\"PA\">* ".$nom_ac." (";
-														}
+															if ($ref_ac) {
+																if ($cout_PA <= $pa_perso){
+																	if ($id_ac == 1 && $pm_perso >= $pmMax_perso) {
+																		echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "pa)</option>";;
+																	}
+																	else if ($id_ac != 1) {
+																		echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "pa)</option>";;
+																	}
+																}
+															}
+														}														
 														
-														echo "". $cout_PA . "pa)</option>";
 													}
 													?>
 													<option value="invalide">-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</option>
