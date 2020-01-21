@@ -22,6 +22,7 @@ $mysqli = db_connexion();
 
 // couleurs perso_carte
 $noir 			= Imagecolorallocate($gare_carte, 0, 0, 0); // noir
+$couleur_nord 	= Imagecolorallocate($gare_carte, 10, 10, 254); // bleu bien voyant
 $couleur_sud 	= Imagecolorallocate($gare_carte, 254, 10, 10); // rouge bien voyant
 $couleur_rail	= Imagecolorallocate($gare_carte, 200, 200, 200); // gris rails
 
@@ -39,10 +40,10 @@ while ($t = $res->fetch_assoc()){
 }
 
 // je vais chercher les gares dans ma table
-$sql = "SELECT x_instance, y_instance, nom_instance, taille_batiment FROM instance_batiment, batiment 
+$sql = "SELECT x_instance, y_instance, nom_instance, taille_batiment, camp_instance FROM instance_batiment, batiment 
 		WHERE batiment.id_batiment = instance_batiment.id_batiment 
 		AND pv_instance>0
-		AND instance_batiment.id_batiment='11' AND camp_instance='2'";
+		AND instance_batiment.id_batiment='11'";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -50,11 +51,17 @@ while ($t = $res->fetch_assoc()){
 	$x 			= $t["x_instance"];
 	$y 			= $t["y_instance"];
 	$taille_bat = $t["taille_batiment"];
+	$camp_bat	= $t["camp_instance"];
 	$nom_bat	= "Gare ".$t["nom_instance"];
 	
 	$taille_text = strlen($nom_bat);
 	
-	$color = $couleur_sud;
+	if ($camp_bat == 1) {
+		$color = $couleur_nord;
+	}
+	else {
+		$color = $couleur_sud;
+	}
 	
 	imagefilledrectangle ($gare_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 	
@@ -71,4 +78,10 @@ imagepng($image_p, "carte_tmp/plan_gare_sud.png");
 
 ImageDestroy ($gare_carte);
 ImageDestroy ($image_carte);
+
+if (isset($_GET['bat'])) {
+	$bat = $_GET['bat'];
+	
+	header("Location: batiment.php?bat=$bat");
+}
 ?>

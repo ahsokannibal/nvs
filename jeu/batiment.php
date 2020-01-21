@@ -60,7 +60,7 @@ if($dispo){
 					if (in_instance_bat($mysqli, $id_perso, $id_i_bat)){
 					
 						// recupération du type de batiment
-						$sql = "SELECT id_batiment, camp_instance, pv_instance, pvMax_instance, nom_instance
+						$sql = "SELECT id_batiment, camp_instance, pv_instance, pvMax_instance, nom_instance, x_instance, y_instance
 								FROM instance_batiment
 								WHERE id_instanceBat='$id_i_bat'";
 						$res = $mysqli->query($sql);
@@ -71,6 +71,8 @@ if($dispo){
 						$pv_bat 	= $t["pv_instance"];
 						$pvMax_bat 	= $t["pvMax_instance"];
 						$nom_i_bat 	= $t["nom_instance"];
+						$x_i_bat	= $t["x_instance"];
+						$y_i_bat	= $t["y_instance"];
 						
 						$pourcentage_rabais = 0;
 						
@@ -1553,13 +1555,26 @@ if($dispo){
 							
 							// Plan gare 
 							if ($camp == 1) {
-								$image_plan = "plan_gare_nord.png";
-								$image_plan_sans_terrain = "gare_nord.png";
+								if ($y_i_bat < 100) {
+									echo "<center><b>-- Vous êtes dans une ancienne gare du Sud --</b></center>";
+									$image_plan = "plan_gare_sud.png";
+									$image_plan_sans_terrain = "gare_sud.png";
+								} else {
+									$image_plan = "plan_gare_nord.png";
+									$image_plan_sans_terrain = "gare_nord.png";
+								}
 							}
 							
 							if ($camp == 2) {
-								$image_plan = "plan_gare_sud.png";
-								$image_plan_sans_terrain = "gare_sud.png";
+								if ($y_i_bat > 100) {
+									echo "<center><b>Vous êtes dans une ancienne gare du Nord</b></center>";
+									$image_plan = "plan_gare_sud.png";
+									$image_plan_sans_terrain = "gare_sud.png";
+								}
+								else {
+									$image_plan = "plan_gare_sud.png";
+									$image_plan_sans_terrain = "gare_sud.png";
+								}
 							}
 							
 							echo "<center>";
@@ -1588,21 +1603,32 @@ if($dispo){
 								}
 								
 								// Récupération infos destination
-								$sql_dest = "SELECT nom_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
+								$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
 								$res_dest = $mysqli->query($sql_dest);
 								$t_dest = $res_dest->fetch_assoc();
 								
-								$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $destination . "]";
+								$camp_dest 	= $t_dest['camp_instance'];
+								$nom_dest	= $t_dest['nom_instance'];
 								
-								echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+								$nom_destination = "Gare " . $nom_dest . "[" . $destination . "]";
 								
-								// Achat de tickets
-								echo "<tr>";
-								echo "	<td align='center'>$nom_destination</td>";
-								echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$destination'> <input type='submit' name='acheter_ticket' value='Acheter un ticket (5 thunes)'></td>";
-								echo "</tr>";
-								
-								echo "</form>";
+								if ($camp_dest == $camp) {									
+									echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+									
+									// Achat de tickets
+									echo "<tr>";
+									echo "	<td align='center'>$nom_destination</td>";
+									echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$destination'> <input type='submit' name='acheter_ticket' value='Acheter un ticket (5 thunes)'></td>";
+									echo "</tr>";
+									
+									echo "</form>";
+								}
+								else {
+									echo "<tr>";
+									echo "	<td align='center'>$nom_destination</td>";
+									echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
+									echo "</tr>";
+								}
 							}
 							
 							echo "</table>";

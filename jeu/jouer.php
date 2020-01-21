@@ -568,7 +568,31 @@ if($dispo || !$admin){
 						$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat] (5 PA)</a>~~</font></center>";
 					}
 					
-					$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+					// cas particulier gare
+					if ($bat == '11') {
+						if ($clan_p == 1) {
+							if ($y_persoN < 100) {
+								// On est dans une gare capturée, on met à jour le plan du Sud
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_sud.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+							}
+							else {
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_nord.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+							}
+						}
+						else if ($clan_p == 2) {
+							if ($y_persoN > 100) {
+								// On est dans une gare capturée, on met à jour le plan du Nord
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_nord.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+							}
+							else {
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_sud.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+							}
+						}
+					}
+					else {
+						$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+					}
+					
 					$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat&out=ok\" > sortir du batiment $nom_bat $nom_ibat</a>~~</font></center>";
 					
 					$bonus_perc = 0;
