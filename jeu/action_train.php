@@ -404,7 +404,11 @@ while ($t = $res->fetch_assoc()) {
 		$sql_perso_ticket_dest = "SELECT id_perso FROM perso_as_objet 
 									WHERE id_objet='1' 
 									AND capacite_objet='$nouvelle_direction' 
-									AND id_perso IN (SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat = '$gare_arrivee')";
+									AND id_perso IN (SELECT perso_in_batiment.id_perso 
+													FROM perso_in_batiment, perso 
+													WHERE perso.id_perso = perso_in_batiment.id_perso 
+													AND id_instanceBat = '$gare_arrivee' 
+													AND clan=$camp_train)";
 		$res_perso_ticket_dest = $mysqli->query($sql_perso_ticket_dest);
 			
 		while ($t_perso_ticket_dest = $res_perso_ticket_dest->fetch_assoc()) {
