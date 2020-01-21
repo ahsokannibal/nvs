@@ -387,6 +387,7 @@ INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '2');
 --
 
 INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VALUES 
+('1', '4', '1'), 
 ('1', '22', '1'), 
 ('1', '23', '1'), 
 ('1', '24', '1'),
@@ -395,6 +396,7 @@ INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VAL
 ('1', '29', '1'),
 ('1', '63', '1'),
 ('1', '64', '1'),
+('2', '4', '1'), 
 ('2', '22', '1'), 
 ('2', '23', '1'), 
 ('2', '24', '1'),

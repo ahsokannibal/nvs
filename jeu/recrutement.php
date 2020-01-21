@@ -233,6 +233,10 @@ if($dispo){
 										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','4','1')";
 										$mysqli->query($sql);
 										
+										// Insertion competence sieste
+										$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','4','1')";
+										$mysqli->query($sql);
+										
 										// Evenement grouillot rejoint bataillon
 										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
 												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
@@ -355,6 +359,10 @@ if($dispo){
 										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','6','1')";
 										$mysqli->query($sql_c);
 										
+										// Insertion competence sieste
+										$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','4','1')";
+										$mysqli->query($sql);
+										
 										// Evenement grouillot rejoint bataillon
 										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
 												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
@@ -474,6 +482,10 @@ if($dispo){
 										$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','6','1')";
 										$mysqli->query($sql_c);
 										
+										// Insertion competence sieste
+										$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','4','1')";
+										$mysqli->query($sql);
+										
 										// Evenement grouillot rejoint bataillon
 										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
 												VALUES ($id_perso_cree,'<font color=$couleur_clan_perso>$nom_perso_cree</font>',' a rejoint le bataillon $bataillon',NULL,'','',NOW(),'0')";
@@ -581,6 +593,10 @@ if($dispo){
 										//------- Ajout des armes à l'artillerie
 										// Arme : Canon
 										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','13','1')";
+										$mysqli->query($sql);
+										
+										// Insertion competence sieste
+										$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','4','1')";
 										$mysqli->query($sql);
 										
 										// Evenement grouillot rejoint bataillon
@@ -693,6 +709,10 @@ if($dispo){
 										$mysqli->query($sql);
 										// griffes
 										$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','12','1')";
+										$mysqli->query($sql);
+										
+										// Insertion competence sieste
+										$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_cree','4','1')";
 										$mysqli->query($sql);
 										
 										// Evenement grouillot rejoint bataillon

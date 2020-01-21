@@ -234,6 +234,10 @@ if(config_dispo_jeu($mysqli)){
 							$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id','4','1')";
 							$mysqli->query($sql);
 							
+							// Insertion competence sieste
+							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id','4','1')";
+							$mysqli->query($sql_c);
+							
 							if (!$bat_spawn_dispo) {
 								
 								// Positionnement grouillot
@@ -308,6 +312,10 @@ if(config_dispo_jeu($mysqli)){
 							
 							// Insertion competence marche forcée
 							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','6','1')";
+							$mysqli->query($sql_c);
+							
+							// Insertion competence sieste
+							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_g','4','1')";
 							$mysqli->query($sql_c);
 					
 							$_SESSION["ID_joueur"] = $IDJoueur_perso;
