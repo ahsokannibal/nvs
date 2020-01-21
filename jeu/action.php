@@ -192,12 +192,13 @@ if($dispo){
 	}
 	
 	?>
-	<html>
+<html>
 	<head>
-	<title>Nord VS Sud</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-	<link href="description.css" rel="stylesheet" type="text/css">
+		<title>Nord VS Sud</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<link href="description.css" rel="stylesheet" type="text/css">
 	</head>
+	
 	<body>
 	<?php
 	
@@ -836,43 +837,42 @@ if($dispo){
 					$res = $mysqli->query($sql);
 					$t_ac = $res->fetch_assoc();
 			
-					$nom_action = $t_ac['nom_action'];
-					$nb_points_action = $t_ac['nb_points'];
-					$portee_action = $t_ac['portee_action'];
-					$perceptionMin_action = $t_ac['perceptionMin_action'];
-					$perceptionMax_action = $t_ac['perceptionMax_action'];
-					$pvMin_action = $t_ac['pvMin_action'];
-					$pvMax_action = $t_ac['pvMax_action'];
-					$recupMin_action = $t_ac['recupMin_action'];
-					$recupMax_action = $t_ac['recupMax_action'];
-					$pmMin_action = $t_ac['pmMin_action'];
-					$pmMax_action = $t_ac['pmMax_action'];
-					$DefMin_action = $t_ac['DefMin_action'];
-					$DefMax_action = $t_ac['DefMax_action'];
-					$coutPa_action = $t_ac['coutPa_action'];
-					$nbreTourMin = $t_ac['nbreTourMin'];
-					$nbreTourMax = $t_ac['nbreTourMax'];
-					$coutOr_action = $t_ac['coutOr_action'];
-					$coutBois_action = $t_ac['coutBois_action'];
-					$coutFer_action = $t_ac['coutFer_action'];
-					$reflexive_action = $t_ac['reflexive_action'];
-					$cible_action = $t_ac['cible_action'];
-					$case_action = $t_ac['case_action'];
-					$pnj_action = $t_ac['pnj_action'];
+					$nom_action 			= $t_ac['nom_action'];
+					$nb_points_action 		= $t_ac['nb_points'];
+					$portee_action 			= $t_ac['portee_action'];
+					$perceptionMin_action 	= $t_ac['perceptionMin_action'];
+					$perceptionMax_action 	= $t_ac['perceptionMax_action'];
+					$pvMin_action 			= $t_ac['pvMin_action'];
+					$pvMax_action 			= $t_ac['pvMax_action'];
+					$recupMin_action 		= $t_ac['recupMin_action'];
+					$recupMax_action 		= $t_ac['recupMax_action'];
+					$pmMin_action 			= $t_ac['pmMin_action'];
+					$pmMax_action 			= $t_ac['pmMax_action'];
+					$DefMin_action 			= $t_ac['DefMin_action'];
+					$DefMax_action 			= $t_ac['DefMax_action'];
+					$coutPa_action 			= $t_ac['coutPa_action'];
+					$nbreTourMin 			= $t_ac['nbreTourMin'];
+					$nbreTourMax 			= $t_ac['nbreTourMax'];
+					$coutOr_action 			= $t_ac['coutOr_action'];
+					$coutBois_action 		= $t_ac['coutBois_action'];
+					$coutFer_action 		= $t_ac['coutFer_action'];
+					$reflexive_action 		= $t_ac['reflexive_action'];
+					$cible_action 			= $t_ac['cible_action'];
+					$case_action 			= $t_ac['case_action'];
+					$pnj_action 			= $t_ac['pnj_action'];
 					
 					$image_action = image_action($id_action);
 					
 					// action ayant pour cible juste son propre perso
 					if($reflexive_action && !$cible_action){
 						
+						if($nom_action == 'Sieste'){
+							action_dormir($mysqli, $id_perso);
+						}
+						
 						// traitement de l'action entrainement
 						if($nom_action == 'Entrainement'){
 							action_entrainement($mysqli, $id_perso);
-						}
-						
-						// traitement de l'action dormir
-						if($nom_action == 'dormir'){
-							action_dormir($mysqli, $id_perso, $nb_points_action);
 						}
 						
 						// traitement de l'action marche forcee

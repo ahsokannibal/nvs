@@ -1275,63 +1275,55 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 
 /**
   * Fonction qui pemet d'effectuer l'action dormir
-  * @param $id_perso	: L'identifiant du personnage qui veut dormir
-  * @param $nb_points_action	: Le niveau de l'action dormir
+  * @param $id_perso			: L'identifiant du personnage qui veut dormir
   * @return Void
   */
-function action_dormir($mysqli, $id_perso, $nb_points_action){
+function action_dormir($mysqli, $id_perso){
 
 	// recuperation des infos du perso
-	$sql = "SELECT nom_perso, clan, recup_perso, bonusRecup_perso, pa_perso, paMax_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, clan, recup_perso, bonusRecup_perso, pa_perso, paMax_perso, pv_perso, pvMax_perso, pm_perso, pmMax_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	
-	$nom_perso = $t_p["nom_perso"];
-	$recup_perso = $t_p["recup_perso"];
-	$pa_perso = $t_p["pa_perso"];
-	$paMax_perso = $t_p["paMax_perso"];
-	$br_p = $t_p["bonusRecup_perso"];
-	$camp = $t_p["clan"];
+	$nom_perso 		= $t_p["nom_perso"];
+	$recup_perso 	= $t_p["recup_perso"];
+	$pa_perso 		= $t_p["pa_perso"];
+	$paMax_perso 	= $t_p["paMax_perso"];
+	$pv_perso 		= $t_p["pv_perso"];
+	$pvMax_perso 	= $t_p["pvMax_perso"];
+	$pm_perso 		= $t_p["pm_perso"];
+	$pmMax_perso 	= $t_p["pmMax_perso"];
+	$br_p 			= $t_p["bonusRecup_perso"];
+	$camp 			= $t_p["clan"];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
-	if($nb_points_action == '1'){
-		$bonus_recup = '+ 1';
-		$n_r = $recup_perso + $br_p + 1;
-	}
-	if($nb_points_action == '2'){
-		$calcul = $recup_perso * 1.5;
-		$bonus_r = ceil($calcul) - $recup_perso;
-		$bonus_recup = '+'.$bonus_r;
-		$n_r = ceil($calcul) + $br_p;
-	}
-	if($nb_points_action == '3'){
-		$calcul = $recup_perso * 2;
-		$bonus_r = ceil($calcul) - $recup_perso;
-		$bonus_recup = '+'.$bonus_r;
-		$n_r = ceil($calcul) + $br_p;
-	}
+	$gain_pv = $recup_perso * 2;
 	
 	// test pa
-	if($pa_perso >= $paMax_perso){
+	if($pa_perso >= $paMax_perso && $pm_perso >= $pmMax_perso){
 	
-		$gain_xp = '1';
-	
-		// maj bonus recup/ pm et xp/pi
-		$sql = "UPDATE perso SET bonusRecup_perso = bonusRecup_perso $bonus_recup, pm_perso=0, pa_perso=0, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
+		if ($pv_perso + $gain_pv >= $pvMax_perso) {
+			// maj perso
+			$sql = "UPDATE perso SET pv_perso=pvMax_perso, pm_perso=0, pa_perso=0 WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
+		else {
+			// maj perso
+			$sql = "UPDATE perso SET pv_perso=pv_perso + $gain_pv, pm_perso=0, pa_perso=0 WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
 		
 		//mise a jour de la table evenement
 		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ... ',NULL,'','',NOW(),'0')";
 		$mysqli->query($sql);
 		
-		echo "<center>Vous dormez profondément, votre récupération au prochain tour sera de : $n_r</center><br />";
-		echo "<center>Vous avez gagné 1xp</center><br /><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<center>Vous dormez profondément, votre sommeil vous permet de récupérer ".$gain_pv." PV <br />";
+		echo "<a href='jouer.php'>[ retour ]</a></center>";
 	}
 	else {
-		echo "<center>Vous n'avez pas assez de PA</center><br />";
+		echo "<center>Vous devez posséder la totalité de vos PA / PM pour effectuer cette action</center><br />";
 		echo "<a href='jouer.php'>[ retour ]</a>";
 	}
 }

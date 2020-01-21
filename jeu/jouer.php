@@ -2176,11 +2176,9 @@ if($dispo || !$admin){
 													// Action d'entrainement
 													if($pa_perso < 10){
 														echo "<option value=\"PA\">* Entrainement (10 pa)</option>";
-														echo "<option value=\"PA\">* Se reposer (10 pa)</option>";
 													}
 													else {
 														echo "<option value=\"65\">Entrainement (10 pa)</option>";
-														echo "<option value=\"1\">Se reposer (10 pa)</option>";
 													}
 													
 													// Action Déposer Objet
