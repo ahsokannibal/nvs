@@ -523,6 +523,17 @@ CREATE TABLE `liaisons_gare` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `liens_activation`
+--
+
+CREATE TABLE `liens_activation` (
+  `id_lien` int(11) NOT NULL,
+  `date_fin` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `message`
 --
 
@@ -1060,6 +1071,12 @@ ALTER TABLE `joueur`
   ADD PRIMARY KEY (`id_joueur`),
   ADD UNIQUE KEY `id_perso` (`nom_joueur`);
 
+--
+-- Index pour la table `liens_activation`
+--
+ALTER TABLE `liens_activation`
+  ADD UNIQUE KEY `unique_id_lien` (`id_lien`);  
+  
 --
 -- Index pour la table `message`
 --
