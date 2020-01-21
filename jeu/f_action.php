@@ -1357,38 +1357,43 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 	// test pa
 	if($pa_perso >= $coutPa_action){
 		
-		$gain_xp = '0';
+		if (!in_bat($mysqli, $id_perso)) {
 		
-		// maj pm et xp/pi
-		$sql = "UPDATE perso SET pm_perso=pm_perso+1, pa_perso=pa_perso-$coutPa_action, pv_perso=pv_perso-$cout_pv, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
-		
-		if($pv_perso - $cout_pv <= 0){
-			// Le perso s'est tue tout seul...
-			// on l'efface de la carte
-			$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+			// maj pm et xp/pi
+			$sql = "UPDATE perso SET pm_perso=pm_perso+1, pa_perso=pa_perso-$coutPa_action, pv_perso=pv_perso-$cout_pv WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
-			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' s\'est tué en effectuant une marche forcée... ',NULL,'',' : Bravo !',NOW(),'0')";
-			$mysqli->query($sql);
+			if($pv_perso - $cout_pv <= 0){
+				// Le perso s'est tue tout seul...
+				// on l'efface de la carte
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$mysqli->query($sql);
+				
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' s\'est tué en effectuant une marche forcée... ',NULL,'',' : Bravo !',NOW(),'0')";
+				$mysqli->query($sql);
+				
+				echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
+				echo "<center>Vous êtes Mort !</center><br />";
+				echo "<center><a href='jouer.php'>[retour]</a></center>";
+			}
+			else {	
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a effectué une marche forcée ',NULL,'',' : +1 PM',NOW(),'0')";
+				$mysqli->query($sql);
 			
-			echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
-			echo "<center>Vous êtes Mort !</center><br />";
-			echo "<center><a href='jouer.php'>[retour]</a></center>";
+				echo "<center>Vous vous êtes dépassé et gagnez 1PM ! ($cout_pv PV perdu)<br /><br />";
+				echo "<a href='jouer.php'>[ retour ]</a></center>";
+			}
 		}
-		else {	
-			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a effectué une marche forcée ',NULL,'',' : +1 PM',NOW(),'0')";
-			$mysqli->query($sql);
-		
-			echo "<center>Vous vous êtes dépassé et gagnez 1PM ! ($cout_pv PV perdu)</center><br />";
-			echo "<a href='jouer.php'>[ retour ]</a>";
+		else {
+			echo "<center>Vous ne pouvez pas faire de marche forcée dans un bâtiment<br />";
+			echo "<a href='jouer.php'>[ retour ]</a></center>";
 		}
 	}
 	else {
-		echo "<center>Vous n'avez pas assez de PA</center><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<center>Vous n'avez pas assez de PA<br />";
+		echo "<a href='jouer.php'>[ retour ]</a></center>";
 	}
 }
 
