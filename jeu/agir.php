@@ -1982,6 +1982,8 @@ if($verif){
 								// perte entre 10 et 50 pv
 								$perte_pv = mt_rand(10,50);
 								
+								echo "Le perso ".$id_p." présent dans le batiment a perdu ".$perte_pv."<br />";
+								
 								// Traitement persos dans le batiment qui perdent des pv 
 								$sql_p = "UPDATE perso SET pv_perso=pv_perso - $perte_pv WHERE id_perso='$id_p'";
 								$mysqli->query($sql_p);
@@ -2000,7 +2002,7 @@ if($verif){
 								$couleur_clan_p = couleur_clan($clan_p);
 								
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p><b>$nom_p</b></font>','a été bléssé suite à la destruction du bâtiment',NULL,'',' : - $perte_pv',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p><b>$nom_p</b></font>','a été bléssé suite à la destruction du bâtiment',NULL,'',' : $perte_pv degats',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// Le perso est encore vivant
@@ -2021,13 +2023,21 @@ if($verif){
 										$occup = verif_pos_libre($mysqli, $x, $y);
 									}
 									
+									echo "Le perso ".$id_p." a été éjecté sur la case ".$x." / ".$y."<br />";
+									
+									// maj evenement
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p><b>$nom_p</b></font>','a été ejecté suite à la destruction du bâtiment',NULL,'',' : en $x / $y et PV divisé par 2',NOW(),'0')";
+									$mysqli->query($sql);
+									
 									// MAJ du perso sur la carte
 									$sql_u = "UPDATE carte SET occupee_carte = '1', image_carte='$image_p', idPerso_carte='$id_p' WHERE x_carte='$x' AND y_carte='$y'";
 									$mysqli->query($sql_u);
 									
 									// MAJ des coordonnées du perso
-									$sql_u2 = "UPDATE perso SET x_perso='$x' AND y_perso='$y' WHERE id_perso='$id_p'";
+									$sql_u2 = "UPDATE perso SET x_perso='$x', y_perso='$y' WHERE id_perso='$id_p'";
 									$mysqli->query($sql_u2);
+									
+									echo $sql_u2;
 								}
 								else {
 									// Le perso est mort
