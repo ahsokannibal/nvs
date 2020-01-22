@@ -3357,11 +3357,13 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -3477,11 +3479,21 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// MAJ perte PO cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -3521,17 +3533,24 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
 							}
@@ -3770,11 +3789,13 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -3890,11 +3911,21 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// Maj perte po cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -3934,13 +3965,26 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+								}
 								
 								// maj stats camp
 								if($clan_cible != $clan_cible){
@@ -4183,11 +4227,13 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -4290,9 +4336,16 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 							}
 							
 							// Maj cible
-							// Ajout d'un malus de 2 au défenseur
-							$sql = "UPDATE perso SET bonus_perso = bonus_perso - 2, pv_perso = pv_perso - $degats WHERE id_perso='$idPerso_carte'";
-							$mysqli->query($sql);
+							if ($idPerso_carte >= 200000) {
+								// MAJ PV et Ajout d'un malus de 2 au défenseur
+								$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 2, pv_i = pv_i - $degats WHERE idInstance_pnj='$idPerso_carte'";
+								$mysqli->query($sql);
+							}
+							else {
+								// MAJ PV et Ajout d'un malus de 2 au défenseur
+								$sql = "UPDATE perso SET bonus_perso = bonus_perso - 2, pv_perso = pv_perso - $degats WHERE id_perso='$idPerso_carte'";
+								$mysqli->query($sql);
+							}
 							
 							// evenement attaque
 							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a chargé ','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',': $degats degats',NOW(),'0')";
@@ -4303,15 +4356,27 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// MAJ perte thunes cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
+								
+								echo $sql;
 								
 								if ($calcul_perte_or > 0) {
 									// On dépose la perte de thune par terre
@@ -4347,19 +4412,27 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
+								
 							}
 							
 							// MAJ xp/pi
@@ -4596,11 +4669,13 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -4716,11 +4791,21 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// MAJ perte thune cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -4760,17 +4845,24 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
 							}
@@ -5008,11 +5100,13 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -5128,11 +5222,21 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// MAJ perte thune cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -5172,17 +5276,24 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
 							}
@@ -5420,11 +5531,13 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -5540,11 +5653,21 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// MAJ perte thune cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -5584,17 +5707,24 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
 							}
@@ -5832,11 +5962,13 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -5952,11 +6084,21 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// MAJ perte thune cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -5996,17 +6138,24 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
 							}
@@ -6244,11 +6393,13 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						// PNJ
 						
 						// Récupération des infos de la cible
-						$sql = "SELECT nom_pnj, pv_i, bonus_i FROM perso WHERE id_perso = '$idPerso_carte'";
+						$sql = "SELECT nom_pnj, pv_i, bonus_i, x_i, y_i FROM instance_pnj, pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$idPerso_carte'";
 						$res = $mysqli->query($sql);
 						$t_cible = $res->fetch_assoc();
 						
 						$nom_cible 		= $t_cible['nom_pnj'];
+						$x_cible		= $t_cible['x_i'];
+						$y_cible		= $t_cible['y_i'];
 						$pv_cible		= $t_cible['pv_i'];
 						$bonus_cible	= $t_cible['bonus_i'];
 						$protec_cible	= 0;
@@ -6368,11 +6519,21 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								$cible_alive = false;
 								
 								// Perte or 
-								$calcul_perte_or = floor(($or_cible * 30) / 100);
+								$calcul_perte_or = 0;
 								
-								// MAJ perte thune cible
-								$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
+								if ($idPerso_carte < 50000) {
+									// Perte or 
+									$calcul_perte_or = floor(($or_cible * 30) / 100);
+									
+									// MAJ perte thunes cible
+									$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
+								else {
+									// On efface l'instance de PNJ 
+									$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
+									$mysqli->query($sql);
+								}
 								
 								// on l'efface de la carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -6412,17 +6573,24 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 								$mysqli->query($sql);
 								
-								// maj stats du perso
-								$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-								$mysqli->query($sql);
-								
-								// maj stats de la cible
-								$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-								$mysqli->query($sql);
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+								if ($idPerso_carte < 50000) {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+									$mysqli->query($sql);
+									
+									// maj stats de la cible
+									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_cible){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
 							}
