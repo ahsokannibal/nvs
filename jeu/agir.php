@@ -1767,7 +1767,7 @@ if($verif){
 			$coutPa_attaque=$coutPa_arme_attaque;
 					
 			// recuperation des données du batiment	
-			$sql = "SELECT batiment.id_batiment, nom_batiment, description, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance 
+			$sql = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, description, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance 
 					FROM batiment, instance_batiment
 					WHERE batiment.id_batiment=instance_batiment.id_batiment
 					AND id_instanceBat=$id_cible";
@@ -1776,6 +1776,7 @@ if($verif){
 			
 			$id_batiment 			= $bat['id_batiment'];
 			$nom_batiment 			= $bat['nom_batiment'];
+			$taille_batiment		= $bat['taille_batiment'];
 			$description_batiment 	= $bat['description'];
 			$nom_instance_batiment 	= $bat['nom_instance'];
 			$pv_instance 			= $bat['pv_instance'];
@@ -1965,11 +1966,26 @@ if($verif){
 						
 						/* Début du traitement de la destruction du batiment*/
 						// il est detruit
-						if ($pv_cible <= 0) { 
+						if ($pv_cible <= 0) {
 						
 							// on efface le batiment de la carte
 							$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 							$mysqli->query($sql);
+							
+							if ($taille_batiment > 1) {
+								// Il faut supprimer les cases sup du batiment de la carte
+								$taille_search = floor($taille_batiment / 2);
+								
+								for ($x = $x_cible - $taille_search; $x <= $x_cible + $taille_search; $x++) {
+									for ($y = $y_cible - $taille_search; $y <= $y_cible + $taille_search; $y++) {
+										
+										// mise a jour de la carte
+										$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x' AND y_carte='$y'";
+										$mysqli->query($sql);
+										
+									}
+								}
+							}
 						
 							// Récupération des persos dans le batiment
 							$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
@@ -1981,8 +1997,6 @@ if($verif){
 								
 								// perte entre 10 et 50 pv
 								$perte_pv = mt_rand(10,50);
-								
-								echo "Le perso ".$id_p." présent dans le batiment a perdu ".$perte_pv."<br />";
 								
 								// Traitement persos dans le batiment qui perdent des pv 
 								$sql_p = "UPDATE perso SET pv_perso=pv_perso - $perte_pv WHERE id_perso='$id_p'";
@@ -2023,8 +2037,6 @@ if($verif){
 										$occup = verif_pos_libre($mysqli, $x, $y);
 									}
 									
-									echo "Le perso ".$id_p." a été éjecté sur la case ".$x." / ".$y."<br />";
-									
 									// maj evenement
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_p','<font color=$couleur_clan_p><b>$nom_p</b></font>','a été ejecté suite à la destruction du bâtiment',NULL,'',' : en $x / $y et PV divisé par 2',NOW(),'0')";
 									$mysqli->query($sql);
@@ -2036,8 +2048,6 @@ if($verif){
 									// MAJ des coordonnées du perso
 									$sql_u2 = "UPDATE perso SET x_perso='$x', y_perso='$y' WHERE id_perso='$id_p'";
 									$mysqli->query($sql_u2);
-									
-									echo $sql_u2;
 								}
 								else {
 									// Le perso est mort
@@ -2066,6 +2076,10 @@ if($verif){
 							
 							// on delete le bâtiment
 							$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_cible'";
+							$mysqli->query($sql);
+							
+							// on delete les canons rattachés au batiment 
+							$sql = "DELETE FROM instance_batiment_canon WHERE id_instance_bat='$id_cible'";
 							$mysqli->query($sql);
 					
 							echo "Vous avez détruit votre cible ! <font color=red>Félicitations.</font>";
