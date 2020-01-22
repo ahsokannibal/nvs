@@ -743,9 +743,19 @@ if($dispo){
 										
 										$image_perso = $tab["image_carte"];
 										$id_perso_carte = $tab["idPerso_carte"];
+										
+										if ($id_perso_carte >= 200000) {
+											$dossier_image = "images/pnj";
+										}
+										else if ($id_perso_carte < 50000) {
+											$dossier_image = "images_perso";
+										}
+										else {
+											$dossier_image = "images_perso";
+										}
 											
 										if(isset($id_perso_carte)){
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../images_perso/".$image_perso."\" width=40 height=40></td>";
+											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../".$dossier_image."/".$image_perso."\" width=40 height=40></td>";
 										}
 										else {
 											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
