@@ -32,7 +32,8 @@ if (@$_SESSION["id_perso"]) {
 	$couleur_bat_clan1 		= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
 	$couleur_bat_clan2 		= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
 	$couleur_rail			= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
-	$couleur_brouillard		= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
+	$couleur_brouillard1	= Imagecolorallocate($perso_carte, 222, 184, 135); // marron burlywood
+	$couleur_brouillard2	= Imagecolorallocate($perso_carte, 210, 180, 140); // marron tan
 	
 	// couleurs image_carte
 	$couleur_bataillon		= Imagecolorallocate($image_carte, 0, 0, 0); // noir
@@ -142,6 +143,15 @@ if (@$_SESSION["id_perso"]) {
 		
 		$x 			= $t["x_carte"];
 		$y 			= $t["y_carte"];
+		
+		$rand = mt_rand(1,2);
+		
+		if ($rand == 1) {
+			$couleur_brouillard = $couleur_brouillard1;
+		}
+		else {
+			$couleur_brouillard = $couleur_brouillard2;
+		}
 		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
 	}
