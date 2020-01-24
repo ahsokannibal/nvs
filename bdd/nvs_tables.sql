@@ -527,8 +527,10 @@ CREATE TABLE `liaisons_gare` (
 --
 
 CREATE TABLE `liens_activation` (
-  `id_lien` int(11) NOT NULL,
-  `date_fin` datetime NOT NULL
+  `id_lien` VARCHAR(250) NOT NULL,
+  `date_fin` datetime NOT NULL,
+  `mail` VARCHAR(250) NOT NULL,
+  `data` TEXT NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

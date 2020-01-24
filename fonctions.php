@@ -458,4 +458,40 @@ function mail_gele_zombie($id_perso){
 	mail($destinataire, $titre, $message, $headers);
 }
 
+function genererChaineAleatoire($taille) {
+	// Initialisation des caractères utilisables
+    $characters = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z");
+
+	$password = "";
+	
+    for($i=0;$i<$taille;$i++) {
+        $password .= ($i%2) ? strtoupper($characters[array_rand($characters)]) : $characters[array_rand($characters)];
+    }
+		
+    return $password;
+}
+
+function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
+
+	// Headers mail
+	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
+	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+	$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
+	$headers .='Content-Transfer-Encoding: 8bit';
+	
+	// Destinataire du mail
+	$destinataire = $mail;
+	
+	// Titre du mail
+	$titre = 'Mot de passe perdu';
+	
+	$lien_activation = "http://loka.zd.fr/nvs/mdp_perdu.php?code=".$code_activation;
+	
+	// Contenu du mail
+	$message = "Votre nouveau mot de passe est $new_mdp \r\nAfin d'activer ce nouveau mot de passe, veuillez cliquer sur ce lien : $lien_activation \r\nLe nouveau mot de passe ne sera actif qu'après activation. \r\nSi vous n'avez pas demandé à réinitailiser votre mot de passe, veuillez ne pas prendre en compte ce mail.";
+	
+	// Envoie du mail
+	mail($destinataire, $titre, $message, $headers);
+}
+
 ?>
