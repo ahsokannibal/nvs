@@ -40,9 +40,13 @@ if(@$_SESSION["id_perso"]){
 $id = $_SESSION["id_perso"];
 
 // recuperation des message dont il est le destinataire
-$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."'";
+$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier='1'";
 $res_a_lire = $mysqli->query($sql_a_lire);
 $a_lire = $res_a_lire->num_rows;
+
+$sql_dossier = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier!='1'";
+$res_dossier = $mysqli->query($sql_dossier);
+$a_lire_dossier = $res_dossier->num_rows;
 ?>
 
 		<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
@@ -54,7 +58,7 @@ $a_lire = $res_a_lire->num_rows;
 			</tr>
 			<tr align="center" bgcolor="#EEEEDD">
 				<td><a href="messagerie_contacts.php">Contacts</a></td>
-				<td><a href="messagerie_dossiers.php">Dossiers</a></td>
+				<td><a href="messagerie_dossiers.php">Dossiers<font color="red"> <?php if($a_lire_dossier) echo" (".$a_lire_dossier." new)"; ?></font></a></td>
 				<td></td>
 			</tr>
 		</table>

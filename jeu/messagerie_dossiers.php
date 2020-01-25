@@ -43,10 +43,11 @@ $id = $_SESSION["id_perso"];
 if(isset($_POST['creation_dossier'])){
 	
 	$nom_dossier = $_POST['nom_dossier'];
+	
 	if(filtre($nom_dossier,0,25) && $nom_dossier != ''){
 		
 		// creation du dossier
-		$sql = "INSERT INTO dossier VALUES ('','$nom_dossier')";
+		$sql = "INSERT INTO dossier (nom_dossier) VALUES ('$nom_dossier')";
 		$mysqli->query($sql);
 		$id_dossier_cree = $mysqli->insert_id;
 		
@@ -85,7 +86,7 @@ if(isset($_GET["id_dossier"])){
 	$dossier = $_GET["id_dossier"];
 }
 
-$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."'";
+$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier='1'";
 $res_a_lire = $mysqli->query($sql_a_lire);
 $a_lire = $res_a_lire->num_rows;
 ?>
@@ -121,11 +122,19 @@ while ($t = $res->fetch_assoc()){
 	$id_dossier 	= $t["id_dossier"];
 	$nom_dossier 	= $t["nom_dossier"];
 	
+	$sql_dossier = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier='$id_dossier'";
+	$res_dossier = $mysqli->query($sql_dossier);
+	$a_lire_dossier = $res_dossier->num_rows;
+	
 	if(isset($_GET["id_dossier"])){
 		
 		if($dossier == $id_dossier){
 			
 			echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='messagerie_dossiers.php'><img src=\"../images/$image_dossier_ouvert\" alt=\"dossier\" border='0' width='32' height='32'></a><b> Dossier $nom_dossier</b>";
+			
+			if ($a_lire_dossier) {
+				echo "<font color='red'> (".$a_lire_dossier." new)</font>";
+			}
 			
 			echo "<form name=\"chk\" method=\"post\" action=\"traitement/t_messagerie.php\">";
 			echo "<table border=1 align=\"center\" cellpadding=2 cellspacing=1 width=550>";
@@ -178,11 +187,19 @@ while ($t = $res->fetch_assoc()){
 			echo "</form>";
 		}
 		else {
-			echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='messagerie_dossiers.php?id_dossier=$id_dossier'><img src=\"../images/$image_dossier_ferme\" alt=\"dossier\" border='0' width='32' height='32'></a><b> Dossier $nom_dossier</b><br />";
+			echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='messagerie_dossiers.php?id_dossier=$id_dossier'><img src=\"../images/$image_dossier_ferme\" alt=\"dossier\" border='0' width='32' height='32'></a><b> Dossier $nom_dossier</b>";
+			if ($a_lire_dossier) {
+				echo "<font color='red'> (".$a_lire_dossier." new)</font>";
+			}
+			echo "<br />";
 		}
 	}
 	else {
-		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='messagerie_dossiers.php?id_dossier=$id_dossier'><img src=\"../images/$image_dossier_ferme\" alt=\"dossier\" border='0' width='32' height='32'></a><b> Dossier $nom_dossier</b><br />";
+		echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='messagerie_dossiers.php?id_dossier=$id_dossier'><img src=\"../images/$image_dossier_ferme\" alt=\"dossier\" border='0' width='32' height='32'></a><b> Dossier $nom_dossier</b>";
+		if ($a_lire_dossier) {
+			echo "<font color='red'> (".$a_lire_dossier." new)</font>";
+		}
+		echo "<br />";
 	}
 }
 ?>
