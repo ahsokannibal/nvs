@@ -10,31 +10,32 @@ if(@$_SESSION["id_perso"]){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<title>Messagerie</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="../style.css" rel="stylesheet" type="text/css">
-</head>
-<script language='javascript'>
-var ok2 = true;
-var ok3 = true;
+	<head>
+		<title>Messagerie</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	
+	<script language='javascript'>
+	var ok2 = true;
+	var ok3 = true;
 
-function test_chk()	{
-var test = 0;
-var i = 0;
-	while(eval('document.chk.check'+i))	{
-		test++;
-		i++
-		;
-	}
-	for(i=0; i<test; i++)	{
-		var box = 'check' + i;
-		document.getElementById(box).checked = ok2;
-	}
-	ok2=!ok2;
-}  
-</script>
-<body>
+	function test_chk()	{
+	var test = 0;
+	var i = 0;
+		while(eval('document.chk.check'+i))	{
+			test++;
+			i++
+			;
+		}
+		for(i=0; i<test; i++)	{
+			var box = 'check' + i;
+			document.getElementById(box).checked = ok2;
+		}
+		ok2=!ok2;
+	}  
+	</script>
+	
+	<body>
 <?php
 $id = $_SESSION["id_perso"];
 
@@ -44,23 +45,23 @@ $res_a_lire = $mysqli->query($sql_a_lire);
 $a_lire = $res_a_lire->num_rows;
 ?>
 
-<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
-<tr align="center" bgcolor="#EEEEDD">
-<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
-	<td>Messages reçus<font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
-	<td><a href="message_envoye.php">Messages envoyés</a></td>
-	<td><a href="nouveau_message.php">Nouveau message</a></td>
-</tr>
-<tr align="center" bgcolor="#EEEEDD">
-	<td><a href="messagerie_contacts.php">Contacts</a></td>
-	<td><a href="messagerie_dossiers.php">Dossiers</a></td>
-	<td></td>
-</tr>
-</table>
-<br />
+		<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
+			<tr align="center" bgcolor="#EEEEDD">
+			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+				<td>Messages reçus<font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
+				<td><a href="message_envoye.php">Messages envoyés</a></td>
+				<td><a href="nouveau_message.php">Nouveau message</a></td>
+			</tr>
+			<tr align="center" bgcolor="#EEEEDD">
+				<td><a href="messagerie_contacts.php">Contacts</a></td>
+				<td><a href="messagerie_dossiers.php">Dossiers</a></td>
+				<td></td>
+			</tr>
+		</table>
+		<br />
 
-<form name= "chk" method="post" action="traitement/t_messagerie.php">
-<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
+		<form name= "chk" method="post" action="traitement/t_messagerie.php">
+			<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
 <?php
 $sql = "SELECT message.id_message, expediteur_message, date_message, objet_message, lu_message 
 		FROM message, message_perso 
@@ -95,16 +96,20 @@ else {
 	}
 }
 ?>
-</table>
+			</table>
 
-<br>
-<table border=0 align="center">
-<tr><td>Que voulez-vous faire des messages sélectionnés?&nbsp;</td><td><input type="submit" name="submit" value="Effacer">&nbsp;</td><td><input type="submit" name="submit" value="Archiver"></td></tr>
-</table>
-</form>
+			<br>
+			<table border=0 align="center">
+				<tr>
+					<td>Que voulez-vous faire des messages sélectionnés?&nbsp;</td>
+					<td><input type="submit" name="submit" value="Effacer">&nbsp;</td>
+					<td><input type="submit" name="submit" value="Archiver"></td>
+				</tr>
+			</table>
+		</form>
 
-<br>
-</body>
+		<br>
+	</body>
 </html>
 <?php
 }

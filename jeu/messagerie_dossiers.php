@@ -10,31 +10,32 @@ if(@$_SESSION["id_perso"]){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
-<head>
-<title>Messagerie</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="../style.css" rel="stylesheet" type="text/css">
-</head>
-<script language='javascript'>
-var ok2 = true;
-var ok3 = true;
+	<head>
+		<title>Messagerie</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	</head>
+	
+	<script language='javascript'>
+	var ok2 = true;
+	var ok3 = true;
 
-function test_chk()	{
-var test = 0;
-var i = 0;
-	while(eval('document.chk.check'+i))	{
-		test++;
-		i++
-		;
-	}
-	for(i=0; i<test; i++)	{
-		var box = 'check' + i;
-		document.getElementById(box).checked = ok2;
-	}
-	ok2=!ok2;
-}  
-</script>
-<body>
+	function test_chk()	{
+	var test = 0;
+	var i = 0;
+		while(eval('document.chk.check'+i))	{
+			test++;
+			i++
+			;
+		}
+		for(i=0; i<test; i++)	{
+			var box = 'check' + i;
+			document.getElementById(box).checked = ok2;
+		}
+		ok2=!ok2;
+	}  
+	</script>
+	
+	<body>
 <?php
 $id = $_SESSION["id_perso"];
 
@@ -89,27 +90,27 @@ $res_a_lire = $mysqli->query($sql_a_lire);
 $a_lire = $res_a_lire->num_rows;
 ?>
 
-<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
-<tr align="center" bgcolor="#EEEEDD">
-<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
-	<td><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
-	<td><a href="message_envoye.php">Messages envoyés</a></td>
-	<td><a href="nouveau_message.php">Nouveau message</a></td>
-</tr>
-<tr align="center" bgcolor="#EEEEDD">
-	<td><a href="messagerie_contacts.php">Contacts</a></td>
-	<td>Dossiers</td>
-	<td></td>
-</tr>
-</table>
-<br />
+		<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
+			<tr align="center" bgcolor="#EEEEDD">
+			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+				<td><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
+				<td><a href="message_envoye.php">Messages envoyés</a></td>
+				<td><a href="nouveau_message.php">Nouveau message</a></td>
+			</tr>
+			<tr align="center" bgcolor="#EEEEDD">
+				<td><a href="messagerie_contacts.php">Contacts</a></td>
+				<td>Dossiers</td>
+				<td></td>
+			</tr>
+		</table>
+		<br />
 
-<center>
-<form method='post' name='creer_dossier' action='messagerie_dossiers.php'>
-<img src='../images/folder_add.png' alt='add folder'> Créer un nouveau dossier : <input type='text' name='nom_dossier'>
-<input type='submit' name='creation_dossier' value='ok'>
-</form>
-</center>
+		<center>
+			<form method='post' name='creer_dossier' action='messagerie_dossiers.php'>
+				<img src='../images/folder_add.png' alt='add folder'> Créer un nouveau dossier : <input type='text' name='nom_dossier'>
+				<input type='submit' name='creation_dossier' value='ok'>
+			</form>
+		</center>
 
 <?php
 $sql = "SELECT dossier.id_dossier, dossier.nom_dossier FROM dossier, perso_as_dossiers WHERE dossier.id_dossier=perso_as_dossiers.id_dossier AND id_perso='$id'";
@@ -121,7 +122,9 @@ while ($t = $res->fetch_assoc()){
 	$nom_dossier 	= $t["nom_dossier"];
 	
 	if(isset($_GET["id_dossier"])){
+		
 		if($dossier == $id_dossier){
+			
 			echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='messagerie_dossiers.php'><img src=\"../images/$image_dossier_ouvert\" alt=\"dossier\" border='0' width='32' height='32'></a><b> Dossier $nom_dossier</b>";
 			
 			echo "<form name=\"chk\" method=\"post\" action=\"traitement/t_messagerie.php\">";
@@ -160,6 +163,18 @@ while ($t = $res->fetch_assoc()){
 				}
 			}
 			echo "</table>";
+			
+			echo "<br>";
+			echo "<table border=0 align=\"center\">";
+			echo "	<tr>";
+			echo "		<td>Que voulez-vous faire des messages sélectionnés?&nbsp;</td>";
+			echo "		<td><input type=\"submit\" name=\"submit\" value=\"Effacer\">&nbsp;</td>";
+			if ($id_dossier != 2) {
+				echo "		<td><input type=\"submit\" name=\"submit\" value=\"Archiver\"></td>";
+			}
+			echo "	</tr>";
+			echo "</table>";
+			
 			echo "</form>";
 		}
 		else {
@@ -172,7 +187,7 @@ while ($t = $res->fetch_assoc()){
 }
 ?>
 
-</body>
+	</body>
 </html>
 <?php
 }
