@@ -31,7 +31,7 @@ if($dispo){
 		}
 		else {
 			
-			$sql = "SELECT idJoueur_perso, nom_perso, pc_perso, pa_perso, chef, clan, bataillon, point_armee_grade FROM perso, perso_as_grade, grades 
+			$sql = "SELECT idJoueur_perso, nom_perso, pc_perso, pa_perso, chef, clan, bataillon, point_armee_grade, grades.id_grade FROM perso, perso_as_grade, grades 
 					WHERE perso.id_perso = perso_as_grade.id_perso
 					AND perso_as_grade.id_grade = grades.id_grade 
 					AND perso.id_perso ='$id'";
@@ -46,6 +46,7 @@ if($dispo){
 			$clan		= $tab["clan"];
 			$bataillon	= $tab["bataillon"];
 			$pg			= $tab["point_armee_grade"];
+			$id_grade	= $tab["id_grade"];
 			
 			if ($clan == 1) {
 				$camp = "nord";
@@ -785,21 +786,27 @@ if($dispo){
 								
 								$image_affiche = $image_unite."_".$camp.".gif";
 								
-								echo "	<tr>";
-								echo "		<td align='center'><img src='../images_perso/".$image_affiche."' alt='".$nom_unite."'/></td>";
-								echo "		<td align='center'>$nom_unite</td>";
-								echo "		<td align='center'>$pa_unite</td>";
-								echo "		<td align='center'>$pv_unite</td>";
-								echo "		<td align='center'>$pm_unite</td>";
-								echo "		<td align='center'>$recup_unite</td>";
-								echo "		<td align='center'>$perception_unite</td>";
-								echo "		<td align='center'>$protection_unite</td>";
-								echo "		<td align='center'>$description_unite</td>";
-								echo "		<td align='center'>$cout_pg_unite PG</td>";
+								if ($id_grade < 6 && $id_unite == 6) {
+									// Chien non recrutable si grade inférieur à Sergent chef
+									echo "<center>Le chien n'est recrutable qu'à partir du grade de Sergent Chef</center>";
+								} else {
 								
-								// TODO - Condition si Possibilité de recruter
-								echo "		<td align='center'><input type=\"submit\" name=\"".$id_unite."\" value=\">> Recruter !\"></td>";
-								echo "	</tr>";
+									echo "	<tr>";
+									echo "		<td align='center'><img src='../images_perso/".$image_affiche."' alt='".$nom_unite."'/></td>";
+									echo "		<td align='center'>$nom_unite</td>";
+									echo "		<td align='center'>$pa_unite</td>";
+									echo "		<td align='center'>$pv_unite</td>";
+									echo "		<td align='center'>$pm_unite</td>";
+									echo "		<td align='center'>$recup_unite</td>";
+									echo "		<td align='center'>$perception_unite</td>";
+									echo "		<td align='center'>$protection_unite</td>";
+									echo "		<td align='center'>$description_unite</td>";
+									echo "		<td align='center'>$cout_pg_unite PG</td>";
+									
+									// TODO - Condition si Possibilité de recruter
+									echo "		<td align='center'><input type=\"submit\" name=\"".$id_unite."\" value=\">> Recruter !\"></td>";
+									echo "	</tr>";
+								}
 								
 							}
 							
