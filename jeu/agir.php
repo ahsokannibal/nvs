@@ -345,9 +345,11 @@ if($verif){
 						
 						// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 						if ($touche <= $precision_final) {
+							
+							$degats_tmp = mt_rand($degatMin_arme_attaque, $degatMin_arme_attaque * $valeur_des_arme_attaque);
 			
 							// calcul degats arme
-							$degats_final = mt_rand($degatMin_arme_attaque, $degatMin_arme_attaque * $valeur_des_arme_attaque) - $protec_cible;
+							$degats_final = $degats_tmp - $protec_cible;
 							
 							// Canon d'artillerie et cible autre artillerie
 							if ($id_arme_attaque == 13 && $type_perso_cible == 5) {

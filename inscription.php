@@ -73,7 +73,7 @@ if(config_dispo_jeu($mysqli)){
 						$pamax_chef = 10;
 						$recup_chef = 40;
 						$perc_chef = 5;
-						$protec_chef = 30;
+						$protec_chef = 20;
 						
 						// Carac grouillot
 						$pvMax_g = 500;
