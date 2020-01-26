@@ -12,6 +12,7 @@ if (@$_SESSION["id_perso"]) {
 	//$legende_carte = imagecreatefrompng("carte_tmp/legende.png");
 	$image_carte = imagecreatefrompng("carte_tmp/carte.png");
 	$image_carte_bataillon = imagecreatefrompng("carte_tmp/carte.png");
+	$image_carte_compagnie = imagecreatefrompng("carte_tmp/carte.png");
 
 	//maintenant on donne une couleur a notre image (ici un fond noir)
 	$fond_perso=Imagecolorallocate($perso_carte, 250, 250, 250);
@@ -166,6 +167,9 @@ if (@$_SESSION["id_perso"]) {
 	// creation de l'image carte
 	imagepng($image_carte, "carte_tmp/carte$id.png");
 	
+	//**********************//
+	//		BATAILLON		//
+	//**********************//
 	// Je vais chercher les persos du même joueur (même bataillon)
 	$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
 	$res = $mysqli->query($sql);
@@ -183,12 +187,39 @@ if (@$_SESSION["id_perso"]) {
 		imagepng($image_carte_bataillon, "carte_tmp/carte_bataillon_sl$id.png");
 	}
 	
+	//**********************//
+	//		COMPAGNIE		//
+	//**********************//
+	// Je vais chercher les persos dans la même compagnie
+	$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie=( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id' )";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()) {
+		
+		$id_perso_comp = $t["id_perso"];
+		
+		$sql_coord = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_perso_comp'";
+		$res_coord = $mysqli->query($sql_coord);
+		$t_coord = $res_coord->fetch_assoc();
+		
+		$x = $t_coord['x_perso'];
+		$y = $t_coord['y_perso'];
+		
+		imageellipse($image_carte, 3*$x, 600-3*$y, 20, 20, $couleur_bataillon);
+		imagepng($image_carte, "carte_tmp/compagnie$id.png");
+		imagepng($image_carte, "carte_tmp/carte_compagnie$id.png");
+		
+		imagecopymerge ($image_carte_compagnie, $image_carte, 0, 0, 0, 0, 603, 603, 100);
+		imagepng($image_carte_compagnie, "carte_tmp/carte_compagnie_sl$id.png");
+	}
+	
 	//imagecopymerge ($image_carte, $legende_carte, 0, 0, 0, 0, 603, 603, 40);
 	
 	
 	ImageDestroy ($perso_carte);
 	ImageDestroy ($image_carte);
 	ImageDestroy ($image_carte_bataillon);
+	ImageDestroy ($image_carte_compagnie);
 	ImageDestroy ($legende_carte);
 
 	header("Location: afficher_carte.php");
