@@ -27,14 +27,17 @@ if (@$_SESSION["id_perso"]) {
 		if(isset($_POST['Submit'])){
 			
 			// Enlever le fond
-			if($_POST['Submit'] == "enlever le fond"){
+			if($_POST['Submit'] == "Retirer la topographie"){
+				
+				echo "<center><h1>Carte Stratégique - sans Topographie</h1></center>";
+				
 				echo "<center><img src=\"carte_tmp/perso$id.png\"></center>"; 
 				echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 			
 				echo "<div align=\"center\"><br>";
-				echo "Vous pouvez remettre le fond si vous le souhaitez<br>";
+				echo "Vous pouvez remettre la topographie si vous le souhaitez<br>";
 				echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"avec_fond\">";
-				echo "<input type=\"submit\" name=\"Submit\" value=\"remettre le fond\">";
+				echo "<input type=\"submit\" name=\"Submit\" value=\"Remettre la topographie\">";
 				echo "</div>";
 				echo "</form>";
 			}
@@ -62,7 +65,7 @@ if (@$_SESSION["id_perso"]) {
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
 						echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"avec_fond\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\">";
+						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\">";
 						echo "</div>";
 						echo "</form>";
 					}
@@ -76,9 +79,9 @@ if (@$_SESSION["id_perso"]) {
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
-							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
 							echo "</div>";
@@ -92,9 +95,9 @@ if (@$_SESSION["id_perso"]) {
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
-							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
 							echo "</div>";
@@ -108,9 +111,9 @@ if (@$_SESSION["id_perso"]) {
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
-							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
 							echo "</div>";
@@ -123,9 +126,9 @@ if (@$_SESSION["id_perso"]) {
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
-							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
 							echo "</div>";
@@ -142,9 +145,9 @@ if (@$_SESSION["id_perso"]) {
 			echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 		
 			echo "<div align=\"center\"><br>";
-			echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+			echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
 			echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-			echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+			echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
 			echo "</div>";
