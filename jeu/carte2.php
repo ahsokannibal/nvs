@@ -38,6 +38,7 @@ if (@$_SESSION["id_perso"]) {
 	
 	// couleurs image_carte
 	$couleur_bataillon		= Imagecolorallocate($image_carte, 0, 0, 0); // noir
+	$couleur_compagnie		= Imagecolorallocate($image_carte_compagnie, 0, 0, 0); // noir
 	
 	// je vais chercher le perso qui est connecté dans ma table
 	$sql2 = "SELECT idJoueur_perso, clan FROM perso WHERE id_perso=$id";
@@ -164,6 +165,8 @@ if (@$_SESSION["id_perso"]) {
 	imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
 	imagepng($image_carte, "carte_tmp/carte_sl$id.png");
 	
+	imagecopymerge ($image_carte_compagnie, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
+	
 	// creation de l'image carte
 	imagepng($image_carte, "carte_tmp/carte$id.png");
 	
@@ -205,16 +208,13 @@ if (@$_SESSION["id_perso"]) {
 		$x = $t_coord['x_perso'];
 		$y = $t_coord['y_perso'];
 		
-		imageellipse($image_carte, 3*$x, 600-3*$y, 20, 20, $couleur_bataillon);
-		imagepng($image_carte, "carte_tmp/compagnie$id.png");
-		imagepng($image_carte, "carte_tmp/carte_compagnie$id.png");
+		imageellipse($image_carte_compagnie, 3*$x, 600-3*$y, 20, 20, $couleur_bataillon);
+		imagepng($image_carte_compagnie, "carte_tmp/compagnie$id.png");
+		imagepng($image_carte_compagnie, "carte_tmp/carte_compagnie$id.png");
 		
-		imagecopymerge ($image_carte_compagnie, $image_carte, 0, 0, 0, 0, 603, 603, 100);
+		//imagecopymerge ($image_carte_compagnie, $image_carte, 0, 0, 0, 0, 603, 603, 100);
 		imagepng($image_carte_compagnie, "carte_tmp/carte_compagnie_sl$id.png");
-	}
-	
-	//imagecopymerge ($image_carte, $legende_carte, 0, 0, 0, 0, 603, 603, 40);
-	
+	}	
 	
 	ImageDestroy ($perso_carte);
 	ImageDestroy ($image_carte);

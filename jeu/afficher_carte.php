@@ -62,33 +62,72 @@ if (@$_SESSION["id_perso"]) {
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
 						echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"avec_fond\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\">";
+						echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\">";
 						echo "</div>";
 						echo "</form>";
 					}
 					else {
 						
 						if ($_POST['Submit'] == "cercles sur mon bataillon") {
+							
+							echo "<center><h1>Carte Stratégique - Mon bataillon</h1></center>";
+							
 							echo "<center><img src=\"carte_tmp/carte_bataillon_sl$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
 							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							echo "</div>";
+							echo "</form>";
+						}
+						else if ($_POST['Submit'] == "cercles sur ma compagnie") {
+							
+							echo "<center><h1>Carte Stratégique - Ma compagnie</h1></center>";
+							
+							echo "<center><img src=\"carte_tmp/carte_compagnie_sl$id.png\"></center>"; 
+							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						
+							echo "<div align=\"center\"><br>";
+							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
 							echo "</div>";
 							echo "</form>";
 						}
-						else {
+						else if ($_POST['Submit'] == "cercles sur mon perso") {
+							
+							echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";							
+								
 							echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
 							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							echo "</div>";
+							echo "</form>";
+						}
+						else {
+							echo "<center><h1>Carte Stratégique</h1></center>";
+							
+							echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
+							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						
+							echo "<div align=\"center\"><br>";
+							echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
+							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
 							echo "</div>";
 							echo "</form>";
 						}
@@ -97,6 +136,7 @@ if (@$_SESSION["id_perso"]) {
 			}
 		}
 		else {
+			echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";
 		
 			echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
 			echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
@@ -104,8 +144,9 @@ if (@$_SESSION["id_perso"]) {
 			echo "<div align=\"center\"><br>";
 			echo "Vous pouvez enlever le fond si vous le souhaitez<br>";
 			echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
-			echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><input type=\"submit\" name=\"Submit\" value=\"enlever la legende\"><br />";
+			echo "<input type=\"submit\" name=\"Submit\" value=\"enlever le fond\"><br />";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
+			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
 			echo "</div>";
 			echo "</form>";
 			
