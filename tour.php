@@ -218,7 +218,7 @@ if(isset($_SESSION["ID_joueur"])){
 					
 					
 					// Récupération de tous les perso du joueur
-					$sql = "SELECT id_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+					$sql = "SELECT id_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, image_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
 					$res = $mysqli->query($sql);
 					
 					while ($t_persos = $res->fetch_assoc()) {
@@ -231,6 +231,13 @@ if(isset($_SESSION["ID_joueur"])){
 						$y_perso_nouveau_tour		= $t_persos["y_perso"];
 						$chef_perso_nouveau_tour	= $t_persos["chef"];
 						$image_perso_nouveau_tour	= $t_persos["image_perso"];
+						$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
+						
+						$new_bonus_perso = 0;
+						
+						if ($bonus_perso_nouveau_tour + 5 <= 0) {
+							$new_bonus_perso = $bonus_perso_nouveau_tour + 5;
+						}
 						
 						//il est encore en vie
 						if ($pv_perso_nouveau_tour > 0) {
@@ -244,13 +251,13 @@ if(isset($_SESSION["ID_joueur"])){
 							if ($chef_perso_nouveau_tour == '1') {
 								
 								// C'est le chef => gain or et PC
-								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							} else {
 								
 								// C'est un grouillot
-								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							}
