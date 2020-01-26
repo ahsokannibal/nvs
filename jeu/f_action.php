@@ -3538,8 +3538,40 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
@@ -3970,8 +4002,40 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
@@ -4417,8 +4481,40 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
@@ -4850,8 +4946,40 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
@@ -5281,8 +5409,40 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
@@ -5712,8 +5872,40 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
@@ -6143,8 +6335,40 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
@@ -6578,8 +6802,40 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 									
-									// maj stats de la cible
-									$sql = "UPDATE perso SET nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+									// Recup infos cible
+									$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$type_perso_cible 	= $t["type_perso"];
+									$xp_perso_cible		= $t["xp_perso"];
+									$pi_perso_cible		= $t["pi_perso"];
+									$pc_perso_cible		= $t["pc_perso"];
+									
+									// Chef
+									if ($type_perso_cible == 1) {
+										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+										
+										// Calcul XP
+										$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+										$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+										$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$xp_perso_fin = $xp_perso_cible;
+										$pc_perso_fin = $pc_perso_cible;
+									}
+									
+									// maj stats / XP / PI / PC de la cible
+									$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 									$mysqli->query($sql);
 									
 									// maj stats camp
