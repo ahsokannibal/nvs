@@ -362,6 +362,10 @@ while ($t = $res->fetch_assoc()) {
 	
 	if (est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee)) {
 		
+		// On remet les PV au train 
+		$sql_pv = "UPDATE instance_batiment SET pv_instance=pvMax_instance WHERE id_instanceBat='$id_instance_train'";
+		$mysqli->query($sql_pv);
+		
 		// Récupération des persos dans le train 
 		$sql_pt = "SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train'";
 		$res_pt = $mysqli->query($sql_pt);
