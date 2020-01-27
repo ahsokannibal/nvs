@@ -9,6 +9,47 @@ if (@$_SESSION["id_perso"]) {
 	
 	$mysqli = db_connexion();
 	
+?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Nord VS Sud</title>
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		
+	</head>
+	
+	<body onload="addMouseChecker('carto', 'idInput', 'xy');">
+		<script>		
+		function addMouseChecker(imgId, inputId, valueToShow) {
+			
+			imgId 	= document.getElementById(imgId);
+			inputId = document.getElementById(inputId);
+			   
+			if (imgId.addEventListener) {
+				imgId.addEventListener('mousemove', function(e){checkMousePos(imgId, inputId, valueToShow, e);}, false);
+			} else if (imgId.attachEvent) {
+				imgId.attachEvent('onclick', function(e){checkMousePos(imgId, inputId, valueToShow, e);});
+			}
+		}
+		
+		function checkMousePos(imgId, inputId, valueToShow, e) {
+			
+			var pos = [];
+			
+			pos['x'] 	= Math.floor((e.clientX - imgId.offsetLeft) / 3);
+			pos['y'] 	= Math.ceil((600 - (e.clientY - imgId.offsetTop)) / 3);
+			pos['xy'] 	= pos['x'] +','+ pos['y'];
+		   
+			inputId.value = pos[valueToShow];
+		}
+		</script>
+<?php	
 	//dans la page qui doit afficher la carte:
 	$requete = $mysqli->query("SELECT * FROM carte_time");
 	$sql = $requete->fetch_array();
@@ -31,7 +72,7 @@ if (@$_SESSION["id_perso"]) {
 				
 				echo "<center><h1>Carte Stratégique - sans Topographie</h1></center>";
 				
-				echo "<center><img src=\"carte_tmp/perso$id.png\"></center>"; 
+				echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/perso$id.png\"></center>"; 
 				echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 			
 				echo "<div align=\"center\"><br>";
@@ -45,7 +86,7 @@ if (@$_SESSION["id_perso"]) {
 				
 				// Enlever la legende
 				if($_POST['Submit'] == "enlever la legende"){
-					echo "<center><img src=\"carte_tmp/carte_sl$id.png\"></center>"; 
+					echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte_sl$id.png\"></center>"; 
 					echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 				
 					echo "<div align=\"center\"><br>";
@@ -59,7 +100,7 @@ if (@$_SESSION["id_perso"]) {
 					
 					// Remettre la legende
 					if($_POST['Submit'] == "remettre la legende"){
-						echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
+						echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
 						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 					
 						echo "<div align=\"center\"><br>";
@@ -75,7 +116,7 @@ if (@$_SESSION["id_perso"]) {
 							
 							echo "<center><h1>Carte Stratégique - Mon bataillon</h1></center>";
 							
-							echo "<center><img src=\"carte_tmp/carte_bataillon_sl$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte_bataillon_sl$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -91,7 +132,7 @@ if (@$_SESSION["id_perso"]) {
 							
 							echo "<center><h1>Carte Stratégique - Ma compagnie</h1></center>";
 							
-							echo "<center><img src=\"carte_tmp/carte_compagnie_sl$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte_compagnie_sl$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -107,7 +148,7 @@ if (@$_SESSION["id_perso"]) {
 							
 							echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";							
 								
-							echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -122,7 +163,7 @@ if (@$_SESSION["id_perso"]) {
 						else {
 							echo "<center><h1>Carte Stratégique</h1></center>";
 							
-							echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -141,7 +182,8 @@ if (@$_SESSION["id_perso"]) {
 		else {
 			echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";
 		
-			echo "<center><img src=\"carte_tmp/carte$id.png\"></center>"; 
+			echo "<center><input type='text' id='idInput' disabled /><br />";
+			echo "<img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
 			echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 		
 			echo "<div align=\"center\"><br>";
@@ -155,6 +197,12 @@ if (@$_SESSION["id_perso"]) {
 			
 		}
 	}
+	?>
+	</body>
+</html>	
+	<?php
 }
-else
-	echo "Veuillez vous connecter";?>
+else {
+	echo "Veuillez vous connecter";	
+}
+?>
