@@ -248,7 +248,7 @@ if($dispo || !$admin){
 													$entre_bat_ok = 1;
 												
 													// recuperation des coordonnees et infos du batiment dans lequel le perso entre
-													$sql = "SELECT nom_instance, niveau_instance, x_instance, y_instance FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
+													$sql = "SELECT nom_instance, niveau_instance, x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
 													$res = $mysqli->query($sql);
 													$coordonnees_instance = $res->fetch_assoc();
 													
@@ -256,15 +256,16 @@ if($dispo || !$admin){
 													$y_bat 				= $coordonnees_instance["y_instance"];
 													$nom_bat 			= $coordonnees_instance["nom_instance"];
 													$niveau_instance 	= $coordonnees_instance["niveau_instance"];
+													$id_bat				= $coordonnees_instance["id_batiment"];
 													$id_inst_bat 		= $_GET["bat"];
 													
-													// verification si le perso est de la même nation ou non que le batiment
+													// Verification si le perso est de la même nation ou non que le batiment
 													if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
 													
-														// les chiens et soigneurs ne peuvent pas capturer de batiment
+														// Les chiens et soigneurs ne peuvent pas capturer de batiment
 														if ($type_perso != '6' && $type_perso != '4') {
 													
-															// capture du batiment, il devient de la nation du perso
+															// Capture du batiment, il devient de la nation du perso
 															$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
 															$mysqli->query($sql);
 															
@@ -274,18 +275,19 @@ if($dispo || !$admin){
 															
 															$camp = $t_c["clan"];
 															
+															// MAJ camp canons
+															$sql = "UPDATE instance_batiment_canon SET camp_canon='$camp' WHERE id_instance_bat='$id_inst_bat'";
+															$mysqli->query($sql);
+															
 															if($camp == "1"){
-																$couleur_c = "b";
+																$couleur_c 		= "b";
 															}
 															if($camp == "2"){
-																$couleur_c = "r";
-															}
-															if($camp == "3"){
-																$couleur_c = "v";
+																$couleur_c 		= "r";
 															}
 															
-															//mise à jour de l'icone
-															$icone = "b".$_GET["bat2"]."$couleur_c.png";
+															// Mise à jour de l'icone centrale sur la carte
+															$icone = "b".$id_bat."$couleur_c.png";
 															$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
 															$mysqli->query($sql);
 															
@@ -377,7 +379,7 @@ if($dispo || !$admin){
 						}
 						// traitement des autres cas
 						else {
-							if(isset($_GET["bat"]) && $_GET["bat"]!="" && isset($_GET["bat2"]) && $_GET["bat2"]!="" && $_GET["bat2"] != 1){
+							if(isset($_GET["bat"]) && $_GET["bat"]!="" && isset($_GET["bat2"]) && $_GET["bat2"]!="" && $_GET["bat2"] != 1) {
 								
 								// Vérification que le perso soit pas déjà dans un bâtiment
 								if(!in_bat($mysqli, $id_perso) && !in_train($mysqli, $id_perso)){
@@ -399,7 +401,10 @@ if($dispo || !$admin){
 													$nb_perso_bat = $res->num_rows;
 											
 													// recuperation des coordonnees et des infos du batiment dans lequel le perso entre
-													$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance, contenance_instance FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
+													$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance, contenance_instance, instance_batiment.id_batiment, taille_batiment 
+															FROM instance_batiment, batiment 
+															WHERE instance_batiment.id_batiment = batiment.id_batiment
+															AND id_instanceBat=".$_GET["bat"]."";
 													$res = $mysqli->query($sql);
 													$coordonnees_instance = $res->fetch_assoc();
 													
@@ -408,6 +413,8 @@ if($dispo || !$admin){
 													$nom_bat 				= $coordonnees_instance["nom_instance"];
 													$id_inst_bat 			= $coordonnees_instance["id_instanceBat"];
 													$contenance_inst_bat 	= $coordonnees_instance["contenance_instance"];
+													$id_bat					= $coordonnees_instance["id_batiment"];
+													$taille_batiment		= $coordonnees_instance["taille_batiment"];
 													
 													// verification contenance batiment
 													if($nb_perso_bat < $contenance_inst_bat){
@@ -433,20 +440,79 @@ if($dispo || !$admin){
 																	
 																	$camp = $t_c["clan"];
 																	
+																	// MAJ camp canons
+																	$sql = "UPDATE instance_batiment_canon SET camp_canon='$camp' WHERE id_instance_bat='$id_inst_bat'";
+																	$mysqli->query($sql);
+																	
 																	if($camp == "1"){
-																		$couleur_c = "b";
+																		$couleur_c 		= "b";
+																		$image_canon_g 	= 'canonG_nord.gif';
+																		$image_canon_d 	= 'canonD_nord.gif';
 																	}
 																	if($camp == "2"){
-																		$couleur_c = "r";
-																	}
-																	if($camp == "3"){
-																		$couleur_c = "v";
+																		$couleur_c 		= "r";
+																		$image_canon_g 	= 'canonG_sud.gif';
+																		$image_canon_d 	= 'canonD_sud.gif';
 																	}
 																	
-																	//mise à jour de l'icone
-																	$icone = "b".$_GET["bat2"]."$couleur_c.png";
-																	$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
-																	$mysqli->query($sql);
+																	$icone = "b".$id_bat."$couleur_c.png";
+																	
+																	if ($taille_batiment > 1) {
+																		
+																		$taille_search 	= floor($taille_batiment / 2);
+																		$image_case_c	= $couleur_c.".png";
+									
+																		for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
+																			for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
+																				if ($x == $x_bat && $y == $y_bat) {
+																					// Mise à jour de l'icone centrale
+																					$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
+																					$mysqli->query($sql);
+																				}
+																				else {
+																					$sql = "UPDATE $carte SET image_carte='$image_case_c' WHERE x_carte='$x' AND y_carte='$y' AND image_carte NOT LIKE 'canon%'";
+																					$mysqli->query($sql);
+																				}
+																			}
+																		}
+																		
+																		// Mise à jour des icones de canon sur la carte
+																		if ($id_bat == 8) {
+																			// Fortin
+																			// Canons Gauche
+																			$sql = "UPDATE $carte SET image_carte='$image_canon_g' 
+																					WHERE (x_carte=$x_bat - 1 AND y_carte=$y_bat - 1) 
+																					OR (x_carte=$x_bat - 1 AND y_carte=$y_bat + 1)";
+																			$mysqli->query($sql);
+																			
+																			// Canons Droit
+																			$sql = "UPDATE $carte SET image_carte='$image_canon_d' 
+																					WHERE (x_carte=$x_bat + 1 AND y_carte=$y_bat - 1) 
+																					OR (x_carte=$x_bat + 1 AND y_carte=$y_bat + 1)";
+																			$mysqli->query($sql);
+																		}
+																		else if ($id_bat == 9) {
+																			// Fort
+																			// Canons Gauche
+																			$sql = "UPDATE $carte SET image_carte='$image_canon_g' 
+																					WHERE (x_carte=$x_bat - 2 AND y_carte=$y_bat + 2) 
+																					OR (x_carte=$x_bat - 2 AND y_carte=$y_bat) 
+																					OR (x_carte=$x_bat - 2 AND y_carte=$y_bat - 2)";
+																			$mysqli->query($sql);
+																			
+																			// Canons Droit
+																			$sql = "UPDATE $carte SET image_carte='$image_canon_d' 
+																					WHERE (x_carte=$x_bat + 2 AND y_carte=$y_bat + 2) 
+																					OR (x_carte=$x_bat + 2 AND y_carte=$y_bat) 
+																					OR (x_carte=$x_bat + 2 AND y_carte=$y_bat - 2)";
+																			$mysqli->query($sql);
+																		}
+																	}
+																	else {
+																		// Mise à jour de l'icone centrale
+																		$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
+																		$mysqli->query($sql);
+																	}
 																		
 																	// mise a jour table evenement
 																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé le batiment $nom_bat','$id_inst_bat','','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
