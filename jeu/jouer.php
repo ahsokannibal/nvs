@@ -1226,6 +1226,8 @@ if($dispo || !$admin){
 				}
 				
 				$nom_compagnie_perso = "";
+				$nb_demandes_adhesion_compagnie = 0;
+				$nb_demandes_emprunt_compagnie	= 0;
 				
 				// recuperation de l'id de la compagnie du perso
 				$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
@@ -1233,16 +1235,45 @@ if($dispo || !$admin){
 				$t_groupe = $res_groupe->fetch_assoc();
 				
 				$id_compagnie = $t_groupe['id_compagnie'];
-													
+								
 				if(isset($id_compagnie) && $id_compagnie != ''){
 					
-					// recuperation des infos sur la compagnie (dont le nom)
+					// Recuperation des infos sur la compagnie (dont le nom)
 					$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_compagnie'";
 					$res_groupe2 = $mysqli->query($sql_groupe2);
 					$t_groupe2 = $res_groupe2->fetch_assoc();
 					
 					$nom_compagnie_perso = addslashes($t_groupe2['nom_compagnie']);
 					
+					// Quel est le poste du perso dans la compagnie ?
+					$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND id_perso='$id_perso'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$poste_perso_compagnie = $t['poste_compagnie'];
+					
+					// Chef ou Recruteur
+					if ($poste_perso_compagnie == 1 || $poste_perso_compagnie == 3) {
+						
+						// Vérifier nouvelles demandes d'adhésion
+						$sql = "SELECT * FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND attenteValidation_compagnie='1'";
+						$res = $mysqli->query($sql);
+						$nb_demandes_adhesion_compagnie = $res->num_rows;
+					}
+					
+					// Trésorier
+					if ($poste_perso_compagnie == 2) {
+						
+						// Vérifier nouvelles demandes d'emprunt
+						$sql = "SELECT banque_compagnie.id_perso FROM banque_compagnie, perso, perso_in_compagnie 
+								WHERE banque_compagnie.id_perso = perso.id_perso 
+								AND perso.id_perso = perso_in_compagnie.id_perso
+								AND perso_in_compagnie.id_compagnie='$id_compagnie' 
+								AND demande_emprunt='1'";
+						$res = $mysqli->query($sql);
+						$nb_demandes_emprunt_compagnie = $res->num_rows;
+						
+					}
 				}
 				
 				// Le perso est-il membre de l'etat major de son camp ?
@@ -1252,6 +1283,12 @@ if($dispo || !$admin){
 				
 				if ($nb_em) {
 					$pourc_icone = "12%";
+					
+					// Verifier nombre compagnies en attente de validation
+					$sql = "SELECT * FROM em_creer_compagnie WHERE camp='$clan_perso'";
+					$res = $mysqli->query($sql);
+					$nb_compagnie_attente_em = $res->num_rows;
+					
 				} else {
 					$pourc_icone = "14%";
 				}
@@ -1325,12 +1362,14 @@ if($dispo || !$admin){
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_messagerie; ?>" alt="messagerie"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=88 height=92 border=0 src="../images/classement2.png" alt="classement"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>>
+								<a href="compagnie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a>
+							</td>
 							<?php
 							if ($nb_em) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=117 height=89 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
-							<?php
+							<?php	
 							}
 							?>
 						</tr>
@@ -1346,13 +1385,46 @@ if($dispo || !$admin){
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a> <?php if($nb_nouveaux_mes) { echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; if($nb_nouveaux_mes > 1) echo "x"; echo " message"; if($nb_nouveaux_mes > 1) echo "s"; echo ")</font>"; } ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>>
+								<a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a>
+								<?php 
+								if($nb_nouveaux_mes) { 
+									echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; 
+									if($nb_nouveaux_mes > 1) {
+										echo "x";
+									}
+									echo " message"; 
+									if($nb_nouveaux_mes > 1) {
+										echo "s";
+									}
+									echo ")</font>"; 
+								} 
+								?>
+							</td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=16 border=0 src="../images/classement_titrev2.png"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>>
+								<a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a>
+								<?php
+								if ($nb_demandes_adhesion_compagnie) {
+									echo "<br/><font color=red><b>$nb_demandes_adhesion_compagnie</b> adhésion(s) en attente</font>";
+								}
+								
+								if ($nb_demandes_emprunt_compagnie) {
+									echo "<br/><font color=red><b>$nb_demandes_emprunt_compagnie</b> emprunt(s) en attente</font>";
+								}
+								?>
+							</td>
 							<?php
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=83 height=16 border=0 src="../images/em_titrev2.png" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>>
+								<a href="etat_major.php" target='_blank'><img width=83 height=16 border=0 src="../images/em_titrev2.png" alt="etat major"></a>
+								<?php
+								if ($nb_compagnie_attente_em) {
+									echo "<br/><font color=red><b>$nb_compagnie_attente_em</b> compagnie(s) en attente de validation</font>";
+								}
+								?>
+							</td>
 							<?php
 							}
 							?>
