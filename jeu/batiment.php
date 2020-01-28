@@ -954,16 +954,16 @@ if($dispo){
 							// achat armes et armures en tout genre
 							echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 							echo "Choix :";
-							echo "<select name=\"choix\">";
+							echo "<select name=\"choix\" onchange=\"this.form.submit()\">";
 							echo "<OPTION value=armes";
-							if (isset($_POST["ch"])){
+							if (isset($_POST["choix"])){
 								if($_POST["choix"] == "armes"){
 									echo " selected ";
 								}
 							}
 							echo ">armes</option>"; 
 							echo "<OPTION value=armures";
-							if (isset($_POST["ch"])){
+							if (isset($_POST["choix"])){
 								if($_POST["choix"] == "armures"){
 									echo " selected ";
 								}
@@ -973,7 +973,7 @@ if($dispo){
 							echo "<input type=\"submit\" name=\"ch\" value=\"ok\">";
 							echo "</form>";
 							
-							if (isset($_POST["ch"])){
+							if (isset($_POST["choix"])){
 								
 								$choix = $_POST["choix"];
 								
@@ -1228,12 +1228,12 @@ if($dispo){
 									
 									echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 								
-									$id_o = $t["id_objet"];
-									$nom_o = $t["nom_objet"];
-									$image_o = "objet".$id_o.".png";
-									$description_o = $t["description_objet"];
-									$poid_o = $t["poids_objet"];
-									$cout_o = $t["coutOr_objet"];
+									$id_o 			= $t["id_objet"];
+									$nom_o 			= $t["nom_objet"];
+									$image_o 		= "objet".$id_o.".png";
+									$description_o 	= $t["description_objet"];
+									$poid_o 		= $t["poids_objet"];
+									$cout_o 		= $t["coutOr_objet"];
 									
 									// Calcul du rabais
 									$rabais = floor(($cout_o * $pourcentage_rabais)/100);
@@ -1261,23 +1261,23 @@ if($dispo){
 							// Armes, Armures et Objets
 							echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 							echo "Choix :";
-							echo "<select name=\"choix\">";
+							echo "<select name=\"choix\" onchange=\"this.form.submit()\">";
 							echo "<OPTION value=objets"; 
-							if (isset($_POST["ch"])){
+							if (isset($_POST["choix"])){
 								if($_POST["choix"] == "objets"){
 									echo " selected ";
 								}
 							}
 							echo">objets</option>"; 
 							echo "<OPTION value=armes";
-							if (isset($_POST["ch"])){
+							if (isset($_POST["choix"])){
 								if($_POST["choix"] == "armes"){
 									echo " selected ";
 								}
 							}
 							echo ">armes</option>"; 
 							echo "<OPTION value=armures";
-							if (isset($_POST["ch"])){
+							if (isset($_POST["choix"])){
 								if($_POST["choix"] == "armures"){
 									echo " selected ";
 								}
@@ -1287,7 +1287,7 @@ if($dispo){
 							echo "<input type=\"submit\" name=\"ch\" value=\"ok\">";
 							echo "</form>";
 							
-							if (isset($_POST["ch"])){
+							if (isset($_POST["choix"])){
 								
 								$choix = $_POST["choix"];
 						
