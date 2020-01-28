@@ -33,12 +33,7 @@ while ($t_b = $res_b->fetch_assoc()) {
 		// Calcul nouvelle date activation canon
 		$date = time();
 		
-		if ($dla_canon != NULL) {
-			$new_dla = get_new_dla($date, $dla_canon);
-			$new_dla = $new_dla + DUREE_TOUR;
-		} else {
-			$new_dla = $date + DUREE_TOUR;
-		}
+		$new_dla = $date + DUREE_TOUR;
 		
 		// MAJ date_activation canon 
 		$sql = "UPDATE instance_batiment_canon SET date_activation=FROM_UNIXTIME($new_dla) WHERE id_instance_canon='$id_instance_canon'";
