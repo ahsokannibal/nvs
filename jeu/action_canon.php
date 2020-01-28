@@ -46,7 +46,7 @@ while ($t_b = $res_b->fetch_assoc()) {
 		$perception_canon	= 5;
 		
 		// y a t-il un ennemi en visu
-		$sql_v = "SELECT idPerso_carte, idJoueur_perso, nom_perso, type_perso, x_perso, y_perso, pv_perso, protec_perso, bonus_perso, or_perso, clan FROM carte, perso  
+		$sql_v = "SELECT idPerso_carte, idJoueur_perso, nom_perso, type_perso, x_perso, y_perso, pi_perso, xp_perso, pc_perso, pv_perso, protec_perso, bonus_perso, or_perso, clan FROM carte, perso  
 					WHERE perso.id_perso = carte.idPerso_carte 
 					AND occupee_carte='1' 
 					AND x_carte >= $x_canon - $perception_canon
@@ -70,6 +70,9 @@ while ($t_b = $res_b->fetch_assoc()) {
 			$y_cible		= $t_v['y_perso'];
 			$or_cible		= $t_v['or_perso'];
 			$nom_cible		= $t_v['nom_perso'];
+			$pi_cible		= $t_v['pi_perso'];
+			$xp_cible		= $t_v['xp_perso'];
+			$pc_cible		= $t_v['pc_perso'];
 			
 			$couleur_clan_cible = couleur_clan($camp_cible);
 			
@@ -137,11 +140,30 @@ while ($t_b = $res_b->fetch_assoc()) {
 					// Calcul gains (po et xp)
 					$perte_po = gain_po_mort($or_cible);
 					
-					// TODO
-					$perte_xp_cible = 0;
+					// Chef
+					if ($type_cible == 1) {
+						// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+						// Calcul PI
+						$pi_perdu 		= floor(($pi_cible * 5) / 100);
+						$pi_perso_fin 	= $pi_cible - $pi_perdu;
+						
+						// Calcul XP
+						$xp_perdu		= floor(($xp_cible * 5) / 100);
+						$xp_perso_fin	= $xp_cible - $xp_perdu;
+						
+						// Calcul PC
+						$pc_perdu		= floor(($pc_perso * 5) / 100);
+						$pc_perso_fin	= $pc_perso - $pc_perdu;
+					}
+					else {
+						// Quand un grouillot meurt, il perd tout ses Pi
+						$pi_perso_fin = 0;
+						$xp_perso_fin = $xp_cible;
+						$pc_perso_fin = $pc_perso;
+					}
 
 					// MAJ perte xp/po/stat cible
-					$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$perte_xp_cible, pi_perso=0, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+					$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 					$mysqli->query($sql);
 					
 					if ($perte_po > 0) {
@@ -205,7 +227,7 @@ while ($t_b = $res_b->fetch_assoc()) {
 						
 						// Perso
 						// Récupération des infos du perso
-						$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pv_perso, pvMax_perso, or_perso, clan, id_grade
+						$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, pi_perso, pc_perso, x_perso, y_perso, pv_perso, pvMax_perso, or_perso, type_perso, clan, id_grade
 								FROM perso, perso_as_grade 
 								WHERE perso_as_grade.id_perso = perso.id_perso
 								AND perso.id_perso='$id_cible_collat'";
@@ -215,6 +237,8 @@ while ($t_b = $res_b->fetch_assoc()) {
 						$id_joueur_collat 	= $t_collat["idJoueur_perso"];
 						$nom_collat			= $t_collat["nom_perso"];
 						$xp_collat 			= $t_collat["xp_perso"];
+						$pi_collat			= $t_collat["pi_perso"];
+						$pc_collat			= $t_collat["pc_perso"];
 						$x_collat 			= $t_collat["x_perso"];
 						$y_collat 			= $t_collat["y_perso"];
 						$pv_collat 			= $t_collat["pv_perso"];
@@ -223,6 +247,7 @@ while ($t_b = $res_b->fetch_assoc()) {
 						$image_perso_collat = $t_collat["image_perso"];
 						$clan_collat 		= $t_collat["clan"];
 						$grade_collat		= $t_collat['id_grade'];
+						$tp_collat			= $t_collat['type_perso'];
 						
 						echo "---- Collat sur ".$id_cible_collat;
 						
@@ -249,11 +274,30 @@ while ($t_b = $res_b->fetch_assoc()) {
 							// Calcul gains (po et xp)
 							$perte_po = gain_po_mort($or_collat);
 							
-							// TODO
-							$perte_xp_collat = 0;
+							// Chef
+							if ($type_cible == 1) {
+								// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+								// Calcul PI
+								$pi_perdu 		= floor(($pi_collat * 5) / 100);
+								$pi_perso_fin 	= $pi_collat - $pi_perdu;
+								
+								// Calcul XP
+								$xp_perdu		= floor(($xp_collat * 5) / 100);
+								$xp_perso_fin	= $xp_collat - $xp_perdu;
+								
+								// Calcul PC
+								$pc_perdu		= floor(($pc_collat * 5) / 100);
+								$pc_perso_fin	= $pc_collat - $pc_perdu;
+							}
+							else {
+								// Quand un grouillot meurt, il perd tout ses Pi
+								$pi_perso_fin = 0;
+								$xp_perso_fin = $xp_collat;
+								$pc_perso_fin = $pc_collat;
+							}
 		
 							// MAJ perte xp/po/stat cible
-							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$perte_xp_collat, pi_perso=0, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
+							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
 							$mysqli->query($sql);
 							
 							if ($perte_po > 0) {
