@@ -75,8 +75,15 @@ if($dispo || $admin){
 	<head>
 		<title>Nord VS Sud</title>
 		
-		<meta charset="utf-8"/>
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		
 		<link href="../style2.css" rel="stylesheet" type="text/css">
+		
 	</head>
 
 	<body>
@@ -1408,13 +1415,11 @@ if($dispo || $admin){
 						<td align=center><b>Grade : <a href="grades.php" target='_blank'></b><?php echo $nom_grade_perso; ?>
 							<img alt="<?php echo $nom_grade_perso; ?>" title="<?php echo $nom_grade_perso; ?>" src="../images/grades/<?php echo $id_grade_perso . ".gif";?>" width=40 height=40></a>
 						</td>
-						<td align=center><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 					</tr>
 					<tr>
 						<td align=center><b>Chef : </b><?php echo $nom_perso_chef;?></td>
 						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
 						<td align=center><b>Compagnie : </b><?php echo $nom_compagnie_perso; ?></td>
-						<td align=center><b>Section : </b><?php echo ""; ?></td>
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
@@ -1643,11 +1648,18 @@ if($dispo || $admin){
 				$res_portee_dist = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_dist, $porteeMax_arme_dist, $perc);
 				
 				?>
-				<table border=0 align="center" cellspacing="0" cellpadding="10" style:no-padding>
+				<table border=0 align="center" cellspacing="0" cellpadding="10">
 					<tr>
 						<td valign="top">
 						
-							<table style="border:0px; background-color: cornflowerblue; min-width: 375;">
+							<table style="border:0px; min-width: 375px;" width="100%">
+								<tr>
+									<td align='left'><b>PV</b></td>
+									<td align='center'><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
+								</tr>
+							</table>
+						
+							<table style="border:0px; background-color: cornflowerblue; min-width: 375px;" width="100%">
 								<tr>
 									<td>
 										<table border="2" bordercolor="white" > <!-- border-collapse:collapse -->
@@ -1731,7 +1743,7 @@ if($dispo || $admin){
 							
 							<br />
 							
-							<table border="2" style="background-color: palevioletred; min-width: 430;">
+							<table border="2" style="background-color: palevioletred;" width="100%">
 								<tr>
 									<td colspan='3'bgcolor="lightgrey"><center><b>Caractèristiques de combat</b></center></td>
 								</tr>
@@ -2052,7 +2064,7 @@ if($dispo || $admin){
 				$taille_table = ($perception_perso + $bonusPerception_perso) * 2 + 2;
 				$taille_table = $taille_table * 40;
 				
-				echo "<table border=0 width=\"$taille_table\" height=\"$taille_table\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" style:no-padding>";
+				echo "<table border=0 width=\"$taille_table\" height=\"$taille_table\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" style=\"text-align: center;\" style:no-padding>";
 				
 				//affichage des abscisses
 				echo "	<tr>
@@ -2130,12 +2142,17 @@ if($dispo || $admin){
 													$idI_bat = $tab['idPerso_carte'];
 													
 													// recuperation du type de bat et du camp
-													$sql_im = "SELECT id_batiment, camp_instance FROM instance_batiment WHERE id_instanceBat='$idI_bat'";
+													$sql_im = "SELECT instance_batiment.id_batiment, camp_instance, nom_instance, nom_batiment
+																FROM instance_batiment, batiment 
+																WHERE instance_batiment.id_batiment = batiment.id_batiment
+																AND id_instanceBat='$idI_bat'";
 													$res_im = $mysqli->query($sql_im);
 													$t_im = $res_im->fetch_assoc();
 													
-													$type_bat = $t_im["id_batiment"];
-													$camp_bat = $t_im["camp_instance"];
+													$type_bat 	= $t_im["id_batiment"];
+													$camp_bat 	= $t_im["camp_instance"];
+													$nom_i_bat	= $t_im["nom_instance"];
+													$nom_bat	= $t_im["nom_batiment"];
 													
 													if($camp_bat == '1'){
 														$camp_bat2 = 'bleu';
@@ -2146,7 +2163,7 @@ if($dispo || $admin){
 													
 													$blason="mini_blason_".$camp_bat2.".gif";
 		
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<img src=../images/$blason>')\" onMouseOut=\"HideBulle()\" title=\"batiment mat ".$tab["idPerso_carte"]."\"></a></td>";
+													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='right' title=\"".$nom_bat." ".$nom_i_bat." [".$tab["idPerso_carte"]."]\"></a></td>";
 												}
 												else {
 											
@@ -2230,7 +2247,7 @@ if($dispo || $admin){
 									
 									if($y > $y_perso+1 || $y < $y_perso-1 || $x > $x_perso+1 || $x < $x_perso-1) {
 										if($nb_o){
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 title='objets à ramasser'/></td>";
+											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/></td>";
 										}
 										else {										
 											echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></td>";
@@ -2556,14 +2573,26 @@ if($dispo || $admin){
 		header("Location: ../index.php");
 	}
 	?>
-			<table border='0'>
-				<tr>
-					<td height='100'>&nbsp;</td>
-				</tr>
-			</table>
+		<table border='0'>
+			<tr>
+				<td height='100'>&nbsp;</td>
+			</tr>
+		</table>
 			
-		</body>
-	</html>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		
+		<script>
+		$(function () {
+		  $('[data-toggle="tooltip"]').tooltip()
+		})
+		</script>
+		
+	</body>
+</html>
 <?php
 }
 else {
