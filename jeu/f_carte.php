@@ -52,7 +52,8 @@ function is_pont($image) //vérifie si l'image de la carte occupée (passée en arg
 	return $image == I_PONT;
 }
 
-function cout_pm($fond) //donne le nombre de pm que coute le deplacement suivant le terrain
+// Donne le nombre de pm que coute le deplacement suivant le terrain
+function cout_pm($fond) 
 {
 	switch($fond) {
 		case(I_FORET): return 2; break; 	//foret
@@ -67,13 +68,32 @@ function cout_pm($fond) //donne le nombre de pm que coute le deplacement suivant
 	}
 }
 
-function get_malus_visu($fond) //donne les malus en visu suivant le terrain
+// Donne les malus en visu suivant le terrain
+function get_malus_visu($fond) 
 {
 	switch($fond) {
 		case(I_FORET): return -1; break; //foret
 		case(I_COLLINE): return 1; break; //colline
 		case(I_MONTAGNE): return 2; break; //montagne
 		default: return 0;
+	}
+}
+
+// Donne le nom du terrain
+function get_nom_terrain($fond) {
+	switch($fond) {
+		case(I_PLAINE): return "Plaine"; break;
+		case(I_FORET): return "Forêt"; break;
+		case(I_EAU): return "Eau"; break;
+		case(I_EAU_P): return "Eau Profonde"; break;
+		case(I_MARECAGE): return "Marécage"; break;
+		case(I_DESERT): return "Désert"; break;
+		case(I_NEIGE): return "Neige"; break;
+		case(I_COLLINE): return "Colline"; break;
+		case(I_MONTAGNE): return "Montagne"; break;
+		case(I_ROUTE_B): return "Route"; break;
+		case(I_ROUTE_R): return "Route"; break;
+		default: return "Inconnu";
 	}
 }
 

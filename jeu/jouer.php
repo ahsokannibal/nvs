@@ -2106,137 +2106,127 @@ if($dispo || $admin){
 							}
 							else {
 								if ($tab["occupee_carte"]){
-									if($tab['image_carte'] == "coffre1t.png") {
-										// positionement du coffre present
-										echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?coffre=ok\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40\" title=\"coffre fermé\"></a></td>";
+									
+									// recuperation de l'image du pnj
+									if($tab['idPerso_carte'] >= 200000){
+										
+										$idI_pnj = $tab['idPerso_carte'];
+										
+										// recuperation du type de pnj
+										$sql_im = "SELECT instance_pnj.id_pnj, nom_pnj FROM instance_pnj, pnj WHERE instance_pnj.id_pnj = pnj.id_pnj AND idInstance_pnj='$idI_pnj'";
+										$res_im = $mysqli->query($sql_im);
+										$t_im = $res_im->fetch_assoc();
+										
+										$id_pnj_im 	= $t_im["id_pnj"];
+										$nom_pnj_im	= $t_im["nom_pnj"];
+										
+										$im_pnj="pnj".$id_pnj_im."t.png";
+										
+										$dossier_pnj = "images/pnj";
+
+										echo "	<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> 
+													<img border=0 src=\"../".$dossier_pnj."/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-placement='bottom' title=\"".$nom_pnj_im." [".$tab["idPerso_carte"]."]\">
+												</td>";
 									}
 									else {
-										if($tab['image_carte'] == "coffre2t.png") {
-											//positionement du coffre present
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40\" title=\"coffre ouvert\"></a></td>";
-										}
-										else{
-											// recuperation de l'image du pnj
-											if($tab['idPerso_carte'] >= 200000){
-												
-												$idI_pnj = $tab['idPerso_carte'];
-												
-												// recuperation du type de pnj
-												$sql_im = "SELECT instance_pnj.id_pnj, nom_pnj FROM instance_pnj, pnj WHERE instance_pnj.id_pnj = pnj.id_pnj AND idInstance_pnj='$idI_pnj'";
-												$res_im = $mysqli->query($sql_im);
-												$t_im = $res_im->fetch_assoc();
-												
-												$id_pnj_im 	= $t_im["id_pnj"];
-												$nom_pnj_im	= $t_im["nom_pnj"];
-												
-												$im_pnj="pnj".$id_pnj_im."t.png";
-												
-												$dossier_pnj = "images/pnj";
-	
-												echo "	<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> 
-															<a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../".$dossier_pnj."/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-placement='bottom' title=\"".$nom_pnj_im." [".$tab["idPerso_carte"]."]\"></a>
-														</td>";
+										//  traitement Batiment
+										if($tab['idPerso_carte'] >= 50000 && $tab['idPerso_carte'] < 200000){
+											
+											$idI_bat = $tab['idPerso_carte'];
+											
+											// recuperation du type de bat et du camp
+											$sql_im = "SELECT instance_batiment.id_batiment, camp_instance, nom_instance, nom_batiment
+														FROM instance_batiment, batiment 
+														WHERE instance_batiment.id_batiment = batiment.id_batiment
+														AND id_instanceBat='$idI_bat'";
+											$res_im = $mysqli->query($sql_im);
+											$t_im = $res_im->fetch_assoc();
+											
+											$type_bat 	= $t_im["id_batiment"];
+											$camp_bat 	= $t_im["camp_instance"];
+											$nom_i_bat	= $t_im["nom_instance"];
+											$nom_bat	= $t_im["nom_batiment"];
+											
+											if($camp_bat == '1'){
+												$camp_bat2 = 'bleu';
 											}
-											else{
-												//  traitement Batiment
-												if($tab['idPerso_carte'] >= 50000 && $tab['idPerso_carte'] < 200000){
+											if($camp_bat == '2'){
+												$camp_bat2 = 'rouge';
+											}
+											
+											$blason="mini_blason_".$camp_bat2.".gif";
+
+											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"".$nom_bat." ".$nom_i_bat." [".$tab["idPerso_carte"]."]\"></td>";
+										}
+										else {
+									
+											if($tab['image_carte'] == "murt.png"){
+												//positionement du mur
+												echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<img src=../images/murs/mur.jpeg>')\" onMouseOut=\"HideBulle()\" title=\"mur\"></td>";
+											}
+											else {
+												
+												$id_perso_im 	= $tab['idPerso_carte'];
+												$fond_im 		= $tab["fond_carte"];
+												
+												$nom_terrain = get_nom_terrain($fond_im);
+												
+												//recuperation du type de perso (image)
+												$sql_perso_im ="SELECT * FROM perso WHERE id_perso='$id_perso_im'";
+												$res_perso_im = $mysqli->query($sql_perso_im);
+												$t_perso_im = $res_perso_im->fetch_assoc();
+												
+												$im_perso 	= $t_perso_im["image_perso"];
+												$nom_ennemi = $t_perso_im['nom_perso'];
+												$id_ennemi 	= $t_perso_im['id_perso'];
+												$clan_e 	= $t_perso_im['clan'];
+												
+												if($clan_e == 1){
+													$clan_ennemi 	= 'rond_b.png';
+													$couleur_clan_e = 'blue';
+													$image_profil 	= "Nord.gif";
+												}
+												if($clan_e == 2){
+													$clan_ennemi 	= 'rond_r.png';
+													$couleur_clan_e = 'red';
+													$image_profil 	= "Sud.gif";
+												}
+												
+												// recuperation de l'id de la compagnie 
+												$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso_im' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+												$res_groupe = $mysqli->query($sql_groupe);
+												$t_groupe = $res_groupe->fetch_assoc();
+												
+												$id_groupe = $t_groupe['id_compagnie'];
+												
+												$nom_compagnie = '';
+												
+												if(isset($id_groupe) && $id_groupe != ''){
+													// recuperation des infos sur la compagnie (dont le nom)
+													$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_groupe'";
+													$res_groupe2 = $mysqli->query($sql_groupe2);
+													$t_groupe2 = $res_groupe2->fetch_assoc();
 													
-													$idI_bat = $tab['idPerso_carte'];
-													
-													// recuperation du type de bat et du camp
-													$sql_im = "SELECT instance_batiment.id_batiment, camp_instance, nom_instance, nom_batiment
-																FROM instance_batiment, batiment 
-																WHERE instance_batiment.id_batiment = batiment.id_batiment
-																AND id_instanceBat='$idI_bat'";
-													$res_im = $mysqli->query($sql_im);
-													$t_im = $res_im->fetch_assoc();
-													
-													$type_bat 	= $t_im["id_batiment"];
-													$camp_bat 	= $t_im["camp_instance"];
-													$nom_i_bat	= $t_im["nom_instance"];
-													$nom_bat	= $t_im["nom_batiment"];
-													
-													if($camp_bat == '1'){
-														$camp_bat2 = 'bleu';
-													}
-													if($camp_bat == '2'){
-														$camp_bat2 = 'rouge';
-													}
-													
-													$blason="mini_blason_".$camp_bat2.".gif";
-		
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"".$nom_bat." ".$nom_i_bat." [".$tab["idPerso_carte"]."]\"></a></td>";
+													$nom_compagnie = addslashes($t_groupe2['nom_compagnie']);
+												}
+												
+												if(isset($nom_compagnie) && trim($nom_compagnie) != ''){
+													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
+													echo "	<div width=40 height=40 style=\"position: relative;\">";
+													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													echo "		<img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
+													echo "	</div>";
+													echo "</td>";
 												}
 												else {
-											
-													if($tab['image_carte'] == "murt.png"){
-														//positionement du mur
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 onMouseOver=\"AffBulle('<img src=../images/murs/mur.jpeg>')\" onMouseOut=\"HideBulle()\" title=\"mur\"></td>";
-													}
-													else {
-														
-														$id_perso_im = $tab['idPerso_carte'];
-														
-														//recuperation du type de perso (image)
-														$sql_perso_im ="SELECT * FROM perso WHERE id_perso='$id_perso_im'";
-														$res_perso_im = $mysqli->query($sql_perso_im);
-														$t_perso_im = $res_perso_im->fetch_assoc();
-														
-														$im_perso 	= $t_perso_im["image_perso"];
-														$nom_ennemi = $t_perso_im['nom_perso'];
-														$id_ennemi 	= $t_perso_im['id_perso'];
-														$clan_e 	= $t_perso_im['clan'];
-														
-														if($clan_e == 1){
-															$clan_ennemi 	= 'rond_b.png';
-															$couleur_clan_e = 'blue';
-															$image_profil 	= "Nord.gif";
-														}
-														if($clan_e == 2){
-															$clan_ennemi 	= 'rond_r.png';
-															$couleur_clan_e = 'red';
-															$image_profil 	= "Sud.gif";
-														}
-														
-														// recuperation de l'id de la compagnie 
-														$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso_im' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
-														$res_groupe = $mysqli->query($sql_groupe);
-														$t_groupe = $res_groupe->fetch_assoc();
-														
-														$id_groupe = $t_groupe['id_compagnie'];
-														
-														if(isset($groupe)){
-															$groupe = '';
-														}
-														
-														if(isset($id_groupe) && $id_groupe != ''){
-															// recuperation des infos sur la compagnie (dont le nom)
-															$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_groupe'";
-															$res_groupe2 = $mysqli->query($sql_groupe2);
-															$t_groupe2 = $res_groupe2->fetch_assoc();
-															
-															$groupe = addslashes($t_groupe2['nom_compagnie']);
-														}
-														
-														if(isset($groupe) && $groupe != ''){
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\">";
-															echo "	<div width=40 height=40 style=\"position: relative;\">";
-															echo "		<div style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-															echo "		<img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a>";
-															echo "	</div>";
-															echo "</td>";
-														}
-														else {
-															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\">";
-															echo "	<div width=40 height=40 style=\"position: relative;\">";
-															echo "		<div style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-															echo "		<img class=\"\" border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 /></a>";
-															echo "	</div>";
-															echo "</td>";
-														}
-													}
+													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
+													echo "	<div width=40 height=40 style=\"position: relative;\">";
+													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													echo "		<img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
+													echo "	</div>";
+													echo "</td>";
 												}
-											}										
+											}
 										}
 									}
 								}
