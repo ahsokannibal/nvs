@@ -10,7 +10,7 @@ $mysqli = db_connexion();
 include ('../nb_online.php');
 
 // Traitement selection perso
-if (isset($_POST["select_perso"]) && $_POST["select_perso"] == "ok" && isset($_POST["liste_perso"])) {
+if (isset($_POST["liste_perso"]) && $_POST["liste_perso"] != "") {
 	$id_perso = $_SESSION['id_perso'] = $_POST["liste_perso"];
 }
 
@@ -1382,25 +1382,25 @@ if($dispo || !$admin){
 						</td>
 						<td align=center>
 							<form method='post' action='jouer.php'>
-								<b>Nom : </b><select name='liste_perso'>
-						<?php 
-						while($t_liste_perso = $res->fetch_assoc()) {
-							
-							$id_perso_liste 	= $t_liste_perso["id_perso"];
-							$nom_perso_liste 	= $t_liste_perso["nom_perso"];
-							$chef_perso			= $t_liste_perso["chef"];
-							
-							if ($chef_perso) {
-								$nom_perso_chef = $nom_perso_liste;
-							}
-							
-							echo "<option value='$id_perso_liste'";
-							if ($id_perso == $id_perso_liste) {
-								echo " selected";
-							}
-							echo ">$nom_perso_liste [$id_perso_liste]</option>";
-						}
-						?>
+								<b>Nom : </b><select name='liste_perso' onchange="this.form.submit()">
+								<?php 
+								while($t_liste_perso = $res->fetch_assoc()) {
+									
+									$id_perso_liste 	= $t_liste_perso["id_perso"];
+									$nom_perso_liste 	= $t_liste_perso["nom_perso"];
+									$chef_perso			= $t_liste_perso["chef"];
+									
+									if ($chef_perso) {
+										$nom_perso_chef = $nom_perso_liste;
+									}
+									
+									echo "<option value='$id_perso_liste'";
+									if ($id_perso == $id_perso_liste) {
+										echo " selected";
+									}
+									echo ">$nom_perso_liste [$id_perso_liste]</option>";
+								}
+								?>
 								</select>
 								<input type='submit' name='select_perso' value='ok' />
 							</form>
