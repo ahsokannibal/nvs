@@ -9,13 +9,10 @@ $mysqli = db_connexion();
 include ('../nb_online.php');
 
 // recupération config jeu
-$sql = "SELECT disponible FROM config_jeu";
-$res = $mysqli->query($sql);
-$t_dispo = $res->fetch_assoc();
+$dispo = config_dispo_jeu($mysqli);
+$admin = admin_perso($mysqli, $_SESSION["id_perso"]);
 
-$dispo = $t_dispo["disponible"];
-
-if($dispo){
+if($dispo || $admin){
 	
 	if(isset($_SESSION["id_perso"])){
 		
@@ -1652,4 +1649,11 @@ if($dispo){
 			}
 		}
 	}
+}
+else {
+	// logout
+	$_SESSION = array(); // On ecrase le tableau de session
+	session_destroy(); // On detruit la session
+	
+	header("Location: ../index2.php");
 }
