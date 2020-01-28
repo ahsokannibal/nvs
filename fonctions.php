@@ -360,13 +360,6 @@ function reste_pv($pv) {
 // Fonction qui vérifie si il y a nouveau tour
 function nouveau_tour($date, $dla) {
 	return $date >= $dla;
-} 
-
-// Fonction qui récupére la nouvelle DLA
-function get_new_dla($date, $dla) {
-	$ecart = $date - $dla;
-	$nb_tour = intval($ecart / DUREE_TOUR);
-	return $dla + $nb_tour * DUREE_TOUR;
 }
 
 // Fonction qui vérifie si le temps passé aprés l'activation du gel est essez grand pour accepter le degel
