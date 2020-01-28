@@ -22,7 +22,7 @@ if(isset($_SESSION["id_perso"])){
 $dispo = config_dispo_jeu($mysqli);
 $admin = admin_perso($mysqli, $id_perso);
 
-if($dispo || !$admin){
+if($dispo || $admin){
 	
 	if(isset($_SESSION["id_perso"])){
 		
