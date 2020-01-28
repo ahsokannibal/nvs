@@ -2122,17 +2122,19 @@ if($dispo || $admin){
 												$idI_pnj = $tab['idPerso_carte'];
 												
 												// recuperation du type de pnj
-												$sql_im = "SELECT id_pnj FROM instance_pnj WHERE idInstance_pnj='$idI_pnj'";
+												$sql_im = "SELECT instance_pnj.id_pnj, nom_pnj FROM instance_pnj, pnj WHERE instance_pnj.id_pnj = pnj.id_pnj AND idInstance_pnj='$idI_pnj'";
 												$res_im = $mysqli->query($sql_im);
 												$t_im = $res_im->fetch_assoc();
 												
-												$id_pnj_im = $t_im["id_pnj"];
+												$id_pnj_im 	= $t_im["id_pnj"];
+												$nom_pnj_im	= $t_im["nom_pnj"];
+												
 												$im_pnj="pnj".$id_pnj_im."t.png";
 												
 												$dossier_pnj = "images/pnj";
 	
 												echo "	<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> 
-															<a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../".$dossier_pnj."/".$tab["image_carte"]."\" width=40 height=40 title=\"pnj mat ".$tab["idPerso_carte"]."\"></a>
+															<a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../".$dossier_pnj."/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-placement='bottom' title=\"".$nom_pnj_im." [".$tab["idPerso_carte"]."]\"></a>
 														</td>";
 											}
 											else{
@@ -2163,7 +2165,7 @@ if($dispo || $admin){
 													
 													$blason="mini_blason_".$camp_bat2.".gif";
 		
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='right' title=\"".$nom_bat." ".$nom_i_bat." [".$tab["idPerso_carte"]."]\"></a></td>";
+													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <a href=\"jouer.php?infoid=".$tab["idPerso_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"".$nom_bat." ".$nom_i_bat." [".$tab["idPerso_carte"]."]\"></a></td>";
 												}
 												else {
 											
