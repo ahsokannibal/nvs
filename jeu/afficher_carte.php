@@ -65,6 +65,12 @@ if (@$_SESSION["id_perso"]) {
 		echo '<meta http-equiv="refresh" content="1;URL=carte.php">';
 	}
 	else {
+		
+		// Le perso appartient-il à une compagnie 
+		$sql = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+		$res = $mysqli->query($sql);
+		$nb_compagnie = $res->num_rows;		
+		
 		if(isset($_POST['Submit'])){
 			
 			// Enlever le fond
@@ -124,11 +130,13 @@ if (@$_SESSION["id_perso"]) {
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							if ($nb_compagnie) {
+								echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							}
 							echo "</div>";
 							echo "</form>";
 						}
-						else if ($_POST['Submit'] == "cercles sur ma compagnie") {
+						else if ($_POST['Submit'] == "cercles sur ma compagnie" && $nb_compagnie) {
 							
 							echo "<center><h1>Carte Stratégique - Ma compagnie</h1></center>";
 							
@@ -156,7 +164,9 @@ if (@$_SESSION["id_perso"]) {
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							if ($nb_compagnie) {
+								echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							}
 							echo "</div>";
 							echo "</form>";
 						}
@@ -171,7 +181,9 @@ if (@$_SESSION["id_perso"]) {
 							echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							if ($nb_compagnie) {
+								echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+							}
 							echo "</div>";
 							echo "</form>";
 						}
@@ -191,7 +203,9 @@ if (@$_SESSION["id_perso"]) {
 			echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
-			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+			if ($nb_compagnie) {
+				echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+			}
 			echo "</div>";
 			echo "</form>";
 			
