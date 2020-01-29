@@ -17,6 +17,12 @@ if($dispo || $admin){
 
 	$id_perso = $_SESSION["id_perso"];
 	
+	$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$id_joueur = $t["idJoueur_perso"];
+	
 	$carte = "carte";
 	$X_MAX = X_MAX;
 	$Y_MAX = Y_MAX;
@@ -192,8 +198,13 @@ if($dispo || $admin){
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link href="description.css" rel="stylesheet" type="text/css">
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	
 	<body>
@@ -714,7 +725,12 @@ if($dispo || $admin){
 					if ($pa_perso == $paMax_perso && $pm_perso >= 4 && $fond_carte_perso == '1.gif') {
 						
 						// recuperation des donnees de la carte
-						$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perception_perso AND x_carte <= $x_perso + $perception_perso AND y_carte <= $y_perso + $perception_perso AND y_carte >= $y_perso - $perception_perso ORDER BY y_carte DESC, x_carte";
+						$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
+								FROM $carte WHERE x_carte >= $x_perso - $perception_perso 
+								AND x_carte <= $x_perso + $perception_perso 
+								AND y_carte <= $y_perso + $perception_perso 
+								AND y_carte >= $y_perso - $perception_perso 
+								ORDER BY y_carte DESC, x_carte";
 						$res = $mysqli->query($sql);
 						$tab = $res->fetch_assoc(); 
 							
@@ -738,24 +754,64 @@ if($dispo || $admin){
 									
 									if ($tab["occupee_carte"]){
 										
-										$image_perso = $tab["image_carte"];
-										$id_perso_carte = $tab["idPerso_carte"];
+										$image_carte 	= $tab["image_carte"];
+										$id_perso_carte = $id_cible = $tab["idPerso_carte"];
+										$fond_im		= $tab["fond_carte"];
+										
+										$nom_terrain = get_nom_terrain($fond_im);
 										
 										if ($id_perso_carte >= 200000) {
+											// PNJ
 											$dossier_image = "images/pnj";
+											
+											$sql_p = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj='$id_cible'";
+											$res_p = $mysqli->query($sql_p);
+											$tab_p = $res_p->fetch_assoc(); 
+											
+											$nom_cible 	= $tab_p["nom_pnj"];
 										}
 										else if ($id_perso_carte < 50000) {
-											$dossier_image = "images_perso";
+											// PERSO
+											$dossier_config = get_dossier_image_joueur($mysqli, $id_joueur);
+											$dossier_image 	= "images_perso/".$dossier_config;
+											
+											$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_cible'";
+											$res_p = $mysqli->query($sql_p);
+											$tab_p = $res_p->fetch_assoc(); 
+											
+											$nom_cible 	= $tab_p["nom_perso"];
+											
 										}
 										else {
+											// BATIMENT
 											$dossier_image = "images_perso";
+											
+											$sql_p = "SELECT nom_batiment, nom_instance FROM batiment, instance_batiment 
+														WHERE batiment.id_batiment = instance_batiment.id_batiment 
+														AND id_instanceBat='$id_cible'";
+											$res_p = $mysqli->query($sql_p);
+											$tab_p = $res_p->fetch_assoc(); 
+											
+											$nom_cible 	= $tab_p["nom_batiment"]." ".$tab_p["nom_instance"];
 										}
 											
-										if(isset($id_perso_carte)){
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"> <img border=0 src=\"../".$dossier_image."/".$image_perso."\" width=40 height=40></td>";
+										if(isset($id_perso_carte) && $id_perso_carte < 50000){
+											echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
+											echo "	<div width=40 height=40 style=\"position: relative;\">";
+											echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_cible." [".$id_cible."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_cible . "</div>";
+											echo "		<img border=0 src=\"../".$dossier_image."/".$image_carte."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_cible." [".$id_cible."]</div><div>".$nom_terrain."</div>\" />";
+											echo "	</div>";
+											echo "</td>";
+										}
+										else if (isset($id_perso_carte)) {
+											echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
+											echo "	<img border=0 src=\"../".$dossier_image."/".$image_carte."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_cible." [".$id_cible."]</div><div>".$nom_terrain."</div>\" />";
+											echo "</td>";
 										}
 										else {
-											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+											echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
+											echo "<img border=0 src=\"../images_perso/".$image_carte."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_cible." [".$id_cible."]</div><div>".$nom_terrain."</div>\" \>";
+											echo "</td>";
 										}
 									}
 									else{
@@ -1733,6 +1789,20 @@ if($dispo || $admin){
 	}
 	
 	?>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		
+		<script>
+		$(function () {
+		  $('[data-toggle="tooltip"]').tooltip()
+		})
+		</script>
+	
+	</body>
+</html>
 <?php
 }
 else {
