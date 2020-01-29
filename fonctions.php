@@ -1,5 +1,5 @@
 <?php
-define ("DUREE_TOUR", 24*60*60);//12*60*60);
+define ("DUREE_TOUR", 46*60*60);//24*60*60);
 
 //%%%%%%%%%%%%%%%%%%//
 // FONCTION DE DB
