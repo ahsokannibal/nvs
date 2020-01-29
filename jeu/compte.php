@@ -69,51 +69,66 @@ if($dispo || $admin){
 					
 					if (isset($_POST['verif_mdp']) && $mdp_joueur == md5($_POST['verif_mdp'])) {
 						
+						// Changement email
 						if ($_POST['email_change'] != "" ) {
 						
 							if (!filtremail($_POST['email_change'])){
-								$mess = "<div class=\"erreur\">email incorrect</div>";
+								$mess .= "<div class=\"erreur\">email incorrect</div>";
 							}
 							else {
 								$email = $_POST['email_change'];
 								$sql = "UPDATE joueur SET email_joueur='$email' WHERE id_joueur ='".$id_joueur."'";
 								$mysqli->query($sql);
+								
+								$mess .= "<div class=\"info\">Email modifié avec succés.</div>";
 							}
 						}
 						
+						// Age
 						if (isset($_POST['age_change']) && $_POST['age_change'] != "") {
 							
 							$age = $_POST['age_change'];
 							$sql = "UPDATE joueur SET age_joueur='$age' WHERE id_joueur ='".$id_joueur."'";
 							$mysqli->query($sql);
+							
+							$mess .= "<div class=\"info\">Age modifié avec succés.</div>";
 						}
 						
+						// Pays
 						if (isset($_POST['pays_change']) && $_POST['pays_change'] != "") {
 							
 							$pays = $_POST['pays_change'];
 							$sql = "UPDATE joueur SET pays_joueur='$pays' WHERE id_joueur ='".$id_joueur."'";
 							$mysqli->query($sql);
+							
+							$mess .= "<div class=\"info\">Pays modifié avec succés.</div>";
 						}
 						
+						// Region
 						if (isset($_POST['region_change']) && $_POST['region_change'] != "") {
 							
 							$region = $_POST['region_change'];
 							$sql = "UPDATE joueur SET region_joueur='$region' WHERE id_joueur ='".$id_joueur."'";
 							$mysqli->query($sql);
+							
+							$mess .= "<div class=\"info\">Région modifié avec succés.</div>";
 						}
 						
+						// Changement de MDP
 						if (isset($_POST['mdp_change']) && $_POST['mdp_change'] != "" ) {
 							
 							$mdp = md5($_POST['mdp_change']);
 							$sql = "UPDATE joueur SET mdp_joueur='$mdp' WHERE id_joueur ='".$id_joueur."'";
 							$mysqli->query($sql);
 							
-							$sql = "UPDATE pun_users SET password='$mdp' WHERE username ='".$pseudo_p."'";
-							$mysqli->query($sql);
+							// mdp forum
+							//$sql = "UPDATE pun_users SET password='$mdp' WHERE username ='".$pseudo_p."'";
+							//$mysqli->query($sql);
 							
-							$mess =  "<div class=\"info\">Mot de passe chang&eacute;</div>";
+							$mess .=  "<div class=\"info\">Mot de passe chang&eacute;</div>";
 						}
 						
+						// Coche mail attaque
 						if (isset($_POST['mail_info'])){
 							
 							$statut = $_POST['mail_info'];
@@ -122,9 +137,20 @@ if($dispo || $admin){
 								$sql = "UPDATE joueur SET mail_info='1' WHERE id_joueur ='".$id_joueur."'";
 								$mysqli->query($sql);
 							}
+							
+							$mess .= "<div class=\"info\">Coche attaque modifié avec succés.</div>";
 						} 
 						else {
 							$sql = "UPDATE joueur SET mail_info='0' WHERE id_joueur ='".$id_joueur."'";
+							$mysqli->query($sql);
+						}
+						
+						// Dossier img
+						if (isset($_POST["select_dossier_img"])) {
+							
+							$new_dossier_img = $_POST["select_dossier_img"];
+							
+							$sql = "UPDATE joueur SET dossier_img='$new_dossier_img' WHERE id_joueur ='".$id_joueur."'";
 							$mysqli->query($sql);
 						}
 					}
@@ -136,16 +162,17 @@ if($dispo || $admin){
 				//recup infos			
 				$sql = "SELECT * FROM joueur WHERE id_joueur ='".$id_joueur."'";
 				$res = $mysqli->query($sql);
-				$tabAttr = $res->fetch_assoc();
+				$t = $res->fetch_assoc();
 				
-				$nom_joueur = $tabAttr["nom_joueur"];
-				$email_joueur = $tabAttr["email_joueur"];
-				$mdp_joueur = $tabAttr["mdp_joueur"];
-				$age_joueur = $tabAttr["age_joueur"];
-				$pays_joueur = $tabAttr["pays_joueur"];
-				$region_joueur = $tabAttr["region_joueur"];
-				$description_joueur = $tabAttr["description_joueur"];
-				$mail_info_joueur = $tabAttr["mail_info"];
+				$nom_joueur 		= $t["nom_joueur"];
+				$email_joueur 		= $t["email_joueur"];
+				$mdp_joueur 		= $t["mdp_joueur"];
+				$age_joueur 		= $t["age_joueur"];
+				$pays_joueur 		= $t["pays_joueur"];
+				$region_joueur 		= $t["region_joueur"];
+				$description_joueur = $t["description_joueur"];
+				$mail_info_joueur 	= $t["mail_info"];
+				$dossier_img_joueur = $t["dossier_img"];
 	?>
 <html>
 	<head>
@@ -179,17 +206,17 @@ if($dispo || $admin){
 		<center><td align="center"><a href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir geler votre perso ?'))">Geler son compte</a></center>
 		<center><b><font color='red'>Veuillez taper votre mot de passe pour changer vos informations</font></b></center>
 		
-		<table class="tab_erreur">
+		<table class="tab_erreur" width="100%">
 			<tr>
-				<td><?php echo $mess; ?></td>
+				<td align='center'><?php echo $mess; ?></td>
 			</tr>
 		</table>
 		
 		<form method="post" action="compte.php">
 			<table border="1" width='100%'>
 				<tr>
-					<td>Mot de passe : </td><td><label>Tapez votre mot de passe : <input type="text" name="verif_mdp" value="" size="20" maxlength="20" ></label></td>
-					<td><label>Nouveau mot de passe : <input type="text" name="mdp_change" value="" size="20" maxlength="20" ></label></td>
+					<td>Mot de passe : </td><td><label>Tapez votre mot de passe : <input type="password" name="verif_mdp" value="" size="20" maxlength="20" ></label></td>
+					<td><label>Nouveau mot de passe : <input type="password" name="mdp_change" value="" size="20" maxlength="20" ></label></td>
 				</tr>
 			</table>
 			
@@ -218,11 +245,57 @@ if($dispo || $admin){
 				</tr>
 			</table>
 			
+			<br />
+			
 			<table>
 				<tr>
 					<td><input type='checkbox' name='mail_info' <?php if($mail_info_joueur) echo 'checked';?> /> Recevoir un mail si on m'attaque</td>
 				</tr>
 			</table>
+			
+			<br />
+			
+			<table>
+				<tr>
+					<td>Images unités à utiliser :</td>
+					<td>
+						<select name='select_dossier_img'>
+							<option value='v1' <?php if ($dossier_img_joueur == 'v1') { echo "selected"; } ?>>V1</option>
+							<option value='v2' <?php if ($dossier_img_joueur == 'v2') { echo "selected"; } ?>>V2</option>
+						</select>
+					</td>
+					<td><a href="compte.php?voir_img=ok">Voir les images</a></td>
+				</tr>
+			</table>
+			
+			<?php
+			if (isset($_GET['voir_img']) && $_GET['voir_img'] == "ok") {
+			?>
+			
+			<table border='1'>
+				<tr>
+					<th>Unité</th><th>v1</th><th>v2</th>
+				</tr>
+				<tr>
+					<td>Cavalerie</td><td><img src="../images_perso/v1/cavalerie_nord.gif"> <img src="../images_perso/v1/cavalerie_sud.gif"></td><td><img src="../images_perso/v2/cavalerie_nord.gif"> <img src="../images_perso/v2/cavalerie_sud.gif"></td>
+				</tr>
+				<tr>
+					<td>Infanterie</td><td><img src="../images_perso/v1/infanterie_nord.gif"> <img src="../images_perso/v1/infanterie_sud.gif"></td><td><img src="../images_perso/v2/infanterie_nord.gif"> <img src="../images_perso/v2/infanterie_sud.gif"></td>
+				</tr>
+				<tr>
+					<td>Soigneur</td><td><img src="../images_perso/v1/soigneur_nord.gif"> <img src="../images_perso/v1/soigneur_sud.gif"></td><td><img src="../images_perso/v2/soigneur_nord.gif"> <img src="../images_perso/v2/soigneur_sud.gif"></td>
+				</tr>
+				<tr>
+					<td>Artillerie</td><td><img src="../images_perso/v1/artillerie_nord.gif"> <img src="../images_perso/v1/artillerie_sud.gif"></td><td><img src="../images_perso/v2/artillerie_nord.gif"> <img src="../images_perso/v2/artillerie_sud.gif"></td>
+				</tr>
+				<tr>
+					<td>Chien</td><td><img src="../images_perso/v1/toutou_nord.gif"> <img src="../images_perso/v1/toutou_sud.gif"></td><td><img src="../images_perso/v2/toutou_nord.gif"> <img src="../images_perso/v2/toutou_sud.gif"></td>
+				</tr>
+			</table>
+			
+			<?php
+			}
+			?>
 			
 			<input type="submit" name="eval_compte" value="Enregistrer">
 		</form>
