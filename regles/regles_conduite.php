@@ -35,6 +35,12 @@
 							<a class="nav-link" href="regles_armees.php">Les Armées</a>
 						</li>
 						<li class="nav-item">
+							<a class="nav-link" href="regles_unites.php">Les unités</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="regles_objets.php">Les objets, armes et thunes</a>
+						</li>
+						<li class="nav-item">
 							<a class="nav-link" href="regles_carte.php">La carte et les terrains</a>
 						</li>
 						<li class="nav-item">
