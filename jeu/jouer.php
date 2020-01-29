@@ -2228,16 +2228,16 @@ if($dispo || $admin){
 												if(isset($nom_compagnie) && trim($nom_compagnie) != ''){
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
-													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-													echo "		<img border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
+													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div><hr><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div><hr><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";
 													echo "</td>";
 												}
 												else {
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
-													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-													echo "		<img border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
+													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div><hr><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div><hr><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";
 													echo "</td>";
 												}
@@ -2458,71 +2458,25 @@ if($dispo || $admin){
 											<img src='../images/barre.png' />
 										</td>
 									</tr>
-									<?php // recuperation des infos du perso choisit
-									if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) {
-										
-										$infoid = $_GET["infoid"];
-										$sql = "SELECT nom_perso, message_perso FROM perso WHERE ID_perso='$infoid'";
-										$res = $mysqli->query($sql);
-										$tab = $res->fetch_assoc();
-										
-										$mess_infoid = stripslashes($tab["message_perso"]);
-										$nom_infoid = $tab["nom_perso"];
-									}?>
 									<tr>
 										<td background='../images/background.jpg'>
 											<table border='0'>
 												<tr>
 													<td>
-														<img src='../images/Pseudo.png' />
-													</td>
-													<td>
 														<img src='../images/Id.png' />
 													</td>
-												</tr>
-												<tr>
 													<td valign='top'>
-														<input type="text" value="<?php if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) echo $nom_infoid;?>" style=background-image:url('../images/background3.jpg');>
-													</td>
-													<td valign='top'>
-														<form method="post" action="evenement.php?infoid=<?php if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) echo $infoid; elseif(isset($_GET["infoid"]) && $_GET["infoid"] >= 10000) echo $_GET["infoid"];?>" target='_blank'>
-															<input type="text" maxlength="6" size="6" name="id_info" value="<?php if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) echo $infoid; elseif(isset($_GET["infoid"]) && $_GET["infoid"] >= 10000) echo $_GET["infoid"];?>" style="background-image:url('../images/background3.jpg');">
+														<form method="post" action="evenement.php" target='_blank'>
+															<input type="text" maxlength="6" size="6" name="id_info" value="" style="background-image:url('../images/background3.jpg');">
 															<input type="submit" value="Plus d'infos">
 														</form>
-													</td>
-												</tr>
-												<tr>
-													<td valign='top'>
-													<?php
-														if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) {
-															echo "<a href=\"nouveau_message.php?pseudo=$nom_infoid\" target='_blank'>";
-															echo "<img src=\"../images/msg.gif\" style=\"vertical-align:middle; margin-left:-5\" border='0' width='25' height='25'>";
-															echo "Envoyer un message</a>";
-														}
-														?>
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<img src='../images/Message.png' />
-													</td>
-													<td align='center'>
-														<img src='../images/Competences.png' />
-													</td>
-												</tr>
-												<tr>
-													<td>
-														<TEXTAREA style=background-image:url('../images/background3.jpg');><?php if (isset($_GET["infoid"]) && $_GET["infoid"] < 10000) echo br2nl2($mess_infoid); ?></TEXTAREA>
-													</td>
-													<td align='center'>
-														<a href='competence.php' target='_blank'><img src='../images/logo_competence.gif' alt='competence' width='75' height='75' border='0' /></a>	
 													</td>
 												</tr>
 											</table>
 										</td>
 									</tr>
 									<tr>
-										<td background='../images/background.jpg' align='left' colspan='2'>
+										<td background='../images/background.jpg' align='left' colspan='3'>
 											<?php 
 											echo "<a href=\"nouveau_message.php?visu=ok\" target='_blank'><img src='../images/Ecrire.png' border=0 /><img src='../images/Envoyer_message.png' border=0 />";
 											?>
@@ -2594,7 +2548,8 @@ if($dispo || $admin){
 		
 		<script>
 		$(function () {
-		  $('[data-toggle="tooltip"]').tooltip()
+		  $('[data-toggle="tooltip"]').tooltip();
+		  $('[data-toggle="popover"]').popover(); 
 		})
 		</script>
 		
