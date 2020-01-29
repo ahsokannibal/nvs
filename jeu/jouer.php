@@ -111,6 +111,8 @@ if($dispo || $admin){
 				// récupération de la couleur du camp
 				$couleur_clan_p = couleur_clan($clan_p);
 				
+				$dossier_img_joueur = get_dossier_image_joueur($mysqli, $id_joueur_perso);
+				
 				$X_MAX = X_MAX;
 				$Y_MAX = Y_MAX;
 				$carte = "carte";
@@ -2099,8 +2101,8 @@ if($dispo || $admin){
 							if ($x == $x_perso && $y == $y_perso){ 
 								echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
 								echo "	<div width=40 height=40 style=\"position: relative;\">";
-								echo "		<div style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_perso . "</div>";
-								echo "		<img class=\"\" border=0 src=\"../images_perso/$image_perso\" width=40 height=40 />";
+								echo "		<div style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_perso . "</div>";
+								echo "		<img class=\"\" border=0 src=\"../images_perso/$dossier_img_joueur/$image_perso\" width=40 height=40 />";
 								echo "	</div>";
 								echo "</td>";
 							}
@@ -2213,16 +2215,16 @@ if($dispo || $admin){
 												if(isset($nom_compagnie) && trim($nom_compagnie) != ''){
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
-													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-													echo "		<img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
+													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													echo "		<img border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
 													echo "	</div>";
 													echo "</td>";
 												}
 												else {
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
-													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-													echo "		<img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
+													echo "		<div data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													echo "		<img border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='tooltip' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_terrain."</div>\" />";
 													echo "	</div>";
 													echo "</td>";
 												}

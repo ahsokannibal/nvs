@@ -405,6 +405,7 @@ function admin_perso($mysqli, $id_perso){
 	$sql = "SELECT admin_perso FROM joueur, perso WHERE id_perso='$id_perso' AND perso.idJoueur_perso  = joueur.id_joueur";
 	$res = $mysqli->query($sql);
 	$t_admin = $res->fetch_assoc();
+	
 	return $t_admin["admin_perso"];
 }
 
@@ -416,7 +417,20 @@ function config_dispo_jeu($mysqli){
 	$sql = "SELECT disponible FROM config_jeu";
 	$res = $mysqli->query($sql);
 	$t_dispo = $res->fetch_assoc();
+	
 	return $t_dispo["disponible"];
+}
+
+/**
+ * Fonction qui retourne le dossier image utilisé par le joueur pour l'affichage des unités sur la map
+ * @return String	: le nom du dossier
+ */
+function get_dossier_image_joueur($mysqli, $id_joueur) {
+	$sql = "SELECT dossier_img FROM joueur WHERE id_joueur='$id_joueur'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	return $t["dossier_img"];
 }
 
 /**
@@ -486,5 +500,4 @@ function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
 	// Envoie du mail
 	mail($destinataire, $titre, $message, $headers);
 }
-
 ?>
