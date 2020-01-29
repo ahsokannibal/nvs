@@ -1235,7 +1235,7 @@ if($dispo || $admin){
 									// Calcul du rabais
 									$rabais = floor(($cout_o * $pourcentage_rabais)/100);
 									
-									echo "<tr><td><center>$nom_o</center></td><td align='center'><img src=\"../images/$image_o\" width=\"40\" height=\"40\"></td><td><center>$description_o</center></td><td><center>$poid_o</center></td>";?>
+									echo "<tr><td><center>$nom_o</center></td><td align='center'><img src=\"../images/objets/$image_o\" width=\"40\" height=\"40\"></td><td><center>$description_o</center></td><td><center>$poid_o</center></td>";?>
 									<td><?php echo "<center>".$cout_o;
 									if($rabais) {
 										$new_cout_o = $cout_o - $rabais;
