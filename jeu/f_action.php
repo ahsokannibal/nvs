@@ -206,7 +206,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			AND x_instance <= $x_bat + $nb_cases_gare
 			AND y_instance >= $y_bat - $nb_cases_gare
 			AND y_instance <= $y_bat + $nb_cases_gare
-			AND id_batiment='11'";
+			AND id_batiment='11' AND camp_instance='$camp_perso'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
@@ -218,6 +218,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			AND x_instance <= $x_bat + $nb_cases_rapat
 			AND y_instance >= $y_bat - $nb_cases_rapat
 			AND y_instance <= $y_bat + $nb_cases_rapat
+			AND camp_instance='$camp_perso'
 			AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9')";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();

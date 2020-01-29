@@ -1253,7 +1253,7 @@ if($dispo || $admin){
 						
 						/////////////////////
 						// forts et fortins
-						if($id_bat == '8' || $id_bat == '9'){
+						if($id_bat == '8' || $id_bat == '9') {
 						
 							// Armes, Armures et Objets
 							echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
@@ -1345,12 +1345,15 @@ if($dispo || $admin){
 								
 								// Armes
 								if($choix == "armes") {
-								
+									
+									echo "<br />";
+									
 									// Armes au CaC
 									echo "<table width=100% border=1>";
-									echo "<tr><th colspan=8>Armes CàC</th></tr>";
+									echo "<tr><th colspan=9>Armes CàC</th></tr>";
 									echo "<tr bgcolor=\"lightgreen\">";
 									echo "<th>arme</th>";
+									echo "<th>unité(s)</th>";
 									echo "<th>coût PA</th>";
 									echo "<th>précision</th>";
 									echo "<th>dégats</th>";
@@ -1361,7 +1364,7 @@ if($dispo || $admin){
 									echo "</tr>";
 								
 									// Récupération des données des armes de CàC de niveau égal à 6
-									$sql = "SELECT id_arme, nom_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, poids_arme, coutOr_arme, image_arme 
+									$sql = "SELECT arme.id_arme, nom_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, poids_arme, coutOr_arme, image_arme 
 											FROM arme
 											WHERE porteeMin_arme = 1 
 											AND porteeMax_arme = 1
@@ -1389,23 +1392,46 @@ if($dispo || $admin){
 											$rabais = floor(($coutOr_arme * $pourcentage_rabais)/100);
 											
 											if($nom_arme != "poing") {
-												echo "<tr><td><center>$nom_arme</center></td><td><center>$coutPa_arme</center></td><td><center>$precision_arme</center></td>";
+												
+												echo "<tr>";
+												echo "	<td><center>$nom_arme</center></td>";
+												
+												echo "	<td><center>";
+												$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
+															WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
+															AND arme_as_type_unite.id_arme = '$id_arme'";
+												$res_u = $mysqli->query($sql_u);
+												$liste_unite = "";
+												while ($t_u = $res_u->fetch_assoc()) {
+													$nom_unite = $t_u["nom_unite"];
+													
+													if ($liste_unite != "") {
+														$liste_unite .= " / ";
+													}
+													$liste_unite .= $nom_unite;
+												}
+												echo $liste_unite;
+												echo "	</center></td>";
+												
+												echo "	<td><center>$coutPa_arme</center></td>";
+												echo "	<td><center>$precision_arme</center></td>";
 												if($degatMin_arme && $valeur_des_arme){
-													echo "<td><center>" . $degatMin_arme . "D". $valeur_des_arme ."</center></td>";
+													echo "	<td><center>" . $degatMin_arme . "D". $valeur_des_arme ."</center></td>";
 												}
 												else {
-													echo "<td><center> - </center></td>";
+													echo "	<td><center> - </center></td>";
 												}
-												echo "<td><center>$poids_arme</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme\" width=\"40\" height=\"40\"></td>";?>
+												echo "	<td><center>$poids_arme</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme\" width=\"40\" height=\"40\"></td>";?>
 												<td><?php echo "<center>".$coutOr_arme;
 												if($rabais) {
 													$new_coutOr_arme = $coutOr_arme - $rabais;
 													echo "<font color='blue'> ($new_coutOr_arme)</font>";
 												}
 												echo "</center></td>"; 
-												echo "<td align=\"center\"><input type='submit' name='achat_arme' value='Acheter' />";
-												echo "<input type='hidden' name='hid_achat_arme' value=".$t["id_arme"]." />";
-												echo "</td></tr>";
+												echo "	<td align=\"center\"><input type='submit' name='achat_arme' value='Acheter' />";
+												echo "	<input type='hidden' name='hid_achat_arme' value=".$t["id_arme"]." />";
+												echo "	</td>";
+												echo "</tr>";
 											}
 											echo "</form>";
 										}
@@ -1418,9 +1444,10 @@ if($dispo || $admin){
 									echo "<table width=100% border=1>";
 									
 									// Armes à Distance
-									echo "<tr><th colspan=10>Armes Dist</th></tr>";
+									echo "<tr><th colspan=11>Armes Dist</th></tr>";
 									echo "<tr bgcolor=\"lightgreen\">";
 									echo "<th>arme</th>";
+									echo "<th>unités</th>";
 									echo "<th>portée</th>";
 									echo "<th>coût PA</th>";
 									echo "<th>précision</th>";
@@ -1461,7 +1488,29 @@ if($dispo || $admin){
 											// Calcul rabais
 											$rabais = floor(($coutOr_arme2 * $pourcentage_rabais)/100);
 											
-											echo "<tr><td><center>$nom_arme2</center></td><td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td><td><center>$coutPa_arme2</center></td><td><center>$precision_arme2</center></td>";
+											echo "<tr>";
+											echo "	<td><center>$nom_arme2</center></td>";
+											
+											echo "	<td><center>";
+												$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
+															WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
+															AND arme_as_type_unite.id_arme = '$id_arme2'";
+												$res_u = $mysqli->query($sql_u);
+												$liste_unite = "";
+												while ($t_u = $res_u->fetch_assoc()) {
+													$nom_unite = $t_u["nom_unite"];
+													
+													if ($liste_unite != "") {
+														$liste_unite .= " / ";
+													}
+													$liste_unite .= $nom_unite;
+												}
+												echo $liste_unite;
+												echo "	</center></td>";
+											
+											echo "	<td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td>";
+											echo "	<td><center>$coutPa_arme2</center></td>";
+											echo "	<td><center>$precision_arme2</center></td>";
 											if($degatMin_arme2 && $valeur_des_arme2){
 												echo "<td><center>" . $degatMin_arme2 . "D" . $valeur_des_arme2 . "</center></td>";
 											}
