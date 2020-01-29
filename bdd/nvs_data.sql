@@ -293,7 +293,7 @@ INSERT INTO `competence_as_action` (`id_competence`, `id_action`) VALUES
 --
 
 INSERT INTO `config_jeu` (`disponible`) VALUES
-(1);
+(0);
 
 -- 
 -- Contenu de la table `dossier`
