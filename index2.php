@@ -86,7 +86,7 @@ $count_online = $res->fetch_array();
 						<div class="col-sm-4">
 							<font color='red'><b>Jeu en cours de mise à jour, veuillez patienter</b></font>
 							<hr />
-							<a href="faq.php" style="color: white;">FAQ - Régles</b></a>
+							<a href="regles/regles.php" style="color: white;">Régles</b></a>
 							<hr />
 							<a href="http://nordvssud-creation.forumactif.com/" style="color: white;">Le Forum</b></a>
 							<hr />
