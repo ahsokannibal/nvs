@@ -346,6 +346,13 @@ INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `
 ('2', NULL, 'romshunter@msn.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
 
 --
+-- Contenu de la table `news`
+--
+INSERT INTO `news` (`id_news`, `id_admin`, `date`, `contenu`) VALUES
+(1, 1, '2020-01-06 00:00:00', 'Lancement de l\'Alpha !'),
+(2, 1, '2020-02-01 00:00:00', 'Lancement de la Beta !');
+
+--
 -- Contenu de la table `objet`
 --
 
