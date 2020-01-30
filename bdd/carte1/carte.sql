@@ -67,7 +67,7 @@ INSERT INTO `carte` (`x_carte`, `y_carte`, `occupee_carte`, `fond_carte`, `idPer
 (0, 37, '0', '6.gif', NULL, NULL, NULL),
 (0, 38, '0', '1.gif', NULL, NULL, NULL),
 (0, 39, '0', '1.gif', NULL, NULL, NULL),
-(0, 40, '1', '7.gif', NULL, NULL, NULL),
+(0, 40, '0', '7.gif', NULL, NULL, NULL),
 (0, 41, '0', '1.gif', NULL, NULL, NULL),
 (0, 42, '0', '1.gif', NULL, NULL, NULL),
 (0, 43, '0', '1.gif', NULL, NULL, NULL),
