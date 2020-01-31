@@ -367,7 +367,7 @@ if(config_dispo_jeu($mysqli)){
 								$mysqli->query($unlock);
 								
 								// assignation du message au perso
-								$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id', '1', '0', '0')";
+								$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id', '1', '0', '1', '0')";
 								$mysqli->query($sql);
 								
 								// Evenement spécial inscription

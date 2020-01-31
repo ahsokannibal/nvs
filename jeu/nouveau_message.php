@@ -33,10 +33,16 @@ if(isset($_POST["envoyer"])) {
 			$message = addslashes($_POST["message"]) ;
 			$objet = "(Sans objet)" ;
 			
+			$lock = "LOCK TABLE (message) WRITE";
+			$mysqli->query($lock);
+			
 			// creation du message
 			$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ('" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
 			$mysqli->query($sql);
 			$id_message = $mysqli->insert_id;
+			
+			$unlock = "UNLOCK TABLES";
+			$mysqli->query($unlock);
 			
 			for ($i = 0; $i < $nbdest; $i++) {
 				
@@ -57,7 +63,7 @@ if(isset($_POST["envoyer"])) {
 					$id_p = $t_p['id_perso'];
 				
 					// assignation du message au perso
-					$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0')";
+					$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
 					$mysqli->query($sql);
 
 					header("Location:messagerie.php?envoi=ok");
@@ -71,7 +77,7 @@ if(isset($_POST["envoyer"])) {
 			
 			$expediteur = $pseudo;
 			$message = addslashes($_POST["message"]) ;
-			$objet = htmlentities(addslashes($_POST["objet"])) ;
+			$objet = htmlentities(addslashes($_POST["objet"]));
 			
 			// creation du message
 			$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ('" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
@@ -103,7 +109,7 @@ if(isset($_POST["envoyer"])) {
 					$id_p = $t_p['id_perso'];
 				
 					// assignation du message au perso
-					$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0')";
+					$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
 					$mysqli->query($sql);
 					
 					header("Location:messagerie.php?envoi=ok");

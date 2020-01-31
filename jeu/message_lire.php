@@ -73,31 +73,40 @@ if($verif){
 			}
 			
 			// recupération des données du message
-			$sql = "SELECT expediteur_message, date_message, objet_message, contenu_message FROM message, message_perso 
-					WHERE message.id_message='" . $id_message . "' 
+			$sql = "SELECT expediteur_message, date_message, objet_message, contenu_message, annonce FROM message, message_perso 
+					WHERE message.id_message = message_perso.id_message
+					AND message.id_message='" . $id_message . "' 
 					AND (id_perso='".$id."' OR expediteur_message='".$pseudo."')";
 			$resultat = $mysqli->query($sql);
 			$tab = $resultat->fetch_assoc();
 			
-			// recupération des destinataires
-			$sql_dest = "SELECT id_perso FROM message_perso WHERE id_message='$id_message'";
-			$res_dest = $mysqli->query($sql_dest);
+			$annonce = $tab['annonce'];
 			
-			while($t_dest = $res_dest->fetch_assoc()){
+			if (!$annonce) {
+			
+				// recupération des destinataires
+				$sql_dest = "SELECT id_perso FROM message_perso WHERE id_message='$id_message'";
+				$res_dest = $mysqli->query($sql_dest);
 				
-				$id_dest = $t_dest["id_perso"];
-				
-				// recup du nom
-				$sql_n = "SELECT nom_perso FROM perso WHERE id_perso='$id_dest'";
-				$res_n = $mysqli->query($sql_n);
-				$t_n = $res_n->fetch_assoc();
-				
-				if(isset($destinataires) && $destinataires != ""){
-					$destinataires .= ";".$t_n["nom_perso"];
+				while($t_dest = $res_dest->fetch_assoc()){
+					
+					$id_dest = $t_dest["id_perso"];
+					
+					// recup du nom
+					$sql_n = "SELECT nom_perso FROM perso WHERE id_perso='$id_dest'";
+					$res_n = $mysqli->query($sql_n);
+					$t_n = $res_n->fetch_assoc();
+					
+					if(isset($destinataires) && $destinataires != ""){
+						$destinataires .= ";".$t_n["nom_perso"];
+					}
+					else {
+						$destinataires = $t_n["nom_perso"];
+					}
 				}
-				else {
-					$destinataires = $t_n["nom_perso"];
-				}
+			}
+			else {
+				$destinataires = " -- ";
 			}
 			
 			echo '<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $tab["date_message"] . "</td></tr>";
@@ -117,10 +126,12 @@ if($verif){
 			if ($methode == "r"){
 				echo '<form method="post" action="traitement/t_lire.php">';
 				echo '<input type="hidden" name="id_message" value="' . $id_message . '">';
-				echo '<div align="center"> 
-						<input type="submit" name="submit" value="Repondre"> &nbsp&nbsp 
-						<input type="submit" name="submit" value="Repondre à tous"> &nbsp&nbsp 
-						<input type="submit" name="submit" value="Effacer"> </div>';
+				echo '<div align="center">';
+				if (!$annonce) {
+					echo '	<input type="submit" name="submit" value="Repondre"> &nbsp&nbsp'; 
+					echo '	<input type="submit" name="submit" value="Repondre à tous"> &nbsp&nbsp'; 
+				}
+				echo '	<input type="submit" name="submit" value="Effacer"> </div>';
 				echo "</form>";
 			}
 		}

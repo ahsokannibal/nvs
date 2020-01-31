@@ -559,6 +559,7 @@ CREATE TABLE `message_perso` (
   `id_perso` int(11) NOT NULL DEFAULT '0',
   `id_dossier` int(11) NOT NULL DEFAULT '0',
   `lu_message` int(11) NOT NULL DEFAULT '0',
+  `annonce` int(11) NOT NULL DEFAULT '0',
   `supprime_message` tinyint(4) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
