@@ -138,81 +138,725 @@ if($dispo || $admin){
 							// verification des pm du perso
 							if($pm_perso + $malus_pm >= 1){
 								
-								$oc = 1;
-								$seek = 1;
-								
-								// tant que les cases sont occupees
-								while ($oc != 0){
-								
-									// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-									$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN + $seek";
-									$res = $mysqli->query($sql);
+								// Si on choisi de sortir avec une direction
+								if (isset($_GET["direction"])) {
 									
-									while($t = $res->fetch_assoc()){
+									if (isDirectionOK($_GET["direction"])) {
+									
+										$direction = $_GET["direction"];
 										
-										$oc 	= $t["occupee_carte"];
-										$xs 	= $t["x_carte"];
-										$ys 	= $t["y_carte"];
-										$fond_c = $t["fond_carte"];
+										$oc = 1;
+										$seek = 1;
 										
-										if($oc == 0) {
-											break;
+										switch($direction){ 
+											case 1: 
+												// Haut gauche
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN - 1 AND y_carte >= $y_persoN + 1 AND y_carte <= $y_persoN + $seek";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
+											case 2:
+												// Haut
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN - 1 AND x_carte <= $x_persoN + 1 AND y_carte >= $y_persoN + 1 AND y_carte <= $y_persoN + $seek";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
+											case 3:
+												// Haut droite
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN + 1 AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN + 1 AND y_carte <= $y_persoN + $seek";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
+											case 4: 
+												// Gauche
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN - 1 AND y_carte >= $y_persoN - 1 AND y_carte <= $y_persoN + 1";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
+											case 5: 
+												// Droite
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN + 1 AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN - 1 AND y_carte <= $y_persoN + 1";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
+											case 6: 
+												// Bas gauche
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN - 1 AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN - 1";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
+											case 7: 
+												// Bas
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN - 1 AND x_carte <= $x_persoN + 1 AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN - 1";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
+											case 8: 
+												// Bas droite
+												// tant que les cases sont occupees
+												while ($oc != 0){
+												
+													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte >= $x_persoN + 1 AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN - 1";
+													$res = $mysqli->query($sql);
+													
+													while($t = $res->fetch_assoc()){
+														
+														$oc 	= $t["occupee_carte"];
+														$xs 	= $t["x_carte"];
+														$ys 	= $t["y_carte"];
+														$fond_c = $t["fond_carte"];
+														
+														if($oc == 0) {
+															break;
+														}
+													}
+													$seek++; // on elargie la recherche
+												}
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
+												
+												$fond = $t_carte1["fond_carte"];
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond);
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												
+												break;
 										}
 									}
-									$seek++; // on elargie la recherche
-								}
-								
-								// mise a jour des coordonnees du perso et de ses pm
-								$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
-								$mysqli->query($sql);
-								
-								$x_persoN = $xs;
-								$y_persoN = $ys;
-								
-								// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
-								$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
-								$mysqli->query($sql);
-								
-								// mise a jour de la table perso_in_batiment
-								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-								$mysqli->query($sql);
-								
-								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
-								$mysqli->query($sql);
-								
-								// recuperation des fonds
-								$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
-								$res_map = $mysqli->query ($sql);
-								$t_carte1 = $res_map->fetch_assoc();
-								
-								$fond = $t_carte1["fond_carte"];
-								
-								// mise a jour du bonus de perception
-								$bonus_visu = get_malus_visu($fond);
-								if(bourre($mysqli, $id_perso)){
-									if(!endurance_alcool($mysqli, $id_perso)) {
-										$malus_bourre = bourre($mysqli, $id_perso) * 3;
-										$bonus_visu -= $malus_bourre;
+									else {
+										$erreur .= "Direction de sorti du bâtiment incorrecte";
 									}
 								}
-								
-								$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
-								$mysqli->query($sql);
-								
-								// maj carte brouillard de guerre
-								$perception_final = $perception_perso + $bonus_visu;
-								if ($clan_p == 1) {
-									$sql = "UPDATE $carte SET vue_nord='1' 
-											WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-											AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+								else {
+									
+									$oc = 1;
+									$seek = 1;
+									
+									// tant que les cases sont occupees
+									while ($oc != 0){
+									
+										// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+										$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN + $seek";
+										$res = $mysqli->query($sql);
+										
+										while($t = $res->fetch_assoc()){
+											
+											$oc 	= $t["occupee_carte"];
+											$xs 	= $t["x_carte"];
+											$ys 	= $t["y_carte"];
+											$fond_c = $t["fond_carte"];
+											
+											if($oc == 0) {
+												break;
+											}
+										}
+										$seek++; // on elargie la recherche
+									}
+									
+									// mise a jour des coordonnees du perso et de ses pm
+									$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
 									$mysqli->query($sql);
-								}
-								else if ($clan_p == 2) {
-									$sql = "UPDATE $carte SET vue_sud='1' 
-											WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-											AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+									
+									$x_persoN = $xs;
+									$y_persoN = $ys;
+									
+									// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+									$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
 									$mysqli->query($sql);
+									
+									// mise a jour de la table perso_in_batiment
+									$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+									$mysqli->query($sql);
+									
+									// mise a jour des evenements
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+									$mysqli->query($sql);
+									
+									// recuperation des fonds
+									$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+									$res_map = $mysqli->query ($sql);
+									$t_carte1 = $res_map->fetch_assoc();
+									
+									$fond = $t_carte1["fond_carte"];
+									
+									// mise a jour du bonus de perception
+									$bonus_visu = get_malus_visu($fond);
+									if(bourre($mysqli, $id_perso)){
+										if(!endurance_alcool($mysqli, $id_perso)) {
+											$malus_bourre = bourre($mysqli, $id_perso) * 3;
+											$bonus_visu -= $malus_bourre;
+										}
+									}
+									
+									$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+									$mysqli->query($sql);
+									
+									// maj carte brouillard de guerre
+									$perception_final = $perception_perso + $bonus_visu;
+									if ($clan_p == 1) {
+										$sql = "UPDATE $carte SET vue_nord='1' 
+												WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+												AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+										$mysqli->query($sql);
+									}
+									else if ($clan_p == 2) {
+										$sql = "UPDATE $carte SET vue_sud='1' 
+												WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+												AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+										$mysqli->query($sql);
+									}
 								}
 							}
 							else {
@@ -2499,20 +3143,59 @@ if($dispo || $admin){
 											<form action="jouer.php" method="get">  
 											<tr>
 												<td rowspan='3'><img src='../images/tribal1.png' /></td>
+												<?php 
+												if(in_bat($mysqli, $id_perso)){
+												?>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=1"><img border=0 src="../fond_carte/fleche1.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=2"><img border=0 src="../fond_carte/fleche2.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=3"><img border=0 src="../fond_carte/fleche3.png"></a></td>
+												<?php
+												}
+												else {
+												?>
 												<td><a href="jouer.php?mouv=1"><img border=0 src="../fond_carte/fleche1.png"></a></td>
 												<td><a href="jouer.php?mouv=2"><img border=0 src="../fond_carte/fleche2.png"></a></td>
 												<td><a href="jouer.php?mouv=3"><img border=0 src="../fond_carte/fleche3.png"></a></td>
+												<?php 
+												}
+												?>
 												<td rowspan='3'><img src='../images/tribal2.png' /></td>
 											</tr>
 											<tr>
+												<?php 
+												if(in_bat($mysqli, $id_perso)){
+												?>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=4"><img border=0 src="../fond_carte/fleche4.png"></a></td>
+												<td><center><b>Sortir</b></center></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=5"><img border=0 src="../fond_carte/fleche5.png"></a></td>
+												<?php
+												}
+												else {
+												?>
 												<td><a href="jouer.php?mouv=4"><img border=0 src="../fond_carte/fleche4.png"></a></td>
 												<td>&nbsp; </td>
 												<td><a href="jouer.php?mouv=5"><img border=0 src="../fond_carte/fleche5.png"></a></td>
+												<?php 
+												}
+												?>
 											</tr>
 											<tr>
+												<?php 
+												if(in_bat($mysqli, $id_perso)){
+												?>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=6"><img border=0 src="../fond_carte/fleche6.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=7"><img border=0 src="../fond_carte/fleche7.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=8"><img border=0 src="../fond_carte/fleche8.png"></a></td>
+												<?php
+												}
+												else {
+												?>
 												<td><a href="jouer.php?mouv=6"><img border=0 src="../fond_carte/fleche6.png"></a></td>
 												<td><a href="jouer.php?mouv=7"><img border=0 src="../fond_carte/fleche7.png"></a></td>
 												<td><a href="jouer.php?mouv=8"><img border=0 src="../fond_carte/fleche8.png"></a></td>
+												<?php 
+												}
+												?>
 											</tr>
 											</form>
 										</table>

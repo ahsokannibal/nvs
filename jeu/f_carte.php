@@ -97,6 +97,12 @@ function get_nom_terrain($fond) {
 	}
 }
 
+function isDirectionOK($direction) {
+	return $direction == 1 || $direction == 2 || $direction == 3
+		|| $direction == 4 || $direction == 5 || $direction == 6
+		|| $direction == 7 || $direction == 8;
+}
+
 // fonction qui verifie si le perso est bourre ou non
 function bourre($mysqli, $id_perso) {
 	$sql = "SELECT bourre_perso FROM perso WHERE id_perso='$id_perso'";
