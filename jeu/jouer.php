@@ -1434,7 +1434,7 @@ if($dispo || $admin){
 					<tr>
 						<td align=center><b>Chef : </b><?php echo $nom_perso_chef;?></td>
 						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
-						<td align=center><b>Compagnie : </b><?php echo $nom_compagnie_perso; ?></td>
+						<td align=center><b>Compagnie : </b><?php echo stripslashes($nom_compagnie_perso); ?></td>
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
@@ -2228,8 +2228,8 @@ if($dispo || $admin){
 												if(isset($nom_compagnie) && trim($nom_compagnie) != ''){
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
-													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_compagnie."</div><div>".$nom_terrain."</div><hr><div><a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>Voir ses événements</a></div><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".$nom_compagnie."</div><div>".$nom_terrain."</div><hr><div><a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>Voir ses événements</a></div><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
+													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".stripslashes($nom_compagnie)."</div><div>".$nom_terrain."</div><hr><div><a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>Voir ses événements</a></div><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>".$nom_ennemi." [".$id_ennemi."]</div><div>".stripslashes($nom_compagnie)."</div><div>".$nom_terrain."</div><hr><div><a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>Voir ses événements</a></div><div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";
 													echo "</td>";
 												}
