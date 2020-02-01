@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
@@ -17,13 +18,17 @@ if($dispo || $admin){
 		//recuperation des varaibles de sessions
 		$id = $_SESSION["id_perso"];
 		
-		$sql = "SELECT idJoueur_perso, chef, pv_perso FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT idJoueur_perso, chef, pv_perso, nom_perso, clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tab = $res->fetch_assoc();
 		
 		$testpv 	= $tab['pv_perso'];
 		$id_joueur	= $tab["idJoueur_perso"];
 		$chef 		= $tab["chef"];
+		$nom_chef	= $tab["nom_perso"];
+		$clan		= $tab["clan"];
+		
+		$couleur_camp_chef = couleur_clan($clan);
 		
 		if ($testpv <= 0) {
 			echo "<font color=red>Vous êtes mort...</font>";
@@ -147,6 +152,9 @@ if($dispo || $admin){
 								$mysqli->query($sql);
 								
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_grouillot_renvoi'";
+								$mysqli->query($sql);
+								
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_camp_chef><b>$nom_chef</b></font>','a viré le grouillot matricule $matricule_grouillot_renvoi',NULL,'','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								echo "<center><font color='blue'>Le grouillot avec la matricule $matricule_grouillot_renvoi a bien été renvoyé de votre bataillon.</font></center><br/>";
