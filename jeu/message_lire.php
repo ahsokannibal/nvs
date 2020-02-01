@@ -31,20 +31,24 @@ $sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND sup
 $res_a_lire = $mysqli->query($sql_a_lire);
 $a_lire = $res_a_lire->num_rows;
 ?>
-<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
-<tr align="center" bgcolor="#EEEEDD">
-	<td><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
-	<td><a href="message_envoye.php">Messages envoyés</a></td>
-	<td><a href="nouveau_message.php">Nouveau message</a></td>
-</tr>
-<tr align="center" bgcolor="#EEEEDD">
-	<td><a href="messagerie_contacts.php">Contacts</a></td>
-	<td><a href="messagerie_dossiers.php">Dossiers</a></td>
-	<td></td>
-</tr>
-</table>
-<br>
-<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
+		<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+
+		<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
+			<tr align="center" bgcolor="#EEEEDD">
+				<td><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
+				<td><a href="message_envoye.php">Messages envoyés</a></td>
+				<td><a href="nouveau_message.php">Nouveau message</a></td>
+			</tr>
+			<tr align="center" bgcolor="#EEEEDD">
+				<td><a href="messagerie_contacts.php">Contacts</a></td>
+				<td><a href="messagerie_dossiers.php">Dossiers</a></td>
+				<td></td>
+			</tr>
+		</table>
+		
+		<br>
+		
+		<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
 <?php
 $id_message = $_GET["id"];
 $verif = preg_match("#^[0-9]+$#i",$id_message);
@@ -109,10 +113,10 @@ if($verif){
 				$destinataires = " -- ";
 			}
 			
-			echo '<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $tab["date_message"] . "</td></tr>";
-			echo '<tr class="exp"><td colspan=2><b>Destinataires :</b> '.$destinataires.'</td></tr>';
-			echo '<tr class="titrel"><td colspan=2><center><b>Objet :</b> ' . stripslashes($tab["objet_message"]) . "</center></td></tr>";
-			echo '<tr class="messl"><td colspan=2>';
+			echo '	<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $tab["date_message"] . "</td></tr>";
+			echo '	<tr class="exp"><td colspan=2><b>Destinataires :</b> '.$destinataires.'</td></tr>';
+			echo '	<tr class="titrel"><td colspan=2><center><b>Objet :</b> ' . stripslashes($tab["objet_message"]) . "</center></td></tr>";
+			echo '	<tr class="messl"><td colspan=2>';
 			
 			if ($tab["contenu_message"] == ""){ 
 				echo "<i>Message vide</i>"; 
@@ -121,7 +125,9 @@ if($verif){
 				echo bbcode(htmlentities(stripslashes($tab["contenu_message"])));
 			}
 			
-			echo "</td></tr></table>";
+			echo "		</td>";
+			echo "	</tr>";
+			echo "</table>";
 			
 			if ($methode == "r"){
 				echo '<form method="post" action="traitement/t_lire.php">';

@@ -48,10 +48,10 @@ $sql_dossier = "SELECT id_message FROM message_perso WHERE lu_message='0' AND su
 $res_dossier = $mysqli->query($sql_dossier);
 $a_lire_dossier = $res_dossier->num_rows;
 ?>
+		<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
 
 		<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
 			<tr align="center" bgcolor="#EEEEDD">
-			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
 				<td>Messages reçus<font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
 				<td><a href="message_envoye.php">Messages envoyés</a></td>
 				<td><a href="nouveau_message.php">Nouveau message</a></td>
