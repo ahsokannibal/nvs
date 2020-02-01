@@ -780,6 +780,18 @@ CREATE TABLE `perso_as_objet` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `perso_as_respawn`
+--
+
+CREATE TABLE `perso_as_respawn` (
+  `id_perso` int(11) NOT NULL,
+  `id_bat` int(11) NOT NULL,
+  `id_instance_bat` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `perso_in_batiment`
 --
 

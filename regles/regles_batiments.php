@@ -122,6 +122,28 @@
 					</div>
 					
 					<br />
+					
+					<h4>Choix d'un bâtiment pour le rapatriement</h4>
+					
+					<p>Les différents camps peuvent choisir un bâtiment de rapatriement favori.<br />
+					Il y a 3 types de bâtiment qui peuvent servir de respawn : Les Hôpitaux, les Fortins et les Forts.<br />
+					Vous devez en choisir un seul de chaque type</p>
+					
+					<p>En cas de capture, vous serez rapatrié dans cet ordre :</p>
+					<ul>
+						<li>Hôpital choisi (si aucun choisi, la priorité ira au Fortin choisi, puis au Fort choisi)</li>
+						<li>Fortin choisi</li>
+						<li>Fort choisi</li>
+						<li>Respawn aléatoire dans un bâtiment</li>
+					</ul>
+					
+					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelquesoit le bâtiment) ou s'il a été capturé à moins de 20 cases de ce dernier (Hors hôpital).</p>
+					
+					<h4>Etat de siège d'un bâtiment</h4>
+					
+					<p>Un bâtiment est considéré en état de siège s'il a perdu au moins 10% de ses PV.</p>
+					
+					<br />
 					<h2>Les trains</h2>
 					
 					<p>Les trains se déplacent de 10 PM par heure et possède 2500PV.<br />
