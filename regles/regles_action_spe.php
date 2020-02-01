@@ -73,7 +73,7 @@
 			<div class="row">
 				<div class="col-12">
 					<h2>La bousculade</h2>
-La bousculade utilise 30 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculer (20 PM si celui que vous bousculez se trouvait dans une forêt, 40 PM si celui que vous bousculez dans la montagne).<br />
+La bousculade utilise 30 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculer (2 PM si celui que vous bousculez se trouvait dans une forêt, 4 PM si celui que vous bousculez dans la montagne).<br />
 Le bousculé recevra un malus de déplacement correspondant à la valeur du terrain sur laquel il est bousculé. S'il est à 0 PM, le malus se reportera quand même sur le tour suivant <i>(ceci ne s'applique pas pour les bousculades entre personnages du même camp)</i>.<br />
 <b><u>Attention ! Tout le monde ne peut pas bousculer n'importe qui :</u></b> 
 					<ul>
@@ -82,11 +82,11 @@ Le bousculé recevra un malus de déplacement correspondant à la valeur du terr
 						<li>Une cavalerie peut bousculer une infanterie ou une cavalerie.</li>
 						<li>Un canon peut bousculer une infanterie ou un soigneur.</li>
 					</ul>
-<b>Les bousculades sur les unités alliés leur coûtent 10 PA à chaque fois mais ne provoque pas de malus en PM.</b>
+<b>Les bousculades sur les unités alliés leur coûtent 1 PA à chaque fois mais ne provoque pas de malus en PM.</b>
 <br /><br />
 					<h2>Charger</h2>
 La charge est une option de combat disponible uniquement pour les cavaleries. Celles ci s'élancent dans la plaine et vont enfoncer les lignes adverses infligeant par la même occasion de terribles dégâts.<br />
-<b>Pour charger, il faut avoir tous ses PA et au moins 40 PM.</b><br />
+<b>Pour charger, il faut avoir tous ses PA et au moins 4 PM.</b><br />
 La charge s'effectue sur une distance max de 5 cases et avec <b>3 cases d'élan minimum</b>.<br />
 Une fois au contact et dans la limite de vos PA, vos attaques au corps-à-corps seront automatiquement effectuées avec un bonus de +30 dégâts pour la première attaque, de +20 dégâts pour la seconde, de +10 dégât pour la troisième et de +0 pour la quatrième et les suivantes.<br />
 Une cavalerie qui charge un bâtiment perd 40 PV et ne fait aucun dégât.<br />
