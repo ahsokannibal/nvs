@@ -94,7 +94,7 @@ $count_online = $res->fetch_array();
 							
 							<a href="mdp_perdu.php" style="color: white;">Mot de passe perdu ?</b></a>
 							<hr />
-							<a href="regles/regles.php" style="color: white;">Régles</b></a>
+							<a href="regles/regles.php" style="color: white;">Règles</b></a>
 							<hr />
 							<a href="faq.php" style="color: white;">FAQ</b></a>
 							<hr />
