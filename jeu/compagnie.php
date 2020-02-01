@@ -213,19 +213,28 @@ if($dispo || $admin){
 						
 						// affichage des information de la compagnie
 						echo "<center><b>$nom_compagnie</b></center>";
-						echo "<table border=\"1\" width = 100%><tr><td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td><td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td><td width=20%><center>Liste des membres (". $nb_persos_compagnie ."/".$nb_persos_compagnie_max.")</center></td>";
-						echo "</tr><tr><td></td><td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td><td>";
+						echo "<table border=\"1\" width = 100%>";
+						echo "	<tr>";
+						echo "		<td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td>";
+						echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
+						echo "		<td width=20%><center>Liste des membres (". $nb_persos_compagnie ."/".$nb_persos_compagnie_max.")</center></td>";
+						echo "	</tr>";
+						echo "	<tr>";
+						echo "		<td></td>";
+						echo "		<td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td>";
+						echo "		<td>";
 						
 						// recuperation de la liste des membres de la compagnie
-						$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
+						$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
 								WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
-								ORDER BY poste_compagnie";
+								ORDER BY poste_compagnie, perso.id_perso";
 						$res = $mysqli->query($sql);
 						
 						while ($membre = $res->fetch_assoc()) {
 							
 							$poste_compagnie 	= $membre["poste_compagnie"];
 							$nom_membre 		= $membre["nom_perso"];
+							$id_membre			= $membre["id_perso"];
 							
 							if($poste_compagnie != 5){
 								
@@ -235,14 +244,15 @@ if($dispo || $admin){
 								$t_p = $res2->fetch_assoc();
 								$nom_poste = $t_p["nom_poste"];
 								
-								echo "<center>".$nom_membre." ($nom_poste)</center>";
+								echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>] ($nom_poste)</center>";
 							}
 							else
-								echo "<center>".$nom_membre."</center>";
+								echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]</center>";
 						}
 						
-						echo "</td>";
-						echo "</tr></table><br>";
+						echo "		</td>";
+						echo "	</tr>";
+						echo "</table><br>";
 						
 						if(isset($_GET['voir_compagnie']) && $_GET['voir_compagnie'] == 'ok'){
 							echo "";
@@ -324,15 +334,16 @@ if($dispo || $admin){
 				echo "</tr><tr><td></td><td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td><td>";
 					
 				// recuperation de la liste des membres de la compagnie
-				$sql = "SELECT nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
+				$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
 						WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
-						ORDER BY poste_compagnie";
+						ORDER BY poste_compagnie, perso.id_perso";
 				$res = $mysqli->query($sql);
 				
 				while ($membre = $res->fetch_assoc()) {
 					
 					$nom_membre 		= $membre["nom_perso"];
 					$poste_compagnie 	= $membre["poste_compagnie"];
+					$id_membre			= $membre["id_perso"];
 					
 					if($poste_compagnie != 5){
 						
@@ -343,10 +354,10 @@ if($dispo || $admin){
 						
 						$nom_poste = $t_p["nom_poste"];
 						
-						echo "<center>".$nom_membre." ($nom_poste)</center>";
+						echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>] ($nom_poste)</center>";
 					}
 					else {
-						echo "<center>".$nom_membre."</center>";
+						echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]</center>";
 					}
 				}
 				
