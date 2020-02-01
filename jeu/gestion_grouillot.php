@@ -37,8 +37,14 @@ if($dispo || $admin){
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-			<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-			<meta http-equiv="Content-Language" content="fr" />
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+			
 		<link rel="stylesheet" type="text/css" media="screen" href="onglet.css" title="Version 1" />
 	</head>
 	
@@ -83,7 +89,7 @@ if($dispo || $admin){
 				}
 				
 				// On souhaite renvoyer un grouillot
-				if (isset($_POST["renvoyer"]) && isset($_POST["matricule_renvoi_hidden"])) {
+				if (isset($_POST["matricule_renvoi_hidden"])) {
 					
 					$matricule_grouillot_renvoi = $_POST["matricule_renvoi_hidden"];
 					
@@ -192,10 +198,35 @@ if($dispo || $admin){
 					echo "<form method=\"post\" action=\"gestion_grouillot.php\">";
 					echo "	<td align='center'><input type='text' maxlength='25' name='nom_grouillot' value='". $nom_grouillot ."'><input type='hidden' name='matricule_hidden' value='$matricule_grouillot'> <input type='submit' name='renommer' value='renommer'></td>";
 					echo "</form>";
-					echo "<form method=\"post\" action=\"gestion_grouillot.php\">";
-					echo "	<td align='center'><input type='hidden' name='matricule_renvoi_hidden' value='$matricule_grouillot'><input type='submit' name='renvoyer' value='renvoyer'></td>";
+					echo "<form method=\"post\" action=\"gestion_grouillot.php\">";					
+					echo "	<td align='center'><button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#modalConfirm$matricule_grouillot\">renvoyer</button></td>";
 					echo "</form>";
 					echo "</tr>";
+					?>
+					<!-- Modal -->
+					<form method="post" action="gestion_grouillot.php">
+						<div class="modal fade" id="modalConfirm<?php echo $matricule_grouillot; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+							<div class="modal-dialog modal-dialog-centered" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalCenterTitle">Renvoyer le grouillot <?php echo $nom_unite_grouillot." ".$nom_grouillot." [".$matricule_grouillot."]"; ?> ?</h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body">
+										Êtes-vous sûr de vouloir renvoyer le grouillot <?php echo $nom_unite_grouillot." ".$nom_grouillot." [".$matricule_grouillot."]"; ?> ?
+										<input type='hidden' name='matricule_renvoi_hidden' value='<?php echo $matricule_grouillot; ?>'>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+										<button type="button" onclick="this.form.submit()" class="btn btn-primary">Renvoyer</button>
+									</div>
+								</div>
+							</div>
+						</div>
+					</form>
+					<?php
 				}
 			}
 			else {
@@ -207,6 +238,12 @@ if($dispo || $admin){
 		echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
 	}
 	?>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
 	</body>
 </html>
 <?php
