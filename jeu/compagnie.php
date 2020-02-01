@@ -158,7 +158,7 @@ if($dispo || $admin){
 							}
 						}
 						
-						if($_GET["rejoindre"] == "off") { 
+						if($_GET["rejoindre"] == "off") {
 						
 							// on souhaite quitter la compagnie
 							// verification si le perso est le chef
@@ -170,7 +170,7 @@ if($dispo || $admin){
 							// si c'est le chef de la compagnie
 							if ($chef == 1) { 
 								echo "<center><font color = red>Vous devez d'abords choisir un nouveau chef avant de quitter la compagnie</font></center><br>";
-								echo "<center><a href='chef_compagnie.php'>changer de chef</a></center>";
+								echo "<center><a href='chef_compagnie.php?id_compagnie=".$id_compagnie."'>changer de chef</a></center>";
 								echo "<center><a href='compagnie.php'> [retour] </a></center>";
 							}
 							else { 
