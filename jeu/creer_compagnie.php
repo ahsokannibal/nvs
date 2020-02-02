@@ -84,7 +84,7 @@ if($dispo || $admin){
 			<form method='post' action='creer_compagnie.php'>
 				<div class="form-group col-md-6">
 					<label for="nomCompagnie">Nom compagnie</label>
-					<input type="text" class="form-control" id="nomCompagnie" name="nomCompagnie" maxlength="100">
+					<input type="text" class="form-control" id="nomCompagnie" name="nomCompagnie" maxlength="40">
 				</div>
 				<div class="form-group col-md-8">
 					<label for="descCompagnie">Description compagnie</label>
