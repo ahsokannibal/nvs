@@ -48,7 +48,7 @@ if(isset($_SESSION["id_perso"])){
 			//    RESPAWN BATIMENT    //
 							
 			// Récupération du batiment de rappatriement le plus proche du perso
-			$id_bat = selection_bat_rapat($mysqli, $x_perso, $y_perso, $clan);
+			$id_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan);
 							
 			// récupération coordonnées batiment
 			$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";

@@ -98,7 +98,7 @@
 								<td align='center'><img src='../images_perso/b7b.png' alt='hopital'><img src='../images_perso/b7r.png' alt='hopital'></td>
 								<td align='center'>Hopital</td>
 								<td align='center'>1000</td>
-								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin.</td>
+								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b11b.png' alt='gare'></td>
@@ -141,7 +141,13 @@
 					
 					<h4>Etat de siège d'un bâtiment</h4>
 					
-					<p>Un bâtiment est considéré en état de siège s'il a perdu au moins 10% de ses PV.</p>
+					<p>Un bâtiment est considéré en état de siège s'il descend en dessous de 90% de ses PV maximum.<br />
+					Cet état a pour effet de bloquer immédiatement les rapatriements, incorportations de nouveaux sur ce bâtiment.<br />
+					Le recrutement de grouillot se trouve aussi bloqué pour ce bâtiment.</p>
+					
+					<p>La réactivation du respawn, des incorporations et recrutements est immédiat lorsque les conditions de siège ne sont plus remplies.</p>
+					
+					<p><b>Attention</b>, de graves sanctions pourront être prises contre les joueurs qui attaqueront leur bâtiment pour abuser de cette règle.</p>
 					
 					<br />
 					<h2>Les trains</h2>
