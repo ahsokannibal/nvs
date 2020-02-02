@@ -8,7 +8,8 @@ include ('../nb_online.php');
 
 $id = $_SESSION["id_perso"];
 
-if (isset($_POST["ch_c"])){
+if (isset($_POST["choix_class"])){
+	
 	$num_class = $_POST["choix_class"];
 	
 	$verif = preg_match("#^[0-9]+$#i",$num_class);
@@ -25,9 +26,9 @@ if (isset($_POST["ch_c"])){
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-		<title>Classement</title>
+		<title>Nord VS Sud - Classement</title>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link href="../style3.css" rel="stylesheet" type="text/css">
+		
 	</head>
 
 	<body background="../images/background.jpg">
@@ -49,7 +50,7 @@ if(isset($_GET["top"])){
 	
 	echo "<center><form method=\"post\" action=\"classement.php\">";
 	echo "Choix classement :";
-	echo "<select name=\"choix_class\">";
+	echo "<select name=\"choix_class\" onchange=\"this.form.submit()\">";
 	echo "<OPTION value='1'"; if(isset($_GET["classement"]) && $_GET["classement"] == 1) echo " selected"; echo">kill (pk)</option>"; 
 	echo "<OPTION value='2'"; if(isset($_GET["classement"]) && $_GET["classement"] == 2) echo " selected"; echo">death</option>"; 
 	echo "<OPTION value='3'"; if(isset($_GET["classement"]) && $_GET["classement"] == 3) echo " selected"; echo">pnj</option>";
@@ -108,7 +109,7 @@ if(isset($_GET["top"])){
 	
 	if((isset($verif) && $verif) || !isset($_GET["classement"])){
 	
-		$sql = "SELECT id_perso, nom_perso, $class FROM perso WHERE id_perso != '1' AND id_perso != '15' AND id_perso != '16' AND id_perso != '424' AND id_perso != '425' ORDER BY $class DESC LIMIT 10";
+		$sql = "SELECT id_perso, nom_perso, $class FROM perso WHERE id_perso > '10' ORDER BY $class DESC LIMIT 10";
 		$res = $mysqli->query($sql);
 		
 		echo "<table align=center width='500' border=1> <tr><th><font color=darkred>position</font></th><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>$class</font></th></tr>";
@@ -304,7 +305,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso!='1' 
+			WHERE perso.id_perso>'10' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='1'";
@@ -338,7 +339,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso!='2' 
+			WHERE perso.id_perso>'10' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='2'";
@@ -379,7 +380,8 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	
 	$sql = "SELECT perso_as_entrainement.id_perso, nom_perso, niveau_entrainement, clan 
 			FROM perso_as_entrainement, perso 
-			WHERE perso_as_entrainement.id_perso=perso.id_perso AND perso.id_perso!='15' AND perso.id_perso!='16' AND perso.id_perso!='1' 
+			WHERE perso_as_entrainement.id_perso=perso.id_perso 
+			AND perso.id_perso>'10'
 			ORDER BY niveau_entrainement DESC LIMIT 10";
 	$res = $mysqli->query($sql);
 	echo "<table align='center' border='1'>";
@@ -417,6 +419,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade FROM perso, perso_as_grade, grades 
 			WHERE perso.id_perso = perso_as_grade.id_perso 
 			AND perso_as_grade.id_grade = grades.id_grade
+			AND perso.id_perso > '10'
 			ORDER BY xp_perso DESC";
 	$res = $mysqli->query($sql);
 	echo "<table align=center width='500' border=1> <tr><th><font color=darkred>position</font></th><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>xp</font></th><th><font color=darkred>niveau</font></th></tr>";
