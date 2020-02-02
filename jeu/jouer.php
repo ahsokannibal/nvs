@@ -2076,7 +2076,7 @@ if($dispo || $admin){
 						</td>
 					</tr>
 					<tr>
-						<td align=center><b>Chef : </b><?php echo $nom_perso_chef;?></td>
+						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; if($admin) { echo "<br /><a class='btn btn-primary' href='admin_nvs.php'>Admin</a>"; }?></td>
 						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
 						<td align=center><b>Compagnie : </b><?php echo stripslashes($nom_compagnie_perso); ?></td>
 					</tr>
