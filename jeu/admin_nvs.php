@@ -61,6 +61,7 @@ if(isset($_SESSION["id_perso"])){
 							$sql = "SELECT DISTINCT j1.id_joueur, j1.email_joueur, j1.mdp_joueur
 									FROM joueur j1
 									JOIN joueur j2 ON j1.mdp_joueur = j2.mdp_joueur AND j1.id_joueur <> j2.id_joueur
+									AND j1.id_joueur > 4
 									ORDER BY j1.mdp_joueur, j1.id_joueur";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
@@ -129,6 +130,7 @@ if(isset($_SESSION["id_perso"])){
 							$sql = "SELECT DISTINCT j1.ip_joueur, j1.id_joueur
 									FROM joueur_as_ip j1
 									JOIN joueur_as_ip j2 ON j1.ip_joueur = j2.ip_joueur AND j1.id_joueur <> j2.id_joueur
+									AND j1.id_joueur > 4
 									ORDER BY j1.ip_joueur, j1.id_joueur";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
