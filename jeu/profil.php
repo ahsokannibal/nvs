@@ -119,54 +119,61 @@ if($dispo || $admin){
 		
 		<table border=0 width=100%>
 		
-			<tr><td>
-		
-			<table border=1 height=50% width=100%>
-				
-				<tr><td width=25%>
-			
-				<table border=0 width=100%>
-					<tr>
-						<td align="center"><img src="../images/<?php echo $im_p; ?>"></td>
-					</tr>
-				</table>
-				
-				</td><td width=75%>
-			
-				<table border=0 width=100%>
-					<tr>
-						<td><?php echo "<u><b>Pseudo :</b></u><font color=\"$couleur_clan_perso\"> ".$nom_p." </font>- <b><u>Camp :</u></b><font color=\"$couleur_clan_perso\"> ".$nom_clan." </font>"; ?></td>
-					</tr>
-					<tr>
-						<td><?php echo "<u><b>Xp :</b></u> ".$xp_p." - <u><b>Pi :</b></u> ".$pi_p." - <u><b>PC :</b></u> ".$pc_p.""; ?></td>
-					</tr>
-					<tr>
-						<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_p."/".$y_p; ?></td>
-					</tr>
-					<tr>
-						<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_p."/".$pmM_p; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_p."/".$pvM_p; ?></td>
-					</tr>
-					<tr>
-						<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_p."/".$paM_p." - <u><b>Malus de defense :</b></u> "; if($b_p < 0) echo "<font color=red>"; echo $b_p; ?></td>
-					</tr>
-					<tr>
-						<td><?php echo "<u><b>Récupération :</b></u> ".$rec_p; if($br_p) echo " <font color='blue'>(+".$br_p.")</font>"; ?><?php echo " - <u><b>Perception :</b></u> ".$per_p; if($bp_p) {if($bp_p>0) echo " (+".$bp_p.")"; else echo " (".$bp_p.")";} ?></td>
-					</tr>
-				</table>
+			<tr>
+				<td>
+					<table border=1 height=50% width=100%>
+						<tr>
+							<td width=25%>
+					
+								<table border=0 width=100%>
+									<tr>
+										<td align="center"><img src="../images/<?php echo $im_p; ?>"></td>
+									</tr>
+								</table>
+						
+							</td>
+							<td width=75%>
+					
+								<table border=0 width=100%>
+									<tr>
+										<td><?php echo "<u><b>Pseudo :</b></u><font color=\"$couleur_clan_perso\"> ".$nom_p." </font>- <b><u>Camp :</u></b><font color=\"$couleur_clan_perso\"> ".$nom_clan." </font>"; ?></td>
+									</tr>
+									<tr>
+										<td><?php echo "<u><b>Xp :</b></u> ".$xp_p." - <u><b>Pi :</b></u> ".$pi_p." - <u><b>PC :</b></u> ".$pc_p.""; ?></td>
+									</tr>
+									<tr>
+										<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_p."/".$y_p; ?></td>
+									</tr>
+									<tr>
+										<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_p."/".$pmM_p; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_p."/".$pvM_p; ?></td>
+									</tr>
+									<tr>
+										<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_p."/".$paM_p." - <u><b>Malus de defense :</b></u> "; if($b_p < 0) echo "<font color=red>"; echo $b_p; ?></td>
+									</tr>
+									<tr>
+										<td><?php echo "<u><b>Récupération :</b></u> ".$rec_p; if($br_p) echo " <font color='blue'>(+".$br_p.")</font>"; ?><?php echo " - <u><b>Perception :</b></u> ".$per_p; if($bp_p) {if($bp_p>0) echo " (+".$bp_p.")"; else echo " (".$bp_p.")";} ?></td>
+									</tr>
+									<tr>
+										<td>&nbsp;</td>
+									</tr>
+									<tr>
+										<td><a class="btn btn-primary" href="choix_rapatriement.php">Choix des rapatriements</a></td>
+									</tr>
+								</table>
+							</td>
+						</tr>
+					</table>
 				</td>
-		
-			</table>
-			
 			</tr>
 			<tr>
-			
-			<table border=1 height=50% width=100%>
-				<tr align=center>
-					<td align=center><u><b>Description</b></u> (<a href="changer_description.php">Changer</a>)<br><br><?php if($des_p == "") echo "Pas de description"; else echo bbcode(htmlentities(stripslashes($des_p))); ?><br><br><u><b>Message du jour</b></u> (<a href="changer_message.php">Changer</a>)<br><br><?php if($mes_p == "") echo "Pas de message du jour"; else echo stripslashes(br2nl2($mes_p)); ?></td>
-				</tr>
-			</table>
-			
-			</td></tr>
+				<td>
+					<table border=1 height=50% width=100%>
+						<tr align=center>
+							<td align=center><u><b>Description</b></u> (<a href="changer_description.php">Changer</a>)<br><br><?php if($des_p == "") echo "Pas de description"; else echo bbcode(htmlentities(stripslashes($des_p))); ?><br><br><u><b>Message du jour</b></u> (<a href="changer_message.php">Changer</a>)<br><br><?php if($mes_p == "") echo "Pas de message du jour"; else echo stripslashes(br2nl2($mes_p)); ?></td>
+						</tr>
+					</table>
+				</td>
+			</tr>
 			
 		</table>
 		<?php

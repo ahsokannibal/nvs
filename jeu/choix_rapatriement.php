@@ -23,21 +23,120 @@ if(isset($_SESSION["id_perso"])){
 		
 		$camp_perso = $t['clan'];
 		
-		if (isset($_POST['selectHopital'])) {
+		$mess = "";
+		
+		if (isset($_POST['selectHopital']) && trim($_POST['selectHopital']) != "") {
 			
 			$id_respawn_hopital = $_POST['selectHopital'];
 			
+			// Existe t-il un choix de rapatriement Hopital pour ce perso ?
+			$sql = "SELECT id_instance_bat FROM perso_as_respawn WHERE id_perso='$id_perso' AND id_bat='7'";
+			$res = $mysqli->query($sql);
+			$nb_h = $res->num_rows;
+			
+			if ($nb_h > 0) {
+			
+				$t = $res->fetch_assoc();
+				$id_choix_hopital = $t['id_instance_bat'];
+				
+				if ($id_choix_hopital != $id_respawn_hopital) {
+					if ($id_respawn_hopital != "supHopital") {
+						// On met à jour
+						$sql = "UPDATE perso_as_respawn SET id_instance_bat='$id_respawn_hopital' WHERE id_perso='$id_perso' AND id_bat = '7'";
+						$mysqli->query($sql);
+					} else {
+						// On supprime la ligne
+						$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_perso' AND id_bat = '7'";
+						$mysqli->query($sql);
+					}
+					
+					$mess .= "Mise à jour de l'hopital de rapatriement.<br />";
+				}
+			} else {
+				if ($id_respawn_hopital != "supHopital") {
+					// Insertion nouveau choix
+					$sql = "INSERT INTO perso_as_respawn (id_perso, id_bat, id_instance_bat) VALUES ('$id_perso','7','$id_respawn_hopital')";
+					$mysqli->query($sql);
+					
+					$mess .= "Ajout de l'hopital $id_respawn_hopital en choix de rapatriement.<br />";
+				}
+			}
 		}
 		
-		if (isset($_POST['selectFortin'])) {
+		if (isset($_POST['selectFortin']) && trim($_POST['selectFortin']) != "") {
 			
 			$id_respawn_fortin = $_POST['selectFortin'];
 			
+			// Existe t-il un choix de rapatriement Hopital pour ce perso ?
+			$sql = "SELECT id_instance_bat FROM perso_as_respawn WHERE id_perso='$id_perso' AND id_bat='8'";
+			$res = $mysqli->query($sql);
+			$nb_h = $res->num_rows;
+			
+			if ($nb_h > 0) {
+			
+				$t = $res->fetch_assoc();
+				$id_choix_fortin = $t['id_instance_bat'];
+				
+				if ($id_choix_fortin != $id_respawn_fortin) {
+					if ($id_respawn_fortin != "supFortin") {
+						// On met à jour
+						$sql = "UPDATE perso_as_respawn SET id_instance_bat='$id_respawn_fortin' WHERE id_perso='$id_perso' AND id_bat = '8'";
+						$mysqli->query($sql);
+					} else {
+						// On supprime la ligne
+						$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_perso' AND id_bat = '8'";
+						$mysqli->query($sql);
+					}
+					$mess .= "Mise à jour du Fortin de rapatriement.<br />";
+				}
+			} else {
+				if ($id_respawn_fortin != "supFortin") {
+					// Insertion nouveau choix
+					$sql = "INSERT INTO perso_as_respawn (id_perso, id_bat, id_instance_bat) VALUES ('$id_perso','8','$id_respawn_fortin')";
+					$mysqli->query($sql);
+					
+					$mess .= "Ajout du Fortin $id_respawn_fortin en choix de rapatriement.<br />";
+				}
+			}
+			
 		}
 		
-		if (isset($_POST['selectFort'])) {
+		if (isset($_POST['selectFort']) && trim($_POST['selectFort']) != "") {
 			
 			$id_respawn_fort = $_POST['selectFort'];
+			
+			// Existe t-il un choix de rapatriement Hopital pour ce perso ?
+			$sql = "SELECT id_instance_bat FROM perso_as_respawn WHERE id_perso='$id_perso' AND id_bat='9'";
+			$res = $mysqli->query($sql);
+			$nb_h = $res->num_rows;
+			
+			if ($nb_h > 0) {
+			
+				$t = $res->fetch_assoc();
+				$id_choix_fort = $t['id_instance_bat'];
+				
+				if ($id_choix_fort != $id_respawn_fort) {
+					if ($id_respawn_fort != "supFort") {
+						// On met à jour
+						$sql = "UPDATE perso_as_respawn SET id_instance_bat='$id_respawn_fort' WHERE id_perso='$id_perso' AND id_bat = '9'";
+						$mysqli->query($sql);
+					} else {
+						// On supprime la ligne
+						$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_perso' AND id_bat = '9'";
+						$mysqli->query($sql);
+					}
+					
+					$mess .= "Mise à jour du Fort de rapatriement.<br />";
+				}
+			} else {
+				if ($id_respawn_fort != "supFort") {
+					// Insertion nouveau choix
+					$sql = "INSERT INTO perso_as_respawn (id_perso, id_bat, id_instance_bat) VALUES ('$id_perso','9','$id_respawn_fort')";
+					$mysqli->query($sql);
+					
+					$mess .= "Ajout du Fort $id_respawn_fortin en choix de rapatriement.<br />";
+				}
+			}
 			
 		}
 	
@@ -68,11 +167,13 @@ if(isset($_SESSION["id_perso"])){
 				</div>
 			</div>
 			
+			<p align="center"><a class="btn btn-primary" href="profil.php">Retour au Profil</a></p>
+			
 			<div class="row">
 				<div class="col-12">
-				
-					<a href="../regles/regles_batiments.php" target='_blank'>Rappel des règles sur le rapatriement</a>
-				
+					<div align='center'><font color='blue'><?php echo $mess; ?></font></div><br />
+					<center><a class="btn btn-outline-info" href="../regles/regles_batiments.php" target='_blank'>Rappel des règles sur le rapatriement</a></center>
+					<br />
 				</div>
 			</div>
 			
@@ -83,6 +184,7 @@ if(isset($_SESSION["id_perso"])){
 						<div class="form-group">
 							<label for="selectHopital">Hôpital</label>
 							<select name="selectHopital" class="form-control" id="selectHopital">
+								<option value='supHopital'>Aucun choix</option>
 							<?php					
 							// Récupération de la liste des Hôpitaux 
 							$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_batiment='7' AND camp_instance='$camp_perso'";
@@ -114,6 +216,7 @@ if(isset($_SESSION["id_perso"])){
 						<div class="form-group">
 							<label for="selectFortin">Fortin</label>
 							<select name="selectFortin" class="form-control" id="selectFortin">
+								<option value='supFortin'>Aucun choix</option>
 							<?php
 							// Récupération de la liste des Fortins
 							$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_batiment='8' AND camp_instance='$camp_perso'";
@@ -145,6 +248,7 @@ if(isset($_SESSION["id_perso"])){
 						<div class="form-group">
 							<label for="selectFort">Fort</label>
 							<select name="selectFort" class="form-control" id="selectFort">
+								<option value='supFort'>Aucun choix</option>
 							<?php
 							// récupération de la liste des Forts
 							$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_batiment='9' AND camp_instance='$camp_perso'";
