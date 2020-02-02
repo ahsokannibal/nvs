@@ -139,6 +139,10 @@
 					
 					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelquesoit le bâtiment) ou s'il a été capturé à moins de 20 cases de ce dernier (Hors hôpital).</p>
 					
+					<p>Pour définir vos choix de rapatriement, allez dans votre profil et cliquez sur le bouton "Choix des rapatriements".</p>
+					
+					<p><b>Attention</b>, cette manipulation devra être faite par chaque personnage et grouillot.</p>
+					
 					<h4>Etat de siège d'un bâtiment</h4>
 					
 					<p>Un bâtiment est considéré en état de siège s'il descend en dessous de 90% de ses PV maximum.<br />

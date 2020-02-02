@@ -450,10 +450,13 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	else {
 		
 		// Verification si le perso a choisi un Fortin de respawn
-		$sql = "SELECT id_instance_bat FROM perso_as_respawn, instance_batiment 
+		$sql = "SELECT id_instance_bat FROM perso_as_respawn, instance_batiment, perso 
 				WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
-				AND id_perso='$id_perso' AND id_bat='8'
-				AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)";
+				AND perso.id_perso = perso_as_respawn.id_perso
+				AND perso_as_respawn.id_perso='$id_perso' AND id_bat='8'
+				AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)
+				AND ((instance_batiment.x_instance <= (x_perso - 20) OR instance_batiment.x_instance >= (x_perso + 20))
+				OR (instance_batiment.y_instance <= (y_perso - 20) OR instance_batiment.y_instance >= (y_perso + 20)))";
 		$res = $mysqli->query($sql);
 		$nb_f = $res->num_rows;
 		
@@ -466,10 +469,13 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 		else {
 			
 			// Verification si le perso a choisi un Fort de respawn
-			$sql = "SELECT id_instance_bat FROM perso_as_respawn, instance_batiment 
+			$sql = "SELECT id_instance_bat FROM perso_as_respawn, instance_batiment, perso 
 					WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
-					AND id_perso='$id_perso' AND id_bat='9'
-					AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)";
+					AND perso.id_perso = perso_as_respawn.id_perso
+					AND perso_as_respawn.id_perso='$id_perso' AND id_bat='9'
+					AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)
+					AND ((instance_batiment.x_instance <= (x_perso - 20) OR instance_batiment.x_instance >= (x_perso + 20))
+					OR (instance_batiment.y_instance <= (y_perso - 20) OR instance_batiment.y_instance >= (y_perso + 20)))";
 			$res = $mysqli->query($sql);
 			$nb_fort = $res->num_rows;
 			
