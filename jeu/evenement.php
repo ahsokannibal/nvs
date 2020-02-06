@@ -21,10 +21,13 @@ if(@$_SESSION["id_perso"]){
 <div align="center"><h2>Evènements</h2></div>
 <?php
 $id_perso = $_SESSION["id_perso"];
+
 if(isset($_POST["id_info"])){
+	
 	// verifier que la valeur est valide
 	$id_tmp = $_POST["id_info"];
 	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_tmp");
+	
 	if($verif){
 		$id = $_POST["id_info"];
 	}
@@ -43,7 +46,8 @@ else {
 			
 			$id = $_GET["infoid"];
 			
-			if(isset($_GET["liste"]) && $_GET["liste"] == "ok") { // on souhaite connaitre la liste des persos d'un batiment par exemple.
+			// on souhaite connaitre la liste des persos d'un batiment
+			if(isset($_GET["liste"]) && $_GET["liste"] == "ok") {
 			
 				// test si c'est bien un batiment
 				if ($_GET['infoid'] >= 50000 && $_GET['infoid'] < 200000) {
@@ -110,12 +114,14 @@ if(isset($id)){
 		entete($mysqli, $id);
 	
 		if(isset($verif_liste) && $verif_liste){
+			
 			// verifier camp perso
 			$sql = "select clan from perso where id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
 			$t_c = $res->fetch_assoc();
+			
 			$camp_perso = $t_c["clan"];
-			$camp_bat = $t_ci["camp_instance"];
+			$camp_bat 	= $t_ci["camp_instance"];
 			
 			if($camp_perso == $camp_bat){
 				
@@ -171,16 +177,26 @@ if(isset($id)){
 				$res = $mysqli->query($sql);
 				
 				while ($t = $res->fetch_assoc()) {
-					echo "<tr><td>".$t['date_evenement']."</td><td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					
+					echo "<tr>";
+					echo "	<td>".$t['date_evenement']."</td>";
+					echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					
 					if ($t['IDCible_evenement'] == 0) {
-						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso)
+						
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
 							echo " ".stripslashes($t['effet_evenement']);
+						}
+						
 						echo "</td>";
 					}
 					else {
 						echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
-						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso)
+						
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
 							echo " ".stripslashes($t['effet_evenement']);
+						}
+						
 						echo "</td>";
 					}
 				}
@@ -192,12 +208,26 @@ if(isset($id)){
 				
 				while ($t = $res->fetch_assoc()) {
 					
-					echo "<tr><td>".$t['date_evenement']."</td><td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					echo "<tr>";
+					echo "	<td>".$t['date_evenement']."</td>";
+					echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
 					
-					if ($t['IDCible_evenement'] == 0)
-						echo stripslashes($t['effet_evenement'])."</td>";
+					if ($t['IDCible_evenement'] == 0) {
+						
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
+							echo stripslashes($t['effet_evenement'])."</td>";
+						}
+						
+						echo "</td>";
+					}
 					else {
-						echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>] ".stripslashes($t['effet_evenement'])."</td>";
+						echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
+						
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
+							echo " ".stripslashes($t['effet_evenement'])."</td>";
+						}
+						
+						echo "</td>";
 					}
 				}
 			}
