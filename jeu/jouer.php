@@ -11,7 +11,41 @@ include ('../nb_online.php');
 
 // Traitement selection perso
 if (isset($_POST["liste_perso"]) && $_POST["liste_perso"] != "") {
-	$id_perso = $_SESSION['id_perso'] = $_POST["liste_perso"];
+	
+	if(isset($_SESSION["ID_joueur"])){
+	
+		$id_joueur 	= $_SESSION["ID_joueur"];
+		$id_perso	= $_POST["liste_perso"];
+		
+		// recuperation des infos du perso
+		$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t_perso = $res->fetch_assoc();
+			
+		$id_joueur_perso 	= $t_perso["idJoueur_perso"];
+			
+		// Le perso appartient-il bien au joueur ?
+		if ($id_joueur_perso == $id_joueur) {
+			$id_perso = $_SESSION['id_perso'] = $_POST["liste_perso"];
+		}
+		else {
+			// Tentative de triche !
+			$text_triche = "Le joueur $id_joueur a essayé de prendre controle du perso $id_perso qui ne lui appartient pas !";
+			
+			$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+			$mysqli->query($sql);
+				
+			$_SESSION = array(); // On écrase le tableau de session
+			session_destroy(); // On détruit la session
+				
+			//redirection
+			header("location:index.php");
+		}
+	
+	} else {
+		
+		header("Location: ../index.php"); 
+	}
 }
 
 if(isset($_SESSION["id_perso"])){
@@ -1872,11 +1906,11 @@ if($dispo || $admin){
 				echo "<tr>
 						<td><img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1>".date('H:i:s ')."</span></b></td>
 						<td rowspan=2><img src='../images/accueil/banniere.jpg' alt='banniere Nord VS Sud' width=150 height=63 /></td>
-						<td align=right> <a href=\"../logout.php\"><font color=red><b>[déconnexion]</b></font></a></td>
+						<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
 					</tr>";
 				echo "<tr>
 						<td>Prochain tour :  ".$n_dla."</td>
-						<td align=right> <a href=\"http://nordvssud-creation.forumactif.com/\"><font color=blue><b>[forum]</b></font></a></td>
+						<td align=right><a class='btn btn-info' href=\"../regles/regles.php\"><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\"><b>Forum</b></a></td>
 					</tr>";
 				echo "</table>";
 	

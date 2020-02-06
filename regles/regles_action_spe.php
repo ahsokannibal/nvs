@@ -103,7 +103,7 @@ Les barricades apparaissent sur la carte avec 25pv/250. Il est possible de les r
 <br /><br />
 					<h2>La marche forcée</h2>
 Les infanteries, guerriers et guerriers du feu peuvent à chaque tour effectuer une marche forcée, leur permettant au prix d'un certain effort de parcourir une plus grande distance.<br />
-Cette action coûte 40 PA et 10 PV, et vous rajoute 10 PM.<br /><br />
+Cette action coûte 4 PA et 10 PV, et vous rajoute 1 PM.<br /><br />
 <b>Il n'est pas possible de faire des marches forcées dans les bâtiments (ou grottes, ou stèles).</b>				
 <br /><br />
 					<h2>Donner</h2>

@@ -124,7 +124,16 @@ if(isset($_SESSION["ID_joueur"])){
 			} else {
 				
 				// Tentative de triche !
-				// TODO report 
+				$text_triche = "Le joueur $id_joueur a essayé de prendre controle du perso $id_perso qui ne lui appartient pas !";
+			
+				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+				$mysqli->query($sql);
+				
+				$_SESSION = array(); // On écrase le tableau de session
+				session_destroy(); // On détruit la session
+				
+				//redirection
+				header("location:index.php");
 			}
 		} else {
 			// Le perso a été supprimé / renvoyé
