@@ -78,6 +78,6 @@ while ($t = $res->fetch_assoc()){
 }
 
 // on affiche l'image
-imagepng($image_carte, "carte_tmp/carte.png");
+imagepng($image_carte, "carte/carte.png");
 ImageDestroy ($image_carte);
 ?>

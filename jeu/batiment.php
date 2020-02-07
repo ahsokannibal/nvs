@@ -1624,7 +1624,7 @@ if($dispo || $admin){
 							}
 							
 							echo "<center>";
-							echo "<img src='./carte_tmp/" . $image_plan . "' class=\"img-fluid\" alt='plan gares'/>";
+							echo "<img src='image_gare.php?imagename=" . $image_plan . "' class=\"img-fluid\" alt='plan gares'/>";
 							echo "</center>";
 							
 							echo "<br />";

@@ -5,7 +5,7 @@ header("Content-type: image/png");//on va commencer par declarer que l'on veut c
 
 //ensuite on defini la taille de l'image
 $gare_carte = imagecreate(603,603)  or die ("Cannot Initialize new GD image stream");
-$image_carte = imagecreatefrompng("carte_tmp/carte.png");
+$image_carte = imagecreatefrompng("carte/carte.png");
 $image_p = imagecreatetruecolor(603, 300);
 imagecopyresampled($image_p, $image_carte, 0, 0, 0, 0, 603, 603, 603, 603);
 
@@ -68,12 +68,12 @@ while ($t = $res->fetch_assoc()){
 	ImageString($gare_carte, 12, ($x*3)-($taille_text*3), ((600-($y*3))) + 3, $nom_bat, $noir);
 }
 
-imagepng($gare_carte, "carte_tmp/gare_nord.png");
+imagepng($gare_carte, "carte/gare_nord.png");
 
 imagecopymerge($image_p, $gare_carte, 0, 0, 0, 0, 603, 300, 100);
 
 // on affiche l'image
-imagepng($image_p, "carte_tmp/plan_gare_nord.png");
+imagepng($image_p, "carte/plan_gare_nord.png");
 
 
 ImageDestroy ($gare_carte);

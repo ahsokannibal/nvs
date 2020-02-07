@@ -5,7 +5,7 @@ session_start();
 	
 	//ensuite on defini la taille de l'image
 	$perso_carte = imagecreate(303,303)  or die ("Cannot Initialize new GD image stream");
-	$image_carte = imagecreatefrompng("carte_tmp/carte.png");
+	$image_carte = imagecreatefrompng("carte/carte.png");
 
 	//maintenant on donne une couleur a notre image (ici un fond noir)
 	$fond_perso=Imagecolorallocate($perso_carte, 250, 250, 250);
@@ -52,7 +52,7 @@ session_start();
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((300-($y*3)))-1), (($x*3)+1), (((300-($y*3)))+1), $color);
 	}
 
-	imagepng($perso_carte, "carte_tmp/perso.png");
+	imagepng($perso_carte, "carte/perso.png");
 	imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 303, 303, 100);
 	
 	// Creation de la carte histo

@@ -9,10 +9,10 @@ if (@$_SESSION["id_perso"]) {
 	
 	//ensuite on defini la taille de l'image
 	$perso_carte = imagecreate(603,603)  or die ("Cannot Initialize new GD image stream");
-	//$legende_carte = imagecreatefrompng("carte_tmp/legende.png");
-	$image_carte = imagecreatefrompng("carte_tmp/carte.png");
-	$image_carte_bataillon = imagecreatefrompng("carte_tmp/carte.png");
-	$image_carte_compagnie = imagecreatefrompng("carte_tmp/carte.png");
+	//$legende_carte = imagecreatefrompng("carte/legende.png");
+	$image_carte = imagecreatefrompng("carte/carte.png");
+	$image_carte_bataillon = imagecreatefrompng("carte/carte.png");
+	$image_carte_compagnie = imagecreatefrompng("carte/carte.png");
 
 	//maintenant on donne une couleur a notre image (ici un fond noir)
 	$fond_perso=Imagecolorallocate($perso_carte, 250, 250, 250);
@@ -159,16 +159,16 @@ if (@$_SESSION["id_perso"]) {
 	}
 
 	// creation de l'image perso
-	imagepng($perso_carte, "carte_tmp/perso$id.png");
+	imagepng($perso_carte, "carte/perso$id.png");
 	
 	// creation de l'image carte_sl
 	imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
-	imagepng($image_carte, "carte_tmp/carte_sl$id.png");
+	imagepng($image_carte, "carte/carte_sl$id.png");
 	
 	imagecopymerge ($image_carte_compagnie, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
 	
 	// creation de l'image carte
-	imagepng($image_carte, "carte_tmp/carte$id.png");
+	imagepng($image_carte, "carte/carte$id.png");
 	
 	//**********************//
 	//		BATAILLON		//
@@ -183,11 +183,11 @@ if (@$_SESSION["id_perso"]) {
 		$y = $t['y_perso'];
 		
 		imageellipse($image_carte, 3*$x, 600-3*$y, 20, 20, $couleur_bataillon);
-		imagepng($image_carte, "carte_tmp/bataillon$id_joueur.png");
-		imagepng($image_carte, "carte_tmp/carte_bataillon$id.png");
+		imagepng($image_carte, "carte/bataillon$id_joueur.png");
+		imagepng($image_carte, "carte/carte_bataillon$id.png");
 		
 		imagecopymerge ($image_carte_bataillon, $image_carte, 0, 0, 0, 0, 603, 603, 100);
-		imagepng($image_carte_bataillon, "carte_tmp/carte_bataillon_sl$id.png");
+		imagepng($image_carte_bataillon, "carte/carte_bataillon_sl$id.png");
 	}
 	
 	//**********************//
@@ -209,11 +209,11 @@ if (@$_SESSION["id_perso"]) {
 		$y = $t_coord['y_perso'];
 		
 		imageellipse($image_carte_compagnie, 3*$x, 600-3*$y, 20, 20, $couleur_bataillon);
-		imagepng($image_carte_compagnie, "carte_tmp/compagnie$id.png");
-		imagepng($image_carte_compagnie, "carte_tmp/carte_compagnie$id.png");
+		imagepng($image_carte_compagnie, "carte/compagnie$id.png");
+		imagepng($image_carte_compagnie, "carte/carte_compagnie$id.png");
 		
 		//imagecopymerge ($image_carte_compagnie, $image_carte, 0, 0, 0, 0, 603, 603, 100);
-		imagepng($image_carte_compagnie, "carte_tmp/carte_compagnie_sl$id.png");
+		imagepng($image_carte_compagnie, "carte/carte_compagnie_sl$id.png");
 	}	
 	
 	ImageDestroy ($perso_carte);
