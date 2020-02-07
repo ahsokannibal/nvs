@@ -1,13 +1,21 @@
 <?php
 session_start();
 
-if (@$_SESSION["id_perso"]) {
+if (isset($_SESSION["id_perso"])) {
 	
 	$id = $_SESSION["id_perso"];
 
 	require_once "../fonctions.php";
 	
 	$mysqli = db_connexion();
+	
+	/*
+	function setImgDownload($imagePath) {
+		$image = imagecreatefrompng($imagePath);
+		header('Content-Type: image/png');
+		imagepng($image);
+	}
+	*/
 	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -49,7 +57,9 @@ if (@$_SESSION["id_perso"]) {
 			inputId.value = pos[valueToShow];
 		}
 		</script>
-<?php	
+	</body>
+</html>	
+	<?php
 	//dans la page qui doit afficher la carte:
 	$requete = $mysqli->query("SELECT * FROM carte_time");
 	$sql = $requete->fetch_array();
@@ -78,7 +88,8 @@ if (@$_SESSION["id_perso"]) {
 				
 				echo "<center><h1>Carte Stratégique - sans Topographie</h1></center>";
 				
-				echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/perso$id.png\"></center>"; 
+				echo "<center><input type='text' id='idInput' disabled /><br />";
+				echo "<img id='carto' src=\"image_carte.php?imagename=perso$id.png\"></center>"; 
 				echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 			
 				echo "<div align=\"center\"><br>";
@@ -92,7 +103,8 @@ if (@$_SESSION["id_perso"]) {
 				
 				// Enlever la legende
 				if($_POST['Submit'] == "enlever la legende"){
-					echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte_sl$id.png\"></center>"; 
+					echo "<center><input type='text' id='idInput' disabled /><br />";
+					echo "<img id='carto' src=\"image_carte.php?imagename=carte_sl$id.png\"></center>"; 
 					echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 				
 					echo "<div align=\"center\"><br>";
@@ -106,7 +118,8 @@ if (@$_SESSION["id_perso"]) {
 					
 					// Remettre la legende
 					if($_POST['Submit'] == "remettre la legende"){
-						echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
+						echo "<center><input type='text' id='idInput' disabled /><br />";
+						echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>"; 
 						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 					
 						echo "<div align=\"center\"><br>";
@@ -122,7 +135,8 @@ if (@$_SESSION["id_perso"]) {
 							
 							echo "<center><h1>Carte Stratégique - Mon bataillon</h1></center>";
 							
-							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte_bataillon_sl$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br />";
+							echo "<img id='carto' src=\"image_carte.php?imagename=carte_bataillon_sl$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -140,7 +154,8 @@ if (@$_SESSION["id_perso"]) {
 							
 							echo "<center><h1>Carte Stratégique - Ma compagnie</h1></center>";
 							
-							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte_compagnie_sl$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br />";
+							echo "<img id='carto' src=\"image_carte.php?imagename=carte_compagnie_sl$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -156,7 +171,8 @@ if (@$_SESSION["id_perso"]) {
 							
 							echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";							
 								
-							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br />";
+							echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -173,7 +189,8 @@ if (@$_SESSION["id_perso"]) {
 						else {
 							echo "<center><h1>Carte Stratégique</h1></center>";
 							
-							echo "<center><input type='text' id='idInput' disabled /><br /><img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
+							echo "<center><input type='text' id='idInput' disabled /><br />";
+							echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>"; 
 							echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 						
 							echo "<div align=\"center\"><br>";
@@ -191,11 +208,13 @@ if (@$_SESSION["id_perso"]) {
 				}
 			}
 		}
-		else {
+		else {			
+			
 			echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";
 		
 			echo "<center><input type='text' id='idInput' disabled /><br />";
-			echo "<img id='carto' src=\"carte_tmp/carte$id.png\"></center>"; 
+			echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
+			
 			echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
 		
 			echo "<div align=\"center\"><br>";
@@ -211,10 +230,6 @@ if (@$_SESSION["id_perso"]) {
 			
 		}
 	}
-	?>
-	</body>
-</html>	
-	<?php
 }
 else {
 	echo "Veuillez vous connecter";	
