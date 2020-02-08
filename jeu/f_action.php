@@ -111,7 +111,7 @@ function verif_contraintes_construction_ennemis($mysqli, $id_bat, $camp_perso, $
 	// Conditions construction
 	if ($id_bat == '2') {
 		// Tour de guet
-		$nb_cases_ennemi 	= 2;
+		$nb_cases_ennemi 	= 5;
 	}
 	else if ($id_bat == '5' || $id_bat == '1') {
 		// Barricades et Ponts
@@ -119,10 +119,10 @@ function verif_contraintes_construction_ennemis($mysqli, $id_bat, $camp_perso, $
 	}
 	else if ($id_bat == '7') {
 		// Hopital
-		$nb_cases_ennemi 	= 20;
+		$nb_cases_ennemi 	= 10;
 	}
 	else {
-		$nb_cases_ennemi 	= 50;
+		$nb_cases_ennemi 	= 30;
 	}
 	
 	// Verification distance avec ennemis

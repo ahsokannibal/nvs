@@ -44,19 +44,19 @@ include ('../nb_online.php');
 								<th>Batiment</th><th>Nombre d'unités de génie civil (à 10 cases autour du point de construction)</th><th>Distance ennemis</th><th>Distance autre batiment</th>
 							</tr>
 							<tr>
-								<td>Fort</td><td align='center'>16</td><td align='center'>50</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Fort</td><td align='center'>16</td><td align='center'>30</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Fortin</td><td align='center'>10</td><td align='center'>50</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Fortin</td><td align='center'>10</td><td align='center'>30</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Gare</td><td align='center'>6</td><td align='center'>50</td><td>40 cases d'une autre gare. 20 cases d'un lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Gare</td><td align='center'>6</td><td align='center'>30</td><td>40 cases d'une autre gare. 20 cases d'un lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Hôpital</td><td align='center'>3</td><td align='center'>50</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Hôpital</td><td align='center'>3</td><td align='center'>10</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Tour de visu</td><td align='center'>1</td><td align='center'>20</td><td>2 cases d'un autre batiment.</td>
+								<td>Tour de visu</td><td align='center'>1</td><td align='center'>5</td><td>2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
 								<td>Barricades</td><td align='center'>1</td><td align='center'> - </td><td>2 cases d'une gare. 2 cases d'un lieu de rapatriement.</td>
