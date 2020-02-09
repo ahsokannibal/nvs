@@ -341,10 +341,11 @@ function id_prox_bat($mysqli, $x, $y){
 
 // fonction qui verifie si le perso est dans un batiment ou non
 function in_bat($mysqli, $id){
-	$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_perso='$id'";
+	$sql = "SELECT id_instanceBat FROM perso_in_batiment WHERE id_perso='$id'";
 	$res = $mysqli->query($sql);
-	$nb = $res->fetch_row();
-	return $nb != 0;
+	$t = $res->fetch_assoc();
+	
+	return $t['id_instanceBat'];
 }
 
 // fonction qui verifie si le perso est dans un train ou non

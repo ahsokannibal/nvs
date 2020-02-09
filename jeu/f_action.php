@@ -81,7 +81,7 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 		$nb_genie_civil 	= 3;
 	}
 	else {
-		$nb_genie_civil 	= 1;
+		$nb_genie_civil 	= 0;
 	}
 	
 	// Verification nb genie civil

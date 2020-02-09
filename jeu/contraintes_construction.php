@@ -59,7 +59,7 @@ include ('../nb_online.php');
 								<td>Tour de visu</td><td align='center'>1</td><td align='center'>5</td><td>2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Barricades</td><td align='center'>1</td><td align='center'> - </td><td>2 cases d'une gare. 2 cases d'un lieu de rapatriement.</td>
+								<td>Barricades</td><td align='center'>0</td><td align='center'> - </td><td>2 cases d'une gare. 2 cases d'un lieu de rapatriement.</td>
 							</tr>
 						</table>
 					</div>

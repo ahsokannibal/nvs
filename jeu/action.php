@@ -231,7 +231,7 @@ if($dispo || $admin){
 			$y_perso = $t_coord["y_perso"];
 			
 			// verifier batiment est à côté du perso ou perso dans le batiment
-			if (prox_instance_bat($mysqli, $x_perso, $y_perso, $id_bat) || in_bat($mysqli, $id_perso)) {
+			if (prox_instance_bat($mysqli, $x_perso, $y_perso, $id_bat) || in_bat($mysqli, $id_perso) == $id_bat) {
 				
 				// Lancement de la réparation
 				action_reparer_bat($mysqli, $id_perso, $id_bat, 76);
