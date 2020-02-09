@@ -221,7 +221,11 @@ if($dispo || $admin){
 						echo "<center><b>$nom_compagnie</b></center>";
 						echo "<table border=\"1\" width = 100%>";
 						echo "	<tr>";
-						echo "		<td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td>";
+						echo "		<td width=40 height=40>";
+						if ($image_compagnie != "0" && trim($image_compagnie) != "") {
+							echo "<img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\">";
+						}
+						echo "		</td>";
 						echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
 						echo "		<td width=20%><center>Liste des membres (". $nb_persos_compagnie ."/".$nb_persos_compagnie_max.")</center></td>";
 						echo "	</tr>";
@@ -351,8 +355,20 @@ if($dispo || $admin){
 					
 				// affichage des information de la compagnie
 				echo "<center><b>$nom_compagnie</b></center>";
-				echo "<table border=\"1\" width = 100%><tr><td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td><td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td><td width=20%><center>Liste des membres</center></td>";
-				echo "</tr><tr><td></td><td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td><td>";
+				echo "<table border=\"1\" width = 100%>";
+				echo "	<tr>";
+				echo "		<td width=40 height=40>";
+				if ($image_compagnie != "0" && trim($image_compagnie) != "") {
+					echo "<img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\">";
+				}
+				echo "		</td>";
+				echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
+				echo "		<td width=20%><center>Liste des membres</center></td>";
+				echo "	</tr>";
+				echo "	<tr>";
+				echo "		<td></td>";
+				echo "		<td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td>";
+				echo "		<td>";
 					
 				// recuperation de la liste des membres de la compagnie
 				$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie, perso_as_grade.id_grade, nom_grade FROM perso, perso_in_compagnie, perso_as_grade, grades
@@ -395,8 +411,9 @@ if($dispo || $admin){
 					}
 				}
 				
-				echo "</td>";
-				echo "</tr></table><br>";
+				echo "		</td>";
+				echo "	</tr>";
+				echo "</table><br>";
 				
 				echo "<center><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Deposer des sous à la banque de la compagnie</a></center>";
 				
@@ -506,7 +523,7 @@ if($dispo || $admin){
 						}
 						else {
 
-							echo "<center><a href='creer_compagnie.php'>Créer une nouvelle compagnie</a></center>";
+							echo "<center><a class='btn btn-primary btn-lg btn-block' href='creer_compagnie.php'>Créer une nouvelle compagnie</a></center>";
 							
 							echo "<br/><center><b><u>Liste des compagnies déjà existants</u></b></center><br/>";
 							
@@ -528,13 +545,19 @@ if($dispo || $admin){
 								$description_compagnie 	= $sec["description_compagnie"];
 							
 								// creation des tableau avec les compagnies existantes
-								echo "<table border=\"1\" width = 100%><tr>
-								<td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td>
-								<th width=25%>$nom_compagnie</th>
-								<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>
-								<td width=80><a href='compagnie.php?id_compagnie=$id_compagnie'><center>Plus d'infos</center></a></td>
-								<td width=100><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'><center> >>Rejoindre</center></a></td>";
-								echo "</tr></table>";
+								echo "<table border=\"1\" width = 100%>";
+								echo "	<tr>";
+								echo "		<td width=40 height=40>";
+								if ($image_compagnie != "0" && trim($image_compagnie) != "") {
+									echo "<img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\">";
+								}
+								echo "		</td>";
+								echo "		<td width=25%>$nom_compagnie</td>";
+								echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
+								echo "		<td width=80><a class='btn btn-outline-info' href='compagnie.php?id_compagnie=$id_compagnie'><center>Plus d'infos</center></a></td>";
+								echo "		<td width=100><a class='btn btn-outline-success' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'><center> >>Rejoindre</center></a></td>";
+								echo "	</tr>";
+								echo "</table>";
 							}
 						}
 					}
