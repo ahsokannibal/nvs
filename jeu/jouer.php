@@ -118,10 +118,79 @@ if($dispo || $admin){
 		
 		<link href="../style2.css" rel="stylesheet" type="text/css">
 		
+		<style>
+		.sidebar {
+		  height: 100%;
+		  width: 0;
+		  position: fixed;
+		  z-index: 1;
+		  top: 0;
+		  left: 0;
+		  background-color: #111;
+		  overflow-x: hidden;
+		  transition: 0.5s;
+		  padding-top: 60px;
+		}
+		
+		.sidebar a {
+		  padding: 8px 8px 8px 32px;
+		  text-decoration: none;
+		  font-size: 25px;
+		  color: #818181;
+		  display: block;
+		  transition: 0.3s;
+		}
+
+		.sidebar a:hover {
+		  color: #f1f1f1;
+		}
+		
+		.sidebar .closebtn {
+		  position: absolute;
+		  top: 0;
+		  right: 25px;
+		  font-size: 36px;
+		  margin-left: 50px;
+		}
+
+		.openbtn {
+		  font-size: 10px;
+		  background-color: #111;
+		  color: white;
+		  padding: 10px 15px;
+		  border: none;
+		  height: 100px;
+		}
+		
+		.openbtn:hover {
+		  background-color: #444;
+		}
+
+		#boutonChat {
+		  transition: margin-left .5s;
+		  position: fixed;
+		  left: 0;
+		  top: 50%;
+		}
+		
+		/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+		@media screen and (max-height: 450px) {
+		  .sidebar {padding-top: 15px;}
+		  .sidebar a {font-size: 18px;}
+		}
+		</style>
+		
 	</head>
 
 	<body>
-					
+		<!--<div id="mySidebar" class="sidebar">
+		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+		  <a href="#">Test</a>
+		</div>
+
+		<div id="boutonChat">
+		  <button class="openbtn" onclick="openNav()">Chat</button>  
+		</div>-->
 				<?php
 				
 				// recuperation des anciennes données du perso
@@ -1994,6 +2063,7 @@ if($dispo || $admin){
 				$nom_compagnie_perso = "";
 				$nb_demandes_adhesion_compagnie = 0;
 				$nb_demandes_emprunt_compagnie	= 0;
+				$nb_demandes_depart_compagnie	= 0;
 				
 				// recuperation de l'id de la compagnie du perso
 				$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
@@ -2022,9 +2092,14 @@ if($dispo || $admin){
 					if ($poste_perso_compagnie == 1 || $poste_perso_compagnie == 3) {
 						
 						// Vérifier nouvelles demandes d'adhésion
-						$sql = "SELECT * FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND attenteValidation_compagnie='1'";
+						$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND attenteValidation_compagnie='1'";
 						$res = $mysqli->query($sql);
 						$nb_demandes_adhesion_compagnie = $res->num_rows;
+						
+						// Vérifier nouvelles demandes de départ
+						$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND attenteValidation_compagnie='2'";
+						$res = $mysqli->query($sql);
+						$nb_demandes_depart_compagnie = $res->num_rows;
 					}
 					
 					// Trésorier
@@ -2112,7 +2187,7 @@ if($dispo || $admin){
 					<tr>
 						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; if($admin) { echo "<br /><a class='btn btn-primary' href='admin_nvs.php'>Admin</a>"; }?></td>
 						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
-						<td align=center><b>Compagnie : </b><?php echo stripslashes($nom_compagnie_perso); ?></td>
+						<td align=center><b>Compagnie : </b><?php echo "<a href=\"compagnie.php\" target='_blank'>" . stripslashes($nom_compagnie_perso) . "</a>"; ?></td>
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
@@ -2153,15 +2228,7 @@ if($dispo || $admin){
 								<a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a>
 								<?php 
 								if($nb_nouveaux_mes) { 
-									echo "<br/><font color=red>($nb_nouveaux_mes nouveau"; 
-									if($nb_nouveaux_mes > 1) {
-										echo "x";
-									}
-									echo " message"; 
-									if($nb_nouveaux_mes > 1) {
-										echo "s";
-									}
-									echo ")</font>"; 
+									echo "<span class='badge badge-pill badge-danger'>$nb_nouveaux_mes</span>"; 
 								} 
 								?>
 							</td>
@@ -2170,11 +2237,15 @@ if($dispo || $admin){
 								<a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a>
 								<?php
 								if ($nb_demandes_adhesion_compagnie) {
-									echo "<br/><font color=red><b>$nb_demandes_adhesion_compagnie</b> adhésion(s) en attente</font>";
+									echo "<span class='badge badge-pill badge-success'>$nb_demandes_adhesion_compagnie</span>";
+								}
+								
+								if ($nb_demandes_depart_compagnie) {
+									echo "<span class='badge badge-pill badge-danger'>$nb_demandes_depart_compagnie</span>";
 								}
 								
 								if ($nb_demandes_emprunt_compagnie) {
-									echo "<br/><font color=red><b>$nb_demandes_emprunt_compagnie</b> emprunt(s) en attente</font>";
+									echo "<span class='badge badge-pill badge-warning'>$nb_demandes_emprunt_compagnie</span>";
 								}
 								?>
 							</td>
@@ -3265,9 +3336,24 @@ if($dispo || $admin){
 		
 		<script>
 		$(function () {
-		  $('[data-toggle="tooltip"]').tooltip();
-		  $('[data-toggle="popover"]').popover(); 
+			$('[data-toggle="tooltip"]').tooltip();
+			$('[data-toggle="popover"]').popover(); 
 		})
+		
+		function openNav() {
+			if(document.getElementById("mySidebar").style.width == "" || document.getElementById("mySidebar").style.width == "0px") {
+				document.getElementById("mySidebar").style.width = "250px";
+				document.getElementById("boutonChat").style.marginLeft = "250px";
+			} else {
+				document.getElementById("mySidebar").style.width = "0";
+				document.getElementById("boutonChat").style.marginLeft= "0";
+			}
+		}
+
+		function closeNav() {
+			document.getElementById("mySidebar").style.width = "0";
+			document.getElementById("boutonChat").style.marginLeft= "0";
+		}
 		</script>
 		
 	</body>

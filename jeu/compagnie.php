@@ -33,7 +33,13 @@ if($dispo || $admin){
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	<body>
 		<p align="center"><input type="button" value="Fermer la fenêtre de compagnie" onclick="window.close()"></p>
@@ -225,8 +231,11 @@ if($dispo || $admin){
 						echo "		<td>";
 						
 						// recuperation de la liste des membres de la compagnie
-						$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
-								WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
+						$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie, perso_as_grade.id_grade, nom_grade FROM perso, perso_in_compagnie, perso_as_grade, grades 
+								WHERE perso_in_compagnie.id_perso=perso.ID_perso
+								AND perso_as_grade.id_perso = perso.id_perso
+								AND perso_as_grade.id_grade = grades.id_grade
+								AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
 								ORDER BY poste_compagnie, perso.id_perso";
 						$res = $mysqli->query($sql);
 						
@@ -235,6 +244,16 @@ if($dispo || $admin){
 							$poste_compagnie 	= $membre["poste_compagnie"];
 							$nom_membre 		= $membre["nom_perso"];
 							$id_membre			= $membre["id_perso"];
+							$id_grade			= $membre["id_grade"];
+							$nom_grade			= $membre["nom_grade"];
+							
+							// cas particuliers grouillot
+							if ($id_grade == 101) {
+								$id_grade = "1.1";
+							}
+							if ($id_grade == 102) {
+								$id_grade = "1.2";
+							}
 							
 							if($poste_compagnie != 5){
 								
@@ -244,10 +263,10 @@ if($dispo || $admin){
 								$t_p = $res2->fetch_assoc();
 								$nom_poste = $t_p["nom_poste"];
 								
-								echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>] ($nom_poste)</center>";
+								echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>] ($nom_poste)<br />";
 							}
 							else
-								echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]</center>";
+								echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]<br />";
 						}
 						
 						echo "		</td>";
@@ -306,6 +325,8 @@ if($dispo || $admin){
 		}
 		else {
 			
+			echo "<center><a class='btn btn-outline-info' href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a></center><br />";
+			
 			// verification si le perso appartient deja a une compagnie
 			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res = $mysqli->query($sql);
@@ -334,8 +355,11 @@ if($dispo || $admin){
 				echo "</tr><tr><td></td><td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td><td>";
 					
 				// recuperation de la liste des membres de la compagnie
-				$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie FROM perso, perso_in_compagnie 
-						WHERE perso_in_compagnie.id_perso=perso.ID_perso AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
+				$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie, perso_as_grade.id_grade, nom_grade FROM perso, perso_in_compagnie, perso_as_grade, grades
+						WHERE perso_in_compagnie.id_perso=perso.ID_perso 
+						AND perso_as_grade.id_perso = perso.id_perso
+						AND perso_as_grade.id_grade = grades.id_grade
+						AND id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
 						ORDER BY poste_compagnie, perso.id_perso";
 				$res = $mysqli->query($sql);
 				
@@ -344,6 +368,16 @@ if($dispo || $admin){
 					$nom_membre 		= $membre["nom_perso"];
 					$poste_compagnie 	= $membre["poste_compagnie"];
 					$id_membre			= $membre["id_perso"];
+					$id_grade			= $membre["id_grade"];
+					$nom_grade			= $membre["nom_grade"];
+							
+					// cas particuliers grouillot
+					if ($id_grade == 101) {
+						$id_grade = "1.1";
+					}
+					if ($id_grade == 102) {
+						$id_grade = "1.2";
+					}
 					
 					if($poste_compagnie != 5){
 						
@@ -354,17 +388,17 @@ if($dispo || $admin){
 						
 						$nom_poste = $t_p["nom_poste"];
 						
-						echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>] ($nom_poste)</center>";
+						echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>] ($nom_poste)<br />";
 					}
 					else {
-						echo "<center>".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]</center>";
+						echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]<br />";
 					}
 				}
 				
 				echo "</td>";
 				echo "</tr></table><br>";
 				
-				echo "<center><a href='banque_compagnie.php?id_compagnie=$id_compagnie'>Deposer des sous à la banque de la compagnie</a></center>";
+				echo "<center><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Deposer des sous à la banque de la compagnie</a></center>";
 				
 				// verification si le perso est le chef de la compagnie
 				$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_perso=$id";
@@ -377,7 +411,7 @@ if($dispo || $admin){
 				
 					// c'est le chef
 					if($poste_s == 1) { 
-						echo "<center><a href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la compagnie</a></center>";
+						echo "<center><a class='btn btn-outline-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la compagnie</a></center>";
 					}
 					
 					// c'est le tresorier
@@ -389,7 +423,12 @@ if($dispo || $admin){
 						
 						$nb = $res->num_rows;
 						
-						echo "<center><a href='tresor_compagnie.php?id_compagnie=$id_compagnie'> Page tresorerie de la compagnie</a><font color=red>($nb persos en attente)</font></center>";
+						echo "<center>";
+						echo "<a class='btn btn-outline-primary' href='tresor_compagnie.php?id_compagnie=$id_compagnie'> Page tresorerie de la compagnie ";
+						if ($nb > 0) {
+							echo "<span class='badge badge-pill badge-danger'>$nb</span>";
+						}
+						echo "</a></center>";
 					}
 					
 					// c'est le recruteur
@@ -413,7 +452,12 @@ if($dispo || $admin){
 						
 						$num_a = $num_e + $num_q;
 						
-						echo "<center><a href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie</a><font color=red> ($num_a persos en attente)</font></center>";
+						echo "<center>";
+						echo "<a class='btn btn-outline-primary' href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie ";
+						if ($num_a > 0) {
+							echo "<span class='badge badge-pill badge-danger'>$num_a</span>";
+						}
+						echo "</a></center>";
 					}
 					
 					// c'est le diplomate
@@ -422,8 +466,7 @@ if($dispo || $admin){
 					}
 				}
 				
-				echo "<br/><center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b> >>Demander à quitter la compagnie</b></a></center>";
-				echo "<br/><br/><a href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a>";
+				echo "<br/><center><a class='btn btn-danger' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b> >>Demander à quitter la compagnie</b></a></center>";
 			}
 			else {
 			
@@ -500,6 +543,12 @@ if($dispo || $admin){
 		}
 	}
 	?>
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
 	</body>
 </html>
 	<?php
