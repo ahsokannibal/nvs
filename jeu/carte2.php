@@ -222,7 +222,7 @@ if (@$_SESSION["id_perso"]) {
 	ImageDestroy ($image_carte_compagnie);
 	ImageDestroy ($legende_carte);
 
-	header("Location: afficher_carte.php");
+	header("Location:afficher_carte.php");
 }
 else
 	echo "veuillez vous connecter";

@@ -82,6 +82,6 @@ ImageDestroy ($image_carte);
 if (isset($_GET['bat'])) {
 	$bat = $_GET['bat'];
 	
-	header("Location: batiment.php?bat=$bat");
+	header("Location:batiment.php?bat=$bat");
 }
 ?>

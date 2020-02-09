@@ -194,22 +194,6 @@ if($dispo || $admin){
 		}
 	}
 	
-	?>
-<html>
-	<head>
-		<title>Nord VS Sud</title>
-		
-		<!-- Required meta tags -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	</head>
-	
-	<body>
-	<?php
-	
 	// Reparer batiment
 	if (isset($_GET['bat']) && $_GET['bat'] != '' && isset($_GET['reparer']) && $_GET['reparer'] == 'ok') {
 		
@@ -237,10 +221,26 @@ if($dispo || $admin){
 				action_reparer_bat($mysqli, $id_perso, $id_bat, 76);
 			}
 			else {
-				header("Location: jouer.php?erreur=prox_bat");
+				header("Location:jouer.php?erreur=prox_bat");
 			}
 		}
 	}
+	
+	?>
+<html>
+	<head>
+		<title>Nord VS Sud</title>
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+	</head>
+	
+	<body>
+	<?php
 	
 	if (isset($_GET['bat']) && $_GET['bat'] != '' && isset($_GET['saboter']) && $_GET['saboter'] == 'ok') {
 	
@@ -1813,6 +1813,6 @@ else {
 	$_SESSION = array(); // On écrase le tableau de session
 	session_destroy(); // On détruit la session
 	
-	header("Location: ../index2.php");
+	header("Location:../index2.php");
 }
 ?>

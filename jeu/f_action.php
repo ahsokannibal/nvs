@@ -599,7 +599,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			}
 		}
 		else {
-			header("Location: jouer.php?erreur=pa");
+			header("Location:jouer.php?erreur=pa");
 		}
 	}
 	else {

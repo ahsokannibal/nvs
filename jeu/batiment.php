@@ -38,7 +38,7 @@ if($dispo || $admin){
 			session_unregister('deDefense');
 			session_unregister('deAttaque');
 			
-			header("Location: ../tour.php");
+			header("Location:../tour.php");
 		}
 		else {
 			
@@ -1704,5 +1704,5 @@ else {
 	$_SESSION = array(); // On ecrase le tableau de session
 	session_destroy(); // On detruit la session
 	
-	header("Location: ../index2.php");
+	header("Location:../index2.php");
 }

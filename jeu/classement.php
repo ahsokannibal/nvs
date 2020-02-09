@@ -15,7 +15,7 @@ if (isset($_POST["choix_class"])){
 	$verif = preg_match("#^[0-9]+$#i",$num_class);
 		
 	if($verif){
-		header("Location: classement.php?top=ok&classement=$num_class");	
+		header("Location:classement.php?top=ok&classement=$num_class");	
 	}
 	else {
 		$erreur = 'Paramètre incorrect';

@@ -62,5 +62,5 @@ session_start();
 	ImageDestroy ($perso_carte);
 	ImageDestroy ($image_carte);
 
-	header("Location: afficher_carte.php");
+	header("Location:afficher_carte.php");
 ?>

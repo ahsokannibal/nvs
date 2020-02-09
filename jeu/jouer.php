@@ -44,7 +44,7 @@ if (isset($_POST["liste_perso"]) && $_POST["liste_perso"] != "") {
 	
 	} else {
 		
-		header("Location: ../index.php"); 
+		header("Location:../index.php"); 
 	}
 }
 
@@ -87,13 +87,13 @@ if($dispo || $admin){
 		// verification si le perso est encore en vie
 		if ($testpv <= 0) {
 			// le perso est mort
-			header("Location: ../tour.php"); 
+			header("Location:../tour.php"); 
 		}
 		else { 
 			// le perso est vivant
 			// verification si nouveau tour ou gele
 			if(nouveau_tour($date, $dla) || $est_gele) {
-				header("Location: ../tour.php");
+				header("Location:../tour.php");
 			}
 			else {
 				$erreur = "<font color=red>";
@@ -1966,7 +1966,7 @@ if($dispo || $admin){
 						}
 						else if(!reste_pm($pm_perso + $malus_pm)){
 							
-							header("Location: jouer.php?erreur=pm");
+							header("Location:jouer.php?erreur=pm");
 						}
 						else {
 							// normalement impossible
@@ -3387,7 +3387,7 @@ if($dispo || $admin){
 		}
 	}
 	else {
-		header("Location: ../index.php");
+		header("Location:../index.php");
 	}
 	?>
 		<table border='0'>
@@ -3433,6 +3433,6 @@ else {
 	$_SESSION = array(); // On écrase le tableau de session
 	session_destroy(); // On détruit la session
 	
-	header("Location: ../index2.php");
+	header("Location:../index2.php");
 }
 ?>

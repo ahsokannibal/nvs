@@ -308,7 +308,7 @@ if($dispo || $admin){
 			$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
 			$mysqli->query($sql);
 			
-			header("Location: jouer.php");
+			header("Location:jouer.php");
 		}
 	}
 	else{
@@ -320,6 +320,6 @@ else {
 	$_SESSION = array(); // On écrase le tableau de session
 	session_destroy(); // On détruit la session
 	
-	header("Location: ../index2.php");
+	header("Location:../index2.php");
 }
 ?>

@@ -32,7 +32,7 @@ if($dispo || $admin){
 		
 		// verification si le perso est encore en vie
 		if ($testpv <= 0) {
-			header("Location: ../tour.php");
+			header("Location:../tour.php");
 		}
 		else {
 ?>
@@ -411,7 +411,7 @@ else {
 	$_SESSION = array(); // On ecrase le tableau de session
 	session_destroy(); // On detruit la session
 	
-	header("Location: ../index2.php");
+	header("Location:../index2.php");
 }
 
 /**

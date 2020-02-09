@@ -37,7 +37,7 @@ if($dispo){
 			// unset($_SESSION['ma_variable']); 
 			session_unregister('deDefense');
 			session_unregister('deAttaque');
-			header("Location: ../tour.php"); //tour.php se charge de verifier si nouveau tour
+			header("Location:../tour.php"); //tour.php se charge de verifier si nouveau tour
 		}
 		else { // le perso est vivant
 

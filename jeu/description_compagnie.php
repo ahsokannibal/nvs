@@ -106,6 +106,6 @@ else {
 	$_SESSION = array(); // On écrase le tableau de session
 	session_destroy(); // On détruit la session
 	
-	header("Location: ../index2.php");
+	header("Location:../index2.php");
 }
 ?>
