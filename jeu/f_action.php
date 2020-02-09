@@ -599,7 +599,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			}
 		}
 		else {
-			echo "<center>Vous n'avez pas assez de PA</center><br />";
+			header("Location: jouer.php?erreur=pa");
 		}
 	}
 	else {

@@ -236,6 +236,9 @@ if($dispo || $admin){
 				// Lancement de la réparation
 				action_reparer_bat($mysqli, $id_perso, $id_bat, 76);
 			}
+			else {
+				header("Location: jouer.php?erreur=prox_bat");
+			}
 		}
 	}
 	
