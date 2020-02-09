@@ -2934,10 +2934,12 @@ if($dispo || $admin){
 											$nom_bat	= $t_im["nom_batiment"];
 											
 											if($camp_bat == '1'){
-												$camp_bat2 = 'bleu';
+												$camp_bat2 		= 'bleu';
+												$image_profil 	= "Nord.gif";
 											}
 											if($camp_bat == '2'){
-												$camp_bat2 = 'rouge';
+												$camp_bat2 		= 'rouge';
+												$image_profil 	= "Sud.gif";
 											}
 											
 											$blason="mini_blason_".$camp_bat2.".gif";
@@ -2948,7 +2950,7 @@ if($dispo || $admin){
 														data-trigger='focus'
 														data-html='true' 
 														data-placement='bottom' 
-														title=\"<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>".$nom_bat." ".$nom_i_bat." [".$idI_bat."]</a></div><hr>";
+														title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$idI_bat."' target='_blank'>".$nom_bat." ".$nom_i_bat." [".$idI_bat."]</a></div><hr>";
 											echo "<a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a>";			
 											echo "\">";		
 											echo "</td>";
