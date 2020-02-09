@@ -1422,24 +1422,24 @@ if($dispo || $admin){
 						if ($clan_p == 1) {
 							if ($y_persoN < 100) {
 								// On est dans une gare capturée, on met à jour le plan du Sud
-								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_sud.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_sud.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
 							}
 							else {
-								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_nord.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_nord.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
 							}
 						}
 						else if ($clan_p == 2) {
 							if ($y_persoN > 100) {
 								// On est dans une gare capturée, on met à jour le plan du Nord
-								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_nord.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_nord.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
 							}
 							else {
-								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_sud.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+								$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_sud.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
 							}
 						}
 					}
 					else {
-						$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> acceder a la page du batiment $nom_bat $nom_ibat</a>~~</font></center>";
+						$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
 					}
 					
 					$mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat&out=ok\" > sortir du batiment $nom_bat $nom_ibat</a>~~</font></center>";
@@ -2227,7 +2227,7 @@ if($dispo || $admin){
 							?>
 						</tr>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de defense : $bonus_perso )</font>";} ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de défense : $bonus_perso )</font>";} ?></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
 							<?php 
@@ -2494,7 +2494,7 @@ if($dispo || $admin){
 												<td><?php echo $protec_perso; ?>&nbsp;</td>
 											</tr>
 											<tr>
-												<td><b>Recuperation</b></td>
+												<td><b>Récuperation</b></td>
 												<td nowrap="nowrap">
 												<?php 
 												echo $recup_perso;
@@ -2511,7 +2511,7 @@ if($dispo || $admin){
 												?>&nbsp;</td>
 											</tr>
 											<tr>
-												<td nowrap="nowrap"><b>Malus Defense</b></td>
+												<td nowrap="nowrap"><b>Malus Défense</b></td>
 												<td><?php echo $bonus_perso; ?>&nbsp;</td>
 											</tr>
 										</table>
@@ -2523,7 +2523,7 @@ if($dispo || $admin){
 							
 							<table border="2" style="background-color: palevioletred;" width="100%">
 								<tr>
-									<td colspan='3'bgcolor="lightgrey"><center><b>Caractèristiques de combat</b></center></td>
+									<td colspan='3'bgcolor="lightgrey"><center><b>Caractéristiques de combat</b></center></td>
 								</tr>
 								<tr>
 									<td width='20%'></td>
@@ -2577,7 +2577,7 @@ if($dispo || $admin){
 									<?php 
 									if ($type_perso != 4) { 
 									?>
-									<td><b>Dégats</b></td>
+									<td><b>Dégâts</b></td>
 									<?php 
 									} else {
 									?>
