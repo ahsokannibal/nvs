@@ -108,6 +108,7 @@ function bbcode($text)
    $text = str_replace("  ", "&nbsp;&nbsp;", $text);
    
    // smilley
+   /*
    $text = str_replace(':)','<img src="http://www.mapping-area.com/images/smiley/smile.gif" alt="" style="border:0"/>',$text);
    $text = str_replace(';)','<img src="http://www.mapping-area.com/images/smiley/hehe.gif" alt="" style="border:0"/>',$text);
    $text = str_replace(':P','<img src="http://www.mapping-area.com/images/smiley/langue.gif" alt="" style="border:0"/>',$text);
@@ -117,6 +118,7 @@ function bbcode($text)
    $text = str_replace('boulet!','<img src="http://loka.forumactif.com/images/smiles/boulet.gif" alt="" style="border:0"/>',$text);
    $text = str_replace(':\'(','<img src="http://loka.forumactif.com/images/smiles/icon_sad.gif" alt="" style="border:0"/>',$text);
    $text = str_replace(':evil:','<img src="http://sitebas.free.fr/forum/images/smiles/icon_evil.gif" alt="" style="border:0"/>',$text);
+   */
 
    $patterns = array();
    $replacements = array();

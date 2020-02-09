@@ -1979,7 +1979,7 @@ if($dispo || $admin){
 					</tr>";
 				echo "<tr>
 						<td>Prochain tour :  ".$n_dla."</td>
-						<td align=right><a class='btn btn-info' href=\"../regles/regles.php\"><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\"><b>Forum</b></a></td>
+						<td align=right><a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a></td>
 					</tr>";
 				echo "</table>";
 	
