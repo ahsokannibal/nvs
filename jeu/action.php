@@ -542,7 +542,7 @@ if($dispo || $admin){
 			$or_perso = $t_o0['or_perso'];
 			
 			echo "<tr>";
-			echo "<td align='center'><dl><dd><a href='#'><img src='../images/or.png' alt='or' height='30' width='30'/><span><b>or</b></span></a></dd></dl></td>";
+			echo "<td align='center'><dl><dd><a href='#'><img src='../images/or.png' alt='thune' height='30' width='30'/><span><b>thune</b></span></a></dd></dl></td>";
 			echo "<td align='center'>0</td>";
 					
 			echo "<form method='post' action='action.php'>";		
