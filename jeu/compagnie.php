@@ -415,7 +415,7 @@ if($dispo || $admin){
 				echo "	</tr>";
 				echo "</table><br>";
 				
-				echo "<center><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Deposer des sous à la banque de la compagnie</a></center>";
+				echo "<center><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Banque de la compagnie</a></center>";
 				
 				// verification si le perso est le chef de la compagnie
 				$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_perso=$id";

@@ -422,7 +422,8 @@ CREATE TABLE `histobanque_compagnie` (
   `id_compagnie` int(11) NOT NULL default '0',
   `id_perso` int(11) NOT NULL default '0',
   `operation` int(11) NOT NULL default '0',
-  `montant` int(11) NOT NULL default '0'
+  `montant` int(11) NOT NULL default '0',
+  `date_operation` datetime DEFAULT NULL
 );
 
 -- --------------------------------------------------------

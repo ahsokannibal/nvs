@@ -81,7 +81,7 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 						
 						// insertion dans la table banque compagnie
-						$sql = "INSERT INTO banque_compagnie VALUES ($new_recrue,'0','','')";
+						$sql = "INSERT INTO banque_compagnie VALUES ($new_recrue,'0','0','0')";
 						$mysqli->query($sql);
 						
 						if ($genie_compagnie) {

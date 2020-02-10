@@ -8,7 +8,11 @@ include ('../nb_online.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
-$admin = admin_perso($mysqli, $_SESSION["id_perso"]);
+if (isset($_SESSION["id_perso"])) {
+	$admin = admin_perso($mysqli, $_SESSION["id_perso"]);
+} else {
+	header("Location:../index.php");
+}
 
 if($dispo || $admin){
 
@@ -73,10 +77,10 @@ if($dispo || $admin){
 			
 				if(isset($_POST['annuler_emp'])){
 					
-					$sql = "UPDATE banque_compagnie SET demande_emprunt='0', montant_emprunt=NULL WHERE id_perso=$id";
+					$sql = "UPDATE banque_compagnie SET demande_emprunt='0', montant_emprunt=0 WHERE id_perso=$id";
 					$mysqli->query($sql);
 					
-					echo "Vous venez d'annuler votre ancienne demande d'emprunt, vous pouvez à present en formuler une ouvelle si vous le souhaitez.<br>";
+					echo "Vous venez d'annuler votre ancienne demande d'emprunt, vous pouvez à present formuler une nouvelle demande si vous le souhaitez.<br>";
 				}
 				
 				// on verifie si le perso ne doit pas des sous a la compagnie
@@ -130,17 +134,29 @@ if($dispo || $admin){
 										$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie='$id_compagnie'";
 										$mysqli->query($sql);
 										
-										// maj histoBanque_compagnie : remboursement dette (3)
-										$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant) VALUES ('$id_compagnie','$id','3','$montant')";						
-										$mysqli->query($sql);
+										$date = time();
 										
 										if($montant > $du) {
+											// maj histoBanque_compagnie : remboursement dette (3)
+											$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','3','$du', FROM_UNIXTIME($date))";						
+											$mysqli->query($sql);
+											
+											$depot = $montant - $du;
+											
+											// maj histoBanque_compagnie : depot
+											$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','0','$depot', FROM_UNIXTIME($date))";						
+											$mysqli->query($sql);
+											
 											// on met la difference sur le compte du perso
 											$montant_f = $montant-$du;
 											
 											// maj banque_compagnie
 											$sql = "UPDATE banque_compagnie SET montant=montant+$montant_f WHERE id_perso=$id";
 											$mysqli->query($sql);	
+										} else {
+											// maj histoBanque_compagnie : remboursement dette (3)
+											$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','3','$montant', FROM_UNIXTIME($date))";						
+											$mysqli->query($sql);
 										}
 									}
 									else {
@@ -154,7 +170,8 @@ if($dispo || $admin){
 										$mysqli->query($sql);
 										
 										// maj histoBanque_compagnie
-										$sql = "INSERT INTO histobanque_compagnie VALUES ('','$id_compagnie','$id','0','$montant')";
+										$date = time();
+										$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','0','$montant', FROM_UNIXTIME($date))";
 										$mysqli->query($sql);
 										
 										// maj bourse perso
@@ -214,7 +231,8 @@ if($dispo || $admin){
 								$mysqli->query($sql);
 								
 								// maj histoBanque_compagnie
-								$sql = "INSERT INTO histobanque_compagnie VALUES ('','$id_compagnie','$id','1','-$montant')";
+								$date = time();
+								$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','1','-$montant', FROM_UNIXTIME($date))";
 								$mysqli->query($sql);
 								
 								// maj bourse perso
@@ -260,7 +278,7 @@ if($dispo || $admin){
 								echo "<br>";
 								echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" class=\"form-group\" name=\"annuler_emp\">";
 								echo "	<div align=\"center\">";
-								echo "		<input type=\"submit\" name=\"annuler_emp\" value=\"Oui\">";
+								echo "		<input type=\"submit\" name=\"annuler_emp\" value=\"Oui\"> <input type=\"submit\" name=\"non\" value=\"Non\">";
 								echo "	</div>";
 								echo "</form>";
 							}
@@ -339,6 +357,20 @@ if($dispo || $admin){
 				$banque = $t_b["montant"];
 				
 				echo "<center><font color=blue>Vous avez <b>$banque</b> thune(s) en banque</font></center><br>";
+				
+				// y a t-il une demande d'emprunt ?
+				$sql = "SELECT montant_emprunt FROM banque_compagnie WHERE id_perso='$id' AND demande_emprunt='1'";
+				$res = $mysqli->query($sql);
+				$t_e = $res->fetch_assoc();
+				
+				$montant_emprunt = $t_e['montant_emprunt'];
+				
+				if (isset($montant_emprunt) && $montant_emprunt > 0) {
+					echo "<center><font color=red>Vous avez effectué une demande d'emprunt de <b>$montant_emprunt</b> thune(s)</font>";
+					echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" class=\"form-group\" name=\"annuler_emp\">";
+					echo "	<input class='btn btn-outline-danger' type=\"submit\" name=\"annuler_emp\" value=\"Annuler demande emprunt\">";
+					echo "</form></center>";
+				}
 				
 				echo "<br>";
 				

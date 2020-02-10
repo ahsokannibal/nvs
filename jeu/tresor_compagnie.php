@@ -34,10 +34,25 @@ if($dispo || $admin){
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	<body>
-		<div align="center"><h2>Tresorerie</h2></div>
+		<div class="container-fluid">
+	
+			<div class="row">
+				<div class="col-12">
+
+					<div align="center">
+						<h2>Trésorerie</h2>
+					</div>
+					
+					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
 	<?php
 	if(isset($_GET["id_compagnie"])) {
 		
@@ -59,7 +74,14 @@ if($dispo || $admin){
 					if(isset($_GET['detail'])) {
 						
 						$id_p = $_GET['detail'];
-						$sql = "SELECT nom_perso, operation, montant FROM histobanque_compagnie, perso 
+						
+						$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_p'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$nom_perso = $t['nom_perso'];
+						
+						$sql = "SELECT operation, montant, date_operation FROM histobanque_compagnie, perso 
 								WHERE id_compagnie=$id_compagnie 
 								AND histobanque_compagnie.id_perso=perso.ID_perso 
 								AND histobanque_compagnie.id_perso=$id_p 
@@ -68,26 +90,46 @@ if($dispo || $admin){
 						
 						echo "<center>";
 						
+						echo "<b>".$nom_perso." [".$id_p."]</b><br /><br />";
+						
+						echo "<div id=\"table_tresor\" class=\"table-responsive\">";
+						echo "	<table border='1'>";
+						echo "		<tr>";
+						echo "			<th>Date opération</th><th>Type d'opération</th><th>Montant</th>";
+						echo "		</tr>";
+						
 						while ($t_solde = $res->fetch_assoc()) {
 							
-							$nom_p 		= $t_solde['nom_perso'];
 							$op 		= $t_solde['operation'];
 							$montant 	= $t_solde['montant'];
+							$date_ope	= $t_solde['date_operation'];
 							
 							if ($op == 0) {
-								echo "$nom_p a retiré <b>$montant</b> po<br>";
+								$type_ope = "Dépot";
+								$color = "blue";
 							}
 							if ($op == 1) {
-								echo "$nom_p a deposé <b>$montant</b> po<br>";
+								$type_ope = "Retrait";
+								$montant = substr($montant, 1, strlen($montant));
+								$color = "orange";
 							}
 							if ($op == 2) {
-								$mont = -$montant;
-								echo "$nom_p a emprunté : <b>$mont</b> po<br>";
+								$type_ope = "Emprunt";
+								$montant = -$montant;
+								$color = "red";
 							}
 							if ($op == 3) {
-								echo "$nom_p a remboursé : <b>$montant</b> po<br>";
+								$type_ope = "Remboursement emprunt";
+								$color = "green";
 							}
+							
+							echo "		<tr>";
+							echo "			<td>".$date_ope."</td><td>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
+							echo "		</tr>";
 						}
+						
+						echo "	</table>";
+						echo "</div>";
 					}
 					else {
 						// on recupere l'historique pour les persos de sa compagnie
@@ -99,15 +141,27 @@ if($dispo || $admin){
 						
 						echo "<center>";
 						
+						echo "<div id=\"table_tresor_perso\" class=\"table-responsive\">";
+						echo "	<table border='1' width='100%'>";
+						echo "		<tr>";
+						echo "			<th>Nom [matricule]</th><th style='text-align: center;'>Montant</th><th style='text-align: center;'>Action</th>";
+						echo "		</tr>";
+						
 						while ($t_solde = $res->fetch_assoc()) {
 							
 							$id_p 	= $t_solde['id_perso'];
 							$nom_p 	= $t_solde['nom_perso'];
 							$fond 	= $t_solde['fond'];
 							
-							echo "$nom_p [".$id_p."] : $fond <a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok&detail=$id_p'> Details ? </a><br>";
-						}			
+							echo "		<tr>";
+							echo "			<td>".$nom_p."[".$id_p."]</td><td align='center'>".$fond."</td><td align='center'><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok&detail=$id_p' class='btn btn-info'> Consulter détails </a></td>";
+							echo "		</tr>";
+						}
+						
+						echo "	</table>";
+						echo "</div>";						
 					}
+					
 					echo "</center><br>";
 				}
 				
@@ -188,8 +242,8 @@ if($dispo || $admin){
 					echo "<center><font color = blue>Il n y a aucun perso en attente d'emprunt</font></center>";
 				}
 				
-				echo "<br /><center><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok'> Voir les soldes par perso </a></center><br>";
-				echo "<a href='compagnie.php'> [acceder a la page de compagnie] </a>";
+				echo "<br /><center><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok' class='btn btn-primary'> Voir les soldes par perso </a></center><br>";
+				echo "<a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a>";
 			}
 		}
 		else {
@@ -203,6 +257,13 @@ if($dispo || $admin){
 		}
 	}	
 	?>
+		</div>
+		
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	</body>
 </html>
 	<?php
