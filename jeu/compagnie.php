@@ -310,6 +310,8 @@ if($dispo || $admin){
 			$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan";
 			$res = $mysqli->query($sql);
 			
+			echo "<table border=\"1\" width = 100%>";
+			
 			while ($sec = $res->fetch_assoc()) {
 				
 				$id_compagnie 			= $sec["id_compagnie"];
@@ -319,13 +321,19 @@ if($dispo || $admin){
 				$description_compagnie 	= $sec["description_compagnie"];
 						
 				// creation des tableau avec les compagnies existantes
-				echo "<table border=\"1\" width = 100%><tr>
-				<td width=40 height=40><img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\"></td>
-				<th width=25%>$nom_compagnie</th>
-				<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>
-				<td width=80><a href='compagnie.php?id_compagnie=$id_compagnie&voir_compagnie=ok'><center>Plus d'infos</center></a></td>";
-				echo "</tr></table>";
+				echo "	<tr>";
+				echo "		<td width=40 height=40>";
+				if ($image_compagnie != "0" && trim($image_compagnie) != "") {
+					echo "<img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\">";
+				}
+				echo "		</td>";
+				echo "		<td width=25%>$nom_compagnie</td>";
+				echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
+				echo "		<td width=80><a href='compagnie.php?id_compagnie=$id_compagnie&voir_compagnie=ok'><center>Plus d'infos</center></a></td>";
+				echo "	</tr>";
 			}
+			
+			echo "</table>";
 		}
 		else {
 			
@@ -536,6 +544,8 @@ if($dispo || $admin){
 									AND compagnie_as_contraintes.contrainte_type_perso = perso.type_perso";
 							$res = $mysqli->query($sql);
 							
+							echo "<table border=\"1\" width = 100%>";
+							
 							while ($sec = $res->fetch_assoc()) {
 								
 								$id_compagnie 			= $sec["id_compagnie"];
@@ -545,7 +555,6 @@ if($dispo || $admin){
 								$description_compagnie 	= $sec["description_compagnie"];
 							
 								// creation des tableau avec les compagnies existantes
-								echo "<table border=\"1\" width = 100%>";
 								echo "	<tr>";
 								echo "		<td width=40 height=40>";
 								if ($image_compagnie != "0" && trim($image_compagnie) != "") {
@@ -557,8 +566,9 @@ if($dispo || $admin){
 								echo "		<td width=80><a class='btn btn-outline-info' href='compagnie.php?id_compagnie=$id_compagnie'><center>Plus d'infos</center></a></td>";
 								echo "		<td width=100><a class='btn btn-outline-success' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'><center> >>Rejoindre</center></a></td>";
 								echo "	</tr>";
-								echo "</table>";
 							}
+							
+							echo "</table>";
 						}
 					}
 				}
