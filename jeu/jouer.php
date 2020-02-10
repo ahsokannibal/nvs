@@ -103,95 +103,6 @@ if($dispo || $admin){
 					echo "<center><font color=red><b>Nouveau tour</b></font></center>";
 					$_SESSION["nv_tour"] = 0;
 				}
-				?>	
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-	<head>
-		<title>Nord VS Sud</title>
-		
-		<!-- Required meta tags -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		
-		<link href="../style2.css" rel="stylesheet" type="text/css">
-		
-		<style>
-		.sidebar {
-		  height: 100%;
-		  width: 0;
-		  position: fixed;
-		  z-index: 1;
-		  top: 0;
-		  left: 0;
-		  background-color: #111;
-		  overflow-x: hidden;
-		  transition: 0.5s;
-		  padding-top: 60px;
-		}
-		
-		.sidebar a {
-		  padding: 8px 8px 8px 32px;
-		  text-decoration: none;
-		  font-size: 25px;
-		  color: #818181;
-		  display: block;
-		  transition: 0.3s;
-		}
-
-		.sidebar a:hover {
-		  color: #f1f1f1;
-		}
-		
-		.sidebar .closebtn {
-		  position: absolute;
-		  top: 0;
-		  right: 25px;
-		  font-size: 36px;
-		  margin-left: 50px;
-		}
-
-		.openbtn {
-		  font-size: 10px;
-		  background-color: #111;
-		  color: white;
-		  padding: 10px 15px;
-		  border: none;
-		  height: 100px;
-		}
-		
-		.openbtn:hover {
-		  background-color: #444;
-		}
-
-		#boutonChat {
-		  transition: margin-left .5s;
-		  position: fixed;
-		  left: 0;
-		  top: 50%;
-		}
-		
-		/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-		@media screen and (max-height: 450px) {
-		  .sidebar {padding-top: 15px;}
-		  .sidebar a {font-size: 18px;}
-		}
-		</style>
-		
-	</head>
-
-	<body>
-		<!--<div id="mySidebar" class="sidebar">
-		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-		  <a href="#">Test</a>
-		</div>
-
-		<div id="boutonChat">
-		  <button class="openbtn" onclick="openNav()">Chat</button>  
-		</div>-->
-				<?php
 				
 				// recuperation des anciennes données du perso
 				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, image_perso, pa_perso, perception_perso, recup_perso, bonusRecup_perso, bonusPM_perso, type_perso, paMax_perso, pv_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
@@ -1983,6 +1894,96 @@ if($dispo || $admin){
 						$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoN, $y_persoN, $id_perso, $type_perso);
 					}
 				}
+				
+				?>	
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Nord VS Sud</title>
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		
+		<link href="../style2.css" rel="stylesheet" type="text/css">
+		
+		<style>
+		.sidebar {
+		  height: 100%;
+		  width: 0;
+		  position: fixed;
+		  z-index: 1;
+		  top: 0;
+		  left: 0;
+		  background-color: #111;
+		  overflow-x: hidden;
+		  transition: 0.5s;
+		  padding-top: 60px;
+		}
+		
+		.sidebar a {
+		  padding: 8px 8px 8px 32px;
+		  text-decoration: none;
+		  font-size: 25px;
+		  color: #818181;
+		  display: block;
+		  transition: 0.3s;
+		}
+
+		.sidebar a:hover {
+		  color: #f1f1f1;
+		}
+		
+		.sidebar .closebtn {
+		  position: absolute;
+		  top: 0;
+		  right: 25px;
+		  font-size: 36px;
+		  margin-left: 50px;
+		}
+
+		.openbtn {
+		  font-size: 10px;
+		  background-color: #111;
+		  color: white;
+		  padding: 10px 15px;
+		  border: none;
+		  height: 100px;
+		}
+		
+		.openbtn:hover {
+		  background-color: #444;
+		}
+
+		#boutonChat {
+		  transition: margin-left .5s;
+		  position: fixed;
+		  left: 0;
+		  top: 50%;
+		}
+		
+		/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
+		@media screen and (max-height: 450px) {
+		  .sidebar {padding-top: 15px;}
+		  .sidebar a {font-size: 18px;}
+		}
+		</style>
+		
+	</head>
+
+	<body>
+		<!--<div id="mySidebar" class="sidebar">
+		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
+		  <a href="#">Test</a>
+		</div>
+
+		<div id="boutonChat">
+		  <button class="openbtn" onclick="openNav()">Chat</button>  
+		</div>-->
+				<?php
 				
 				//affichage de l'heure serveur et de nouveau tour
 				echo "<table width=100% bgcolor='white' border=0>";
