@@ -153,7 +153,7 @@ if($dispo || $admin){
 										echo "<center><font color='red'>Vous ne pouvez pas postuler dans cette compagnie, contraintes non respectées</font></center>";
 									}
 					
-									echo "<a href='compagnie.php'> [retour] </a>";
+									echo "<a href='compagnie.php' class='btn btn-outline-secondary'> retour </a>";
 								}
 								else {
 									echo "<center><font color='red'>Vous êtes déjà inscrit dans une compagnie</font></center>";
@@ -177,7 +177,7 @@ if($dispo || $admin){
 							if ($chef == 1) { 
 								echo "<center><font color = red>Vous devez d'abords choisir un nouveau chef avant de quitter la compagnie</font></center><br>";
 								echo "<center><a href='chef_compagnie.php?id_compagnie=".$id_compagnie."'>changer de chef</a></center>";
-								echo "<center><a href='compagnie.php'> [retour] </a></center>";
+								echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
 							}
 							else { 
 						
@@ -186,7 +186,7 @@ if($dispo || $admin){
 								$mysqli->query($sql);
 							
 								echo "<center><font color='blue'>Votre demande pour quitter la compagnie a bien été effectuée</font></center>";
-								echo "<center><a href='compagnie.php'> [retour] </a></center>";
+								echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
 							}
 						}
 					}
@@ -285,7 +285,7 @@ if($dispo || $admin){
 								echo "<center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'> >>Rejoindre</a></center>";
 							}
 						}
-						echo "<br><center><a href=\"compagnie.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						echo "<br><center><a href=\"compagnie.php?voir_compagnie=ok\" class='btn btn-outline-secondary'> retour liste compagnies </a> <a href=\"compagnie.php\" class='btn btn-outline-secondary'> retour compagnie </a></center>";
 					}
 				}
 				else {
@@ -351,7 +351,7 @@ if($dispo || $admin){
 				$id_compagnie = $c[0];
 				
 				// recuperation des information sur la compagnie
-				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie";
+				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
 				$res = $mysqli->query($sql);
 				$sec = $res->fetch_assoc();
 				
@@ -360,6 +360,20 @@ if($dispo || $admin){
 				$image_compagnie 		= $sec["image_compagnie"];
 				$resume_compagnie 		= $sec["resume_compagnie"];
 				$description_compagnie 	= $sec["description_compagnie"];
+				$genie_compagnie		= $sec["genie_civil"];
+				
+				if ($genie_compagnie) {
+					$nb_persos_compagnie_max = 60;
+				} else {
+					$nb_persos_compagnie_max = 80;
+				}
+				
+				// Récupération nombre perso dans la compagnie
+				$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+				$res = $mysqli->query($sql);
+				$tab = $res->fetch_assoc();
+				
+				$nb_persos_compagnie = $tab["nb_persos_compagnie"];
 					
 				// affichage des information de la compagnie
 				echo "<center><b>$nom_compagnie</b></center>";
@@ -371,7 +385,7 @@ if($dispo || $admin){
 				}
 				echo "		</td>";
 				echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
-				echo "		<td width=20%><center>Liste des membres</center></td>";
+				echo "		<td width=20%><center>Liste des membres  (". $nb_persos_compagnie ."/".$nb_persos_compagnie_max.")</center></td>";
 				echo "	</tr>";
 				echo "	<tr>";
 				echo "		<td></td>";
@@ -506,7 +520,7 @@ if($dispo || $admin){
 					$mysqli->query($sql);
 			
 					echo "Vous venez d'annuler votre demande d'adhésion <br />";
-					echo "<a href='compagnie.php'>[ retour ]</>";
+					echo "<a href='compagnie.php' class='btn btn-outline-secondary'> retour </>";
 				}
 				else{
 					// en attente de validation

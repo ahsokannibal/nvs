@@ -401,7 +401,7 @@ if($dispo || $admin){
 				echo "	</div>";
 				echo "</form>";
 				
-				echo "<br /><br /><center><a href='compagnie.php'> [acceder a la page de la compagnie] </a></center>";
+				echo "<br /><br /><center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a></center>";
 				
 				echo "	</div>";
 				echo "</div>";
