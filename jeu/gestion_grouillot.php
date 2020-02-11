@@ -83,10 +83,21 @@ if($dispo || $admin){
 					
 					if (trim($nouveau_nom_grouillot) != "" && filtre($nouveau_nom_grouillot,1,25)) {
 						
-						$sql = "UPDATE perso SET nom_perso = '$nouveau_nom_grouillot' WHERE id_perso = '$matricule_grouillot'";
-						$mysqli->query($sql);
+						// On vérifie si ce nom est déjà utilisé
+						$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nouveau_nom_grouillot'";
+						$res = $mysqli->query($sql);
+						$verif = $res->num_rows;
 						
-						echo "<center><font color='blue'>Vous avez renommé un de vos grouillots en $nouveau_nom_grouillot</font></center>";
+						if (!$verif) {
+						
+							$sql = "UPDATE perso SET nom_perso = '$nouveau_nom_grouillot' WHERE id_perso = '$matricule_grouillot'";
+							$mysqli->query($sql);
+							
+							echo "<center><font color='blue'>Vous avez renommé un de vos grouillots en $nouveau_nom_grouillot</font></center>";
+						}
+						else {
+							echo "<center><b><font color='red'>Ce nom est déjà utilisé, veuillez en choisir un autre</font></b></center>";
+						}
 						
 					} else {
 						echo "<center><b><font color='red'>Veuillez rentrer une valeur correcte sans caractères spéciaux comprise entre 1 et 25 caractères pour le nom de votre grouillot</font></b></center>";
