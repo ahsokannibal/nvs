@@ -1992,10 +1992,13 @@ if($dispo || $admin){
 						<td rowspan=2><img src='../images/accueil/banniere.jpg' alt='banniere Nord VS Sud' width=150 height=63 /></td>
 						<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
 					</tr>";
-				echo "<tr>
-						<td>Prochain tour :  ".$n_dla."</td>
-						<td align=right><a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a></td>
-					</tr>";
+				echo "<tr>";
+				echo "	<td>Prochain tour :  ".$n_dla."</td>";
+				echo "	<td align=right>";
+				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
+				if($admin) { echo " <a class='btn btn-warning' href='admin_nvs.php'>Admin</a>"; }
+				echo "	</td>";
+				echo "</tr>";
 				echo "</table>";
 	
 				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
@@ -2200,7 +2203,7 @@ if($dispo || $admin){
 						</td>
 					</tr>
 					<tr>
-						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; if($admin) { echo "<br /><a class='btn btn-primary' href='admin_nvs.php'>Admin</a>"; }?></td>
+						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; if (anim_perso($mysqli, $id_perso)) { echo "<br /><a class='btn btn-warning' href='animation.php'>Animation</a>"; } ?></td>
 						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
 						<td align=center><b>Compagnie : </b><?php echo "<a href=\"compagnie.php\" target='_blank'>" . stripslashes($nom_compagnie_perso) . "</a>"; ?></td>
 					</tr>
