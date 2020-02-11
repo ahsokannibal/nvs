@@ -1,11 +1,11 @@
 <?php
-// définition des abscisses et ordonnées limites de la carte
+// dÃ©finition des abscisses et ordonnÃ©es limites de la carte
 define ("X_MIN", 0);
 define ("Y_MIN", 0);
 define ("X_MAX", 200);
 define ("Y_MAX", 200);
 
-// définition des abscisses et ordonnées limites de la carte
+// dÃ©finition des abscisses et ordonnÃ©es limites de la carte
 define ("I_PLAINE", "1.gif");
 define ("I_COLLINE", "2.gif");
 define ("I_MONTAGNE", "3.gif");
@@ -22,32 +22,32 @@ define("I_PONT_R","b5r.png");
 define("I_ROUTE_B","b4b.png");
 define("I_ROUTE_R","b4r.png");
 
-function in_map($x, $y) //vérifie si les coordonnées passées en argument sont bien sur la carte
+function in_map($x, $y) //vÃ©rifie si les coordonnÃ©es passÃ©es en argument sont bien sur la carte
 {
 	return $x >= X_MIN && $y >= Y_MIN && $x <= X_MAX && $y <= Y_MAX;
 }
 
-function in_map_arene($x, $y) //vérifie si les coordonnées passées en argument sont bien sur la carte
+function in_map_arene($x, $y) //vÃ©rifie si les coordonnÃ©es passÃ©es en argument sont bien sur la carte
 {
 	return $x >= X_MIN && $y >= Y_MIN && $x <= X_MAXA && $y <= Y_MAXA;
 }
 
-function reste_pm($pm) //vérifie si le perso à suffisament de pm pour se deplacer
+function reste_pm($pm) //vÃ©rifie si le perso Ã  suffisament de pm pour se deplacer
 {
 	return $pm > 0;
 }
 
-function is_eau_p($fond) //vérifie si le fond passé en argument est de l'eau profonde
+function is_eau_p($fond) //vÃ©rifie si le fond passÃ© en argument est de l'eau profonde
 {
 	return $fond == I_EAU_P;
 }
 
-function is_ville($image) //vérifie si l'image de la carte occupée (passée en argument) est une ville
+function is_ville($image) //vÃ©rifie si l'image de la carte occupÃ©e (passÃ©e en argument) est une ville
 {
 	return $image == I_VILLE;
 }
 
-function is_pont($image) //vérifie si l'image de la carte occupée (passée en argument) est un pont
+function is_pont($image) //vÃ©rifie si l'image de la carte occupÃ©e (passÃ©e en argument) est un pont
 {
 	return $image == I_PONT;
 }
@@ -83,11 +83,11 @@ function get_malus_visu($fond)
 function get_nom_terrain($fond) {
 	switch($fond) {
 		case(I_PLAINE): return "Plaine"; break;
-		case(I_FORET): return "Forêt"; break;
+		case(I_FORET): return "ForÃªt"; break;
 		case(I_EAU): return "Eau"; break;
 		case(I_EAU_P): return "Eau Profonde"; break;
-		case(I_MARECAGE): return "Marécage"; break;
-		case(I_DESERT): return "Désert"; break;
+		case(I_MARECAGE): return "MarÃ©cage"; break;
+		case(I_DESERT): return "DÃ©sert"; break;
 		case(I_NEIGE): return "Neige"; break;
 		case(I_COLLINE): return "Colline"; break;
 		case(I_MONTAGNE): return "Montagne"; break;
@@ -120,7 +120,7 @@ function endurance_alcool($mysqli, $id_perso){
 	return $num==1;
 }
 
-// fonction qui vérifie si on est pas trop chargé et retourne le malus de pm
+// fonction qui vÃ©rifie si on est pas trop chargÃ© et retourne le malus de pm
 function get_malus_charge($charge, $chargeMax){
 	$chargeMax_reel = $chargeMax * 4;
 	$malus = ceil($chargeMax_reel - $charge);
@@ -130,25 +130,60 @@ function get_malus_charge($charge, $chargeMax){
 	return $malus;
 }
 
-//donne les cibles humaines potentielles d'une attaque en fonction de la portée de l'arme
+//donne les cibles humaines potentielles d'une attaque en fonction de la portÃ©e de l'arme
 function get_cibles($mysqli, $x_perso, $y_perso, $id_perso, $perc, $portee) {	
 	if ($perc < $portee) $portee=$perc;
-	$sql = "SELECT DISTINCT nom_perso, ID_perso FROM carte, perso WHERE occupee_carte='1' AND x_carte >= $x_perso - $portee AND x_carte <= $x_perso + $portee AND y_carte <= $y_perso + $portee AND y_carte >= $y_perso - $portee AND idPerso_carte!='$id_perso' AND idPerso_carte=ID_perso AND x_perso >= $x_perso - $portee AND x_perso <= $x_perso + $portee AND y_perso <= $y_perso + $portee AND y_perso >= $y_perso - $portee AND pv_perso>0 ORDER BY ID_perso";
+	$sql = "SELECT DISTINCT nom_perso, ID_perso FROM carte, perso 
+			WHERE occupee_carte='1' 
+			AND x_carte >= $x_perso - $portee 
+			AND x_carte <= $x_perso + $portee 
+			AND y_carte <= $y_perso + $portee 
+			AND y_carte >= $y_perso - $portee 
+			AND idPerso_carte!='$id_perso' 
+			AND idPerso_carte=ID_perso 
+			AND x_perso >= $x_perso - $portee 
+			AND x_perso <= $x_perso + $portee 
+			AND y_perso <= $y_perso + $portee 
+			AND y_perso >= $y_perso - $portee 
+			AND pv_perso>0 
+			ORDER BY ID_perso";
 	return $res = $mysqli->query($sql);
 }
 
-//donne les cibles pnj potentielles d'une attaque en fonction de la portée de l'arme
+//donne les cibles pnj potentielles d'une attaque en fonction de la portÃ©e de l'arme
 function get_cibles_pnj($mysqli, $x_perso, $y_perso, $perc, $portee) {	
 	echo $portee;
 	echo " ".$perc;
 	if ($perc < $portee) $portee=$perc;
-	$sql = "SELECT DISTINCT nom_pnj, id_instance_pnj FROM carte, instance_pnj, pnj WHERE occupee_carte='1' AND x_carte >= $x_perso - $portee AND x_carte <= $x_perso + $portee AND y_carte <= $y_perso + $portee AND y_carte >= $y_perso - $portee AND pnj.id_pnj=instance_pnj.id_pnj AND idPerso_carte=id_instance_pnj AND x_pnj >= $x_perso - $portee AND x_pnj <= $x_perso + $portee AND y_pnj <= $y_perso + $portee AND y_pnj >= $y_perso - $portee AND pv_instance>0 ORDER BY id_instance_pnj";
+	$sql = "SELECT DISTINCT nom_pnj, id_instance_pnj 
+			FROM carte, instance_pnj, pnj 
+			WHERE occupee_carte='1' 
+			AND x_carte >= $x_perso - $portee 
+			AND x_carte <= $x_perso + $portee 
+			AND y_carte <= $y_perso + $portee 
+			AND y_carte >= $y_perso - $portee 
+			AND pnj.id_pnj=instance_pnj.id_pnj 
+			AND idPerso_carte=id_instance_pnj 
+			AND x_pnj >= $x_perso - $portee 
+			AND x_pnj <= $x_perso + $portee 
+			AND y_pnj <= $y_perso + $portee 
+			AND y_pnj >= $y_perso - $portee 
+			AND pv_instance>0 
+			ORDER BY id_instance_pnj";
 	return $res = $mysqli->query($sql);
 }
 
 function get_persos_visu($mysqli, $x_perso, $y_perso, $perc,$id) //donne les persos dans sa visu
 {
-	$sql = "SELECT DISTINCT perso.nom_perso,idPerso_carte FROM carte,perso WHERE occupee_carte='1' AND x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc AND y_carte >= $y_perso - $perc AND y_carte<=$y_perso + $perc AND carte.idPerso_carte=perso.id_perso AND carte.idPerso_carte!='$id'";
+	$sql = "SELECT DISTINCT perso.nom_perso,idPerso_carte 
+			FROM carte,perso 
+			WHERE occupee_carte='1' 
+			AND x_carte >= $x_perso - $perc 
+			AND x_carte <= $x_perso + $perc 
+			AND y_carte >= $y_perso - $perc 
+			AND y_carte<=$y_perso + $perc 
+			AND carte.idPerso_carte=perso.id_perso 
+			AND carte.idPerso_carte!='$id'";
 	return $res = $mysqli->query($sql);
 }
 
@@ -188,7 +223,7 @@ function chance_objet($nb){
 		return 0;
 }
 
-// fonction qui verifie si le perso est à proximité d'un coffre
+// fonction qui verifie si le perso est Ã  proximitÃ© d'un coffre
 function prox_coffre($mysqli, $x, $y){
 	
 	$nb = 0;
@@ -236,7 +271,7 @@ function contenu_coffre($mysqli){
 	
 	$ok = 0;
 	
-	// récupération du nombre d'objets en base
+	// rÃ©cupÃ©ration du nombre d'objets en base
 	$sql = "SELECT id_objet FROM contenu_coffre";
 	$res = $mysqli->query($sql);
 	$nb_o = $res->num_row;
@@ -262,7 +297,7 @@ function contenu_coffre($mysqli){
 }
 
 /**
- * Fonction qui permet de determiner si un perso est sur un objet déposé ou drop à terre
+ * Fonction qui permet de determiner si un perso est sur un objet dÃ©posÃ© ou drop Ã  terre
  *
  */
 function is_objet_a_terre($mysqli, $x_perso, $y_perso) {
@@ -276,7 +311,7 @@ function is_objet_a_terre($mysqli, $x_perso, $y_perso) {
 	return $nb_obj > 0;
 }
 
-// fonction qui retourne un booleen : vrai si il y a un batiment a coté de ces coordonnées, faux sinon
+// fonction qui retourne un booleen : vrai si il y a un batiment a cotÃ© de ces coordonnÃ©es, faux sinon
 function prox_bat($mysqli, $x, $y, $id_perso){
 	
 	$sql = "SELECT idPerso_carte FROM carte,perso WHERE x_carte >= $x - 1 AND x_carte <= $x + 1 AND y_carte >= $y - 1 AND y_carte <= $y + 1 AND idPerso_carte>50000";
@@ -286,7 +321,7 @@ function prox_bat($mysqli, $x, $y, $id_perso){
 	
 }
 
-// fonction qui retourne un booleen : vrai si il y a un batiment a coté de ces coordonnées, faux sinon
+// fonction qui retourne un booleen : vrai si il y a un batiment a cotÃ© de ces coordonnÃ©es, faux sinon
 function prox_bat_perso($mysqli, $id_perso, $id_bat){
 	
 	$sql = "SELECT idPerso_carte FROM carte, perso 
@@ -299,7 +334,7 @@ function prox_bat_perso($mysqli, $id_perso, $id_bat){
 	
 }
 
-// fonction qui retourne un booleen : vrai si le batiment concerné est a coté de ces coordonnées, faux sinon
+// fonction qui retourne un booleen : vrai si le batiment concernÃ© est a cotÃ© de ces coordonnÃ©es, faux sinon
 function prox_instance_bat($mysqli, $x, $y, $instance){
 	
 	if($instance >= 50000){
@@ -322,7 +357,7 @@ function prox_instance_bat($mysqli, $x, $y, $instance){
 	
 }
 
-// fonction qui recupere les infos sur les batiments a proximité
+// fonction qui recupere les infos sur les batiments a proximitÃ©
 // on ne prend pas en compte les trains
 function id_prox_bat($mysqli, $x, $y){
 	
@@ -364,7 +399,7 @@ function in_instance_bat($mysqli, $id_perso, $id_i_bat){
 	return $nb != 0;
 }
 
-// fonction qui verifie si le batiment est de la même nation ou non
+// fonction qui verifie si le batiment est de la mÃªme nation ou non
 function nation_perso_bat($mysqli, $id_perso, $id_bat){
 	
 	// recuperation de la nation du perso
@@ -400,7 +435,7 @@ function existe_instance_bat($mysqli, $instance_bat){
 	return $verif != 0;
 }
 
-// fonction qui vérifie le type du batiment par rapport à son instance
+// fonction qui vÃ©rifie le type du batiment par rapport Ã  son instance
 function verif_bat_instance($mysqli, $id_bat, $id_instance){
 	
 	$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance'";
@@ -425,13 +460,13 @@ function calcul_nb_cases($x_depart, $y_depart, $x_arrivee, $y_arrivee){
 	return ceil(SQRT(POW($x, 2)+POW($y, 2)));
 }
 
-// fontion qui calcule la distance de construction possible d'un bâtiment selon le nombre de points
+// fontion qui calcule la distance de construction possible d'un bÃ¢timent selon le nombre de points
 function calcul_distance_construction($nombre_points){
 	
 	return 200;
 }
 
-// fonction qui récupère le batiment de rapatriement le plus proche d'un perso
+// fonction qui rÃ©cupÃ¨re le batiment de rapatriement le plus proche d'un perso
 function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	
 	// Verification si le perso a choisi un Hoptail de respawn
@@ -488,13 +523,13 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 			}
 			else {
 	
-				// Respawn choix par le système
+				// Respawn choix par le systÃ¨me
 	
 				// init variables
 				$min_distance = 200;
 				$min_id_bat = 0;
 
-				// récupération des batiments de rappatriement du camp du perso
+				// rÃ©cupÃ©ration des batiments de rappatriement du camp du perso
 				// Fort : 9 - Fortin : 8
 				$sql_b = "SELECT * FROM instance_batiment WHERE camp_instance='$clan' AND (id_batiment='8' OR id_batiment='9')";
 				$res_b = $mysqli->query($sql_b);
@@ -511,7 +546,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 					// calcul pourcentage pv bat 
 					$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
 					
-					// Récupération du nombre de perso dans ce batiment
+					// RÃ©cupÃ©ration du nombre de perso dans ce batiment
 					$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
 					$res_n = $mysqli->query($sql_n);
 					$t_n = $res_n->fetch_assoc();
@@ -523,7 +558,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 						// Calcul de la distance entre le batiment et le perso
 						$distance = calcul_nb_cases($x_perso, $y_perso, $x_bat, $y_bat);
 						
-						// Si la distance est moindre mais qu'on est toujours à plus de 20 cases, on selectionne ce batiment
+						// Si la distance est moindre mais qu'on est toujours Ã  plus de 20 cases, on selectionne ce batiment
 						if ($distance < $min_distance && $distance > 20){
 							$min_id_bat = $id_bat;
 						}
@@ -537,7 +572,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 }
 
 /**
- * Fonction permettant d'afficher les liens utiles lorsqu'un perso se retrouve à proximité d'un batiment
+ * Fonction permettant d'afficher les liens utiles lorsqu'un perso se retrouve Ã  proximitÃ© d'un batiment
  * @return $mess_bat contenant les liens
  */
 function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_perso) {
@@ -564,12 +599,12 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 			
 			$nom_bat = $t_n["nom_batiment"];
 				
-			// verification si le batiment est de la même nation que le perso
+			// verification si le batiment est de la mÃªme nation que le perso
 			if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) {
 			
 				// Verification si le batiment est vide
 				// + Le lien est utile pour les batiments autre que barricade et pont 
-				// + Le lien est utile que pour les unités autre que chien et soigneur
+				// + Le lien est utile que pour les unitÃ©s autre que chien et soigneur
 				if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $type_perso != '6' && $type_perso != '4'){
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
@@ -579,7 +614,7 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 				
-				// Les chiens ne peuvent pas réparer les batiments
+				// Les chiens ne peuvent pas rÃ©parer les batiments
 				if ($pv_instance < $pvMax_instance && $type_perso != '6') {
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat] (5 PA)</a>~~</font></center>";
 				}
