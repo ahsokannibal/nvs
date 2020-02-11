@@ -81,7 +81,7 @@ if($dispo || $admin){
 					$nouveau_nom_grouillot 	= $_POST["nom_grouillot"];
 					$matricule_grouillot 	= $_POST["matricule_hidden"];
 					
-					if (trim($nouveau_nom_grouillot) != "" && filtre($nouveau_nom_grouillot,1,25)) {
+					if (trim($nouveau_nom_grouillot) != "" && filtre($nouveau_nom_grouillot,1,25) && !ctype_digit($nouveau_nom_grouillot)) {
 						
 						// On vérifie si ce nom est déjà utilisé
 						$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nouveau_nom_grouillot'";
