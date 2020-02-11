@@ -2566,7 +2566,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$clan_cible = $t['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
 									
-								echo "Vous avez donné <b>$quantite or</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "Vous avez donné <b>$quantite thunes</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
