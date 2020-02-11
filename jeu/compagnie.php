@@ -94,7 +94,7 @@ if($dispo || $admin){
 									}
 								}
 								
-								// vefication que le perso n'est pas deja dans une compagnie ou en attente sur une autre
+								// verification que le perso n'est pas deja dans une compagnie ou en attente sur une autre
 								$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id'";
 								$res = $mysqli->query($sql);
 								$est_deja = $res->num_rows;
@@ -277,15 +277,28 @@ if($dispo || $admin){
 						echo "	</tr>";
 						echo "</table><br>";
 						
+						// verification que le perso n'est pas deja dans une compagnie ou en attente sur une autre
+						$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id'";
+						$res = $mysqli->query($sql);
+						$est_deja = $res->num_rows;
+						
 						if(isset($_GET['voir_compagnie']) && $_GET['voir_compagnie'] == 'ok'){
 							echo "";
 						}
 						else {
 							if ($nb_persos_compagnie < $nb_persos_compagnie_max) {
-								echo "<center><a href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'> >>Rejoindre</a></center>";
+								echo "<center><a class='btn btn-outline-success' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'> >>Rejoindre</a></center>";
 							}
 						}
-						echo "<br><center><a href=\"compagnie.php?voir_compagnie=ok\" class='btn btn-outline-secondary'> retour liste compagnies </a> <a href=\"compagnie.php\" class='btn btn-outline-secondary'> retour compagnie </a></center>";
+						
+						echo "<br>";
+						echo "<center>";
+						if ($est_deja) {
+							echo "	<a href=\"compagnie.php?voir_compagnie=ok\" class='btn btn-outline-secondary'> retour liste compagnie </a> <a href=\"compagnie.php\" class='btn btn-outline-secondary'> retour compagnie </a>";
+						} else {
+							echo "	<a href=\"compagnie.php\" class='btn btn-outline-secondary'> retour liste compagnies </a> ";
+						}
+						echo "</center>";
 					}
 				}
 				else {
@@ -329,7 +342,7 @@ if($dispo || $admin){
 				echo "		</td>";
 				echo "		<td width=25%>$nom_compagnie</td>";
 				echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
-				echo "		<td width=80><a href='compagnie.php?id_compagnie=$id_compagnie&voir_compagnie=ok'><center>Plus d'infos</center></a></td>";
+				echo "		<td width=80><a class='btn btn-outline-info' href='compagnie.php?id_compagnie=$id_compagnie&voir_compagnie=ok'><center>Plus d'infos</center></a></td>";
 				echo "	</tr>";
 			}
 			
