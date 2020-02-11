@@ -412,6 +412,19 @@ function admin_perso($mysqli, $id_perso){
 }
 
 /**
+  * Fonction qui vérifie si un perso est animateur
+  * @param $id_perso	: l'identifiant du perso
+  * @return Bool		: Si oui ou non le perso est admin
+  */
+function anim_perso($mysqli, $id_perso){
+	$sql = "SELECT animateur FROM joueur, perso WHERE id_perso='$id_perso' AND perso.idJoueur_perso  = joueur.id_joueur";
+	$res = $mysqli->query($sql);
+	$t_anim = $res->fetch_assoc();
+	
+	return $t_anim["animateur"];
+}
+
+/**
   * Fonction qui retourne la configuration de disponibilité du jeu
   * @return Bool	: Si oui ou non le jeu est disponible
   */
