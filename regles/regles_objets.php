@@ -83,13 +83,13 @@
 					Les armes sont disponibles chez le marchand Momo (notamment dans les forts et fortins). On trouve ainsi aisément des baïonnettes, sabres, couteaux, sabres lourds, pistolets, pistolets à canon long, magnums, fusils, fusils à double canon, fusil de précision, gatlings…<br />
 					Il est possible d'acheter autant d'armes que vous en pouvez transporter.</p>
 					
-					<p>Toutes armes nouvellement achetées sera intégrées dans votre inventaire sous le statut "rengainé" (non équipée). Vous pourrez dégainer (ou équiper) une arme, si la place correspondante dans l'inventaire "arme" est libre. Cette action vous coûtera 10 PA.<br />
-					Rengainer (ou déséquiper) une arme vous coûtera aussi 10 PA.</p>
+					<p>Toutes armes nouvellement achetées sera intégrées dans votre inventaire sous le statut "rengainé" (non équipée). Vous pourrez dégainer (ou équiper) une arme, si la place correspondante dans l'inventaire "arme" est libre. Cette action vous coûtera 1 PA.<br />
+					Rengainer (ou déséquiper) une arme vous coûtera aussi 1 PA.</p>
 					
 					<p>Vous pouvez ramasser une arme qui est à terre en passant sur sa case et en cliquant sur le lien permettant de rammasser les objets à terre.<br />
-					Vous pouvez aussi abandonner une arme à terre pour 10 PA.<br />
-					Donner une arme vous coûte 10 PA.<br />
-					L'achat et la vente d'une arme coûte 20 PA.</p>
+					Vous pouvez aussi abandonner une arme à terre pour 1 PA.<br />
+					Donner une arme vous coûte 1 PA.<br />
+					L'achat et la vente d'une arme coûte 2 PA.</p>
 					
 					<h2>Les Objets</h2>
 					
@@ -97,10 +97,10 @@
 					Ainsi vous pourrez trouver des bouteilles de Whisky, trousses de soins, gourde d'eau…</p>
 					
 					<p>Vous pouvez aussi ramasser des objets à terre en passant simplement sur la case où est situé l'objet et en cliquant sur le lien permettant de rammasser les objets à terre.<br />
-					L'utilisation d'un objet coute 10PA.<br />
-					Vous pouvez aussi abandonner un objet à terre pour 10 PA.<br />
-					Donner un objet coûte 10 PA.<br />
-					L'achat et la vente d'un objet coûte 20 PA.</p>
+					L'utilisation d'un objet coute 1 PA.<br />
+					Vous pouvez aussi abandonner un objet à terre pour 1 PA.<br />
+					Donner un objet coûte 1 PA.<br />
+					L'achat et la vente d'un objet coûte 2 PA.</p>
 					
 					<p>Vous pouvez revendre des objets chez Momo à condition que ceux ci ne soient pas déjà utilisés et Momo vous infligera alors une décote de 10%.</p>
 					
