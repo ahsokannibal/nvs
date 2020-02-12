@@ -107,7 +107,7 @@
 					<h2>Les Thunes</h2>
 					
 					<p>La Thune est l'indicateur de richesse de votre personnage. L'argent permet de se procurer armement, médicaments… mais aussi de soudoyer un ennemi.<br />
-					Parce que vous êtes dans l'armée, vous percevez à chaque tour une solde qui s'élève à 3 thunes pour le chef plus 1 thune par grouillot.</p>
+					Parce que vous êtes dans l'armée, vous percevez à chaque tour une solde qui s'élève à 3 thunes pour le chef et un nombre de thune égal à son nombre de PG divisé par 2 et arrondi au supérieur par grouillot.</p>
 					
 					<p>Lorsque vous tuez des adversaires vous gagnez de la thune si vous ramassez la bourse qui se trouve à la place de leur cadavre.</p>
 					

@@ -89,11 +89,11 @@
 					<p>Renvoyer un grouillot ne coûte aucun PA. <b>Mais est définitif et vous perdez toutes les améliorations (expérience) ainsi que le matériel que vous auriez acheté pour cette unité !</b></p>
 					<p>Chaque grouillot vaut un certain nombre de points de grouillot (PG) :
 					<ul>
-						<li>Un chien vaut 1 point de grouillot.</li>
-						<li>Une infanterie vaut 2 points de grouillot.</li>
-						<li>Un soigneur vaut 3 points de grouillot.</li>
-						<li>Une cavalerie lourde vaut 4 points de grouillot.</li>
-						<li>Une artillerie vaut 5 points de grouillot.</li>
+						<li>Un chien vaut 1 point de grouillot. Il gagne une solde de 1 thune par tour.</li>
+						<li>Une infanterie vaut 2 points de grouillot. Il gagne une solde de 1 thune par tour.</li>
+						<li>Un soigneur vaut 3 points de grouillot. Il gagne une solde de 2 thunes par tour.</li>
+						<li>Une cavalerie lourde vaut 4 points de grouillot. Il gagne une solde de 2 thunes par tour.</li>
+						<li>Une artillerie vaut 5 points de grouillot. Il gagne une solde de 3 thunes par tour.</li>
 					</ul></p>
 					<p>Vous n'avez pas l'obligation d'utiliser tout vos PG, ces derniers seront alors conservés pour une utilisation postérieure.<br />
 					Cependant, il est vivement recommandé d'utiliser le maximum de PG afin de faire évoluer plus rapidement votre chef de bataillon (vos grouillots vous permettent de gagner des PC).</p>
