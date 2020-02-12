@@ -6,6 +6,15 @@ $mysqli = db_connexion();
 
 include ('nb_online.php');
 
+define('IN_PHPBB', true);
+$phpEx = 'php';
+
+$phpbb_root_path = './forum/';
+require_once($phpbb_root_path ."common.php");
+require_once($phpbb_root_path ."includes/functions_user.php");
+
+$request->enable_super_globals();
+
 if(config_dispo_jeu($mysqli)){
 
 	if(isset($_POST['creer'])) {
@@ -46,6 +55,7 @@ if(config_dispo_jeu($mysqli)){
 						// sécurité camp
 						if($camp == "1" || $camp == "2"){
 							
+							$old_mdp_joueur = $mdp_joueur;
 							$mdp_joueur = md5($mdp_joueur);
 							
 							if($camp == 1){ // bleu
@@ -55,6 +65,7 @@ if(config_dispo_jeu($mysqli)){
 								$y_max_spawn = 200;
 								$image_chef = "cavalerie_nord.gif";
 								$image_g = "infanterie_nord.gif";
+								$group_id = 8;
 							}
 							
 							if($camp == 2){ // rouge
@@ -64,6 +75,7 @@ if(config_dispo_jeu($mysqli)){
 								$y_max_spawn = 50;
 								$image_chef = "cavalerie_sud.gif";
 								$image_g = "infanterie_sud.gif";
+								$group_id = 9;
 							}
 						
 							$date = time();
@@ -207,6 +219,23 @@ if(config_dispo_jeu($mysqli)){
 								
 								$unlock = "UNLOCK TABLES";
 								$mysqli->query($unlock);
+								
+								// TODO - creation compte forum 
+								$user_row = array(
+									'username'				=> $nom_perso,
+									'user_password'			=> phpbb_hash($old_mdp_joueur),
+									'user_email'			=> $email_joueur,
+									'group_id'				=> $group_id,
+									'user_timezone'			=> 'UTC',
+									'user_lang'				=> 'fr',
+									'user_type'				=> USER_NORMAL,
+									'user_actkey'			=> '',
+									'user_ip'				=> realip(),
+									'user_regdate'			=> time(),
+									'user_inactive_reason'	=> 0,
+									'user_inactive_time'	=> 0,
+								);
+								user_add($user_row);
 								
 								if ($bat_spawn_dispo) {
 									// On met le perso dans le batiment
