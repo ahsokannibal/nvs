@@ -2429,14 +2429,15 @@ if($dispo || $admin){
 				// Récupération de la liste des persos à portée d'attaque arme dist
 				$res_portee_dist = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_dist, $porteeMax_arme_dist, $perc);
 				
+				// background='../images/background_html.jpg'
 				?>
-				<table border=0 align="center" cellspacing="0" cellpadding="10">
+				<table border=0 align="center" cellspacing="0" cellpadding="10" >
 					<tr>
 						<td valign="top">
 						
-							<table style="border:0px; min-width: 375px;" width="100%">
+							<table style="border:0px; background-color: cornflowerblue; min-width: 375px;" width="100%">
 								<tr>
-									<td align='left'><b>PV</b></td>
+									<td align='right'><b>PV</b></td>
 									<td align='center'><?php $pourc = affiche_jauge($pv_perso, $pvMax_perso); echo "".round($pourc)."% ou $pv_perso/$pvMax_perso"; ?></td>
 								</tr>
 							</table>
@@ -3395,13 +3396,7 @@ if($dispo || $admin){
 	else {
 		header("Location:../index.php");
 	}
-	?>
-		<table border='0'>
-			<tr>
-				<td height='100'>&nbsp;</td>
-			</tr>
-		</table>
-			
+	?>			
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
