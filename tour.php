@@ -215,19 +215,10 @@ if(isset($_SESSION["ID_joueur"])){
 				if (!$est_gele && nouveau_tour($date, $dla)) {
 				
 					// calcul du prochain tour
-					$new_dla = $date + DUREE_TOUR;
-					
-					// Calcul Or perso nouveau tour
-					// Récupération du nombre de grouillots du perso
-					$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_joueur' and chef='0' ";
-					$res = $mysqli->query($sql);
-					$num_grouillots = $res->num_rows;
-					
-					$gain_or = 3 + $num_grouillots;
-					
+					$new_dla = $date + DUREE_TOUR;					
 					
 					// Récupération de tous les perso du joueur
-					$sql = "SELECT id_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, image_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+					$sql = "SELECT id_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
 					$res = $mysqli->query($sql);
 					
 					while ($t_persos = $res->fetch_assoc()) {
@@ -241,6 +232,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$chef_perso_nouveau_tour	= $t_persos["chef"];
 						$image_perso_nouveau_tour	= $t_persos["image_perso"];
 						$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
+						$type_perso_nouveau_tour	= $t_persos["type_perso"];
 						
 						$new_bonus_perso = 0;
 						
@@ -259,14 +251,29 @@ if(isset($_SESSION["ID_joueur"])){
 							
 							if ($chef_perso_nouveau_tour == '1') {
 								
+								$gain_or = 3;
+								
 								// C'est le chef => gain or et PC
 								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							} else {
 								
+								if ($type_perso_nouveau_tour == 2) {
+									$gain_or = 2;
+								}
+								else if ($type_perso_nouveau_tour == 4) {
+									$gain_or = 2;
+								}
+								else if ($type_perso_nouveau_tour == 5) {
+									$gain_or = 3;
+								}
+								else {
+									$gain_or = 1;
+								}								
+								
 								// C'est un grouillot
-								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							}
