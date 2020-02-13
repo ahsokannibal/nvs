@@ -33,11 +33,23 @@ if($dispo || $admin){
 					$nom_compagnie 	= addslashes($_POST["nomCompagnie"]);
 					$desc_compagnie	= addslashes($_POST["descCompagnie"]);
 					
-					$sql = "INSERT INTO em_creer_compagnie (id_perso, nom_compagnie, description_compagnie, camp) VALUES ('$id', '$nom_compagnie', '$desc_compagnie', '$camp')";
-					$mysqli->query($sql);
+					// Est ce que le nom de cette compagnie est déjà pris ?
+					$sql = "SELECT * FROM compagnies WHERE nom_compagnie='$nom_compagnie'";
+					$res = $mysqli->query($sql);
+					$verif = $res->num_rows;
 					
-					echo "<center><font color='blue'>Votre compagnie " . $_POST["nomCompagnie"] . " a bien été soumis a l'état major, vous serez notifié de sa création ou non dans les prochains jours</font></center>";
+					if ($verif == 0) {
 					
+						$sql = "INSERT INTO em_creer_compagnie (id_perso, nom_compagnie, description_compagnie, camp) VALUES ('$id', '$nom_compagnie', '$desc_compagnie', '$camp')";
+						$mysqli->query($sql);
+						
+						echo "<center><font color='blue'>Votre compagnie " . $_POST["nomCompagnie"] . " a bien été soumis a l'état major, vous serez notifié de sa création ou non dans les prochains jours</font></center>";
+					} else {
+						
+						$_SESSION['desc_compagnie'] = $_POST["descCompagnie"];
+						
+						echo "<center><font color='red'>Une compagnie du nom " . $_POST["nomCompagnie"] . " existe déjà, veuillez choisir un autre nom</font></center>";
+					}
 				}
 				else {
 					echo "<center><font color='red'>Veuillez renseigner une description de compagnie</font></center>";
@@ -88,7 +100,7 @@ if($dispo || $admin){
 				</div>
 				<div class="form-group col-md-8">
 					<label for="descCompagnie">Description compagnie</label>
-					<textarea  class="form-control" cols="100" rows="20" id="descCompagnie" name="descCompagnie"></textarea >
+					<textarea  class="form-control" cols="100" rows="20" id="descCompagnie" name="descCompagnie"><?php if(isset($_SESSION['desc_compagnie'])) { echo $_SESSION['desc_compagnie']; } ?></textarea >
 				</div>
 				<div class="form-group col-md-6">
 					<input type="submit" name="enregistrer" value="enregistrer">
