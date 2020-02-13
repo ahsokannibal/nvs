@@ -74,7 +74,49 @@ if($dispo || $admin){
 						$sql = "UPDATE perso_in_compagnie SET poste_compagnie=1 WHERE id_perso=$id_p";
 						$mysqli->query($sql);
 						
-						$sql = "UPDATE perso_in_compagnie SET poste_compagnie=0 WHERE id_perso=$id";
+						// L'ancien chef redevient simple membre
+						$sql = "UPDATE perso_in_compagnie SET poste_compagnie=5 WHERE id_perso=$id";
+						$mysqli->query($sql);
+						
+						// recuperation des information sur la compagnie
+						$sql = "SELECT nom_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie";
+						$res = $mysqli->query($sql);
+						$sec = $res->fetch_assoc();
+						
+						$nom_compagnie		= addslashes($sec["nom_compagnie"]);
+						
+						// FORUM
+						// Récupération de l'id du group de la compagnie sur le forum
+						$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$id_group_forum = $t['group_id'];
+						
+						// Récupération de l'id de l'ancien chef sur le forum 
+						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+									(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+										(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1')";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$id_forum_ancien_chef = $t['user_id'];
+						
+						// Il n'est plus chef du groupe sur le forum
+						$sql = "UPDATE ".$table_prefix."user_group SET group_leader=0 WHERE group_id='$id_group_forum' AND user_id='$id_forum_ancien_chef'";
+						$mysqli->query($sql);
+						
+						// Récupération de l'id du nouveau chef sur le forum 
+						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+									(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+										(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_p') AND chef='1')";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$id_forum_nouveau_chef = $t['user_id'];
+						
+						// Il devient chef du groupe sur le forum
+						$sql = "UPDATE ".$table_prefix."user_group SET group_leader=1 WHERE group_id='$id_group_forum' AND user_id='$id_forum_ancien_chef'";
 						$mysqli->query($sql);
 						
 						echo "<br><center><font color='blue'>$nom_p devient le nouveau chef de votre compagnie</font></center><br>";
