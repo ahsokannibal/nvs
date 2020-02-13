@@ -5,6 +5,7 @@ require_once("../fonctions.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
+include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
@@ -62,11 +63,12 @@ if($dispo || $admin){
 			if($verif){
 				
 				// recuperation des information sur la compagnie
-				$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
+				$sql = "SELECT genie_civil, nom_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie";
 				$res = $mysqli->query($sql);
 				$sec = $res->fetch_assoc();
 				
-				$genie_compagnie = $sec["genie_civil"];
+				$genie_compagnie 	= $sec["genie_civil"];
+				$nom_compagnie		= addslashes($sec["nom_compagnie"]);
 				
 				if ($genie_compagnie) {
 					$nb_persos_compagnie_max = 60;
@@ -118,6 +120,34 @@ if($dispo || $admin){
 							$mysqli->query($sql);
 						}
 						
+						// -- FORUM
+						// Récupération de l'id de l'utilisateur sur le forum 
+						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+									(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+										(SELECT idJoueur_perso FROM perso WHERE id_perso='$new_recrue') AND chef='1')";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$id_user_forum = $t['user_id'];
+						
+						// Récupération de l'id du group de la compagnie sur le forum
+						$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$id_group_forum = $t['group_id'];
+						
+						// Est ce qu'il est déjà dans le groupe ?
+						$sql = "SELECT * FROM ".$table_prefix."user_group WHERE group_id = '$id_group_forum' AND user_id='$id_user_forum'";
+						$res = $mysqli->query($sql);
+						$verif = $res->num_rows;
+						
+						if ($verif == 0) {
+							// Insertion de l'utilisateur dans le groupe
+							$sql = "INSERT INTO ".$table_prefix."user_group (group_id, user_id, user_pending, group_leader) VALUES ('$id_group_forum', '$id_user_forum', 0, 0)";
+							$mysqli->query($sql);
+						}
+						
 						echo "<center>".$nom_recrue."[".$new_recrue."] vient de rentrer dans la compagnie</center>";
 					}
 				}
@@ -134,22 +164,15 @@ if($dispo || $admin){
 						$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$new_recrue'";
 						$mysqli->query($sql);
 						
-						// recup nom compagnie
-						$sql = "SELECT nom_compagnie FROM compagnies WHERE id_compagnie='$id_compagnie'";
-						$res = $mysqli->query($sql);
-						$t_s = $res->fetch_assoc();
-						
-						$nom_groupe = $t_s["nom_compagnie"];
-						
 						// on lui envoi un mp
 						$message = "Bonjour $nom_recrue,
-									J\'ai le regret de t\'annoncer que ton entrée dans la compagnie ". addslashes($nom_groupe) ." a été refusé.";
+									J\'ai le regret de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été refusé.";
 						$objet = "Refus d\'incorporation dans la compagnie";
 						
 						$lock = "LOCK TABLE (joueur) WRITE";
 						$mysqli->query($lock);
 						
-						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . addslashes($nom_groupe) . "', NOW(), '" . $message . "', '" . $objet . "')";
+						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . $nom_compagnie . "', NOW(), '" . $message . "', '" . $objet . "')";
 						$res = $mysqli->query($sql);
 						$id_message = $mysqli->insert_id;
 						
@@ -204,6 +227,34 @@ if($dispo || $admin){
 							
 							// Construire Rails
 							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='64'";
+							$mysqli->query($sql);
+						}
+						
+						// -- FORUM
+						// Récupération de l'id de l'utilisateur sur le forum 
+						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+									(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+										(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue') AND chef='1')";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$id_user_forum = $t['user_id'];
+						
+						// Récupération de l'id du group de la compagnie sur le forum
+						$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$id_group_forum = $t['group_id'];
+						
+						// Est ce qu'il a d'autres persos dans la compagnie en dehors de celui qui part
+						$sql = "SELECT * FROM perso_in_compagnie WHERE id_perso IN (SELECT id_perso FROM perso WHERE idJoueur_perso IN (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue'))";
+						$res = $mysqli->query($sql);
+						$verif = $res->num_rows;
+						
+						if ($verif == 0) {
+							// Suppression de l'utilisateur du groupe
+							$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
 							$mysqli->query($sql);
 						}
 						
