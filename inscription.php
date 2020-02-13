@@ -207,6 +207,10 @@ if(config_dispo_jeu($mysqli)){
 								$lock = "LOCK TABLE (perso) WRITE";
 								$mysqli->query($lock);
 								
+								if (trim($nom_bataillon) == "") {
+									$nom_bataillon = $nom_perso." family";
+								}
+								
 								$nom_bataillon = addslashes($nom_bataillon);
 								
 								$insert_sql = "	INSERT INTO perso (IDJoueur_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, or_perso, clan, message_perso, chef, bataillon) 
