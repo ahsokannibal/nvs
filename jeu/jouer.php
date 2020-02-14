@@ -1245,7 +1245,7 @@ if($dispo || $admin){
 																	
 																		// Ajout de l'historique
 																		$date = time();
-																		$texte = addslashes("Pour la destruction du bâtiment ".$nom_batiment." ".$nom_bat." [".$id_inst_bat."] par ".$nom_perso." [".$id_perso."]");
+																		$texte = addslashes("Pour la capture du bâtiment ".$nom_batiment." ".$nom_bat." [".$id_inst_bat."] par ".$nom_perso." [".$id_perso."]");
 																		$sql = "INSERT INTO histo_stats_camp_pv (date_pvict, id_camp, gain_pvict, texte) VALUES (FROM_UNIXTIME($date), '$clan_p', '$gain_pvict', '$texte')";
 																		$mysqli->query($sql);
 																		
