@@ -469,6 +469,12 @@ INSERT INTO `poste` VALUES (5, 'membre');
 
 INSERT INTO `stats_camp_kill` (`id_camp`, `nb_kill`) VALUES ('1', '0'), ('2', '0');
 
+--
+-- Contenu de la table `stats_camp_pv`
+--
+
+INSERT INTO `stats_camp_pv` (`id_camp`, `points_victoire`) VALUES ('1', '0'), ('2', '0');
+
 -- --------------------------------------------------------
 
 --

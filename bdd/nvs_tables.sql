@@ -428,6 +428,19 @@ CREATE TABLE `histobanque_compagnie` (
 
 -- --------------------------------------------------------
 
+-- 
+-- Structure de la table `histobanque_compagnie`
+-- 
+
+CREATE TABLE `histo_stats_camp_pv` ( 
+	`date_pvict` DATETIME NOT NULL , 
+	`id_camp` INT NOT NULL , 
+	`gain_pvict` INT NOT NULL , 
+	`texte` TEXT NOT NULL
+) ENGINE=MyISAM; 
+
+-- --------------------------------------------------------
+
 --
 -- Structure de la table `instance_batiment`
 --
@@ -911,6 +924,17 @@ CREATE TABLE `ressources_entrepot` (
 CREATE TABLE `stats_camp_kill` (
   `id_camp` tinyint(4) NOT NULL DEFAULT '0',
   `nb_kill` int(11) NOT NULL DEFAULT '0'
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `stats_camp_pv`
+--
+
+CREATE TABLE `stats_camp_pv` (
+  `id_camp` int(11) NOT NULL,
+  `points_victoire` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
