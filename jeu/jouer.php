@@ -929,14 +929,14 @@ if($dispo || $admin){
 													$entre_bat_ok = 1;
 												
 													// recuperation des coordonnees et infos du batiment dans lequel le perso entre
-													$sql = "SELECT nom_instance, niveau_instance, x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
+													$sql = "SELECT nom_instance, nom_instance, x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
 													$res = $mysqli->query($sql);
 													$coordonnees_instance = $res->fetch_assoc();
 													
 													$x_bat 				= $coordonnees_instance["x_instance"];
 													$y_bat 				= $coordonnees_instance["y_instance"];
 													$nom_bat 			= $coordonnees_instance["nom_instance"];
-													$niveau_instance 	= $coordonnees_instance["niveau_instance"];
+													$nom_instance 		= $coordonnees_instance["nom_instance"];
 													$id_bat				= $coordonnees_instance["id_batiment"];
 													$id_inst_bat 		= $_GET["bat"];
 													
@@ -1095,7 +1095,7 @@ if($dispo || $admin){
 													$nb_perso_bat = $res->num_rows;
 											
 													// recuperation des coordonnees et des infos du batiment dans lequel le perso entre
-													$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance, contenance_instance, instance_batiment.id_batiment, taille_batiment 
+													$sql = "SELECT nom_batiment, id_instanceBat, nom_instance, x_instance, y_instance, contenance_instance, instance_batiment.id_batiment, taille_batiment 
 															FROM instance_batiment, batiment 
 															WHERE instance_batiment.id_batiment = batiment.id_batiment
 															AND id_instanceBat=".$_GET["bat"]."";
@@ -1105,6 +1105,7 @@ if($dispo || $admin){
 													$x_bat 					= $coordonnees_instance["x_instance"];
 													$y_bat 					= $coordonnees_instance["y_instance"];
 													$nom_bat 				= $coordonnees_instance["nom_instance"];
+													$nom_batiment			= $coordonnees_instance["nom_batiment"];
 													$id_inst_bat 			= $coordonnees_instance["id_instanceBat"];
 													$contenance_inst_bat 	= $coordonnees_instance["contenance_instance"];
 													$id_bat					= $coordonnees_instance["id_batiment"];
@@ -1211,6 +1212,44 @@ if($dispo || $admin){
 																	// mise a jour table evenement
 																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé le batiment $nom_bat','$id_inst_bat','','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
 																	$mysqli->query($sql);
+																	
+																	// Gain points de victoire
+																	if ($id_bat == 9) {
+																		// FORT -> 400
+																		$gain_pvict = 400;
+																	}
+																	else if ($id_bat == 8) {
+																		// FORTIN -> 100
+																		$gain_pvict = 100;
+																	}
+																	else if ($id_bat == 11) {
+																		// GARE -> 75
+																		$gain_pvict = 75;
+																	}
+																	else if ($id_bat == 7) {
+																		// HOPITAL -> 10
+																		$gain_pvict = 10;
+																	}
+																	else {
+																		$gain_pvict = 0;
+																	}
+																	
+																	if ($gain_pvict > 0) {
+																		
+																		// C'est une capture, gains X 1.5
+																		$gain_pvict = floor($gain_pvict * 1.5);
+																		
+																		// MAJ stats points victoire
+																		$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_p'";
+																		$mysqli->query($sql);
+																	
+																		// Ajout de l'historique
+																		$date = time();
+																		$texte = addslashes("Pour la destruction du bâtiment ".$nom_batiment." ".$nom_bat." [".$id_inst_bat."] par ".$nom_perso." [".$id_perso."]");
+																		$sql = "INSERT INTO histo_stats_camp_pv (date_pvict, id_camp, gain_pvict, texte) VALUES (FROM_UNIXTIME($date), '$clan_p', '$gain_pvict', '$texte')";
+																		$mysqli->query($sql);
+																		
+																	}
 																	
 																	echo "<font color = red>Félicitation, vous venez de capturer un batiment ennemi !</font><br>";
 																} 

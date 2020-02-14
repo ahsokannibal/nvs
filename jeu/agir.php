@@ -2158,10 +2158,21 @@ if($verif){
 									$gain_pvict = 0;
 								}
 								
-								// MAJ stats points victoire
-								$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_perso'";
-								$mysqli->query($sql);
-							}					
+								if ($gain_pvict > 0) {
+									
+									// MAJ stats points victoire
+									$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_perso'";
+									$mysqli->query($sql);
+								
+									// Ajout de l'historique
+									$date = time();
+									$texte = addslashes("Pour la destruction du bâtiment ".$nom_batiment." ".$nom_instance_batiment." [".$id_cible."] par ".$nom_perso." [".$id."]");
+									$sql = "INSERT INTO histo_stats_camp_pv (date_pvict, id_camp, gain_pvict, texte) VALUES (FROM_UNIXTIME($date), '$clan_perso', '$gain_pvict', '$texte')";
+									$mysqli->query($sql);
+									
+								}
+								
+							}
 								
 							echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 						}
