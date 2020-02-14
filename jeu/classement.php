@@ -254,8 +254,21 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2'";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
+	
+	$sql_pvictb = "SELECT points_victoire FROM stats_camp_pv WHERE id_camp='1'";
+	$res_pvictb = $mysqli->query($sql_pvictb);
+	$t = $res_pvictb->fetch_assoc();
+	$nbvictb = $t['points_victoire'];
+	
+	$sql_pvictr = "SELECT points_victoire FROM stats_camp_pv WHERE id_camp='2'";
+	$res_pvictr = $mysqli->query($sql_pvictr);
+	$t = $res_pvictr->fetch_assoc();
+	$nbvictr = $t['points_victoire'];
 
-	echo "<table align=center width='500' border=1> <tr><th><font color=darkred>Camp[id]</font></th><th><font color=darkred>Nombre de captures ennemis</font></th><th><font color=darkred>Nombre de captures alliés</font></th><th><font color=darkred>Nombre de persos</font></th></tr>";
+	echo "<table align=center width='500' border=1>";
+	echo "	<tr>";
+	echo "		<th><font color=darkred>Camp[id]</font></th><th><font color=darkred>Nombre de captures ennemis</font></th><th><font color=darkred>Nombre de captures alliés</font></th><th><font color=darkred>Nombre de persos</font></th><th><font color=darkred>Points de victoires</font></th>";
+	echo "	</tr>";
 
 	while ($tc_kill = $res->fetch_assoc()){
 		$id_camp = $tc_kill["id_camp"];
@@ -265,22 +278,26 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		$meutre_r = $nb_countr - $nb_kill;
 		
 		if($id_camp == "1"){
-			$couleur_camp = "blue";
-			$nom_camp = "Nord";
-			$nb = $nbb;
-			$meutre = $meutre_b;
+			$couleur_camp 	= "blue";
+			$nom_camp 		= "Nord";
+			$nb 			= $nbb;
+			$meutre 		= $meutre_b;
+			$pvict 			= $nbvictb;
 		}
 		if($id_camp == "2"){
-			$couleur_camp = "red";
-			$nom_camp = "Sud";
-			$nb = $nbr;
-			$meutre = $meutre_r;
+			$couleur_camp 	= "red";
+			$nom_camp 		= "Sud";
+			$nb 			= $nbr;
+			$meutre 		= $meutre_r;
+			$pvict 			= $nbvictr;
 		}
 		if($id_camp == "3"){
 			$couleur_camp = "green";
 		}
 		
-		echo "<tr><td align=center><font color=\"$couleur_camp\">".$nom_camp."</font> [".$id_camp."]</td><td align=center>$nb_kill</td><td align=center>$meutre</td><td align=center>$nb</td></tr>";
+		echo "<tr>";
+		echo "	<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font> [".$id_camp."]</td><td align=center>$nb_kill</td><td align=center>$meutre</td><td align=center>$nb</td><td align='center'>".$pvict."</td>";
+		echo "</tr>";
 	}
 	echo "</table>";
 }
