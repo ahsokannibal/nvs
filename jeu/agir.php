@@ -2135,6 +2135,33 @@ if($verif){
 							// maj cv
 							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',NOW())"; 
 							$mysqli->query($sql);
+							
+							if ($clan_perso != $camp_instance) {
+								// Gain points de victoire
+								if ($id_batiment == 9) {
+									// FORT -> 400
+									$gain_pvict = 400;
+								}
+								else if ($id_batiment == 8) {
+									// FORTIN -> 100
+									$gain_pvict = 100;
+								}
+								else if ($id_batiment == 11) {
+									// GARE -> 75
+									$gain_pvict = 75;
+								}
+								else if ($id_batiment == 7) {
+									// HOPITAL -> 10
+									$gain_pvict = 10;
+								}
+								else {
+									$gain_pvict = 0;
+								}
+								
+								// MAJ stats points victoire
+								$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_perso'";
+								$mysqli->query($sql);
+							}					
 								
 							echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 						}
