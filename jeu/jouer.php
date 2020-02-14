@@ -1121,142 +1121,157 @@ if($dispo || $admin){
 															
 															// les chiens et soigneurs ne peuvent pas capturer de batiment
 															if ($type_perso != '6' && $type_perso != '4') {
+																
+																// Les hopitaux et les gares ne peuvent être capturés
+																if ($id_bat != '7' && $id_bat != '11') {
 														
-																// verification que le batiment est vide
-																if(batiment_vide($mysqli, $id_inst_bat)) {
-																	
-																	// capture du batiment, il devient de la nation du perso
-																	$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
-																	$mysqli->query($sql);
+																	// verification que le batiment est vide
+																	if(batiment_vide($mysqli, $id_inst_bat)) {
 																		
-																	$sql = "select clan from perso where id_perso='$id_perso'";
-																	$res = $mysqli->query($sql);
-																	$t_c = $res->fetch_assoc();
-																	
-																	$camp = $t_c["clan"];
-																	
-																	// MAJ camp canons
-																	$sql = "UPDATE instance_batiment_canon SET camp_canon='$camp' WHERE id_instance_bat='$id_inst_bat'";
-																	$mysqli->query($sql);
-																	
-																	if($camp == "1"){
-																		$couleur_c 		= "b";
-																		$image_canon_g 	= 'canonG_nord.gif';
-																		$image_canon_d 	= 'canonD_nord.gif';
-																	}
-																	if($camp == "2"){
-																		$couleur_c 		= "r";
-																		$image_canon_g 	= 'canonG_sud.gif';
-																		$image_canon_d 	= 'canonD_sud.gif';
-																	}
-																	
-																	$icone = "b".$id_bat."$couleur_c.png";
-																	
-																	if ($taille_batiment > 1) {
+																		// capture du batiment, il devient de la nation du perso
+																		$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
+																		$mysqli->query($sql);
+																			
+																		$sql = "select clan from perso where id_perso='$id_perso'";
+																		$res = $mysqli->query($sql);
+																		$t_c = $res->fetch_assoc();
 																		
-																		$taille_search 	= floor($taille_batiment / 2);
-																		$image_case_c	= $couleur_c.".png";
-									
-																		for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
-																			for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
-																				if ($x == $x_bat && $y == $y_bat) {
-																					// Mise à jour de l'icone centrale
-																					$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
-																					$mysqli->query($sql);
-																				}
-																				else {
-																					$sql = "UPDATE $carte SET image_carte='$image_case_c' WHERE x_carte='$x' AND y_carte='$y' AND image_carte NOT LIKE 'canon%'";
-																					$mysqli->query($sql);
+																		$camp = $t_c["clan"];
+																		
+																		// MAJ camp canons
+																		$sql = "UPDATE instance_batiment_canon SET camp_canon='$camp' WHERE id_instance_bat='$id_inst_bat'";
+																		$mysqli->query($sql);
+																		
+																		if($camp == "1"){
+																			$couleur_c 		= "b";
+																			$image_canon_g 	= 'canonG_nord.gif';
+																			$image_canon_d 	= 'canonD_nord.gif';
+																		}
+																		if($camp == "2"){
+																			$couleur_c 		= "r";
+																			$image_canon_g 	= 'canonG_sud.gif';
+																			$image_canon_d 	= 'canonD_sud.gif';
+																		}
+																		
+																		$icone = "b".$id_bat."$couleur_c.png";
+																		
+																		if ($taille_batiment > 1) {
+																			
+																			$taille_search 	= floor($taille_batiment / 2);
+																			$image_case_c	= $couleur_c.".png";
+										
+																			for ($x = $x_bat - $taille_search; $x <= $x_bat + $taille_search; $x++) {
+																				for ($y = $y_bat - $taille_search; $y <= $y_bat + $taille_search; $y++) {
+																					if ($x == $x_bat && $y == $y_bat) {
+																						// Mise à jour de l'icone centrale
+																						$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
+																						$mysqli->query($sql);
+																					}
+																					else {
+																						$sql = "UPDATE $carte SET image_carte='$image_case_c' WHERE x_carte='$x' AND y_carte='$y' AND image_carte NOT LIKE 'canon%'";
+																						$mysqli->query($sql);
+																					}
 																				}
 																			}
+																			
+																			// Mise à jour des icones de canon sur la carte
+																			if ($id_bat == 8) {
+																				// Fortin
+																				// Canons Gauche
+																				$sql = "UPDATE $carte SET image_carte='$image_canon_g' 
+																						WHERE (x_carte=$x_bat - 1 AND y_carte=$y_bat - 1) 
+																						OR (x_carte=$x_bat - 1 AND y_carte=$y_bat + 1)";
+																				$mysqli->query($sql);
+																				
+																				// Canons Droit
+																				$sql = "UPDATE $carte SET image_carte='$image_canon_d' 
+																						WHERE (x_carte=$x_bat + 1 AND y_carte=$y_bat - 1) 
+																						OR (x_carte=$x_bat + 1 AND y_carte=$y_bat + 1)";
+																				$mysqli->query($sql);
+																			}
+																			else if ($id_bat == 9) {
+																				// Fort
+																				// Canons Gauche
+																				$sql = "UPDATE $carte SET image_carte='$image_canon_g' 
+																						WHERE (x_carte=$x_bat - 2 AND y_carte=$y_bat + 2) 
+																						OR (x_carte=$x_bat - 2 AND y_carte=$y_bat) 
+																						OR (x_carte=$x_bat - 2 AND y_carte=$y_bat - 2)";
+																				$mysqli->query($sql);
+																				
+																				// Canons Droit
+																				$sql = "UPDATE $carte SET image_carte='$image_canon_d' 
+																						WHERE (x_carte=$x_bat + 2 AND y_carte=$y_bat + 2) 
+																						OR (x_carte=$x_bat + 2 AND y_carte=$y_bat) 
+																						OR (x_carte=$x_bat + 2 AND y_carte=$y_bat - 2)";
+																				$mysqli->query($sql);
+																			}
+																		}
+																		else {
+																			// Mise à jour de l'icone centrale
+																			$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
+																			$mysqli->query($sql);
+																		}
+																			
+																		// mise a jour table evenement
+																		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé le batiment $nom_bat','$id_inst_bat','','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
+																		$mysqli->query($sql);
+																		
+																		// Gain points de victoire
+																		if ($id_bat == 9) {
+																			// FORT -> 400
+																			$gain_pvict = 400;
+																		}
+																		else if ($id_bat == 8) {
+																			// FORTIN -> 100
+																			$gain_pvict = 100;
+																		}
+																		else if ($id_bat == 11) {
+																			// GARE -> 75
+																			$gain_pvict = 75;
+																		}
+																		else if ($id_bat == 7) {
+																			// HOPITAL -> 10
+																			$gain_pvict = 10;
+																		}
+																		else {
+																			$gain_pvict = 0;
 																		}
 																		
-																		// Mise à jour des icones de canon sur la carte
-																		if ($id_bat == 8) {
-																			// Fortin
-																			// Canons Gauche
-																			$sql = "UPDATE $carte SET image_carte='$image_canon_g' 
-																					WHERE (x_carte=$x_bat - 1 AND y_carte=$y_bat - 1) 
-																					OR (x_carte=$x_bat - 1 AND y_carte=$y_bat + 1)";
+																		if ($gain_pvict > 0) {
+																			
+																			// C'est une capture, gains X 1.5
+																			$gain_pvict = floor($gain_pvict * 1.5);
+																			
+																			// MAJ stats points victoire
+																			$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_p'";
+																			$mysqli->query($sql);
+																		
+																			// Ajout de l'historique
+																			$date = time();
+																			$texte = addslashes("Pour la capture du bâtiment ".$nom_batiment." ".$nom_bat." [".$id_inst_bat."] par ".$nom_perso." [".$id_perso."]");
+																			$sql = "INSERT INTO histo_stats_camp_pv (date_pvict, id_camp, gain_pvict, texte) VALUES (FROM_UNIXTIME($date), '$clan_p', '$gain_pvict', '$texte')";
 																			$mysqli->query($sql);
 																			
-																			// Canons Droit
-																			$sql = "UPDATE $carte SET image_carte='$image_canon_d' 
-																					WHERE (x_carte=$x_bat + 1 AND y_carte=$y_bat - 1) 
-																					OR (x_carte=$x_bat + 1 AND y_carte=$y_bat + 1)";
-																			$mysqli->query($sql);
 																		}
-																		else if ($id_bat == 9) {
-																			// Fort
-																			// Canons Gauche
-																			$sql = "UPDATE $carte SET image_carte='$image_canon_g' 
-																					WHERE (x_carte=$x_bat - 2 AND y_carte=$y_bat + 2) 
-																					OR (x_carte=$x_bat - 2 AND y_carte=$y_bat) 
-																					OR (x_carte=$x_bat - 2 AND y_carte=$y_bat - 2)";
-																			$mysqli->query($sql);
-																			
-																			// Canons Droit
-																			$sql = "UPDATE $carte SET image_carte='$image_canon_d' 
-																					WHERE (x_carte=$x_bat + 2 AND y_carte=$y_bat + 2) 
-																					OR (x_carte=$x_bat + 2 AND y_carte=$y_bat) 
-																					OR (x_carte=$x_bat + 2 AND y_carte=$y_bat - 2)";
-																			$mysqli->query($sql);
-																		}
-																	}
+																		
+																		echo "<font color = red>Félicitation, vous venez de capturer un batiment ennemi !</font><br>";
+																	} 
 																	else {
-																		// Mise à jour de l'icone centrale
-																		$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
-																		$mysqli->query($sql);
-																	}
+																		$entre_bat_ok = 0;
 																		
-																	// mise a jour table evenement
-																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé le batiment $nom_bat','$id_inst_bat','','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
-																	$mysqli->query($sql);
-																	
-																	// Gain points de victoire
-																	if ($id_bat == 9) {
-																		// FORT -> 400
-																		$gain_pvict = 400;
+																		$erreur .= "Le bâtiment n'est pas vide et ne peut donc pas être capturé";
 																	}
-																	else if ($id_bat == 8) {
-																		// FORTIN -> 100
-																		$gain_pvict = 100;
-																	}
-																	else if ($id_bat == 11) {
-																		// GARE -> 75
-																		$gain_pvict = 75;
-																	}
-																	else if ($id_bat == 7) {
-																		// HOPITAL -> 10
-																		$gain_pvict = 10;
-																	}
-																	else {
-																		$gain_pvict = 0;
-																	}
-																	
-																	if ($gain_pvict > 0) {
-																		
-																		// C'est une capture, gains X 1.5
-																		$gain_pvict = floor($gain_pvict * 1.5);
-																		
-																		// MAJ stats points victoire
-																		$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_p'";
-																		$mysqli->query($sql);
-																	
-																		// Ajout de l'historique
-																		$date = time();
-																		$texte = addslashes("Pour la capture du bâtiment ".$nom_batiment." ".$nom_bat." [".$id_inst_bat."] par ".$nom_perso." [".$id_perso."]");
-																		$sql = "INSERT INTO histo_stats_camp_pv (date_pvict, id_camp, gain_pvict, texte) VALUES (FROM_UNIXTIME($date), '$clan_p', '$gain_pvict', '$texte')";
-																		$mysqli->query($sql);
-																		
-																	}
-																	
-																	echo "<font color = red>Félicitation, vous venez de capturer un batiment ennemi !</font><br>";
-																} 
+																}
 																else {
 																	$entre_bat_ok = 0;
 																	
-																	$erreur .= "Le bâtiment n'est pas vide et ne peut donc pas être capturé";
+																	// Tentative de triche
+																	$text_triche = "Tentative capture Hopital ou Gare";
+					
+																	$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+																	$mysqli->query($sql);
+																	
+																	$erreur .= "Les hopitaux et les gares ne peuvent pas être capturés !";
 																}
 															}
 															else {
