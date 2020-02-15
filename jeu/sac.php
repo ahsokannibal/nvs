@@ -72,50 +72,106 @@ if($dispo || $admin){
 								$coutPa 			= $bonus_o["coutPa_objet"];
 								$poids 				= $bonus_o["poids_objet"];
 								$type_o 			= $bonus_o["type_objet"];
-										
-								// on supprime l'objet de l'inventaire
-								$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
-								$mysqli->query($sql);
-										
-								// on recupere les pv et autres donnees du perso
-								$sql = "SELECT pv_perso, pvMax_perso, recup_perso, bonusRecup_perso FROM perso WHERE id_perso='$id'";
-								$res = $mysqli->query($sql);
-								$t_p = $res->fetch_assoc();
 								
-								$pv_p 	= $t_p["pv_perso"];
-								$pvM_p 	= $t_p["pvMax_perso"];
-								$rec_p 	= $t_p["recup_perso"];
-								$br_p 	= $t_p["bonusRecup_perso"];
-									
-								// si l'objet donne des bonus
-								if($bonusRecup) { 
+								if ($type_o == 'N') {
 										
-									// on applique les effets de l'objet sur le perso
-									$sql = "UPDATE perso 
-											SET pa_perso=pa_perso-1, bonusRecup_perso=bonusRecup_perso+$bonusRecup
-											WHERE id_perso='$id'";
+									// on supprime l'objet de l'inventaire
+									$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
 									$mysqli->query($sql);
-										
-									// Affichage 
-									$mess .= "Vous avez utilisé ".$nom_ob."<br>";
+											
+									// on recupere les pv et autres donnees du perso
+									$sql = "SELECT pv_perso, pvMax_perso, recup_perso, bonusRecup_perso FROM perso WHERE id_perso='$id'";
+									$res = $mysqli->query($sql);
+									$t_p = $res->fetch_assoc();
 									
-									if ($bonusRecup) {
-										$mess .= "Votre recuperation passe de ".$rec_p+$br_p." à ";
-										$mess .= $rec_p+$br_p+$bonusRecup."<br />";
-									}										
+									$pv_p 	= $t_p["pv_perso"];
+									$pvM_p 	= $t_p["pvMax_perso"];
+									$rec_p 	= $t_p["recup_perso"];
+									$br_p 	= $t_p["bonusRecup_perso"];
+										
+									// si l'objet donne des bonus
+									if($bonusRecup) { 
+											
+										// on applique les effets de l'objet sur le perso
+										$sql = "UPDATE perso 
+												SET pa_perso=pa_perso-1, bonusRecup_perso=bonusRecup_perso+$bonusRecup
+												WHERE id_perso='$id'";
+										$mysqli->query($sql);
+											
+										// Affichage 
+										$mess .= "Vous avez utilisé ".$nom_ob."<br>";
+										
+										if ($bonusRecup) {
+											$mess .= "Votre recuperation passe de ".$rec_p+$br_p." à ";
+											$mess .= $rec_p+$br_p+$bonusRecup."<br />";
+										}										
+									}
+									
+									if ($bonusPerception < 0) {
+										// le perso est bourre
+										$sql = "UPDATE perso SET bourre_perso=bourre_perso+1 WHERE id_perso='$id'";
+										$mysqli->query($sql);
+										
+										$mess .= "Votre perception en prend un coup temporairement : Perception ".$bonusPerception;
+									}
+									
+									// MAJ perso
+									$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1, charge_perso=charge_perso-$poids WHERE id_perso='$id'";
+									$mysqli->query($sql_c);
+								}
+								else if ($type_o == 'E') {
+									// Objet équipable 
+									
+									// On verifie si on est pas déjà équipé de cet objet
+									$sql = "SELECT * FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o' AND equip_objet='1'";
+									$res = $mysqli->query($sql);
+									$is_equipe = $res->num_rows;
+									
+									if (isset($_GET['desequip']) && $_GET['desequip'] == "ok") {
+										
+										if ($is_equipe) {
+											
+											// On enleve l'objet
+											$sql = "UPDATE perso_as_objet SET equip_objet='0' WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
+											$mysqli->query($sql);
+											
+											// MAJ perso
+											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1 WHERE id_perso='$id'";
+											$mysqli->query($sql_c);
+											
+										}
+										else {
+											// Tentative de triche
+											$text_triche = "Tentative deséquiper objet non équipé !";
+			
+											$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+											$mysqli->query($sql);
+										}
+									}
+									else {
+										
+										if (!$is_equipe) {
+									
+											// On équipe l'objet
+											$sql = "UPDATE perso_as_objet SET equip_objet='1' WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
+											$mysqli->query($sql);
+											
+											// MAJ perso
+											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1 WHERE id_perso='$id'";
+											$mysqli->query($sql_c);
+										}
+										else {
+											// Tentative de triche
+											$text_triche = "Tentative équiper objet déjà équipé !";
+			
+											$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+											$mysqli->query($sql);
+											
+										}
+									}
 								}
 								
-								if ($bonusPerception < 0) {
-									// le perso est bourre
-									$sql = "UPDATE perso SET bourre_perso=bourre_perso+1 WHERE id_perso='$id'";
-									$mysqli->query($sql);
-									
-									$mess .= "Votre perception en prend un coup temporairement : Perception ".$bonusPerception;
-								}
-								
-								// MAJ charge perso
-								$sql_c = "UPDATE perso SET charge_perso=charge_perso-$poids WHERE id_perso='$id'";
-								$mysqli->query($sql_c);
+								header("location:sac.php");
 							}
 							else {
 								$mess_err .= "Vous n'avez pas assez de PA, l'utilisation d'un objet coute 1 PA.";
@@ -126,7 +182,7 @@ if($dispo || $admin){
 						}
 					}
 					else {
-						$mess_err .= "Impossible de consommer cet objet !";
+						$mess_err .= "Impossible de consommer / équiper cet objet !";
 					}
 				}
 				else {
@@ -239,13 +295,14 @@ if($dispo || $admin){
 					$id_obj = $t_obj["id_objet"];
 					
 					// recuperation des carac de l'objet
-					$sql1 = "SELECT nom_objet, poids_objet, description_objet FROM objet WHERE id_objet='$id_obj'";
+					$sql1 = "SELECT nom_objet, poids_objet, description_objet, type_objet FROM objet WHERE id_objet='$id_obj'";
 					$res1 = $mysqli->query($sql1);
 					$t_o = $res1->fetch_assoc();
 					
 					$nom_o 			= $t_o["nom_objet"];
 					$poids_o 		= $t_o["poids_objet"];
 					$description_o 	= $t_o["description_objet"];
+					$type_o			= $t_o["type_objet"];
 					
 					// recuperation du nombre d'objet de ce type que possede le perso
 					$sql2 = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj'";
@@ -260,12 +317,28 @@ if($dispo || $admin){
 					echo "	<td align='center'><img src=\"../images/objets/objet".$id_obj.".png\"></td>";
 					echo "	<td align='center'><font color=green><b>".$nom_o."</b></font><br>".stripslashes($description_o)."</td>";
 					echo "	<td align='center'>Vous possédez <b>".$nb_o."</b> ".$nom_o."";
-					if($nb_o > 1 && $id_obj != 6 && $id_obj != 7){ 
+					if($nb_o > 1){ 
 						echo "s";
 					}
-					if($id_obj != 1){
-						echo "<br /><a href=\"sac.php?id_obj=".$id_obj."\">utiliser (cout : 1 PA)</a>";
+					
+					if($type_o == 'N'){
+						echo "<br /><a class='btn btn-outline-success' href=\"sac.php?id_obj=".$id_obj."\">utiliser (cout : 1 PA)</a>";
 					}
+					
+					// Est ce que le perso est déjà équipé de cet objet ?
+					$sql2 = "SELECT * FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj' AND equip_objet='1'";
+					$res2 = $mysqli->query($sql2);
+					$is_equipe = $res2->num_rows;
+					
+					if($type_o == 'E' && !$is_equipe){
+						echo "<br /><a class='btn btn-outline-primary' href=\"sac.php?id_obj=".$id_obj."\">équiper (cout : 1 PA)</a>";
+					}
+					
+					if ($is_equipe) {
+						echo "<br /><b>Vous êtes équipé de cet objet</b>";
+						echo "<br /><a class='btn btn-outline-danger' href=\"sac.php?id_obj=".$id_obj."&desequip=ok\">enlever (cout : 1 PA)</a>";
+					}
+					
 					echo "<br /><u>Poids total :</u> <b>$poids_total_o</b></td>";
 					echo "</tr>";
 			}
