@@ -682,4 +682,28 @@ function isTypePersoBousculable($type_perso, $type_perso_b) {
 		return false;
 	}
 }
+
+/**
+ * Fonction permettant de récupérer les bonus / malus de perception du aux objets équipés
+ * @return entier
+ */
+function getBonusObjet($mysqli, $id_perso) {
+	
+	$bonusPerception = 0;
+	
+	$sql = "SELECT bonusPerception_objet FROM perso_as_objet, objet 
+			WHERE perso_as_objet.id_objet = objet.id_objet
+			AND id_perso='$id_perso' 
+			AND equip_objet='1'";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()) {
+		
+		$bonus_perc_objet = $t['bonusPerception_objet'];
+		
+		$bonusPerception += $bonus_perc_objet;
+	}
+	
+	return $bonusPerception;
+}
 ?>

@@ -60,7 +60,7 @@ if($dispo || $admin){
 							if($testpa >= 1){
 							
 								// recuperation des effets de l'objet
-								$sql = "SELECT nom_objet, bonusPerception_objet, bonusRecup_objet, bonusPv_objet, bonusPm_objet, coutPa_objet, poids_objet, type_objet FROM objet WHERE id_objet='$id_o'";
+								$sql = "SELECT * FROM objet WHERE id_objet='$id_o'";
 								$res = $mysqli->query($sql);
 								$bonus_o = $res->fetch_assoc();
 								
@@ -69,6 +69,7 @@ if($dispo || $admin){
 								$bonusRecup 		= $bonus_o["bonusRecup_objet"];
 								$bonusPv 			= $bonus_o["bonusPv_objet"];
 								$bonusPm 			= $bonus_o["bonusPm_objet"];
+								$bonusPa			= $bonus_o["bonusPA_objet"];
 								$coutPa 			= $bonus_o["coutPa_objet"];
 								$poids 				= $bonus_o["poids_objet"];
 								$type_o 			= $bonus_o["type_objet"];
@@ -136,8 +137,16 @@ if($dispo || $admin){
 											$mysqli->query($sql);
 											
 											// MAJ perso
-											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1 WHERE id_perso='$id'";
+											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1";
+											
+											if ($bonusPerception != 0) {
+												$sql_c .= ", bonusPerception_perso=bonusPerception_perso-".$bonusPerception;
+											}
+
+											$sql_c .= " WHERE id_perso='$id'";
 											$mysqli->query($sql_c);
+											
+											echo $sql_c;
 											
 										}
 										else {
@@ -157,7 +166,13 @@ if($dispo || $admin){
 											$mysqli->query($sql);
 											
 											// MAJ perso
-											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1 WHERE id_perso='$id'";
+											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1";
+											
+											if ($bonusPerception != 0) {
+												$sql_c .= ", bonusPerception_perso=bonusPerception_perso+".$bonusPerception;
+											}
+											
+											$sql_c .= " WHERE id_perso='$id'";
 											$mysqli->query($sql_c);
 										}
 										else {

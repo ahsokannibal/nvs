@@ -228,7 +228,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -306,7 +307,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -384,7 +386,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -462,7 +465,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -540,7 +544,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -618,7 +623,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -696,7 +702,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -774,7 +781,8 @@ if($dispo || $admin){
 												$fond = $t_carte1["fond_carte"];
 												
 												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond);
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
 												if(bourre($mysqli, $id_perso)){
 													if(!endurance_alcool($mysqli, $id_perso)) {
 														$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -860,7 +868,8 @@ if($dispo || $admin){
 									$fond = $t_carte1["fond_carte"];
 									
 									// mise a jour du bonus de perception
-									$bonus_visu = get_malus_visu($fond);
+									$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+									
 									if(bourre($mysqli, $id_perso)){
 										if(!endurance_alcool($mysqli, $id_perso)) {
 											$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -1631,7 +1640,7 @@ if($dispo || $admin){
 								$fond 			= $t_carte1["fond_carte"];
 								
 								$cout_pm 	= cout_pm($fond);
-								$bonus_visu = get_malus_visu($fond);
+								$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
 								
 								if(bourre($mysqli, $id_perso)){
 									if(!endurance_alcool($mysqli, $id_perso)){
@@ -1754,7 +1763,7 @@ if($dispo || $admin){
 														$fondB 			= $t_carteB["fond_carte"];
 														
 														$cout_pmB 		= cout_pm($fondB);
-														$bonus_visuB 	= get_malus_visu($fondB);
+														$bonus_visuB 	= get_malus_visu($fondB) + getBonusObjet($mysqli, $id_perso);
 														
 														// Case cible de la bousculade est-elle déjà occupée ?
 														if (!$case_occupeeB) {
