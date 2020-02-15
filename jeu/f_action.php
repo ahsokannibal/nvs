@@ -2579,11 +2579,12 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 						// Objet
 						if($type_objet == 2){
 								
-							$sql_vo = "SELECT count(*) as q_obj FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'";
+							$sql_vo = "SELECT count(*) as q_obj FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0'";
 							$res_vo = $mysqli->query($sql_vo);
 							$t_vo = $res_vo->fetch_assoc();
 								
 							$q_obj = $t_vo['q_obj'];
+							
 							if($q_obj >= $quantite){
 									
 								// On supprime l'objet de l'inventaire du perso
