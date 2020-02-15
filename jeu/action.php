@@ -559,7 +559,7 @@ if($dispo || $admin){
 				
 				
 			// Objets
-			$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' ORDER BY id_objet";
+			$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND equip_objet = '0' ORDER BY id_objet";
 			$res_o = $mysqli->query($sql_o);
 			
 			while($t_o = $res_o->fetch_assoc()){
@@ -575,7 +575,7 @@ if($dispo || $admin){
 				$poids_o 	= $t1_o["poids_objet"];
 										
 				// recuperation du nombre d'objet de ce type que possede le perso
-				$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'";
+				$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'  AND equip_objet = '0'";
 				$res2_o = $mysqli->query($sql2_o);
 				$nb_o = $res2_o->num_rows;
 										
