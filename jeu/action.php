@@ -567,26 +567,30 @@ if($dispo || $admin){
 				$id_objet = $t_o["id_objet"];
 					
 				// recuperation des carac de l'objet
-				$sql1_o = "SELECT nom_objet, poids_objet FROM objet WHERE id_objet='$id_objet'";
+				$sql1_o = "SELECT nom_objet, poids_objet, type_objet FROM objet WHERE id_objet='$id_objet'";
 				$res1_o = $mysqli->query($sql1_o);
 				$t1_o = $res1_o->fetch_assoc();
 				
 				$nom_o 		= $t1_o["nom_objet"];
 				$poids_o 	= $t1_o["poids_objet"];
+				$type_o		= $t1_o["type_objet"];
+				
+				if ($type_o != 'T') {
 										
-				// recuperation du nombre d'objet de ce type que possede le perso
-				$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'  AND equip_objet = '0'";
-				$res2_o = $mysqli->query($sql2_o);
-				$nb_o = $res2_o->num_rows;
-										
-				echo "<tr>";
-				echo "	<td align='center'><dl><dd><a href='#'><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
-				echo "	<td align='center'>$poids_o</td>";
-				echo "	<td align='center'>$nb_o</td>";
-				echo "	<form method='post' action='action.php'>";
-				echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
-				echo "	</form>";
-				echo "</tr>";
+					// recuperation du nombre d'objet de ce type que possede le perso
+					$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'  AND equip_objet = '0'";
+					$res2_o = $mysqli->query($sql2_o);
+					$nb_o = $res2_o->num_rows;
+											
+					echo "<tr>";
+					echo "	<td align='center'><dl><dd><a href='#'><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
+					echo "	<td align='center'>$poids_o</td>";
+					echo "	<td align='center'>$nb_o</td>";
+					echo "	<form method='post' action='action.php'>";
+					echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
+					echo "	</form>";
+					echo "</tr>";
+				}
 			}
 			
 			// Armes non portes
