@@ -670,9 +670,10 @@ if($dispo || $admin){
 		}
 		$t_objet = $_POST['id_objet_don'];
 		$t2 = explode(',',$t_objet);
-		$id_objet = $t2[0];
+		
+		$id_objet 	= $t2[0];
 		$type_objet = $t2[1];
-		$id_cible = $t2[2];
+		$id_cible 	= $t2[2];
 		
 		action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $quantite);
 	}
