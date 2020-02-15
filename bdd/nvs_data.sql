@@ -356,11 +356,14 @@ INSERT INTO `news` (`id_news`, `id_admin`, `date`, `contenu`) VALUES
 -- Contenu de la table `objet`
 --
 
-INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `type_objet`) VALUES
-(1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 5, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 'T'),
-(2, 'Gourde d\'eau bien fraiche', 0, 0, 30, 0, 0, 0, 5, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 'N'),
-(3, 'Whisky', 0, -3, 50, 0, 0, 0, 1, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 'N'),
-(4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 'N');
+INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `bonusPrecisionCac_objet`, `bonusPrecisionDist_objet`, `bonusPA_objet`, `bonusDefense_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `type_objet`) VALUES
+(1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 'T'),
+(2, 'Gourde d\'eau bien fraiche', 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 5, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 'N'),
+(3, 'Whisky', 0, -3, 50, 0, 0, 0, 0, 0, 0, 0, 1, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 'N'),
+(4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 'N'),
+(5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 0, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 'E'),
+(6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 'E'),
+(7, 'Lunette de visée', 0, 0, 0, 0, 0, 10, 15, 0, 0, 0, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Bonus Precision au CàC +10, Bonus Précision à distance +15)', 'E');
 
 --
 -- Contenu de la table `perso`
