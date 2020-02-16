@@ -193,6 +193,28 @@ if($dispo || $admin){
 										$image_perso_cree 	= $image_unite."_".$camp.".gif";
 										$nom_perso_cree		= $nom_perso."_junior";
 										
+										$nom_perso_tmp = $nom_perso_cree;
+										$nom_pas_trouve = true;
+										$i = 2;
+										
+										while ($nom_pas_trouve) {
+											
+											$nom_perso_cherche = addslashes($nom_perso_cree);
+											
+											$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nom_perso_cherche'";
+											$res = $mysqli->query($sql);
+											$nb = $res->num_rows;
+											
+											if ($nb == 0) {
+												$nom_pas_trouve = false;
+											}
+											else {
+												$nom_perso_cree = $nom_perso_tmp.$i;
+												
+												$i++;
+											}
+										}
+										
 										// Calcul DLA
 										$date = time();
 										$dla = $date + DUREE_TOUR;
@@ -309,6 +331,28 @@ if($dispo || $admin){
 										
 										$image_perso_cree 	= $image_unite."_".$camp.".gif";
 										$nom_perso_cree		= $nom_perso."_junior";
+										
+										$nom_perso_tmp = $nom_perso_cree;
+										$nom_pas_trouve = true;
+										$i = 2;
+										
+										while ($nom_pas_trouve) {
+											
+											$nom_perso_cherche = addslashes($nom_perso_cree);
+											
+											$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nom_perso_cherche'";
+											$res = $mysqli->query($sql);
+											$nb = $res->num_rows;
+											
+											if ($nb == 0) {
+												$nom_pas_trouve = false;
+											}
+											else {
+												$nom_perso_cree = $nom_perso_tmp.$i;
+												
+												$i++;
+											}
+										}
 										
 										// Calcul DLA
 										$date = time();
@@ -437,6 +481,28 @@ if($dispo || $admin){
 										$image_perso_cree 	= $image_unite."_".$camp.".gif";
 										$nom_perso_cree		= $nom_perso."_junior";
 										
+										$nom_perso_tmp = $nom_perso_cree;
+										$nom_pas_trouve = true;
+										$i = 2;
+										
+										while ($nom_pas_trouve) {
+											
+											$nom_perso_cherche = addslashes($nom_perso_cree);
+											
+											$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nom_perso_cherche'";
+											$res = $mysqli->query($sql);
+											$nb = $res->num_rows;
+											
+											if ($nb == 0) {
+												$nom_pas_trouve = false;
+											}
+											else {
+												$nom_perso_cree = $nom_perso_tmp.$i;
+												
+												$i++;
+											}
+										}
+										
 										// Calcul DLA
 										$date = time();
 										$dla = $date + DUREE_TOUR;
@@ -559,6 +625,28 @@ if($dispo || $admin){
 										$image_perso_cree 	= $image_unite."_".$camp.".gif";
 										$nom_perso_cree		= $nom_perso."_junior";
 										
+										$nom_perso_tmp = $nom_perso_cree;
+										$nom_pas_trouve = true;
+										$i = 2;
+										
+										while ($nom_pas_trouve) {
+											
+											$nom_perso_cherche = addslashes($nom_perso_cree);
+											
+											$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nom_perso_cherche'";
+											$res = $mysqli->query($sql);
+											$nb = $res->num_rows;
+											
+											if ($nb == 0) {
+												$nom_pas_trouve = false;
+											}
+											else {
+												$nom_perso_cree = $nom_perso_tmp.$i;
+												
+												$i++;
+											}
+										}
+										
 										// Calcul DLA
 										$date = time();
 										$dla = $date + DUREE_TOUR;
@@ -679,6 +767,28 @@ if($dispo || $admin){
 											
 											$image_perso_cree 	= $image_unite."_".$camp.".gif";
 											$nom_perso_cree		= $nom_perso."_junior";
+											
+											$nom_perso_tmp = $nom_perso_cree;
+											$nom_pas_trouve = true;
+											$i = 2;
+											
+											while ($nom_pas_trouve) {
+												
+												$nom_perso_cherche = addslashes($nom_perso_cree);
+												
+												$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nom_perso_cherche'";
+												$res = $mysqli->query($sql);
+												$nb = $res->num_rows;
+												
+												if ($nb == 0) {
+													$nom_pas_trouve = false;
+												}
+												else {
+													$nom_perso_cree = $nom_perso_tmp.$i;
+													
+													$i++;
+												}
+											}
 											
 											// Calcul DLA
 											$date = time();
