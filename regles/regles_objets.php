@@ -121,6 +121,11 @@
 					</ul>
 					D'où l'avantage de faire partie d'une compagnie et de placer son argent dans la caisse de cette dernière. 
 					</p>
+					
+					<h2>Malus à cause du poids</h2>
+					
+					<p>Lorsque le perso est chargé avec 10kg ou plus d'objets et d'armes, un malus de mouvement est alors appliqué : -1PM / 10kg. Ainsi, à 20kg, vous aurez un malus de 2PM et ainsi de suite.<br />
+					Si la charge totale est supérieure ou égale à 70kg, le personnage est immobilisé (malus égal à la totalité de ses PM max).</p>
 				</div>
 			</div>
 		
