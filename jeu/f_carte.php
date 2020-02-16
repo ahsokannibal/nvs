@@ -605,13 +605,17 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 				// Verification si le batiment est vide
 				// + Le lien est utile pour les batiments autre que barricade et pont 
 				// + Le lien est utile que pour les unités autre que chien et soigneur
-				if(batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4'){
+				// + si batiment tour de guet, seul les infanterie peuvent capturer
+				if((batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') && (($bat == 2 && $type_perso == 3))){
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 			}
 			else {
 				if($bat != 1 && $bat != 5){
-					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+					// Si batiment tour de guet, seul les infanteries, soigneurs et chiens peuvent rentrer
+					if (($bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $bat != 2 ) {
+						$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
+					}
 				}
 				
 				// Les chiens ne peuvent pas réparer les batiments
@@ -705,5 +709,24 @@ function getBonusObjet($mysqli, $id_perso) {
 	}
 	
 	return $bonusPerception;
+}
+
+/**
+ * Fonction qui retourne le malus de PM du à la charge
+ */
+function getMalusCharge($charge_perso) {
+	
+	$malus = 0;
+	
+	if ($charge_perso >= 70) {
+		$malus = 100;
+	}
+	else {
+		$taille_malus = floor($charge_perso / 10);
+		$malus = -$taille_malus;
+	}
+	
+	return $malus;
+	
 }
 ?>

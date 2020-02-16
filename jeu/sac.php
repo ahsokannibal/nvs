@@ -146,6 +146,10 @@ if($dispo || $admin){
 											if ($bonusPa != 0) {
 												$sql_c .= ", bonusPA_perso=bonusPA_perso-".$bonusPa;
 											}
+											
+											if ($bonusPm != 0) {
+												$sql_c .= ", bonusPM_perso=bonusPM_perso-".$bonusPm;
+											}
 
 											$sql_c .= " WHERE id_perso='$id'";
 											$mysqli->query($sql_c);
@@ -178,6 +182,10 @@ if($dispo || $admin){
 											
 											if ($bonusPa != 0) {
 												$sql_c .= ", bonusPA_perso=bonusPA_perso+".$bonusPa;
+											}
+											
+											if ($bonusPm != 0) {
+												$sql_c .= ", bonusPM_perso=bonusPM_perso+".$bonusPm;
 											}
 											
 											$sql_c .= " WHERE id_perso='$id'";
