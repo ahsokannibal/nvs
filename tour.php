@@ -109,8 +109,17 @@ if(isset($_SESSION["ID_joueur"])){
 						$mysqli->query($sql);
 					}
 					
+					$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x AND y_carte=$y";
+					$res_map = $mysqli->query($sql);
+					$t_carte1 = $res_map->fetch_assoc();
+							
+					$fond = $t_carte1["fond_carte"];
+					
+					// calcul bonus perception perso
+					$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+					
 					// MAJ perso
-					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso'";
+					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
 		
 					//redirection
@@ -184,8 +193,11 @@ if(isset($_SESSION["ID_joueur"])){
 					$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_degele','$id_bat')";
 					$mysqli->query($sql);
 					
+					// calcul bonus perception perso
+					$bonus_visu = getBonusObjet($mysqli, $id_perso);
+					
 					// MAJ perso
-					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso_degele'";
+					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso_degele'";
 					$mysqli->query($sql);
 				}
 				else {
@@ -249,12 +261,21 @@ if(isset($_SESSION["ID_joueur"])){
 								$pv_after_recup = $pv_max_perso_nouveau_tour;
 							}
 							
+							$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x_perso_nouveau_tour AND y_carte=$y_perso_nouveau_tour";
+							$res_map = $mysqli->query($sql);
+							$t_carte1 = $res_map->fetch_assoc();
+							
+							$fond = $t_carte1["fond_carte"];
+							
 							if ($chef_perso_nouveau_tour == '1') {
 								
 								$gain_or = 3;
 								
+								// calcul bonus perception perso
+								$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
+								
 								// C'est le chef => gain or et PC
-								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							} else {
@@ -270,10 +291,13 @@ if(isset($_SESSION["ID_joueur"])){
 								}
 								else {
 									$gain_or = 1;
-								}								
+								}
+								
+								// calcul bonus perception perso
+								$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
 								
 								// C'est un grouillot
-								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							}
@@ -332,17 +356,26 @@ if(isset($_SESSION["ID_joueur"])){
 								$mysqli->query($sql);
 							}
 							
+							$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x AND y_carte=$y";
+							$res_map = $mysqli->query($sql);
+							$t_carte1 = $res_map->fetch_assoc();
+							
+							$fond = $t_carte1["fond_carte"];
+							
+							// calcul bonus perception perso
+							$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+							
 							// MAJ perso
 							if ($chef_perso_nouveau_tour == '1') {
 								
 								// C'est le chef => gain or et PC
-								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=$new_bonus_perso, pc_perso=pc_perso+1, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=$new_bonus_perso, pc_perso=pc_perso+1, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							} else {
 								
 								// Grouillot
-								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=$new_bonus_perso, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=$new_bonus_perso, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 							}
 				
@@ -377,8 +410,11 @@ if(isset($_SESSION["ID_joueur"])){
 							$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
 							$mysqli->query($sql);
 							
+							// calcul bonus perception perso
+							$bonus_visu = getBonusObjet($mysqli, $id_perso);
+							
 							// MAJ perso
-							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso, pv_perso=pvMax_perso, bonusPerception_perso=0, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
+							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
 							$mysqli->query($sql);
 				
 							//redirection

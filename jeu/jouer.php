@@ -1035,14 +1035,11 @@ if($dispo || $admin){
 															
 														// calcul du bonus de perception
 														if($_GET["bat2"] == 2){
-															$bonus_perc = $niveau_instance;
+															$bonus_perc = 5;
 														}
-														if($_GET["bat2"] == 3){
-															$bonus_perc = 2;
-														}	
 														
 														// mise a jour du bonus de perception du perso
-														$bonus_visu = $bonus_perc;
+														$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
 														
 														if(bourre($mysqli, $id_perso)){
 															if(!endurance_alcool($mysqli, $id_perso)) {
@@ -1319,7 +1316,7 @@ if($dispo || $admin){
 															$bonus_perc = 0;
 															
 															// mise a jour du bonus de perception du perso
-															$bonus_visu = $bonus_perc;
+															$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
 															
 															if(bourre($mysqli, $id_perso)){
 																if(!endurance_alcool($mysqli, $id_perso)) {
@@ -1423,11 +1420,12 @@ if($dispo || $admin){
 					// calcul du bonus de perception
 					// Tour de guet
 					if($bat == 2){
-						$bonus_perc += 2;
+						$bonus_perc += 5;
 					}
 					
 					// mise a jour du bonus de perception du perso
-					$bonus_visu = $bonus_perc;
+					$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
+					
 					if(bourre($mysqli, $id_perso)){
 						if(!endurance_alcool($mysqli, $id_perso)) {
 							$malus_bourre = bourre($mysqli, $id_perso) * 3;
@@ -2064,7 +2062,7 @@ if($dispo || $admin){
 				echo "</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonusPA_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -2083,6 +2081,7 @@ if($dispo || $admin){
 				$pmMax_perso 			= $t_perso2["pmMax_perso"];
 				$perception_perso 		= $t_perso2["perception_perso"];
 				$bonusPerception_perso 	= $t_perso2["bonusPerception_perso"];
+				$bonusPA_perso			= $t_perso2["bonusPA_perso"];
 				$recup_perso 			= $t_perso2["recup_perso"];
 				$bonusRecup_perso		= $t_perso2["bonusRecup_perso"];
 				$protec_perso 			= $t_perso2["protec_perso"];
@@ -2530,23 +2529,43 @@ if($dispo || $admin){
 												<td><b>Perception</b></td>
 												<td align='center'>
 												<?php 
-												echo $perception_perso; 
 												
-												$bonus_perc_final = $bonusPerception_perso;
-												
+												$texte_tooltip = "Base : ".$perception_perso."";
 												if($bonusPerception_perso != 0) {
 													if ($bonusPerception_perso < 0) {
-														echo "<font color='red'> (";
+														$texte_tooltip .= " <b>(";
 													} else {
-														echo "<font color='blue'> (+";
+														$texte_tooltip .= " <b>(+";
 													}
-													echo $bonusPerception_perso . ")</font>"; 
-												} 
+													$texte_tooltip .= $bonusPerception_perso . ")</b>"; 
+												}
+												
+												$perception_final_perso = $perception_perso + $bonusPerception_perso;
+												
+												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$perception_final_perso.'</a>';
+												
 												?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>PA</b></td>
-												<td nowrap="nowrap"><?php echo $pa_perso . ' / ' . $paMax_perso; ?>&nbsp;</td>
+												<td nowrap="nowrap">
+												<?php 
+												
+												$texte_tooltip = "Base max : ".$paMax_perso."";
+												if ($bonusPA_perso != 0) {
+													if ($bonusPA_perso < 0) {
+														$texte_tooltip .= " <b>(";
+													} else {
+														$texte_tooltip .= " <b>(+";
+													}
+													$texte_tooltip .= $bonusPA_perso . ")</b>"; 
+												}
+												
+												$paMax_final_perso = $paMax_perso + $bonusPA_perso;
+												
+												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$pa_perso . ' / ' . $paMax_final_perso.'</a>';
+												
+												?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>PM</b></td>
