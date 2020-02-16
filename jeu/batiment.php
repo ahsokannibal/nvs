@@ -19,7 +19,7 @@ if($dispo || $admin){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
-		$sql = "SELECT pv_perso, type_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele, clan FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT pv_perso, pa_perso, type_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele, clan FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql );
 		$tpv = $res->fetch_assoc();
 		
@@ -29,6 +29,7 @@ if($dispo || $admin){
 		$dla 		= $tpv["DLA"];
 		$est_gele 	= $tpv["est_gele"];
 		$camp		= $tpv['clan'];
+		$pa_perso	= $tpv['pa_perso'];
 		
 		$config = '1';
 		
@@ -109,8 +110,14 @@ if($dispo || $admin){
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
-	<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Nord VS Sud</title>
+	
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	
 	<body>
@@ -132,40 +139,49 @@ if($dispo || $admin){
 							
 								// vérification que l'arme existe bien
 								if(existe_arme($mysqli, $id_arme)){
+									
+									if ($pa_perso >= 2) {
 								
-									// recuperation des données de l'arme
-									$sql_a = "SELECT nom_arme, coutOr_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
-									$res_a = $mysqli->query($sql_a);
-									$t_a = $res_a->fetch_assoc();
-									
-									$nom_arme 		= $t_a["nom_arme"];
-									$coutOr_arme 	= $t_a["coutOr_arme"];
-									$poids_arme 	= $t_a["poids_arme"];
-									
-									// calcul rabais
-									if($nb_points_marchandage){
-										$rabais = floor(($coutOr_arme * $pourcentage_rabais)/100);
-										$coutOr_arme = $coutOr_arme - $rabais;
-									}
-									
-									//verification de l'or du perso
-									if($or >= $coutOr_arme){
+										// recuperation des données de l'arme
+										$sql_a = "SELECT nom_arme, coutOr_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
+										$res_a = $mysqli->query($sql_a);
+										$t_a = $res_a->fetch_assoc();
 										
-										// insertion perso_as_arme
-										$sql_i = "INSERT INTO perso_as_arme VALUES('$id_perso','$id_arme','0')";
-										$mysqli->query($sql_i);
-									
-										// mis à jour or/charge perso
-										$sql_m = "UPDATE perso SET or_perso=or_perso-$coutOr_arme, charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_perso'";
-										$mysqli->query($sql_m);
-									
-										// MAJ or perso pour affichage
-										$or = $or - $coutOr_arme;
-									
-										echo "<font color=blue>Vous venez de vous offrir l'arme $nom_arme pour $coutOr_arme Or</font>";
+										$nom_arme 		= $t_a["nom_arme"];
+										$coutOr_arme 	= $t_a["coutOr_arme"];
+										$poids_arme 	= $t_a["poids_arme"];
+										
+										// calcul rabais
+										if($nb_points_marchandage){
+											$rabais = floor(($coutOr_arme * $pourcentage_rabais)/100);
+											$coutOr_arme = $coutOr_arme - $rabais;
+										}
+										
+										//verification de l'or du perso
+										if($or >= $coutOr_arme){
+											
+											// insertion perso_as_arme
+											$sql_i = "INSERT INTO perso_as_arme VALUES('$id_perso','$id_arme','0')";
+											$mysqli->query($sql_i);
+										
+											// mis à jour or/charge perso
+											$sql_m = "UPDATE perso SET or_perso=or_perso-$coutOr_arme, charge_perso=charge_perso+$poids_arme, pa_perso=pa_perso-2 WHERE id_perso='$id_perso'";
+											$mysqli->query($sql_m);
+										
+											// MAJ or perso pour affichage
+											$or = $or - $coutOr_arme;
+											
+											// MAJ pa perso pour affichage
+											$pa_perso = $pa_perso - 2;
+										
+											echo "<font color=blue>Vous venez de vous offrir l'arme $nom_arme pour $coutOr_arme Or</font>";
+										}
+										else {
+											echo "<font color=red>Vous n'avez pas assez de thunes pour vous offrir cette arme</font>";
+										}
 									}
 									else {
-										echo "<font color=red>Vous n'avez pas assez de thunes pour vous offrir cette arme</font>";
+										echo "<font color=red>Vous n'avez pas assez de PA pour acheter une arme</font>";
 									}
 								}
 								else {
@@ -191,40 +207,49 @@ if($dispo || $admin){
 								
 								// vérification que l'armure existe bien
 								if(existe_armure($mysqli, $id_armure)){
+									
+									if ($pa_perso >= 2) {
 								
-									// recuperation des données de l'armure
-									$sql_a = "SELECT nom_armure, coutOr_armure, poids_armure FROM armure WHERE id_armure='$id_armure'";
-									$res_a = $mysqli->query($sql_a);
-									$t_a = $res_a->fetch_assoc();
-									
-									$nom_armure 	= $t_a["nom_armure"];
-									$coutOr_armure 	= $t_a["coutOr_armure"];
-									$pvMax_armure 	= $t_a["pvMax_armure"];
-									
-									// calcul rabais
-									if($nb_points_marchandage){
-										$rabais = floor(($coutOr_armure * $pourcentage_rabais)/100);
-										$coutOr_armure = $coutOr_armure - $rabais;
-									}
-									
-									//verification de l'or du perso
-									if($or >= $coutOr_armure){
+										// recuperation des données de l'armure
+										$sql_a = "SELECT nom_armure, coutOr_armure, poids_armure FROM armure WHERE id_armure='$id_armure'";
+										$res_a = $mysqli->query($sql_a);
+										$t_a = $res_a->fetch_assoc();
 										
-										// insertion perso_as_armure
-										$sql_i = "INSERT INTO perso_as_armure VALUES('$id_perso','$id_armure','0')";
-										$mysqli->query($sql_i);
-									
-										// mis à jour or et charge perso
-										$sql_m = "UPDATE perso SET or_perso=or_perso-$coutOr_armure, charge_perso=charge_perso+$poids_armure WHERE id_perso='$id_perso'";
-										$mysqli->query($sql_m);
-									
-										// MAJ or perso pour affichage
-										$or = $or - $coutOr_armure;
+										$nom_armure 	= $t_a["nom_armure"];
+										$coutOr_armure 	= $t_a["coutOr_armure"];
+										$pvMax_armure 	= $t_a["pvMax_armure"];
 										
-										echo "<font color=blue>Vous venez de vous offrir l'armure $nom_armure pour $coutOr_armure Thunes</font>";
+										// calcul rabais
+										if($nb_points_marchandage){
+											$rabais = floor(($coutOr_armure * $pourcentage_rabais)/100);
+											$coutOr_armure = $coutOr_armure - $rabais;
+										}
+										
+										//verification de l'or du perso
+										if($or >= $coutOr_armure){
+											
+											// insertion perso_as_armure
+											$sql_i = "INSERT INTO perso_as_armure VALUES('$id_perso','$id_armure','0')";
+											$mysqli->query($sql_i);
+										
+											// mis à jour or et charge perso
+											$sql_m = "UPDATE perso SET or_perso=or_perso-$coutOr_armure, charge_perso=charge_perso+$poids_armure, pa_perso=pa_perso-2 WHERE id_perso='$id_perso'";
+											$mysqli->query($sql_m);
+										
+											// MAJ or perso pour affichage
+											$or = $or - $coutOr_armure;
+											
+											// MAJ pa perso pour affichage
+											$pa_perso = $pa_perso - 2;
+											
+											echo "<font color=blue>Vous venez de vous offrir l'armure $nom_armure pour $coutOr_armure Thunes</font>";
+										}
+										else {
+											echo "<font color=red>Vous n'avez pas assez de thunes pour vous offrir cette armure</font>";
+										}
 									}
 									else {
-										echo "<font color=red>Vous n'avez pas assez de thunes pour vous offrir cette arme</font>";
+										echo "<font color=red>Vous n'avez pas assez de PA pour acheter une armure</font>";
 									}
 								}
 								else {
@@ -250,40 +275,49 @@ if($dispo || $admin){
 								
 								// vérification que l'objet existe bien
 								if(existe_objet($mysqli, $id_o)){
+									
+									if ($pa_perso >= 2) {
 								
-									// recuperation des données de l'objet
-									$sql = "SELECT nom_objet, poids_objet, coutOr_objet FROM objet WHERE id_objet='$id_o'";
-									$res = $mysqli->query($sql);
-									$t_o = $res->fetch_assoc();
-									
-									$nom_o 		= $t_o["nom_objet"];
-									$poids_o 	= $t_o["poids_objet"];
-									$coutOr_o 	= $t_o["coutOr_objet"];
-									
-									// calcul rabais
-									if($nb_points_marchandage){
-										$rabais = floor(($coutOr_o * $pourcentage_rabais)/100);
-										$coutOr_o = $coutOr_o - $rabais;
-									}
-									
-									//verification de l'or du perso
-									if ($coutOr_o <= $or){
+										// recuperation des données de l'objet
+										$sql = "SELECT nom_objet, poids_objet, coutOr_objet FROM objet WHERE id_objet='$id_o'";
+										$res = $mysqli->query($sql);
+										$t_o = $res->fetch_assoc();
 										
-										//On met à jour le perso (or + charge)
-										$sql = "UPDATE perso SET or_perso=or_perso-$coutOr_o, charge_perso=charge_perso+$poids_o WHERE id_perso='$id_perso'";
-										$mysqli->query($sql);
+										$nom_o 		= $t_o["nom_objet"];
+										$poids_o 	= $t_o["poids_objet"];
+										$coutOr_o 	= $t_o["coutOr_objet"];
 										
-										// On met l'objet dans le sac
-										$sql = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso','$id_o')";
-										$mysqli->query($sql);
+										// calcul rabais
+										if($nb_points_marchandage){
+											$rabais = floor(($coutOr_o * $pourcentage_rabais)/100);
+											$coutOr_o = $coutOr_o - $rabais;
+										}
 										
-										// MAJ or perso pour affichage
-										$or = $or - $coutOr_o;
-										
-										echo "<font color=blue>Vous avez acheter l'objet $nom_o pour $coutOr_o thunes</font>";
+										//verification de l'or du perso
+										if ($coutOr_o <= $or){
+											
+											//On met à jour le perso (or + charge)
+											$sql = "UPDATE perso SET or_perso=or_perso-$coutOr_o, charge_perso=charge_perso+$poids_o, pa_perso=pa_perso-2 WHERE id_perso='$id_perso'";
+											$mysqli->query($sql);
+											
+											// On met l'objet dans le sac
+											$sql = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso','$id_o')";
+											$mysqli->query($sql);
+											
+											// MAJ or perso pour affichage
+											$or = $or - $coutOr_o;
+											
+											// MAJ pa perso pour affichage
+											$pa_perso = $pa_perso - 2;
+											
+											echo "<font color=blue>Vous avez acheter l'objet $nom_o pour $coutOr_o thunes</font>";
+										}
+										else {
+											echo "<font color=red>Vous ne possédez pas assez de thunes pour acheter l'objet $nom_o</font>";
+										}
 									}
 									else {
-										echo "<font color=red>Vous ne possédez pas assez de thunes pour acheter l'objet $nom_o</font>";
+										echo "<font color=red>Vous ne possédez pas assez de PA pour acheter un objet</font>";
 									}
 								}
 								else {
@@ -829,7 +863,7 @@ if($dispo || $admin){
 							}
 							else {
 								// Vos armes / armures / Ressources à vendre
-								echo "<center><a href=\"batiment.php?bat=$id_i_bat&vente=ok\">Vendre vos biens</a></center>";
+								echo "<center><a class='btn btn-primary' href=\"batiment.php?bat=$id_i_bat&vente=ok\">Vendre vos biens</a></center>";
 							}
 						}
 						
@@ -1202,6 +1236,8 @@ if($dispo || $admin){
 						// hopital
 						if($id_bat == '7'){
 							
+							echo "<center><font color='red'>Chaque achat coûte 2PA au perso (il vous reste ".$pa_perso." PA)</font></center>";
+							
 							// Objets de soin
 							echo "<table width=100% border=1>";
 							echo "<tr><th colspan=6>Objets de soin</th></tr>";
@@ -1242,7 +1278,11 @@ if($dispo || $admin){
 										echo "<font color='blue'> ($new_cout_o)</font>";
 									}
 									echo "</center></td>";
-									echo "<td align=\"center\"><input type='submit' name='achat_objet' value='Acheter' />";
+									echo "<td align=\"center\"><input type='submit' name='achat_objet' value='Acheter' ";
+									if ($pa_perso < 2) {
+										echo "disabled";
+									}
+									echo " />";
 									echo "<input type='hidden' name='hid_achat_objet' value=".$id_o." />";
 									echo "</td></tr>";
 									
@@ -1285,312 +1325,330 @@ if($dispo || $admin){
 							echo "</form>";
 							
 							if (isset($_POST["choix"])){
-								
 								$choix = $_POST["choix"];
+							} else {
+								$choix = "objets";
+							}
+							
+							echo "<center><font color='red'>Chaque achat coûte 2PA au perso (il vous reste ".$pa_perso." PA)</font></center>";
 						
-								// Objets
-								if($choix == "objets"){
-									echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
-									
-									echo "<table width=100% border=1>";
-									echo "<tr><th colspan=6>Objets</th></tr>";
-									echo "<tr bgcolor=\"lightgreen\">";
-									echo "<th>objet</th>";
-									echo "<th>poids</th>";
-									echo "<th>image</th>";
-									echo "<th>description</th>";
-									echo "<th>cout</th>";
-									echo "<th>achat</th>";
-									echo "</tr>";
-									
-									//possibilité achat objets de base
-									$sql = "SELECT * from objet where type_objet='N'";
-									$res = $mysqli->query($sql);
-									$nb = $res->num_rows;
-									
-									if($nb){
-										while ($t = $res->fetch_assoc()) {
-											
-											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+							// Objets
+							if($choix == "objets"){
+								
+								echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+								
+								echo "<table width=100% border=1>";
+								echo "<tr><th colspan=6>Objets</th></tr>";
+								echo "<tr bgcolor=\"lightgreen\">";
+								echo "<th>objet</th>";
+								echo "<th>poids</th>";
+								echo "<th>image</th>";
+								echo "<th>description</th>";
+								echo "<th>cout</th>";
+								echo "<th>achat</th>";
+								echo "</tr>";
+								
+								//possibilité achat objets de base
+								$sql = "SELECT * from objet where type_objet='N'";
+								$res = $mysqli->query($sql);
+								$nb = $res->num_rows;
+								
+								if($nb){
+									while ($t = $res->fetch_assoc()) {
 										
-											$id_objet 			= $t["id_objet"];
-											$nom_objet 			= $t["nom_objet"];
-											$poids_objet 		= $t["poids_objet"];
-											$coutOr_objet 		= $t["coutOr_objet"];
-											$description_objet 	= $t["description_objet"];
-											
-											$image_objet = "objet".$id_objet.".png";
-											
-											// rabais
-											$rabais = floor(($coutOr_objet * $pourcentage_rabais)/100);
-											
-											echo "<tr><td><center>$nom_objet</center></td><td><center>$poids_objet</center></td><td align='center'><img src=\"../images/objets/$image_objet\" width=\"40\" height=\"40\" ></td><td>$description_objet</td>";?>
-											<td><?php echo "<center>".$coutOr_objet;
-											if($rabais) {
-												$new_coutOr_objet = $coutOr_objet - $rabais;
-												echo "<font color='blue'> ($new_coutOr_objet)</font>";
-											}
-											echo "</center></td>";
-											echo "<td align=\"center\"><input type='submit' name='achat_objet' value='Acheter' />";
-											echo "<input type='hidden' name='hid_achat_objet' value=".$id_objet." />";
-											echo "</td></tr>";
-											
-											echo "</form>";
+										echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+									
+										$id_objet 			= $t["id_objet"];
+										$nom_objet 			= $t["nom_objet"];
+										$poids_objet 		= $t["poids_objet"];
+										$coutOr_objet 		= $t["coutOr_objet"];
+										$description_objet 	= $t["description_objet"];
+										
+										$image_objet = "objet".$id_objet.".png";
+										
+										// rabais
+										$rabais = floor(($coutOr_objet * $pourcentage_rabais)/100);
+										
+										echo "<tr><td><center>$nom_objet</center></td><td><center>$poids_objet</center></td><td align='center'><img src=\"../images/objets/$image_objet\" width=\"40\" height=\"40\" ></td><td>$description_objet</td>";?>
+										<td><?php echo "<center>".$coutOr_objet;
+										if($rabais) {
+											$new_coutOr_objet = $coutOr_objet - $rabais;
+											echo "<font color='blue'> ($new_coutOr_objet)</font>";
 										}
-									}
-									else {
-										echo "<tr><td align='center' colspan='6'><i>Aucun objet disponible pour le moment</i></td></tr>";
+										echo "</center></td>";
+										echo "<td align=\"center\"><input type='submit' name='achat_objet' value='Acheter' ";
+										if ($pa_perso < 2) {
+											echo "disabled";
+										}
+										echo " />";
+										echo "<input type='hidden' name='hid_achat_objet' value=".$id_objet." />";
+										echo "</td></tr>";
+										
+										echo "</form>";
 									}
 								}
+								else {
+									echo "<tr><td align='center' colspan='6'><i>Aucun objet disponible pour le moment</i></td></tr>";
+								}
+							}
+							
+							// Armes
+							if($choix == "armes") {
 								
-								// Armes
-								if($choix == "armes") {
-									
-									echo "<br />";
-									
-									// Armes au CaC
-									echo "<table width=100% border=1>";
-									echo "<tr><th colspan=9>Armes CàC</th></tr>";
-									echo "<tr bgcolor=\"lightgreen\">";
-									echo "<th>arme</th>";
-									echo "<th>unité(s)</th>";
-									echo "<th>coût PA</th>";
-									echo "<th>précision</th>";
-									echo "<th>dégats</th>";
-									echo "<th>poids</th>";
-									echo "<th>image</th>";
-									echo "<th>coût</th>";
-									echo "<th>achat</th>";
-									echo "</tr>";
+								// Armes au CaC
+								echo "<table width=100% border=1>";
+								echo "<tr><th colspan=9>Armes CàC</th></tr>";
+								echo "<tr bgcolor=\"lightgreen\">";
+								echo "<th>arme</th>";
+								echo "<th>unité(s)</th>";
+								echo "<th>coût PA</th>";
+								echo "<th>précision</th>";
+								echo "<th>dégats</th>";
+								echo "<th>poids</th>";
+								echo "<th>image</th>";
+								echo "<th>coût</th>";
+								echo "<th>achat</th>";
+								echo "</tr>";
+							
+								// Récupération des données des armes de CàC de niveau égal à 6
+								$sql = "SELECT arme.id_arme, nom_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, poids_arme, coutOr_arme, image_arme 
+										FROM arme
+										WHERE porteeMin_arme = 1 
+										AND porteeMax_arme = 1
+										AND coutOr_arme > 0";
+								$res = $mysqli->query($sql);
+								$nb = $res->num_rows;
 								
-									// Récupération des données des armes de CàC de niveau égal à 6
-									$sql = "SELECT arme.id_arme, nom_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, poids_arme, coutOr_arme, image_arme 
-											FROM arme
-											WHERE porteeMin_arme = 1 
-											AND porteeMax_arme = 1
-											AND coutOr_arme > 0";
-									$res = $mysqli->query($sql);
-									$nb = $res->num_rows;
-									
-									if($nb){
-										while ($t = $res->fetch_assoc()) {
-											
-											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+								if($nb){
+									while ($t = $res->fetch_assoc()) {
 										
-											$id_arme 			= $t["id_arme"];
-											$nom_arme 			= $t["nom_arme"];
-											$coutPa_arme 		= $t["coutPa_arme"];
-											$degatMin_arme 		= $t["degatMin_arme"];
-											$degatMax_arme 		= $t["degatMax_arme"];
-											$valeur_des_arme 	= $t["valeur_des_arme"];
-											$precision_arme		= $t["precision_arme"];
-											$coutOr_arme 		= $t["coutOr_arme"];
-											$image_arme 		= $t["image_arme"];
-											$poids_arme			= $t["poids_arme"];
-											
-											// rabais
-											$rabais = floor(($coutOr_arme * $pourcentage_rabais)/100);
-											
-											if($nom_arme != "poing") {
-												
-												echo "<tr>";
-												echo "	<td><center>$nom_arme</center></td>";
-												
-												echo "	<td><center>";
-												$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
-															WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
-															AND arme_as_type_unite.id_arme = '$id_arme'";
-												$res_u = $mysqli->query($sql_u);
-												$liste_unite = "";
-												while ($t_u = $res_u->fetch_assoc()) {
-													$nom_unite = $t_u["nom_unite"];
-													
-													if ($liste_unite != "") {
-														$liste_unite .= " / ";
-													}
-													$liste_unite .= $nom_unite;
-												}
-												echo $liste_unite;
-												echo "	</center></td>";
-												
-												echo "	<td><center>$coutPa_arme</center></td>";
-												echo "	<td><center>$precision_arme</center></td>";
-												if($degatMin_arme && $valeur_des_arme){
-													echo "	<td><center>" . $degatMin_arme . "D". $valeur_des_arme ."</center></td>";
-												}
-												else {
-													echo "	<td><center> - </center></td>";
-												}
-												echo "	<td><center>$poids_arme</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme\" width=\"40\" height=\"40\"></td>";?>
-												<td><?php echo "<center>".$coutOr_arme;
-												if($rabais) {
-													$new_coutOr_arme = $coutOr_arme - $rabais;
-													echo "<font color='blue'> ($new_coutOr_arme)</font>";
-												}
-												echo "</center></td>"; 
-												echo "	<td align=\"center\"><input type='submit' name='achat_arme' value='Acheter' />";
-												echo "	<input type='hidden' name='hid_achat_arme' value=".$t["id_arme"]." />";
-												echo "	</td>";
-												echo "</tr>";
-											}
-											echo "</form>";
-										}
-									}
-									else {
-										echo "<tr><td align='center' colspan='7'><i>Aucunes armes au CàC disponibles pour le moment</i></td></tr>";
-									}
-									echo "</table>";
-									echo "<br>";
-									echo "<table width=100% border=1>";
+										echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 									
-									// Armes à Distance
-									echo "<tr><th colspan=11>Armes Dist</th></tr>";
-									echo "<tr bgcolor=\"lightgreen\">";
-									echo "<th>arme</th>";
-									echo "<th>unités</th>";
-									echo "<th>portée</th>";
-									echo "<th>coût PA</th>";
-									echo "<th>précision</th>";
-									echo "<th>dégats</th>";
-									echo "<th>dégats de zone ?</th>";
-									echo "<th>poids</th>";
-									echo "<th>image</th>";
-									echo "<th>coût</th>";
-									echo "<th>achat</th>";
-									
-									// Récupération des données des armes à distance de qualité égal à 6
-									$sql2 = "SELECT id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, degatZone_arme, poids_arme, coutOr_arme, image_arme 
-												FROM arme
-												WHERE porteeMax_arme > 1
-												AND coutOr_arme > 0";
-									$res2 = $mysqli->query($sql2);
-									$nb2 = $res2->num_rows;
-									
-									if($nb2){
-										while ($t2 = $res2->fetch_assoc()) {
-											
-											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+										$id_arme 			= $t["id_arme"];
+										$nom_arme 			= $t["nom_arme"];
+										$coutPa_arme 		= $t["coutPa_arme"];
+										$degatMin_arme 		= $t["degatMin_arme"];
+										$degatMax_arme 		= $t["degatMax_arme"];
+										$valeur_des_arme 	= $t["valeur_des_arme"];
+										$precision_arme		= $t["precision_arme"];
+										$coutOr_arme 		= $t["coutOr_arme"];
+										$image_arme 		= $t["image_arme"];
+										$poids_arme			= $t["poids_arme"];
 										
-											$id_arme2 			= $t2["id_arme"];
-											$nom_arme2 			= $t2["nom_arme"];
-											$porteeMin_arme2 	= $t2["porteeMin_arme"];
-											$porteeMax_arme2 	= $t2["porteeMax_arme"];
-											$coutPa_arme2 		= $t2["coutPa_arme"];
-											$valeur_des_arme2 	= $t2["valeur_des_arme"];
-											$precision_arme2 	= $t2["precision_arme"];
-											$degatMin_arme2 	= $t2["degatMin_arme"];
-											$degatMax_arme2 	= $t2["degatMax_arme"];
-											$degatZone_arme2 	= $t2["degatZone_arme"];
-											$poids_arme2 		= $t2["poids_arme"];
-											$coutOr_arme2 		= $t2["coutOr_arme"];
-											$image_arme2 		= $t2["image_arme"];
-											
-											// Calcul rabais
-											$rabais = floor(($coutOr_arme2 * $pourcentage_rabais)/100);
+										// rabais
+										$rabais = floor(($coutOr_arme * $pourcentage_rabais)/100);
+										
+										if($nom_arme != "poing") {
 											
 											echo "<tr>";
-											echo "	<td><center>$nom_arme2</center></td>";
+											echo "	<td><center>$nom_arme</center></td>";
 											
 											echo "	<td><center>";
-												$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
-															WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
-															AND arme_as_type_unite.id_arme = '$id_arme2'";
-												$res_u = $mysqli->query($sql_u);
-												$liste_unite = "";
-												while ($t_u = $res_u->fetch_assoc()) {
-													$nom_unite = $t_u["nom_unite"];
-													
-													if ($liste_unite != "") {
-														$liste_unite .= " / ";
-													}
-													$liste_unite .= $nom_unite;
+											$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
+														WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
+														AND arme_as_type_unite.id_arme = '$id_arme'";
+											$res_u = $mysqli->query($sql_u);
+											$liste_unite = "";
+											while ($t_u = $res_u->fetch_assoc()) {
+												$nom_unite = $t_u["nom_unite"];
+												
+												if ($liste_unite != "") {
+													$liste_unite .= " / ";
 												}
-												echo $liste_unite;
-												echo "	</center></td>";
+												$liste_unite .= $nom_unite;
+											}
+											echo $liste_unite;
+											echo "	</center></td>";
 											
-											echo "	<td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td>";
-											echo "	<td><center>$coutPa_arme2</center></td>";
-											echo "	<td><center>$precision_arme2</center></td>";
-											if($degatMin_arme2 && $valeur_des_arme2){
-												echo "<td><center>" . $degatMin_arme2 . "D" . $valeur_des_arme2 . "</center></td>";
+											echo "	<td><center>$coutPa_arme</center></td>";
+											echo "	<td><center>$precision_arme</center></td>";
+											if($degatMin_arme && $valeur_des_arme){
+												echo "	<td><center>" . $degatMin_arme . "D". $valeur_des_arme ."</center></td>";
 											}
 											else {
-												echo "<td><center> - </center></td>";
+												echo "	<td><center> - </center></td>";
 											}
-											echo "<td>";
-											if ($degatZone_arme2){
-												echo "<center>oui</center></td>";
-											}
-											else{
-												echo "<center>non</center></td>";
-											}
-											echo "<td><center>$poids_arme2</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme2\" width=\"40\" height=\"40\"></td>";?>
-											<td><?php echo "<center>".$coutOr_arme2;
+											echo "	<td><center>$poids_arme</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme\" width=\"40\" height=\"40\"></td>";?>
+											<td><?php echo "<center>".$coutOr_arme;
 											if($rabais) {
-												$new_coutOr_arme2 = $coutOr_arme2 - $rabais;
-												echo "<font color='blue'> ($new_coutOr_arme2)</font>";
+												$new_coutOr_arme = $coutOr_arme - $rabais;
+												echo "<font color='blue'> ($new_coutOr_arme)</font>";
 											}
 											echo "</center></td>"; 
-											echo "<td align=\"center\"><input type='submit' name='achat_arme' value='Acheter' />";
-											echo "<input type='hidden' name='hid_achat_arme' value=".$t2["id_arme"]." />";
-											echo "</td></tr>";
-											
-											echo "</form>";
-										}
-									}
-									else {
-										echo "<tr><td align='center' colspan='9'><i>Aucunes armes à distance disponibles pour le moment</i></td></tr>";
-									}
-									echo "</table>";
-								}
-								
-								// Armures
-								if($choix == "armures") {
-									
-									echo "<table width=100% border=1>";
-									echo "<tr><th colspan=6>Armures</th></tr>";
-									echo "<tr bgcolor=\"lightgreen\">";
-									echo "<th>armure</th>";
-									echo "<th>defense</th>";
-									echo "<th>poids</th>";
-									echo "<th>image</th>";
-									echo "<th>coût</th>";
-									echo "<th>achat</th>";
-									echo "</tr>";
-								
-									// Récupération des données des armures de niveau égal à 6
-									$sql = "SELECT id_armure, nom_armure, poids_armure, coutOr_armure, image_armure, corps_armure, bonusDefense_armure FROM armure 
-											WHERE qualite_armure = 6
-											ORDER BY corps_armure, coutOr_armure";
-									$res = $mysqli->query($sql);
-									$nb_armure = $res->num_rows;
-									
-									if($nb_armure){
-										while ($t = $res->fetch_assoc()) {
-											
-											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
-											
-											$id_armure = $t["id_armure"];
-											$nom_armure = $t["nom_armure"];
-											$poids_armure = $t["poids_armure"];
-											$coutOr_armure = $t["coutOr_armure"];
-											$image_armure = $t["image_armure"];
-											$corps_armure = $t["corps_armure"];
-											$defense_armure = $t["bonusDefense_armure"];
-											
-											// Calcul du rabais
-											$rabais = floor(($coutOr_armure * $pourcentage_rabais)/100);
-											
-											echo "<tr><td align='center'>$nom_armure</td><td align='center'>$defense_armure</td><td align='center'>$poids_armure</td><td align='center'><img src=\"../images/armures/$image_armure\"</td><td align='center'>$coutOr_armure</td>";
-											echo "<td align=\"center\"><input type='submit' name='achat_armure' value='Acheter' />";
-											echo "<input type='hidden' name='hid_achat_armure' value=".$t["id_armure"]." />";
+											echo "	<td align=\"center\"><input type='submit' name='achat_arme' value='Acheter' ";
+											if ($pa_perso < 2) {
+												echo "disabled";
+											}
+											echo " />";
+											echo "	<input type='hidden' name='hid_achat_arme' value=".$t["id_arme"]." />";
+											echo "	</td>";
 											echo "</tr>";
-											echo "</form>";
 										}
+										echo "</form>";
 									}
-									else {
-										echo "<tr><td align='center' colspan='9'><i>Aucunes armures disponibles pour le moment</i></td></tr>";
+								}
+								else {
+									echo "<tr><td align='center' colspan='7'><i>Aucunes armes au CàC disponibles pour le moment</i></td></tr>";
+								}
+								echo "</table>";
+								echo "<br>";
+								echo "<table width=100% border=1>";
+								
+								// Armes à Distance
+								echo "<tr><th colspan=11>Armes Dist</th></tr>";
+								echo "<tr bgcolor=\"lightgreen\">";
+								echo "<th>arme</th>";
+								echo "<th>unités</th>";
+								echo "<th>portée</th>";
+								echo "<th>coût PA</th>";
+								echo "<th>précision</th>";
+								echo "<th>dégats</th>";
+								echo "<th>dégats de zone ?</th>";
+								echo "<th>poids</th>";
+								echo "<th>image</th>";
+								echo "<th>coût</th>";
+								echo "<th>achat</th>";
+								
+								// Récupération des données des armes à distance de qualité égal à 6
+								$sql2 = "SELECT id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, degatZone_arme, poids_arme, coutOr_arme, image_arme 
+											FROM arme
+											WHERE porteeMax_arme > 1
+											AND coutOr_arme > 0";
+								$res2 = $mysqli->query($sql2);
+								$nb2 = $res2->num_rows;
+								
+								if($nb2){
+									while ($t2 = $res2->fetch_assoc()) {
+										
+										echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+									
+										$id_arme2 			= $t2["id_arme"];
+										$nom_arme2 			= $t2["nom_arme"];
+										$porteeMin_arme2 	= $t2["porteeMin_arme"];
+										$porteeMax_arme2 	= $t2["porteeMax_arme"];
+										$coutPa_arme2 		= $t2["coutPa_arme"];
+										$valeur_des_arme2 	= $t2["valeur_des_arme"];
+										$precision_arme2 	= $t2["precision_arme"];
+										$degatMin_arme2 	= $t2["degatMin_arme"];
+										$degatMax_arme2 	= $t2["degatMax_arme"];
+										$degatZone_arme2 	= $t2["degatZone_arme"];
+										$poids_arme2 		= $t2["poids_arme"];
+										$coutOr_arme2 		= $t2["coutOr_arme"];
+										$image_arme2 		= $t2["image_arme"];
+										
+										// Calcul rabais
+										$rabais = floor(($coutOr_arme2 * $pourcentage_rabais)/100);
+										
+										echo "<tr>";
+										echo "	<td><center>$nom_arme2</center></td>";
+										
+										echo "	<td><center>";
+											$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
+														WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
+														AND arme_as_type_unite.id_arme = '$id_arme2'";
+											$res_u = $mysqli->query($sql_u);
+											$liste_unite = "";
+											while ($t_u = $res_u->fetch_assoc()) {
+												$nom_unite = $t_u["nom_unite"];
+												
+												if ($liste_unite != "") {
+													$liste_unite .= " / ";
+												}
+												$liste_unite .= $nom_unite;
+											}
+											echo $liste_unite;
+											echo "	</center></td>";
+										
+										echo "	<td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td>";
+										echo "	<td><center>$coutPa_arme2</center></td>";
+										echo "	<td><center>$precision_arme2</center></td>";
+										if($degatMin_arme2 && $valeur_des_arme2){
+											echo "<td><center>" . $degatMin_arme2 . "D" . $valeur_des_arme2 . "</center></td>";
+										}
+										else {
+											echo "<td><center> - </center></td>";
+										}
+										echo "<td>";
+										if ($degatZone_arme2){
+											echo "<center>oui</center></td>";
+										}
+										else{
+											echo "<center>non</center></td>";
+										}
+										echo "<td><center>$poids_arme2</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme2\" width=\"40\" height=\"40\"></td>";?>
+										<td><?php echo "<center>".$coutOr_arme2;
+										if($rabais) {
+											$new_coutOr_arme2 = $coutOr_arme2 - $rabais;
+											echo "<font color='blue'> ($new_coutOr_arme2)</font>";
+										}
+										echo "</center></td>"; 
+										echo "<td align=\"center\"><input type='submit' name='achat_arme' value='Acheter' ";
+										if ($pa_perso < 2) {
+											echo "disabled";
+										}
+										echo " />";
+										echo "<input type='hidden' name='hid_achat_arme' value=".$t2["id_arme"]." />";
+										echo "</td></tr>";
+										
+										echo "</form>";
 									}
+								}
+								else {
+									echo "<tr><td align='center' colspan='9'><i>Aucunes armes à distance disponibles pour le moment</i></td></tr>";
+								}
+								echo "</table>";
+							}
+							
+							// Armures
+							if($choix == "armures") {
+								
+								echo "<table width=100% border=1>";
+								echo "<tr><th colspan=6>Armures</th></tr>";
+								echo "<tr bgcolor=\"lightgreen\">";
+								echo "<th>armure</th>";
+								echo "<th>defense</th>";
+								echo "<th>poids</th>";
+								echo "<th>image</th>";
+								echo "<th>coût</th>";
+								echo "<th>achat</th>";
+								echo "</tr>";
+							
+								// Récupération des données des armures de niveau égal à 6
+								$sql = "SELECT id_armure, nom_armure, poids_armure, coutOr_armure, image_armure, corps_armure, bonusDefense_armure FROM armure 
+										WHERE qualite_armure = 6
+										ORDER BY corps_armure, coutOr_armure";
+								$res = $mysqli->query($sql);
+								$nb_armure = $res->num_rows;
+								
+								if($nb_armure){
+									while ($t = $res->fetch_assoc()) {
+										
+										echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+										
+										$id_armure = $t["id_armure"];
+										$nom_armure = $t["nom_armure"];
+										$poids_armure = $t["poids_armure"];
+										$coutOr_armure = $t["coutOr_armure"];
+										$image_armure = $t["image_armure"];
+										$corps_armure = $t["corps_armure"];
+										$defense_armure = $t["bonusDefense_armure"];
+										
+										// Calcul du rabais
+										$rabais = floor(($coutOr_armure * $pourcentage_rabais)/100);
+										
+										echo "<tr><td align='center'>$nom_armure</td><td align='center'>$defense_armure</td><td align='center'>$poids_armure</td><td align='center'><img src=\"../images/armures/$image_armure\"</td><td align='center'>$coutOr_armure</td>";
+										echo "<td align=\"center\"><input type='submit' name='achat_armure' value='Acheter' ";
+										if ($pa_perso < 2) {
+											echo "disabled";
+										}
+										echo " />";
+										echo "<input type='hidden' name='hid_achat_armure' value=".$t["id_armure"]." />";
+										echo "</tr>";
+										echo "</form>";
+									}
+								}
+								else {
+									echo "<tr><td align='center' colspan='9'><i>Aucunes armures disponibles pour le moment</i></td></tr>";
 								}
 							}
 						}
@@ -1698,6 +1756,23 @@ if($dispo || $admin){
 			}
 		}
 	}
+	?>			
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		
+		<script>
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip();
+			$('[data-toggle="popover"]').popover(); 
+		})
+		</script>
+		
+	</body>
+</html>
+<?php
 }
 else {
 	// logout
