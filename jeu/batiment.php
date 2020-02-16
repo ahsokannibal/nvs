@@ -1349,7 +1349,7 @@ if($dispo || $admin){
 								echo "</tr>";
 								
 								//possibilité achat objets de base
-								$sql = "SELECT * from objet where type_objet='N'";
+								$sql = "SELECT * from objet where type_objet='N' OR type_objet='E'";
 								$res = $mysqli->query($sql);
 								$nb = $res->num_rows;
 								
