@@ -316,62 +316,103 @@ if($dispo || $admin){
 			<?php
 			
 			// recuperation du nombre de type d'objets que possede le perso
-			$sql = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id'";
+			$sql = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id' ORDER BY id_objet";
 			$res = $mysqli->query($sql);
 			$nb_obj = $res->num_rows;
 			
 			while ($t_obj = $res->fetch_assoc()){
 			
-					// id de l'objet
-					$id_obj = $t_obj["id_objet"];
-					
-					// recuperation des carac de l'objet
-					$sql1 = "SELECT nom_objet, poids_objet, description_objet, type_objet FROM objet WHERE id_objet='$id_obj'";
-					$res1 = $mysqli->query($sql1);
-					$t_o = $res1->fetch_assoc();
-					
-					$nom_o 			= $t_o["nom_objet"];
-					$poids_o 		= $t_o["poids_objet"];
-					$description_o 	= $t_o["description_objet"];
-					$type_o			= $t_o["type_objet"];
-					
-					// recuperation du nombre d'objet de ce type que possede le perso
-					$sql2 = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj'";
-					$res2 = $mysqli->query($sql2);
-					$nb_o = $res2->num_rows;
-					
-					// calcul poids
-					$poids_total_o = $poids_o * $nb_o;
-					
-					// affichage
-					echo "<tr>";
-					echo "	<td align='center'><img src=\"../images/objets/objet".$id_obj.".png\"></td>";
-					echo "	<td align='center'><font color=green><b>".$nom_o."</b></font><br>".stripslashes($description_o)."</td>";
-					echo "	<td align='center'>Vous possédez <b>".$nb_o."</b> ".$nom_o."";
-					if($nb_o > 1){ 
-						echo "s";
-					}
-					
-					if($type_o == 'N'){
-						echo "<br /><a class='btn btn-outline-success' href=\"sac.php?id_obj=".$id_obj."\">utiliser (cout : 1 PA)</a>";
-					}
-					
-					// Est ce que le perso est déjà équipé de cet objet ?
-					$sql2 = "SELECT * FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj' AND equip_objet='1'";
-					$res2 = $mysqli->query($sql2);
-					$is_equipe = $res2->num_rows;
-					
-					if($type_o == 'E' && !$is_equipe){
-						echo "<br /><a class='btn btn-outline-primary' href=\"sac.php?id_obj=".$id_obj."\">équiper (cout : 1 PA)</a>";
-					}
-					
-					if ($is_equipe) {
-						echo "<br /><b>Vous êtes équipé de cet objet</b>";
-						echo "<br /><a class='btn btn-outline-danger' href=\"sac.php?id_obj=".$id_obj."&desequip=ok\">enlever (cout : 1 PA)</a>";
-					}
-					
-					echo "<br /><u>Poids total :</u> <b>$poids_total_o</b></td>";
-					echo "</tr>";
+				// id de l'objet
+				$id_obj = $t_obj["id_objet"];
+				
+				// recuperation des carac de l'objet
+				$sql1 = "SELECT nom_objet, poids_objet, description_objet, type_objet FROM objet WHERE id_objet='$id_obj'";
+				$res1 = $mysqli->query($sql1);
+				$t_o = $res1->fetch_assoc();
+				
+				$nom_o 			= $t_o["nom_objet"];
+				$poids_o 		= $t_o["poids_objet"];
+				$description_o 	= $t_o["description_objet"];
+				$type_o			= $t_o["type_objet"];
+				
+				// recuperation du nombre d'objet de ce type que possede le perso
+				$sql2 = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj'";
+				$res2 = $mysqli->query($sql2);
+				$nb_o = $res2->num_rows;
+				
+				// calcul poids
+				$poids_total_o = $poids_o * $nb_o;
+				
+				// affichage
+				echo "<tr>";
+				echo "	<td align='center'><img class='img-fluid' src=\"../images/objets/objet".$id_obj.".png\"></td>";
+				echo "	<td align='center'><font color=green><b>".$nom_o."</b></font><br>".stripslashes($description_o)."</td>";
+				echo "	<td align='center'>Vous possédez <b>".$nb_o."</b> ".$nom_o."";
+				if($nb_o > 1){ 
+					echo "s";
+				}
+				
+				if($type_o == 'N'){
+					echo "<br /><a class='btn btn-outline-success' href=\"sac.php?id_obj=".$id_obj."\">utiliser (cout : 1 PA)</a>";
+				}
+				
+				// Est ce que le perso est déjà équipé de cet objet ?
+				$sql2 = "SELECT * FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj' AND equip_objet='1'";
+				$res2 = $mysqli->query($sql2);
+				$is_equipe = $res2->num_rows;
+				
+				if($type_o == 'E' && !$is_equipe){
+					echo "<br /><a class='btn btn-outline-primary' href=\"sac.php?id_obj=".$id_obj."\">équiper (cout : 1 PA)</a>";
+				}
+				
+				if ($is_equipe) {
+					echo "<br /><b>Vous êtes équipé de cet objet</b>";
+					echo "<br /><a class='btn btn-outline-danger' href=\"sac.php?id_obj=".$id_obj."&desequip=ok\">enlever (cout : 1 PA)</a>";
+				}
+				
+				echo "<br /><u>Poids total :</u> <b>$poids_total_o</b></td>";
+				echo "</tr>";
+			}
+			
+			// Récupération des armes non équipées
+			$sql = "SELECT DISTINCT id_arme FROM perso_as_arme WHERE id_perso='$id' AND est_portee='0' ORDER BY id_arme";
+			$res = $mysqli->query($sql);
+			$nb_arme = $res->num_rows;
+			
+			while ($t_arme = $res->fetch_assoc()){
+				
+				// id de l'arme
+				$id_arme = $t_arme["id_arme"];
+				
+				// recuperation des carac de l'objet
+				$sql1 = "SELECT nom_arme, poids_arme, description_arme, image_arme FROM arme WHERE id_arme='$id_arme'";
+				$res1 = $mysqli->query($sql1);
+				$t_a = $res1->fetch_assoc();
+				
+				$nom_a 			= $t_a["nom_arme"];
+				$poids_a 		= $t_a["poids_arme"];
+				$description_a 	= $t_a["description_arme"];
+				$image_a		= $t_a["image_arme"];
+				
+				// recuperation du nombre d'armes de ce type que possede le perso
+				$sql2 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id' AND id_arme='$id_arme'";
+				$res2 = $mysqli->query($sql2);
+				$nb_a = $res2->num_rows;
+				
+				// calcul poids
+				$poids_total_a = $poids_a * $nb_a;
+				
+				// affichage
+				echo "<tr>";
+				echo "	<td align='center'><img class='img-fluid' src=\"../images/armes/".$image_a."\"></td>";
+				echo "	<td align='center'><font color=green><b>".$nom_a."</b></font><br>".stripslashes($description_a)."</td>";
+				echo "	<td align='center'>Vous possédez <b>".$nb_a."</b> ".$nom_a."";
+				if($nb_a > 1){ 
+					echo "s";
+				}
+				
+				echo "<br /><u>Poids total :</u> <b>$poids_total_a</b></td>";
+				echo "</tr>";
 			}
 			?>
 					</table>
