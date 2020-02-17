@@ -82,13 +82,14 @@ if($dispo){
 						
 						if ($verif) {
 							
-							$sql = "SELECT porteeMax_arme, nom_arme, main, bonusPM_arme FROM arme WHERE id_arme='$id_arme'";
+							$sql = "SELECT porteeMax_arme, nom_arme, main, bonusPM_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
 							$res = $mysqli->query ($sql);
 							$tab1 = $res->fetch_assoc();
 							
 							$nom_arme 		= $tab1["nom_arme"];
 							$main_arme 		= $tab1["main"];
 							$bonusPM_arme 	= $tab1["bonusPM_arme"];
+							$poids_arme		= $tab1["poids_arme"];
 							
 							// CaC ?
 							($tab1["porteeMax_arme"] == 1)? $cac=1 : $cac=0;
@@ -123,7 +124,7 @@ if($dispo){
 											$ok_equip = 1;
 											// mise a jour des pa du perso
 												
-											$sql = "UPDATE perso SET pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
+											$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
 											$mysqli->query($sql);
 												
 											// mise a jour equipe perso
@@ -150,7 +151,7 @@ if($dispo){
 							}
 							else {
 								// mise a jour des pa du perso
-								$sql = "UPDATE perso SET pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
+								$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
 								$mysqli->query($sql);
 								
 								if($main_arme == 2){
@@ -187,14 +188,15 @@ if($dispo){
 					
 						$id_arme = $_POST["id_desequip"];
 						
-						$sql = "SELECT bonusPM_arme FROM arme WHERE id_arme='$id_arme'";
+						$sql = "SELECT bonusPM_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
 						$res = $mysqli->query ($sql);
 						$tab1 = $res->fetch_assoc();
 						
-						$bonusPM_arme = $tab1["bonusPM_arme"];
+						$bonusPM_arme 	= $tab1["bonusPM_arme"];
+						$poids_arme		= $tab1["poids_arme"];
 						
 						// mise a jour pa perso
-						$sql = "UPDATE perso SET pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
+						$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_perso'";
 						$mysqli->query($sql);
 						
 						// mise a jour equipe perso
