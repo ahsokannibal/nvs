@@ -30,10 +30,10 @@ if($dispo || $admin){
 			
 			if ($camp_em == 1) {
 				$image_em = "em_nord.png";
-				$forum_parent_id = '3';
+				$forum_parent_id = '7';
 			} else {
 				$image_em = "em_sud.png";
-				$forum_parent_id = '4';
+				$forum_parent_id = '8';
 			}
 			
 			// Récupération du nombre de personnes dans l'etat major de ce camp
@@ -160,7 +160,8 @@ if($dispo || $admin){
 				$sql = "UPDATE phpbb_forums SET right_id = right_id + 2 where right_id >= ".$next_leftid.";";
 				$mysqli->query($sql);
 				
-				$sql = "INSERT INTO ".$table_prefix."forums (forum_name, forum_desc, left_id, right_id, parent_id, forum_type, forum_posts_approved, forum_posts_unapproved, forum_posts_softdeleted, forum_topics_approved, forum_topics_unapproved, forum_topics_softdeleted, forum_last_post_id, forum_last_poster_id, forum_last_poster_name, forum_last_poster_colour, forum_last_post_subject, forum_link, forum_password, forum_image, forum_rules, forum_rules_link, forum_rules_uid, forum_desc_uid, prune_freq, prune_days, prune_viewed, forum_parents, forum_flags) VALUES ('$nom_comp', '', '$next_leftid', '$next_rightid', '$forum_parent_id', 1, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', 1, 7, 7, '', 48);";
+				$sql = "INSERT INTO ".$table_prefix."forums (forum_name, forum_desc, left_id, right_id, parent_id, forum_type, forum_posts_approved, forum_posts_unapproved, forum_posts_softdeleted, forum_topics_approved, forum_topics_unapproved, forum_topics_softdeleted, forum_last_post_id, forum_last_poster_id, forum_last_poster_name, forum_last_poster_colour, forum_last_post_subject, forum_link, forum_password, forum_image, forum_rules, forum_rules_link, forum_rules_uid, forum_desc_uid, prune_freq, prune_days, prune_viewed, forum_parents, forum_flags) 
+						VALUES ('$nom_comp', '', '$next_leftid', '$next_rightid', '$forum_parent_id', 1, 0, 0, 0, 0, 0, 0, 0, 0, '', '', '', '', '', '', '', '', '', '', 1, 7, 7, '', 48);";
 				$mysqli->query($sql);
 				
 				$id_new_forum = $mysqli->insert_id;
