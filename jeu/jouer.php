@@ -1058,7 +1058,7 @@ if($dispo || $admin){
 																}
 															}
 															// maj bonus perception et -1 pm pour rentrer dans le batiment
-															$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu, pm_perso=pm_perso-1 WHERE id_perso='$id_perso'";
+															$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
 															$mysqli->query($sql);
 																
 															// mise a jour des coordonnees du perso pour les tests d'après
