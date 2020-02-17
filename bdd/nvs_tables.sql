@@ -668,7 +668,7 @@ CREATE TABLE `perso` (
   `paMax_perso` int(11) NOT NULL DEFAULT '10',
   `protec_perso` int(11) NOT NULL DEFAULT '0',
   `charge_perso` int(11) NOT NULL DEFAULT '0',
-  `chargeMax_perso` int(11) NOT NULL DEFAULT '5',
+  `chargeMax_perso` int(11) NOT NULL DEFAULT '10',
   `bonusPerception_perso` int(11) NOT NULL DEFAULT '0',
   `bonusRecup_perso` int(11) NOT NULL DEFAULT '0',
   `bonusPM_perso` int(11) NOT NULL DEFAULT '0',

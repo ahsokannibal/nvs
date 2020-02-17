@@ -126,7 +126,7 @@ if($verif){
 			}
 			
 			// recup des données du perso
-			$sql = "SELECT nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan, id_grade
+			$sql = "SELECT nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 					FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id'";
@@ -149,8 +149,6 @@ if($verif){
 			$br_perso 		= $t_perso["bonusRecup_perso"];
 			$per_perso 		= $t_perso["perception_perso"];
 			$bp_perso 		= $t_perso["bonusPerception_perso"];
-			$ch_perso 		= $t_perso["charge_perso"];
-			$chM_perso 		= $t_perso["chargeMax_perso"];
 			$dc_perso 		= $t_perso["dateCreation_perso"];
 			$id_j_perso		= $t_perso["idJoueur_perso"];
 			$clan_perso 	= $t_perso["clan"];
@@ -163,7 +161,7 @@ if($verif){
 			if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
 				
 				// recuperation des données du perso cible
-				$sql = "SELECT idJoueur_perso, nom_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, protec_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, or_perso, clan, id_grade
+				$sql = "SELECT idJoueur_perso, nom_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonus_perso, perception_perso, protec_perso, bonusPerception_perso, dateCreation_perso, or_perso, clan, id_grade
 						FROM perso, perso_as_grade 
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso.id_perso='$id_cible'";
@@ -189,8 +187,6 @@ if($verif){
 				$bonus_cible 		= $t_cible["bonus_perso"];
 				$per_cible 			= $t_cible["perception_perso"];
 				$bp_cible 			= $t_cible["bonusPerception_perso"];
-				$ch_cible 			= $t_cible["charge_perso"];
-				$chM_cible 			= $t_cible["chargeMax_perso"];
 				$dc_cible 			= $t_cible["dateCreation_perso"];
 				$or_cible 			= $t_cible["or_perso"];
 				$image_perso_cible 	= $t_cible["image_perso"];
@@ -1066,7 +1062,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan, id_grade
+		$sql = "SELECT nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 				FROM perso, perso_as_grade
 				WHERE perso_as_grade.id_perso = perso.id_perso
 				AND perso.id_perso='$id'";
@@ -1089,8 +1085,6 @@ if($verif){
 		$br_perso 		= $t_perso["bonusRecup_perso"];
 		$per_perso 		= $t_perso["perception_perso"];
 		$bp_perso 		= $t_perso["bonusPerception_perso"];
-		$ch_perso 		= $t_perso["charge_perso"];
-		$chM_perso 		= $t_perso["chargeMax_perso"];
 		$dc_perso 		= $t_perso["dateCreation_perso"];
 		$id_j_perso		= $t_perso["idJoueur_perso"];
 		$clan_perso 	= $t_perso["clan"];
@@ -1774,7 +1768,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, charge_perso, chargeMax_perso, dateCreation_perso, clan, id_grade
+		$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 				FROM perso, perso_as_grade
 				WHERE perso_as_grade.id_perso = perso.id_perso
 				AND perso.id_perso='$id'";
@@ -1797,8 +1791,6 @@ if($verif){
 		$br_perso 		= $t_perso["bonusRecup_perso"];
 		$per_perso 		= $t_perso["perception_perso"];
 		$bp_perso 		= $t_perso["bonusPerception_perso"];
-		$ch_perso 		= $t_perso["charge_perso"];
-		$chM_perso 		= $t_perso["chargeMax_perso"];
 		$dc_perso 		= $t_perso["dateCreation_perso"];
 		$clan_perso 	= $t_perso["clan"];
 		$grade_perso 	= $t_perso["id_grade"];
