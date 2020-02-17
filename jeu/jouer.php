@@ -2469,9 +2469,9 @@ if($dispo || $admin){
 							</table>
 						
 							<table style="border:0px; background-color: cornflowerblue; min-width: 375px;" width="100%">
-								<tr>
-									<td>
-										<table border="2" bordercolor="white" > <!-- border-collapse:collapse -->
+								<tr style="width: 100%;">
+									<td style="width: 100%;">
+										<table border="2" bordercolor="white" style="width: 100%;"> <!-- border-collapse:collapse -->
 											<tr>
 												<td><b>XP</b></td>
 												<td><?php echo $xp_perso; ?>&nbsp;</td>
@@ -2487,8 +2487,8 @@ if($dispo || $admin){
 										</table>
 									</td>
 									
-									<td>
-										<table border="2" bordercolor="white">
+									<td style="width: 100%;">
+										<table border="2" bordercolor="white" style="width: 100%;">
 											<tr>
 												<td><b>Perception</b></td>
 												<td align='center'>
@@ -2538,8 +2538,8 @@ if($dispo || $admin){
 										</table>
 									</td>
 									
-									<td>
-										<table border="2" bordercolor="white">
+									<td style="width: 100%;">
+										<table border="2" bordercolor="white" style="width: 100%;">
 											<tr>
 												<td><b>Protection</b></td>
 												<td><?php echo $protec_perso; ?>&nbsp;</td>
