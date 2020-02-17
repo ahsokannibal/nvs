@@ -2026,6 +2026,7 @@ if($dispo || $admin){
 				echo "	<td>Prochain tour :  ".$n_dla."</td>";
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
+				if(anim_perso($mysqli, $id_perso)) { echo " <a class='btn btn-warning' href='animation.php'>Animation</a>"; }
 				if($admin) { echo " <a class='btn btn-warning' href='admin_nvs.php'>Admin</a>"; }
 				echo "	</td>";
 				echo "</tr>";
@@ -2234,7 +2235,7 @@ if($dispo || $admin){
 						</td>
 					</tr>
 					<tr>
-						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; if (anim_perso($mysqli, $id_perso)) { echo "<br /><a class='btn btn-warning' href='animation.php'>Animation</a>"; } ?></td>
+						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; ?></td>
 						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
 						<td align=center><b>Compagnie : </b><?php echo "<a href=\"compagnie.php\" target='_blank'>" . stripslashes($nom_compagnie_perso) . "</a>"; ?></td>
 					</tr>
@@ -2872,7 +2873,82 @@ if($dispo || $admin){
 									</form>
 								</tr>
 							</table>
-					
+							
+							<br />
+							
+							<table border='2' width="100%">
+								<tr>
+									<td background='../images/background.jpg'>
+										<!--Création du tableau du choix du deplacement-->
+										<table border=0 align='center'>
+											<tr>
+												<td colspan='5' align='center'>
+												<img src='../images/Se_Deplacer.png' />
+												</td>
+											</tr>
+											<form action="jouer.php" method="post">  
+											<tr>
+												<td rowspan='3'><img src='../images/tribal1.png' /></td>
+												<?php 
+												if(in_bat($mysqli, $id_perso)){
+												?>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=1"><img border=0 src="../fond_carte/fleche1.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=2"><img border=0 src="../fond_carte/fleche2.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=3"><img border=0 src="../fond_carte/fleche3.png"></a></td>
+												<?php
+												}
+												else {
+												?>
+												<td><a href="jouer.php?mouv=1"><img border=0 src="../fond_carte/fleche1.png"></a></td>
+												<td><a href="jouer.php?mouv=2"><img border=0 src="../fond_carte/fleche2.png"></a></td>
+												<td><a href="jouer.php?mouv=3"><img border=0 src="../fond_carte/fleche3.png"></a></td>
+												<?php 
+												}
+												?>
+												<td rowspan='3'><img src='../images/tribal2.png' /></td>
+											</tr>
+											<tr>
+												<?php 
+												if(in_bat($mysqli, $id_perso)){
+												?>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=4"><img border=0 src="../fond_carte/fleche4.png"></a></td>
+												<td><center><b>Sortir</b></center></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=5"><img border=0 src="../fond_carte/fleche5.png"></a></td>
+												<?php
+												}
+												else {
+												?>
+												<td><a href="jouer.php?mouv=4"><img border=0 src="../fond_carte/fleche4.png"></a></td>
+												<td>&nbsp; </td>
+												<td><a href="jouer.php?mouv=5"><img border=0 src="../fond_carte/fleche5.png"></a></td>
+												<?php 
+												}
+												?>
+											</tr>
+											<tr>
+												<?php 
+												if(in_bat($mysqli, $id_perso)){
+												?>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=6"><img border=0 src="../fond_carte/fleche6.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=7"><img border=0 src="../fond_carte/fleche7.png"></a></td>
+												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=8"><img border=0 src="../fond_carte/fleche8.png"></a></td>
+												<?php
+												}
+												else {
+												?>
+												<td><a href="jouer.php?mouv=6"><img border=0 src="../fond_carte/fleche6.png"></a></td>
+												<td><a href="jouer.php?mouv=7"><img border=0 src="../fond_carte/fleche7.png"></a></td>
+												<td><a href="jouer.php?mouv=8"><img border=0 src="../fond_carte/fleche8.png"></a></td>
+												<?php 
+												}
+												?>
+											</tr>
+											</form>
+										</table>
+										<!--Fin du tableau du choix du deplacement-->
+									</td>
+								</tr>
+							</table>
 						</td>
 						
 						<td valign="top">
@@ -3356,77 +3432,6 @@ if($dispo || $admin){
 									<tr>
 										<td background='../images/background.jpg' colspan='2' align='center'>
 											<img src='../images/barre.png' />
-										</td>
-									</tr>
-									<tr>
-										<td background='../images/background.jpg'>
-											<!--Création du tableau du choix du deplacement-->
-											<table border=0 align='center'>
-												<tr>
-													<td colspan='5' align='center'>
-													<img src='../images/Se_Deplacer.png' />
-													</td>
-												</tr>
-												<form action="jouer.php" method="post">  
-												<tr>
-													<td rowspan='3'><img src='../images/tribal1.png' /></td>
-													<?php 
-													if(in_bat($mysqli, $id_perso)){
-													?>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=1"><img border=0 src="../fond_carte/fleche1.png"></a></td>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=2"><img border=0 src="../fond_carte/fleche2.png"></a></td>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=3"><img border=0 src="../fond_carte/fleche3.png"></a></td>
-													<?php
-													}
-													else {
-													?>
-													<td><a href="jouer.php?mouv=1"><img border=0 src="../fond_carte/fleche1.png"></a></td>
-													<td><a href="jouer.php?mouv=2"><img border=0 src="../fond_carte/fleche2.png"></a></td>
-													<td><a href="jouer.php?mouv=3"><img border=0 src="../fond_carte/fleche3.png"></a></td>
-													<?php 
-													}
-													?>
-													<td rowspan='3'><img src='../images/tribal2.png' /></td>
-												</tr>
-												<tr>
-													<?php 
-													if(in_bat($mysqli, $id_perso)){
-													?>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=4"><img border=0 src="../fond_carte/fleche4.png"></a></td>
-													<td><center><b>Sortir</b></center></td>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=5"><img border=0 src="../fond_carte/fleche5.png"></a></td>
-													<?php
-													}
-													else {
-													?>
-													<td><a href="jouer.php?mouv=4"><img border=0 src="../fond_carte/fleche4.png"></a></td>
-													<td>&nbsp; </td>
-													<td><a href="jouer.php?mouv=5"><img border=0 src="../fond_carte/fleche5.png"></a></td>
-													<?php 
-													}
-													?>
-												</tr>
-												<tr>
-													<?php 
-													if(in_bat($mysqli, $id_perso)){
-													?>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=6"><img border=0 src="../fond_carte/fleche6.png"></a></td>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=7"><img border=0 src="../fond_carte/fleche7.png"></a></td>
-													<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=8"><img border=0 src="../fond_carte/fleche8.png"></a></td>
-													<?php
-													}
-													else {
-													?>
-													<td><a href="jouer.php?mouv=6"><img border=0 src="../fond_carte/fleche6.png"></a></td>
-													<td><a href="jouer.php?mouv=7"><img border=0 src="../fond_carte/fleche7.png"></a></td>
-													<td><a href="jouer.php?mouv=8"><img border=0 src="../fond_carte/fleche8.png"></a></td>
-													<?php 
-													}
-													?>
-												</tr>
-												</form>
-											</table>
-											<!--Fin du tableau du choix du deplacement-->
 										</td>
 									</tr>
 								</table>
