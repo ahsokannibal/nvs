@@ -3387,7 +3387,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -3433,6 +3433,10 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme + $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -3851,7 +3855,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -3897,6 +3901,10 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme + $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -4321,7 +4329,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -4367,6 +4375,10 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme + $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -4795,7 +4807,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -4841,6 +4853,10 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme + $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -5258,7 +5274,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -5304,6 +5320,10 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme + $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -5721,7 +5741,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -5767,6 +5787,10 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme + $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -6184,7 +6208,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -6230,6 +6254,10 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme + $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
@@ -6647,7 +6675,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						$pv_cible			= $t_cible['pv_perso'];
 						$xp_cible 			= $t_cible['xp_perso'];
 						$or_cible 			= $t_cible['or_perso'];
-						$bonus_cible		= $t_cible['bonus_perso'];
+						$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
 						$protec_cible		= $t_cible['protec_perso'];
 						$grade_cible		= $t_cible['id_grade'];
 						$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -6693,6 +6721,10 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 						// Est ce que le perso touche sa cible ?
 						$touche = mt_rand(0, 100);
 						$precision_final = $precision_arme - $bonus_cible;
+						
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
+						
+						$precision_final += $bonus_precision_objet;
 						
 						if ($touche <= $precision_final) {
 							// Le perso touche sa cible
