@@ -2047,8 +2047,8 @@ if($dispo || $admin){
 				$pc_perso 				= $t_perso2["pc_perso"];
 				$pv_perso 				= $t_perso2["pv_perso"];
 				$pvMax_perso 			= $t_perso2["pvMax_perso"];
-				$pm_perso 				= $t_perso2["pm_perso"] + $malus_pm;
-				$pmMax_perso 			= $t_perso2["pmMax_perso"] + $malus_pm;
+				$pm_perso_tmp			= $t_perso2["pm_perso"];
+				$pmMax_perso_tmp 		= $t_perso2["pmMax_perso"];
 				$perception_perso 		= $t_perso2["perception_perso"];
 				$bonusPerception_perso 	= $t_perso2["bonusPerception_perso"];
 				$bonusPA_perso			= $t_perso2["bonusPA_perso"];
@@ -2058,6 +2058,9 @@ if($dispo || $admin){
 				$bonus_perso 			= $t_perso2["bonus_perso"];
 				$type_perso 			= $t_perso2["type_perso"];
 				$bataillon_perso 		= $t_perso2["bataillon"];
+				
+				$pm_perso 		= $pm_perso_tmp + $malus_pm;
+				$pmMax_perso 	= $pmMax_perso_tmp + $malus_pm;
 				
 				$clan_perso = $t_perso2["clan"];				
 				
@@ -2263,7 +2266,7 @@ if($dispo || $admin){
 							?>
 						</tr>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<br/><font color=red>( Malus de défense : $bonus_perso )</font>";} ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<span class='badge badge-pill badge-danger' title='malus de défense dû aux attaques'>$bonus_perso</span>";} ?></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
 							<?php 
@@ -2527,13 +2530,37 @@ if($dispo || $admin){
 												
 												$paMax_final_perso = $paMax_perso + $bonusPA_perso;
 												
-												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$pa_perso . ' / ' . $paMax_final_perso.'</a>';
+												echo $pa_perso . ' / <a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'. $paMax_final_perso.'</a>';
 												
 												?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>PM</b></td>
-												<td nowrap="nowrap"><?php echo $pm_perso . ' / ' . $pmMax_perso; ?>&nbsp;</td>
+												<td nowrap="nowrap"><?php 
+												
+												$texte_tooltip = "Base max : ".$pmMax_perso_tmp."";
+												
+												if ($malus_pm != 0) {
+													if ($malus_pm < 0) {
+														$texte_tooltip .= " <b>(";
+													} else {
+														$texte_tooltip .= " <b>(+";
+													}
+													$texte_tooltip .= $malus_pm . ")</b>";
+												}
+												else if ($bonusPM_perso_p != 0 || $malus_pm_charge != 0) {
+													$texte_tooltip .= " <b>(";
+													if ($bonusPM_perso_p < 0) {
+														$texte_tooltip .= $bonusPM_perso_p;
+													}
+													else {
+														$texte_tooltip .= "+".$bonusPM_perso_p;
+													}
+													
+													$texte_tooltip .= " ".$malus_pm_charge . ")</b>";
+												}
+												echo $pm_perso . ' / <a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">' . $pmMax_perso . '</a>';
+												?>&nbsp;</td>
 											</tr>
 										</table>
 									</td>
@@ -2548,22 +2575,35 @@ if($dispo || $admin){
 												<td><b>Récuperation</b></td>
 												<td nowrap="nowrap">
 												<?php 
-												echo $recup_perso;
+												$texte_tooltip = "Base : ".$recup_perso."";
 												
 												if($bonusRecup_perso != 0) {
 													if ($bonusRecup_perso < 0) {
-														echo "<font color='red'> (";
+														$texte_tooltip .= " <b>(";
 													} else {
-														echo "<font color='blue'> (+";
+														$texte_tooltip .= " <b>(+";
 													}
-													echo $bonusRecup_perso . ")</font>"; 
-												} 
+													$texte_tooltip .= $bonusRecup_perso . ")</b>"; 
+												}
+												
+												$recup_final = $recup_perso + $bonusRecup_perso;
+												
+												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$recup_final.'</a>';
 												
 												?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td nowrap="nowrap"><b>Malus Défense</b></td>
-												<td><?php echo $bonus_perso; ?>&nbsp;</td>
+												<td><?php 
+												
+												$texte_tooltip = "Base : ".$bonus_perso."";
+												
+												$bonus_defense = getBonusDefenseObjet($mysqli, $id_perso);
+												
+												$bonus_final = $bonus_perso + $bonus_defense;
+												
+												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$bonus_final.'</a>';
+												?>&nbsp;</td>
 											</tr>
 										</table>
 									</td>

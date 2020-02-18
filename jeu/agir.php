@@ -184,7 +184,7 @@ if($verif){
 				$rec_cible 			= $t_cible["recup_perso"];
 				$protec_cible		= $t_cible["protec_perso"];
 				$br_cible 			= $t_cible["bonusRecup_perso"];
-				$bonus_cible 		= $t_cible["bonus_perso"];
+				$bonus_cible 		= $t_cible["bonus_perso"] + getBonusDefenseObjet($mysqli, $id_cible);
 				$per_cible 			= $t_cible["perception_perso"];
 				$bp_cible 			= $t_cible["bonusPerception_perso"];
 				$dc_cible 			= $t_cible["dateCreation_perso"];
@@ -335,9 +335,21 @@ if($verif){
 						
 						// Calcul touche
 						$touche = mt_rand(0,100);
+						
 						$precision_final = $precision_arme_attaque - $bonus_cible;
 						
+						$bonus_precision_objet = 0;
+						if ($porteeMax_arme_attaque == 1) {
+							$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id);
+						}
+						else {
+							$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id);
+						}
+						
+						$precision_final += $bonus_precision_objet;
+						
 						echo "Votre score de touche : ".$touche."<br>";
+						echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Defense cible : ".$bonus_cible." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
 						
 						// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 						if ($touche <= $precision_final) {
@@ -1213,7 +1225,18 @@ if($verif){
 					$touche = mt_rand(0,100);
 					$precision_final = $precision_arme_attaque - $bonus_cible;
 					
+					$bonus_precision_objet = 0;
+					if ($porteeMax_arme_attaque == 1) {
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id);
+					}
+					else {
+						$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id);
+					}
+					
+					$precision_final += $bonus_precision_objet;
+					
 					echo "Votre score de touche : ".$touche."<br>";
+					echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Defense cible : ".$bonus_cible." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
 					
 					// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 					if ($touche <= $precision_final) {
@@ -1928,7 +1951,18 @@ if($verif){
 					$touche = mt_rand(0,100);
 					$precision_final = $precision_arme_attaque;
 					
+					$bonus_precision_objet = 0;
+					if ($porteeMax_arme_attaque == 1) {
+						$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id);
+					}
+					else {
+						$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id);
+					}
+					
+					$precision_final += $bonus_precision_objet;
+					
 					echo "Votre score de touche : ".$touche."<br>";
+					echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
 					
 					// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 					if ($touche <= $precision_final) {

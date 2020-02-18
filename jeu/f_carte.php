@@ -712,6 +712,75 @@ function getBonusObjet($mysqli, $id_perso) {
 }
 
 /**
+ * Fonction permettant de récupérer les bonus / malus de defense du aux objets équipés
+ */
+function getBonusDefenseObjet($mysqli, $id_perso) {
+	
+	$bonusDefense = 0;
+	
+	$sql = "SELECT bonusDefense_objet  FROM perso_as_objet, objet 
+			WHERE perso_as_objet.id_objet = objet.id_objet
+			AND id_perso='$id_perso' 
+			AND equip_objet='1'";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()) {
+		
+		$bonus_def_objet = $t['bonusDefense_objet'];
+		
+		$bonusDefense += $bonus_def_objet;
+	}
+	
+	return $bonusDefense;
+}
+
+/**
+ * Fonction permettant de récupérer les bonus / malus de precision au CaC du aux objets équipés
+ */
+function getBonusPrecisionCacObjet($mysqli, $id_perso) {
+	
+	$bonusPrecisionCac = 0;
+	
+	$sql = "SELECT bonusPrecisionCac_objet  FROM perso_as_objet, objet 
+			WHERE perso_as_objet.id_objet = objet.id_objet
+			AND id_perso='$id_perso' 
+			AND equip_objet='1'";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()) {
+		
+		$bonus_precision_cac_objet = $t['bonusPrecisionCac_objet'];
+		
+		$bonusPrecisionCac += $bonus_precision_cac_objet;
+	}
+	
+	return $bonusPrecisionCac;
+}
+
+/**
+ * Fonction permettant de récupérer les bonus / malus de precision à distance du aux objets équipés
+ */
+function getBonusPrecisionDistObjet($mysqli, $id_perso) {
+	
+	$bonusPrecisionDist = 0;
+	
+	$sql = "SELECT bonusPrecisionDist_objet  FROM perso_as_objet, objet 
+			WHERE perso_as_objet.id_objet = objet.id_objet
+			AND id_perso='$id_perso' 
+			AND equip_objet='1'";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()) {
+		
+		$bonus_precision_dist_objet = $t['bonusPrecisionDist_objet'];
+		
+		$bonusPrecisionDist += $bonus_precision_dist_objet;
+	}
+	
+	return $bonusPrecisionDist;
+}
+
+/**
  * Fonction qui retourne le malus de PM du à la charge
  */
 function getMalusCharge($charge_perso) {
