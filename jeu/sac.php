@@ -95,7 +95,7 @@ if($dispo || $admin){
 											
 										// on applique les effets de l'objet sur le perso
 										$sql = "UPDATE perso 
-												SET pa_perso=pa_perso-1, bonusRecup_perso=bonusRecup_perso+$bonusRecup
+												SET bonusRecup_perso=bonusRecup_perso+$bonusRecup
 												WHERE id_perso='$id'";
 										$mysqli->query($sql);
 											
