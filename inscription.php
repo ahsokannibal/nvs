@@ -58,45 +58,51 @@ if(config_dispo_jeu($mysqli)){
 							$old_mdp_joueur = $mdp_joueur;
 							$mdp_joueur = md5($mdp_joueur);
 							
-							if($camp == 1){ // bleu
-								$x_min_spawn = 150;
-								$x_max_spawn = 200;
-								$y_min_spawn = 150;
-								$y_max_spawn = 200;
-								$image_chef = "cavalerie_nord.gif";
-								$image_g = "infanterie_nord.gif";
-								$group_id = 8;
+							if($camp == 1){
+								$x_min_spawn 		= 150;
+								$x_max_spawn 		= 200;
+								$y_min_spawn 		= 150;
+								$y_max_spawn 		= 200;
+								$image_chef 		= "cavalerie_nord.gif";
+								$image_g 			= "infanterie_nord.gif";
+								$group_id 			= 8;
+								$nom_camp 			= 'Nordistes';
+								$ncamp 				= "Nord";
+								$couleur_clan_perso = "blue";
 							}
 							
-							if($camp == 2){ // rouge
-								$x_min_spawn = 0;
-								$x_max_spawn = 50;
-								$y_min_spawn = 0;
-								$y_max_spawn = 50;
-								$image_chef = "cavalerie_sud.gif";
-								$image_g = "infanterie_sud.gif";
-								$group_id = 9;
+							if($camp == 2){
+								$x_min_spawn 		= 0;
+								$x_max_spawn 		= 50;
+								$y_min_spawn 		= 0;
+								$y_max_spawn 		= 50;
+								$image_chef 		= "cavalerie_sud.gif";
+								$image_g 			= "infanterie_sud.gif";
+								$group_id 			= 9;
+								$nom_camp 			= 'Sudistes';
+								$ncamp 				= "Sud";
+								$couleur_clan_perso = "red";
 							}
 						
 							$date = time();
 							$dla = $date + DUREE_TOUR; // calcul dla
 					
 							// Caracs Chef
-							$pvMax_chef = 850;
-							$pmMax_chef = 10;
-							$pamax_chef = 10;
-							$recup_chef = 40;
-							$perc_chef = 5;
-							$protec_chef = 20;
+							$pvMax_chef 	= 850;
+							$pmMax_chef 	= 10;
+							$pamax_chef 	= 10;
+							$recup_chef 	= 40;
+							$perc_chef 		= 5;
+							$protec_chef 	= 20;
 							
 							// Carac grouillot
-							$pvMax_g = 500;
-							$pmMax_g = 5;
-							$pamax_g = 10;
-							$recup_g = 30;
-							$perc_g = 4;
-							$protec_g = 10;
-							$nom_g = $nom_perso."_junior";
+							$pvMax_g 	= 500;
+							$pmMax_g 	= 5;
+							$pamax_g 	= 10;
+							$recup_g 	= 30;
+							$perc_g 	= 4;
+							$protec_g 	= 10;
+							$nom_g 		= $nom_perso."_junior";
 							
 							// securité
 							$sql = "select email_joueur from joueur,perso where nom_perso='$nom_perso'";
@@ -356,27 +362,6 @@ if(config_dispo_jeu($mysqli)){
 								$mysqli->query($sql_c);
 						
 								$_SESSION["ID_joueur"] = $IDJoueur_perso;
-
-								//insertion dans le forum
-								if($camp == '1'){
-									$group_id = '5';
-									$nom_camp = 'Nordistes';
-									$ncamp = "Nord";
-									$couleur_clan_perso = "blue";
-								}
-								if($camp == '2'){
-									$group_id = '6';
-									$nom_camp = 'Sudistes';
-									$ncamp = "Sud";
-									$couleur_clan_perso = "red";
-								}
-								
-								$now = time();
-								$addr = get_remote_address();
-								
-								// FORUM - TODO
-								//$sql = "INSERT INTO pun_users (username, group_id, password, email, email_setting, save_pass, timezone, language, style, registered, registration_ip, last_visit) VALUES('$nom_perso', '$group_id', '$mdp_joueur', '$email_joueur', '1', '1', '0', 'French', 'Chronicles', '$now', '$addr' , '$now')";
-								//exec_requete($sql);
 								
 								// message de bienvenue
 								$expediteur = "loka";

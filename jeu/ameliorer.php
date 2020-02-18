@@ -53,129 +53,143 @@ if($dispo || $admin){
 		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		
-		<link rel="stylesheet" type="text/css" media="screen" href="onglet.css" title="Version 1" />
 	</head>
 	
 	<body>
-		<div id="header">
-			<ul>
-				<li><a href="profil.php">Profil</a></li>
-				<li id="current"><a href="#">Améliorer son perso</a></li>
-				<?php
-				if($chef) {
-					echo "<li><a href=\"recrutement.php\">Recruter des grouillots</a></li>";
-					echo "<li><a href=\"gestion_grouillot.php\">Gérer ses grouillots</a></li>";
-				}
-				?>
-				<li><a href="equipement.php">Equiper son perso</a></li>
-				<li><a href="compte.php">Gérer son Compte</a></li>
-			</ul>
-		</div>
+		<div class="container-fluid">
+			<nav class="navbar navbar-expand-lg navbar-light">
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto nav-pills">
+						<li class="nav-item">
+							<a class="nav-link" href="profil.php">Profil</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link active" href="#">Améliorer son perso</a>
+						</li>
+						<?php
+						if($chef) {
+							echo "<li class='nav-item'><a class='nav-link' href=\"recrutement.php\">Recruter des grouillots</a></li>";
+							echo "<li class='nav-item'><a class='nav-link' href=\"gestion_grouillot.php\">Gérer ses grouillots</a></li>";
+						}
+						?>
+						<li class="nav-item">
+							<a class="nav-link" href="equipement.php">Equiper son perso</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="compte.php">Gérer son Compte</a>
+						</li>
+					</ul>
+				</div>
+			</nav>
+			
+			<hr>
 		
-		<br /><br /><center><h1>Améliorer ce perso</h1></center>
+			<br /><br /><center><h1>Améliorer ce perso</h1></center>
+			
+			<br /><br />
+				
+			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+			<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
+		<?php
+		if (isset($_POST["pv"])) {
+			
+			// calcul du nombre de pi necessaire
+			$nbpi_pv = ameliore_pv($mysqli, $pv, $type);
+			
+			// verification que le perso a assez de pi
+			if ($pi >= $nbpi_pv){
+				
+				$sql2 = "UPDATE perso SET pvMax_perso=pvMax_perso+1, pi_perso=pi_perso-$nbpi_pv WHERE id_perso ='$id'";
+				$mysqli->query($sql2);
+				
+				$pv = $pv + 1;
+				$pi = $pi - $nbpi_pv;
+			}
+			else {
+				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+			}
+		}
 		
-		<br /><br />
+		if (isset($_POST["pm"])) {
 			
-		<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
-		<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
-	<?php
-	if (isset($_POST["pv"])) {
+			// calcul du nombre de pi necessaire
+			$nbpi_pm = ameliore_pm($mysqli, $pm, $type);
 		
-		// calcul du nombre de pi necessaire
-		$nbpi_pv = ameliore_pv($mysqli, $pv, $type);
+			// verification que le perso a assez de pi
+			if($pi >= $nbpi_pm) {
+				
+				$sql2 = "UPDATE perso SET pmMax_perso=pmMax_perso+1, pi_perso=pi_perso-$nbpi_pm WHERE id_perso ='$id'";
+				$mysqli->query($sql2);
+				
+				$pm = $pm + 1;
+				$pi = $pi - $nbpi_pm;
+			}
+			else {
+				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+			}
+		}
 		
-		// verification que le perso a assez de pi
-		if ($pi >= $nbpi_pv){
+		if (isset($_POST["pa"])) {
 			
-			$sql2 = "UPDATE perso SET pvMax_perso=pvMax_perso+1, pi_perso=pi_perso-$nbpi_pv WHERE id_perso ='$id'";
-			$mysqli->query($sql2);
-			
-			$pv = $pv + 1;
-			$pi = $pi - $nbpi_pv;
-		}
-		else {
-			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-		}
-	}
-	
-	if (isset($_POST["pm"])) {
+			// calcul du nombre de pi necessaire
+			$nbpi_pa = ameliore_pa($mysqli, $pa, $type);
 		
-		// calcul du nombre de pi necessaire
-		$nbpi_pm = ameliore_pm($mysqli, $pm, $type);
-	
-		// verification que le perso a assez de pi
-		if($pi >= $nbpi_pm) {
-			
-			$sql2 = "UPDATE perso SET pmMax_perso=pmMax_perso+1, pi_perso=pi_perso-$nbpi_pm WHERE id_perso ='$id'";
-			$mysqli->query($sql2);
-			
-			$pm = $pm + 1;
-			$pi = $pi - $nbpi_pm;
+			// verification que le perso a assez de pi	
+			if($pi >= $nbpi_pa) {
+				
+				$sql2 = "UPDATE perso SET paMax_perso=paMax_perso+1, pi_perso=pi_perso-$nbpi_pa WHERE id_perso ='$id'";
+				$mysqli->query($sql2);
+				
+				$pa = $pa + 1;
+				$pi = $pi - $nbpi_pa;
+			}
+			else {
+				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+			}
 		}
-		else {
-			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-		}
-	}
-	
-	if (isset($_POST["pa"])) {
 		
-		// calcul du nombre de pi necessaire
-		$nbpi_pa = ameliore_pa($mysqli, $pa, $type);
-	
-		// verification que le perso a assez de pi	
-		if($pi >= $nbpi_pa) {
+		if (isset($_POST["per"])) {
 			
-			$sql2 = "UPDATE perso SET paMax_perso=paMax_perso+1, pi_perso=pi_perso-$nbpi_pa WHERE id_perso ='$id'";
-			$mysqli->query($sql2);
-			
-			$pa = $pa + 1;
-			$pi = $pi - $nbpi_pa;
-		}
-		else {
-			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-		}
-	}
-	
-	if (isset($_POST["per"])) {
+			// calcul du nombre de pi necessaire
+			$nbpi_perc = ameliore_perc($mysqli, $per, $type);
 		
-		// calcul du nombre de pi necessaire
-		$nbpi_perc = ameliore_perc($mysqli, $per, $type);
-	
-		// verification que le perso a assez de pi	
-		if($pi >= $nbpi_perc) {
-			
-			$sql2 = "UPDATE perso SET perception_perso=perception_perso+1, pi_perso=pi_perso-$nbpi_perc WHERE id_perso ='$id'";
-			$mysqli->query($sql2);
-			
-			$per = $per + 1;
-			$pi = $pi - $nbpi_perc;
+			// verification que le perso a assez de pi	
+			if($pi >= $nbpi_perc) {
+				
+				$sql2 = "UPDATE perso SET perception_perso=perception_perso+1, pi_perso=pi_perso-$nbpi_perc WHERE id_perso ='$id'";
+				$mysqli->query($sql2);
+				
+				$per = $per + 1;
+				$pi = $pi - $nbpi_perc;
+			}
+			else {
+				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+			}
 		}
-		else {
-			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-		}
-	}
-	
-	if (isset($_POST["rec"])) {
 		
-		// calcul du nombre de pi necessaire
-		$nbpi_recup = ameliore_recup($mysqli, $rec, $type);
-	
-		// verification que le perso a assez de pi
-		if($pi >= $nbpi_recup) {
+		if (isset($_POST["rec"])) {
 			
-			$sql2 = "UPDATE perso SET recup_perso=recup_perso+1, pi_perso=pi_perso-$nbpi_recup WHERE id_perso ='$id'";
-			$mysqli->query($sql2);
-			
-			$rec = $rec + 1;
-			$pi = $pi - $nbpi_recup;
+			// calcul du nombre de pi necessaire
+			$nbpi_recup = ameliore_recup($mysqli, $rec, $type);
+		
+			// verification que le perso a assez de pi
+			if($pi >= $nbpi_recup) {
+				
+				$sql2 = "UPDATE perso SET recup_perso=recup_perso+1, pi_perso=pi_perso-$nbpi_recup WHERE id_perso ='$id'";
+				$mysqli->query($sql2);
+				
+				$rec = $rec + 1;
+				$pi = $pi - $nbpi_recup;
+			}
+			else {
+				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+			}
 		}
-		else {
-			echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-		}
-	}
-	
-	?>
+		
+		?>
 			<form method="post" action="ameliorer.php">
 				<br>
 				<center>
@@ -197,8 +211,16 @@ if($dispo || $admin){
 				</table>
 			</form>
 			
-		</body>
-	</html>
+		</div>
+		
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		
+	</body>
+</html>
 	<?php
 		}
 	}
