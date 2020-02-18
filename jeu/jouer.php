@@ -2470,7 +2470,7 @@ if($dispo || $admin){
 						
 							<table style="border:0px; background-color: cornflowerblue; min-width: 375px;" width="100%">
 								<tr style="width: 100%;">
-									<td style="width: 100%;">
+									<td style="width: 40%;">
 										<table border="2" bordercolor="white" style="width: 100%;"> <!-- border-collapse:collapse -->
 											<tr>
 												<td><b>XP</b></td>
@@ -2487,7 +2487,7 @@ if($dispo || $admin){
 										</table>
 									</td>
 									
-									<td style="width: 100%;">
+									<td style="width: 30%;">
 										<table border="2" bordercolor="white" style="width: 100%;">
 											<tr>
 												<td><b>Perception</b></td>
@@ -2538,7 +2538,7 @@ if($dispo || $admin){
 										</table>
 									</td>
 									
-									<td style="width: 100%;">
+									<td style="width: 30%;">
 										<table border="2" bordercolor="white" style="width: 100%;">
 											<tr>
 												<td><b>Protection</b></td>
