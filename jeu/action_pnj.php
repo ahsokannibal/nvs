@@ -498,7 +498,7 @@ while ($t_id = $res->fetch_assoc()) {
 			if ($dernier_a_i) {
 				
 				//on verifie si le perso est toujours dans la visu du pnj
-				if ($id_pj = perso_visu_pnj($x_i,$y_i,$perception,$dernier_a_i)) {
+				if ($id_pj = perso_visu_pnj($mysqli, $x_i,$y_i,$perception,$dernier_a_i)) {
 				
 					// on regarde si le perso est au CaC
 					if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)){
