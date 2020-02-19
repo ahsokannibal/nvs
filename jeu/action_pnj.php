@@ -452,6 +452,7 @@ while ($t_id = $res->fetch_assoc()) {
 						}
 					}
 					else {
+						
 						// il n y a pas de perso dans sa visu
 						// il bouge au hasard
 						while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){
@@ -471,6 +472,7 @@ while ($t_id = $res->fetch_assoc()) {
 				}
 			}
 			else {
+				
 				// il n'a pas été attaqué
 				// deplacement du pnj au hasard
 				while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){

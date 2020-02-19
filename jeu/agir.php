@@ -742,7 +742,7 @@ if($verif){
 										$gain_xp_collat = 1;
 										
 										// mise a jour des pv de la cible
-										$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat WHERE idInstance_pnj='$id_cible_collat'";
+										$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
 										$mysqli->query($sql);
 										
 										echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
@@ -1217,7 +1217,11 @@ if($verif){
 				//le perso a assez de pa
 					
 				//la cible est encore en vie
-				if ($pv_cible > 0) { 
+				if ($pv_cible > 0) {
+
+					// maj dernierAttaquant_i
+					$sql = "UPDATE instance_pnj SET dernierAttaquant_i = $id WHERE idInstance_pnj = '$id_cible'";
+					$mysqli->query($sql);
 							
 					echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
 						
@@ -1512,7 +1516,7 @@ if($verif){
 									$gain_xp_collat = 1;
 									
 									// mise a jour des pv de la cible
-									$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat WHERE idInstance_pnj='$id_cible_collat'";
+									$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
 									$mysqli->query($sql);
 									
 									echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
