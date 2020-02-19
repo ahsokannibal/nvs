@@ -21,6 +21,7 @@ define("I_PONT_B","b5b.png");
 define("I_PONT_R","b5r.png");
 define("I_ROUTE_B","b4b.png");
 define("I_ROUTE_R","b4r.png");
+define("I_RAIL","rail.gif");
 
 function in_map($x, $y) //vérifie si les coordonnées passées en argument sont bien sur la carte
 {
@@ -93,6 +94,7 @@ function get_nom_terrain($fond) {
 		case(I_MONTAGNE): return "Montagne"; break;
 		case(I_ROUTE_B): return "Route"; break;
 		case(I_ROUTE_R): return "Route"; break;
+		case(I_RAIL): return "Rail"; break;
 		default: return "Inconnu";
 	}
 }
@@ -385,10 +387,11 @@ function in_bat($mysqli, $id){
 
 // fonction qui verifie si le perso est dans un train ou non
 function in_train($mysqli, $id){
-	$sql = "SELECT id_perso FROM perso_in_train WHERE id_perso='$id'";
+	$sql = "SELECT id_train FROM perso_in_train WHERE id_perso='$id'";
 	$res = $mysqli->query($sql);
-	$nb = $res->fetch_row();
-	return $nb != 0;
+	$t = $res->fetch_assoc();
+	
+	return $t['id_train'];
 }
 
 // fonction qui verifie si le perso est dans un batiment precis ou non

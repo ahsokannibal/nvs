@@ -3040,11 +3040,265 @@ if($dispo || $admin){
 						if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { 
 						
 							//coordonnées du perso
-							if ($x == $x_perso && $y == $y_perso){ 
-								echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+							if ($x == $x_perso && $y == $y_perso){
+								if($clan_perso == '1'){
+									$image_profil 	= "Nord.gif";
+								}
+								if($clan_perso == '2'){
+									$image_profil 	= "Sud.gif";
+								}
+								
+								$fond_im = $tab["fond_carte"];
+								$nom_terrain = get_nom_terrain($fond_im);
+								
+								echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 								echo "	<div width=40 height=40 style=\"position: relative;\">";
-								echo "		<div style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_perso . "</div>";
-								echo "		<img class=\"\" border=0 src=\"../images_perso/$dossier_img_joueur/$image_perso\" width=40 height=40 />";
+								echo "		<div tabindex='0' style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\"
+													data-toggle='popover'
+													data-trigger='focus'
+													data-html='true' 
+													data-placement='bottom' ";
+								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div> ";					
+								if (!in_bat($mysqli,$id_perso)) {
+									
+									if (!in_train($mysqli,$id_perso)) {
+										echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+									}
+									else {
+										$id_instance_in_train = in_train($mysqli,$id_perso);
+										
+										$sql_im = "SELECT instance_batiment.id_batiment, camp_instance, nom_instance, nom_batiment
+														FROM instance_batiment, batiment 
+														WHERE instance_batiment.id_batiment = batiment.id_batiment
+														AND id_instanceBat='$id_instance_in_train'";
+										$res_im = $mysqli->query($sql_im);
+										$t_im = $res_im->fetch_assoc();
+												
+										$type_bat 	= $t_im["id_batiment"];
+										$camp_bat 	= $t_im["camp_instance"];
+										$nom_i_bat	= $t_im["nom_instance"];
+										$nom_bat	= $t_im["nom_batiment"];
+										
+										if ($camp_bat == 1) {
+											$pre_img = "b";
+										}
+										else {
+											$pre_img = "r";
+										}
+										
+										echo "<div><a href='evenement.php?infoid=".$id_instance_in_train."' target='_blank'><img src='../images_perso/b".$type_bat.$pre_img.".png' width='20' height='20'> " . $nom_bat ." ". $nom_i_bat ."[".$id_instance_in_train."]</a></div>";
+									}
+								}
+								else {
+									$id_instance_in_bat = in_bat($mysqli,$id_perso);
+									
+									$sql_im = "SELECT instance_batiment.id_batiment, camp_instance, nom_instance, nom_batiment
+														FROM instance_batiment, batiment 
+														WHERE instance_batiment.id_batiment = batiment.id_batiment
+														AND id_instanceBat='$id_instance_in_bat'";
+									$res_im = $mysqli->query($sql_im);
+									$t_im = $res_im->fetch_assoc();
+											
+									$type_bat 	= $t_im["id_batiment"];
+									$camp_bat 	= $t_im["camp_instance"];
+									$nom_i_bat	= $t_im["nom_instance"];
+									$nom_bat	= $t_im["nom_batiment"];
+									
+									if ($camp_bat == 1) {
+										$pre_img = "b";
+									}
+									else {
+										$pre_img = "r";
+									}
+									
+									echo "<div><a href='evenement.php?infoid=".$id_instance_in_bat."' target='_blank'><img src='../images_perso/b".$type_bat.$pre_img.".png' width='20' height='20'> " . $nom_bat ." ". $nom_i_bat ."[".$id_instance_in_bat."]</a></div>";
+								}
+								echo "\" ";					
+								echo "			data-content=\"";
+								if (in_bat($mysqli,$id_perso)) {
+									
+									$id_instance_in_bat = in_bat($mysqli,$id_perso);
+									
+									echo "		<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
+									echo "		<div><a href='action.php?bat=".$id_instance_in_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
+								}
+								else if (prox_bat($mysqli, $x_perso, $y_perso, $id_perso)) {
+									
+									// recuperation des id et noms des batiments dans lesquels le perso peut entrer
+									$res_bat = id_prox_bat($mysqli, $x_perso, $y_perso); 
+									
+									while ($bat1 = $res_bat->fetch_assoc()) {
+										
+										$nom_ibat 		= $bat1["nom_instance"];
+										$id_bat 		= $bat1["id_instanceBat"];
+										$bat 			= $bat1["id_batiment"];
+										$pv_instance 	= $bat1["pv_instance"];
+										$pvMax_instance = $bat1["pvMax_instance"];
+											
+										//recuperation du nom du batiment
+										$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
+										$res_n = $mysqli->query($sql_n);
+										$t_n = $res_n->fetch_assoc();
+										
+										$nom_bat = $t_n["nom_batiment"];
+											
+										// verification si le batiment est de la même nation que le perso
+										if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) {
+										
+											// Verification si le batiment est vide
+											// + Le lien est utile pour les batiments autre que barricade et pont 
+											// + Le lien est utile que pour les unités autre que chien et soigneur
+											// + si batiment tour de guet, seul les infanterie peuvent capturer
+											if((batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') && (($bat == 2 && $type_perso == 3))){
+												echo "		<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."' > Capturer ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
+											}
+										}
+										else {
+											if($bat != 1 && $bat != 5){
+												// Si batiment tour de guet, seul les infanteries, soigneurs et chiens peuvent rentrer
+												if (($bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $bat != 2 ) {
+													echo "		<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."' > Entrer dans ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
+												}
+											}
+											
+											// Les chiens ne peuvent pas réparer les batiments
+											if ($pv_instance < $pvMax_instance && $type_perso != '6') {
+												echo "		<div><a href='action.php?bat=".$id_bat."&reparer=ok' > Reparer ".$nom_bat." ".$nom_ibat." [".$id_bat."] (5 PA)</a></div>";
+											}
+										}
+										
+										// Pont
+										// Les chiens ne peuvent pas saboter les ponts
+										if ($bat == 5 && $type_perso != '6') {
+											echo "		<div><a href='action.php?bat=".$id_bat.".&saboter=ok' > Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
+										}
+									}
+								}
+								echo "\" >" . $id_perso . "</div>";
+								echo "		<img tabindex='0' class=\"\" border=0 src=\"../images_perso/$dossier_img_joueur/$image_perso\" width=40 height=40 
+													data-toggle='popover'
+													data-trigger='focus'
+													data-html='true' 
+													data-placement='bottom' ";
+								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div>";
+								
+								if (!in_bat($mysqli,$id_perso)) {
+									
+									if (!in_train($mysqli,$id_perso)) {
+										echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+									}
+									else {
+										$id_instance_in_train = in_train($mysqli,$id_perso);
+										
+										$sql_im = "SELECT instance_batiment.id_batiment, camp_instance, nom_instance, nom_batiment
+														FROM instance_batiment, batiment 
+														WHERE instance_batiment.id_batiment = batiment.id_batiment
+														AND id_instanceBat='$id_instance_in_train'";
+										$res_im = $mysqli->query($sql_im);
+										$t_im = $res_im->fetch_assoc();
+												
+										$type_bat 	= $t_im["id_batiment"];
+										$camp_bat 	= $t_im["camp_instance"];
+										$nom_i_bat	= $t_im["nom_instance"];
+										$nom_bat	= $t_im["nom_batiment"];
+										
+										if ($camp_bat == 1) {
+											$pre_img = "b";
+										}
+										else {
+											$pre_img = "r";
+										}
+										
+										echo "<div><a href='evenement.php?infoid=".$id_instance_in_train."' target='_blank'><img src='../images_perso/b".$type_bat.$pre_img.".png' width='20' height='20'> " . $nom_bat ." ". $nom_i_bat ."[".$id_instance_in_train."]</a></div>";
+									}
+								}
+								else {
+									$id_instance_in_bat = in_bat($mysqli,$id_perso);
+									
+									$sql_im = "SELECT instance_batiment.id_batiment, camp_instance, nom_instance, nom_batiment
+														FROM instance_batiment, batiment 
+														WHERE instance_batiment.id_batiment = batiment.id_batiment
+														AND id_instanceBat='$id_instance_in_bat'";
+									$res_im = $mysqli->query($sql_im);
+									$t_im = $res_im->fetch_assoc();
+											
+									$type_bat 	= $t_im["id_batiment"];
+									$camp_bat 	= $t_im["camp_instance"];
+									$nom_i_bat	= $t_im["nom_instance"];
+									$nom_bat	= $t_im["nom_batiment"];
+									
+									if ($camp_bat == 1) {
+										$pre_img = "b";
+									}
+									else {
+										$pre_img = "r";
+									}
+									
+									echo "<div><a href='evenement.php?infoid=".$id_instance_in_bat."' target='_blank'><img src='../images_perso/b".$type_bat.$pre_img.".png' width='20' height='20'> " . $nom_bat ." ". $nom_i_bat ."[".$id_instance_in_bat."]</a></div>";
+								}
+								echo "\" ";					
+								echo "			data-content=\"";
+								if (in_bat($mysqli,$id_perso)) {
+									
+									$id_instance_in_bat = in_bat($mysqli,$id_perso);
+									
+									echo "		<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
+									echo "		<div><a href='action.php?bat=".$id_instance_in_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
+								}
+								else if (prox_bat($mysqli, $x_perso, $y_perso, $id_perso)) {
+									
+									// recuperation des id et noms des batiments dans lesquels le perso peut entrer
+									$res_bat = id_prox_bat($mysqli, $x_perso, $y_perso); 
+									
+									while ($bat1 = $res_bat->fetch_assoc()) {
+										
+										$nom_ibat 		= $bat1["nom_instance"];
+										$id_bat 		= $bat1["id_instanceBat"];
+										$bat 			= $bat1["id_batiment"];
+										$pv_instance 	= $bat1["pv_instance"];
+										$pvMax_instance = $bat1["pvMax_instance"];
+											
+										//recuperation du nom du batiment
+										$sql_n = "SELECT nom_batiment FROM batiment WHERE id_batiment = '$bat'";
+										$res_n = $mysqli->query($sql_n);
+										$t_n = $res_n->fetch_assoc();
+										
+										$nom_bat = $t_n["nom_batiment"];
+											
+										// verification si le batiment est de la même nation que le perso
+										if(!nation_perso_bat($mysqli, $id_perso, $id_bat)) {
+										
+											// Verification si le batiment est vide
+											// + Le lien est utile pour les batiments autre que barricade et pont 
+											// + Le lien est utile que pour les unités autre que chien et soigneur
+											// + si batiment tour de guet, seul les infanterie peuvent capturer
+											if((batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') && (($bat == 2 && $type_perso == 3))){
+												echo "		<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."' > Capturer ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
+											}
+										}
+										else {
+											if($bat != 1 && $bat != 5){
+												// Si batiment tour de guet, seul les infanteries, soigneurs et chiens peuvent rentrer
+												if (($bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $bat != 2 ) {
+													echo "		<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."' > Entrer dans ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
+												}
+											}
+											
+											// Les chiens ne peuvent pas réparer les batiments
+											if ($pv_instance < $pvMax_instance && $type_perso != '6') {
+												echo "		<div><a href='action.php?bat=".$id_bat."&reparer=ok' > Reparer ".$nom_bat." ".$nom_ibat." [".$id_bat."] (5 PA)</a></div>";
+											}
+										}
+										
+										// Pont
+										// Les chiens ne peuvent pas saboter les ponts
+										if ($bat == 5 && $type_perso != '6') {
+											echo "		<div><a href='action.php?bat=".$id_bat.".&saboter=ok' > Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
+										}
+									}
+								}
+								echo "\" ";
+								echo " />";
 								echo "	</div>";
 								echo "</td>";
 							}
@@ -3115,9 +3369,30 @@ if($dispo || $admin){
 														data-toggle='popover'
 														data-trigger='focus'
 														data-html='true' 
-														data-placement='bottom' 
-														title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$idI_bat."' target='_blank'>".$nom_bat." ".$nom_i_bat." [".$idI_bat."]</a></div>\"";
-											echo "data-content=\"<a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a>\"";			
+														data-placement='bottom' ";
+											echo "		title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$idI_bat."' target='_blank'>".$nom_bat." ".$nom_i_bat." [".$idI_bat."]</a></div>\"";
+											echo "		data-content=\"";
+											if (in_bat($mysqli,$id_perso)) {
+									
+												$id_instance_in_bat = in_bat($mysqli,$id_perso);
+												
+												echo "		<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
+											}
+											if(prox_instance_bat($mysqli, $x_perso, $y_perso, $idI_bat)) {
+												echo "		<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
+												
+												if (!nation_perso_bat($mysqli, $id_perso, $idI_bat)) {
+													if((batiment_vide($mysqli, $idI_bat) && $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 11 && $type_perso != '6' && $type_perso != '4') && (($type_bat == 2 && $type_perso == 3))){
+														echo "		<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."' > Capturer ce bâtiment</a></div>";
+													}
+												}
+												else {
+													if (($type_bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $type_bat != 2 ) {
+														echo "		<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."' > Entrer dans ce bâtiment</a></div>";
+													}
+												}
+											}
+											echo "\"";
 											echo "\">";		
 											echo "</td>";
 										}
@@ -3178,30 +3453,46 @@ if($dispo || $admin){
 												if(isset($nom_compagnie) && trim($nom_compagnie) != ''){
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
-													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' 
-																	title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
+													
+													//--- Div matricule perso
+													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+													// Title popover
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}
 													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\"";
+													// data content popover
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
 													
-													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' 
-																	title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
+													//--- Image perso
+													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+													// Title popover
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}				
-													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
+													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+													// Data content popover
+													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";
 													echo "</td>";
 												}
 												else {
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
+													
+													//--- Div matricule perso
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
-													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' 
-																	title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
-													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' 
-																	title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
+													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+													// Title Popover
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
+													
+													//--- Image perso
+													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+													// Title popover
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";
 													echo "</td>";
 												}
