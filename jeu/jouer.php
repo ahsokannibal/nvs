@@ -3377,8 +3377,9 @@ if($dispo || $admin){
 												$id_instance_in_bat = in_bat($mysqli,$id_perso);
 												
 												echo "		<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
+												echo "		<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 											}
-											if(prox_instance_bat($mysqli, $x_perso, $y_perso, $idI_bat)) {
+											else if(prox_instance_bat($mysqli, $x_perso, $y_perso, $idI_bat)) {
 												echo "		<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												
 												if (!nation_perso_bat($mysqli, $id_perso, $idI_bat)) {
