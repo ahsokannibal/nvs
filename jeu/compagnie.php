@@ -377,6 +377,8 @@ if($dispo || $admin){
 				
 				if ($genie_compagnie) {
 					$nb_persos_compagnie_max = 60;
+					
+					echo "<center><a class='btn btn-outline-info' href='contraintes_construction.php' target='_blank'>Voir les contraintes des constructions</a></center>";
 				} else {
 					$nb_persos_compagnie_max = 80;
 				}
