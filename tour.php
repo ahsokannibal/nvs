@@ -26,7 +26,7 @@ if(isset($_SESSION["ID_joueur"])){
 	$image_perso= $t_chef["image_perso"];
 	
 	if (isset($_SESSION["id_perso"]) && $_SESSION["id_perso"] != $id) {
-		// on a switch sur un perso mort ?
+		// on a switch sur un perso mort ou nouveau tour ?
 		
 		$id_perso = $_SESSION["id_perso"];
 		
@@ -127,8 +127,96 @@ if(isset($_SESSION["ID_joueur"])){
 					
 				} else {
 					// Le perso est vivant
+
+					$date = time();
+					
 					// redirection
-					header("location:jeu/jouer.php"); 
+					if (!$est_gele && nouveau_tour($date, $dla)) {
+				
+						// calcul du prochain tour
+						$new_dla = $date + DUREE_TOUR;
+						
+						// Récupération de tous les perso du joueur
+						$sql = "SELECT id_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+						$res = $mysqli->query($sql);
+						
+						while ($t_persos = $res->fetch_assoc()) {
+					
+							$id_perso_nouveau_tour 		= $t_persos["id_perso"];
+							$pv_perso_nouveau_tour 		= $t_persos["pv_perso"];
+							$pv_max_perso_nouveau_tour	= $t_persos["pvMax_perso"];
+							$recup_perso_nouveau_tour 	= $t_persos["recup_perso"] + $t_persos["bonusRecup_perso"];
+							$x_perso_nouveau_tour		= $t_persos["x_perso"];
+							$y_perso_nouveau_tour		= $t_persos["y_perso"];
+							$chef_perso_nouveau_tour	= $t_persos["chef"];
+							$image_perso_nouveau_tour	= $t_persos["image_perso"];
+							$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
+							$type_perso_nouveau_tour	= $t_persos["type_perso"];
+							
+							$new_bonus_perso = 0;
+							
+							if ($bonus_perso_nouveau_tour + 5 <= 0) {
+								$new_bonus_perso = $bonus_perso_nouveau_tour + 5;
+							}
+							
+							//il est encore en vie
+							if ($pv_perso_nouveau_tour > 0) {
+								
+								$pv_after_recup = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour;
+								
+								if ($pv_after_recup > $pv_max_perso_nouveau_tour) {
+									$pv_after_recup = $pv_max_perso_nouveau_tour;
+								}
+								
+								$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x_perso_nouveau_tour AND y_carte=$y_perso_nouveau_tour";
+								$res_map = $mysqli->query($sql);
+								$t_carte1 = $res_map->fetch_assoc();
+								
+								$fond = $t_carte1["fond_carte"];
+								
+								if ($chef_perso_nouveau_tour == '1') {
+									
+									$gain_or = 3;
+									
+									// calcul bonus perception perso
+									$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
+									
+									// C'est le chef => gain or et PC
+									$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+									$mysqli->query($sql);
+									
+								} else {
+									
+									if ($type_perso_nouveau_tour == 2) {
+										$gain_or = 2;
+									}
+									else if ($type_perso_nouveau_tour == 4) {
+										$gain_or = 2;
+									}
+									else if ($type_perso_nouveau_tour == 5) {
+										$gain_or = 3;
+									}
+									else {
+										$gain_or = 1;
+									}
+									
+									// calcul bonus perception perso
+									$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
+									
+									// C'est un grouillot
+									$sql = "UPDATE perso SET pm_perso=pmMax_perso, pa_perso=paMax_perso+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+									$mysqli->query($sql);
+									
+								}
+								
+								// redirection
+								header("location:jeu/jouer.php");			
+							}
+						}
+					}
+					else {
+						header("location:jeu/jouer.php"); 
+					}
 				}
 			} else {
 				
@@ -301,7 +389,7 @@ if(isset($_SESSION["ID_joueur"])){
 								$mysqli->query($sql);
 								
 							}
-			
+							
 							// redirection
 							header("location:jeu/jouer.php");			
 						}
@@ -368,14 +456,29 @@ if(isset($_SESSION["ID_joueur"])){
 							// MAJ perso
 							if ($chef_perso_nouveau_tour == '1') {
 								
-								// C'est le chef => gain or et PC
+								$gain_or = 3;
+								
+								// C'est le chef => gain or et pc
 								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=$new_bonus_perso, pc_perso=pc_perso+1, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
 							} else {
 								
+								if ($type_perso_nouveau_tour == 2) {
+									$gain_or = 2;
+								}
+								else if ($type_perso_nouveau_tour == 4) {
+									$gain_or = 2;
+								}
+								else if ($type_perso_nouveau_tour == 5) {
+									$gain_or = 3;
+								}
+								else {
+									$gain_or = 1;
+								}
+								
 								// Grouillot
-								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=$new_bonus_perso, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=$new_bonus_perso, or_perso=or_perso+$gain_or, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 							}
 				
@@ -449,6 +552,8 @@ if(isset($_SESSION["ID_joueur"])){
 							
 							$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id' WHERE x_carte='$x' AND y_carte='$y'";
 							$mysqli->query($sql);
+							
+							header("location:jeu/jouer.php");
 						}
 					}
 				}
