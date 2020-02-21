@@ -3410,7 +3410,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
@@ -3878,7 +3878,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
@@ -4352,7 +4352,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
@@ -4830,7 +4830,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
@@ -5297,7 +5297,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
@@ -5764,7 +5764,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
@@ -6231,7 +6231,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
@@ -6698,7 +6698,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 								|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 								|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 							
-							$gain_pc = 2;
+							$gain_pc = 1;
 						} else {
 							$gain_pc = 0;
 						}
