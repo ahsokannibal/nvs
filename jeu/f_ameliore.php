@@ -88,8 +88,8 @@ function ameliore_recup($mysqli, $rec_courant, $type_perso){
 	$rec_base_unite = $tab["recup_unite"];
 	
 	$rec_ameliore_cible = $rec_courant - $rec_base_unite;
-	$base_cout_rec = 100;
-	$cout_achat_rec = 30;
+	$base_cout_rec = 10;
+	$cout_achat_rec = 3;
 	
 	$resultat = $base_cout_rec + $rec_ameliore_cible * $cout_achat_rec;
 	return $resultat;
