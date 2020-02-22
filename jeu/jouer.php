@@ -3038,8 +3038,10 @@ if($dispo || $admin){
 						//les coordonnées sont dans les limites
 						if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { 
 						
+							//--------------------------
 							//coordonnées du perso
 							if ($x == $x_perso && $y == $y_perso){
+								
 								if($clan_perso == '1'){
 									$image_profil 	= "Nord.gif";
 								}
@@ -3304,7 +3306,8 @@ if($dispo || $admin){
 							else {
 								if ($tab["occupee_carte"]){
 									
-									// recuperation de l'image du pnj
+									//------------------------------------
+									// Traitement PNJ
 									if($tab['idPerso_carte'] >= 200000){
 										
 										$idI_pnj = $tab['idPerso_carte'];
@@ -3334,6 +3337,7 @@ if($dispo || $admin){
 										echo "	</td>";
 									}
 									else {
+										//-------------------------
 										//  traitement Batiment
 										if($tab['idPerso_carte'] >= 50000 && $tab['idPerso_carte'] < 200000){
 											
@@ -3390,8 +3394,10 @@ if($dispo || $admin){
 													}
 												}
 												else {
-													if (($type_bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $type_bat != 2 ) {
-														echo "		<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."' > Entrer dans ce bâtiment</a></div>";
+													if($type_bat != 1 && $type_bat != 5){
+														if (($type_bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $type_bat != 2 ) {
+															echo "		<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."' > Entrer dans ce bâtiment</a></div>";
+														}
 													}
 												}
 											}
