@@ -513,6 +513,8 @@ if(isset($_SESSION["ID_joueur"])){
 						header("location:jeu/jouer.php");
 					}
 					else {
+						// Il est mort et ce n'est pas un nouveau tour
+						
 						//    RESPAWN BATIMENT    //
 						
 						// Récupération du batiment de rappatriement le plus proche du perso
@@ -536,7 +538,7 @@ if(isset($_SESSION["ID_joueur"])){
 							$bonus_visu = getBonusObjet($mysqli, $id_perso);
 							
 							// MAJ perso
-							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
+							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pm_perso/2, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
 							$mysqli->query($sql);
 				
 							//redirection
