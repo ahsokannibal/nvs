@@ -473,23 +473,41 @@ function calcul_distance_construction($nombre_points){
 function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	
 	// Verification si le perso a choisi un Hoptail de respawn
-	$sql = "SELECT id_instance_bat FROM perso_as_respawn, instance_batiment 
+	$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment 
 			WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 			AND id_perso='$id_perso' AND id_bat='7'
 			AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)";
 	$res = $mysqli->query($sql);
 	$nb_h = $res->num_rows;
 	
-	if ($nb_h > 0) {
+	$t = $res->fetch_assoc();
 		
-		$t = $res->fetch_assoc();
-		$min_id_bat = $t['id_instance_bat'];
+	$id_ibat7 	= $t['id_instance_bat'];
+	$x_ibat		= $t['x_instance'];
+	$y_ibat		= $t['y_instance'];
+	
+	// Verification si 10 persos ennemis à moins de 15 cases
+	$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
+			WHERE perso.id_perso = carte.idPerso_carte 
+			AND x_carte <= $x_ibat + 15
+			AND x_carte >= $x_ibat - 15
+			AND y_carte <= $y_ibat + 15
+			AND y_carte >= $y_ibat - 15
+			AND perso.clan != '$clan'";
+	$res = $mysqli->query($sql);
+	$t_e = $res->fetch_assoc();
+	
+	$nb_ennemis_siege7 = $t_e['nb_ennemi'];
+	
+	if ($nb_h > 0 && $nb_ennemis_siege7 < 10) {
+		
+		$min_id_bat = $id_ibat7;
 		
 	}
 	else {
 		
 		// Verification si le perso a choisi un Fortin de respawn
-		$sql = "SELECT id_instance_bat FROM perso_as_respawn, instance_batiment, perso 
+		$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment, perso 
 				WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 				AND perso.id_perso = perso_as_respawn.id_perso
 				AND perso_as_respawn.id_perso='$id_perso' AND id_bat='8'
@@ -499,10 +517,28 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 		$res = $mysqli->query($sql);
 		$nb_f = $res->num_rows;
 		
-		if ($nb_f > 0) {
+		$t = $res->fetch_assoc();
 			
-			$t = $res->fetch_assoc();
-			$min_id_bat = $t['id_instance_bat'];
+		$id_ibat8 	= $t['id_instance_bat'];
+		$x_ibat		= $t['x_instance'];
+		$y_ibat		= $t['y_instance'];
+		
+		// Verification si 10 persos ennemis à moins de 15 cases
+		$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
+				WHERE perso.id_perso = carte.idPerso_carte 
+				AND x_carte <= $x_ibat + 15
+				AND x_carte >= $x_ibat - 15
+				AND y_carte <= $y_ibat + 15
+				AND y_carte >= $y_ibat - 15
+				AND perso.clan != '$clan'";
+		$res = $mysqli->query($sql);
+		$t_e = $res->fetch_assoc();
+		
+		$nb_ennemis_siege8 = $t_e['nb_ennemi'];
+		
+		if ($nb_f > 0 && $nb_ennemis_siege8 < 10) {
+			
+			$min_id_bat = $id_ibat;
 			
 		}
 		else {
@@ -518,10 +554,28 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 			$res = $mysqli->query($sql);
 			$nb_fort = $res->num_rows;
 			
-			if ($nb_fort > 0) {
+			$t = $res->fetch_assoc();
+			
+			$id_ibat9 	= $t['id_instance_bat'];
+			$x_ibat		= $t['x_instance'];
+			$y_ibat		= $t['y_instance'];
+			
+			// Verification si 10 persos ennemis à moins de 15 cases
+			$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
+					WHERE perso.id_perso = carte.idPerso_carte 
+					AND x_carte <= $x_ibat + 15
+					AND x_carte >= $x_ibat - 15
+					AND y_carte <= $y_ibat + 15
+					AND y_carte >= $y_ibat - 15
+					AND perso.clan != '$clan'";
+			$res = $mysqli->query($sql);
+			$t_e = $res->fetch_assoc();
+			
+			$nb_ennemis_siege9 = $t_e['nb_ennemi'];
+			
+			if ($nb_fort > 0 && $nb_ennemis_siege9 < 10) {
 				
-				$t = $res->fetch_assoc();
-				$min_id_bat = $t['id_instance_bat'];
+				$min_id_bat = $id_ibat9;
 				
 			}
 			else {
@@ -549,13 +603,26 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 					// calcul pourcentage pv bat 
 					$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
 					
+					// Verification si 10 persos ennemis à moins de 15 cases
+					$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
+							WHERE perso.id_perso = carte.idPerso_carte 
+							AND x_carte <= $x_bat + 15
+							AND x_carte >= $x_bat - 15
+							AND y_carte <= $y_bat + 15
+							AND y_carte >= $y_bat - 15
+							AND perso.clan != '$clan'";
+					$res = $mysqli->query($sql);
+					$t_e = $res->fetch_assoc();
+					
+					$nb_ennemis_siege = $t_e['nb_ennemi'];
+					
 					// Récupération du nombre de perso dans ce batiment
 					$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
 					$res_n = $mysqli->query($sql_n);
 					$t_n = $res_n->fetch_assoc();
 					$nb_perso_bat = $t_n['nb_perso_bat'];
 					
-					if ($contenance_bat > $nb_perso_bat && $pourcentage_pv_bat >= 90){
+					if ($contenance_bat > $nb_perso_bat && $pourcentage_pv_bat >= 90 && $nb_ennemis_siege < 10){
 						// Le perso peut respawn dans ce batiment
 						
 						// Calcul de la distance entre le batiment et le perso
@@ -799,6 +866,26 @@ function getMalusCharge($charge_perso) {
 	}
 	
 	return $malus;
+}
+
+/**
+ * Fonction permettant de connaitre le gain d'or selon le type de grouillot
+ */
+function gain_or_grouillot($type_grouillot) {
 	
+	if ($type_grouillot == 2) {
+		$gain_or = 2;
+	}
+	else if ($type_grouillot == 4) {
+		$gain_or = 2;
+	}
+	else if ($type_grouillot == 5) {
+		$gain_or = 3;
+	}
+	else {
+		$gain_or = 1;
+	}
+	
+	return $gain_or;
 }
 ?>
