@@ -45,7 +45,7 @@ $mysqli = db_connexion();
 					
 					<div style="color: azure;">
 						<h3>D'après une idée originale de </h3>
-						<b>GrOOn</b>, <b>Keldrith</b> (Créateurs du jeu original Nord versus Sud)					
+						<b>GrOOn</b>, <b>Keldrilh</b> (Créateurs du jeu original Nord versus Sud)					
 					</div>
 					
 					<br /><br />
