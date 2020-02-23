@@ -145,10 +145,23 @@ if($dispo || $admin){
 							// Calcul pourcentage pv du batiment 
 							$pourc_pv_instance = ($pv_instance / $pv_max_instance) * 100;
 							
-							if ($pourc_pv_instance < 90) {
+							// Verification si 10 persos ennemis à moins de 15 cases
+							$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
+									WHERE perso.id_perso = carte.idPerso_carte 
+									AND x_carte <= $x_instance + 15
+									AND x_carte >= $x_instance - 15
+									AND y_carte <= $y_instance + 15
+									AND y_carte >= $y_instance - 15
+									AND perso.clan != '$clan'";
+							$res = $mysqli->query($sql);
+							$t_e = $res->fetch_assoc();
+							
+							$nb_ennemis_siege = $t_e['nb_ennemi'];
+							
+							if ($pourc_pv_instance < 90 || $nb_ennemis_siege >= 10) {
 								
 								// Il reste moins de 90% des pv du batiment => siege
-								echo "<center><font color='red'>Ce batiment est considéré en état de siege, il ne sera pas possible de recruter des grouillots tant que ses PV ne seront pas suffisamment remontés</font></center><br />";
+								echo "<center><font color='red'>Ce batiment est considéré en état de siege, il ne sera pas possible de recruter des grouillots tant que ses PV ne seront pas suffisamment remontés ou que la zone ne sera pas nettoyée des ennemis</font></center><br />";
 								echo "<center>PV actuel : $pv_instance / $pv_max_instance</center>";
 								
 							} else {
