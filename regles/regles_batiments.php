@@ -145,7 +145,7 @@
 					
 					<h4>Etat de siège d'un bâtiment</h4>
 					
-					<p>Un bâtiment est considéré en état de siège s'il descend en dessous de 90% de ses PV maximum.<br />
+					<p>Un bâtiment est considéré en état de siège s'il descend en dessous de 90% de ses PV maximum ou qu'il y a 10 persos ennemi à moins de 15 cases.<br />
 					Cet état a pour effet de bloquer immédiatement les rapatriements, incorportations de nouveaux sur ce bâtiment.<br />
 					Le recrutement de grouillot se trouve aussi bloqué pour ce bâtiment.</p>
 					
