@@ -704,7 +704,9 @@ if($dispo || $admin){
 			
 			if($verif || $id_action=='65' || $id_action=='110' || $id_action=='111' || $id_action=='139' || $id_action=='999'){
 			
+				//-----------------
 				// Action Charger
+				//-----------------
 				if ($id_action=='999') {
 					
 					echo "<center><h1>Charger !</h1></center>";
@@ -729,15 +731,29 @@ if($dispo || $admin){
 					
 					$fond_carte_perso = $tab['fond_carte'];
 					
+					$bonus_visu = get_malus_visu($fond_carte_perso) + getBonusObjet($mysqli, $id_perso);
+												
+					if(bourre($mysqli, $id_perso)){
+						if(!endurance_alcool($mysqli, $id_perso)) {
+							$malus_bourre = bourre($mysqli, $id_perso) * 3;
+							$bonus_visu -= $malus_bourre;
+						}
+					}
+					
+					$perception_final = $perception_perso + $bonus_visu;
+					if ($perception_final <= 0) {
+						$perception_final = 1;
+					}
+					
 					// Pour pouvoir charger, il faut avoir tout ses PA, 40 PM et être sur de la plaine
 					if ($pa_perso == $paMax_perso && $pm_perso >= 4 && $fond_carte_perso == '1.gif') {
 						
 						// recuperation des donnees de la carte
 						$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
-								FROM $carte WHERE x_carte >= $x_perso - $perception_perso 
-								AND x_carte <= $x_perso + $perception_perso 
-								AND y_carte <= $y_perso + $perception_perso 
-								AND y_carte >= $y_perso - $perception_perso 
+								FROM $carte WHERE x_carte >= $x_perso - $perception_final 
+								AND x_carte <= $x_perso + $perception_final 
+								AND y_carte <= $y_perso + $perception_final 
+								AND y_carte >= $y_perso - $perception_final 
 								ORDER BY y_carte DESC, x_carte";
 						$res = $mysqli->query($sql);
 						$tab = $res->fetch_assoc(); 
@@ -746,16 +762,16 @@ if($dispo || $admin){
 						echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 							
 						echo "<tr><td>y \ x</td>";  //affichage des abscisses
-						for ($i = $x_perso - $perception_perso; $i <= $x_perso + $perception_perso; $i++) {
+						for ($i = $x_perso - $perception_final; $i <= $x_perso + $perception_final; $i++) {
 							echo "<th width=40 height=40>$i</th>";
 						}
 						echo "</tr>";
 							
-						for ($y = $y_perso + $perception_perso; $y >= $y_perso - $perception_perso; $y--) {
+						for ($y = $y_perso + $perception_final; $y >= $y_perso - $perception_final; $y--) {
 							
 							echo "<th>$y</th>";
 							
-							for ($x = $x_perso - $perception_perso; $x <= $x_perso + $perception_perso; $x++) {
+							for ($x = $x_perso - $perception_final; $x <= $x_perso + $perception_final; $x++) {
 								
 								//les coordonnees sont dans les limites
 								if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {

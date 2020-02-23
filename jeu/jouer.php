@@ -3001,9 +3001,18 @@ if($dispo || $admin){
 				
 				<?php
 				//<!--Génération de la carte-->
+				$perc_carte = $perc;
+				if ($perc_carte < 0) {
+					$perc_carte = 0;
+				}
 				
 				// recuperation des données de la carte
-				$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc AND y_carte <= $y_perso + $perc AND y_carte >= $y_perso - $perc ORDER BY y_carte DESC, x_carte";
+				$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte FROM $carte 
+						WHERE x_carte >= $x_perso - $perc_carte 
+						AND x_carte <= $x_perso + $perc_carte 
+						AND y_carte <= $y_perso + $perc_carte 
+						AND y_carte >= $y_perso - $perc_carte 
+						ORDER BY y_carte DESC, x_carte";
 				$res = $mysqli->query($sql);
 				$tab = $res->fetch_assoc();		
 				
@@ -3017,7 +3026,7 @@ if($dispo || $admin){
 				echo "	<tr>
 							<td width='40' heigth='40' background=\"../images/background.jpg\" align='center'>y \ x</td>";  
 				
-				for ($i = $x_perso - $perc; $i <= $x_perso + $perc; $i++) {
+				for ($i = $x_perso - $perc_carte; $i <= $x_perso + $perc_carte; $i++) {
 					if ($i == $x_perso)
 						echo "<th width=40 height=40 background=\"../images/background3.jpg\">$i</th>";
 					else
@@ -3026,7 +3035,7 @@ if($dispo || $admin){
 				
 				echo "	</tr>";
 				
-				for ($y = $y_perso + $perc; $y >= $y_perso - $perc; $y--) {
+				for ($y = $y_perso + $perc_carte; $y >= $y_perso - $perc_carte; $y--) {
 					
 					echo "<tr align=\"center\" >";
 					
@@ -3037,7 +3046,7 @@ if($dispo || $admin){
 						echo "<th width=40 height=40 background=\"../images/background.jpg\">$y</th>";
 					}
 					
-					for ($x = $x_perso - $perc; $x <= $x_perso + $perc; $x++) {
+					for ($x = $x_perso - $perc_carte; $x <= $x_perso + $perc_carte; $x++) {
 						
 						//les coordonnées sont dans les limites
 						if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) { 

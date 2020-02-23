@@ -3581,8 +3581,8 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
@@ -4049,20 +4049,14 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
 								else {
 									// maj stats du perso
 									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
-									$mysqli->query($sql);
-								}
-								
-								// maj stats camp
-								if($clan_cible != $clan_cible){
-									$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
 									$mysqli->query($sql);
 								}
 							}
@@ -4532,8 +4526,8 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
@@ -4542,7 +4536,6 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 									$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 									$mysqli->query($sql);
 								}
-								
 							}
 							
 							// MAJ xp/pi
@@ -5001,8 +4994,8 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
@@ -5468,8 +5461,8 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
@@ -5935,8 +5928,8 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
@@ -6402,8 +6395,8 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
@@ -6873,8 +6866,8 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 									$mysqli->query($sql);
 									
 									// maj stats camp
-									if($clan_cible != $clan_cible){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+									if($clan_cible != $clan){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 										$mysqli->query($sql);
 									}
 								}
