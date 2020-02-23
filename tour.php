@@ -160,11 +160,11 @@ if(isset($_SESSION["ID_joueur"])){
 								$gain_pc = 0;
 							}
 							
-							if ($pm_perso_nouvea_tour < 0) {
-								$malus_pm = $pm_perso_nouvea_tour;
-							} else {
-								$malus_pm = 0;
-							}
+							if ($pm_perso_nouveau_tour < 0) {
+									$malus_pm = $pm_perso_nouveau_tour;
+								} else {
+									$malus_pm = 0;
+								}
 							
 							if ($pv_perso_nouveau_tour <= 0) {
 								// MAJ perso avec malus rapat
@@ -239,8 +239,8 @@ if(isset($_SESSION["ID_joueur"])){
 								// calcul bonus perception perso
 								$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
 								
-								if ($pm_perso_nouvea_tour < 0) {
-									$malus_pm = $pm_perso_nouvea_tour;
+								if ($pm_perso_nouveau_tour < 0) {
+									$malus_pm = $pm_perso_nouveau_tour;
 								} else {
 									$malus_pm = 0;
 								}
@@ -413,11 +413,11 @@ if(isset($_SESSION["ID_joueur"])){
 							// calcul bonus perception perso
 							$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
 							
-							if ($pm_perso_nouvea_tour < 0) {
-								$malus_pm = $pm_perso_nouvea_tour;
-							} else {
-								$malus_pm = 0;
-							}
+							if ($pm_perso_nouveau_tour < 0) {
+									$malus_pm = $pm_perso_nouveau_tour;
+								} else {
+									$malus_pm = 0;
+								}
 							
 							if ($chef_perso_nouveau_tour == '1') {
 								
@@ -523,7 +523,7 @@ if(isset($_SESSION["ID_joueur"])){
 						}
 					}
 				}
-				else {	
+				else {
 					if ($pv > 0) { 
 						// il est encore en vie
 						// redirection
