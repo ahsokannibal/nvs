@@ -6,8 +6,6 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
-$id = $_SESSION["id_perso"];
-
 if (isset($_POST["choix_class"])){
 	
 	$num_class = $_POST["choix_class"];
@@ -50,23 +48,30 @@ if(isset($erreur)){
 if(isset($_GET["top"])){
 	echo "<div align=\"center\"><h2><font color=darkred>Top 10</font></h2></div>";
 
-
-	echo "<center><a href=\"classement.php\">Revenir au classement normal</a></center>";
-	echo "<center><a href=\"classement.php?titre=ok\">Voir les Titres attribués aux persos</a></center>";
-	echo "<center><a href=\"classement.php?training=ok\">Voir les pros de l'entrainement</a></center>";
-	echo "<center><a href=\"classement.php?super=ok\">Voir les Supermans</a></center>";
-	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
+	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
 	
-	echo "<center><form method=\"post\" action=\"classement.php\">";
-	echo "Choix classement :";
-	echo "<select name=\"choix_class\" onchange=\"this.form.submit()\">";
-	echo "<OPTION value='1'"; if(isset($_GET["classement"]) && $_GET["classement"] == 1) echo " selected"; echo">kill (pk)</option>"; 
-	echo "<OPTION value='2'"; if(isset($_GET["classement"]) && $_GET["classement"] == 2) echo " selected"; echo">death</option>"; 
-	echo "<OPTION value='3'"; if(isset($_GET["classement"]) && $_GET["classement"] == 3) echo " selected"; echo">pnj</option>";
-	echo "<OPTION value='4'"; if(isset($_GET["classement"]) && $_GET["classement"] == 4) echo " selected"; echo">or</option>";
-	echo "</select>";
-	echo "<input type=\"submit\" name=\"ch_c\" value=\"ok\">";
-	echo "</form></center>";
+	echo "<center>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "</center>";
+	echo "<br/>";
+	
+	echo "<center>";
+	echo "	<form method=\"post\" action=\"classement.php\">";
+	echo "	Choix classement :";
+	echo "		<select name=\"choix_class\" onchange=\"this.form.submit()\">";
+	echo "			<OPTION value='1'"; if(isset($_GET["classement"]) && $_GET["classement"] == 1) echo " selected"; echo">Les machines à tuer</option>"; 
+	echo "			<OPTION value='2'"; if(isset($_GET["classement"]) && $_GET["classement"] == 2) echo " selected"; echo">Les habitués des hôpitaux</option>"; 
+	echo "			<OPTION value='3'"; if(isset($_GET["classement"]) && $_GET["classement"] == 3) echo " selected"; echo">Les chasseurs</option>";
+	echo "			<OPTION value='4'"; if(isset($_GET["classement"]) && $_GET["classement"] == 4) echo " selected"; echo">Les picsou</option>";
+	echo "		</select>";
+	echo "		<input type=\"submit\" name=\"ch_c\" value=\"ok\">";
+	echo "	</form>";
+	echo "</center>";
+	echo "<br />";
 	
 	if(isset($_GET["classement"])) {
 		$num_c = $_GET["classement"];
@@ -113,16 +118,16 @@ if(isset($_GET["top"])){
 		$c = 0;
 		
 		if($class == "nb_kill") {
-			echo "<center><h3><font color=darkred>Les Pks</font></h3></center>";
+			echo "<center><h3><font color=darkred>Les machines à tuer</font></h3></center>";
 		}
 		if($class == "nb_mort") {
-			echo "<center><h3><font color=darkred>Les Cibles humaines</font></h3></center>";
+			echo "<center><h3><font color=darkred>Les habitués des hôpitaux</font></h3></center>";
 		}
 		if($class == "nb_pnj") {
-			echo "<center><h3><font color=darkred>Les Killers</font></h3></center>";
+			echo "<center><h3><font color=darkred>Les Chasseurs</font></h3></center>";
 		}
 		if($class == "or_perso") {
-			echo "<center><h3><font color=darkred>Les Riches</font></h3></center>";
+			echo "<center><h3><font color=darkred>Les Picsou</font></h3></center>";
 		}
 			
 		while($t = $res->fetch_assoc()){
@@ -143,11 +148,16 @@ if(isset($_GET["top"])){
 if(isset($_GET["titre"])){
 	echo "<div align=\"center\"><h2><font color=darkred>Les Titres</font></h2></div>";
 
-	echo "<center><a href=\"classement.php\">Revenir au classement normal</a></center>";
-	echo "<center><a href=\"classement.php?top=ok\">Voir les tops 10</a></center>";
-	echo "<center><a href=\"classement.php?training=ok\">Voir les pros de l'entrainement</a></center>";
-	echo "<center><a href=\"classement.php?super=ok\">Voir les Supermans</a></center>";
-	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
+	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	$sql = "SELECT id_pnj FROM perso_as_killpnj GROUP BY id_pnj";
 	$res = $mysqli->query($sql);
@@ -222,13 +232,18 @@ if(isset($_GET["titre"])){
 	
 }
 if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
-	echo "<div align=\"center\"><h2><font color=darkred>Statistiques</font></h2></div>";
+	echo "<div align=\"center\"><h2><font color=darkred>Statistiques des camps</font></h2></div>";
 	
-	echo "<center><a href=\"classement.php\">Revenir au classement normal</a></center>";
-	echo "<center><a href=\"classement.php?top=ok\">Voir les tops 10</a></center>";
-	echo "<center><a href=\"classement.php?titre=ok\">Voir les Titres attribués aux persos</a></center>";
-	echo "<center><a href=\"classement.php?training=ok\">Voir les pros de l'entrainement</a></center>";
-	echo "<center><a href=\"classement.php?super=ok\">Voir les Supermans</a></center><br/>";
+	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	// recuperation des stats
 	$sql = "SELECT id_camp, nb_kill FROM stats_camp_kill";
@@ -266,7 +281,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
 	echo "		<thead>";
 	echo "			<tr>";
-	echo "				<th><font color=darkred>Camp[id]</font></th>";
+	echo "				<th><font color=darkred>Camp</font></th>";
 	echo "				<th><font color=darkred>Nombre de captures ennemis</font></th>";
 	echo "				<th><font color=darkred>Nombre de captures alliés</font></th>";
 	echo "				<th><font color=darkred>Nombre de persos</font></th>";
@@ -301,7 +316,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		}
 		
 		echo "			<tr>";
-		echo "				<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font> [".$id_camp."]</td>";
+		echo "				<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font></td>";
 		echo "				<td align=center>$nb_kill</td>";
 		echo "				<td align=center>$meutre</td>";
 		echo "				<td align=center>$nb</td>";
@@ -317,11 +332,16 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	echo "<div align=\"center\"><h2><font color=darkred>Les Supermans</font></h2></div>";
 	
-	echo "<center><a href=\"classement.php\">Revenir au classement normal</a></center>";
-	echo "<center><a href=\"classement.php?top=ok\">Voir les tops 10</a></center>";
-	echo "<center><a href=\"classement.php?titre=ok\">Voir les Titres attribués aux persos</a></center>";
-	echo "<center><a href=\"classement.php?training=ok\">Voir les pros de l'entrainement</a></center>";
-	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
+	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	// bleus
 	$sql = "SELECT 	max(id_grade) as id_grade_max, 
@@ -375,15 +395,15 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	$res = $mysqli->query($sql);
 	$t_r = $res->fetch_assoc();
 	
-	$id_grade_max_r = $t_r['id_grade_max'];
-	$xp_max_r = $t_r['xp_max'];
-	$pv_max_r = $t_r['pv_max'];
-	$pm_max_r = $t_r['pm_max'];
-	$perception_max_r = $t_r['perception_max'];
-	$recup_max_r = $t_r['recup_max'];
-	$pa_max_r = $t_r['pa_max'];
-	$kill_max_r = $t_r['kill_max'];
-	$pnj_max_r = $t_r['pnj_max'];
+	$id_grade_max_r 	= $t_r['id_grade_max'];
+	$xp_max_r 			= $t_r['xp_max'];
+	$pv_max_r 			= $t_r['pv_max'];
+	$pm_max_r 			= $t_r['pm_max'];
+	$perception_max_r 	= $t_r['perception_max'];
+	$recup_max_r 		= $t_r['recup_max'];
+	$pa_max_r 			= $t_r['pa_max'];
+	$kill_max_r 		= $t_r['kill_max'];
+	$pnj_max_r 			= $t_r['pnj_max'];
 	
 	$sql = "SELECT nom_grade FROM grades WHERE id_grade = '$id_grade_max_r'";
 	$res = $mysqli->query($sql);
@@ -411,11 +431,16 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	echo "<div align=\"center\"><h2><font color=darkred>Entrainement</font></h2></div>";
 	
-	echo "<center><a href=\"classement.php\">Revenir au classement normal</a></center>";
-	echo "<center><a href=\"classement.php?top=ok\">Voir les tops 10</a></center>";
-	echo "<center><a href=\"classement.php?titre=ok\">Voir les Titres attribués aux persos</a></center>";
-	echo "<center><a href=\"classement.php?super=ok\">Voir les Supermans</a></center>";
-	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
+	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	$sql = "SELECT perso_as_entrainement.id_perso, nom_perso, niveau_entrainement, clan 
 			FROM perso_as_entrainement, perso 
@@ -462,16 +487,21 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 
 if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !isset($_GET["super"]) && !isset($_GET["training"])) {
 	
-	echo "<div align=\"center\"><h2><font color=darkred>Classement</font></h2></div>";
+	echo "<div align=\"center\"><h2><font color=darkred>Classement Global</font></h2></div>";
 	
-	echo "<center><a href=\"classement.php?top=ok\">Voir les tops 10</a></center>";
-	echo "<center><a href=\"classement.php?titre=ok\">Voir les Titres attribués aux persos</a></center>";
-	echo "<center><a href=\"classement.php?training=ok\">Voir les pros de l'entrainement</a></center>";
-	echo "<center><a href=\"classement.php?super=ok\">Voir les Supermans</a></center>";
-	echo "<center><a href=\"classement.php?stats=ok\">Voir les Statistiques de chaque camps</a></center><br/>";
+	echo "<div align=\"center\"><a class='btn btn-primary' href=\"classement.php\">Classement Global</a></div><br />";
+	
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	// recuperation des valeurs en excluant les persos pnj
-	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade FROM perso, perso_as_grade, grades 
+	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades 
 			WHERE perso.id_perso = perso_as_grade.id_perso 
 			AND perso_as_grade.id_grade = grades.id_grade
 			AND perso.id_perso > '10'
@@ -483,10 +513,11 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
 	echo "		<thead>";
 	echo "			<tr>";
-	echo "				<th><font color=darkred>Position</font></th>";
-	echo "				<th><font color=darkred>Nom [matricule]</font></th>";
-	echo "				<th><font color=darkred>XP</font></th>";
-	echo "				<th><font color=darkred>Grade</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Position</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nom</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Matricule</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>XP</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Grade</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
 	
@@ -505,13 +536,24 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 			$couleur_camp = "red";
 		}
 		
+		$id_grade_perso = $t2['id_grade'];
+		
+		// cas particuliers grouillot
+		if ($id_grade_perso == 101) {
+			$id_grade_perso = "1.1";
+		}
+		if ($id_grade_perso == 102) {
+			$id_grade_perso = "1.2";
+		}
+		
 		$cc++;
 		
 		echo "			<tr>";
-		echo "				<td>$cc</td>";
-		echo "				<td align=center><font color=$couleur_camp>".$t2['nom_perso']."</font>[<a href=\"evenement.php?infoid=".$t2['id_perso']."\">" .$t2['id_perso']. "</a>]</td>";
+		echo "				<td align=center>$cc</td>";
+		echo "				<td align=center><font color=$couleur_camp>".$t2['nom_perso']."</font></td>";
+		echo "				<td align='center'><a href=\"evenement.php?infoid=".$t2['id_perso']."\">" .$t2['id_perso']. "</a></td>";
 		echo "				<td align=center>".$t2['xp_perso']."</td>";
-		echo "				<td align=center>".$t2['nom_grade']."</td>";
+		echo "				<td align=center><img src=\"../images/grades/" . $id_grade_perso . ".gif\" />".$id_grade_perso." - ".$t2['nom_grade']."</td>";
 		echo "			</tr>";
 	}
 	
