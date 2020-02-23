@@ -1807,16 +1807,8 @@ if($dispo || $admin){
 																	//-------------------------------------
 																	// On déplace en premier le bousculé 
 																	// maj perso : mise à jour des pm et du bonus de perception
-																	if ($pm_perso_b >= $cout_pmB) {
-																		$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pmB, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
-																		$mysqli->query($sql);
-																	} else {
-																		// calcul des malus de pm
-																		$malus_pmB = $cout_pmB - $pm_perso_b;
-																		
-																		$sql = "UPDATE perso SET pm_perso = 0, bonusPM_perso-=$malus_pmB, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
-																		$mysqli->query($sql);
-																	}
+																	$sql = "UPDATE perso SET pm_perso = pm_perso-$cout_pmB, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
+																	$mysqli->query($sql);
 																	
 																	//mise à jour des coordonnées du perso 
 																	$dep = "UPDATE perso SET x_perso=$x_persoB, y_perso=$y_persoB WHERE id_perso ='$id_perso_b'"; 
