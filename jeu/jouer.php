@@ -3401,7 +3401,6 @@ if($dispo || $admin){
 													}
 												}
 											}
-											echo "\"";
 											echo "\">";		
 											echo "</td>";
 										}
