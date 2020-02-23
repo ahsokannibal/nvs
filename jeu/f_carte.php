@@ -538,7 +538,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 		
 		if ($nb_f > 0 && $nb_ennemis_siege8 < 10) {
 			
-			$min_id_bat = $id_ibat;
+			$min_id_bat = $id_ibat8;
 			
 		}
 		else {
