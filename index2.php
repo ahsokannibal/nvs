@@ -90,6 +90,10 @@ $count_online = $res->fetch_array();
 							<hr />
 							<a href="http://nordvssud-creation.forumactif.com/" style="color: white;">Le Forum</b></a>
 							<hr />
+							<a href="jeu/classement.php" style="color: white;">Les classements</b></a>
+							<hr />
+							<a href="credits.php" style="color: white;">Crédits</b></a>
+							<hr />
 							<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
 								<input type="hidden" name="cmd" value="_s-xclick" />
 								<input type="hidden" name="hosted_button_id" value="YRKPHY4WX37F6" />

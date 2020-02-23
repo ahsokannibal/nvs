@@ -27,11 +27,20 @@ if (isset($_POST["choix_class"])){
 <html>
 	<head>
 		<title>Nord VS Sud - Classement</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://drvic10k.github.io/bootstrap-sortable/Contents/bootstrap-sortable.css" />
+		<link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet">
 		
 	</head>
 
 	<body background="../images/background.jpg">
+	
+		<div class="container">
 
 <?php
 if(isset($erreur)){
@@ -55,11 +64,6 @@ if(isset($_GET["top"])){
 	echo "<OPTION value='2'"; if(isset($_GET["classement"]) && $_GET["classement"] == 2) echo " selected"; echo">death</option>"; 
 	echo "<OPTION value='3'"; if(isset($_GET["classement"]) && $_GET["classement"] == 3) echo " selected"; echo">pnj</option>";
 	echo "<OPTION value='4'"; if(isset($_GET["classement"]) && $_GET["classement"] == 4) echo " selected"; echo">or</option>";
-	echo "<OPTION value='5'"; if(isset($_GET["classement"]) && $_GET["classement"] == 5) echo " selected"; echo">pv Max</option>";
-	echo "<OPTION value='6'"; if(isset($_GET["classement"]) && $_GET["classement"] == 6) echo " selected"; echo">pm Max</option>";
-	echo "<OPTION value='7'"; if(isset($_GET["classement"]) && $_GET["classement"] == 7) echo " selected"; echo">pa Max</option>";
-	echo "<OPTION value='8'"; if(isset($_GET["classement"]) && $_GET["classement"] == 8) echo " selected"; echo">perception</option>";
-	echo "<OPTION value='9'"; if(isset($_GET["classement"]) && $_GET["classement"] == 9) echo " selected"; echo">recup</option>";
 	echo "</select>";
 	echo "<input type=\"submit\" name=\"ch_c\" value=\"ok\">";
 	echo "</form></center>";
@@ -82,21 +86,6 @@ if(isset($_GET["top"])){
 				case 4:
 					$class = "or_perso";
 					break;
-				case 5:
-					$class = "pvMax_perso";
-					break;
-				case 6:
-					$class = "pmMax_perso";
-					break;
-				case 7:
-					$class = "paMax_perso";
-					break;
-				case 8:
-					$class = "perception_perso";
-					break;
-				case 9:
-					$class = "recup_perso";
-					break;
 				default:
 					$class = "nb_kill";
 					break;
@@ -112,7 +101,15 @@ if(isset($_GET["top"])){
 		$sql = "SELECT id_perso, nom_perso, $class FROM perso WHERE id_perso > '10' ORDER BY $class DESC LIMIT 10";
 		$res = $mysqli->query($sql);
 		
-		echo "<table align=center width='500' border=1> <tr><th><font color=darkred>position</font></th><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>$class</font></th></tr>";
+		echo "<div class='table-responsive'>";
+		echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+		echo "		<thead>";
+		echo "			<tr>";
+		echo "				<th><font color=darkred>position</font></th><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>$class</font></th>";
+		echo"			</tr>";
+		echo "		</thead>";
+		echo "		<tbody>";
+		
 		$c = 0;
 		
 		if($class == "nb_kill") {
@@ -127,28 +124,17 @@ if(isset($_GET["top"])){
 		if($class == "or_perso") {
 			echo "<center><h3><font color=darkred>Les Riches</font></h3></center>";
 		}
-		if($class == "pvMax_perso") {
-			echo "<center><h3><font color=darkred>Les Bons vivants</font></h3></center>";
-		}
-		if($class == "pmMax_perso") {
-			echo "<center><h3><font color=darkred>Les Vagabonds</font></h3></center>";
-		}
-		if($class == "paMax_perso") {
-			echo "<center><h3><font color=darkred>Les Hyperactifs</font></h3></center>";
-		}
-		if($class == "perception_perso") {
-			echo "<center><h3><font color=darkred>Les Jumelles ambulantes</font></h3></center>";
-		}
-		if($class == "recup_perso") {
-			echo "<center><h3><font color=darkred>Les Meilleures recup</font></h3></center>";
-		}
 			
 		while($t = $res->fetch_assoc()){
 			$c++;
-			echo "<tr><td width=10><center>$c</center></td><td align=center>" .$t['nom_perso']. "[<a href=\"evenement.php?infoid=".$t['id_perso']."\">" .$t['id_perso']. "</a>]</td><td align=center width=150>".$t["$class"]."</td></tr>";
+			echo "			<tr>";
+			echo "				<td width=10><center>$c</center></td><td align=center>" .$t['nom_perso']. "[<a href=\"evenement.php?infoid=".$t['id_perso']."\">" .$t['id_perso']. "</a>]</td><td align=center width=150>".$t["$class"]."</td>";
+			echo "			</tr>";
 		}
 		
-		echo "</table>";
+		echo "		</tbody>";
+		echo "	</table>";
+		echo "</div>";
 	}
 	else {
 		echo "<br /><center><b>Paramètre incorrect</b></center>";
@@ -166,7 +152,15 @@ if(isset($_GET["titre"])){
 	$sql = "SELECT id_pnj FROM perso_as_killpnj GROUP BY id_pnj";
 	$res = $mysqli->query($sql);
 	
-	echo "<table align=center width='500' border=1> <tr><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>Titre</font></th></tr>";
+	echo "<div class='table-responsive'>";
+	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+	echo "		<thead>";
+	echo "			<tr>";
+	echo "				<th><font color=darkred>Nom[id]</font></th>";
+	echo "				<th><font color=darkred>Titre</font></th>";
+	echo "			</tr>";
+	echo "		</thead>";
+	echo "		<tbody>";
 	
 	while ($t_pnj = $res->fetch_assoc()){
 		$id_pnj = $t_pnj["id_pnj"];
@@ -177,12 +171,10 @@ if(isset($_GET["titre"])){
 		$res_p = $mysqli->query($sql_p);
 
 		while($t = $res_p->fetch_assoc()){
-			$id_perso_t =$t["id_perso"];
-			$id_pnj_t = $t["id_pnj"];
-			$nb_pnj_t =$t["nb_pnj"];
 			
-			//echo "id_perso : ".$id_perso_t." ";
-			//echo "nb_pnj : ".$nb_pnj_t."<br/>";
+			$id_perso_t = $t["id_perso"];
+			$id_pnj_t 	= $t["id_pnj"];
+			$nb_pnj_t 	= $t["nb_pnj"];
 			
 			// recuperation du nom du perso
 			$sql_n = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_t'";
@@ -217,11 +209,16 @@ if(isset($_GET["titre"])){
 				}
 			}
 			
-			echo "<tr><td align=center>" .$nom_perso. "[<a href=\"evenement.php?infoid=".$id_perso_t."\">" .$id_perso_t. "</a>]</td><td align=center width=75%><b>".$titre."</></td></tr>";
+			echo "			<tr>";
+			echo "				<td align=center>" .$nom_perso. "[<a href=\"evenement.php?infoid=".$id_perso_t."\">" .$id_perso_t. "</a>]</td>";
+			echo "				<td align=center width=75%><b>".$titre."</></td>";
+			echo "			</tr>";
 		}
 	}
 	
-	echo "</table>";
+	echo "		</tbody>";
+	echo "	</table>";
+	echo "</div>";
 	
 }
 if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
@@ -265,10 +262,18 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$t = $res_pvictr->fetch_assoc();
 	$nbvictr = $t['points_victoire'];
 
-	echo "<table align=center width='500' border=1>";
-	echo "	<tr>";
-	echo "		<th><font color=darkred>Camp[id]</font></th><th><font color=darkred>Nombre de captures ennemis</font></th><th><font color=darkred>Nombre de captures alliés</font></th><th><font color=darkred>Nombre de persos</font></th><th><font color=darkred>Points de victoires</font></th>";
-	echo "	</tr>";
+	echo "<div class='table-responsive'>";
+	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+	echo "		<thead>";
+	echo "			<tr>";
+	echo "				<th><font color=darkred>Camp[id]</font></th>";
+	echo "				<th><font color=darkred>Nombre de captures ennemis</font></th>";
+	echo "				<th><font color=darkred>Nombre de captures alliés</font></th>";
+	echo "				<th><font color=darkred>Nombre de persos</font></th>";
+	echo "				<th><font color=darkred>Points de victoires</font></th>";
+	echo "			</tr>";
+	echo "		</thead>";
+	echo "		<tbody>";
 
 	while ($tc_kill = $res->fetch_assoc()){
 		$id_camp = $tc_kill["id_camp"];
@@ -295,11 +300,18 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$couleur_camp = "green";
 		}
 		
-		echo "<tr>";
-		echo "	<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font> [".$id_camp."]</td><td align=center>$nb_kill</td><td align=center>$meutre</td><td align=center>$nb</td><td align='center'>".$pvict."</td>";
-		echo "</tr>";
+		echo "			<tr>";
+		echo "				<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font> [".$id_camp."]</td>";
+		echo "				<td align=center>$nb_kill</td>";
+		echo "				<td align=center>$meutre</td>";
+		echo "				<td align=center>$nb</td>";
+		echo "				<td align='center'>".$pvict."</td>";
+		echo "			</tr>";
 	}
-	echo "</table>";
+	
+	echo "		</tbody>";
+	echo "	</table>";
+	echo "</div>";
 }
 
 if(isset($_GET['super']) && $_GET['super'] == 'ok'){
@@ -379,11 +391,21 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	
 	$nom_grade_r = $t['nom_grade'];
 	
-	echo "<table align='center' border='1'>";
-	echo "<tr><th>Nom</th><th>grade max</th><th>Xp</th><th>Pv</th><th>Pm</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Nombre de kills</th><th>Nombre de pnj tués</th></tr>";
-	echo "<tr><td align='center'><font color='blue'>Super Unioniste</font></td><td align='center'>$nom_grade_b <img src=\"../images/grades/" . $id_grade_max_b . ".gif\" /></td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
-	echo "<tr><td align='center'><font color='red'>Super Confédéré</font></td><td align='center'>$nom_grade_r <img src=\"../images/grades/" . $id_grade_max_r . ".gif\" /></td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
-	echo "</table>";
+	echo "<div class='table-responsive'>";
+	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+	echo "		<thead>";
+	echo "			<tr>";
+	echo "				<th>Nom</th>";
+	echo "				<th>grade max</th>";
+	echo "				<th>XP</th><th>PV</th><th>PM</th><th>Perception</th><th>Recup</th><th>Pa</th><th>Nombre de kills</th><th>Nombre de pnj tués</th>";
+	echo "			</tr>";
+	echo "		</thead>";
+	echo "		<tbody>";
+	echo "			<tr><td align='center'><font color='blue'>Super Unioniste</font></td><td align='center'>$nom_grade_b <img src=\"../images/grades/" . $id_grade_max_b . ".gif\" /></td><td align='center'>$xp_max_b</td><td align='center'>$pv_max_b</td><td align='center'>$pm_max_b</td><td align='center'>$perception_max_b</td><td align='center'>$recup_max_b</td><td align='center'>$pa_max_b</td><td align='center'>$kill_max_b</td><td align='center'>$pnj_max_b</td></tr>";
+	echo "			<tr><td align='center'><font color='red'>Super Confédéré</font></td><td align='center'>$nom_grade_r <img src=\"../images/grades/" . $id_grade_max_r . ".gif\" /></td><td align='center'>$xp_max_r</td><td align='center'>$pv_max_r</td><td align='center'>$pm_max_r</td><td align='center'>$perception_max_r</td><td align='center'>$recup_max_r</td><td align='center'>$pa_max_r</td><td align='center'>$kill_max_r</td><td align='center'>$pnj_max_r</td></tr>";
+	echo "		</tbody>";
+	echo "	</table>";
+	echo "</div>";
 }
 
 if(isset($_GET['training']) && $_GET['training'] == 'ok'){
@@ -401,12 +423,23 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 			AND perso.id_perso>'10'
 			ORDER BY niveau_entrainement DESC LIMIT 10";
 	$res = $mysqli->query($sql);
-	echo "<table align='center' border='1'>";
-	echo "<tr><th>Nom</th><th>niveau entrainement</th><th>Gains surprise</th></tr>";
+	
+	echo "<div class='table-responsive'>";
+	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+	echo "		<thead>";
+	echo "			<tr>";
+	echo "				<th>Nom</th>";
+	echo "				<th>niveau entrainement</th>";
+	echo "				<th>Gains surprise</th>";
+	echo "			</tr>";
+	echo "		</thead>";
+	echo "		<tbody>";
+	
 	while ($t = $res->fetch_assoc()){
-		$nom = $t['nom_perso'];
-		$niveau_e = $t['niveau_entrainement'];
-		$camp = $t['clan'];
+		
+		$nom 		= $t['nom_perso'];
+		$niveau_e 	= $t['niveau_entrainement'];
+		$camp 		= $t['clan'];
 		
 		if($camp == '1'){
 			$color = 'blue';
@@ -418,14 +451,19 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 			$color = 'purple';
 		}
 	
-		echo "<tr><td align='center'><font color=$color>$nom</font></td><td align='center'>$niveau_e</td><td align='center'>&nbsp;</td></tr>";
+		echo "		<tr><td align='center'><font color=$color>$nom</font></td><td align='center'>$niveau_e</td><td align='center'>&nbsp;</td></tr>";
 	}
-	echo "</table>";
+	
+	echo "		</tbody>";
+	echo "	</table>";
+	echo "</div>";
 }
 
 
 if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !isset($_GET["super"]) && !isset($_GET["training"])) {
+	
 	echo "<div align=\"center\"><h2><font color=darkred>Classement</font></h2></div>";
+	
 	echo "<center><a href=\"classement.php?top=ok\">Voir les tops 10</a></center>";
 	echo "<center><a href=\"classement.php?titre=ok\">Voir les Titres attribués aux persos</a></center>";
 	echo "<center><a href=\"classement.php?training=ok\">Voir les pros de l'entrainement</a></center>";
@@ -439,28 +477,55 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 			AND perso.id_perso > '10'
 			ORDER BY xp_perso DESC";
 	$res = $mysqli->query($sql);
-	echo "<table align=center width='500' border=1> <tr><th><font color=darkred>position</font></th><th><font color=darkred>Nom[id]</font></th><th><font color=darkred>xp</font></th><th><font color=darkred>niveau</font></th></tr>";
+	
+	
+	echo "<div class='table-responsive'>";
+	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+	echo "		<thead>";
+	echo "			<tr>";
+	echo "				<th><font color=darkred>Position</font></th>";
+	echo "				<th><font color=darkred>Nom [matricule]</font></th>";
+	echo "				<th><font color=darkred>XP</font></th>";
+	echo "				<th><font color=darkred>Grade</font></th>";
+	echo "			</tr>";
+	echo "		</thead>";
+	
+	echo "		<tbody>";
+	
 	$cc = 0;
+	
 	while ($t2 = $res->fetch_assoc()){
+		
 		$id_camp = $t2["clan"];
+		
 		if($id_camp == "1"){
 			$couleur_camp = "blue";
 		}
 		if($id_camp == "2"){
 			$couleur_camp = "red";
 		}
-		if($id_camp == "3"){
-			$couleur_camp = "green";
-		}
+		
 		$cc++;
-		echo "<tr><td width=10>$cc</td>";
-		echo "<td align=center><font color=$couleur_camp>".$t2['nom_perso']."</font>[<a href=\"evenement.php?infoid=".$t2['id_perso']."\">" .$t2['id_perso']. "</a>]</td>";
-		echo "<td align=center>".$t2['xp_perso']."</td>";
-		echo "<td align=center>".$t2['nom_grade']."</td></tr>";
+		
+		echo "			<tr>";
+		echo "				<td>$cc</td>";
+		echo "				<td align=center><font color=$couleur_camp>".$t2['nom_perso']."</font>[<a href=\"evenement.php?infoid=".$t2['id_perso']."\">" .$t2['id_perso']. "</a>]</td>";
+		echo "				<td align=center>".$t2['xp_perso']."</td>";
+		echo "				<td align=center>".$t2['nom_grade']."</td>";
+		echo "			</tr>";
 	}
 	
-	echo "</table>";
+	echo "		</tbody>";
+	echo "	</table>";
+	echo "</div>";
 }
 ?>
+		</div>
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script src="https://drvic10k.github.io/bootstrap-sortable/Scripts/bootstrap-sortable.js"></script>
+		
 	</body>
 </html>
