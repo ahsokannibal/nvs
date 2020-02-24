@@ -313,6 +313,22 @@ function port_armures_lourdes($mysqli, $id_perso){
 }
 
 /**
+ * Fonction permettant de calculer le resultat d'un lancé de dès
+ */
+function calcul_des_attaque($nbDes, $valeurDes) {
+	
+	$total = 0;
+	
+	for ($i = 0; $i < $nbDes; $i++) {
+		$resultat_des = mt_rand(1, $valeurDes);
+		
+		$total += $resultat_des;
+	}
+	
+	return $total;
+}
+
+/**
   * Fonction qui verifie si le joueur a coche l'envoi de mail lors d'une attaque
   * @param $id_joueur	: L'identifiant du joueur
   * @return bool		: Si le joueur e coche ou non l'envoi de mail

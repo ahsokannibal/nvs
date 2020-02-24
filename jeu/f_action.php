@@ -3443,7 +3443,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -3911,7 +3911,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -4379,7 +4379,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -4856,7 +4856,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -5323,7 +5323,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -5790,7 +5790,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -6257,7 +6257,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if ($touche <= 2) {
 								// Coup critique ! Dégats et Gains PC X 2
@@ -6724,7 +6724,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 							
 							// calcul des dégats
 							$bonus_degats_charge = 30 - $nb_attaque*10;
-							$degats = mt_rand($degats_arme, $degats_arme * $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+							$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 							
 							if($degats < 0) {
 								$degats = 0;
