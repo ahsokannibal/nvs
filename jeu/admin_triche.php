@@ -130,7 +130,7 @@ if(isset($_SESSION["id_perso"])){
 							
 							$sql = "SELECT j1.id_joueur as id_joueur1, j2.id_joueur as id_joueur2, j1.email_joueur as email_joueur1, j2.email_joueur as email_joueur2, distance_inference_basique(j1.email_joueur, j2.email_joueur) as ib FROM joueur j1, joueur j2
 									WHERE j1.id_joueur != j2.id_joueur
-									AND distance_inference_basique(j1.email_joueur, j2.email_joueur) > 10
+									AND distance_inference_basique(j1.email_joueur, j2.email_joueur) > 15
 									AND j1.id_joueur > 4 AND j2.id_joueur > 4
 									ORDER BY j1.id_joueur";
 							$res = $mysqli->query($sql);
