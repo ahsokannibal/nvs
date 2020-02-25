@@ -32,10 +32,25 @@ if(isSet ($_POST['pseudo']) && isSet ($_POST['password']))
 			
 			$_SESSION["id_perso"] = $t_user["id_perso"];
 			
+			$date = time();
+			
 			// recuperation de l'ip du joueur
 			$ip_joueur = realip();
-			$sql = "INSERT INTO joueur_as_ip VALUES ('$id_joueur','$ip_joueur')";
-			$mysqli->query($sql);
+			
+			// Est ce que ce joueur est déjà présent avec cette IP
+			$sql = "SELECT * FROM joueur_as_ip WHERE ip_joueur = '$ip_joueur' AND id_joueur='$id_joueur'";
+			$res = $mysqli->query($sql);
+			$nb_ip = $res->num_rows;
+			
+			if ($nb_ip > 0) {
+				// Maj date dernier releve sur enregistrement existant
+				$sql = "UPDATE joueur_as_ip SET date_dernier_releve = FROM_UNIXTIME($date) WHERE id_joueur = '$id_joueur' AND ip_joueur = '$ip_joueur'";
+				$mysqli->query($sql);
+			} else {
+				// nouvel enregistrement
+				$sql = "INSERT INTO joueur_as_ip VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),FROM_UNIXTIME($date))";
+				$mysqli->query($sql);
+			}
 			
 			header("location:jeu/jouer.php");
 		}

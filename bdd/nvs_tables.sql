@@ -520,7 +520,9 @@ CREATE TABLE `joueur` (
 
 CREATE TABLE `joueur_as_ip` (
   `id_joueur` int(11) NOT NULL DEFAULT '0',
-  `ip_joueur` varchar(100) NOT NULL DEFAULT '000.000.000.000'
+  `ip_joueur` varchar(100) NOT NULL DEFAULT '000.000.000.000',
+  `date_premier_releve` datetime NOT NULL,
+  `date_dernier_releve` datetime NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
