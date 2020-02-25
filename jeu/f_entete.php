@@ -76,7 +76,7 @@ function entete($mysqli, $id) {
 			echo "</tr>";
 			
 			if(isset($groupe) && $groupe != ''){
-				echo "<tr><td><b>Compagnie :</b> <a href=\"compagnie.php?id_compagnie=$id_groupe&voir_groupe=ok\">". stripslashes($groupe) ."</a></td></tr>";
+				echo "<tr><td><b>Compagnie :</b> <a href=\"compagnie.php?id_compagnie=$id_groupe&voir_compagnie=ok\">". stripslashes($groupe) ."</a></td></tr>";
 			}
 			echo "</table></center>";
 	
