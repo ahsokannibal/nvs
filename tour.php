@@ -126,7 +126,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$new_dla = $date + DUREE_TOUR;
 						
 						// Récupération de tous les perso du joueur
-						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
 						$res = $mysqli->query($sql);
 						
 						while ($t_persos = $res->fetch_assoc()) {
@@ -142,6 +142,7 @@ if(isset($_SESSION["ID_joueur"])){
 							$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
 							$type_perso_nouveau_tour	= $t_persos["type_perso"];
 							$pm_perso_nouvea_tour		= $t_persos["pm_perso"];
+							$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
 							
 							$new_bonus_perso = 0;
 							
@@ -161,10 +162,12 @@ if(isset($_SESSION["ID_joueur"])){
 							}
 							
 							if ($pm_perso_nouveau_tour < 0) {
-									$malus_pm = $pm_perso_nouveau_tour;
-								} else {
-									$malus_pm = 0;
-								}
+								$malus_pm = $pm_perso_nouveau_tour;
+							} else {
+								$malus_pm = 0;
+							}
+							
+							$malus_pm += $bonusPM_nouveau_tour;
 							
 							if ($pv_perso_nouveau_tour <= 0) {
 								// MAJ perso avec malus rapat
@@ -198,7 +201,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$new_dla = $date + DUREE_TOUR;
 						
 						// Récupération de tous les perso du joueur
-						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
 						$res = $mysqli->query($sql);
 						
 						while ($t_persos = $res->fetch_assoc()) {
@@ -214,6 +217,7 @@ if(isset($_SESSION["ID_joueur"])){
 							$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
 							$type_perso_nouveau_tour	= $t_persos["type_perso"];
 							$pm_perso_nouveau_tour		= $t_persos["pm_perso"];
+							$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
 							
 							$new_bonus_perso = 0;
 							
@@ -244,6 +248,8 @@ if(isset($_SESSION["ID_joueur"])){
 								} else {
 									$malus_pm = 0;
 								}
+								
+								$malus_pm += $bonusPM_nouveau_tour;
 								
 								if ($chef_perso_nouveau_tour == '1') {
 									
@@ -372,7 +378,7 @@ if(isset($_SESSION["ID_joueur"])){
 					$new_dla = $date + DUREE_TOUR;					
 					
 					// Récupération de tous les perso du joueur
-					$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+					$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
 					$res = $mysqli->query($sql);
 					
 					while ($t_persos = $res->fetch_assoc()) {
@@ -388,6 +394,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
 						$type_perso_nouveau_tour	= $t_persos["type_perso"];
 						$pm_perso_nouveau_tour		= $t_persos["pm_perso"];
+						$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
 						
 						$new_bonus_perso = 0;
 						
@@ -414,10 +421,12 @@ if(isset($_SESSION["ID_joueur"])){
 							$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
 							
 							if ($pm_perso_nouveau_tour < 0) {
-									$malus_pm = $pm_perso_nouveau_tour;
-								} else {
-									$malus_pm = 0;
-								}
+								$malus_pm = $pm_perso_nouveau_tour;
+							} else {
+								$malus_pm = 0;
+							}
+							
+							$malus_pm += $bonusPM_nouveau_tour ;
 							
 							if ($chef_perso_nouveau_tour == '1') {
 								
