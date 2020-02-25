@@ -175,7 +175,10 @@ function get_cibles_pnj($mysqli, $x_perso, $y_perso, $perc, $portee) {
 	return $res = $mysqli->query($sql);
 }
 
-function get_persos_visu($mysqli, $x_perso, $y_perso, $perc,$id) //donne les persos dans sa visu
+/**
+ * Fonction qui donne les persos dans sa visu
+ */
+function get_persos_visu($mysqli, $x_perso, $y_perso, $perc, $id)
 {
 	$sql = "SELECT DISTINCT perso.nom_perso,idPerso_carte 
 			FROM carte,perso 
@@ -183,9 +186,27 @@ function get_persos_visu($mysqli, $x_perso, $y_perso, $perc,$id) //donne les per
 			AND x_carte >= $x_perso - $perc 
 			AND x_carte <= $x_perso + $perc 
 			AND y_carte >= $y_perso - $perc 
-			AND y_carte<=$y_perso + $perc 
+			AND y_carte <= $y_perso + $perc 
 			AND carte.idPerso_carte=perso.id_perso 
 			AND carte.idPerso_carte!='$id'";
+	return $res = $mysqli->query($sql);
+}
+
+/**
+ * Fonction qui donne les persos de son camp dans sa visu
+ */
+function get_persos_visu_camp($mysqli, $x_perso, $y_perso, $perc, $id, $camp)
+{
+	$sql = "SELECT DISTINCT perso.nom_perso,idPerso_carte 
+			FROM carte,perso 
+			WHERE occupee_carte='1' 
+			AND x_carte >= $x_perso - $perc 
+			AND x_carte <= $x_perso + $perc 
+			AND y_carte >= $y_perso - $perc 
+			AND y_carte <= $y_perso + $perc 
+			AND carte.idPerso_carte=perso.id_perso 
+			AND carte.idPerso_carte!='$id'
+			AND perso.clan = $camp";
 	return $res = $mysqli->query($sql);
 }
 

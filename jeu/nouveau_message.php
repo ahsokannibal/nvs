@@ -190,12 +190,33 @@ if(isset($_GET["visu"]) && $_GET["visu"] == "ok"){
 	$y = $t["y_perso"];
 	$perc = $t["perception_perso"];
 	
-	$res_visu = get_persos_visu($mysqli, $x, $y, $perc, $id_perso);
-	$tv =  $res_visu->fetch_assoc();
-	$visu = $tv["nom_perso"];
+	// recuperation des fonds
+	$sql = "SELECT fond_carte, image_carte, image_carte FROM carte WHERE x_carte='$x' AND y_carte='$y'";
+	$res_map = $mysqli->query ($sql);
+	$t_carte = $res_map->fetch_assoc();
+	
+	$fond = $t_carte["fond_carte"];
+	
+	$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+	
+	$perc_finale = $perc + $bonus_visu;
+	
+	if (isset($_GET["camp"]) && trim($_GET["camp"]) != '' && ($_GET["camp"] == "1" || $_GET["camp"] == "2")) {
+		
+		$camp = $_GET["camp"];
+		
+		$res_visu = get_persos_visu_camp($mysqli, $x, $y, $perc_finale, $id_perso, $camp);
+		$tv =  $res_visu->fetch_assoc();
+		$visu = $tv["nom_perso"];
+	}
+	else {
+		$res_visu = get_persos_visu($mysqli, $x, $y, $perc_finale, $id_perso);
+		$tv =  $res_visu->fetch_assoc();
+		$visu = $tv["nom_perso"];
+	}
 	
 	while ($tv = $res_visu->fetch_assoc()){
-			$visu .=";".$tv["nom_perso"];
+		$visu .=";".$tv["nom_perso"];
 	}
 }
 
