@@ -48,12 +48,12 @@ if(isset($_SESSION["id_perso"])){
 			<div class="row">
 				<div class="col-12">
 				
-					<h3>Joueurs ayant le même mot de passe</h3>
+					<div align='center'><h3>Joueurs ayant le même mot de passe</h3></div>
 					
 					<div id="table_mdp" class="table-responsive">
-						<table border="1">
+						<table border="1" width='100%'>
 							<tr>
-								<th>mdp</th><th>Liste des joueurs</th>
+								<th style='text-align:center'>mdp (hash)</th><th style='text-align:center'>Liste des joueurs</th>
 							</tr>
 							<?php
 							$mdp_tmp = "";
@@ -77,7 +77,7 @@ if(isset($_SESSION["id_perso"])){
 									}
 									
 									echo "<tr>";
-									echo "	<td>".$mdp_joueur."</td><td>";
+									echo "	<td align='center'>".$mdp_joueur."</td><td>";
 									
 									$mdp_tmp = $mdp_joueur;
 								}
@@ -114,29 +114,84 @@ if(isset($_SESSION["id_perso"])){
 				</div>
 			</div>
 			
+			<br />
+			
 			<div class="row">
 				<div class="col-12">
 				
-					<h3>Joueurs ayant la même IP</h3>
+					<div align='center'><h3>Joueurs ayant un mail se ressemblant</h3></div>
+					
+					<div id="table_mdp" class="table-responsive">
+						<table border="1" width='100%'>
+							<tr>
+								<th style='text-align:center'>Mail joueur 1</th><th style='text-align:center'>Mail joueur 2</th><th style='text-align:center'>Inférence Basique</th>
+							</tr>
+							<?php
+							
+							$sql = "SELECT j1.id_joueur as id_joueur1, j2.id_joueur as id_joueur2, j1.email_joueur as email_joueur1, j2.email_joueur as email_joueur2, distance_inference_basique(j1.email_joueur, j2.email_joueur) as ib FROM joueur j1, joueur j2
+									WHERE j1.id_joueur != j2.id_joueur
+									AND distance_inference_basique(j1.email_joueur, j2.email_joueur) > 10
+									AND j1.id_joueur > 4 AND j2.id_joueur > 4
+									ORDER BY j1.id_joueur";
+							$res = $mysqli->query($sql);
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_joueur1 	= $t["id_joueur1"];
+								$id_joueur2 	= $t["id_joueur2"];
+								$email_joueur1 	= $t["email_joueur1"];
+								$email_joueur2 	= $t["email_joueur2"];
+								$inference_bas	= $t["ib"];
+								
+								if ($id_joueur2 > $id_joueur1) {
+									echo "<tr>";
+									
+									echo "<td> Joueur id : ".$id_joueur1." - email : ".$email_joueur1."</td>";
+									echo "<td> Joueur id : ".$id_joueur2." - email : ".$email_joueur2."</td>";
+									echo "<td>".$inference_bas."</td>";
+									
+									echo "</tr>";
+								}
+							}				
+									 
+							?>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+				
+					<div align='center'><h3>Joueurs ayant la même IP le même jour</h3></div>
 					
 					<div id="table_ip" class="table-responsive">
-						<table border="1">
+						<table border="1" width='100%'>
 							<tr>
-								<th>IP</th><th>Liste des joueurs</th>
+								<th style='text-align:center'>IP</th><th style='text-align:center'>Liste des joueurs se connectant le même jour sur la même IP</th>
 							</tr>
 							<?php
 							$ip_tmp = "";
 							
-							$sql = "SELECT DISTINCT j1.ip_joueur, j1.id_joueur
+							$sql = "SELECT DISTINCT j1.ip_joueur, j1.id_joueur, j1.date_premier_releve, j1.date_dernier_releve
 									FROM joueur_as_ip j1
 									JOIN joueur_as_ip j2 ON j1.ip_joueur = j2.ip_joueur AND j1.id_joueur <> j2.id_joueur
-									AND j1.id_joueur > 4
+									AND j1.id_joueur > 4 AND j2.id_joueur > 4
+									AND (DATEDIFF(j1.date_premier_releve, j2.date_premier_releve) = 0 
+											OR DATEDIFF(j1.date_dernier_releve, j2.date_dernier_releve) = 0
+											OR DATEDIFF(j1.date_premier_releve, j2.date_dernier_releve) = 0
+											OR DATEDIFF(j1.date_dernier_releve, j2.date_premier_releve) = 0)
 									ORDER BY j1.ip_joueur, j1.id_joueur";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
 								
 								$id_joueur 	= $t["id_joueur"];
 								$ip_joueur	= $t["ip_joueur"];
+								$date_pr 	= $t["date_premier_releve"];
+								$date_dr 	= $t["date_dernier_releve"];
 								
 								if ($ip_tmp != $ip_joueur) {
 									
@@ -145,7 +200,7 @@ if(isset($_SESSION["id_perso"])){
 									}
 									
 									echo "<tr>";
-									echo "	<td>".$ip_joueur."</td><td>";
+									echo "	<td align='center'>".$ip_joueur."</td><td>";
 									
 									$ip_tmp = $ip_joueur;
 								}
@@ -169,7 +224,9 @@ if(isset($_SESSION["id_perso"])){
 									$color_p = "black";
 								}
 									
-								echo "<font color='$color_p'>".$nom_p." [".$id_p."]</font> - ";
+								echo "<font color='$color_p'>".$nom_p." [".$id_p."]</font>";
+								echo " - Date premier relevé : ".$date_pr." - Date dernier relevé : ".$date_dr; 
+								echo "<br />";
 							}				
 									 
 							?>
