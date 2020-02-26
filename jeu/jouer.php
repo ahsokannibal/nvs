@@ -1742,76 +1742,60 @@ if($dispo || $admin){
 																	// Si allié, mon allié possède t-il encore 1PA ?
 																	if ($pa_perso_b >= 1) {
 																		
-																		$chance_bouculade = mt_rand(0,100);
+																		// OK => On bouscule !
 																		
-																		if ($chance_bouculade <= 66) {
+																		//-------------------------------------
+																		// On déplace en premier le bousculé 
+																		$sql = "UPDATE perso SET pa_perso = $pa_perso_b-1, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
+																		$mysqli->query($sql);
 																		
-																			// OK => On bouscule !
-																			
-																			//-------------------------------------
-																			// On déplace en premier le bousculé 
-																			$sql = "UPDATE perso SET pa_perso = $pa_perso_b-1, bonusPerception_perso=$bonus_visuB WHERE id_perso='$id_perso_b'"; 
-																			$mysqli->query($sql);
-																			
-																			//mise à jour des coordonnées du perso 
-																			$dep = "UPDATE perso SET x_perso=$x_persoB, y_perso=$y_persoB WHERE id_perso ='$id_perso_b'"; 
-																			$mysqli->query($dep);
-																			
-																			// maj carte
-																			$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
-																			$mysqli->query($sql);
-																			
-																			$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso_b', idPerso_carte='$id_perso_b' WHERE x_carte='$x_persoB' AND y_carte='$y_persoB'"; 
-																			$mysqli->query($sql);
+																		//mise à jour des coordonnées du perso 
+																		$dep = "UPDATE perso SET x_perso=$x_persoB, y_perso=$y_persoB WHERE id_perso ='$id_perso_b'"; 
+																		$mysqli->query($dep);
 																		
-																			//-----------------------
-																			// On se déplace ensuite
-																			$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pm, pa_perso = $pa_perso-3, bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'"; 
+																		// maj carte
+																		$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+																		$mysqli->query($sql);
+																		
+																		$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso_b', idPerso_carte='$id_perso_b' WHERE x_carte='$x_persoB' AND y_carte='$y_persoB'"; 
+																		$mysqli->query($sql);
+																	
+																		//-----------------------
+																		// On se déplace ensuite
+																		$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pm, pa_perso = $pa_perso-3, bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'"; 
+																		$mysqli->query($sql);
+																		
+																		//mise à jour des coordonnées du perso 
+																		$dep = "UPDATE perso SET x_perso=$x_persoN, y_perso=$y_persoN WHERE id_perso ='$id_perso'"; 
+																		$mysqli->query($dep);
+																		
+																		// maj carte
+																		$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
+																		$mysqli->query($sql);
+																		
+																		$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'"; 
+																		$mysqli->query($sql);
+																		
+																		// maj carte brouillard de guerre
+																		$perception_final = $perception_perso + $bonus_visu;
+																		if ($clan_p == 1) {
+																			$sql = "UPDATE $carte SET vue_nord='1' 
+																					WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																					AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																			$mysqli->query($sql);
-																			
-																			//mise à jour des coordonnées du perso 
-																			$dep = "UPDATE perso SET x_perso=$x_persoN, y_perso=$y_persoN WHERE id_perso ='$id_perso'"; 
-																			$mysqli->query($dep);
-																			
-																			// maj carte
-																			$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
-																			$mysqli->query($sql);
-																			
-																			$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'"; 
-																			$mysqli->query($sql);
-																			
-																			// maj carte brouillard de guerre
-																			$perception_final = $perception_perso + $bonus_visu;
-																			if ($clan_p == 1) {
-																				$sql = "UPDATE $carte SET vue_nord='1' 
-																						WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																						AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																				$mysqli->query($sql);
-																			}
-																			else if ($clan_p == 2) {
-																				$sql = "UPDATE $carte SET vue_sud='1' 
-																						WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																						AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																				$mysqli->query($sql);
-																			}
-																			
-																			// maj evenement
-																			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','a bousculé ',$id_perso_b,'<font color=$couleur_clan_p_b><b>$nom_perso_b</b></font>','en $x_persoB/$y_persoB',NOW(),'0')";
-																			$mysqli->query($sql);
-																			
-																			header("location:jouer.php");
 																		}
-																		else {
-																			// MAJ PA
-																			$sql = "UPDATE perso SET pa_perso = $pa_perso-3 WHERE id_perso='$id_perso'"; 
+																		else if ($clan_p == 2) {
+																			$sql = "UPDATE $carte SET vue_sud='1' 
+																					WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																					AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																			$mysqli->query($sql);
-																			
-																			// maj evenement
-																			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','a raté sa bousculade sur ',$id_perso_b,'<font color=$couleur_clan_p_b><b>$nom_perso_b</b></font>','',NOW(),'0')";
-																			$mysqli->query($sql);
-																			
-																			$erreur .= "Vous avez raté votre bousculade et perdez 3PA";
 																		}
+																		
+																		// maj evenement
+																		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','a bousculé ',$id_perso_b,'<font color=$couleur_clan_p_b><b>$nom_perso_b</b></font>','en $x_persoB/$y_persoB',NOW(),'0')";
+																		$mysqli->query($sql);
+																		
+																		header("location:jouer.php");
 																		
 																	} else {
 																		$erreur .= "Votre allié ne possède plus suffisamment de PA pour être bousculer (demande 1 PA à votre allié) !";
