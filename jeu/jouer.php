@@ -3805,8 +3805,8 @@ if($dispo || $admin){
 									<tr>
 										<td background='../images/background.jpg' align='left' colspan='3'>
 											<?php 
-											echo "<div><a href=\"nouveau_message.php?visu=ok&camp=".$clan_perso."\" target='_blank'><img class='img-fluid' src='../images/Ecrire.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message aux persos de son camp dans sa visu' border=0 /><img class='img-fluid' src='../images/Envoyer_message.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message aux persos de son camp dans sa visu' border=0 /></div>";
-											echo "<div><a href=\"nouveau_message.php?visu=ok\" target='_blank'><img class='img-fluid' src='../images/porte_voix.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message à tous les persos dans sa visu' border=0 width='100' height='80' /><img class='img-fluid' src='../images/Envoyer_message.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message à tous les persos dans sa visu' border=0 /></div>";
+											echo "<div><a href=\"nouveau_message.php?visu=ok&camp=".$clan_perso."\" target='_blank'><img class='img-fluid' src='../images/Ecrire.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message aux persos de son camp dans sa visu' border=0 /><font face='Playball' size='5'><b>Envoyer un MP à sa visu</b></font></a></div>";
+											echo "<div><a href=\"nouveau_message.php?visu=ok\" target='_blank'><img class='img-fluid' src='../images/porte_voix.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message à tous les persos dans sa visu' border=0 width='100' height='80' /><font face='Playball' size='5'><b>Crier très fort</b></font></a></div>";
 											?>
 										</td>
 									</tr>
