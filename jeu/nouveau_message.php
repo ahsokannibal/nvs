@@ -135,6 +135,9 @@ if(isset($_GET["id"])) {
 		
 		if($verif_id){
 	
+			unset($_SESSION['message']);
+			unset($message);
+	
 			$sql_message = "SELECT * FROM message WHERE id_message ='" . $_GET["id"] . "'";
 			$res_message = $mysqli->query($sql_message);
 			$tabMess = $res_message->fetch_assoc();
@@ -367,18 +370,20 @@ $a_lire = $res_a_lire->num_rows;
 							</tr>
 							<tr class="messl">
 								<td><div class="form-group"><label for="textareaMessageImput">Message : </label></td> 
-								<td colspan=3 align="center"><TEXTAREA class="form-control" id="textareaMessageImput" name="message" rows="15" cols="50" >
-								<?php
-									if(isset($_SESSION['message'])){
-										echo $_SESSION['message'];
-									} 
-									if(isset($_GET["id"])) {
-										echo "\n\n****************************\n".stripslashes($tabMess["expediteur_message"])." wrote :\n****************************\n"; 
-										echo stripslashes($tabMess["contenu_message"]);
-									}
-									if(isset($_GET["id_compagnie"])){
-										echo "".stripslashes($contenu);
-									} ?></TEXTAREA></div>
+								<td colspan=3 align="center">
+<TEXTAREA class="form-control" id="textareaMessageImput" name="message" rows="15" cols="50" >
+<?php
+	if(isset($_SESSION['message'])){
+		echo $_SESSION['message'];
+	} 
+	if(isset($_GET["id"])) {
+		echo "\n\n****************************\n".stripslashes($tabMess["expediteur_message"])." wrote :\n****************************\n"; 
+		echo stripslashes($tabMess["contenu_message"]);
+	}
+	if(isset($_GET["id_compagnie"])){
+		echo "".stripslashes($contenu);
+	} ?>
+</TEXTAREA></div>
 								</td>
 							</tr>
 						</table>
