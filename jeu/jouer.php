@@ -2140,7 +2140,8 @@ if($dispo || $admin){
 					$res_groupe2 = $mysqli->query($sql_groupe2);
 					$t_groupe2 = $res_groupe2->fetch_assoc();
 					
-					$nom_compagnie_perso = addslashes($t_groupe2['nom_compagnie']);
+					$nom_compagnie_perso 	= addslashes($t_groupe2['nom_compagnie']);
+					$image_compagnie_perso	= $t_groupe2['image_compagnie'];
 					
 					// Quel est le poste du perso dans la compagnie ?
 					$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND id_perso='$id_perso'";
@@ -3082,6 +3083,15 @@ if($dispo || $admin){
 													data-html='true' 
 													data-placement='bottom' ";
 								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div> ";					
+								
+								if (trim($nom_compagnie_perso) != "") {
+									echo "<div>";
+									if (trim($image_compagnie_perso) != "" && $image_compagnie_perso != "0") {
+										echo "<img src='".$image_compagnie_perso."' width='20' height='20'>";
+									}
+									echo " <a href='compagnie.php' target='_blank'>" . $nom_compagnie_perso . "</a></div>";
+								}
+								
 								if (!in_bat($mysqli,$id_perso)) {
 									
 									if (!in_train($mysqli,$id_perso)) {
@@ -3138,6 +3148,7 @@ if($dispo || $admin){
 								}
 								echo "\" ";					
 								echo "			data-content=\"";
+								
 								if (in_bat($mysqli,$id_perso)) {
 									
 									$id_instance_in_bat = in_bat($mysqli,$id_perso);
@@ -3205,6 +3216,14 @@ if($dispo || $admin){
 													data-placement='bottom' ";
 								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div>";
 								
+								if (trim($nom_compagnie_perso) != "") {
+									echo "<div>";
+									if (trim($image_compagnie_perso) != "" && $image_compagnie_perso != "0") {
+										echo "<img src='".$image_compagnie_perso."' width='20' height='20'>";
+									}
+									echo " <a href='compagnie.php' target='_blank'>" . $nom_compagnie_perso . "</a></div>";
+								}
+								
 								if (!in_bat($mysqli,$id_perso)) {
 									
 									if (!in_train($mysqli,$id_perso)) {
@@ -3265,8 +3284,8 @@ if($dispo || $admin){
 									
 									$id_instance_in_bat = in_bat($mysqli,$id_perso);
 									
-									echo "		<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
-									echo "		<div><a href='action.php?bat=".$id_instance_in_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
+									echo "<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
+									echo "<div><a href='action.php?bat=".$id_instance_in_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 								}
 								else if (prox_bat($mysqli, $x_perso, $y_perso, $id_perso)) {
 									
@@ -3296,27 +3315,27 @@ if($dispo || $admin){
 											// + Le lien est utile que pour les unités autre que chien et soigneur
 											// + si batiment tour de guet, seul les infanterie peuvent capturer
 											if((batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') && (($bat == 2 && $type_perso == 3))){
-												echo "		<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."' > Capturer ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
+												echo "<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."'>Capturer ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
 											}
 										}
 										else {
 											if($bat != 1 && $bat != 5){
 												// Si batiment tour de guet, seul les infanteries, soigneurs et chiens peuvent rentrer
 												if (($bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $bat != 2 ) {
-													echo "		<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."' > Entrer dans ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
+													echo "<div><a href='jouer.php?bat=".$id_bat."&bat2=".$bat."'>Entrer dans ".$nom_bat." ".$nom_ibat." [".$id_bat."]</a></div>";
 												}
 											}
 											
 											// Les chiens ne peuvent pas réparer les batiments
 											if ($pv_instance < $pvMax_instance && $type_perso != '6') {
-												echo "		<div><a href='action.php?bat=".$id_bat."&reparer=ok' > Reparer ".$nom_bat." ".$nom_ibat." [".$id_bat."] (5 PA)</a></div>";
+												echo "<div><a href='action.php?bat=".$id_bat."&reparer=ok'>Reparer ".$nom_bat." ".$nom_ibat." [".$id_bat."] (5 PA)</a></div>";
 											}
 										}
 										
 										// Pont
 										// Les chiens ne peuvent pas saboter les ponts
 										if ($bat == 5 && $type_perso != '6') {
-											echo "		<div><a href='action.php?bat=".$id_bat.".&saboter=ok' > Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
+											echo "<div><a href='action.php?bat=".$id_bat.".&saboter=ok'>Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
 										}
 									}
 								}
@@ -3403,22 +3422,22 @@ if($dispo || $admin){
 												
 												if ($idI_bat == $id_instance_in_bat) {
 												
-													echo "		<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
-													echo "		<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
+													echo "<div><a href='batiment.php?bat=".$id_instance_in_bat."' target='_blank'>Accéder à la page du bâtiment</a></div> ";
+													echo "<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												}
 											}
 											else if(prox_instance_bat($mysqli, $x_perso, $y_perso, $idI_bat)) {
-												echo "		<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
+												echo "<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												
 												if (!nation_perso_bat($mysqli, $id_perso, $idI_bat)) {
 													if((batiment_vide($mysqli, $idI_bat) && $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 11 && $type_perso != '6' && $type_perso != '4') && (($type_bat == 2 && $type_perso == 3))){
-														echo "		<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."' > Capturer ce bâtiment</a></div>";
+														echo "<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."'>Capturer ce bâtiment</a></div>";
 													}
 												}
 												else {
 													if($type_bat != 1 && $type_bat != 5){
 														if (($type_bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $type_bat != 2 ) {
-															echo "		<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."' > Entrer dans ce bâtiment</a></div>";
+															echo "<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."'>Entrer dans ce bâtiment</a></div>";
 														}
 													}
 												}
