@@ -75,6 +75,7 @@
 					<h2>La bousculade</h2>
 La bousculade utilise 30 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculer (2 PM si celui que vous bousculez se trouvait dans une forêt, 4 PM si celui que vous bousculez dans la montagne).<br />
 Le bousculé recevra un malus de déplacement correspondant à la valeur du terrain sur laquel il est bousculé. S'il est à 0 PM, le malus se reportera quand même sur le tour suivant <i>(ceci ne s'applique pas pour les bousculades entre personnages du même camp)</i>.<br />
+<b><u>Attention ! Les chances de réussir une bousculade sur un ennemi sont de 66% !</u></b><br /> 
 <b><u>Attention ! Tout le monde ne peut pas bousculer n'importe qui :</u></b> 
 					<ul>
 						<li>Une infanterie peut bousculer une infanterie, un soigneur et pousser une artillerie.</li>
@@ -101,6 +102,11 @@ Les unités d'infanterie peuvent mettre en place des barricades qui sont des str
 Pour ce faire, elles doivent disposer de tous leurs PA, car la construction d'une barricade coûte 10 PA et ne peut être effectuée que sur une case "plaine".<br />
 Les barricades apparaissent sur la carte avec 25pv/250. Il est possible de les réparer pour 5PA. 
 <br /><br />
+					<h2>Saboter</h2>
+Lorsqu'on se trouve à proximité d'une case de pont, une action "Saboter" apparait (accéssible pour toutes les unités).<br />
+Pour 10PA, cette action, ayant 60% de chance de réussite, sabotera le pont pour entre 50 et 200PV.<br />
+Les unités du génie étant plus efficaces pour saboter un pont, elles feront le double de dégâts ! 
+<br /><br />
 					<h2>La marche forcée</h2>
 Les infanteries, guerriers et guerriers du feu peuvent à chaque tour effectuer une marche forcée, leur permettant au prix d'un certain effort de parcourir une plus grande distance.<br />
 Cette action coûte 4 PA et 10 PV, et vous rajoute 1 PM.<br /><br />
@@ -112,7 +118,7 @@ Chaque type de chose donnée obéit à des règles spécifiques.<br />
 On peut donner une arme ou un objet directement à un personnage de son camp.
 <br /><br />
 					<h2>Capturer un personnage</h2>	
-Il est possible de capturer RP parlant en informant sa cible. Celle-ci doit accepter la capture . les modalités de la capture RP sont définies ici. 					
+Il est possible de capturer RP parlant en informant sa cible. Celle-ci doit accepter la capture. 					
 				</div>
 			</div>
 		
