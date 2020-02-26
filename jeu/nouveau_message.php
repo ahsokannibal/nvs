@@ -301,9 +301,8 @@ $a_lire = $res_a_lire->num_rows;
 			
 					<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
 						<tr align="center" bgcolor="#EEEEDD">
-						
-							<td><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
-							<td><a href="message_envoye.php">Messages envoyés</a></td>
+							<td width="33%"><a href="messagerie.php">Messages reçus</a><font color="red"> <?php if($a_lire) echo" (".$a_lire." new)"; ?></font></td>
+							<td width="33%"><a href="message_envoye.php">Messages envoyés</a></td>
 							<td>Nouveau message</td>
 						</tr>
 						<tr align="center" bgcolor="#EEEEDD">
