@@ -190,7 +190,7 @@ if($dispo || $admin){
 							}
 						}
 					}
-					else { 
+					else {
 						// on souhaite juste avoir des infos sur la compagnie
 						// recuperation des information sur la compagnie
 						$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
@@ -278,7 +278,7 @@ if($dispo || $admin){
 						echo "</table><br>";
 						
 						// verification que le perso n'est pas deja dans une compagnie ou en attente sur une autre
-						$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id'";
+						$sql = "SELECT id_perso, id_compagnie FROM perso_in_compagnie WHERE id_perso='$id'";
 						$res = $mysqli->query($sql);
 						$est_deja = $res->num_rows;
 						
@@ -286,7 +286,7 @@ if($dispo || $admin){
 							echo "";
 						}
 						else {
-							if ($nb_persos_compagnie < $nb_persos_compagnie_max) {
+							if ($nb_persos_compagnie < $nb_persos_compagnie_max && !$est_deja) {
 								echo "<center><a class='btn btn-outline-success' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=ok'> >>Rejoindre</a></center>";
 							}
 						}
