@@ -224,7 +224,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);		
 							
 							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$id_cible','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_i_pnj,'<b>$nom_pnj</b>','a attaqué ','$dernier_a_i','<b>$nom_cible</b>',': $degats degats',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
