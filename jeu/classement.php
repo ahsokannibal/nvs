@@ -103,7 +103,7 @@ if(isset($_GET["top"])){
 	
 	if((isset($verif) && $verif) || !isset($_GET["classement"])){
 	
-		$sql = "SELECT id_perso, nom_perso, $class FROM perso WHERE id_perso > '10' ORDER BY $class DESC LIMIT 10";
+		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso > '10' ORDER BY $class DESC LIMIT 10";
 		$res = $mysqli->query($sql);
 		
 		echo "<div class='table-responsive'>";
@@ -131,9 +131,23 @@ if(isset($_GET["top"])){
 		}
 			
 		while($t = $res->fetch_assoc()){
+			
 			$c++;
+			
+			$id_perso	= $t['id_perso'];
+			$nom_perso	= $t['nom_perso'];
+			$id_camp 	= $t["clan"];
+			
+			if($id_camp == "1"){
+				$couleur_camp = "blue";
+			}
+			if($id_camp == "2"){
+				$couleur_camp = "red";
+			}
+			
 			echo "			<tr>";
-			echo "				<td width=10><center>$c</center></td><td align=center>" .$t['nom_perso']. "[<a href=\"evenement.php?infoid=".$t['id_perso']."\">" .$t['id_perso']. "</a>]</td><td align=center width=150>".$t["$class"]."</td>";
+			echo "				<td width=10><center>$c</center></td>";
+			echo "				<td align=center><font color='".$couleur_camp."'>" .$nom_perso. "</font> [<a href=\"evenement.php?infoid=".$id_perso."\">" .$id_perso. "</a>]</td><td align=center width=150>".$t["$class"]."</td>";
 			echo "			</tr>";
 		}
 		
@@ -187,40 +201,31 @@ if(isset($_GET["titre"])){
 			$nb_pnj_t 	= $t["nb_pnj"];
 			
 			// recuperation du nom du perso
-			$sql_n = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_t'";
+			$sql_n = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_t'";
 			$res_n = $mysqli->query($sql_n);
 			$t_n = $res_n->fetch_assoc();
-			$nom_perso = $t_n["nom_perso"];
+			
+			$nom_perso 	= $t_n["nom_perso"];
+			$camp_perso	= $t_n["clan"];
+			
+			if($camp_perso == "1"){
+				$couleur_camp = "blue";
+			}
+			if($camp_perso == "2"){
+				$couleur_camp = "red";
+			}
 			
 			// recuperation du nom du pnj
 			$sql_n = "SELECT nom_pnj FROM pnj WHERE id_pnj='$id_pnj_t'";
 			$res_n = $mysqli->query($sql_n);
 			$t_n = $res_n->fetch_assoc();
+			
 			$nom_pnj = $t_n["nom_pnj"];
 			
-			if($nom_pnj == "Scaros le Cyclope"){
-				$titre = $nom_perso." le Pourfendeur de Scaros le Cyclope";
-			}
-			
-			if ($nom_pnj == "ogre") {
-				$titre = $nom_perso." le Pourfendeur d'".$nom_pnj."s";
-			}
-			else {
-				if ($nom_pnj == "dragon de terre") {
-					$titre = $nom_perso." le Pourfendeur de dragons de terre";
-				}
-				else {
-					if($nom_pnj == "cochon guerrier"){
-						$titre = $nom_perso." le Pourfendeur de cochons guerriers";
-					}
-					else {
-						$titre = $nom_perso." le Pourfendeur de ".$nom_pnj."s";
-					}
-				}
-			}
+			$titre = "<font color='".$couleur_camp."'>".$nom_perso."</font> le Pourfendeur de ".$nom_pnj."s";
 			
 			echo "			<tr>";
-			echo "				<td align=center>" .$nom_perso. "[<a href=\"evenement.php?infoid=".$id_perso_t."\">" .$id_perso_t. "</a>]</td>";
+			echo "				<td align=center><font color='".$couleur_camp."'>" .$nom_perso. "</font> [<a href=\"evenement.php?infoid=".$id_perso_t."\">" .$id_perso_t. "</a>]</td>";
 			echo "				<td align=center width=75%><b>".$titre."</></td>";
 			echo "			</tr>";
 		}
@@ -471,9 +476,6 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 		}
 		if($camp == '2'){
 			$color = 'red';
-		}
-		if($camp == '3'){
-			$color = 'purple';
 		}
 	
 		echo "		<tr><td align='center'><font color=$color>$nom</font></td><td align='center'>$niveau_e</td><td align='center'>&nbsp;</td></tr>";
