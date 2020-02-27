@@ -325,7 +325,7 @@ if(isset($_SESSION["ID_joueur"])){
 				$mysqli->query($sql);
 				
 				// Récupération du batiment de rappatriement le plus proche du perso
-				$id_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso_degele, $y_perso_degele, $clan);
+				$id_bat = selection_bat_rapat($mysqli, $id_perso_degele, $x_perso_degele, $y_perso_degele, $clan);
 				
 				if ($id_bat != null && $id_bat != 0) {
 				
@@ -453,7 +453,7 @@ if(isset($_SESSION["ID_joueur"])){
 							//    RESPAWN BATIMENT    //
 							
 							// Récupération du batiment de rappatriement le plus proche du perso
-							$id_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
+							$id_bat = selection_bat_rapat($mysqli, $id_perso_nouveau_tour, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
 							
 							if ($id_bat != null && $id_bat != 0) {
 							
