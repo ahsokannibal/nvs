@@ -137,6 +137,11 @@ if(isset($_GET["id"])) {
 	
 			unset($_SESSION['message']);
 			unset($message);
+			unset($_SESSION['objet']);
+			unset($message);
+			unset($_SESSION['destinataires']);
+			unset($destinataires);
+			
 	
 			$sql_message = "SELECT * FROM message WHERE id_message ='" . $_GET["id"] . "'";
 			$res_message = $mysqli->query($sql_message);
