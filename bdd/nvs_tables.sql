@@ -554,6 +554,18 @@ CREATE TABLE `liens_activation` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `log`
+--
+
+CREATE TABLE `log` ( 
+	`id_log` INT NOT NULL AUTO_INCREMENT , 
+	`date_log` DATETIME NOT NULL , 
+	`id_perso` INT NOT NULL , 
+	`message_log` TEXT NOT NULL , 
+	PRIMARY KEY (`id_log`)
+) ENGINE = MyISAM; 
+
+--
 -- Structure de la table `message`
 --
 
