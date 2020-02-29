@@ -538,7 +538,7 @@ if(isset($_SESSION["ID_joueur"])){
 						//    RESPAWN BATIMENT    //
 						
 						// Récupération du batiment de rappatriement le plus proche du perso
-						$id_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan);
+						$id_bat = selection_bat_rapat($mysqli, $id, $x_perso, $y_perso, $clan);
 						
 						if ($id_bat != null && $id_bat != 0) {
 						
@@ -555,7 +555,7 @@ if(isset($_SESSION["ID_joueur"])){
 							$mysqli->query($sql);
 							
 							// calcul bonus perception perso
-							$bonus_visu = getBonusObjet($mysqli, $id_perso);
+							$bonus_visu = getBonusObjet($mysqli, $id);
 							
 							// MAJ perso
 							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pm_perso/2, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
