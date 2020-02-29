@@ -73,7 +73,7 @@
 			<div class="row">
 				<div class="col-12">
 					<h2>La bousculade</h2>
-La bousculade utilise 30 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculer (2 PM si celui que vous bousculez se trouvait dans une forêt, 4 PM si celui que vous bousculez dans la montagne).<br />
+La bousculade utilise 3 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculez (2 PM si celui que vous bousculez se trouvait dans une forêt, 4 PM si dans la montagne, etc..).<br />
 Le bousculé recevra un malus de déplacement correspondant à la valeur du terrain sur laquel il est bousculé. S'il est à 0 PM, le malus se reportera quand même sur le tour suivant <i>(ceci ne s'applique pas pour les bousculades entre personnages du même camp)</i>.<br />
 <b><u>Attention ! Les chances de réussir une bousculade sur un ennemi sont de 66% !</u></b><br /> 
 <b><u>Attention ! Tout le monde ne peut pas bousculer n'importe qui :</u></b> 
