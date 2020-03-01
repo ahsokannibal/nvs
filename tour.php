@@ -25,6 +25,9 @@ if(isset($_SESSION["ID_joueur"])){
 	$pv			= $t_chef["pv_perso"];
 	$image_perso= $t_chef["image_perso"];
 	
+	// Récupération de la couleur associée au clan du perso
+	$couleur_clan_p = couleur_clan($clan);
+	
 	if (isset($_SESSION["id_perso"]) && $_SESSION["id_perso"] != $id) {
 		// on a switch sur un perso mort ou nouveau tour ?
 		
@@ -40,11 +43,12 @@ if(isset($_SESSION["ID_joueur"])){
 		if ($nb_perso == 1) {
 			
 			// recuperation des infos du perso
-			$sql = "SELECT idJoueur_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso FROM perso WHERE id_perso='$id_perso'";
+			$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso FROM perso WHERE id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
 			$t_perso = $res->fetch_assoc();
 			
 			$id_joueur_perso 	= $t_perso["idJoueur_perso"];
+			$nom_perso			= $t_perso["nom_perso"];
 			$x_perso			= $t_perso["x_perso"];
 			$y_perso			= $t_perso["y_perso"];
 			$pv_perso			= $t_perso["pv_perso"];
@@ -79,6 +83,10 @@ if(isset($_SESSION["ID_joueur"])){
 						$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_bat')";
 						$mysqli->query($sql);
 						
+						// mise a jour des evenements
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
+						$mysqli->query($sql);
+						
 					} else {
 						
 						// Respawn aleatoire
@@ -108,6 +116,10 @@ if(isset($_SESSION["ID_joueur"])){
 						}
 						
 						$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x' AND y_carte='$y'";
+						$mysqli->query($sql);
+						
+						// mise a jour des evenements
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
 						$mysqli->query($sql);
 					}
 					
@@ -307,12 +319,13 @@ if(isset($_SESSION["ID_joueur"])){
 		if($est_gele && temp_degele($date, $date_gele)){
 			
 			// Récupération de tous les perso du joueur
-			$sql = "SELECT id_perso, x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
+			$sql = "SELECT id_perso, nom_perso, x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
 			$res = $mysqli->query($sql);
 			
 			while ($t_persos = $res->fetch_assoc()) {
 				
 				$id_perso_degele 	= $t_persos["id_perso"];
+				$nom_perso_degele	= $t_persos["nom_perso"];
 				$x_perso_degele		= $t_persos["x_perso"];
 				$y_perso_degele		= $t_persos["y_perso"];
 				
@@ -342,6 +355,10 @@ if(isset($_SESSION["ID_joueur"])){
 					
 					// MAJ perso
 					$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id_perso_degele'";
+					$mysqli->query($sql);
+					
+					// mise a jour des evenements
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_degele','<font color=$couleur_clan_p><b>$nom_perso_degele</b></font>','est de retour de permission',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
 					$mysqli->query($sql);
 				}
 				else {
@@ -374,12 +391,13 @@ if(isset($_SESSION["ID_joueur"])){
 					$new_dla = $date + DUREE_TOUR;					
 					
 					// Récupération de tous les perso du joueur
-					$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+					$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
 					$res = $mysqli->query($sql);
 					
 					while ($t_persos = $res->fetch_assoc()) {
 				
 						$id_perso_nouveau_tour 		= $t_persos["id_perso"];
+						$nom_perso_nouveau_tour		= $t_persos["nom_perso"];
 						$pv_perso_nouveau_tour 		= $t_persos["pv_perso"];
 						$pv_max_perso_nouveau_tour	= $t_persos["pvMax_perso"];
 						$recup_perso_nouveau_tour 	= $t_persos["recup_perso"] + $t_persos["bonusRecup_perso"];
@@ -463,6 +481,10 @@ if(isset($_SESSION["ID_joueur"])){
 								$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_nouveau_tour','$id_bat')";
 								$mysqli->query($sql);
 								
+								// mise a jour des evenements
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
+								$mysqli->query($sql);
+								
 							} else {
 								
 								// Respawn aleatoire
@@ -491,6 +513,10 @@ if(isset($_SESSION["ID_joueur"])){
 								}
 								
 								$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso_nouveau_tour', idPerso_carte='$id_perso_nouveau_tour' WHERE x_carte='$x' AND y_carte='$y'";
+								$mysqli->query($sql);
+								
+								// mise a jour des evenements
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
 								$mysqli->query($sql);
 							}
 							
@@ -560,6 +586,10 @@ if(isset($_SESSION["ID_joueur"])){
 							// MAJ perso
 							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pm_perso/2, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0 WHERE id_perso='$id'";
 							$mysqli->query($sql);
+							
+							// mise a jour des evenements
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_clan_p><b>$pseudo</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
+							$mysqli->query($sql);
 				
 							//redirection
 							header("location:jeu/jouer.php");
@@ -592,6 +622,10 @@ if(isset($_SESSION["ID_joueur"])){
 							}
 							
 							$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id' WHERE x_carte='$x' AND y_carte='$y'";
+							$mysqli->query($sql);
+							
+							// mise a jour des evenements
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_clan_p><b>$pseudo</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
 							$mysqli->query($sql);
 							
 							header("location:jeu/jouer.php");
