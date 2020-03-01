@@ -3283,6 +3283,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 					$nb_deplacements = $i - 1;
 					$x_perso_final = $x_perso;
 					$y_perso_final = $y_perso + $nb_deplacements;
+					
 					$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 					$mysqli->query($sql);
 					
@@ -3302,6 +3303,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 					$nb_deplacements = $i - 1;
 					$x_perso_final = $x_perso;
 					$y_perso_final = $y_perso + $nb_deplacements;
+					
 					$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 					$mysqli->query($sql);
 					
@@ -3331,6 +3333,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 					$nb_deplacements = $i - 1;
 					$x_perso_final = $x_perso;
 					$y_perso_final = $y_perso + $nb_deplacements;
+					
 					$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 					$mysqli->query($sql);
 					
@@ -3675,6 +3678,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 				// Mise à jour position perso sur carte
 				$x_perso_final = $x_perso;
 				$y_perso_final = $y_perso + 4;
+				
 				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 				$mysqli->query($sql);
 				

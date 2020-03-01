@@ -1804,6 +1804,12 @@ if($dispo || $admin){
 																	// Camps différents
 																	
 																	$chance_bouculade = mt_rand(0,100);
+																	
+																	$date_log = time();
+																	
+																	$sql = "INSERT INTO log (date_log, id_perso, type_action, pourcentage, message_log) 
+																			VALUES (FROM_UNIXTIME($date_log), '$id_perso', 'Bousculade', '$chance_bouculade', '$id_perso a bousculé $id_perso_b')";
+																	$mysqli->query($sql);
 																		
 																	if ($chance_bouculade <= 66) {
 																	
