@@ -2028,11 +2028,12 @@ if($dispo || $admin){
 		  <button class="openbtn" onclick="openNav()">Chat</button>  
 		</div>-->
 				<?php
+				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
 				
 				//affichage de l'heure serveur et de nouveau tour
 				echo "<table width=100% bgcolor='white' border=0>";
 				echo "<tr>
-						<td><img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1>".date('H:i:s ')."</span></b></td>
+						<td><img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1>".$date_serveur->format('H:i:s')."</span></b></td>
 						<td rowspan=2><img src='../images/accueil/banniere.jpg' alt='banniere Nord VS Sud' width=150 height=63 /></td>
 						<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
 					</tr>";

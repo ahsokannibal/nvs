@@ -329,6 +329,63 @@ function calcul_des_attaque($nbDes, $valeurDes) {
 }
 
 /**
+ * Fonction permettant de gérer la loi anti-zerk
+ */
+function gestion_anti_zerk($mysqli, $id_perso) {
+	
+	$verif_anti_zerk = 1;
+						
+	// Verification si enregistrement d'attaque existant
+	$sql = "SELECT * FROM anti_zerk WHERE id_perso='$id_perso'";
+	$res = $mysqli->query($sql);
+	$nb_enr_anti_zerk = $res->num_rows;
+	
+	if ($nb_enr_anti_zerk > 0) {
+		
+		$t_zerk = $res->fetch_assoc();
+		
+		$date_derniere_attaque 		= $t_zerk['date_derniere_attaque'];
+		$date_nouveau_tour			= $t_zerk['date_nouveau_tour'];
+		
+		date_default_timezone_set('Europe/Paris');
+		$date_now = time();
+		
+		$diff_date = $date_now - strtotime($date_nouveau_tour);
+		$diff_date_h = $diff_date / 3600;
+		
+		if ($diff_date >= 0) {
+			// Un nouveau tour a été enclenché depuis la dernière attaque
+			// L'attaque respecte t-elle les 8 heures ?
+			$diff = $date_now - strtotime($date_derniere_attaque);
+			
+			if ($diff < 8 * 60 * 60) {
+				// Loi anti-zerk non respectée
+				$verif_anti_zerk = 0;
+			}
+			else {
+				// Loi anti-zerk respectée
+				// On met à jour la table anti-zerk
+				$sql = "UPDATE anti_zerk SET date_derniere_attaque=NOW(), date_nouveau_tour='$dla_perso' WHERE id_perso='$id_perso'";
+				$mysqli->query($sql);
+			}
+		}
+		else {
+			// attaque normal dans son tour
+			// On met à jour la table anti-zerk
+			$sql = "UPDATE anti_zerk SET date_derniere_attaque=NOW() WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
+	}
+	else {
+		// Faire le premier enregistrement pour la vérification de loi anti-zerk
+		$sql = "INSERT INTO anti_zerk(id_perso, date_derniere_attaque, date_nouveau_tour) VALUES ('$id_perso', NOW(), '$dla_perso')";
+		$mysqli->query($sql);
+	}
+	
+	return $verif_anti_zerk;
+}
+
+/**
   * Fonction qui verifie si le joueur a coche l'envoi de mail lors d'une attaque
   * @param $id_joueur	: L'identifiant du joueur
   * @return bool		: Si le joueur e coche ou non l'envoi de mail

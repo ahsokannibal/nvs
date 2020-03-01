@@ -2,7 +2,6 @@
 @session_start();  
 require_once("fonctions.php");
 require_once("jeu/f_carte.php");
-require_once("jeu/f_combat.php");
 	
 $mysqli = db_connexion();
 
@@ -29,7 +28,12 @@ if(isset($_SESSION["ID_joueur"])){
 	$y_perso	= $t_chef["y_perso"];
 	
 	// Récupération de la couleur associée au clan du perso
-	$couleur_clan_p = couleur_clan($clan);
+	if($clan == '1'){
+		$couleur_clan_p = 'blue';
+	}
+	if($clan == '2'){
+		$couleur_clan_p = 'red';
+	}
 	
 	if (isset($_SESSION["id_perso"]) && $_SESSION["id_perso"] != $id) {
 		// on a switch sur un perso mort ou nouveau tour ?
