@@ -988,7 +988,7 @@ if($verif){
 							<?php
 						}
 						else {
-							echo "Erreur : Loi anti-zerk non respectée ! Vous devez attendre 8h entre votre dernière attaque du tour précédent et une nouvelle attaque sur le nouveau tour.";
+							echo "Loi anti-zerk non respectée ! Vous devez attendre 8h entre votre dernière attaque du tour précédent et une nouvelle attaque sur le nouveau tour.";
 							echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 						}
 					}			

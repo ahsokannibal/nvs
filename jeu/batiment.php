@@ -310,7 +310,7 @@ if($dispo || $admin){
 											// MAJ pa perso pour affichage
 											$pa_perso = $pa_perso - 2;
 											
-											echo "<font color=blue>Vous avez acheter l'objet $nom_o pour $coutOr_o thunes</font>";
+											echo "<font color=blue>Vous avez acheté l'objet $nom_o pour $coutOr_o thunes</font>";
 										}
 										else {
 											echo "<font color=red>Vous ne possédez pas assez de thunes pour acheter l'objet $nom_o</font>";
