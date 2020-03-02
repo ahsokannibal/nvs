@@ -3243,6 +3243,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 						$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
 						$mysqli->query($sql);
 					}
+					
+					// maj dernier tombé
+					$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$idPerso_carte')";
+					$mysqli->query($sql);
 				}
 				else {
 					// maj stats du perso
