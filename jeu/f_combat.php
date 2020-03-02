@@ -340,6 +340,13 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 	$res = $mysqli->query($sql);
 	$nb_enr_anti_zerk = $res->num_rows;
 	
+	// recupération dla perso
+	$sql_p = "SELECT DLA_perso FROM perso WHERE id_perso='$id_perso'";
+	$res_p = $mysqli->query($sql_p);
+	$t_p = $res_p->fetch_assoc();
+	
+	$dla_perso = $t_p['DLA_perso'];
+	
 	if ($nb_enr_anti_zerk > 0) {
 		
 		$t_zerk = $res->fetch_assoc();
