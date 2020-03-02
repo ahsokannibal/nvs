@@ -356,6 +356,17 @@ CREATE TABLE `cv` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `dernier_tombe`
+--
+
+CREATE TABLE `dernier_tombe` ( 
+	`date_capture` DATETIME NOT NULL , 
+	`id_perso_capture` INT NOT NULL 
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `dossier`
 --
 
