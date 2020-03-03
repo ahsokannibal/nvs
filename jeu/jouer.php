@@ -2439,7 +2439,7 @@ if($dispo || $admin){
 				if ($perc_att <= 0) {
 					$perc_att = 1;
 				}
-				$res_portee_cac = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perc_att);
+				$res_portee_cac = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perc_att, 'cac');
 				
 				// Récupération de l'arme à distance sur le perso
 				$sql = "SELECT arme.id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme, degatZone_arme 
@@ -2476,7 +2476,7 @@ if($dispo || $admin){
 				$degats_arme_dist = $degatMin_arme_dist."D".$valeur_des_arme_dist;
 				
 				// Récupération de la liste des persos à portée d'attaque arme dist
-				$res_portee_dist = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_dist, $porteeMax_arme_dist, $perc_att);
+				$res_portee_dist = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_dist, $porteeMax_arme_dist, $perc_att, 'dist');
 				
 				// background='../images/background_html.jpg'
 				?>
