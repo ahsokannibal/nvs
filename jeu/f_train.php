@@ -3,18 +3,103 @@
 /**
  * Fonction permettant de déplacer le train sur une case x/y
  */
-function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train) {
+function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train) {
+	
+	$deplacement_possible = true;
 	
 	// Modification carte 
-	$sql_c1 = "UPDATE carte SET idPerso_carte=NULL, occupee_carte='0', image_carte=NULL WHERE idPerso_carte='$id_instance_train'";
-	$mysqli->query($sql_c1);
+	$sql = "UPDATE carte SET idPerso_carte=NULL, occupee_carte='0', image_carte=NULL WHERE idPerso_carte='$id_instance_train'";
+	$mysqli->query($sql);
 	
-	$sql_c2 = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_train' AND y_carte='$y_train'";
-	$mysqli->query($sql_c2);
+	// La case de destination du train est-elle occupée ?
+	$sql = "SELECT occupee_carte, idPerso_carte FROM carte WHERE x_carte='$x_train' AND y_carte='$y_train'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
 	
-	// MAJ coordonnées persos dans le train
-	$sql_u_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
-	$mysqli->query($sql_u_perso);
+	$occupee_carte 	= $t["occupee_carte"];
+	$idPerso_carte	= $t["idPerso_carte"];
+	
+	if ($occupee_carte) {
+		// Qu'est ce qui occupe la carte ?
+		if ($idPerso_carte < 50000) {
+			// Perso => on lui roule dessus (PV/2) et on l'ejecte
+			
+			// Recherche case libre pour ejection					
+			$trouve = 0;
+			$seek = 1;
+			
+			// Tant qu'on a pas trouvé
+			while (!$trouve){
+			
+				// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+				$sql = "SELECT x_carte, y_carte, fond_carte FROM carte 
+						WHERE occupee_carte='0' 
+						AND x_carte >= $x_train - $seek AND x_carte <= $x_train + $seek AND y_carte >= $y_train - $seek AND y_carte <= $y_train + $seek
+						AND x_carte='$x_train' AND y_carte!='$y_train'";
+				$res = $mysqli->query($sql);
+				$nb_libre = $res->num_rows;
+				
+				if ($nb_libre) {
+				
+					$t = $res->fetch_assoc();
+					
+					$x_libre 	= $t["x_carte"];
+					$y_libre 	= $t["y_carte"];
+					$fond_libre	= $t["fond_carte"];
+					
+					$trouve = 1;
+					
+					break;
+				}
+				else {
+					// on elargie la recherche
+					$seek++;
+				}
+			}
+			
+			// MAJ perso
+			$sql = "UPDATE perso SET pv_perso = pv_perso/2, x_perso=$x_libre, y_perso=$y_libre WHERE id_perso='$idPerso_carte'";
+			$mysqli->query($sql);
+			
+			// Récupération infos perso 
+			$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$idPerso_carte'";
+			$res = $mysqli->query($sql);
+			$t_p = $res->fetch_assoc();
+			
+			$nom_perso	= $t_p["nom_perso"];
+			$camp_perso	= $t_p["clan"];
+			
+			if($camp_perso == 1) {
+				$couleur_camp_perso = "blue";
+			}
+			else {
+				$couleur_camp_perso = "red";
+			}
+			
+			// MAJ evenements perso
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_train,'<font color=$couleur_camp_train><b>$nom_train</b></font>','<b>a roulé sur </b>','$idPerso_carte','<font color=$couleur_camp_perso><b>$nom_perso</b></font>',' : perdu la moitié de ses PV',NOW(),'0')";
+			$mysqli->query($sql);
+		}
+		else if ($idPerso_carte >= 50000 && $idPerso_carte < 200000) {
+			// Batiment
+			$deplacement_possible = false;
+		}
+		else {
+			// PNJ => rien à faire
+		}
+	}
+	
+	if ($deplacement_possible) {
+	
+		$sql = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_train' AND y_carte='$y_train'";
+		$mysqli->query($sql);
+			
+		// MAJ coordonnées persos dans le train
+		$sql = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
+		$mysqli->query($sql);
+	}
+	
+	return $deplacement_possible;
 }
 
 /**

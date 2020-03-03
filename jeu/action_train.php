@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_train.php");
 
 $mysqli = db_connexion();
 
@@ -21,15 +22,18 @@ while ($t = $res->fetch_assoc()) {
 	
 	if ($camp_train == 1) {
 		// Nord
-		$image_train = "b12b.png";
+		$image_train 		= "b12b.png";
+		$couleur_camp_train	= "blue";
 	}
 	else if ($camp_train == 2) {
 		// Sud
-		$image_train = "b12r.png";
+		$image_train 		= "b12r.png";
+		$couleur_camp_train	= "red";
 	}
 	else {
 		// Ne devrait pas arriver
-		$image_train = "b12.png";
+		$image_train 		= "b12.png";
+		$couleur_camp_train	= "black";
 	}	
 	
 	// récupération de la direction de ce train
@@ -131,9 +135,9 @@ while ($t = $res->fetch_assoc()) {
 					$x_train = $x_r;
 					$y_train = $y_r;
 					
-					deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train);
-					
-					$dep_restant--;
+					if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+						$dep_restant--;
+					}
 				}
 			}
 			else {
@@ -146,9 +150,9 @@ while ($t = $res->fetch_assoc()) {
 				$x_train = $x_r;
 				$y_train = $y_r;
 				
-				deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train);
-				
-				$dep_restant--;
+				if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+					$dep_restant--;
+				}
 			}
 			
 		}
@@ -230,9 +234,9 @@ while ($t = $res->fetch_assoc()) {
 					$x_train = $x_r;
 					$y_train = $y_r;
 					
-					deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train);
-					
-					$dep_restant--;
+					if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+						$dep_restant--;
+					}
 				}
 			}
 			else {
@@ -245,9 +249,9 @@ while ($t = $res->fetch_assoc()) {
 				$x_train = $x_r;
 				$y_train = $y_r;
 				
-				deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train);
-				
-				$dep_restant--;
+				if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+					$dep_restant--;
+				}
 			}
 		}
 		else {
@@ -307,9 +311,9 @@ while ($t = $res->fetch_assoc()) {
 				$x_train = $x_r;
 				$y_train = $y_r;
 				
-				deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train);
-				
-				$dep_restant--;
+				if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+					$dep_restant--;
+				}
 			}
 			
 		}
@@ -340,7 +344,7 @@ while ($t = $res->fetch_assoc()) {
 		$sql_lg = "UPDATE liaisons_gare SET direction='$nouvelle_direction' WHERE id_train='$id_instance_train'";
 		$mysqli->query($sql_lg);
 		
-		chargement_persos_train($mysqli, $id_instance_train, $x_train, $y_train, $nouvelle_direction, $gare_arrivee, $camp_train)
+		chargement_persos_train($mysqli, $id_instance_train, $x_train, $y_train, $nouvelle_direction, $gare_arrivee, $camp_train);
 	}
 }
 ?>
