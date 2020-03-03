@@ -78,12 +78,15 @@ function id_arme_equipee($mysqli, $id_perso){
   */
 function is_a_portee_attaque($mysqli, $carte, $id_perso, $id_cible, $portee_min, $portee_max, $per_perso){
 
+	// Pas d'attaque au CaC depuis un batiment
+	// Portée max ne peut pas être inférieur à portée min
+	if(($portee_max == 1 && in_bat($mysqli, $id_perso)) || $portee_max < $portee_min){
+		return 0;
+	}
+
+	// On réduit la portée max à la perception du perso
 	if($per_perso < $portee_max){
 		$portee_max = $per_perso;
-	}
-	
-	if($portee_max < $portee_min){
-		return 0;
 	}
 
 	// Requete qui recupere les persos a portee d'attaque
@@ -143,57 +146,62 @@ function is_a_portee_attaque($mysqli, $carte, $id_perso, $id_cible, $portee_min,
  */
 function resource_liste_cibles_a_portee_attaque($mysqli, $carte, $id_perso, $portee_min, $portee_max, $per_perso, $type_attaque) {
 	
-	if($per_perso < $portee_max){
-		$portee_max = $per_perso;
+	// Pas d'attaque au CaC depuis un batiment
+	// Portée max ne peut pas être inférieur à portée min
+	if (($type_attaque == 'cac' && in_bat($mysqli, $id_perso)) || $portee_max < $portee_min) {
+		$sql = "SELECT id_perso FROM perso WHERE 1=2";
 	}
+	else {
 	
-	if($portee_max < $portee_min){
-		return;
-	}
+		// On réduit la portée max à la perception du perso
+		if($per_perso < $portee_max){
+			$portee_max = $per_perso;
+		}
 
-	// Requete qui recupere les cases a portee d'attaque
-	$sql = "(
-			SELECT DISTINCT(idPerso_carte)
-			FROM $carte, perso 
-			WHERE id_perso='$id_perso'
-			AND occupee_carte = '1'
-			AND ((x_carte>=x_perso+$portee_min AND x_carte<=x_perso+$portee_max AND y_carte>=y_perso-$portee_max AND y_carte<=y_perso+$portee_max)
-					OR 	(x_carte>=x_perso-$portee_max AND x_carte<=x_perso-$portee_min AND y_carte>=y_perso-$portee_max AND y_carte<=y_perso+$portee_max)
-					OR	(y_carte>=y_perso+$portee_min AND y_carte<=y_perso+$portee_max AND x_carte>=x_perso-$portee_max AND x_carte<=x_perso+$portee_max)
-					OR	(y_carte>=y_perso-$portee_max AND y_carte<=y_perso-$portee_min AND x_carte>=x_perso-$portee_max AND x_carte<=x_perso+$portee_max)
+		// Requete qui recupere les cases a portee d'attaque
+		$sql = "(
+				SELECT DISTINCT(idPerso_carte)
+				FROM $carte, perso 
+				WHERE id_perso='$id_perso'
+				AND occupee_carte = '1'
+				AND ((x_carte>=x_perso+$portee_min AND x_carte<=x_perso+$portee_max AND y_carte>=y_perso-$portee_max AND y_carte<=y_perso+$portee_max)
+						OR 	(x_carte>=x_perso-$portee_max AND x_carte<=x_perso-$portee_min AND y_carte>=y_perso-$portee_max AND y_carte<=y_perso+$portee_max)
+						OR	(y_carte>=y_perso+$portee_min AND y_carte<=y_perso+$portee_max AND x_carte>=x_perso-$portee_max AND x_carte<=x_perso+$portee_max)
+						OR	(y_carte>=y_perso-$portee_max AND y_carte<=y_perso-$portee_min AND x_carte>=x_perso-$portee_max AND x_carte<=x_perso+$portee_max)
+					)
 				)
-			)
-			";
-	
-	// Si attaque à distance
-	// => On peut attaquer les persos dans les train et les batiments
-	if ($type_attaque == 'dist') {
+				";
 		
-		$sql .= "
-			UNION (
-				SELECT perso_in_train.id_perso
-				FROM instance_batiment, perso_in_train, perso
-				WHERE instance_batiment.id_instanceBat = perso_in_train.id_train
-				AND perso.id_perso = '$id_perso'
-				AND id_batiment='12' 
-				AND ((x_instance>=x_perso+$portee_min AND x_instance<=x_perso+$portee_max AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
-					OR 	(x_instance>=x_perso-$portee_max AND x_instance<=x_perso-$portee_min AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
-					OR	(y_instance>=y_perso+$portee_min AND y_instance<=y_perso+$portee_max AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
-					OR	(y_instance>=y_perso-$portee_max AND y_instance<=y_perso-$portee_min AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
+		// Si attaque à distance
+		// => On peut attaquer les persos dans les train et les batiments
+		if ($type_attaque == 'dist') {
+			
+			$sql .= "
+				UNION (
+					SELECT perso_in_train.id_perso
+					FROM instance_batiment, perso_in_train, perso
+					WHERE instance_batiment.id_instanceBat = perso_in_train.id_train
+					AND perso.id_perso = '$id_perso'
+					AND id_batiment='12' 
+					AND ((x_instance>=x_perso+$portee_min AND x_instance<=x_perso+$portee_max AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
+						OR 	(x_instance>=x_perso-$portee_max AND x_instance<=x_perso-$portee_min AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
+						OR	(y_instance>=y_perso+$portee_min AND y_instance<=y_perso+$portee_max AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
+						OR	(y_instance>=y_perso-$portee_max AND y_instance<=y_perso-$portee_min AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
+					)
 				)
-			)
-			UNION (
-				SELECT perso_in_batiment.id_perso
-				FROM instance_batiment, perso_in_batiment, perso
-				WHERE instance_batiment.id_instanceBat = perso_in_batiment.id_instanceBat
-				AND perso.id_perso = '$id_perso'
-				AND id_batiment!='12' 
-				AND ((x_instance>=x_perso+$portee_min AND x_instance<=x_perso+$portee_max AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
-					OR 	(x_instance>=x_perso-$portee_max AND x_instance<=x_perso-$portee_min AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
-					OR	(y_instance>=y_perso+$portee_min AND y_instance<=y_perso+$portee_max AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
-					OR	(y_instance>=y_perso-$portee_max AND y_instance<=y_perso-$portee_min AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
-				)
-			)";
+				UNION (
+					SELECT perso_in_batiment.id_perso
+					FROM instance_batiment, perso_in_batiment, perso
+					WHERE instance_batiment.id_instanceBat = perso_in_batiment.id_instanceBat
+					AND perso.id_perso = '$id_perso'
+					AND id_batiment!='12' 
+					AND ((x_instance>=x_perso+$portee_min AND x_instance<=x_perso+$portee_max AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
+						OR 	(x_instance>=x_perso-$portee_max AND x_instance<=x_perso-$portee_min AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
+						OR	(y_instance>=y_perso+$portee_min AND y_instance<=y_perso+$portee_max AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
+						OR	(y_instance>=y_perso-$portee_max AND y_instance<=y_perso-$portee_min AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
+					)
+				)";
+		}
 	}
 			
 	$res = $mysqli->query($sql);
