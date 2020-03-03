@@ -48,7 +48,12 @@ if(isset($erreur)){
 if(isset($_GET["top"])){
 	echo "<div align=\"center\"><h2><font color=darkred>Top 10</font></h2></div>";
 
-	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	echo "<div align=\"center\">";
+	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</div>";
+	
+	echo "<br />";
 	
 	echo "<center>";
 	echo "	<a class='btn btn-primary' href=\"classement.php?top=ok\">Les tops 10</a>";
@@ -162,7 +167,10 @@ if(isset($_GET["top"])){
 if(isset($_GET["titre"])){
 	echo "<div align=\"center\"><h2><font color=darkred>Les Titres</font></h2></div>";
 
-	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	echo "<div align=\"center\">";
+	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</div>";
 	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
@@ -239,7 +247,10 @@ if(isset($_GET["titre"])){
 if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "<div align=\"center\"><h2><font color=darkred>Statistiques des camps</font></h2></div>";
 	
-	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	echo "<div align=\"center\">";
+	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</div>";
 	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
@@ -337,7 +348,10 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	echo "<div align=\"center\"><h2><font color=darkred>Les Supermans</font></h2></div>";
 	
-	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	echo "<div align=\"center\">";
+	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</div>";
 	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
@@ -436,7 +450,10 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	echo "<div align=\"center\"><h2><font color=darkred>Entrainement</font></h2></div>";
 	
-	echo "<div align=\"center\"><a class='btn btn-info' href=\"classement.php\">Classement Global</a></div><br />";
+	echo "<div align=\"center\">";
+	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</div>";
 	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
@@ -486,12 +503,76 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	echo "</div>";
 }
 
+if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
+	
+	echo "<div align=\"center\"><h2><font color=darkred>Derniers tombés</font></h2></div>";
+	
+	echo "<div align=\"center\">";
+	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</div>";
+	
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "</center>";
+	echo "<br/>";
+	
+	$sql = "SELECT nom_perso, clan, perso.id_perso, date_capture FROM perso, dernier_tombe
+			WHERE perso.id_perso = dernier_tombe.id_perso_capture
+			ORDER BY date_capture DESC LIMIT 10";
+	$res = $mysqli->query($sql);
+	
+	echo "<div class='table-responsive'>";
+	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+	echo "		<thead>";
+	echo "			<tr>";
+	echo "				<th style='text-align:center'><font color=darkred>Date de capture</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nom</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Matricule</font></th>";
+	echo "			</tr>";
+	echo "		</thead>";
+	
+	echo "		<tbody>";
+	
+	while ($t = $res->fetch_assoc()){
+		
+		$date_capture 	= $t['date_capture'];
+		$id_camp_capt	= $t["clan"];
+		$nom_perso_capt	= $t["nom_perso"];
+		$id_perso_capt	= $t["id_perso"];
+		
+		if($id_camp_capt == "1"){
+			$couleur_camp = "blue";
+		}
+		if($id_camp_capt == "2"){
+			$couleur_camp = "red";
+		}
+		
+		echo "			<tr>";
+		echo "				<td align=center>$date_capture</td>";
+		echo "				<td align=center><font color=$couleur_camp>".$nom_perso_capt."</font></td>";
+		echo "				<td align='center'><a href=\"evenement.php?infoid=".$id_perso_capt."\">" .$id_perso_capt. "</a></td>";
+		echo "			</tr>";
+	}
+	
+	echo "		</tbody>";
+	echo "	</table>";
+	echo "</div>";
+}
 
-if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !isset($_GET["super"]) && !isset($_GET["training"])) {
+
+if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !isset($_GET["super"]) && !isset($_GET["training"]) && !isset($_GET["dernier_tombe"])) {
 	
 	echo "<div align=\"center\"><h2><font color=darkred>Classement Global</font></h2></div>";
 	
-	echo "<div align=\"center\"><a class='btn btn-primary' href=\"classement.php\">Classement Global</a></div><br />";
+	echo "<div align=\"center\">";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Classement Global</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</div>";
 	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
