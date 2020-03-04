@@ -3105,19 +3105,21 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 			
 			// calcul gain experience
 			if ($idPerso_carte >= 200000) {
-				$gain_experience = mt_rand(1,4);
+				$gain_experience = mt_rand(1, 6);
 			} else {
 			
-				$calcul_des_xp = ($xp_cible - $xp_perso) / 10;
-				if ($calcul_des_xp < 0) {
+				$calcul_dif_xp = ($xp_cible - $xp_perso) / 10;
+								
+				if ($calcul_dif_xp < 0) {
 					$valeur_des_xp = 0;
 				} else {
-					$valeur_des_xp = mt_rand(1, $calcul_des_xp);
+					$valeur_des_xp = mt_rand(0, $calcul_dif_xp);
 				}
-				$gain_experience = ($degats / 2) + $valeur_des_xp;
 				
-				if ($gain_experience > 15) {
-					$gain_experience = 15;
+				$gain_experience = ceil(($degats_final / 20) + $valeur_des_xp);
+				
+				if ($gain_experience > 10) {
+					$gain_experience = 10;
 				}
 			}
 			

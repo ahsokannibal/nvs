@@ -1279,7 +1279,7 @@ if($verif){
 						}
 						
 						// TODO - calcul gain XP selon pnj
-						$gain_xp = mt_rand(1, 12);
+						$gain_xp = mt_rand(1, 6);
 						
 						if ($id_arme_attaque == 10) {
 								
