@@ -324,9 +324,9 @@ if($verif){
 						
 							// Si perso ou cible est une infanterie 
 							// ou si grade perso >= grade cible - 1
-							if ($grade_perso <= $grade_cible + 1 
+							if (($grade_perso <= $grade_cible + 1 
 									|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
-									|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
+									|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $clan_cible != $clan_perso) {
 								
 								$gain_pc = 1;
 							} else {
