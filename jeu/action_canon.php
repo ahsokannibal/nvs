@@ -80,8 +80,6 @@ while ($t_b = $res_b->fetch_assoc()) {
 			$nb_des_canon 		= 75;
 			$valeur_des_canon 	= 6;
 			
-			echo "-- Attaque sur ".$id_cible." : ";
-			
 			// Vérifie si le joueur attaqué a coché l'envoi de mail
 			$mail_info_joueur = verif_coche_mail($mysqli, $idJoueur_cible);
 						
@@ -94,8 +92,6 @@ while ($t_b = $res_b->fetch_assoc()) {
 			// Calcul touche
 			$touche = mt_rand(0,100);
 			$precision_final = $precision_canon - $bonus_cible;
-			
-			echo "score de touche = ".$touche;
 			
 			if ($touche <= $precision_final) {
 				
@@ -118,20 +114,16 @@ while ($t_b = $res_b->fetch_assoc()) {
 					$degats_final = $degats_final * 2;
 				}
 				
-				echo " - degats : ".$degats_final;
-				
 				// mise a jour des pv et des malus de la cible
 				$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_final, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible'";
 				$mysqli->query($sql);
 				
 				// mise a jour de la table evenement
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_bat,'<font color=$couleur_clan_canon><b>Canon</b></font>','a attaqué ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',': $degats_final degats',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_bat,'<font color=$couleur_clan_canon><b>Canon</b></font>','a attaqué ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final )',NOW(),'0')";
 				$mysqli->query($sql);
 				
 				// il est mort
 				if ($pv_cible - $degats_final <= 0) {
-					
-					echo " - Cible capturée<br />";
 					
 					// on l'efface de la carte
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
@@ -206,9 +198,6 @@ while ($t_b = $res_b->fetch_assoc()) {
 						$mysqli->query($sql);
 					}
 				}
-				else {
-					echo "<br />";
-				}
 				
 				$degats_collat = floor($degats_final / 2);
 								
@@ -249,8 +238,6 @@ while ($t_b = $res_b->fetch_assoc()) {
 						$grade_collat		= $t_collat['id_grade'];
 						$tp_collat			= $t_collat['type_perso'];
 						
-						echo "---- Collat sur ".$id_cible_collat;
-						
 						// Récupération de la couleur associée au clan de la cible
 						$couleur_clan_collat = couleur_clan($clan_collat);
 						
@@ -259,13 +246,11 @@ while ($t_b = $res_b->fetch_assoc()) {
 						$mysqli->query($sql);
 						
 						// mise a jour de la table evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_bat,'<font color=$couleur_clan_canon><b>Canon</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>',': $degats_collat degats',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_bat,'<font color=$couleur_clan_canon><b>Canon</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>',' ( Dégâts : $degats_collat )',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						// il est mort
 						if ($pv_collat - $degats_collat <= 0) {
-							
-							echo " - Cible collat capturée<br />";
 							
 							// on l'efface de la carte
 							$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_collat' AND y_carte='$y_collat'";
@@ -344,7 +329,6 @@ while ($t_b = $res_b->fetch_assoc()) {
 				}
 			}
 			else {
-				echo "<br />";
 			
 				// gain xp esquive et ajout malus Cible
 				$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, bonus_perso=bonus_perso-1 WHERE id_perso='$id_cible'";
