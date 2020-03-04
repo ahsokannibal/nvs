@@ -3136,7 +3136,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 			}
 			
 			// evenement attaque
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a chargé ','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','( Précision : $touche / $precision_final ; Dégât : $degats ; Gain XP : $gain_experience )',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a chargé ','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','( Précision : $touche / $precision_final ; Dégât : $degats ; Gain XP : $gain_experience ; Gain PC : $gain_pc )',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			// Verification si cible morte							
