@@ -336,7 +336,7 @@ if($dispo || $admin){
 				$type_o			= $t_o["type_objet"];
 				
 				// recuperation du nombre d'objet de ce type que possede le perso
-				$sql2 = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj'";
+				$sql2 = "SELECT id_objet, capacite_objet FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj'";
 				$res2 = $mysqli->query($sql2);
 				$nb_o = $res2->num_rows;
 				
@@ -350,6 +350,24 @@ if($dispo || $admin){
 				echo "	<td align='center'>Vous possédez <b>".$nb_o."</b> ".$nom_o."";
 				if($nb_o > 1){ 
 					echo "s";
+				}
+				
+				// Tickets de train
+				if ($type_o == 'T') {
+					
+					echo "<br /><b>Destinations : </b>";
+					
+					while ($t_o = $res2->fetch_assoc()) {
+						
+						$destination = $t_o['capacite_objet'];
+						
+						if (trim($destination) == "") {
+							echo "- Ticket non valide - "; 
+						}
+						else {
+							echo "<a class='btn btn-primary' href='evenement.php?infoid=".$destination."'>".$destination."</a> ";
+						}
+					}
 				}
 				
 				if($type_o == 'N'){

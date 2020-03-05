@@ -104,8 +104,6 @@ if($dispo || $admin){
 							$camp_bat2 = 'rouge';
 						}
 						
-						$blason="blason_".$camp_bat2.".gif";
-						
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -122,7 +120,6 @@ if($dispo || $admin){
 	
 	<body>
 		<div align="center"><h2><?php echo $nom_bat." ".$nom_i_bat; ?></h2></div>
-		<center><img src="../images/<?php echo $blason; ?>" alt="blason"/></center><br />
 		<center><input type="button" onclick="window.open('evenement.php?infoid=<?php echo $id_i_bat; ?>');" value="Voir les évènements du bâtiment" /></center>
 <?php
 						/////////////////////
@@ -666,45 +663,85 @@ if($dispo || $admin){
 							// Achat d'un ticket de train
 							if (isset($_POST["acheter_ticket"]) && isset($_POST["ticket_hidden"]) && trim($_POST["ticket_hidden"]) != "") {
 								
-								$ticket_dest = $_POST["ticket_hidden"];
+								$tab_ticket_dest 	= explode(',', $_POST["ticket_hidden"]);
+								$nb_ticket			= count($tab_ticket_dest);
 								
-								$sql_dest = "SELECT nom_instance FROM instance_batiment WHERE id_instanceBat='$ticket_dest'";
-								$res_dest = $mysqli->query($sql_dest);
-								$t_dest = $res_dest->fetch_assoc();
-								
-								$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $ticket_dest . "]";
-								
-								// On vérifie que le perso possède bien 5 thunes 
-								if ($or >= 5) {
+								if ($nb_ticket > 1) {
 									
-									// On vérifie si le perso n'a pas déjà un ticket pour la même destination
-									$sql = "SELECT count(*) as nb_ticket FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='1' AND capacite_objet='$ticket_dest'";
-									$res = $mysqli->query($sql);
-									$t = $res->fetch_assoc();
+									$thune_necessaire = 5 * $nb_ticket;
 									
-									$possede_deja_ticket = $t['nb_ticket'];
-									
-									if ($possede_deja_ticket == 0) {
+									if ($or >= $thune_necessaire) {
 										
-										// MAJ thune perso
-										$sql = "UPDATE perso SET or_perso=or_perso-5 WHERE id_perso='$id_perso'";
-										$mysqli->query($sql);
-										
-										// Ajout de l'objet ticket de train dans l'inventaire du perso
-										$sql = "INSERT INTO perso_as_objet (id_perso, id_objet, capacite_objet) VALUES ('$id_perso', '1', '$ticket_dest')";
-										$mysqli->query($sql);
-										
-										// Maj thune pour affichage 
-										$or = $or - 5;
-										
-										echo "<center><font color='blue'>Vous avez acheté un ticket de train en destination de $nom_destination</font></center>";
+										for ($i = 0; $i < $nb_ticket; $i++) {
+											
+											$ticket_dest = $tab_ticket_dest[$i];
+											
+											$sql_dest = "SELECT nom_instance FROM instance_batiment WHERE id_instanceBat='$ticket_dest'";
+											$res_dest = $mysqli->query($sql_dest);
+											$t_dest = $res_dest->fetch_assoc();
+											
+											$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $ticket_dest . "]";
+												
+											// MAJ thune perso
+											$sql = "UPDATE perso SET or_perso=or_perso-5 WHERE id_perso='$id_perso'";
+											$mysqli->query($sql);
+											
+											// Ajout de l'objet ticket de train dans l'inventaire du perso
+											$sql = "INSERT INTO perso_as_objet (id_perso, id_objet, capacite_objet) VALUES ('$id_perso', '1', '$ticket_dest')";
+											$mysqli->query($sql);
+											
+											// Maj thune pour affichage 
+											$or = $or - 5;
+											
+											echo "<center><font color='blue'>Vous avez acheté un ticket de train en destination de $nom_destination</font></center>";
+										}
 									}
 									else {
-										echo "<center><font color='red'>Vous possédez déjà un ticket de train pour cette destination</font></center>";
-									}
-								} 
+										echo "<center><font color='red'>Vous n'avez pas suffisamment de thunes pour vous acheter tous les tickets de train</font></center>";
+									}									
+								}
 								else {
-									echo "<center><font color='red'>Vous n'avez pas suffisamment de thunes pour vous acheter un ticket de train</font></center>";
+								
+									$ticket_dest = $tab_ticket_dest[0];
+								
+									$sql_dest = "SELECT nom_instance FROM instance_batiment WHERE id_instanceBat='$ticket_dest'";
+									$res_dest = $mysqli->query($sql_dest);
+									$t_dest = $res_dest->fetch_assoc();
+									
+									$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $ticket_dest . "]";
+									
+									// On vérifie que le perso possède bien 5 thunes 
+									if ($or >= 5) {
+										
+										// On vérifie si le perso n'a pas déjà un ticket pour la même destination
+										$sql = "SELECT count(*) as nb_ticket FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='1' AND capacite_objet='$ticket_dest'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$possede_deja_ticket = $t['nb_ticket'];
+										
+										if ($possede_deja_ticket == 0) {
+											
+											// MAJ thune perso
+											$sql = "UPDATE perso SET or_perso=or_perso-5 WHERE id_perso='$id_perso'";
+											$mysqli->query($sql);
+											
+											// Ajout de l'objet ticket de train dans l'inventaire du perso
+											$sql = "INSERT INTO perso_as_objet (id_perso, id_objet, capacite_objet) VALUES ('$id_perso', '1', '$ticket_dest')";
+											$mysqli->query($sql);
+											
+											// Maj thune pour affichage 
+											$or = $or - 5;
+											
+											echo "<center><font color='blue'>Vous avez acheté un ticket de train en destination de $nom_destination</font></center>";
+										}
+										else {
+											echo "<center><font color='red'>Vous possédez déjà un ticket de train pour cette destination</font></center>";
+										}
+									}
+									else {
+										echo "<center><font color='red'>Vous n'avez pas suffisamment de thunes pour vous acheter un ticket de train</font></center>";
+									}
 								}
 							}
 						}						
@@ -1681,6 +1718,8 @@ if($dispo || $admin){
 								}
 							}
 							
+							echo "<center><img src='../images/".$image_plan_sans_terrain."' class=\"img-fluid\" alt='blason gares' width='200' ></center><br />";
+							
 							echo "<center>";
 							echo "<img src='image_gare.php?imagename=" . $image_plan . "' class=\"img-fluid\" alt='plan gares'/>";
 							echo "</center>";
@@ -1716,7 +1755,48 @@ if($dispo || $admin){
 								
 								$nom_destination = "Gare " . $nom_dest . "[" . $destination . "]";
 								
-								if ($camp_dest == $camp) {									
+								if ($camp_dest == $camp) {
+									
+									// Récupération des liaisons depuis cette gare
+									$sql_l = "SELECT * FROM liaisons_gare WHERE (id_gare1='$destination' OR id_gare2='$destination')";
+									$res_l = $mysqli->query($sql_l);
+									
+									while ($t_l = $res_l->fetch_assoc()) {
+										
+										$id_gare1_l = $t_l['id_gare1'];
+										$id_gare2_l = $t_l['id_gare2'];
+										
+										if ($id_gare1_l == $id_i_bat) {
+											$destination_l = $id_gare2_l;
+										} else {
+											$destination_l = $id_gare1_l;
+										}
+										
+										if ($destination_l != $destination) {
+											
+											// Récupération infos destination
+											$sql_dest_l = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination_l'";
+											$res_dest_l = $mysqli->query($sql_dest_l);
+											$t_dest_l = $res_dest_l->fetch_assoc();
+											
+											$camp_dest_l 	= $t_dest_l['camp_instance'];
+											$nom_dest_l		= $t_dest_l['nom_instance'];
+											
+											$nom_destination_l = "Gare " . $nom_dest_l . "[" . $destination_l . "]";
+											
+											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+											
+											// Achat de tickets
+											echo "<tr>";
+											echo "	<td align='center'>$nom_destination_l</td>";
+											echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$destination,$destination_l'> <input type='submit' name='acheter_ticket' value='Acheter un ticket (10 thunes)'></td>";
+											echo "</tr>";
+											
+											echo "</form>";
+										}
+										
+									}
+								
 									echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 									
 									// Achat de tickets

@@ -149,7 +149,7 @@ function entete($mysqli, $id) {
 				echo "<center>";
 				echo "<img src=\"../images_perso/$image_bat\" width=\"40\" height=\"40\">";
 				echo "<table border=\"1\">";
-				echo "  <tr><td width=\"60%\" align='center'>Batiment : $nom_batiment [$id]</td></tr>";
+				echo "  <tr><td width=\"60%\" align='center'>Batiment : $nom_batiment $nom_instance_batiment [$id]</td></tr>";
 				echo "  <tr><td align='center'>Camp : <font color=\"$couleur_camp_instance\">$nom_clan</font></td></tr>";
 				
 				if($camp_perso == $camp_instance){
