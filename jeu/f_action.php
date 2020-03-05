@@ -3116,11 +3116,13 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 					$valeur_des_xp = mt_rand(0, $calcul_dif_xp);
 				}
 				
-				$gain_experience = ceil(($degats_final / 20) + $valeur_des_xp);
+				$gain_experience = ceil(($degats / 20) + $valeur_des_xp);
 				
 				if ($gain_experience > 10) {
 					$gain_experience = 10;
 				}
+				
+				echo "Gain XP : ".$gain_experience;
 			}
 			
 			// Maj cible malus et PV
