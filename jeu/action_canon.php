@@ -144,14 +144,14 @@ while ($t_b = $res_b->fetch_assoc()) {
 						$xp_perso_fin	= $xp_cible - $xp_perdu;
 						
 						// Calcul PC
-						$pc_perdu		= floor(($pc_perso * 5) / 100);
-						$pc_perso_fin	= $pc_perso - $pc_perdu;
+						$pc_perdu		= floor(($pc_cible * 5) / 100);
+						$pc_perso_fin	= $pc_cible - $pc_perdu;
 					}
 					else {
 						// Quand un grouillot meurt, il perd tout ses Pi
 						$pi_perso_fin = 0;
 						$xp_perso_fin = $xp_cible;
-						$pc_perso_fin = $pc_perso;
+						$pc_perso_fin = $pc_cible;
 					}
 
 					// MAJ perte xp/po/stat cible
