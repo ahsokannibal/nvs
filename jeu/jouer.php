@@ -2041,6 +2041,7 @@ if($dispo || $admin){
 				echo "	<td>Prochain tour :  ".$n_dla."</td>";
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
+				if(redac_perso($mysqli, $id_perso)) { echo " <a class='btn btn-warning' href='redacteur.php'>Redaction</a>"; }
 				if(anim_perso($mysqli, $id_perso)) { echo " <a class='btn btn-warning' href='animation.php'>Animation</a>"; }
 				if($admin) { echo " <a class='btn btn-warning' href='admin_nvs.php'>Admin</a>"; }
 				echo "	</td>";
