@@ -2048,7 +2048,7 @@ if($dispo || $admin){
 				echo "</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonusPA_perso, bonus_perso, image_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonusPA_perso, bonus_perso, image_perso, message_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -2074,6 +2074,7 @@ if($dispo || $admin){
 				$bonus_perso 			= $t_perso2["bonus_perso"];
 				$type_perso 			= $t_perso2["type_perso"];
 				$bataillon_perso 		= $t_perso2["bataillon"];
+				$message_perso			= $t_perso2["message_perso"];
 				
 				$pm_perso 		= $pm_perso_tmp + $malus_pm;
 				$pmMax_perso 	= $pmMax_perso_tmp + $malus_pm;
@@ -3090,6 +3091,8 @@ if($dispo || $admin){
 													data-trigger='focus'
 													data-html='true' 
 													data-placement='bottom' ";
+													
+								// TITLE POPOVER
 								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div> ";					
 								
 								if (trim($nom_compagnie_perso) != "") {
@@ -3097,7 +3100,7 @@ if($dispo || $admin){
 									if (trim($image_compagnie_perso) != "" && $image_compagnie_perso != "0") {
 										echo "<img src='".$image_compagnie_perso."' width='20' height='20'>";
 									}
-									echo " <a href='compagnie.php' target='_blank'>" . $nom_compagnie_perso . "</a></div>";
+									echo " <a href='compagnie.php' target='_blank'>" . stripslashes($nom_compagnie_perso) . "</a></div>";
 								}
 								
 								if (!in_bat($mysqli,$id_perso)) {
@@ -3154,7 +3157,11 @@ if($dispo || $admin){
 									
 									echo "<div><a href='evenement.php?infoid=".$id_instance_in_bat."' target='_blank'><img src='../images_perso/b".$type_bat.$pre_img.".png' width='20' height='20'> " . $nom_bat ." ". $nom_i_bat ."[".$id_instance_in_bat."]</a></div>";
 								}
-								echo "\" ";					
+								echo "<div><u>Message du jour</u> :<br />".$message_perso."</div>";
+								
+								echo "\" ";
+								
+								// DATA CONTENT POPOVER
 								echo "			data-content=\"";
 								
 								if (in_bat($mysqli,$id_perso)) {
@@ -3217,11 +3224,13 @@ if($dispo || $admin){
 									}
 								}
 								echo "\" >" . $id_perso . "</div>";
+								
 								echo "		<img tabindex='0' class=\"\" border=0 src=\"../images_perso/$dossier_img_joueur/$image_perso\" width=40 height=40 
 													data-toggle='popover'
 													data-trigger='focus'
 													data-html='true' 
 													data-placement='bottom' ";
+								// TITLE POPOVER
 								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div>";
 								
 								if (trim($nom_compagnie_perso) != "") {
@@ -3229,7 +3238,7 @@ if($dispo || $admin){
 									if (trim($image_compagnie_perso) != "" && $image_compagnie_perso != "0") {
 										echo "<img src='".$image_compagnie_perso."' width='20' height='20'>";
 									}
-									echo " <a href='compagnie.php' target='_blank'>" . $nom_compagnie_perso . "</a></div>";
+									echo " <a href='compagnie.php' target='_blank'>" . stripslashes($nom_compagnie_perso) . "</a></div>";
 								}
 								
 								if (!in_bat($mysqli,$id_perso)) {
@@ -3286,7 +3295,10 @@ if($dispo || $admin){
 									
 									echo "<div><a href='evenement.php?infoid=".$id_instance_in_bat."' target='_blank'><img src='../images_perso/b".$type_bat.$pre_img.".png' width='20' height='20'> " . $nom_bat ." ". $nom_i_bat ."[".$id_instance_in_bat."]</a></div>";
 								}
-								echo "\" ";					
+								echo "<div><u>Message du jour</u> :<br />".$message_perso."</div>";
+								
+								echo "\" ";
+								// DATA CONTENT POPOVER
 								echo "			data-content=\"";
 								if (in_bat($mysqli,$id_perso)) {
 									
@@ -3518,7 +3530,8 @@ if($dispo || $admin){
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}
-													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\"";
+													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+													echo "<div><u>Message du jour</u> :<br />".$message_perso."</div>\" ";
 													// data content popover
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
 													
@@ -3529,7 +3542,8 @@ if($dispo || $admin){
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}				
-													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+													echo "<div><u>Message du jour</u> :<br />".$message_perso."</div>\" ";
 													// Data content popover
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";

@@ -26,15 +26,19 @@ if (@$_SESSION["id_perso"]) {
 	$mysqli = db_connexion();
 	
 	// couleurs perso_carte
-	$noir 					= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
-	$couleur_vert 			= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
-	$couleur_perso_clan1 	= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
-	$couleur_perso_clan2 	= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
-	$couleur_bat_clan1 		= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
-	$couleur_bat_clan2 		= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
-	$couleur_rail			= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
-	$couleur_brouillard1	= Imagecolorallocate($perso_carte, 222, 184, 135); // marron burlywood
-	$couleur_brouillard2	= Imagecolorallocate($perso_carte, 210, 180, 140); // marron tan
+	$noir 							= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
+	$couleur_vert 					= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
+	$couleur_perso_clan1 			= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
+	$couleur_perso_clan2 			= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
+	$couleur_bat_clan1 				= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
+	$couleur_bat_clan2 				= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
+	$couleur_rail					= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
+	$couleur_brouillard_plaine		= Imagecolorallocate($perso_carte, 208, 192, 122); // Chamois
+	$couleur_brouillard_eau			= Imagecolorallocate($perso_carte, 187, 174, 152); // Grège
+	$couleur_brouillard_montagne	= Imagecolorallocate($perso_carte, 47, 27, 12); // Cachou
+	$couleur_brouillard_colinne		= Imagecolorallocate($perso_carte, 133, 109, 77); // Bistre
+	$couleur_brouillard_desert		= Imagecolorallocate($perso_carte, 225, 206, 154); // Vanille
+	$couleur_brouillard_foret		= Imagecolorallocate($perso_carte, 97, 77, 26); // Vanille
 	
 	// couleurs image_carte
 	$couleur_bataillon		= Imagecolorallocate($image_carte, 0, 0, 0); // noir
@@ -134,10 +138,10 @@ if (@$_SESSION["id_perso"]) {
 	
 	// J'ajoute le brouillard de guerre
 	if ($camp_perso == '1') {
-		$sql = "SELECT x_carte, y_carte FROM carte WHERE vue_nord='0'";
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
 	}
 	else if ($camp_perso == '2') {
-		$sql = "SELECT x_carte, y_carte FROM carte WHERE vue_sud='0'";
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_sud='0'";
 	}
 	$res = $mysqli->query($sql);
 	
@@ -145,7 +149,34 @@ if (@$_SESSION["id_perso"]) {
 		
 		$x 			= $t["x_carte"];
 		$y 			= $t["y_carte"];
+		$fond		= $t["fond_carte"];
 		
+		if ($fond == '3.gif') {
+			// Montagne
+			$couleur_brouillard = $couleur_brouillard_montagne;
+		}
+		else if ($fond == '2.gif') {
+			// Colinne
+			$couleur_brouillard = $couleur_brouillard_colinne;
+		}
+		else if ($fond == '4.gif') {
+			// Desert
+			$couleur_brouillard = $couleur_brouillard_desert;
+		}
+		else if ($fond == '7.gif') {
+			// Foret
+			$couleur_brouillard = $couleur_brouillard_foret;
+		}
+		else if ($fond == '8.gif' || $fond == '9.gif' || $fond == '6.gif') {
+			// eau
+			$couleur_brouillard = $couleur_brouillard_eau;
+		}
+		else {
+			// plaine et autres
+			$couleur_brouillard = $couleur_brouillard_plaine;
+		}
+		
+		/*
 		$rand = mt_rand(1,2);
 		
 		if ($rand == 1) {
@@ -153,7 +184,7 @@ if (@$_SESSION["id_perso"]) {
 		}
 		else {
 			$couleur_brouillard = $couleur_brouillard2;
-		}
+		}*/
 		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
 	}
