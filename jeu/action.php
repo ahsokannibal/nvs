@@ -81,7 +81,7 @@ if($dispo || $admin){
 		$direction_charge = $_POST['action_charge'];
 		
 		// Recup infos perso
-		$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pv_perso, xp_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+		$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
 				WHERE perso_as_grade.id_perso = perso.id_perso
 				AND perso.id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
@@ -91,71 +91,18 @@ if($dispo || $admin){
 		$x_perso 		= $t_perso['x_perso'];
 		$y_perso 		= $t_perso['y_perso'];
 		$pa_perso 		= $t_perso['pa_perso'];
+		$pm_perso 		= $t_perso['pm_perso'];
 		$pv_perso		= $t_perso['pv_perso'];
 		$xp_perso		= $t_perso['xp_perso'];
 		$clan			= $t_perso['clan'];
 		$image_perso	= $t_perso["image_perso"];
 		$grade_perso	= $t_perso["id_grade"];
+		$paMax_perso	= $t_perso['paMax_perso'];
+		$bonusPM_perso	= $t_perso['bonusPM_perso'];
 		
-		// Déplacement du perso dans l'axe choisi
-		if ($direction_charge == 'haut') {
-			charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
+		// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
+		if ($pa_perso == $paMax_perso && $pm_perso + $bonusPM_perso >= 4) {
 		
-		if ($direction_charge == 'haut_gauche') {
-			charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
-		
-		if ($direction_charge == 'gauche') {
-			charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
-		
-		if ($direction_charge == 'bas_gauche') {
-			charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
-		
-		if ($direction_charge == 'bas') {
-			charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
-		
-		if ($direction_charge == 'bas_droite') {
-			charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
-		
-		if ($direction_charge == 'droite') {
-			charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
-		
-		if ($direction_charge == 'haut_droite') {
-			charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
-		}
-		
-		// retour a la page de jeu
-		header("location:jouer.php");
-		
-	} else {
-		
-		if(isset($_POST['hid_action_charge'])){
-			
-			$direction_charge = $_POST['hid_action_charge'];
-			
-			// Recup infos perso
-			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pv_perso, xp_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
-					WHERE perso_as_grade.id_perso = perso.id_perso
-					AND perso.id_perso='$id_perso'";
-			$res = $mysqli->query($sql);
-			$t_perso = $res->fetch_assoc();
-			
-			$nom_perso 		= $t_perso['nom_perso'];
-			$x_perso 		= $t_perso['x_perso'];
-			$y_perso 		= $t_perso['y_perso'];
-			$pa_perso 		= $t_perso['pa_perso'];
-			$pv_perso		= $t_perso['pv_perso'];
-			$xp_perso		= $t_perso['xp_perso'];
-			$clan			= $t_perso['clan'];
-			$image_perso	= $t_perso["image_perso"];
-			$grade_perso	= $t_perso["id_grade"];
-			
 			// Déplacement du perso dans l'axe choisi
 			if ($direction_charge == 'haut') {
 				charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
@@ -191,6 +138,80 @@ if($dispo || $admin){
 			
 			// retour a la page de jeu
 			header("location:jouer.php");
+		}
+		else {
+			// retour a la page de jeu
+			header("location:jouer.php");
+		}
+	} else {
+		
+		if(isset($_POST['hid_action_charge'])){
+			
+			$direction_charge = $_POST['hid_action_charge'];
+			
+			// Recup infos perso
+			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+					WHERE perso_as_grade.id_perso = perso.id_perso
+					AND perso.id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_perso = $res->fetch_assoc();
+			
+			$nom_perso 		= $t_perso['nom_perso'];
+			$x_perso 		= $t_perso['x_perso'];
+			$y_perso 		= $t_perso['y_perso'];
+			$pa_perso 		= $t_perso['pa_perso'];
+			$pm_perso 		= $t_perso['pm_perso'];
+			$pv_perso		= $t_perso['pv_perso'];
+			$xp_perso		= $t_perso['xp_perso'];
+			$clan			= $t_perso['clan'];
+			$image_perso	= $t_perso["image_perso"];
+			$grade_perso	= $t_perso["id_grade"];
+			$paMax_perso	= $t_perso['paMax_perso'];
+			$bonusPM_perso	= $t_perso['bonusPM_perso'];
+			
+			// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
+			if ($pa_perso == $paMax_perso && $pm_perso + $bonusPM_perso >= 4) {
+			
+				// Déplacement du perso dans l'axe choisi
+				if ($direction_charge == 'haut') {
+					charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				if ($direction_charge == 'haut_gauche') {
+					charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				if ($direction_charge == 'gauche') {
+					charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				if ($direction_charge == 'bas_gauche') {
+					charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				if ($direction_charge == 'bas') {
+					charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				if ($direction_charge == 'bas_droite') {
+					charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				if ($direction_charge == 'droite') {
+					charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				if ($direction_charge == 'haut_droite') {
+					charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+				}
+				
+				// retour a la page de jeu
+				header("location:jouer.php");
+			}
+			else {
+				// retour a la page de jeu
+				header("location:jouer.php");
+			}
 		}
 	}
 	
