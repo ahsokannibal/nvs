@@ -429,7 +429,7 @@ function anim_perso($mysqli, $id_perso){
  * @param $id_perso	: l'identifiant du perso
  * @return Bool		: Si oui ou non le perso est redacteur
  */
-function redac_perso($mysqli, $id) {
+function redac_perso($mysqli, $id_perso) {
 	$sql = "SELECT redacteur FROM joueur, perso WHERE id_perso='$id_perso' AND perso.idJoueur_perso  = joueur.id_joueur";
 	$res = $mysqli->query($sql);
 	$t_anim = $res->fetch_assoc();
