@@ -431,7 +431,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 								$couleur_clan_perso = couleur_clan($camp);
 								
 								// route et pont
-								if($id_bat == 4 || $id_bat == 5){
+								if($id_bat == 4){
 									//mise a jour de la table evenement
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>$nom_bat</b>',NULL,'','',NOW(),'0')";
 									$mysqli->query($sql);
