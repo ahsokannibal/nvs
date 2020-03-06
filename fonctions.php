@@ -414,7 +414,7 @@ function admin_perso($mysqli, $id_perso){
 /**
   * Fonction qui vérifie si un perso est animateur
   * @param $id_perso	: l'identifiant du perso
-  * @return Bool		: Si oui ou non le perso est admin
+  * @return Bool		: Si oui ou non le perso est animateur
   */
 function anim_perso($mysqli, $id_perso){
 	$sql = "SELECT animateur FROM joueur, perso WHERE id_perso='$id_perso' AND perso.idJoueur_perso  = joueur.id_joueur";
@@ -422,6 +422,19 @@ function anim_perso($mysqli, $id_perso){
 	$t_anim = $res->fetch_assoc();
 	
 	return $t_anim["animateur"];
+}
+
+/**
+ * Fonction qui vérifie si un perso est redacteur
+ * @param $id_perso	: l'identifiant du perso
+ * @return Bool		: Si oui ou non le perso est redacteur
+ */
+function redac_perso($mysqli, $id) {
+	$sql = "SELECT redacteur FROM joueur, perso WHERE id_perso='$id_perso' AND perso.idJoueur_perso  = joueur.id_joueur";
+	$res = $mysqli->query($sql);
+	$t_anim = $res->fetch_assoc();
+	
+	return $t_anim["redacteur"];
 }
 
 /**

@@ -176,6 +176,21 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 					}
 					
+					// Coche mail mp
+					if (isset($_POST['mail_mp'])){
+						
+						$statut = $_POST['mail_mp'];
+						
+						if($statut == 'on'){
+							$sql = "UPDATE joueur SET mail_mp='1' WHERE id_joueur ='".$id_joueur."'";
+							$mysqli->query($sql);
+						}
+					} 
+					else {
+						$sql = "UPDATE joueur SET mail_mp='0' WHERE id_joueur ='".$id_joueur."'";
+						$mysqli->query($sql);
+					}
+					
 					// Dossier img
 					if (isset($_POST["select_dossier_img"])) {
 						
@@ -199,6 +214,7 @@ if($dispo || $admin){
 				$region_joueur 		= $t["region_joueur"];
 				$description_joueur = $t["description_joueur"];
 				$mail_info_joueur 	= $t["mail_info"];
+				$mail_mp_joueur		= $t["mail_mp"];
 				$dossier_img_joueur = $t["dossier_img"];
 	?>
 <html>
@@ -403,6 +419,12 @@ if($dispo || $admin){
 				<div class="row">
 					<div class="col-2">
 						<input type='checkbox' name='mail_info' <?php if($mail_info_joueur) echo 'checked';?> /> Recevoir un mail si on m'attaque
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-2">
+						<input type='checkbox' name='mail_mp' <?php if($mail_mp_joueur) echo 'checked';?> /> Recevoir une copie des MP par mail
 					</div>
 				</div>
 				

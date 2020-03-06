@@ -530,7 +530,9 @@ CREATE TABLE `joueur` (
   `mail_info` tinyint(1) NOT NULL DEFAULT '0',
   `dossier_img` varchar(10) DEFAULT 'v1',
   `admin_perso` enum('0','1') NOT NULL DEFAULT '0',
-  `animateur` enum('0','1') NOT NULL DEFAULT '0'
+  `animateur` enum('0','1') NOT NULL DEFAULT '0',
+  `redacteur` INT NOT NULL DEFAULT '0',
+  `mail_mp` INT NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
