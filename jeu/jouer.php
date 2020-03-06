@@ -2351,65 +2351,86 @@ if($dispo || $admin){
 				// Traitement voir objets à terre
 				if(isset($_GET['ramasser']) && $_GET['ramasser'] == "voir"){
 					
+					$affichage_objets = true;
+					
 					if (isset($_GET['x']) && isset($_GET['y']) && trim($_GET['x']) != "" && trim($_GET['y']) != "") {
+						
 						$x = $_GET['x'];
 						$y = $_GET['y'];
 						
-						$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
-						$res = $mysqli->query($sql);
+						$verifx = preg_match("#^[0-9]*[0-9]$#i","$x");
+						$verify = preg_match("#^[0-9]*[0-9]$#i","$y");
+						
+						if ($verifx && $verify) {
+						
+							$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
+							$res = $mysqli->query($sql);
+						}
+						else {
+							$affichage_objets = false;
+							
+							// Tentative de triche !
+							$text_triche = "Le perso $id_perso a essayé de jouer avec les paramètres pour voir les objets à ramasser !";
+							
+							$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+							$mysqli->query($sql);
+						}
 					}
 					else {
 						$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
 						$res = $mysqli->query($sql);
 					}
 					
-					echo "<center>";
-					echo "<b>Liste des objets à terre</b>";
-					echo "	<table border='1' width='50%'>";
-					echo "		<tr>";
-					echo "			<th style='text-align:center'>Nom objet</th><th style='text-align:center'>Quantité</th>";
-					echo "		</tr>";
+					if ($affichage_objets) {
 					
-					while ($t = $res->fetch_assoc()) {
-						
-						$type_objet = $t['type_objet'];
-						$id_objet 	= $t['id_objet'];
-						$nb_objet	= $t['nb_objet'];
-						
-						// Récupération du nom de l'objet 
-						// Thunes
-						if ($type_objet == '1') {
-							$nom_objet = "Thune";
-							if ($nb_objet > 1) {
-								$nom_objet = $nom_objet."s";
-							}
-						}
-						
-						// Objets
-						if ($type_objet == '2') {
-							$sql_obj = "SELECT nom_objet FROM objet WHERE id_objet='$id_objet'";
-							$res_obj = $mysqli->query($sql_obj);
-							$t_obj = $res_obj->fetch_assoc();
-							
-							$nom_objet = $t_obj['nom_objet'];
-						}
-						
-						// Armes
-						if ($type_objet == '3') {
-							$sql_obj = "SELECT nom_arme FROM arme WHERE id_arme='$id_objet'";
-							$res_obj = $mysqli->query($sql_obj);
-							$t_obj = $res_obj->fetch_assoc();
-							
-							$nom_objet = $t_obj['nom_arme'];
-						}
-						
+						echo "<center>";
+						echo "<b>Liste des objets à terre</b>";
+						echo "	<table border='1' width='50%'>";
 						echo "		<tr>";
-						echo "			<td align='center'>" . $nom_objet . "</td><td align='center'>" . $nb_objet . "</td>";
+						echo "			<th style='text-align:center'>Nom objet</th><th style='text-align:center'>Quantité</th>";
 						echo "		</tr>";
+						
+						while ($t = $res->fetch_assoc()) {
+							
+							$type_objet = $t['type_objet'];
+							$id_objet 	= $t['id_objet'];
+							$nb_objet	= $t['nb_objet'];
+							
+							// Récupération du nom de l'objet 
+							// Thunes
+							if ($type_objet == '1') {
+								$nom_objet = "Thune";
+								if ($nb_objet > 1) {
+									$nom_objet = $nom_objet."s";
+								}
+							}
+							
+							// Objets
+							if ($type_objet == '2') {
+								$sql_obj = "SELECT nom_objet FROM objet WHERE id_objet='$id_objet'";
+								$res_obj = $mysqli->query($sql_obj);
+								$t_obj = $res_obj->fetch_assoc();
+								
+								$nom_objet = $t_obj['nom_objet'];
+							}
+							
+							// Armes
+							if ($type_objet == '3') {
+								$sql_obj = "SELECT nom_arme FROM arme WHERE id_arme='$id_objet'";
+								$res_obj = $mysqli->query($sql_obj);
+								$t_obj = $res_obj->fetch_assoc();
+								
+								$nom_objet = $t_obj['nom_arme'];
+							}
+							
+							echo "		<tr>";
+							echo "			<td align='center'>" . $nom_objet . "</td><td align='center'>" . $nb_objet . "</td>";
+							echo "		</tr>";
+						}
+						
+						echo "	</table>";
+						echo "</center>";
 					}
-					
-					echo "	</table>";
-					echo "</center>";
 				}
 				
 				// Récupération de l'arme de CaC équipé sur le perso
@@ -3497,6 +3518,7 @@ if($dispo || $admin){
 												$nom_ennemi = $t_perso_im['nom_perso'];
 												$id_ennemi 	= $t_perso_im['id_perso'];
 												$clan_e 	= $t_perso_im['clan'];
+												$message_e	= $t_perso_im['message_perso'];
 												
 												if($clan_e == 1){
 													$clan_ennemi 	= 'rond_b.png';
@@ -3541,7 +3563,7 @@ if($dispo || $admin){
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}
 													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
-													echo "<div><u>Message du jour</u> :<br />".$message_perso."</div>\" ";
+													echo "<div><u>Message du jour</u> :<br />".$message_e."</div>\" ";
 													// data content popover
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
 													
@@ -3553,7 +3575,7 @@ if($dispo || $admin){
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}				
 													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
-													echo "<div><u>Message du jour</u> :<br />".$message_perso."</div>\" ";
+													echo "<div><u>Message du jour</u> :<br />".$message_e."</div>\" ";
 													// Data content popover
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";
