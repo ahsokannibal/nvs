@@ -19,101 +19,120 @@ $pseudo = $t["nom_perso"];
 
 unset($_SESSION['destinataires']);
 
+/**
+  * Fonction qui envoi une copie du mp par mail
+  * @return void
+  */
+function mail_mp($mysqli, $expediteur, $objet, $message, $id_perso_destinataire){
+	
+	// Recuperation du mail du destinataire
+	$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE id_perso='$id_perso_destinataire' AND id_joueur=idJoueur_perso";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+
+	// Headers mail
+	/*
+	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\r\n";
+	$headers .='Reply-To: nordvssud@no-reply.fr'."\r\n";
+	$headers .='Content-Type: text/html; charset="utf-8"'."\r\n";
+	$headers .='Content-Transfer-Encoding: 8bit';
+	*/
+	
+	// Destinataire du mail
+	$destinataire 	= $t['email_joueur'];
+	$nom_perso		= $t['nom_perso'];
+	
+	$headers[] = 'MIME-Version: 1.0';
+    $headers[] = 'Content-type: text/html; charset=utf-8';
+	$headers[] = 'To: '.$nom_perso.' <'.$destinataire.'>';
+    $headers[] = 'From: Nord VS Sud"<nordvssud@no-reply.fr>';
+	$headers[] = 'Reply-To: nordvssud@no-reply.fr';
+	
+	// Titre du mail
+	$titre = "Votre personnage $nom_perso a reçu un MP de $expediteur";
+	
+	// Contenu du mail
+	$message = "Objet du message : $objet <br>Message : ".bbcode($message);
+	
+	// Envoie du mail
+	mail($destinataire, $titre, $message, implode("\r\n", $headers));
+}
+
 if(isset($_POST["envoyer"])) {
 	if (trim($_POST["destinataire"]) == ""){
 		echo "<div class=\"info\">Vous devez obligatoirement renseigner le destinataire du message</div>";
 	}
 	else {
 		if(trim($_POST["objet"]) == ""){
-			$destinataire = $_POST["destinataire"];
-			$dest = explode(";",$destinataire);
-			$nbdest = count($dest);
-			
-			$expediteur = $pseudo;
-			$message = addslashes($_POST["message"]) ;
-			$objet = "(Sans objet)" ;
-			
-			$lock = "LOCK TABLE (message) WRITE";
-			$mysqli->query($lock);
-			
-			// creation du message
-			$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ('" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
-			$mysqli->query($sql);
-			$id_message = $mysqli->insert_id;
-			
-			$unlock = "UNLOCK TABLES";
-			$mysqli->query($unlock);
-			
-			for ($i = 0; $i < $nbdest; $i++) {
-				
-				// recupération du nom du perso destinataire
-				$sql_d = "SELECT nom_perso FROM perso WHERE id_perso='".addslashes($dest[$i])."' OR nom_perso='".addslashes($dest[$i])."'";
-				$res_d = $mysqli->query($sql_d);
-				
-				if( $res_d->num_rows == 0 ){ 
-					echo "<div class=\"erreur\">Le destinataire n'existe pas !</div>";
-					$_SESSION['destinataires'] .= $dest[$i].";";
-					$_SESSION['message'] = $_POST["message"];
-					$_SESSION['objet'] = "(Sans objet)";
-				}
-				else {
-					$sql_p = "SELECT id_perso FROM perso WHERE nom_perso='".addslashes($dest[$i])."' OR id_perso='".addslashes($dest[$i])."'";
-					$res_p = $mysqli->query($sql_p);
-					$t_p = $res_p->fetch_assoc();
-					$id_p = $t_p['id_perso'];
-				
-					// assignation du message au perso
-					$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
-					$mysqli->query($sql);
-
-					header("Location:messagerie.php?envoi=ok");
-				}
-			}
+			$objet = "(Sans objet)";
 		}
 		else {
-			$destinataire = $_POST["destinataire"];
-			$dest = explode(";",$destinataire);
-			$nbdest = count($dest);
-			
-			$expediteur = $pseudo;
-			$message = addslashes($_POST["message"]) ;
 			$objet = htmlentities(addslashes($_POST["objet"]));
+		}
+		
+		$destinataire = $_POST["destinataire"];
+		$dest = explode(";",$destinataire);
+		$nbdest = count($dest);
+		
+		$expediteur = $pseudo;
+		$message = addslashes($_POST["message"]);
+		
+		$lock = "LOCK TABLE (message) WRITE";
+		$mysqli->query($lock);
+		
+		// creation du message
+		$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ('" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
+		$mysqli->query($sql);
+		$id_message = $mysqli->insert_id;
+		
+		$unlock = "UNLOCK TABLES";
+		$mysqli->query($unlock);
+		
+		for ($i = 0; $i < $nbdest; $i++) {
 			
-			// creation du message
-			$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ('" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
-			$mysqli->query($sql);
-			$id_message = $mysqli->insert_id;
+			// recupération du nom du perso destinataire
+			$sql_d = "SELECT nom_perso FROM perso WHERE id_perso='".addslashes($dest[$i])."' OR nom_perso='".addslashes($dest[$i])."'";
+			$res_d = $mysqli->query($sql_d);
 			
-			for ($i = 0; $i < $nbdest; $i++) {
+			if( $res_d->num_rows == 0 ){
+				echo "<div class=\"erreur\">Le destinataire n'existe pas !</div>";
 				
-				// recupération du nom du perso destinataire
-				$sql_d = "SELECT nom_perso FROM perso WHERE id_perso='".addslashes($dest[$i])."' OR nom_perso='".addslashes($dest[$i])."'";
-				$res_d = $mysqli->query($sql_d);
-				
-				if( $res_d->num_rows == 0 ){
-					echo "<div class=\"erreur\">Le destinataire n'existe pas !</div>";
-					
-					if(isset($_SESSION['destinataires'])){
-						$_SESSION['destinataires'] .= ";".$dest[$i];
-					}
-					else {
-						$_SESSION['destinataires'] = $dest[$i];
-					}
-					$_SESSION['message'] = $_POST["message"];
-					$_SESSION['objet'] = $_POST["objet"];
+				if(isset($_SESSION['destinataires'])){
+					$_SESSION['destinataires'] .= ";".$dest[$i];
 				}
 				else {
-					$sql_p = "SELECT id_perso FROM perso WHERE nom_perso='".addslashes($dest[$i])."' OR id_perso='".addslashes($dest[$i])."'";
-					$res_p = $mysqli->query($sql_p);
-					$t_p = $res_p->fetch_assoc();
-					$id_p = $t_p['id_perso'];
-				
-					// assignation du message au perso
-					$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
-					$mysqli->query($sql);
-					
-					header("Location:messagerie.php?envoi=ok");
+					$_SESSION['destinataires'] = $dest[$i];
 				}
+				$_SESSION['message'] = $_POST["message"];
+				$_SESSION['objet'] = $_POST["objet"];
+			}
+			else {
+				$sql_p = "SELECT id_perso, idJoueur_perso FROM perso WHERE nom_perso='".addslashes($dest[$i])."' OR id_perso='".addslashes($dest[$i])."'";
+				$res_p = $mysqli->query($sql_p);
+				$t_p = $res_p->fetch_assoc();
+				
+				$id_p = $t_p['id_perso'];
+				$id_j = $t_p['idJoueur_perso'];
+			
+				// assignation du message au perso
+				$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
+				$mysqli->query($sql);
+				
+				// On récupère la config envoi_mail_mp du joueur 
+				$sql = "SELECT mail_mp FROM joueur WHERE id_joueur='$id_j'";
+				$res = $mysqli->query($sql);
+				$t_j = $res->fetch_assoc();
+				
+				$envoi_mail_mp = $t_j['mail_mp'];
+				
+				if ($envoi_mail_mp) {
+					
+					// Envoi d'une copie du message par mail 
+					mail_mp($mysqli, $expediteur, $objet, $message, $id_p);
+					
+				}
+				
+				header("Location:messagerie.php?envoi=ok");
 			}
 		}
 	}
@@ -232,7 +251,7 @@ if(isset($_GET["id_compagnie"])) {
 	$id_compagnie = $_GET["id_compagnie"];
 	//-- TODO -- //
 	// Sécurité : verif $id_compagnie correct
-	//                   verif identité joueur qui veut envoyer le message => fait-il bien partie de la compagnie ?
+	//            verif identité joueur qui veut envoyer le message => fait-il bien partie de la compagnie ?
 	// -- TODO -- //
 	
 	if(isset($_POST["contenu"])) {

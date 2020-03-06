@@ -965,14 +965,18 @@ if($verif){
 				
 								echo "<br>Vous avez raté votre cible.<br><br>";
 								
-								$gain_xp = 1;
-								
-								// gain xp esquive et ajout malus
-								$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, bonus_perso=bonus_perso-1 WHERE id_perso='$id_cible'";
+								if ($touche >= 98) {
+									// Echec critique !
+									// Ajout d'un malus supplémentaire à l'attaquant
+									$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
+								} else {
+									// ajout malus cible
+									$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id_cible'";
+								}
 								$mysqli->query($sql);
 									
 								// maj evenement
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
 								$mysqli->query($sql);
 				
 							}
@@ -1732,9 +1736,19 @@ if($verif){
 					else { // la cible a esquivé l'attaque
 		
 						echo "<br>Vous avez raté votre cible.<br><br>";
+						
+						if ($touche >= 98) {
+							// Echec critique !
+							// Ajout d'un malus supplémentaire à l'attaquant
+							$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
+						} else {
+							// ajout malus cible
+							$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 1 WHERE idInstance_pnj='$id_cible'";
+						}
+						$mysqli->query($sql);
 							
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						if ($pv_cible > 0) {
@@ -2288,12 +2302,19 @@ if($verif){
 						
 						echo "<br>Vous avez raté votre cible.<br><br>";
 						
+						if ($touche >= 98) {
+							// Echec critique !
+							// Ajout d'un malus supplémentaire à l'attaquant
+							$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
+							$mysqli->query($sql);
+						}
+						
 						//mise à jour des pa
 						$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_attaque WHERE id_perso='$id'";
-						$res = $mysqli->query($sql);
+						$mysqli->query($sql);
 							
 						// maj evenement
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a raté son attaque contre','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a raté son attaque contre','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						?>
