@@ -3716,17 +3716,6 @@ if($dispo || $admin){
 														echo "<option value=\"999\">Charger (tous les pa)</option>";
 													}
 													
-													// verification s'il y a un objet sur la case du perso
-													$sql_op = "SELECT id_objet FROM objet_in_carte, perso WHERE x_carte=x_perso AND y_carte=y_perso";
-													$res_op = $mysqli->query($sql_op);
-													$nb_op = $res_op->num_rows;
-													if($nb_op){
-														// Action Ramasser Objet
-														if($pa_perso >= 1){
-															echo "<option value=\"111\">Ramasser objet (1 point - 1 pa)</option>";
-														}
-													}
-													
 													$sql = "SELECT action.id_action, nom_action, coutPa_action, reflexive_action
 															FROM perso_as_competence, competence_as_action, action 
 															WHERE id_perso='$id_perso' 
