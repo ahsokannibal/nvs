@@ -39,22 +39,39 @@ function image_action($id_action){
 
 function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 	
-	if(isset($_POST['pose_rail'])){
-		$t_rail = $_POST['pose_rail'];
+	$sql = "SELECT pa_perso FROM perso WHERE id_perso='$id_perso'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$pa_perso = $t['pa_perso'];
+	
+	if ($pa_perso >= 4) {
+	
+		// Récupération coordonnées rail
+		if(isset($_POST['pose_rail'])){
+			$t_rail = $_POST['pose_rail'];
+		}
+		else {
+			$t_rail = $_POST['hid_pose_rail'];
+		}
+
+		$t_rail2 = explode(',',$t_rail);
+		$x_rail = $t_rail2[0];
+		$y_rail = $t_rail2[1];
+		
+		// mise a jour de la carte
+		$sql = "UPDATE $carte SET fond_carte='rail.gif' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
+		$mysqli->query($sql);
+		
+		// maj pa perso 
+		$sql = "UPDATE perso SET pa_perso = pa_perso - 4 WHERE id_perso='$id_perso'";
+		$mysqli->query($sql);
+		
+		return 1;
 	}
 	else {
-		$t_rail = $_POST['hid_pose_rail'];
+		return 1;
 	}
-
-	$t_rail2 = explode(',',$t_rail);
-	$x_rail = $t_rail2[0];
-	$y_rail = $t_rail2[1];
-	
-	// mise a jour de la carte
-	$sql = "UPDATE $carte SET fond_carte='rail.gif' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
-	$mysqli->query($sql);
-	
-	return 1;
 }
 
 /**

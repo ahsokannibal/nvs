@@ -1405,72 +1405,82 @@ if($dispo || $admin){
 									$taille_batiment = 1;
 									
 									//recuperation des coordonnees du perso
-									$sql = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
+									$sql = "SELECT x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
 									$res = $mysqli->query($sql);
 									$t_coord = $res->fetch_assoc();
 									
-									$x_perso = $t_coord['x_perso'];
-									$y_perso = $t_coord['y_perso'];
+									$x_perso 	= $t_coord['x_perso'];
+									$y_perso 	= $t_coord['y_perso'];
+									$pa_perso	= $t_coord['pa_perso'];
 									
-									// recuperation des donnees de la carte
-									$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
-											FROM $carte WHERE x_carte >= $x_perso - $taille_batiment AND x_carte <= $x_perso + $taille_batiment AND y_carte <= $y_perso + $taille_batiment AND y_carte >= $y_perso - $taille_batiment 
-											ORDER BY y_carte DESC, x_carte";
-									$res = $mysqli->query($sql);
-									$tab = $res->fetch_assoc(); 
+									// Il faut 4 PA pour construire un rail
+									if ($pa_perso >= 4) {
 									
-									//<!--Generation de la carte-->
-									echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
-									
-									echo "<tr><td>y \ x</td>";  //affichage des abscisses
-									for ($i = $x_perso - $taille_batiment; $i <= $x_perso + $taille_batiment; $i++) {
-										echo "<th width=40 height=40>$i</th>";
-									}
-									echo "</tr>";
-									
-									for ($y = $y_perso + $taille_batiment; $y >= $y_perso - $taille_batiment; $y--) {
-										echo "<th>$y</th>";
-										for ($x = $x_perso - $taille_batiment; $x <= $x_perso + $taille_batiment; $x++) {
-											
-											//les coordonnees sont dans les limites
-											if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
-												
-												if ($tab["occupee_carte"]){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
-												}
-												else{
-													echo "<form method=\"post\" action=\"action.php\" >";
-												
-													//positionnement du fond
-													$fond_carte = $tab["fond_carte"];
-													
-													if($fond_carte == '1.gif'){
-														echo "
-															<td width=40 height=40> 
-																<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
-																	onMouseOver=\"this.src='../fond_carte/$image_bat';\" 
-																	onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
-																<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y\" >
-															</td>";
-													}
-													else {
-														echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
-													}
-													echo "</form>";
-												}
-												$tab = $res->fetch_assoc();
-											}
-											else //les coordonnees sont hors limites
-												echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
+										// recuperation des donnees de la carte
+										$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
+												FROM $carte WHERE x_carte >= $x_perso - $taille_batiment AND x_carte <= $x_perso + $taille_batiment AND y_carte <= $y_perso + $taille_batiment AND y_carte >= $y_perso - $taille_batiment 
+												ORDER BY y_carte DESC, x_carte";
+										$res = $mysqli->query($sql);
+										$tab = $res->fetch_assoc(); 
+										
+										//<!--Generation de la carte-->
+										echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
+										
+										echo "<tr><td>y \ x</td>";  //affichage des abscisses
+										for ($i = $x_perso - $taille_batiment; $i <= $x_perso + $taille_batiment; $i++) {
+											echo "<th width=40 height=40>$i</th>";
 										}
 										echo "</tr>";
+										
+										for ($y = $y_perso + $taille_batiment; $y >= $y_perso - $taille_batiment; $y--) {
+											echo "<th>$y</th>";
+											for ($x = $x_perso - $taille_batiment; $x <= $x_perso + $taille_batiment; $x++) {
+												
+												//les coordonnees sont dans les limites
+												if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
+													
+													if ($tab["occupee_carte"]){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+													}
+													else{
+														echo "<form method=\"post\" action=\"action.php\" >";
+													
+														//positionnement du fond
+														$fond_carte = $tab["fond_carte"];
+														
+														if($fond_carte == '1.gif'){
+															echo "
+																<td width=40 height=40> 
+																	<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																		onMouseOver=\"this.src='../fond_carte/$image_bat';\" 
+																		onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
+																	<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y\" >
+																</td>";
+														}
+														else {
+															echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
+														}
+														echo "</form>";
+													}
+													$tab = $res->fetch_assoc();
+												}
+												else //les coordonnees sont hors limites
+													echo "<td width=40 height=40><img border=0 width=40 height=40 src=\"../fond_carte/decorO.jpg\"></td>";
+											}
+											echo "</tr>";
+										}
+										echo "</table>";
+										// fin de la generation de la carte
+										
+										// lien annuler
+										echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
 									}
-									echo "</table>";
-									// fin de la generation de la carte
-									
-									// lien annuler
-									echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
-									
+									else {
+										echo "<center>Il vous faut 4 PA pour construire un rail</center>";
+										
+										// lien annuler
+										echo "<br /><br /><center><a href='jouer.php'><b>[ retour ]</b></a></center>";
+									}
 								}
 								
 								// reparer batiment
