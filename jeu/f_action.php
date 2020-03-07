@@ -3015,7 +3015,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 				$gain_experience = mt_rand(1, 6);
 			} else {
 			
-				$calcul_dif_xp = ($xp_cible - $xp_perso) / 10;
+				$calcul_dif_xp = ceil(($xp_cible - $xp_perso) / 10);
 								
 				if ($calcul_dif_xp < 0) {
 					$valeur_des_xp = 0;
