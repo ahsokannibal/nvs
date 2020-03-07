@@ -2030,6 +2030,24 @@ if($dispo || $admin){
 				<?php
 				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
 				
+				if (anim_perso($mysqli, $id_perso)) {
+					// Récupération des demandes sur la gestion des compagnies
+					$sql = "SELECT * FROM compagnie_demande_anim, compagnies 
+							WHERE compagnie_demande_anim.id_compagnie = compagnies.id_compagnie
+							AND compagnies.id_clan='$clan_p'";
+					$res = $mysqli->query($sql);
+					$nb_demandes_gestion_compagnie = $res->num_rows;
+					
+					// Récupération des demandes sur la gestion des persos 
+					$sql = "SELECT * FROM perso_demande_anim, perso
+							WHERE perso_demande_anim.id_perso = perso.id_perso
+							AND perso.clan = '$clan_p'";
+					$res = $mysqli->query($sql);
+					$nb_demandes_gestion_perso = $res->num_rows;
+					
+					$nb_demande_a_traiter = $nb_demandes_gestion_compagnie + $nb_demandes_gestion_perso;
+				}
+				
 				//affichage de l'heure serveur et de nouveau tour
 				echo "<table width=100% bgcolor='white' border=0>";
 				echo "<tr>
@@ -2041,9 +2059,25 @@ if($dispo || $admin){
 				echo "	<td>Prochain tour :  ".$n_dla."</td>";
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
-				if(redac_perso($mysqli, $id_perso)) { echo " <a class='btn btn-warning' href='redacteur.php'>Redaction</a>"; }
-				if(anim_perso($mysqli, $id_perso)) { echo " <a class='btn btn-warning' href='animation.php'>Animation</a>"; }
-				if($admin) { echo " <a class='btn btn-warning' href='admin_nvs.php'>Admin</a>"; }
+				
+				// Redacteur
+				if(redac_perso($mysqli, $id_perso)) { 
+					echo " <a class='btn btn-warning' href='redacteur.php'>Redaction</a>"; 
+				}
+				
+				// Animation
+				if(anim_perso($mysqli, $id_perso)) { 
+					echo " <a class='btn btn-warning' href='animation.php'>Animation <span class='badge badge-danger' title='".$nb_demande_a_traiter." demandes en attente'>";
+					if ($nb_demande_a_traiter > 0) {
+						echo $nb_demande_a_traiter;
+					}
+					echo "</span></a>";
+				}
+				
+				// Admin
+				if($admin) {
+					echo " <a class='btn btn-warning' href='admin_nvs.php'>Admin</a>";
+				}
 				echo "	</td>";
 				echo "</tr>";
 				echo "</table>";
