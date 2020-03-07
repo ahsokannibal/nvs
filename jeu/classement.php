@@ -347,6 +347,15 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	
 	// Nombre de capture de PNJ
 	
+	// Nombre de destruction
+	
+	// Nombre d'attaques (dont charges)
+	
+	// Nombre de charges
+	
+	// Nombre de soins
+	
+	// Nombre de réparations	
 
 	echo "<div class='table-responsive'>";
 	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";

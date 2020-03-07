@@ -721,7 +721,7 @@ if($verif){
 												$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>',NOW())";
 												$mysqli->query($sql);
 							
-												// maj stats de la cible
+												// maj stats du perso
 												$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id";
 												$mysqli->query($sql);
 												
@@ -945,7 +945,7 @@ if($verif){
 									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 									$mysqli->query($sql);
 				
-									// maj stats de la cible
+									// maj stats du perso
 									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id";
 									$mysqli->query($sql);
 									

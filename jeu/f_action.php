@@ -3174,9 +3174,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 				$mysqli->query($sql);
 				
 				if ($idPerso_carte < 50000) {
-					// maj stats du perso
-					$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-					$mysqli->query($sql);
 					
 					// Recup infos cible
 					$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
@@ -3212,6 +3209,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 					
 					// maj stats / XP / PI / PC de la cible
 					$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+					$mysqli->query($sql);
+					
+					// maj stats du perso
+					$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
 					$mysqli->query($sql);
 					
 					// maj stats camp
