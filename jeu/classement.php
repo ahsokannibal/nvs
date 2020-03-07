@@ -265,67 +265,124 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$sql = "SELECT id_camp, nb_kill FROM stats_camp_kill";
 	$res = $mysqli->query($sql);
 	
-	$sql_countb = "SELECT sum(nb_kill) as count_b FROM perso WHERE clan='1'";
-	$res_countb = $mysqli->query($sql_countb);
-	$t_b = $res_countb->fetch_assoc();
-	$nb_countb = $t_b['count_b'];
-	
-	$sql_countr = "SELECT sum(nb_kill) as count_r FROM perso WHERE clan='2'";
-	$res_countr = $mysqli->query($sql_countr);
-	$t_r = $res_countr->fetch_assoc();
-	$nb_countr = $t_r['count_r'];
-	
+	// Nombre de persos au Nord
 	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1'";
 	$res_nbb = $mysqli->query($sql_nbb);
 	$nbb = $res_nbb->num_rows;
 	
+	// Nombre de persos au Sud
 	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2'";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
 	
+	// Nombre de Point de victoire au Nord
 	$sql_pvictb = "SELECT points_victoire FROM stats_camp_pv WHERE id_camp='1'";
 	$res_pvictb = $mysqli->query($sql_pvictb);
 	$t = $res_pvictb->fetch_assoc();
 	$nbvictb = $t['points_victoire'];
 	
+	// Nombre de Point de victoire au Sud
 	$sql_pvictr = "SELECT points_victoire FROM stats_camp_pv WHERE id_camp='2'";
 	$res_pvictr = $mysqli->query($sql_pvictr);
 	$t = $res_pvictr->fetch_assoc();
 	$nbvictr = $t['points_victoire'];
+	
+	// Nombre de persos du sud capturés par le Nord
+	$sql_ev_capt = "SELECT * FROM evenement WHERE 
+					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
+					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
+					AND IDActeur_evenement < 50000
+					AND IDCible_evenement < 50000
+					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
+	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$nb_ennemis_capt_nord = $res_ev_capt->num_rows;
+	
+	// Nombre de persos du nord capturés par le Sud
+	$sql_ev_capt = "SELECT * FROM evenement WHERE 
+					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
+					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
+					AND IDActeur_evenement < 50000
+					AND IDCible_evenement < 50000
+					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
+	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$nb_ennemis_capt_sud = $res_ev_capt->num_rows;
+	
+	// Nombre de persos du nord capturés par le Nord
+	$sql_ev_capt = "SELECT * FROM evenement WHERE 
+					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
+					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
+					AND IDActeur_evenement < 50000
+					AND IDCible_evenement < 50000
+					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
+	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$nb_allies_capt_nord = $res_ev_capt->num_rows;
+	
+	// Nombre de persos du sud capturés par le Sud
+	$sql_ev_capt = "SELECT * FROM evenement WHERE 
+					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
+					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
+					AND IDActeur_evenement < 50000
+					AND IDCible_evenement < 50000
+					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
+	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$nb_allies_capt_sud = $res_ev_capt->num_rows;
+	
+	// Nombre de persos du nord capturés par autre chose qu'un perso (pnj / canon)
+	$sql_ev_capt = "SELECT * FROM evenement WHERE 
+					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
+					AND IDActeur_evenement > 50000
+					AND IDCible_evenement < 50000
+					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
+	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$nb_autre_capt_nord = $res_ev_capt->num_rows;
+	
+	// Nombre de persos du sud capturés par autre chose qu'un perso (pnj / canon)
+	$sql_ev_capt = "SELECT * FROM evenement WHERE 
+					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
+					AND IDActeur_evenement > 50000
+					AND IDCible_evenement < 50000
+					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
+	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$nb_autre_capt_sud = $res_ev_capt->num_rows;
+	
+	// Nombre de capture de PNJ
+	
 
 	echo "<div class='table-responsive'>";
 	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
 	echo "		<thead>";
 	echo "			<tr>";
-	echo "				<th><font color=darkred>Camp</font></th>";
-	echo "				<th><font color=darkred>Nombre de captures ennemis</font></th>";
-	echo "				<th><font color=darkred>Nombre de captures alliés</font></th>";
-	echo "				<th><font color=darkred>Nombre de persos</font></th>";
-	echo "				<th><font color=darkred>Points de victoires</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Camp</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures ennemis</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures alliés</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé par un canon ou un pnj)</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Points de victoires</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
 	echo "		<tbody>";
 
 	while ($tc_kill = $res->fetch_assoc()){
-		$id_camp = $tc_kill["id_camp"];
-		$nb_kill = $tc_kill["nb_kill"];
 		
-		$meutre_b = $nb_countb - $nb_kill;
-		$meutre_r = $nb_countr - $nb_kill;
+		$id_camp = $tc_kill["id_camp"];
 		
 		if($id_camp == "1"){
 			$couleur_camp 	= "blue";
 			$nom_camp 		= "Nord";
 			$nb 			= $nbb;
-			$meutre 		= $meutre_b;
 			$pvict 			= $nbvictb;
+			$nb_kill		= $nb_ennemis_capt_nord;
+			$meutre 		= $nb_allies_capt_nord;
+			$autres			= $nb_autre_capt_nord;
 		}
 		if($id_camp == "2"){
 			$couleur_camp 	= "red";
 			$nom_camp 		= "Sud";
 			$nb 			= $nbr;
-			$meutre 		= $meutre_r;
 			$pvict 			= $nbvictr;
+			$nb_kill		= $nb_ennemis_capt_sud;
+			$meutre 		= $nb_allies_capt_sud;
+			$autres			= $nb_autre_capt_sud;
 		}
 		if($id_camp == "3"){
 			$couleur_camp = "green";
@@ -333,9 +390,10 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		
 		echo "			<tr>";
 		echo "				<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font></td>";
+		echo "				<td align=center>$nb</td>";
 		echo "				<td align=center>$nb_kill</td>";
 		echo "				<td align=center>$meutre</td>";
-		echo "				<td align=center>$nb</td>";
+		echo "				<td align=center>$autres</td>";
 		echo "				<td align='center'>".$pvict."</td>";
 		echo "			</tr>";
 	}
