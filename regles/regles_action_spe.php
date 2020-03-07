@@ -107,6 +107,11 @@ Lorsqu'on se trouve à proximité d'une case de pont, une action "Saboter" appar
 Pour 10PA, cette action, ayant 60% de chance de réussite, sabotera le pont pour entre 50 et 200PV.<br />
 Les unités du génie étant plus efficaces pour saboter un pont, elles feront le double de dégâts ! 
 <br /><br />
+					<h2>Réparer</h2>
+Lorsqu'on se trouve à proximité d'un bâtiment ou d'un pont, une action "Réparer" apparait (accéssible pour toutes les unités).<br />
+Pour 5PA, cette action, ayant 100% de chance de réussite, réparera le bâtiment ou le pont pour entre 20 et 120PV.<br />
+Les unités du génie étant plus efficaces pour réparer un bâtiment ou un pont, les points de réparation seront doublés ! 
+<br /><br />
 					<h2>La marche forcée</h2>
 Les infanteries, guerriers et guerriers du feu peuvent à chaque tour effectuer une marche forcée, leur permettant au prix d'un certain effort de parcourir une plus grande distance.<br />
 Cette action coûte 4 PA et 10 PV, et vous rajoute 1 PM.<br /><br />

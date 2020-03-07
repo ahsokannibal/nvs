@@ -118,6 +118,12 @@
 								<td align='center'>250</td>
 								<td>Il s'agit d'une espèce de mur de protection permettant de défendre une ligne de front. La barricade suit ces règles : on la construit pour 10PA, elle possède 250 PV au maximum et un personnage ne peut la franchir tant qu'elle n'est pas détruite. La barricade possède 25PV juste après sa construction. Elles ne peuvent être construites qu'en plaine par des infanteries</td>
 							</tr>
+							<tr>
+								<td align='center'><img src='../images_perso/b5b.png' alt='pont'></td>
+								<td align='center'>Pont</td>
+								<td align='center'>750</td>
+								<td>Le pont peut être posé sur les case d'eau et d'eau profonde. Il permet aux persos de traverser l'eau pour le cout d'un PM au lieu de 4 ainsi que de traverser l'eau profonde qui est infranchissable sans pont. C'est donc un outil stratégique très important à ne pas négliger ! Les ponts peuvent être sabotés par les persos, il suffit de se trouver à côté d'un pont afin d'avoir la possibilité de le <a href='regles_action_spe.php'>saboter</a> comme de le <a href='regles_action_spe.php'>réparer</a>. On ne peut peut pour l'instant pas saboter un pont avec un perso dessus.</td>
+							</tr>
 						</table>
 					</div>
 					
