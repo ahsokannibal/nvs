@@ -1334,7 +1334,17 @@ if($dispo || $admin){
 											if ($x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX) {
 												
 												if ($tab["occupee_carte"]){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+													
+													$idPerso_carte = $tab['idPerso_carte'];
+													
+													if ($idPerso_carte < 200000) {
+														// Perso ou batiment
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+													}
+													else {
+														// PNJ
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images/pnj/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+													}
 												}
 												else{
 													echo "<form method=\"post\" action=\"action.php\" >";

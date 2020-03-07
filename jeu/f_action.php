@@ -417,6 +417,71 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 										// mise a jour de la carte image centrale
 										$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_bat' AND y_carte='$y_bat'";
 										$mysqli->query($sql);
+										
+										if ($id_bat == '8') {
+											// CANONS FORTIN
+											
+											if ($camp_perso == 1) {
+												$image_canon_g = 'canonG_nord.gif';
+												$image_canon_d = 'canonD_nord.gif';
+											}
+											
+											if ($camp_perso == 2) {
+												$image_canon_g = 'canonG_sud.gif';
+												$image_canon_d = 'canonD_sud.gif';
+											}
+											
+											// Canons Gauche
+											$sql = "UPDATE carte SET image_carte='$image_canon_g' WHERE (x_carte=$x_bat - 1 AND y_carte=$y_bat - 1) OR (x_carte=$x_bat - 1 AND y_carte=$y_bat + 1)";
+											$mysqli->query($sql);
+											
+											// Canons Droit
+											$sql = "UPDATE carte SET image_carte='$image_canon_d' WHERE (x_carte=$x_bat + 1 AND y_carte=$y_bat - 1) OR (x_carte=$x_bat + 1 AND y_carte=$y_bat + 1)";
+											$mysqli->query($sql);
+											
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat - 1, $y_bat - 1, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat - 1, $y_bat + 1, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 1, $y_bat - 1, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 1, $y_bat + 1, $camp_perso)";
+											$mysqli->query($sql);
+										}
+										else if ($id_bat == '9') {
+											// CANONS FORT
+											
+											if ($camp_perso == 1) {
+												$image_canon_g = 'canonG_nord.gif';
+												$image_canon_d = 'canonD_nord.gif';
+											}
+											
+											if ($camp_perso == 2) {
+												$image_canon_g = 'canonG_sud.gif';
+												$image_canon_d = 'canonD_sud.gif';
+											}
+											
+											// Canons Gauche
+											$sql = "UPDATE carte SET image_carte='$image_canon_g' WHERE (x_carte=$x_bat - 2 AND y_carte=$y_bat + 2) OR (x_carte=$x_bat - 2 AND y_carte=$y_bat) OR (x_carte=$x_bat - 2 AND y_carte=$y_bat - 2)";
+											$mysqli->query($sql);
+											
+											// Canons Droit
+											$sql = "UPDATE carte SET image_carte='$image_canon_d' WHERE (x_carte=$x_bat + 2 AND y_carte=$y_bat + 2) OR (x_carte=$x_bat + 2 AND y_carte=$y_bat) OR (x_carte=$x_bat + 2 AND y_carte=$y_bat - 2)";
+											$mysqli->query($sql);
+											
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat - 2, $y_bat + 2, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat - 2, $y_bat, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat - 2, $y_bat - 2, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 2, $y_bat + 2, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 2, $y_bat, $camp_perso)";
+											$mysqli->query($sql);
+											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 2, $y_bat - 2, $camp_perso)";
+											$mysqli->query($sql);
+										}
 									}
 								}
 								
