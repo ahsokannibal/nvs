@@ -29,9 +29,16 @@ if (@$_SESSION["id_perso"]) {
 <html>
 	<head>
 		<title>Nord VS Sud</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	<body>
+		<div class="container-fluid">
 <?php
 if(isset($_GET["id_compagnie"])) {
 	
@@ -50,6 +57,14 @@ if(isset($_GET["id_compagnie"])) {
 		
 		if($ok_chef == 1) {
 		
+			// Récupération infos de la compagnie
+			$sql = "SELECT nom_compagnie FROM compagnies WHERE id_compagnie='$id_compagnie'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$nom_compagnie = $t['nom_compagnie'];
+		
+			// Changement de l'image
 			if(isset($_POST["image"])){
 				
 				if($_POST["image"] != "") {
@@ -65,6 +80,8 @@ if(isset($_GET["id_compagnie"])) {
 					echo "<font color = red>Veuillez bien remplir le champ pour le changement d'image</font>";
 				}
 			}
+			
+			// Virer un perso
 			if(isset($_POST["virer"])) {
 				
 				if($_POST["virer"] != "") {
@@ -164,11 +181,13 @@ if(isset($_GET["id_compagnie"])) {
 				}
 			}
 		
-			echo "<h3><center>Page d'administration de la compagnie</center></h3>";
-			echo "<center><a href='chef_compagnie.php?id_compagnie=$id_compagnie'>changer de chef</a></center>";
-			echo "<center><a href='resume_compagnie.php?id_compagnie=$id_compagnie'>changer le resume de la compagnie</a></center>";
-			echo "<center><a href='description_compagnie.php?id_compagnie=$id_compagnie'>changer la description de la compagnie</a></center>";
-			echo "<center><a href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa compagnie</a></center>";
+			echo "<h3><center>Page d'administration de la compagnie ".$nom_compagnie." <a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a></center></h3>";
+			echo "<center>";
+			echo "	<a class='btn btn-danger' href='chef_compagnie.php?id_compagnie=$id_compagnie'>changer de chef</a>";
+			echo " 	<a class='btn btn-info' href='resume_compagnie.php?id_compagnie=$id_compagnie'>changer le resume de la compagnie</a>";
+			echo " 	<a class='btn btn-info' href='description_compagnie.php?id_compagnie=$id_compagnie'>changer la description de la compagnie</a>";
+			echo " 	<a class='btn btn-warning' href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa compagnie</a>";
+			echo "</center>";
 			
 			echo "<hr>";
 			
@@ -200,7 +219,7 @@ if(isset($_GET["id_compagnie"])) {
 			echo "</div>";
 			echo "</form>";
 			
-			echo "<a href='compagnie.php'>[retour a la page compagnie]</a>";
+			echo "<br /><center><a class='btn btn-primary' href='compagnie.php'>retour a la page compagnie</a></center>";
 				
 		}
 		else {
@@ -225,7 +244,14 @@ if(isset($_GET["id_compagnie"])) {
 
 
 ?>
-</body>
+		</div>
+		
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	</body>
 </html>
 <?php
 	}

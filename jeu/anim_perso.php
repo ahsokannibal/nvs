@@ -36,19 +36,12 @@ if($dispo || $admin){
 				$nom_camp = 'Indien';
 			}
 			
-			// Récupération des demandes sur la gestion des compagnies
-			$sql = "SELECT * FROM compagnie_demande_anim, compagnies 
-					WHERE compagnie_demande_anim.id_compagnie = compagnies.id_compagnie
-					AND compagnies.id_clan='$camp'";
-			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_compagnie = $res->num_rows;
-			
 			// Récupération des demandes sur la gestion des persos 
 			$sql = "SELECT * FROM perso_demande_anim, perso
 					WHERE perso_demande_anim.id_perso = perso.id_perso
-					AND perso.clan = '$camp'";
+					AND perso.clan = '$camp'
+					ORDER BY perso_demande_anim.id_perso ASC";
 			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_perso = $res->num_rows;
 			
 ?>
 		
@@ -71,17 +64,31 @@ if($dispo || $admin){
 				<div class="col-12">
 
 					<div align="center">
-						<h2>Animation du camp <?php echo $nom_camp; ?></h2>
+						<h2>Animation - Gestion des demandes des persos</h2>
 					</div>
 				</div>
 			</div>
 			
-			<p align="center"><a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
+			<p align="center"><a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a></p>
 			
 			<div class="row">
 				<div class="col-12">
-					<a class='btn btn-info' href='anim_compagnie.php' target='_blank'>Gestion des compagnies <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_compagnie." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_compagnie > 0) { echo $nb_demandes_gestion_compagnie; }?></span></a>
-					<a class='btn btn-info' href='anim_perso.php' target='_blank'>Gestion des persos <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_perso." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_perso > 0) { echo $nb_demandes_gestion_cperso; }?></span></a>					
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th>perso</th>
+									<th>Type de demande</th>
+									<th>Infos Demande</th>
+								</tr>
+							</thead>
+							<tbody>
+							<?php
+
+							?>
+							</tbody>
+						</table>
+					</div>
 				</div>
 			</div>
 			

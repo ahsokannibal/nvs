@@ -280,6 +280,18 @@ CREATE TABLE `compagnie_as_contraintes` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `compagnie_demande_anim`
+--
+
+CREATE TABLE `compagnie_demande_anim` ( 
+	`id_compagnie` INT NOT NULL , 
+	`type_demande` INT NOT NULL , 
+	`info_demande` TEXT NOT NULL 
+) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `competence`
 --
 
@@ -846,6 +858,18 @@ CREATE TABLE `perso_as_respawn` (
   `id_bat` int(11) NOT NULL,
   `id_instance_bat` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `perso_demande_anim`
+--
+
+CREATE TABLE `perso_demande_anim` ( 
+	`id_perso` INT NOT NULL , 
+	`type_demande` INT NOT NULL , 
+	`info_demande` TEXT NOT NULL 
+) ENGINE = MyISAM; 
 
 -- --------------------------------------------------------
 
