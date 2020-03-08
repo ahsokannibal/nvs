@@ -52,7 +52,7 @@ function mail_mp($mysqli, $expediteur, $objet, $message, $id_perso_destinataire)
 	$titre = "Votre personnage $nom_perso a reçu un MP de $expediteur";
 	
 	// Contenu du mail
-	$message = "Objet du message : $objet <br>Message : ".bbcode($message);
+	$message = "Objet du message : $objet <br>Message : ".bbcode(stripslashes($message));
 	
 	// Envoie du mail
 	mail($destinataire, $titre, $message, implode("\r\n", $headers));
