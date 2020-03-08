@@ -58,11 +58,46 @@ if(isset($_GET["id_compagnie"])) {
 		if($ok_chef == 1) {
 		
 			// Récupération infos de la compagnie
-			$sql = "SELECT nom_compagnie FROM compagnies WHERE id_compagnie='$id_compagnie'";
+			$sql = "SELECT nom_compagnie, image_compagnie, genie_civil FROM compagnies WHERE id_compagnie='$id_compagnie'";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
 			
-			$nom_compagnie = $t['nom_compagnie'];
+			$nom_compagnie 		= $t['nom_compagnie'];
+			$image_compagnie	= $t['image_compagnie'];
+			$genie_compagnie	= $t['genie_civil'];
+			
+			// Vérification si il y a une demande de suppresion en attente
+			$sql = "SELECT * FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie' AND type_demande='2'";
+			$res = $mysqli->query($sql);
+			$demande_suppression = $res->num_rows;
+			
+			// Demande de suppression de la compagnie
+			if (isset($_POST['delete_compagnie_hidden'])) {
+				
+				if (!$demande_suppression && !$genie_compagnie) {
+				
+					$id_compagnie_to_delete = $_POST['delete_compagnie_hidden'];
+					
+					// Vérification qu'on demande bien à supprimer sa propre compagnie...
+					if ($id_compagnie_to_delete == $id_compagnie) {
+						
+						$sql = "INSERT INTO compagnie_demande_anim (id_compagnie, type_demande, info_demande) VALUES ('$id_compagnie', '2', '')";
+						$mysqli->query($sql);
+						
+						$demande_suppression = 1;
+						
+						echo "<center><font color='blue'>Demande envoyée avec succée</font></center>";
+						
+					}
+					else {
+						// Tentative de triche 
+						$text_triche = "Tentative de demande de suppression de la compagnie ".$id_compagnie_to_delete." qui n'est pas la sienne (".$id_compagnie.") !";
+				
+						$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+						$mysqli->query($sql);
+					}
+				}
+			}
 		
 			// Changement de l'image
 			if(isset($_POST["image"])){
@@ -89,7 +124,11 @@ if(isset($_GET["id_compagnie"])) {
 					$perso_a_virer = $_POST["virer"];
 					
 					// verification que le membre appartienne bien a la compagnie
-					$sql = "SELECT perso.id_perso FROM perso, perso_in_compagnie WHERE perso.id_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND nom_perso='$perso_a_virer' AND poste_compagnie!=1";
+					$sql = "SELECT perso.id_perso FROM perso, perso_in_compagnie 
+							WHERE perso.id_perso=perso_in_compagnie.id_perso 
+							AND id_compagnie=$id_compagnie 
+							AND nom_perso='$perso_a_virer' 
+							AND poste_compagnie!=1";
 					$res = $mysqli->query($sql);
 					$t_v = $res->fetch_assoc();
 					
@@ -181,7 +220,14 @@ if(isset($_GET["id_compagnie"])) {
 				}
 			}
 		
-			echo "<h3><center>Page d'administration de la compagnie ".$nom_compagnie." <a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a></center></h3>";
+			echo "<h3>";
+			echo "	<center>Page d'administration de la compagnie ".$nom_compagnie." ";
+			echo "	<a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a>";
+			if (!$demande_suppression && !$genie_compagnie) {
+				echo "	<button type='button' class='btn btn-danger' data-toggle='modal' data-target=\"#modalConfirm\">Supprimer la compagnie</button>";
+			}
+			echo "	</center>";
+			echo "</h3>";
 			echo "<center>";
 			echo "	<a class='btn btn-danger' href='chef_compagnie.php?id_compagnie=$id_compagnie'>changer de chef</a>";
 			echo " 	<a class='btn btn-info' href='resume_compagnie.php?id_compagnie=$id_compagnie'>changer le resume de la compagnie</a>";
@@ -189,7 +235,19 @@ if(isset($_GET["id_compagnie"])) {
 			echo " 	<a class='btn btn-warning' href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa compagnie</a>";
 			echo "</center>";
 			
+			if ($demande_suppression) {
+				echo "<center><font color='red'><b>Cette compagnie est en attente de suppression par l'animation</b></font></center>";
+			}
+			
 			echo "<hr>";
+			
+			// Affichage de l'image de la compagnie
+			if (trim($image_compagnie) != "" && $image_compagnie != "0") {
+				echo "<center><img src='".htmlspecialchars($image_compagnie)."' width='40' height='40' alt='image de la compagnie' title='image de ma compagnie'></center>";
+			}
+			else {
+				echo "<center><font color='red'>Aucune image définie pour la compagnie</font></center>";
+			}
 			
 			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"image\">";
 			echo "<div align=\"center\"><br>";
@@ -220,6 +278,31 @@ if(isset($_GET["id_compagnie"])) {
 			echo "</form>";
 			
 			echo "<br /><center><a class='btn btn-primary' href='compagnie.php'>retour a la page compagnie</a></center>";
+			?>
+			<!-- Modal -->
+			<form method="post" action="admin_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>">
+				<div class="modal fade" id="modalConfirm" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalCenterTitle">Demande de suppression de compagnie</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								Êtes-vous sûr de vouloir demander la suppression de votre compagnie ?
+								<input type='hidden' name='delete_compagnie_hidden' value='<?php echo $id_compagnie; ?>'>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+								<button type="button" onclick="this.form.submit()" class="btn btn-danger">Supprimer</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</form>
+			<?php
 				
 		}
 		else {

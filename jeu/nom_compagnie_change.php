@@ -117,7 +117,11 @@ if(isset($_GET["id_compagnie"])) {
 				echo "<center><font color='red'>Une demande de changement de nom pour cette compagnie a déjà été effectuée, veuillez patienter</font></center>";
 			}
 			
-			echo "<br /><center><a class='btn btn-primary' href='compagnie.php'>retour a la page compagnie</a></center>";
+			echo "<br />";
+			echo "<center>";
+			echo "	<a class='btn btn-primary' href='compagnie.php'>retour a la page compagnie</a>";
+			echo "	<a class='btn btn-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'>retour a la page d'administration de la compagnie</a>";
+			echo "</center>";
 			
 		}
 		else {

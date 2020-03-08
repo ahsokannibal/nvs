@@ -5,6 +5,7 @@ require_once("../fonctions.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
+include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
@@ -59,30 +60,91 @@ if($dispo || $admin){
 							
 							$nouveau_nom_compagnie = addslashes($t['info_demande']);
 							
-							$sql = "UPDATE compagnies SET nom_compagnie='$nouveau_nom_compagnie'";
+							$sql = "UPDATE compagnies SET nom_compagnie='$nouveau_nom_compagnie' WHERE id_compagnie='$id_compagnie_maj'";
 							$mysqli->query($sql);
 							
 							// Suppression de la demande 
-							$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj' AND type_demande='1'";
+							$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj' AND type_demande='$type_demande_maj'";
 							$mysqli->query($sql);
 							
 							// TODO - Envoi d'un MP
 						}
+						else if ($type_demande_maj == 2) {
+							// Demande de suppression de la compagnie
+							
+							// recuperation des information sur la compagnie
+							$sql = "SELECT nom_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie_maj";
+							$res = $mysqli->query($sql);
+							$sec = $res->fetch_assoc();
+							
+							$nom_compagnie		= addslashes($sec["nom_compagnie"]);
+							
+							// Récupération de l'id du group de la compagnie sur le forum
+							$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$id_group_forum = $t['group_id'];
+							
+							// récupération des persos dans la compagnie 
+							$sql = "SELECT * FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie_maj'";
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_perso_a_virer = $t['id_perso'];
+								
+								// on vire le perso de la compagnie
+								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso=$id_perso_a_virer AND id_compagnie=$id_compagnie_maj";
+								$mysqli->query($sql);
+								
+								// on enleve le perso de la banque
+								$sql = "DELETE FROM banque_compagnie WHERE id_perso=$id_perso_a_virer";
+								$mysqli->query($sql);
+								
+								// -- FORUM
+								// Récupération de l'id de l'utilisateur sur le forum 
+								$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+											(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+												(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_virer') AND chef='1')";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$id_user_forum = $t['user_id'];
+								
+								// Suppression de l'utilisateur du groupe sur le forum
+								$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
+								$mysqli->query($sql);
+								
+							}
+							
+							// Suppression du groupe sur le forum 
+							$sql = "DELETE FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+							$mysqli->query($sql);
+							
+							// Suppression de la compagnie sur le jeu 
+							$sql = "DELETE FROM compagnies WHERE id_compagnie='$id_compagnie_maj'";
+							$mysqli->query($sql);
+							
+							// Suppression de la banque de la compagnie
+							$sql = "DELETE FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie_maj'";
+							$mysqli->query($sql);
+							
+							// Suppression de toutes le demandes liées à cette compagnie
+							$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj'";
+							$mysqli->query($sql);
+						}						
 						
 						header("Location:anim_compagnie.php");
 					}
 					else if ($_GET['valid'] == 'refus') {
 						// Refus de la demande
 						
-						if ($type_demande_maj == 1) {
-							// Demande de changement de nom 
-							// Suppression de la demande 
-							$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj' AND type_demande='1'";
-							$mysqli->query($sql);
-							
-							// TODO - Envoi d'un MP
-							
-						}
+						// Suppression de la demande 
+						$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj' AND type_demande='$type_demande_maj'";
+						$mysqli->query($sql);
+						
+						// TODO MP
 						
 						header("Location:anim_compagnie.php");
 					}
@@ -165,6 +227,9 @@ if($dispo || $admin){
 									if ($type_demande == 1) {
 										$nom_demande = "Changement de nom";
 										$info_demande = "Nouveau nom : ".$info_demande;
+									}
+									else if ($type_demande == 2) {
+										$nom_demande = "Demande de suppression";
 									}
 									else {
 										$nom_demande = "Inconnu";
