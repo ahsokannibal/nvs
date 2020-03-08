@@ -80,10 +80,15 @@ function entete($mysqli, $id) {
 			}
 			echo "</table></center>";
 	
-			echo "<center><table border=0>";
-			echo "<tr><td><a href='evenement.php?infoid=$id'>Évènement</a>&nbsp;&nbsp;</td>";
-			echo "<td><a href='cv.php?infoid=$id'>CV</a>&nbsp;&nbsp;</td>";
-			echo "<td><a href='description.php?infoid=$id'>Description</a></td></tr></table></center><br>";
+			echo "<br />";
+	
+			echo "<div align='center'>";
+			echo "	<a class='btn btn-primary' href='evenement.php?infoid=$id'>Évènement</a>&nbsp;&nbsp;";
+			echo "	<a class='btn btn-primary' href='cv.php?infoid=$id'>CV</a>&nbsp;&nbsp;";
+			echo "	<a class='btn btn-primary' href='description.php?infoid=$id'>Description</a>";
+			echo "</div>";
+			
+			echo "<br />";
 		}
 		else {
 			// PNJ

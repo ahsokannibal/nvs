@@ -13,14 +13,21 @@ if(@$_SESSION["id_perso"]){
 <html>
 	<head>
 		<title>CV</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-		<link href="../style.css" rel="stylesheet" type="text/css">
+		
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	
 	<body>
 		<div align="center">
 			<h2>CV</h2>
 		</div>
+		
+		<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 <?php 
 if(isset($_POST["id_info"])){
 	// verifier que la valeur est valide
@@ -49,9 +56,7 @@ else {
 		$id = $_SESSION["id_perso"];
 	}
 }
-?>
-<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
-<?php
+
 if(isset($id)){
 	
 	if($id < 50000){
@@ -87,7 +92,7 @@ if(isset($id)){
 		if ($nb_event) {
 			
 			echo "<center><font color=red><b>Évènements spéciaux</b></font></center>";
-			echo "<center><table border=1 width=80%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+			echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 		
 			while ($t = $res->fetch_assoc()){
 				echo "<tr>";
@@ -110,7 +115,7 @@ if(isset($id)){
 		if ($nb_mission) {
 			
 			echo "<center><font color=red><b>Missions</b></font></center>";
-			echo "<center><table border=1 width=80%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+			echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 			
 			while ($t = $res->fetch_assoc()){
 				$count++;
@@ -121,7 +126,7 @@ if(isset($id)){
 				}
 				echo "</td></tr>";
 			}
-			echo "<tr><td><font color = red>total</font></td><td>$count</td></tr>";
+			echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
 			echo "</table></center><br />";
 			
 		}
@@ -132,7 +137,7 @@ if(isset($id)){
 		$res = $mysqli->query($sql);
 		
 		echo "<center><font color=red><b>Le bon...</b></font></center>";
-		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 50000) {
@@ -141,7 +146,7 @@ if(isset($id)){
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 			}
 		}
-		echo "<tr><td><font color = red>total</font></td><td>$count</td></tr>";
+		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
 		echo "</table></center><br />";
 		
 		// nombre de morts
@@ -150,7 +155,7 @@ if(isset($id)){
 		$res = $mysqli->query($sql);
 		
 		echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
-		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDCible_cv'] == $id) {
@@ -159,7 +164,7 @@ if(isset($id)){
 				echo $t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>]</td>";
 			}
 		}
-		echo "<tr><td><font color = red>total</font></td><td>$count</td></tr>";
+		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
 		echo "</table></center><br />";
 		
 		// nombre de pnj tu"s
@@ -168,7 +173,7 @@ if(isset($id)){
 		$res = $mysqli->query($sql);
 		
 		echo "<center><font color=red><b>PNJ</b></font></center>";
-		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center' >Évènement</th></tr>";
 		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
@@ -177,7 +182,7 @@ if(isset($id)){
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 			}
 		}
-		echo "<tr><td><font color = red>total</font></td><td>$count</td></tr>";
+		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
 		echo "</table></center><br />";
 		
 		// nombre de batiments d"truits
@@ -186,17 +191,26 @@ if(isset($id)){
 		$res = $mysqli->query($sql);
 		
 		echo "<center><font color=red><b>Batiments</b></font></center>";
-		echo "<center><table border=1 width=60%><tr><th width=25%>date</th><th>Évènement</th></tr>";
+		echo "<center>";
+		echo "	<table border=1 width=60%>";
+		echo "		<tr>";
+		echo "			<th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th>";
+		echo "		</tr>";
 		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000 && $t['IDCible_cv'] < 200000) {
 				$count++;
-				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
+				echo "		<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 			}
 		}
-		echo "<tr><td><font color = red>total</font></td><td>$count</td></tr>";
-		echo "</table></center><br />";
+		echo "		<tr>";
+		echo "			<td align='center'><font color = red>total</font></td><td align='center'>$count</td>";
+		echo "		</tr>";
+		echo "	</table>";
+		echo "</center>";
+		
+		echo "<br />";
 	}
 	else {
 		// le perso n'existe pas
@@ -208,6 +222,12 @@ else {
 }
 
 ?>
+
+		<!-- Optional JavaScript -->
+		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	</body>
 </html>
 <?php
