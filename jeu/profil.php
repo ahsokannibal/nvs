@@ -93,8 +93,6 @@ if($dispo || $admin){
 		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		
-		<link rel="stylesheet" type="text/css" media="screen" href="onglet.css" title="Version 1" />
 	</head>
 	
 	<body>
@@ -152,7 +150,16 @@ if($dispo || $admin){
 						
 									<table border=0 width=100%>
 										<tr>
-											<td><?php echo "<u><b>Pseudo :</b></u><font color=\"$couleur_clan_perso\"> ".$nom_p." </font>- <b><u>Camp :</u></b><font color=\"$couleur_clan_perso\"> ".$nom_clan." </font>"; ?></td>
+											<td>
+												<?php 
+												echo "<u><b>Pseudo :</b></u> <font color=\"$couleur_clan_perso\">".$nom_p."</font>";
+												if ($chef) {
+													echo " <a class='btn btn-warning' href='nom_perso_change.php'>Demander à changer de nom</a>";
+												}
+												echo " - <b><u>Camp :</u></b><font color=\"$couleur_clan_perso\"> ".$nom_clan." </font>"; 
+												
+												?>
+											</td>
 										</tr>
 										<tr>
 											<td><?php echo "<u><b>Xp :</b></u> ".$xp_p." - <u><b>Pi :</b></u> ".$pi_p." - <u><b>PC :</b></u> ".$pc_p.""; ?></td>

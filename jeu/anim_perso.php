@@ -77,14 +77,48 @@ if($dispo || $admin){
 						<table class="table">
 							<thead>
 								<tr>
-									<th>perso</th>
-									<th>Type de demande</th>
-									<th>Infos Demande</th>
+									<th style='text-align:center'>Compagnie</th>
+									<th style='text-align:center'>Type de demande</th>
+									<th style='text-align:center'>Infos Demande</th>
+									<th style='text-align:center'>Action</th>
 								</tr>
 							</thead>
 							<tbody>
 							<?php
-
+							while ($t = $res->fetch_assoc()) {
+									
+								$id_perso 		= $t['id_perso'];
+								$type_demande	= $t['type_demande'];
+								$info_demande	= $t['info_demande'];
+								
+								if ($type_demande == 1) {
+									$nom_demande = "Changement de nom";
+									$info_demande = "Nouveau nom : ".$info_demande;
+								}
+								else if ($type_demande == 2) {
+									$nom_demande = "Demande de suppression";
+								}
+								else {
+									$nom_demande = "Inconnu";
+								}
+								
+								// Récupération infos compagnie
+								$sql_c = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso'";
+								$res_c = $mysqli->query($sql_c);
+								$t_c = $res_c->fetch_assoc();
+								
+								$nom_perso = $t_c['nom_perso'];
+								
+								echo "<tr>";
+								echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+								echo "	<td align='center'>".$nom_demande."</td>";
+								echo "	<td align='center'>".$info_demande."</td>";
+								echo "	<td align='center'>";
+								echo "		<a class='btn btn-success' href=\"anim_compagnie.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter</a>";
+								echo "		<a class='btn btn-danger' href=\"anim_compagnie.php?id_perso=".$id_perso."&type=".$type_demande."&valid=refus\">Refuser</a>";
+								echo "	</td>";
+								echo "</tr>";
+							}
 							?>
 							</tbody>
 						</table>
