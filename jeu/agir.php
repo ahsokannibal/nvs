@@ -974,6 +974,12 @@ if($verif){
 									$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id_cible'";
 								}
 								$mysqli->query($sql);
+								
+								// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
+								if($clan_cible != $clan_perso){
+									$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1 WHERE id_perso='$id_cible'";
+									$mysqli->query($sql);
+								}
 									
 								// maj evenement
 								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
