@@ -5,6 +5,7 @@ require_once("../fonctions.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
+include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
@@ -18,6 +19,24 @@ if($dispo || $admin){
 		$id = $_SESSION["id_perso"];
 		
 		if (anim_perso($mysqli, $id)) {
+			
+			function mail_changement_nom($nouveau_nom, $email_joueur){
+
+				// Headers mail
+				$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
+				$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+				$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
+				$headers .='Content-Transfer-Encoding: 8bit';
+				
+				// Titre du mail
+				$titre = 'Changement du nom de votre personnage principal';
+				
+				// Contenu du mail
+				$message = "Votre nouveau nom est ".$nouveau_nom;
+				
+				// Envoie du mail
+				mail($destinataire, $titre, $message, $headers);
+			}
 			
 			// Récupération du camp de l'animateur 
 			$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
@@ -34,6 +53,56 @@ if($dispo || $admin){
 			}
 			else if ($camp == '3') {
 				$nom_camp = 'Indien';
+			}
+			
+			if (isset($_GET['id_perso']) && isset($_GET['type']) && isset($_GET['valid'])) {
+				
+				$id_perso_maj 		= $_GET['id_perso'];
+				$type_demande_maj 	= $_GET['type'];
+				$valid_maj			= $_GET['valid'];
+				
+				$verif_id 	= preg_match("#^[0-9]*[0-9]$#i","$id_perso_maj");
+				$verif_type = preg_match("#^[0-9]*[0-9]$#i","$type_demande_maj");
+				
+				if ($verif_id && $verif_type) {
+				
+					if ($_GET['valid'] == 'ok') {
+						// Validation de la demande
+						
+						if ($type_demande_maj == 1) {
+							// Demande de changement de nom 
+							
+							// Récupération mail joueur du perso 
+							$sql = "SELECT email_joueur FROM joueur, perso WHERE perso.idJoueur_perso = joueur.id_joueur AND perso.id_perso='$id_perso_maj'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$email_joueur = $t["email_joueur"];
+							
+							// Récupération du nouveau nom
+							$sql = "SELECT info_demande FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='1'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$nouveau_nom_perso = addslashes($t['info_demande']);
+							
+							$sql = "UPDATE perso SET nom_perso='$nouveau_nom_perso' WHERE id_perso='$id_perso_maj'";
+							$mysqli->query($sql);
+							
+							// Suppression de la demande 
+							$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
+							$mysqli->query($sql);
+							
+							// Envoi d'un Mail
+							mail_changement_nom($nouveau_nom_perso, $email_joueur);
+							
+							// -- FORUM
+							$sql = "UPDATE ".$table_prefix."users SET username='$nouveau_nom_perso' WHERE user_email='$email_joueur'";
+							$mysqli->query($sql);
+							
+						}
+					}
+				}
 			}
 			
 			// Récupération des demandes sur la gestion des persos 

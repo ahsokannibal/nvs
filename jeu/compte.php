@@ -22,8 +22,10 @@ $admin = admin_perso($mysqli, $_SESSION["id_perso"]);
 if($dispo || $admin){
 
 	if (isset($_SESSION["id_perso"])) {
+		
 		//recuperation des variables de sessions
 		$id = $_SESSION["id_perso"];
+		
 		$sql = "SELECT pv_perso, a_gele, est_gele, nom_perso, chef FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tpe = $res->fetch_assoc();
@@ -117,8 +119,19 @@ if($dispo || $admin){
 						
 						if (isset($_POST['verif_mdp_email']) && $mdp_joueur == md5($_POST['verif_mdp_email'])) {
 						
-							$email = $_POST['email_change'];
-							$sql = "UPDATE joueur SET email_joueur='$email' WHERE id_joueur ='".$id_joueur."'";
+							// Récupération du mail avant changement
+							$sql = "SELECT email_joueur FROM joueur WHERE id_joueur ='".$id_joueur."'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$ancien_email = $t["email_joueur"];
+							$nouvel_email = $_POST['email_change'];
+							
+							$sql = "UPDATE joueur SET email_joueur='$nouvel_email' WHERE id_joueur ='".$id_joueur."'";
+							$mysqli->query($sql);
+							
+							// -- FORUM
+							$sql = "UPDATE ".$table_prefix."users SET user_email='$nouvel_email' WHERE user_email='$ancien_email'";
 							$mysqli->query($sql);
 							
 							$mess .= "Email modifié avec succés.";

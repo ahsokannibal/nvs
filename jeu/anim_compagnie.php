@@ -60,11 +60,16 @@ if($dispo || $admin){
 							
 							$nouveau_nom_compagnie = addslashes($t['info_demande']);
 							
+							// Maj du nom de la compagnie dans le jeu
 							$sql = "UPDATE compagnies SET nom_compagnie='$nouveau_nom_compagnie' WHERE id_compagnie='$id_compagnie_maj'";
 							$mysqli->query($sql);
 							
 							// Suppression de la demande 
 							$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj' AND type_demande='$type_demande_maj'";
+							$mysqli->query($sql);
+							
+							// -- FORUM
+							$sql = "UPDATE ".$table_prefix."groups SET group_name='$nouveau_nom_compagnie' WHERE group_name='$nom_compagnie'";
 							$mysqli->query($sql);
 							
 							// TODO - Envoi d'un MP
