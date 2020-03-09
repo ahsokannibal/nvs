@@ -35,7 +35,7 @@ if($dispo || $admin){
 				$message = "Votre nouveau nom est ".$nouveau_nom.". Veuillez utiliser votre nouveau nom pour vous connecter.";
 				
 				// Envoie du mail
-				mail($destinataire, $titre, $message, $headers);
+				mail($email_joueur, $titre, $message, $headers);
 			}
 			
 			// Récupération du camp de l'animateur 
@@ -113,6 +113,14 @@ if($dispo || $admin){
 								echo "<center><font color='red'><b>Impossible de valider ce changement de nom car le nom est déjà pris</b></font></center>";
 							}
 						}
+					}
+					else {
+						// Suppression de la demande 
+						$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
+						$mysqli->query($sql);
+						
+						// TODO - envoi MP
+						
 					}
 				}
 			}
@@ -195,8 +203,8 @@ if($dispo || $admin){
 								echo "	<td align='center'>".$nom_demande."</td>";
 								echo "	<td align='center'>".$info_demande."</td>";
 								echo "	<td align='center'>";
-								echo "		<a class='btn btn-success' href=\"anim_compagnie.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter</a>";
-								echo "		<a class='btn btn-danger' href=\"anim_compagnie.php?id_perso=".$id_perso."&type=".$type_demande."&valid=refus\">Refuser</a>";
+								echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter</a>";
+								echo "		<a class='btn btn-danger' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=refus\">Refuser</a>";
 								echo "	</td>";
 								echo "</tr>";
 							}
