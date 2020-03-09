@@ -70,14 +70,7 @@ if($dispo || $admin){
 						// Validation de la demande
 						
 						if ($type_demande_maj == 1) {
-							// Demande de changement de nom 
-							
-							// Récupération mail joueur du perso 
-							$sql = "SELECT email_joueur FROM joueur, perso WHERE perso.idJoueur_perso = joueur.id_joueur AND perso.id_perso='$id_perso_maj'";
-							$res = $mysqli->query($sql);
-							$t = $res->fetch_assoc();
-							
-							$email_joueur = $t["email_joueur"];
+							// Demande de changement de nom
 							
 							// Récupération du nouveau nom
 							$sql = "SELECT info_demande FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='1'";
@@ -86,20 +79,39 @@ if($dispo || $admin){
 							
 							$nouveau_nom_perso = addslashes($t['info_demande']);
 							
-							$sql = "UPDATE perso SET nom_perso='$nouveau_nom_perso' WHERE id_perso='$id_perso_maj'";
-							$mysqli->query($sql);
+							// Ce nom est-il déjà pris ?
+							// Est ce que le nom de cette compagnie est déjà pris ?
+							$sql = "SELECT * FROM perso WHERE nom_perso='$nouveau_nom_perso'";
+							$res = $mysqli->query($sql);
+							$verif = $res->num_rows;
 							
-							// Suppression de la demande 
-							$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
-							$mysqli->query($sql);
+							if ($verif == 0) {
 							
-							// Envoi d'un Mail
-							mail_changement_nom($nouveau_nom_perso, $email_joueur);
-							
-							// -- FORUM
-							$sql = "UPDATE ".$table_prefix."users SET username='$nouveau_nom_perso' WHERE user_email='$email_joueur'";
-							$mysqli->query($sql);
-							
+								// Récupération mail joueur du perso 
+								$sql = "SELECT email_joueur FROM joueur, perso WHERE perso.idJoueur_perso = joueur.id_joueur AND perso.id_perso='$id_perso_maj'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$email_joueur = $t["email_joueur"];
+								
+								$sql = "UPDATE perso SET nom_perso='$nouveau_nom_perso' WHERE id_perso='$id_perso_maj'";
+								$mysqli->query($sql);
+								
+								// Suppression de la demande 
+								$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
+								$mysqli->query($sql);
+								
+								// Envoi d'un Mail
+								mail_changement_nom($nouveau_nom_perso, $email_joueur);
+								
+								// -- FORUM
+								$sql = "UPDATE ".$table_prefix."users SET username='$nouveau_nom_perso' WHERE user_email='$email_joueur'";
+								$mysqli->query($sql);
+								
+							}
+							else {
+								echo "<center><font color='red'><b>Impossible de valider ce changement de nom car le nom est déjà pris</b></font></center>";
+							}
 						}
 					}
 				}
