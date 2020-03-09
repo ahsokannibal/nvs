@@ -32,7 +32,7 @@ if($dispo || $admin){
 				$titre = 'Changement du nom de votre personnage principal';
 				
 				// Contenu du mail
-				$message = "Votre nouveau nom est ".$nouveau_nom;
+				$message = "Votre nouveau nom est ".$nouveau_nom.". Veuillez utiliser votre nouveau nom pour vous connecter.";
 				
 				// Envoie du mail
 				mail($destinataire, $titre, $message, $headers);
