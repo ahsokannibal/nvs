@@ -3156,9 +3156,9 @@ if($dispo || $admin){
 													data-trigger='focus'
 													data-html='true' 
 													data-placement='bottom' ";
-													
+											
 								// TITLE POPOVER
-								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div> ";					
+								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_perso."' title='".$nom_grade_perso."' src='../images/grades/" . $id_grade_perso . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div> ";					
 								
 								if (trim($nom_compagnie_perso) != "") {
 									echo "<div>";
@@ -3296,7 +3296,7 @@ if($dispo || $admin){
 													data-html='true' 
 													data-placement='bottom' ";
 								// TITLE POPOVER
-								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div>";
+								echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_perso."' title='".$nom_grade_perso."' src='../images/grades/" . $id_grade_perso . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_perso."' target='_blank'>".$nom_perso." [".$id_perso."]</a></div>";
 								
 								if (trim($nom_compagnie_perso) != "") {
 									echo "<div>";
@@ -3544,7 +3544,7 @@ if($dispo || $admin){
 												$nom_terrain = get_nom_terrain($fond_im);
 												
 												//recuperation du type de perso (image)
-												$sql_perso_im ="SELECT * FROM perso WHERE id_perso='$id_perso_im'";
+												$sql_perso_im = "SELECT * FROM perso WHERE id_perso='$id_perso_im'";
 												$res_perso_im = $mysqli->query($sql_perso_im);
 												$t_perso_im = $res_perso_im->fetch_assoc();
 												
@@ -3565,6 +3565,22 @@ if($dispo || $admin){
 													$image_profil 	= "Sud.gif";
 												}
 												
+												// récupération du grade du perso 
+												$sql_grade = "SELECT perso_as_grade.id_grade, nom_grade FROM perso_as_grade, grades WHERE perso_as_grade.id_grade = grades.id_grade AND id_perso='$id_ennemi'";
+												$res_grade = $mysqli->query($sql_grade);
+												$t_grade = $res_grade->fetch_assoc();
+												
+												$id_grade_ennemi 	= $t_grade["id_grade"];
+												$nom_grade_ennemi 	= $t_grade["nom_grade"];
+												
+												// cas particuliers grouillot
+												if ($id_grade_ennemi == 101) {
+													$id_grade_ennemi = "1.1";
+												}
+												if ($id_grade_ennemi == 102) {
+													$id_grade_ennemi = "1.2";
+												}
+												
 												// recuperation de l'id de la compagnie 
 												$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso_im' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 												$res_groupe = $mysqli->query($sql_groupe);
@@ -3575,6 +3591,7 @@ if($dispo || $admin){
 												$nom_compagnie = '';
 												
 												if(isset($id_groupe) && $id_groupe != ''){
+													
 													// recuperation des infos sur la compagnie (dont le nom)
 													$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_groupe'";
 													$res_groupe2 = $mysqli->query($sql_groupe2);
@@ -3583,16 +3600,18 @@ if($dispo || $admin){
 													$nom_compagnie 		= addslashes($t_groupe2['nom_compagnie']);
 													$id_compagnie 		= $t_groupe2['id_compagnie'];
 													$image_compagnie	= $t_groupe2['image_compagnie'];
+													
 												}
 												
 												if(isset($nom_compagnie) && trim($nom_compagnie) != ''){
+													
 													echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
 													
 													//--- Div matricule perso
 													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 													// Title popover
-													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_ennemi."' title='".$nom_grade_ennemi."' src='../images/grades/" . $id_grade_ennemi . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}
@@ -3604,7 +3623,7 @@ if($dispo || $admin){
 													//--- Image perso
 													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 													// Title popover
-													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_ennemi."' title='".$nom_grade_ennemi."' src='../images/grades/" . $id_grade_ennemi . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><a href='compagnie.php?id_compagnie=".$id_compagnie."&voir_compagnie=ok' target='_blank'>";
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}				
@@ -3622,13 +3641,13 @@ if($dispo || $admin){
 													echo "	<div width=40 height=40 style=\"position: relative;\">";
 													echo "		<div tabindex='0' data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 													// Title Popover
-													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_ennemi."' title='".$nom_grade_ennemi."' src='../images/grades/" . $id_grade_ennemi . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\">" . $id_ennemi . "</div>";
 													
 													//--- Image perso
 													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 													// Title popover
-													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+													echo "			title=\"<div><img src='../images/".$image_profil."' width='20' height='20'><img alt='".$nom_grade_ennemi."' title='".$nom_grade_ennemi."' src='../images/grades/" . $id_grade_ennemi . ".gif' width='20' height='20'> <a href='evenement.php?infoid=".$id_ennemi."' target='_blank'>".$nom_ennemi." [".$id_ennemi."]</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>\" />";
 													echo "	</div>";
 													echo "</td>";
