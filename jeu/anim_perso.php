@@ -86,7 +86,25 @@ if($dispo || $admin){
 							$verif = $res->num_rows;
 							
 							if ($verif == 0) {
-							
+								
+								// Récupération ancien nom 
+								$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_maj'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$ancien_nom = $t['nom_perso'];
+								$camp		= $t['clan'];
+								
+								if ($camp == 1) {
+									$couleur_clan_p = 'blue';
+								}
+								else if ($camp == 2) {
+									$couleur_clan_p = 'red';
+								}
+								else if ($camp == 3) {
+									$couleur_clan_p = 'green';
+								}
+								
 								// Récupération mail joueur du perso 
 								$sql = "SELECT email_joueur FROM joueur, perso WHERE perso.idJoueur_perso = joueur.id_joueur AND perso.id_perso='$id_perso_maj'";
 								$res = $mysqli->query($sql);
@@ -95,6 +113,10 @@ if($dispo || $admin){
 								$email_joueur = $t["email_joueur"];
 								
 								$sql = "UPDATE perso SET nom_perso='$nouveau_nom_perso' WHERE id_perso='$id_perso_maj'";
+								$mysqli->query($sql);
+								
+								// evenement changement de nom 
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso_maj,'<font color=$couleur_clan_p><b>$ancien_nom</b></font>','a été renommé en <font color=$couleur_clan_p><b>$nouveau_nom_perso</b></font>',NULL,'','',NOW(),'0')";
 								$mysqli->query($sql);
 								
 								// Suppression de la demande 
