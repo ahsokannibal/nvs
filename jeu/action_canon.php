@@ -197,6 +197,10 @@ while ($t_b = $res_b->fetch_assoc()) {
 						$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$camp_canon";
 						$mysqli->query($sql);
 					}
+					
+					// maj dernier tombé
+					$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+					$mysqli->query($sql);
 				}
 				
 				$degats_collat = floor($degats_final / 2);
@@ -309,6 +313,10 @@ while ($t_b = $res_b->fetch_assoc()) {
 									$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat_fin','$y_collat_fin')";
 									$mysqli->query($sql);
 								}
+								
+								// maj dernier tombé
+								$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible_collat')";
+								$mysqli->query($sql);
 							}
 							
 							// maj evenements
