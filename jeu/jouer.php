@@ -3013,7 +3013,7 @@ if($dispo || $admin){
 									<?php 
 									}
 									
-									if ($type_perso != 6 && $type_perso != 4) { 
+									if ($type_perso != 6 && $type_perso != 4) {
 									?>
 									<td>
 										<select name='id_attaque_dist' style="width: -moz-available;">
@@ -3069,7 +3069,7 @@ if($dispo || $admin){
 										$res_portee_cac2 = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perc_att, 'cac');
 									?>
 									<td>
-										<select name='id_attaque_cac' style="width: -moz-available;">
+										<select name='id_attaque_cac2' style="width: -moz-available;">
 											<option value="personne">Personne</option>
 											<?php
 											// Soigneur

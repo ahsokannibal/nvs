@@ -48,6 +48,15 @@ if (isset($_POST["id_attaque_cac"]) && $_POST["id_attaque_cac"] != "personne") {
 	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_attaque");
 }
 
+if (isset($_POST["id_attaque_cac2"]) && $_POST["id_attaque_cac2"] != "personne") {
+	
+	$t_attaque_cac 		= explode(",", $_POST["id_attaque_cac2"]);
+	$id_attaque 		= $t_attaque_cac[0];
+	$id_arme_attaque 	= $t_attaque_cac[1];
+	
+	$verif = preg_match("#^[0-9]*[0-9]$#i","$id_attaque");
+}
+
 if (isset($_POST["id_attaque_dist"]) && $_POST["id_attaque_dist"] != "personne") {
 	
 	$t_attaque_dist 	= explode(",", $_POST["id_attaque_dist"]);
@@ -335,7 +344,13 @@ if($verif){
 									|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 									|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && ($clan_cible != $clan_perso || $type_perso == 4)) {
 								
-								$gain_pc = 1;
+								// Est-ce que la cible est dans le même bataillon ?
+								if ($id_j_perso == $id_joueur_cible) {
+									$gain_pc = 0;
+								}
+								else {
+									$gain_pc = 1;
+								}
 							} else {
 								$gain_pc = 0;
 							}
