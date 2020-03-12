@@ -419,7 +419,7 @@ if($verif){
 								} else if ($id_arme_attaque == 11) {
 									
 									// Bandage
-									if ($bonus_perso + $degats_final > 0) {
+									if ($bonus_cible + $degats_final > 0) {
 										$sql = "UPDATE perso SET bonus_perso=0 WHERE id_perso='$id_cible'";
 										echo "<br>Vous avez soigné tous les malus de la cible.<br><br>";
 									} else {

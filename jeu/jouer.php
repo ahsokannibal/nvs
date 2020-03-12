@@ -2475,31 +2475,70 @@ if($dispo || $admin){
 						AND perso_as_arme.est_portee = '1'
 						AND id_perso = '$id_perso'";
 				$res = $mysqli->query($sql);
-				$t_cac = $res->fetch_assoc();
+				$nb_cac = $res->num_rows;
 				
-				if ($t_cac != NULL) {
-					$id_arme_cac			= $t_cac["id_arme"];
-					$nom_arme_cac 			= $t_cac["nom_arme"];
-					$porteeMin_arme_cac 	= $t_cac["porteeMin_arme"];
-					$porteeMax_arme_cac 	= $t_cac["porteeMax_arme"];
-					$coutPa_arme_cac 		= $t_cac["coutPa_arme"];
-					$degatMin_arme_cac 		= $t_cac["degatMin_arme"];
-					$valeur_des_arme_cac 	= $t_cac["valeur_des_arme"];
-					$precision_arme_cac 	= $t_cac["precision_arme"];
-					$degatZone_arme_cac 	= $t_cac["degatZone_arme"];
-				} else {
-					$id_arme_cac			= 1000;
-					$nom_arme_cac 			= "Poings";
-					$porteeMin_arme_cac 	= 1;
-					$porteeMax_arme_cac 	= 1;
-					$coutPa_arme_cac 		= 3;
-					$degatMin_arme_cac 		= 4;
-					$valeur_des_arme_cac 	= 6;
-					$precision_arme_cac 	= 30;
-					$degatZone_arme_cac 	= 0;
+				if ($nb_cac > 1) {
+					$i = 1;
+					
+					while ($t_cac = $res->fetch_assoc()) {
+						
+						if ($i == 1) {
+							$id_arme_cac			= $t_cac["id_arme"];
+							$nom_arme_cac 			= $t_cac["nom_arme"];
+							$porteeMin_arme_cac 	= $t_cac["porteeMin_arme"];
+							$porteeMax_arme_cac 	= $t_cac["porteeMax_arme"];
+							$coutPa_arme_cac 		= $t_cac["coutPa_arme"];
+							$degatMin_arme_cac 		= $t_cac["degatMin_arme"];
+							$valeur_des_arme_cac 	= $t_cac["valeur_des_arme"];
+							$precision_arme_cac 	= $t_cac["precision_arme"];
+							$degatZone_arme_cac 	= $t_cac["degatZone_arme"];
+							
+							$degats_arme_cac = $degatMin_arme_cac."D".$valeur_des_arme_cac;
+						}
+						else {
+							$id_arme_cac2			= $t_cac["id_arme"];
+							$nom_arme_cac2 			= $t_cac["nom_arme"];
+							$porteeMin_arme_cac2 	= $t_cac["porteeMin_arme"];
+							$porteeMax_arme_cac2 	= $t_cac["porteeMax_arme"];
+							$coutPa_arme_cac2		= $t_cac["coutPa_arme"];
+							$degatMin_arme_cac2 	= $t_cac["degatMin_arme"];
+							$valeur_des_arme_cac2 	= $t_cac["valeur_des_arme"];
+							$precision_arme_cac2 	= $t_cac["precision_arme"];
+							$degatZone_arme_cac2 	= $t_cac["degatZone_arme"];
+							
+							$degats_arme_cac2 = $degatMin_arme_cac2."D".$valeur_des_arme_cac2;
+						}
+						
+						$i++;
+					}
 				}
-				
-				$degats_arme_cac = $degatMin_arme_cac."D".$valeur_des_arme_cac;
+				else {
+					$t_cac = $res->fetch_assoc();
+					
+					if ($t_cac != NULL) {
+						$id_arme_cac			= $t_cac["id_arme"];
+						$nom_arme_cac 			= $t_cac["nom_arme"];
+						$porteeMin_arme_cac 	= $t_cac["porteeMin_arme"];
+						$porteeMax_arme_cac 	= $t_cac["porteeMax_arme"];
+						$coutPa_arme_cac 		= $t_cac["coutPa_arme"];
+						$degatMin_arme_cac 		= $t_cac["degatMin_arme"];
+						$valeur_des_arme_cac 	= $t_cac["valeur_des_arme"];
+						$precision_arme_cac 	= $t_cac["precision_arme"];
+						$degatZone_arme_cac 	= $t_cac["degatZone_arme"];
+					} else {
+						$id_arme_cac			= 1000;
+						$nom_arme_cac 			= "Poings";
+						$porteeMin_arme_cac 	= 1;
+						$porteeMax_arme_cac 	= 1;
+						$coutPa_arme_cac 		= 3;
+						$degatMin_arme_cac 		= 4;
+						$valeur_des_arme_cac 	= 6;
+						$precision_arme_cac 	= 30;
+						$degatZone_arme_cac 	= 0;
+					}
+					
+					$degats_arme_cac = $degatMin_arme_cac."D".$valeur_des_arme_cac;
+				}
 				
 				// Récupération de la liste des persos à portée d'attaque arme CaC
 				$perc_att = $perc;
@@ -2717,6 +2756,11 @@ if($dispo || $admin){
 									<td width='40%' nowrap="nowrap"><center><b>A distance</b></center></td>
 									<?php 
 									}
+									else if ($type_perso == 4) {
+									?>
+									<td width='40%'><center><b>Rapproché</b></center></td>
+									<?php 	
+									}
 									?>
 								</tr>
 								<tr>
@@ -2733,6 +2777,11 @@ if($dispo || $admin){
 									<td nowrap="nowrap"><center><?php echo $nom_arme_dist; ?></center></td>
 									<?php 
 									}
+									else if ($type_perso == 4) {
+									?>
+									<td nowrap="nowrap"><center><?php echo $nom_arme_cac2; ?></center></td>
+									<?php 	
+									}
 									?>
 								</tr>
 								<tr>
@@ -2748,6 +2797,11 @@ if($dispo || $admin){
 									?>
 									<td><center><?php echo $coutPa_arme_dist; ?></center></td>
 									<?php 
+									}
+									else if ($type_perso == 4) {
+									?>
+									<td nowrap="nowrap"><center><?php echo $coutPa_arme_cac2; ?></center></td>
+									<?php 	
 									}
 									?>
 								</tr>
@@ -2775,6 +2829,11 @@ if($dispo || $admin){
 									<td><center><?php echo $degats_arme_dist; ?></center></td>
 									<?php 
 									}
+									else if ($type_perso == 4) {
+									?>
+									<td nowrap="nowrap"><center><?php echo $degats_arme_cac2; ?></center></td>
+									<?php 	
+									}
 									?>
 								</tr>
 								<tr>
@@ -2791,6 +2850,11 @@ if($dispo || $admin){
 									<td><center><?php echo $porteeMax_arme_dist; ?></center></td>
 									<?php 
 									}
+									else if ($type_perso == 4) {
+									?>
+									<td nowrap="nowrap"><center><?php echo $porteeMax_arme_cac2; ?></center></td>
+									<?php 	
+									}
 									?>
 								</tr>
 								<tr>
@@ -2806,6 +2870,11 @@ if($dispo || $admin){
 									?>
 									<td><center><?php echo $precision_arme_dist . "%"; ?></center></td>
 									<?php 
+									}
+									else if ($type_perso == 4) {
+									?>
+									<td nowrap="nowrap"><center><?php echo $precision_arme_cac2; ?></center></td>
+									<?php 	
 									}
 									?>
 								</tr>
@@ -2995,6 +3064,119 @@ if($dispo || $admin){
 										</select>
 									</td>
 									<?php 
+									}
+									else if ($nb_cac > 1 && $type_perso == '4') {
+										$res_portee_cac2 = resource_liste_cibles_a_portee_attaque($mysqli, 'carte', $id_perso, $porteeMin_arme_cac, $porteeMax_arme_cac, $perc_att, 'cac');
+									?>
+									<td>
+										<select name='id_attaque_cac' style="width: -moz-available;">
+											<option value="personne">Personne</option>
+											<?php
+											// Soigneur
+											if ($type_perso == 4) {
+												
+												while($t_cible_portee_cac = $res_portee_cac2->fetch_assoc()) {
+													
+													$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
+													
+													if ($id_cible_cac < 50000) {
+														
+														// Un autre perso
+														$sql = "SELECT nom_perso, pv_perso, pvMax_perso, bonus_perso, clan FROM perso WHERE id_perso='$id_cible_cac'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_cac 		= $tab["nom_perso"];
+														$pv_cible_cac		= $tab["pv_perso"];
+														$pv_max_cible_cac	= $tab["pvMax_perso"];
+														$bonus_cible_cac	= $tab["bonus_perso"];
+														$camp_cible_cac		= $tab["clan"];
+														
+														$couleur_clan_cible = couleur_clan($camp_cible_cac);
+														
+														if ($id_arme_cac2 == 10) {
+															// seringue
+															// On affiche que les persos blessés
+															if ($pv_cible_cac < $pv_max_cible_cac) {
+																echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac2."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+															}
+														} else if ($id_arme_cac2 == 11) {
+															// bandage
+															// On affiche que les persos avec malus
+															if ($bonus_cible_cac < 0) {
+																echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac2."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+															}
+														}
+													} else if ($id_cible_cac >= 200000) {
+														
+														// Un PNJ
+														$sql = "SELECT nom_pnj, pv_i, pvMax_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_cac 		= $tab["nom_pnj"];
+														$pv_cible_cac		= $tab["pv_i"];
+														$pv_max_cible_cac	= $tab["pvMax_pnj"];
+														
+														if ($pv_cible_cac < $pv_max_cible_cac) {
+															echo "<option style=\"color:grey\" value='".$id_cible_cac.",".$id_arme_cac2."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+														}														
+													} else {
+														// Un Batiment => on ne veut pas l'afficher !
+													}
+												}
+											}
+											else {
+												// Impossible d'attaquer au CaC quand on est dans un train
+												if (!in_train($mysqli, $id_perso)) {
+												
+													while($t_cible_portee_cac = $res_portee_cac->fetch_assoc()) {
+														
+														$id_cible_cac = $t_cible_portee_cac["idPerso_carte"];
+														
+														if ($id_cible_cac < 50000) {
+															
+															// Un autre perso
+															$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_cac'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_cac 	= $tab["nom_perso"];
+															$camp_cible_cac	= $tab["clan"];
+															
+															$couleur_clan_cible = couleur_clan($camp_cible_cac);
+															
+														} else if ($id_cible_cac >= 200000) {
+															
+															// Un PNJ
+															$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_cac'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_cac = $tab["nom_pnj"];
+															
+															$couleur_clan_cible = "grey";
+															
+														} else {
+															
+															// Un Batiment
+															$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_cac = $tab["nom_batiment"];
+															
+															$couleur_clan_cible = "black";
+														}
+														
+														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
+													}
+												}
+											}
+											?>
+										</select>
+									</td>
+									<?php
 									}
 									?>
 									</form>
