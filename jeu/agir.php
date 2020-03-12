@@ -131,7 +131,7 @@ if($verif){
 			}
 			
 			// recup des données du perso
-			$sql = "SELECT nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, id_grade
+			$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, id_grade
 					FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id'";
@@ -159,6 +159,7 @@ if($verif){
 			$clan_perso 	= $t_perso["clan"];
 			$dla_perso		= $t_perso["DLA_perso"];
 			$grade_perso 	= $t_perso["id_grade"];
+			$type_perso		= $t_perso["type_perso"];
 			
 			// Récupération de la couleur associée au clan du perso
 			$couleur_clan_perso = couleur_clan($clan_perso);
@@ -332,7 +333,7 @@ if($verif){
 							// ou si grade perso >= grade cible - 1
 							if (($grade_perso <= $grade_cible + 1 
 									|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
-									|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $clan_cible != $clan_perso) {
+									|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && ($clan_cible != $clan_perso || $type_perso == 4)) {
 								
 								$gain_pc = 1;
 							} else {
@@ -370,7 +371,12 @@ if($verif){
 								$degats_tmp = calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
 				
 								// calcul degats arme
-								$degats_final = $degats_tmp - $protec_cible;
+								if ($id_arme_attaque != 10 && $id_arme_attaque != 11) {
+									$degats_final = $degats_tmp - $protec_cible;
+								}
+								else {
+									$degats_final = $degats_tmp;
+								}
 								
 								// Canon d'artillerie et cible autre artillerie
 								if ($id_arme_attaque == 13 && $type_perso_cible == 5) {
@@ -965,20 +971,31 @@ if($verif){
 				
 								echo "<br>Vous avez raté votre cible.<br><br>";
 								
-								if ($touche >= 98) {
-									// Echec critique !
-									// Ajout d'un malus supplémentaire à l'attaquant
-									$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
-								} else {
-									// ajout malus cible
-									$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id_cible'";
-								}
-								$mysqli->query($sql);
+								if ($id_arme_attaque != 11 && $id_arme_attaque != 10) {
 								
-								// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
-								if($clan_cible != $clan_perso){
-									$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1 WHERE id_perso='$id_cible'";
+									if ($touche >= 98) {
+										// Echec critique !
+										// Ajout d'un malus supplémentaire à l'attaquant
+										$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
+									} else {
+										// ajout malus cible
+										$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id_cible'";
+									}
 									$mysqli->query($sql);
+									
+									// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
+									if($clan_cible != $clan_perso){
+										$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1 WHERE id_perso='$id_cible'";
+										$mysqli->query($sql);
+									}
+								}
+								else {
+									if ($touche >= 98) {
+										// Echec critique !
+										// Ajout d'un malus supplémentaire à l'attaquant
+										$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
+										$mysqli->query($sql);
+									}
 								}
 									
 								// maj evenement
