@@ -44,19 +44,30 @@ while ($t = $res->fetch_assoc()) {
 	$gare_arrivee = $t_dir['direction'];
 	
 	// Récupération des coordonnées de la direction
-	$sql_g = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$gare_arrivee'";
+	$sql_g = "SELECT x_instance, y_instance, pv_instance, pvMax_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$gare_arrivee'";
 	$res_g = $mysqli->query($sql_g);
 	$t_g = $res_g->fetch_assoc();
 	
-	$x_gare_arrivee = $t_g['x_instance'];
-	$y_gare_arrivee = $t_g['y_instance'];
+	$x_gare_arrivee 	= $t_g['x_instance'];
+	$y_gare_arrivee 	= $t_g['y_instance'];
+	$pv_gare_arrivee	= $t_g['pv_instance'];
+	$pvMax_gare_arrivee	= $t_g['pvMax_instance'];
+	$camp_gare_arrivee	= $t_g['camp_instance'];
+	
+	// Calcul pourcentage pv du batiment 
+	$pourc_pv_gare_arrivee = ($pv_gare_arrivee / $pvMax_gare_arrivee) * 100;
 	
 	echo "Déplacement du train ". $id_instance_train ." ($x_train / $y_train) vers la gare ". $gare_arrivee ." ($x_gare_arrivee / $y_gare_arrivee)<br />";
 	
 	// 10 PM
 	$dep_restant = 10;
 	
-	while (!est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee) && $dep_restant > 0) {
+	// Une gare n'est active qu'au dessus de 50% de ses PV
+	// Le train circule vers la gare que si la gare d'arrivée est du même camp que le train
+	while (!est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee) 
+		&& $dep_restant > 0 
+		&& $pourc_pv_gare_arrivee >= 50 
+		&& $camp_gare_arrivee == $camp_train) {
 		
 		// On déplace le train
 		if ($x_train > $x_gare_arrivee) {

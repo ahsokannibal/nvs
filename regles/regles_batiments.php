@@ -104,7 +104,7 @@
 								<td align='center'><img src='../images_perso/b11b.png' alt='gare'></td>
 								<td align='center'>Gare</td>
 								<td align='center'>5000</td>
-								<td>Une Gare permet de se rendre à une autre Gare en achetant un ticket et en prenant le Train. Cela permet de se rendre plus rapidement à différents endroits de la carte.</td>
+								<td>Une Gare permet de se rendre à une autre Gare en achetant un ticket et en prenant le Train. Cela permet de se rendre plus rapidement à différents endroits de la carte. Une gare devient inactive (les trains ne vont plus vers cette gare) si elle est en dessous de 50% de ses PV.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b2b.png' alt='tour de guet'></td>
@@ -164,7 +164,9 @@
 					
 					<p>Les trains se déplacent de 10 PM par heure et possède 2500PV.<br />
 					Ils embarquent les personnages dans la gare qui disposent d'un ticket composté. Chaque train va d'une seule gare à une autre.<br />
-					Quand le train arrive en gare, il décharge aussitôt les passagers et est automatiquement réparé (regagne tout ses PV).</p>
+					Quand le train arrive en gare, il décharge aussitôt les passagers et est automatiquement réparé (regagne tout ses PV).<br />
+					Si la gare de destination posséde moins de 50% de ses PV maximum, le train s'arrête de circuler car la gare ne possède plus les infrastructures pour accueillir le train.<br />
+					Si la gare de destination n'est pas du même camp que le train, le train s'arrête de circuler.</p>
 					
 				</div>
 			</div>
