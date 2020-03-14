@@ -91,6 +91,29 @@
 					Donner une arme vous coûte 1 PA.<br />
 					L'achat et la vente d'une arme coûte 2 PA.</p>
 					
+					<div id="table_armes" class="table-responsive">
+						<table border='1' align="center" width=100%>
+							<tr>
+								<th style="text-align:center">Image</th>
+								<th style="text-align:center">Nom</th>
+								<th style="text-align:center">Dégâts</th>
+								<th style="text-align:center">Portée</th>
+								<th style="text-align:center">Unités</th>
+								<th style="text-align:center">Poids</th>
+								<th style="text-align:center">Coût</th>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/armes/baionette.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+							</tr>
+						</table>
+					</div>
+					
 					<h2>Les Objets</h2>
 					
 					<p>Vous pouvez acheter divers objets chez Momo qui pourront vous donner (ou pas) des bonus temporaire ou définitifs si vous les utilisez.<br />
@@ -103,6 +126,97 @@
 					L'achat et la vente d'un objet coûte 2 PA.</p>
 					
 					<p>Vous pouvez revendre des objets chez Momo à condition que ceux ci ne soient pas déjà utilisés et Momo vous infligera alors une décote de 10%.</p>
+					
+					<center><b>Tableau des objets</b></center>
+					
+					<div id="table_objets" class="table-responsive">
+						<table border='1' align="center" width=100%>
+							<tr>
+								<th style="text-align:center">Image</th>
+								<th style="text-align:center">Nom</th>
+								<th style="text-align:center">Type d'objet</th>
+								<th style="text-align:center">Bonus</th>
+								<th style="text-align:center">Malus</th>
+								<th style="text-align:center">Poids</th>
+								<th style="text-align:center">Coût</th>
+								<th style="text-align:center">Lieu d'achat</th>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/objets/objet1.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Ticket de train</td>
+								<td align='center'>Spécial</td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'>Gare</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/objets/objet2.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Gourde d'eau</td>
+								<td align='center'>Consommable</td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'>Fort / Fortin</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/objets/objet3.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Whisky</td>
+								<td align='center'>Consommable</td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'>Fort / Fortin</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/objets/objet4.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Trousse de soin</td>
+								<td align='center'>Consommable</td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'>Fort / Fortin / Hôpital</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/objets/objet5.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Bottes légères</td>
+								<td align='center'>Équipable</td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'>Fort / Fortin</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/objets/objet6.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Lunnette de vue</td>
+								<td align='center'>Équipable</td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'>Fort / Fortin</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/objets/objet7.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Lunette de visée</td>
+								<td align='center'>Équipable</td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'></td>
+								<td align='center'>Fort / Fortin</td>
+							</tr>
+						</table>
+					</div>
+					
+					<br />
+					<p>Les objets consommable disparaissent après utilisation.<br />
+					Les objets équipable peuvent être équipés/déséquipés et octroie les bonus/malus uniquement lorsqu'ils sont équipés.</p>
 					
 					<h2>Les Thunes</h2>
 					
