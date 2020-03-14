@@ -3206,6 +3206,9 @@ if($dispo || $admin){
 												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=3"><img border=0 src="../fond_carte/fleche3.png"></a></td>
 												<?php
 												}
+												else if (in_train($mysqli, $id_perso)) {
+													
+												}
 												else {
 												?>
 												<td><a href="jouer.php?mouv=1"><img border=0 src="../fond_carte/fleche1.png"></a></td>
@@ -3225,6 +3228,9 @@ if($dispo || $admin){
 												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=5"><img border=0 src="../fond_carte/fleche5.png"></a></td>
 												<?php
 												}
+												else if (in_train($mysqli, $id_perso)) {
+													
+												}
 												else {
 												?>
 												<td><a href="jouer.php?mouv=4"><img border=0 src="../fond_carte/fleche4.png"></a></td>
@@ -3242,6 +3248,9 @@ if($dispo || $admin){
 												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=7"><img border=0 src="../fond_carte/fleche7.png"></a></td>
 												<td><a href="jouer.php?bat=<?php echo $id_bat; ?>&bat2=<?php echo $bat; ?>&out=ok&direction=8"><img border=0 src="../fond_carte/fleche8.png"></a></td>
 												<?php
+												}
+												else if (in_train($mysqli, $id_perso)) {
+													
 												}
 												else {
 												?>
@@ -3693,7 +3702,8 @@ if($dispo || $admin){
 													echo "<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												}
 											}
-											else if(prox_instance_bat($mysqli, $x_perso, $y_perso, $idI_bat)) {
+											else if(prox_instance_bat($mysqli, $x_perso, $y_perso, $idI_bat) && $type_bat != 12) {
+												
 												echo "<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												
 												if (!nation_perso_bat($mysqli, $id_perso, $idI_bat)) {
