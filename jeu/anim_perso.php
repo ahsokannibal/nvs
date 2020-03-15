@@ -145,15 +145,7 @@ if($dispo || $admin){
 						
 					}
 				}
-			}
-			
-			// Récupération des demandes sur la gestion des persos 
-			$sql = "SELECT * FROM perso_demande_anim, perso
-					WHERE perso_demande_anim.id_perso = perso.id_perso
-					AND perso.clan = '$camp'
-					ORDER BY perso_demande_anim.id_perso ASC";
-			$res = $mysqli->query($sql);
-			
+			}			
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -184,11 +176,48 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
+					<form method='POST' action='anim_event_perso.php'>
+						<div class="form-row">
+							<div class="form-group col-md-12">
+								<label for="formSelectPerso">Voir les événements détaillées du perso : </label>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-8">
+								<select class="form-control" name='liste_perso_event' id="formSelectPerso">
+								<?php
+								// récuopération de tous les persos de son camp 
+								$sql = "SELECT id_perso, nom_perso FROM perso WHERE clan='$camp' ORDER BY id_perso ASC";
+								$res = $mysqli->query($sql);
+								
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_perso_list 	= $t["id_perso"];
+									$nom_perso_list	= $t["nom_perso"];
+									
+									echo "<option value='".$id_perso_list."'>".$nom_perso_list." [".$id_perso_list."]</option>";
+									
+								}
+								?>
+								</select>
+							</div>
+							<div class="form-group col-md-4">
+								<button type="submit" class="btn btn-primary">Voir</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			
+			<br /><br />
+			
+			<div class="row">
+				<div class="col-12">
 					<div class="table-responsive">
 						<table class="table">
 							<thead>
 								<tr>
-									<th style='text-align:center'>Compagnie</th>
+									<th style='text-align:center'>Perso</th>
 									<th style='text-align:center'>Type de demande</th>
 									<th style='text-align:center'>Infos Demande</th>
 									<th style='text-align:center'>Action</th>
@@ -196,6 +225,13 @@ if($dispo || $admin){
 							</thead>
 							<tbody>
 							<?php
+							// Récupération des demandes sur la gestion des persos 
+							$sql = "SELECT * FROM perso_demande_anim, perso
+									WHERE perso_demande_anim.id_perso = perso.id_perso
+									AND perso.clan = '$camp'
+									ORDER BY perso_demande_anim.id_perso ASC";
+							$res = $mysqli->query($sql);
+							
 							while ($t = $res->fetch_assoc()) {
 									
 								$id_perso 		= $t['id_perso'];
