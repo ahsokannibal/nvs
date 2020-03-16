@@ -2962,7 +2962,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 	
 	// Attaques arme CaC
 	// Recuperation caracs de l'arme CaC equipé
-	$sql = "SELECT nom_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme FROM arme, perso, perso_as_arme 
+	$sql = "SELECT arme.id_arme, nom_arme, coutPa_arme, degatMin_arme, valeur_des_arme, precision_arme FROM arme, perso, perso_as_arme 
 			WHERE perso_as_arme.id_perso = perso.id_perso 
 			AND perso_as_arme.id_arme = arme.id_arme
 			AND perso_as_arme.est_portee = '1' 
@@ -2971,6 +2971,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 	$res = $mysqli->query($sql);
 	$t_arme = $res->fetch_assoc();
 	
+	$id_arme_attaque	= $t_arme['id_arme'];
 	$nom_arme 			= $t_arme['nom_arme'];
 	$degats_arme 		= $t_arme['degatMin_arme'];
 	$valeur_des_arme	= $t_arme['valeur_des_arme'];
@@ -2991,6 +2992,8 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 		$pv_cible		= $t_cible['pv_i'];
 		$bonus_cible	= $t_cible['bonus_i'];
 		$protec_cible	= 0;
+		
+		$couleur_clan_cible = 'black';
 		
 		$gain_pc = 0;
 		
@@ -3066,6 +3069,14 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 			// calcul des dégats
 			$bonus_degats_charge = 30 - $nb_attaque*10;
 			$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+			
+			$degats_tmp = calcul_des_attaque($degats_arme, $valeur_des_arme);
+			$degats_tmp_bonus = $degats_tmp + $bonus_degats_charge;
+			
+			// Insertion log attaque
+			$message_log = $id_perso.' a chargé '.$idPerso_carte.' - degats avec bonus : '.$degats_tmp_bonus;
+			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id_perso', 'charge', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+			$mysqli->query($sql);
 			
 			if ($touche <= 2) {
 				// Coup critique ! Dégats et Gains PC X 2
@@ -3293,6 +3304,11 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 					$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 1 WHERE idInstance_pnj='$idPerso_carte'";
 				}
 			}
+			$mysqli->query($sql);
+			
+			// Insertion log attaque
+			$message_log = $id_perso.' a raté sa charge sur '.$idPerso_carte;
+			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id_perso', 'charge', '$id_arme_attaque', '$touche', '$message_log')";
 			$mysqli->query($sql);
 			
 			// Gain de 1 XP si esquive attaque d'un perso d'un autre camp

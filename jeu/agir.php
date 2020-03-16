@@ -384,6 +384,11 @@ if($verif){
 							if ($touche <= $precision_final) {
 								
 								$degats_tmp = calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
+								
+								// Insertion log attaque
+								$message_log = $id.' a attaqué '.$id_cible;
+								$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+								$mysqli->query($sql);
 				
 								// calcul degats arme
 								if ($id_arme_attaque != 10 && $id_arme_attaque != 11) {
@@ -1012,6 +1017,11 @@ if($verif){
 										$mysqli->query($sql);
 									}
 								}
+								
+								// Insertion log attaque
+								$message_log = $id.' a raté son attaque sur '.$id_cible;
+								$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$touche', '$message_log')";
+								$mysqli->query($sql);
 									
 								// maj evenement
 								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
@@ -1315,7 +1325,13 @@ if($verif){
 					if ($touche <= $precision_final) {
 		
 						// calcul degats arme
-						$degats_final = calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque) - $protec_cible;
+						$degats_tmp 	= calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
+						$degats_final 	= $degats_tmp - $protec_cible;
+						
+						// Insertion log attaque
+						$message_log = $id.' a attaqué '.$id_cible;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+						$mysqli->query($sql);
 						
 						if($degats_final < 0) {
 							$degats_final = 0;
@@ -1784,6 +1800,11 @@ if($verif){
 							$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 1 WHERE idInstance_pnj='$id_cible'";
 						}
 						$mysqli->query($sql);
+						
+						// Insertion log attaque
+						$message_log = $id.' a raté son attaque sur '.$id_cible;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$touche', '$message_log')";
+						$mysqli->query($sql);
 							
 						// maj evenement
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
@@ -2077,6 +2098,11 @@ if($verif){
 						// calcul degats arme
 						$degats_final = calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
 						
+						// Insertion log attaque
+						$message_log = $id.' a attaqué '.$id_cible;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$degats_final', '$touche', '$message_log')";
+						$mysqli->query($sql);
+						
 						if($degats_final < 0) {
 							$degats_final = 0;
 						}
@@ -2349,6 +2375,11 @@ if($verif){
 						
 						//mise à jour des pa
 						$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_attaque WHERE id_perso='$id'";
+						$mysqli->query($sql);
+						
+						// Insertion log attaque
+						$message_log = $id.' a raté son attaque sur '.$id_cible;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$touche', '$message_log')";
 						$mysqli->query($sql);
 							
 						// maj evenement
