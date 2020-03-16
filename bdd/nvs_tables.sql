@@ -597,6 +597,8 @@ CREATE TABLE `log` (
 	`date_log` DATETIME NOT NULL , 
 	`id_perso` INT NOT NULL , 
 	`type_action` VARCHAR(255) NOT NULL,
+	`id_arme` INT NULL,
+	`degats` INT NULL,
 	`pourcentage` INT NULL,
 	`message_log` TEXT NOT NULL , 
 	PRIMARY KEY (`id_log`)
