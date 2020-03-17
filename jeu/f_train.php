@@ -62,12 +62,17 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 			$mysqli->query($sql);
 			
 			// Récupération infos perso 
-			$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$idPerso_carte'";
+			$sql = "SELECT nom_perso, image_perso, clan FROM perso WHERE id_perso='$idPerso_carte'";
 			$res = $mysqli->query($sql);
 			$t_p = $res->fetch_assoc();
 			
-			$nom_perso	= $t_p["nom_perso"];
-			$camp_perso	= $t_p["clan"];
+			$nom_perso		= $t_p["nom_perso"];
+			$camp_perso		= $t_p["clan"];
+			$image_perso	= $t_p["image_perso"];
+			
+			// MAJ carte
+			$sql = "UPDATE carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$idPerso_carte' WHERE x_carte = '$x_libre' AND y_carte = '$y_libre'"
+			$mysqli->query($sql);
 			
 			if($camp_perso == 1) {
 				$couleur_camp_perso = "blue";
