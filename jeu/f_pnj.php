@@ -54,7 +54,8 @@ function proche_perso($mysqli, $x_pnj, $y_pnj, $perception_pnj) {
 	
 	$id_pj = 0;
 	
-	$sql = "SELECT idPerso_carte, occupee_carte FROM carte WHERE x_carte>=$x_pnj-$perception_pnj AND x_carte<=$x_pnj+$perception_pnj AND y_carte>=$y_pnj-$perception_pnj AND y_carte<=$y_pnj+$perception_pnj";
+	$sql = "SELECT idPerso_carte, occupee_carte FROM carte 
+			WHERE x_carte>=$x_pnj-$perception_pnj AND x_carte<=$x_pnj+$perception_pnj AND y_carte>=$y_pnj-$perception_pnj AND y_carte<=$y_pnj+$perception_pnj";
 	$res = $mysqli->query($sql);
 	
 	while ($t_proche = $res->fetch_assoc()){
@@ -119,6 +120,8 @@ function calcul_vecteur_y($y_pnj,$y_pj) {
 
 // fonction de deplacement d'un pnj en fuite
 function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, $nom_pnj, $type_pnj) {
+	
+	echo "deplacement_fuite<br>";
 
 	$image_pnj = "pnj".$type_pnj."t.png";	
 	
@@ -526,6 +529,8 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 
 // fonction de deplacement de pnj vers sa cible
 function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_pnj, $nom_pnj, $type_pnj, $id_cible){
+	
+	echo "deplacement_vers_cible<br>";
 
 	$image_pnj = "pnj".$type_pnj."t.png";	
 	
@@ -533,7 +538,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		
 		if($y_d > 0) {
 			
-			//echo "deplacement vers la diagonale haut-gauche<br>";
+			echo "deplacement vers la diagonale haut-gauche<br>";
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -590,7 +595,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -616,14 +621,14 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}
 		
 		if ($y_d < 0) {
 			
-			//echo "deplacement vers la diagonale bas-gauche<br>";	
+			echo "deplacement vers la diagonale bas-gauche<br>";	
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -678,7 +683,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -703,14 +708,14 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}
 		
 		if($y_d == 0) {
 			
-			//echo "deplacement vers la gauche<br>";
+			echo "deplacement vers la gauche<br>";
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -765,7 +770,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -789,7 +794,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}
@@ -798,7 +803,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 	if ($x_d > 0){
 		
 		if($y_d > 0) {
-			//echo "deplacement vers la diagonale haut-droite<br>";
+			echo "deplacement vers la diagonale haut-droite<br>";
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -854,7 +859,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -879,13 +884,13 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}
 		
 		if($y_d < 0) {
-			//echo "deplacement vers la diagonale bas-droite<br>";
+			echo "deplacement vers la diagonale bas-droite<br>";
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -940,7 +945,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -965,13 +970,13 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}
 		
 		if($y_d == 0) {
-			//echo "deplacement vers la droite<br>";
+			echo "deplacement vers la droite<br>";
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -1026,7 +1031,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -1051,7 +1056,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}
@@ -1062,7 +1067,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		
 		// deplacement vers le haut
 		if($y_d > 0) {
-			//echo "deplacement vers le haut<br>";
+			echo "deplacement vers le haut<br>";
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -1117,7 +1122,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -1142,14 +1147,14 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}
 		
 		// deplacement vers le bas
 		if($y_d < 0) {
-			
+			echo "deplacement vers le bas<br>";
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -1204,7 +1209,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 			else {
@@ -1229,7 +1234,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 				}
 				else {
 					// on a pas trouvé de case libre
-					//echo "Le pnj est bloqué<br>";
+					echo "Le pnj est bloqué<br>";
 				}
 			}
 		}	
@@ -1238,6 +1243,8 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 
 // fonction de deplacement de pnj au hasard (quand celui ci n'a pas d'objectif ou ne doit pas fuir)
 function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
+
+	echo "deplacement_hasard<br>";
 
 	$image_pnj = "pnj".$type."t.png";
 	$essai = 0; 
@@ -1280,7 +1287,7 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 	}
 	
 	if($ok) {
-		//echo "deplacement au hasard bloqué<br>";
+		echo "deplacement au hasard bloqué<br>";
 	}
 	else {
 		// on s'y deplace
