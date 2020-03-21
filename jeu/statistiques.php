@@ -47,7 +47,7 @@ if (isset($_POST['choix_stat']) && trim($_POST['choix_stat']) != "") {
 	}
 }
 else {
-	$stat = "Bousculade";
+	$nom_stat = $stat = "Bousculade";
 }
 
 // calcul moyenne
