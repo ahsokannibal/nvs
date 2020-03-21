@@ -40,7 +40,7 @@ while ($t_id = $res->fetch_assoc()) {
 	$id_i_pnj 	= $t_id["idInstance_pnj"];
 	$pv_i 		= $t_id["pv_i"];
 	
-	echo "$nb_deplacer | id pnj : $id_i_pnj<br>";
+	echo "$nb_deplacer | id pnj : $id_i_pnj";
 	
 	//recuperation des infos du pnj
 	$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pvMax_pnj, perception_pnj, recup_pnj, aggressivite_pnj, degatMin_pnj, degatMax_pnj, precision_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj=$id_i_pnj";
@@ -79,6 +79,8 @@ while ($t_id = $res->fetch_assoc()) {
 	$x_i 			= $pnj["x_i"];
 	$y_i 			= $pnj["y_i"];
 	$dernier_a_i 	= $pnj["dernierAttaquant_i"];
+	
+	echo " - Agressivite : ".$agressivite." -- PM : ".$pm_i."<br>";
 	
 	switch($agressivite) {
 		
@@ -489,9 +491,11 @@ while ($t_id = $res->fetch_assoc()) {
 			}
 			else {
 				
+				echo "else cas 1<br>";
+				
 				// il n'a pas été attaqué
 				// deplacement du pnj au hasard
-				while($pm_i > 0 && !proche_perso($mysqli,$x_i,$y_i,$perception)){
+				while($pm_i > 0){
 					
 					// recuperation des nouvelles coordonées du pnj
 					$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
