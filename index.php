@@ -103,6 +103,8 @@ $count_online = $res->fetch_array();
 							<hr />
 							<a href="jeu/classement.php" style="color: white;">Les classements</b></a>
 							<hr />
+							<a href="jeu/statistiques.php" style="color: white;">Les statistiques</b></a>
+							<hr />
 							<a href="credits.php" style="color: white;">Crédits</b></a>
 							<hr />
 							<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
