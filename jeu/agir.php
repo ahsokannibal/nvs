@@ -387,7 +387,8 @@ if($verif){
 								
 								// Insertion log attaque
 								$message_log = $id.' a attaqué '.$id_cible;
-								$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+								$type_action = "Attaque ".$id_arme_attaque;
+								$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
 								$mysqli->query($sql);
 				
 								// calcul degats arme
@@ -1020,7 +1021,8 @@ if($verif){
 								
 								// Insertion log attaque
 								$message_log = $id.' a raté son attaque sur '.$id_cible;
-								$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$touche', '$message_log')";
+								$type_action = "Attaque ".$id_arme_attaque;
+								$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
 								$mysqli->query($sql);
 									
 								// maj evenement
@@ -1330,7 +1332,8 @@ if($verif){
 						
 						// Insertion log attaque
 						$message_log = $id.' a attaqué '.$id_cible;
-						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+						$type_action = "Attaque ".$id_arme_attaque;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
 						$mysqli->query($sql);
 						
 						if($degats_final < 0) {
@@ -1803,7 +1806,8 @@ if($verif){
 						
 						// Insertion log attaque
 						$message_log = $id.' a raté son attaque sur '.$id_cible;
-						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$touche', '$message_log')";
+						$type_action = "Attaque ".$id_arme_attaque;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
 						$mysqli->query($sql);
 							
 						// maj evenement
@@ -2100,7 +2104,8 @@ if($verif){
 						
 						// Insertion log attaque
 						$message_log = $id.' a attaqué '.$id_cible;
-						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$degats_final', '$touche', '$message_log')";
+						$type_action = "Attaque ".$id_arme_attaque;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$degats_final', '$touche', '$message_log')";
 						$mysqli->query($sql);
 						
 						if($degats_final < 0) {
@@ -2379,7 +2384,8 @@ if($verif){
 						
 						// Insertion log attaque
 						$message_log = $id.' a raté son attaque sur '.$id_cible;
-						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', 'attaque', '$id_arme_attaque', '$touche', '$message_log')";
+						$type_action = "Attaque ".$id_arme_attaque;
+						$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
 						$mysqli->query($sql);
 							
 						// maj evenement

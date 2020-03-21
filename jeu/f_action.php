@@ -3075,7 +3075,8 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 			
 			// Insertion log attaque
 			$message_log = $id_perso.' a chargé '.$idPerso_carte.' - degats avec bonus : '.$degats_tmp_bonus;
-			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id_perso', 'charge', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+			$type_action = "Attaque ".$id_arme_attaque;
+			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
 			$mysqli->query($sql);
 			
 			if ($touche <= 2) {
@@ -3308,7 +3309,8 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 			
 			// Insertion log attaque
 			$message_log = $id_perso.' a raté sa charge sur '.$idPerso_carte;
-			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id_perso', 'charge', '$id_arme_attaque', '$touche', '$message_log')";
+			$type_action = "Attaque ".$id_arme_attaque;
+			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
 			$mysqli->query($sql);
 			
 			// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
