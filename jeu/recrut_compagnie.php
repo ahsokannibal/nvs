@@ -120,6 +120,24 @@ if($dispo || $admin){
 							$mysqli->query($sql);
 						}
 						
+						// on lui envoi un mp
+						$message = "Bonjour $nom_recrue,
+									J\'ai le plaisir de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été accepté.";
+						$objet = "Incorporation dans la compagnie";
+						
+						$lock = "LOCK TABLE (joueur) WRITE";
+						$mysqli->query($lock);
+						
+						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . $nom_compagnie . "', NOW(), '" . $message . "', '" . $objet . "')";
+						$res = $mysqli->query($sql);
+						$id_message = $mysqli->insert_id;
+						
+						$unlock = "UNLOCK TABLES";
+						$mysqli->query($unlock);
+						
+						$sql = "INSERT INTO message_perso VALUES ('$id_message','$new_recrue','1','0','1','0')";
+						$res = $mysqli->query($sql);
+						
 						// -- FORUM
 						// Récupération de l'id de l'utilisateur sur le forum 
 						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
