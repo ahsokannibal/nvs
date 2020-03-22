@@ -71,7 +71,7 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 			$image_perso	= $t_p["image_perso"];
 			
 			// MAJ carte
-			$sql = "UPDATE carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$idPerso_carte' WHERE x_carte = '$x_libre' AND y_carte = '$y_libre'"
+			$sql = "UPDATE carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$idPerso_carte' WHERE x_carte = '$x_libre' AND y_carte = '$y_libre'";
 			$mysqli->query($sql);
 			
 			if($camp_perso == 1) {
