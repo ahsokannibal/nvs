@@ -362,10 +362,19 @@ if($verif){
 								echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
 							}						
 							
+							// Où se trouve la cible ?
+							$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$fond_carte_cible = $t['fond_carte'];
+							
+							$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
+							
 							// Calcul touche
 							$touche = mt_rand(0,100);
 							
-							$precision_final = $precision_arme_attaque - $bonus_cible;
+							$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain;
 							
 							$bonus_precision_objet = 0;
 							if ($porteeMax_arme_attaque == 1) {
@@ -378,7 +387,7 @@ if($verif){
 							$precision_final += $bonus_precision_objet;
 							
 							echo "Votre score de touche : ".$touche."<br>";
-							echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Defense cible : ".$bonus_cible." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
+							echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Defense cible : ".$bonus_cible." -- Defense terrain cible : ".$bonus_defense_terrain." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
 							
 							// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 							if ($touche <= $precision_final) {
