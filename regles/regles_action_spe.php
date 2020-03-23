@@ -90,6 +90,7 @@ La charge est une option de combat disponible uniquement pour les cavaleries. Ce
 <b>Pour charger, il faut avoir tous ses PA et au moins 4 PM.</b><br />
 La charge s'effectue sur une distance max de 5 cases et avec <b>3 cases d'élan minimum</b>.<br />
 Une fois au contact et dans la limite de vos PA, vos attaques au corps-à-corps seront automatiquement effectuées avec un bonus de +30 dégâts pour la première attaque, de +20 dégâts pour la seconde, de +10 dégât pour la troisième et de +0 pour la quatrième et les suivantes.<br />
+A la fin de la charge, les PA non utilisés pour les attaques ne sont pas supprimés (exemple : un cavalier avec 10PA qui charge au sabre, fera 2 attaques à 4PA et il lui restera 2 PA à la fin de la charge).<br />
 Une cavalerie qui charge un bâtiment perd 40 PV et ne fait aucun dégât.<br />
 Une cavalerie ne peut charger qu'en plaine ou dans les steppes, et AUCUN obstacle (les routes et rails ne sont pas considéré comme un obstacle) ne doit se trouver sur sa route, la cible doit aussi se trouver en plaine ou sur une steppe.					
 <br /><br />
