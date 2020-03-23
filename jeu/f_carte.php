@@ -99,6 +99,30 @@ function get_nom_terrain($fond) {
 	}
 }
 
+function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
+	
+	if ($porteeMax_arme_attaque > 1) {
+		// Attaque avec arme à distance 
+		switch($fond) {
+			case(I_FORET): return 20; break;
+			case(I_EAU): return 10; break;
+			case(I_DESERT): return -10; break;
+			case(I_COLLINE): return -10; break;
+			case(I_MONTAGNE): return 10; break;
+			default: return 0;
+		}
+	}
+	else {
+		// Attaque avec arme au CaC 
+		switch($fond) {
+			case(I_MARECAGE): return -10; break;
+			case(I_DESERT): return -10; break;
+			case(I_EAU): return 10; break;
+			default: return 0;
+		}
+	}
+}
+
 function isDirectionOK($direction) {
 	return $direction == 1 || $direction == 2 || $direction == 3
 		|| $direction == 4 || $direction == 5 || $direction == 6
