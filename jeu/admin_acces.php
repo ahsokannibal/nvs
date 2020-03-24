@@ -18,52 +18,37 @@ if(isset($_SESSION["id_perso"])){
 		$mess_err 	= "";
 		$mess 		= "";
 		
-		if(isset($_POST['teleporte_perso']) && $_POST['teleporte_perso'] != '') {
+		if(isset($_POST['acces_perso']) && $_POST['acces_perso'] != '') {
 			
-			$id_perso_a_teleporter = $_POST['teleporte_perso'];
+			$id_perso_a_acces = $_POST['acces_perso'];
 			
 		}
 		
-		if (isset($_POST['id_perso_teleport_hid']) 
-				&& isset($_POST['coord_x_teleport']) && trim($_POST['coord_x_teleport']) != ''
-				&& isset($_POST['coord_y_teleport']) && trim($_POST['coord_y_teleport']) != '') {
+		if (isset($_POST['id_perso_acces_hid']) && isset($_POST['type_acces'])) {
 			
-			$id_perso_teleport 	= $_POST['id_perso_teleport_hid'];
-			$x_teleport			= $_POST['coord_x_teleport'];
-			$y_teleport			= $_POST['coord_y_teleport'];
+			$id_perso_acces = $_POST['id_perso_acces_hid'];
+			$type_acces		= $_POST['type_acces'];
 			
-			// On verifie si les coordonnées sont dispo
-			$sql = "SELECT occupee_carte FROM carte WHERE x_carte='$x_teleport' AND y_carte='$y_teleport'";
+			$sql = "SELECT idJoueur_perso, clan FROM perso WHERE id_perso='$id_perso_acces'";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
 			
-			$occupee = $t['occupee_carte'];
+			$id_joueur 		= $t['idJoueur_perso'];
+			$camp_joueur	= $t['clan'];
 			
-			if (!$occupee) {
+			if ($type_acces == 'em') {
+				$sql = "INSERT INTO perso_in_em (id_perso, camp_em) VALUES ('$id_perso_acces', '$camp_joueur')";
+			}
+			else if ($type_acces == 'anim') {
+				$sql = "UPDATE joueur SET animateur='1' WHERE id_joueur='$id_joueur'";
+			}
+			else if ($type_acces == 'redac') {
+				$sql = "UPDATE joueur SET redacteur='1' WHERE id_joueur='$id_joueur'";
+			}
 			
-				$sql = "SELECT x_perso, y_perso, image_perso FROM perso WHERE id_perso='$id_perso_teleport'";
-				$res = $mysqli->query($sql);
-				$t = $res->fetch_assoc();
-				
-				$x_perso_origin = $t['x_perso'];
-				$y_perso_origin = $t['y_perso'];
-				$image_perso	= $t['image_perso'];
-				
-				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
-				$mysqli->query($sql);
-				
-				$sql = "UPDATE perso SET x_perso='$x_teleport', y_perso='$y_teleport' WHERE id_perso='$id_perso_teleport'";
-				$mysqli->query($sql);
-				
-				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso_teleport', image_carte='$image_perso' WHERE x_carte='$x_teleport' AND y_carte='$y_teleport'";
-				$mysqli->query($sql);
-				
-				$mess = "Le perso d'id $id_perso_teleport a bien été téléporté en $x_teleport / $y_teleport";
-			}
-			else {
-				$mess_err = "La case cible est déjà occupée";
-			}
+			$mysqli->query($sql);
 		}
+		
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -96,14 +81,14 @@ if(isset($_SESSION["id_perso"])){
 			<div class="row">
 				<div class="col-12">
 				
-					<h3>Téléportation d'un perso</h3>
+					<h3>Donner des accès à un perso</h3>
 					
 					<center><font color='red'><?php echo $mess_err; ?></font></center>
 					<center><font color='blue'><?php echo $mess; ?></font></center>
 					
-					<form method='POST' action='admin_teleporte.php'>
+					<form method='POST' action='admin_acces.php'>
 					
-						<select name="teleporte_perso">
+						<select name="acces_perso">
 						
 							<?php
 							$sql = "SELECT id_perso, nom_perso, x_perso, y_perso FROM perso ORDER BY id_perso ASC";
@@ -116,7 +101,7 @@ if(isset($_SESSION["id_perso"])){
 								$x_perso	= $t["x_perso"];
 								$y_perso 	= $t["y_perso"];
 								
-								echo "<option value='".$id_perso."'>".$nom_perso." [".$id_perso."] - ".$x_perso."/".$y_perso."</option>";
+								echo "<option value='".$id_perso."'>".$nom_perso." [".$id_perso."]</option>";
 							}
 							?>
 						
@@ -127,14 +112,17 @@ if(isset($_SESSION["id_perso"])){
 					</form>
 					
 					<?php
-					if (isset($id_perso_a_teleporter) && $id_perso_a_teleporter != 0) {
+					if (isset($id_perso_a_acces) && $id_perso_a_acces != 0) {
 						
-						echo "<form method='POST' action='admin_teleporte.php'>";
-						echo "	<input type='text' value='".$id_perso_a_teleporter."' name='id_perso_teleport' disabled>";
-						echo "	<input type='hidden' value='".$id_perso_a_teleporter."' name='id_perso_teleport_hid'>";
-						echo "	<input type='text' value='' name='coord_x_teleport'>";
-						echo "	<input type='text' value='' name='coord_y_teleport'>";
-						echo "	<input type='submit' value='téléporter'>";
+						echo "<form method='POST' action='admin_acces.php'>";
+						echo "	<input type='text' value='".$id_perso_a_acces."' name='id_perso_acces' disabled>";
+						echo "	<input type='hidden' value='".$id_perso_a_acces."' name='id_perso_acces_hid'>";
+						echo "	<select name='type_acces'>";
+						echo "		<option value='em'>Etat Major</option>";
+						echo "		<option value='anim'>Animation</option>";
+						echo "		<option value='redac'>Redacteur</option>";
+						echo "	</select>";
+						echo "	<input type='submit' value='Donner acces'>";
 						echo "</form>";
 					}
 					?>

@@ -48,7 +48,8 @@ if(isset($_SESSION["id_perso"])){
 			<div class="row">
 				<div class="col-12">
 					<a class='btn btn-danger' href='admin_triche.php' target='_blank'>Vérification multi-compte</a>
-					<a class='btn btn-danger' href='admin_teleporte.php' target='_blank'>Téléporter un perso</a>					
+					<a class='btn btn-danger' href='admin_teleporte.php' target='_blank'>Téléporter un perso</a>
+					<a class='btn btn-danger' href='admin_acces.php' target='_blank'>Donner des accès à un perso</a>					
 				</div>
 			</div>
 			
