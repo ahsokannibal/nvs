@@ -45,20 +45,30 @@ if($dispo || $admin){
 			header("location:../tour.php");
 		}
 		else {
-			if (isset($_GET["gele"]) && $_GET["gele"] == "ok"){
+			if (isset($_GET["gele"])){
 				
-				if ($a_g){
-					echo "<font color=red>Vous avez déjà demandé à partir en permission, la permission sera effective à minuit</font><br />";
+				if ($_GET["gele"] == "ok") {
+				
+					if ($a_g){
+						echo "<font color=red>Vous avez déjà demandé à partir en permission, la permission sera effective à minuit</font><br />";
+					}
+					else {
+						$date_gele = time();
+						
+						// maj du perso => statut en gele
+						$sql = "UPDATE perso SET a_gele='1', date_gele=FROM_UNIXTIME($date_gele) WHERE idJoueur_perso='$idJoueur_p'";
+						$mysqli->query($sql);
+						
+						// redirection vers la page d'accueil
+						header("location:../logout.php");
+					}
 				}
-				else {
-					$date_gele = time();
-					
-					// maj du perso => statut en gele
-					$sql = "UPDATE perso SET a_gele='1', date_gele=FROM_UNIXTIME($date_gele) WHERE idJoueur_perso='$idJoueur_p'";
+				else if ($_GET["gele"] == "annuler") {
+					// maj du perso
+					$sql = "UPDATE perso SET a_gele='0', date_gele=NULL WHERE idJoueur_perso='$idJoueur_p'";
 					$mysqli->query($sql);
 					
-					// redirection vers la page d'accueil
-					header("location:../logout.php");
+					$a_g = 0;
 				}
 			}
 			
@@ -291,7 +301,21 @@ if($dispo || $admin){
 			
 			<br />
 			
-			<center><a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir partir en permission ?'))">Partir en permission</a></center><br />
+			<center>
+				<?php
+				if ($a_g) {
+				?>
+				<a class='btn btn-danger' href="compte.php?gele=annuler" OnClick="return(confirm('êtes vous sûr de vouloir annuler votre départ en permission ? Le départ en permission sera effectif à minuit.'))">Annuler le départ en permission</a>	
+				<?php
+				}
+				else {
+				?>
+				<a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir partir en permission ? Le départ en permission sera effectif à minuit.'))">Partir en permission</a>
+				<?php
+				}
+				?>
+			</center>
+			<br />
 			
 			<div class="row">
 				<div class="col-12">
