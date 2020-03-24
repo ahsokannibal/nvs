@@ -911,10 +911,19 @@ if($verif){
 									
 								// il est mort
 								if ($pv_cible <= 0) {
+									
+									if (in_bat($mysqli, $id_cible)) {
+										
+										// on le supprime du batiment
+										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_cible'";
+										$mysqli->query($sql);
+									}
+									else {
 								
-									// on l'efface de la carte
-									$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-									$mysqli->query($sql);
+										// on l'efface de la carte
+										$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
 				
 									// Calcul gains (po et xp)
 									$perte_po = gain_po_mort($or_cible);
