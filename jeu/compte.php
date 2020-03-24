@@ -26,7 +26,7 @@ if($dispo || $admin){
 		//recuperation des variables de sessions
 		$id = $_SESSION["id_perso"];
 		
-		$sql = "SELECT pv_perso, a_gele, est_gele, nom_perso, chef FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT idJoueur_perso, pv_perso, a_gele, est_gele, nom_perso, chef FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tpe = $res->fetch_assoc();
 		
@@ -35,6 +35,7 @@ if($dispo || $admin){
 		$e_g 		= $tpe['est_gele'];
 		$pseudo_p 	= $tpe['nom_perso'];
 		$chef		= $tpe['chef'];
+		$idJoueur_p = $tpe['idJoueur_perso'];
 		
 		$mess 		= "";
 		$mess_err 	= "";
@@ -47,13 +48,13 @@ if($dispo || $admin){
 			if (isset($_GET["gele"]) && $_GET["gele"] == "ok"){
 				
 				if ($a_g){
-					echo "<font color=red>Vous avez déjà demandé de geler votre perso, le gel sera effectif à minuit</font><br />";
+					echo "<font color=red>Vous avez déjà demandé à partir en permission, la permission sera effective à minuit</font><br />";
 				}
 				else {
 					$date_gele = time();
 					
 					// maj du perso => statut en gele
-					$sql = "UPDATE perso SET a_gele='1', date_gele=FROM_UNIXTIME($date_gele) WHERE id_perso='$id'";
+					$sql = "UPDATE perso SET a_gele='1', date_gele=FROM_UNIXTIME($date_gele) WHERE idJoueur_perso='$idJoueur_p'";
 					$mysqli->query($sql);
 					
 					// redirection vers la page d'accueil
@@ -290,7 +291,7 @@ if($dispo || $admin){
 			
 			<br />
 			
-			<center><a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir geler votre perso ?'))">Geler son compte</a></center><br />
+			<center><a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir partir en permission ?'))">Partir en permission</a></center><br />
 			
 			<div class="row">
 				<div class="col-12">
