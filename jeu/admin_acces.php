@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
@@ -86,6 +87,8 @@ if(isset($_SESSION["id_perso"])){
 					<center><font color='red'><?php echo $mess_err; ?></font></center>
 					<center><font color='blue'><?php echo $mess; ?></font></center>
 					
+					
+					
 					<form method='POST' action='admin_acces.php'>
 					
 						<select name="acces_perso">
@@ -126,6 +129,35 @@ if(isset($_SESSION["id_perso"])){
 						echo "</form>";
 					}
 					?>
+					
+					<center>
+						<div id="table_bataillon" class="table-responsive">
+							<table border="1">
+								<tr>
+									<th>Nom perso [matricule]</th><th>statut</th>
+								</tr>
+					
+								<?php
+								$sql = "SELECT perso.nom_perso, perso.id_perso, perso.clan FROM perso, perso_in_em WHERE perso.id_perso = perso_in_em.id_perso ORDER BY clan ASC";
+								$res = $mysqli->query($sql);
+								
+								while ($t = $res->fetch_assoc()) {
+									
+									$nom_perso_em 	= $t['nom_perso'];
+									$id_perso_em 	= $t['id_perso'];
+									$camp_perso_em	= $t['clan'];
+									
+									$couleur_clan_perso = couleur_clan($camp_perso_em);
+									
+									echo "<tr>";
+									echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_em."</font></b> [".$id_perso_em."]</td>";
+									echo "	<td>État Major</td>";
+									echo "</tr>";
+								}
+								?>
+							</table>
+						</div>
+					</center>
 				</div>
 			</div>
 			
