@@ -98,7 +98,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$mysqli->query($sql);
 						
 						// Rapat Chef dans Fort ou Fortin
-						if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+						if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
 							
 							// recup grade / pc chef
 							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
@@ -420,7 +420,7 @@ if(isset($_SESSION["ID_joueur"])){
 					$mysqli->query($sql);
 					
 					// Rapat Chef dans Fort ou Fortin
-					if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+					if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
 						
 						// recup grade / pc chef
 						$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
@@ -592,7 +592,7 @@ if(isset($_SESSION["ID_joueur"])){
 								$mysqli->query($sql);
 								
 								// Rapat Chef dans Fort ou Fortin
-								if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+								if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
 									
 									// recup grade / pc chef
 									$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
@@ -732,7 +732,7 @@ if(isset($_SESSION["ID_joueur"])){
 							$mysqli->query($sql);
 							
 							// Rapat Chef dans Fort ou Fortin
-							if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+							if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
 								
 								// recup grade / pc chef
 								$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
