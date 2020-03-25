@@ -501,6 +501,13 @@ if($verif){
 									}
 								}
 								
+								// recup id perso chef
+								$sql = "SELECT id_perso FROM `perso` WHERE idJoueur_perso=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1' ";
+								$res = $mysqli->query($sql);
+								$t_chef = $res->fetch_assoc();
+								
+								$id_perso_chef = $t_chef["id_perso"];
+								
 								// MAJ PC Chef
 								$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
 								$mysqli->query($sql);
@@ -608,6 +615,13 @@ if($verif){
 											} else {
 												echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
 											}
+											
+											// recup id perso chef
+											$sql = "SELECT id_perso FROM `perso` WHERE idJoueur_perso=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1' ";
+											$res = $mysqli->query($sql);
+											$t_chef = $res->fetch_assoc();
+											
+											$id_perso_chef = $t_chef["id_perso"];
 											
 											// mise à jour des PC du chef											
 											$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc_collat WHERE id_perso='$id_perso_chef'";
@@ -1458,6 +1472,13 @@ if($verif){
 											echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
 										}
 									}
+									
+									// recup id perso chef
+									$sql = "SELECT id_perso FROM `perso` WHERE idJoueur_perso=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1' ";
+									$res = $mysqli->query($sql);
+									$t_chef = $res->fetch_assoc();
+									
+									$id_perso_chef = $t_chef["id_perso"];
 									
 									// mise à jour des PC du chef									
 									$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc_collat WHERE id_perso='$id_perso_chef'";
