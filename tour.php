@@ -50,7 +50,7 @@ if(isset($_SESSION["ID_joueur"])){
 		if ($nb_perso == 1) {
 			
 			// recuperation des infos du perso
-			$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso, convalescence FROM perso WHERE id_perso='$id_perso'";
+			$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, image_perso, chef, convalescence FROM perso WHERE id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
 			$t_perso = $res->fetch_assoc();
 			
@@ -62,7 +62,8 @@ if(isset($_SESSION["ID_joueur"])){
 			$pvMax_perso		= $t_perso["pvMax_perso"];
 			$recup_perso		= $t_perso["recup_perso"] + $t_perso["bonusRecup_perso"];
 			$image_perso		= $t_perso["image_perso"];
-			$convalescent_perso	= $t_perso["convalescence"];	
+			$convalescent_perso	= $t_perso["convalescence"];
+			$chef_perso 		= $t_perso["chef"];
 			
 			// Le perso appartient-il bien au joueur ?
 			if ($id_joueur_perso == $id_joueur) {
@@ -75,25 +76,59 @@ if(isset($_SESSION["ID_joueur"])){
 					//    RESPAWN BATIMENT    //
 								
 					// Récupération du batiment de rappatriement le plus proche du perso
-					$id_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan);
+					$id_instance_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan);
 					
-					if ($id_bat != null && $id_bat != 0) {
+					if ($id_instance_bat != null && $id_instance_bat != 0) {
 						
 						// récupération coordonnées batiment
-						$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+						$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
 						$res_b = $mysqli->query($sql_b);
 						$t_b = $res_b->fetch_assoc();
 						
-						$x = $t_b['x_instance'];
-						$y = $t_b['y_instance'];
+						$x 		= $t_b['x_instance'];
+						$y 		= $t_b['y_instance'];
+						$id_bat	= $t_b['id_batiment'];
 						
 						// On met le perso dans le batiment
-						$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_bat')";
+						$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_instance_bat')";
 						$mysqli->query($sql);
 						
 						// mise a jour des evenements
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
 						$mysqli->query($sql);
+						
+						// Rapat Chef dans Fort ou Fortin
+						if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+							
+							// recup grade / pc chef
+							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
+							
+							$id_perso_chef = $t_chef["id_perso"];
+							$pc_perso_chef = $t_chef["pc_perso"];
+							$id_grade_chef = $t_chef["id_grade"];
+							
+							// Verification passage de grade 
+							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+							$res = $mysqli->query($sql);
+							$t_grade = $res->fetch_assoc();
+							
+							$id_grade_final 	= $t_grade["id_grade"];
+							$nom_grade_final	= $t_grade["nom_grade"];
+							
+							if ($id_grade_chef < $id_grade_final) {
+									
+								// Passage de grade								
+								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
+								$mysqli->query($sql);
+								
+								// mise a jour des evenements
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+								$mysqli->query($sql);
+								
+							}
+						}
 						
 					} else {
 						
@@ -356,20 +391,21 @@ if(isset($_SESSION["ID_joueur"])){
 				$mysqli->query($sql);
 				
 				// Récupération du batiment de rappatriement le plus proche du perso
-				$id_bat = selection_bat_rapat($mysqli, $id_perso_degele, $x_perso_degele, $y_perso_degele, $clan);
+				$id_instance_bat = selection_bat_rapat($mysqli, $id_perso_degele, $x_perso_degele, $y_perso_degele, $clan);
 				
-				if ($id_bat != null && $id_bat != 0) {
+				if ($id_instance_bat != null && $id_instance_bat != 0) {
 				
 					// récupération coordonnées batiment
-					$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+					$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
 					$res_b = $mysqli->query($sql_b);
 					$t_b = $res_b->fetch_assoc();
 					
-					$x = $t_b['x_instance'];
-					$y = $t_b['y_instance'];
+					$x 		= $t_b['x_instance'];
+					$y 		= $t_b['y_instance'];
+					$id_bat	= $t_b['id_batiment'];
 					
 					// On met le perso et ses grouillots dans le batiment
-					$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_degele','$id_bat')";
+					$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_degele','$id_instance_bat')";
 					$mysqli->query($sql);
 					
 					// calcul bonus perception perso
@@ -380,8 +416,41 @@ if(isset($_SESSION["ID_joueur"])){
 					$mysqli->query($sql);
 					
 					// mise a jour des evenements
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_degele','<font color=$couleur_clan_p><b>$nom_perso_degele</b></font>','est de retour de permission',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_degele','<font color=$couleur_clan_p><b>$nom_perso_degele</b></font>','est de retour de permission',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
 					$mysqli->query($sql);
+					
+					// Rapat Chef dans Fort ou Fortin
+					if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+						
+						// recup grade / pc chef
+						$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+						$res = $mysqli->query($sql);
+						$t_chef = $res->fetch_assoc();
+						
+						$id_perso_chef = $t_chef["id_perso"];
+						$pc_perso_chef = $t_chef["pc_perso"];
+						$id_grade_chef = $t_chef["id_grade"];
+						
+						// Verification passage de grade 
+						$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+						$res = $mysqli->query($sql);
+						$t_grade = $res->fetch_assoc();
+						
+						$id_grade_final 	= $t_grade["id_grade"];
+						$nom_grade_final	= $t_grade["nom_grade"];
+						
+						if ($id_grade_chef < $id_grade_final) {
+								
+							// Passage de grade								
+							$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
+							$mysqli->query($sql);
+							
+							// mise a jour des evenements
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+							$mysqli->query($sql);
+							
+						}
+					}
 				}
 				else {
 					echo "<center>Aucun batiment disponible pour le dégèle de votre perso</center>";
@@ -501,25 +570,59 @@ if(isset($_SESSION["ID_joueur"])){
 							//    RESPAWN BATIMENT    //
 							
 							// Récupération du batiment de rappatriement le plus proche du perso
-							$id_bat = selection_bat_rapat($mysqli, $id_perso_nouveau_tour, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
+							$id_instance_bat = selection_bat_rapat($mysqli, $id_perso_nouveau_tour, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
 							
-							if ($id_bat != null && $id_bat != 0) {
+							if ($id_instance_bat != null && $id_instance_bat != 0) {
 							
 								// récupération coordonnées batiment
-								$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+								$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
 								$res_b = $mysqli->query($sql_b);
 								$t_b = $res_b->fetch_assoc();
 								
-								$x = $t_b['x_instance'];
-								$y = $t_b['y_instance'];
+								$x 		= $t_b['x_instance'];
+								$y 		= $t_b['y_instance'];
+								$id_bat	= $t_b['id_batiment'];
 								
 								// On met le perso dans le batiment
-								$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_nouveau_tour','$id_bat')";
+								$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_nouveau_tour','$id_instance_bat')";
 								$mysqli->query($sql);
 								
 								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
 								$mysqli->query($sql);
+								
+								// Rapat Chef dans Fort ou Fortin
+								if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+									
+									// recup grade / pc chef
+									$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+									$res = $mysqli->query($sql);
+									$t_chef = $res->fetch_assoc();
+									
+									$id_perso_chef = $t_chef["id_perso"];
+									$pc_perso_chef = $t_chef["pc_perso"];
+									$id_grade_chef = $t_chef["id_grade"];
+									
+									// Verification passage de grade 
+									$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+									$res = $mysqli->query($sql);
+									$t_grade = $res->fetch_assoc();
+									
+									$id_grade_final 	= $t_grade["id_grade"];
+									$nom_grade_final	= $t_grade["nom_grade"];
+									
+									if ($id_grade_chef < $id_grade_final) {
+											
+										// Passage de grade								
+										$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
+										$mysqli->query($sql);
+										
+										// mise a jour des evenements
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+										$mysqli->query($sql);
+										
+									}
+								}
 								
 							} else {
 								
@@ -600,20 +703,21 @@ if(isset($_SESSION["ID_joueur"])){
 						//    RESPAWN BATIMENT    //
 						
 						// Récupération du batiment de rappatriement le plus proche du perso
-						$id_bat = selection_bat_rapat($mysqli, $id, $x_perso, $y_perso, $clan);
+						$id_instance_bat = selection_bat_rapat($mysqli, $id, $x_perso, $y_perso, $clan);
 						
-						if ($id_bat != null && $id_bat != 0) {
+						if ($id_instance_bat != null && $id_instance_bat != 0) {
 						
 							// récupération coordonnées batiment
-							$sql_b = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+							$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
 							$res_b = $mysqli->query($sql_b);
 							$t_b = $res_b->fetch_assoc();
 							
-							$x = $t_b['x_instance'];
-							$y = $t_b['y_instance'];
+							$x 		= $t_b['x_instance'];
+							$y 		= $t_b['y_instance'];
+							$id_bat	= $t_b['id_batiment'];
 							
 							// On met le perso dans le batiment
-							$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_bat')";
+							$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_instance_bat')";
 							$mysqli->query($sql);
 							
 							// calcul bonus perception perso
@@ -624,8 +728,41 @@ if(isset($_SESSION["ID_joueur"])){
 							$mysqli->query($sql);
 							
 							// mise a jour des evenements
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_clan_p><b>$pseudo</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_bat en $x/$y',NOW(),'0')";
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_clan_p><b>$pseudo</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
 							$mysqli->query($sql);
+							
+							// Rapat Chef dans Fort ou Fortin
+							if ($chef_perso && ($id_bat == '8' || $id_bat == '9')) {
+								
+								// recup grade / pc chef
+								$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+								$res = $mysqli->query($sql);
+								$t_chef = $res->fetch_assoc();
+								
+								$id_perso_chef = $t_chef["id_perso"];
+								$pc_perso_chef = $t_chef["pc_perso"];
+								$id_grade_chef = $t_chef["id_grade"];
+								
+								// Verification passage de grade 
+								$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+								$res = $mysqli->query($sql);
+								$t_grade = $res->fetch_assoc();
+								
+								$id_grade_final 	= $t_grade["id_grade"];
+								$nom_grade_final	= $t_grade["nom_grade"];
+								
+								if ($id_grade_chef < $id_grade_final) {
+										
+									// Passage de grade								
+									$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
+									$mysqli->query($sql);
+									
+									// mise a jour des evenements
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+									$mysqli->query($sql);
+									
+								}
+							}
 				
 							//redirection
 							header("location:jeu/jouer.php");
