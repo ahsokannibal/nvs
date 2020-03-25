@@ -103,7 +103,7 @@ if(isset($_SESSION["id_perso"])){
 								$y_perso 	= $t["y_perso"];
 								
 								echo "<option value='".$id_perso."'";
-								if ($id_perso_a_acces == $id_perso) {
+								if (isset($id_perso_a_acces) && $id_perso_a_acces == $id_perso) {
 									echo " selected";
 								}
 								echo ">".$nom_perso." [".$id_perso."]</option>";
@@ -132,12 +132,14 @@ if(isset($_SESSION["id_perso"])){
 					}
 					?>
 					
+					
 					<center>
+						<h2>Récapitulatif des accès</h2>
 						<div id="table_acces" class="table-responsive">
 							<table class='table table-bordered table-hover' border="1">
 								<thead>
 									<tr>
-										<th>Nom perso [matricule]</th><th>statut</th>
+										<th>Nom perso [matricule]</th><th>statut</th><th>Action</th>
 									</tr>
 								</thead>
 								<tbody>
@@ -156,6 +158,7 @@ if(isset($_SESSION["id_perso"])){
 										echo "<tr>";
 										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_em."</font></b> [".$id_perso_em."]</td>";
 										echo "	<td>État Major</td>";
+										echo "	<td><a href='admin_acces.php?id_perso=".$id_perso_em."&action=delete_em' class='btn btn-danger' >Supprimer</a></td>";
 										echo "</tr>";
 									}
 									
@@ -173,6 +176,7 @@ if(isset($_SESSION["id_perso"])){
 										echo "<tr>";
 										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_anim."</font></b> [".$id_perso_anim."]</td>";
 										echo "	<td>Animateur</td>";
+										echo "	<td><a href='admin_acces.php?id_perso=".$id_perso_anim."&action=delete_anim' class='btn btn-danger'>Supprimer</a></td>";
 										echo "</tr>";
 									}
 									
@@ -190,6 +194,7 @@ if(isset($_SESSION["id_perso"])){
 										echo "<tr>";
 										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_redac."</font></b> [".$id_perso_redac."]</td>";
 										echo "	<td>Redacteur</td>";
+										echo "	<td><a href='admin_acces.php?id_perso=".$id_perso_redac."&action=delete_redac' class='btn btn-danger'>Supprimer</a></td>";
 										echo "</tr>";
 									}
 									?>
