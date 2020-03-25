@@ -87,8 +87,6 @@ if(isset($_SESSION["id_perso"])){
 					<center><font color='red'><?php echo $mess_err; ?></font></center>
 					<center><font color='blue'><?php echo $mess; ?></font></center>
 					
-					
-					
 					<form method='POST' action='admin_acces.php'>
 					
 						<select name="acces_perso">
@@ -104,7 +102,11 @@ if(isset($_SESSION["id_perso"])){
 								$x_perso	= $t["x_perso"];
 								$y_perso 	= $t["y_perso"];
 								
-								echo "<option value='".$id_perso."'>".$nom_perso." [".$id_perso."]</option>";
+								echo "<option value='".$id_perso."'";
+								if ($id_perso_a_acces == $id_perso) {
+									echo " selected";
+								}
+								echo ">".$nom_perso." [".$id_perso."]</option>";
 							}
 							?>
 						
@@ -131,30 +133,67 @@ if(isset($_SESSION["id_perso"])){
 					?>
 					
 					<center>
-						<div id="table_bataillon" class="table-responsive">
-							<table border="1">
-								<tr>
-									<th>Nom perso [matricule]</th><th>statut</th>
-								</tr>
-					
-								<?php
-								$sql = "SELECT perso.nom_perso, perso.id_perso, perso.clan FROM perso, perso_in_em WHERE perso.id_perso = perso_in_em.id_perso ORDER BY clan ASC";
-								$res = $mysqli->query($sql);
-								
-								while ($t = $res->fetch_assoc()) {
+						<div id="table_acces" class="table-responsive">
+							<table class='table table-bordered table-hover' border="1">
+								<thead>
+									<tr>
+										<th>Nom perso [matricule]</th><th>statut</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									$sql = "SELECT perso.nom_perso, perso.id_perso, perso.clan FROM perso, perso_in_em WHERE perso.id_perso = perso_in_em.id_perso ORDER BY clan ASC";
+									$res = $mysqli->query($sql);
 									
-									$nom_perso_em 	= $t['nom_perso'];
-									$id_perso_em 	= $t['id_perso'];
-									$camp_perso_em	= $t['clan'];
+									while ($t = $res->fetch_assoc()) {
+										
+										$nom_perso_em 	= $t['nom_perso'];
+										$id_perso_em 	= $t['id_perso'];
+										$camp_perso_em	= $t['clan'];
+										
+										$couleur_clan_perso = couleur_clan($camp_perso_em);
+										
+										echo "<tr>";
+										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_em."</font></b> [".$id_perso_em."]</td>";
+										echo "	<td>État Major</td>";
+										echo "</tr>";
+									}
 									
-									$couleur_clan_perso = couleur_clan($camp_perso_em);
+									$sql = "SELECT perso.nom_perso, perso.id_perso, perso.clan FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND joueur.animateur='1' AND chef='1' ORDER BY clan ASC";
+									$res = $mysqli->query($sql);
 									
-									echo "<tr>";
-									echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_em."</font></b> [".$id_perso_em."]</td>";
-									echo "	<td>État Major</td>";
-									echo "</tr>";
-								}
-								?>
+									while ($t = $res->fetch_assoc()) {
+										
+										$nom_perso_anim 	= $t['nom_perso'];
+										$id_perso_anim 		= $t['id_perso'];
+										$camp_perso_anim	= $t['clan'];
+										
+										$couleur_clan_perso = couleur_clan($camp_perso_anim);
+										
+										echo "<tr>";
+										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_anim."</font></b> [".$id_perso_anim."]</td>";
+										echo "	<td>Animateur</td>";
+										echo "</tr>";
+									}
+									
+									$sql = "SELECT perso.nom_perso, perso.id_perso, perso.clan FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND joueur.redacteur='1' AND chef='1' ORDER BY clan ASC";
+									$res = $mysqli->query($sql);
+									
+									while ($t = $res->fetch_assoc()) {
+										
+										$nom_perso_redac 	= $t['nom_perso'];
+										$id_perso_redac 	= $t['id_perso'];
+										$camp_perso_redac	= $t['clan'];
+										
+										$couleur_clan_perso = couleur_clan($camp_perso_redac);
+										
+										echo "<tr>";
+										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_redac."</font></b> [".$id_perso_redac."]</td>";
+										echo "	<td>Redacteur</td>";
+										echo "</tr>";
+									}
+									?>
+								</tbody>
 							</table>
 						</div>
 					</center>

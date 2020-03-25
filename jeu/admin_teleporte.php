@@ -122,7 +122,11 @@ if(isset($_SESSION["id_perso"])){
 								$x_perso	= $t["x_perso"];
 								$y_perso 	= $t["y_perso"];
 								
-								echo "<option value='".$id_perso."'>".$nom_perso." [".$id_perso."] - ".$x_perso."/".$y_perso."</option>";
+								echo "<option value='".$id_perso."'";
+								if ($id_perso_a_teleporter == $id_perso) {
+									echo " selected";
+								}
+								echo ">".$nom_perso." [".$id_perso."] - ".$x_perso."/".$y_perso."</option>";
 							}
 							?>
 						
