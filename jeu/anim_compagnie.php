@@ -100,11 +100,11 @@ if($dispo || $admin){
 								$id_perso_a_virer = $t['id_perso'];
 								
 								// on vire le perso de la compagnie
-								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso=$id_perso_a_virer AND id_compagnie=$id_compagnie_maj";
+								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso_a_virer' AND id_compagnie='$id_compagnie_maj'";
 								$mysqli->query($sql);
 								
 								// on enleve le perso de la banque
-								$sql = "DELETE FROM banque_compagnie WHERE id_perso=$id_perso_a_virer";
+								$sql = "DELETE FROM banque_compagnie WHERE id_perso='$id_perso_a_virer'";
 								$mysqli->query($sql);
 								
 								// -- FORUM
