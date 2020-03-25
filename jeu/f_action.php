@@ -148,7 +148,8 @@ function verif_contraintes_construction_ennemis($mysqli, $id_bat, $camp_perso, $
 			AND x_perso >= $x_bat - $nb_cases_ennemi
 			AND x_perso <= $x_bat + $nb_cases_ennemi
 			AND y_perso >= $y_bat - $nb_cases_ennemi
-			AND y_perso <= $y_bat + $nb_cases_ennemi";
+			AND y_perso <= $y_bat + $nb_cases_ennemi
+			AND pv_perso > 0";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
