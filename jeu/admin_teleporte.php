@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
@@ -49,7 +50,12 @@ if(isset($_SESSION["id_perso"])){
 				$y_perso_origin = $t['y_perso'];
 				$image_perso	= $t['image_perso'];
 				
-				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+				if (in_bat($mysqli, $id_perso_teleport)) {
+					$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_teleport'";
+				}
+				else {
+					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+				}
 				$mysqli->query($sql);
 				
 				$sql = "UPDATE perso SET x_perso='$x_teleport', y_perso='$y_teleport' WHERE id_perso='$id_perso_teleport'";
