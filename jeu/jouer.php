@@ -1333,6 +1333,38 @@ if($dispo || $admin){
 															$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est entré dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
 															$mysqli->query($sql);
 															
+															// Partie Passage de grade chef
+															if ($type_perso == 1 && ($id_bat == 8 || $id_bat == 9)) {
+																
+																// recup grade / pc chef
+																$sql = "SELECT pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+																$res = $mysqli->query($sql);
+																$t_chef = $res->fetch_assoc();
+																
+																$pc_perso_chef = $t_chef["pc_perso"];
+																$id_grade_chef = $t_chef["id_grade"];
+																
+																// Verification passage de grade 
+																$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+																$res = $mysqli->query($sql);
+																$t_grade = $res->fetch_assoc();
+																
+																$id_grade_final 	= $t_grade["id_grade"];
+																$nom_grade_final	= $t_grade["nom_grade"];
+																
+																if ($id_grade_chef < $id_grade_final) {
+																		
+																	// Passage de grade								
+																	$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
+																	$mysqli->query($sql);
+																	
+																	// mise a jour des evenements
+																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+																	$mysqli->query($sql);
+																	
+																}
+															}
+															
 															$bonus_perc = 0;
 															
 															// mise a jour du bonus de perception du perso

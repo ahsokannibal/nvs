@@ -501,37 +501,9 @@ if($verif){
 									}
 								}
 								
-								// mise à jour des PC du chef
-								$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
-								$res = $mysqli->query($sql);
-								$t_chef = $res->fetch_assoc();
-								
-								$id_perso_chef = $t_chef["id_perso"];
-								$pc_perso_chef = $t_chef["pc_perso"];
-								$id_grade_chef = $t_chef["id_grade"];
-								
+								// MAJ PC Chef
 								$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
 								$mysqli->query($sql);
-								
-								$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
-								
-								// Verification passage de grade 
-								$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-								$res = $mysqli->query($sql);
-								$t_grade = $res->fetch_assoc();
-								
-								$id_grade_final 	= $t_grade["id_grade"];
-								$nom_grade_final	= $t_grade["nom_grade"];
-								
-								if ($id_grade_chef < $id_grade_final) {
-									
-									// Passage de grade								
-									$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
-									$mysqli->query($sql);
-									
-									echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
-									
-								}
 								
 								if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
 									
@@ -637,37 +609,9 @@ if($verif){
 												echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
 											}
 											
-											// mise à jour des PC du chef
-											$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
-											$res = $mysqli->query($sql);
-											$t_chef = $res->fetch_assoc();
-											
-											$id_perso_chef = $t_chef["id_perso"];
-											$pc_perso_chef = $t_chef["pc_perso"];
-											$id_grade_chef = $t_chef["id_grade"];
-											
+											// mise à jour des PC du chef											
 											$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc_collat WHERE id_perso='$id_perso_chef'";
 											$mysqli->query($sql);
-											
-											$pc_perso_chef_final = $pc_perso_chef + $gain_pc_collat;
-											
-											// Verification passage de grade 
-											$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-											$res = $mysqli->query($sql);
-											$t_grade = $res->fetch_assoc();
-											
-											$id_grade_final 	= $t_grade["id_grade"];
-											$nom_grade_final	= $t_grade["nom_grade"];
-											
-											if ($id_grade_chef < $id_grade_final) {
-												
-												// Passage de grade								
-												$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
-												$mysqli->query($sql);
-												
-												echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
-												
-											}
 											
 											// mise a jour de la table evenement
 											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>',' ( Dégâts : $degats_collat ; Gain XP : $gain_xp_collat ; Gain PC : $gain_pc_collat )',NOW(),'0')";
@@ -1515,37 +1459,9 @@ if($verif){
 										}
 									}
 									
-									// mise à jour des PC du chef
-									$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
-									$res = $mysqli->query($sql);
-									$t_chef = $res->fetch_assoc();
-									
-									$id_perso_chef = $t_chef["id_perso"];
-									$pc_perso_chef = $t_chef["pc_perso"];
-									$id_grade_chef = $t_chef["id_grade"];
-									
+									// mise à jour des PC du chef									
 									$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc_collat WHERE id_perso='$id_perso_chef'";
 									$mysqli->query($sql);
-									
-									$pc_perso_chef_final = $pc_perso_chef + $gain_pc_collat;
-									
-									// Verification passage de grade 
-									$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-									$res = $mysqli->query($sql);
-									$t_grade = $res->fetch_assoc();
-									
-									$id_grade_final 	= $t_grade["id_grade"];
-									$nom_grade_final	= $t_grade["nom_grade"];
-									
-									if ($id_grade_chef < $id_grade_final) {
-										
-										// Passage de grade								
-										$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
-										$mysqli->query($sql);
-										
-										echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
-										
-									}
 									
 									// mise a jour de la table evenement
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>',' ( Dégâts : $degats_collat ; Gain XP : $gain_xp_collat ; Gain PC : $gain_pc_collat )',NOW(),'0')";
