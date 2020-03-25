@@ -50,6 +50,24 @@ if(isset($_SESSION["id_perso"])){
 			$mysqli->query($sql);
 		}
 		
+		if (isset($_GET['id_perso']) && isset($_GET['action'])) {
+			
+			$id_perso 	= $_GET['id_perso'];
+			$action 	= $_GET['action'];
+			
+			if ($action == "delete_em") {
+				$sql = "DELETE FROM perso_in_em WHERE id_perso='$id_perso'";
+			}
+			else if ($action == "delete_anim") {
+				$sql = "UPDATE joueur SET animateur='0' WHERE id_joueur=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso')";
+			}
+			else if ($action == "delete_redac") {
+				$sql = "UPDATE joueur SET redacteur='0' WHERE id_joueur=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso')";
+			}
+			
+			$mysqli->query($sql);
+		}
+		
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
