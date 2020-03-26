@@ -6,7 +6,10 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
-if(isset($_SESSION["id_perso"])){	
+if(isset($_SESSION["id_perso"])){
+	
+	//recuperation des variables de sessions
+	$id = $_SESSION["id_perso"];
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -41,21 +44,38 @@ if(isset($_SESSION["id_perso"])){
 	if(isset($_GET["id_bataillon"])){
 		
 		// verifier que la valeur est valide
-		$id_joueur = $_GET["id_bataillon"];
-		$verif = preg_match("#^[0-9]*[0-9]$#i","$id_joueur");
+		$id_joueur_bat = $_GET["id_bataillon"];
+		$verif = preg_match("#^[0-9]*[0-9]$#i","$id_joueur_bat");
 		
 		if($verif){
 			
+			// récupération de l'id joueur du perso connecté 
+			$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$id_joueur_perso = $t['idJoueur_perso'];
+			
 			if (isset($_POST["enregistrer"]) && trim($_POST['nomBataillon']) != "") {
 				
-				$nouveau_nom_bataillon = addslashes($_POST['nomBataillon']);
+				if ($id_joueur_perso == $id_joueur_bat) {
 				
-				$sql = "INSERT INTO perso_demande_anim (id_perso, type_demande, info_demande) VALUES ('$id_joueur', '3', '$nouveau_nom_bataillon')";
-				$mysqli->query($sql);
+					$nouveau_nom_bataillon = addslashes($_POST['nomBataillon']);
+					
+					$sql = "INSERT INTO perso_demande_anim (id_perso, type_demande, info_demande) VALUES ('$id_joueur_bat', '3', '$nouveau_nom_bataillon')";
+					$mysqli->query($sql);
+				}
+				else {
+					// Tentative de triche !
+					$text_triche = "Le perso $id (joueur $id_joueur_perso) a essayé de changer le nom du bataillon du joueur $id_joueur_bat !";
+					
+					$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+					$mysqli->query($sql);
+				}
 			}
 			
 			// Récupération du nom du bataillon du joueur
-			$sql = "SELECT bataillon FROM perso WHERE idJoueur_perso='$id_joueur' LIMIT 1";
+			$sql = "SELECT bataillon FROM perso WHERE idJoueur_perso='$id_joueur_bat' LIMIT 1";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
 			
@@ -75,19 +95,21 @@ if(isset($_SESSION["id_perso"])){
 					<div align='center'>
 						
 						<?php
-						if (isset($_GET['changer_nom']) && $_GET['changer_nom'] == 'ok') {
-							echo "<form method='POST' action='bataillon.php?id_bataillon=".$id_joueur."'>";
-							echo "	<div class='form-group col-6'>";
-							echo "		<label for='nomBataillon'>Nouveau nom du bataillon</label>";
-							echo "		<input type='text' class='form-control' id='nomBataillon' name='nomBataillon' maxlength='100'>";
-							echo "	</div>";
-							echo "	<div class='form-group col-6'>";
-							echo "		<input type='submit' class='btn btn-warning' name='enregistrer' value='Demander le changement de nom'>";
-							echo "	</div>";
-							echo "</form>";
-						}
-						else {
-							echo "<a href='bataillon.php?id_bataillon=".$id_joueur."&changer_nom=ok' class='btn btn-warning'>Demander à changer le nom du bataillon</a>";
+						if ($id_joueur_perso == $id_joueur_bat) {
+							if (isset($_GET['changer_nom']) && $_GET['changer_nom'] == 'ok') {
+								echo "<form method='POST' action='bataillon.php?id_bataillon=".$id_joueur_bat."'>";
+								echo "	<div class='form-group col-6'>";
+								echo "		<label for='nomBataillon'>Nouveau nom du bataillon</label>";
+								echo "		<input type='text' class='form-control' id='nomBataillon' name='nomBataillon' maxlength='100'>";
+								echo "	</div>";
+								echo "	<div class='form-group col-6'>";
+								echo "		<input type='submit' class='btn btn-warning' name='enregistrer' value='Demander le changement de nom'>";
+								echo "	</div>";
+								echo "</form>";
+							}
+							else {
+								echo "<a href='bataillon.php?id_bataillon=".$id_joueur_bat."&changer_nom=ok' class='btn btn-warning'>Demander à changer le nom du bataillon</a>";
+							}
 						}
 						?>
 					</div>
@@ -104,7 +126,7 @@ if(isset($_SESSION["id_perso"])){
 					WHERE perso.id_perso = perso_as_grade.id_perso 
 					AND perso_as_grade.id_grade = grades.id_grade
 					AND perso.type_perso = type_unite.id_unite
-					AND idJoueur_perso='$id_joueur'";
+					AND idJoueur_perso='$id_joueur_bat'";
 			$res = $mysqli->query($sql);
 			
 			while ($t = $res->fetch_assoc()) {
