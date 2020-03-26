@@ -17,6 +17,11 @@ if($dispo || $admin){
 		//recuperation des variables de sessions
 		$id = $_SESSION["id_perso"];
 		
+		// verification que le perso n'est pas deja dans une compagnie ou en attente sur une autre
+		$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id'";
+		$res = $mysqli->query($sql);
+		$est_deja = $res->num_rows;
+		
 		// récupération du camp du perso
 		$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
@@ -26,37 +31,43 @@ if($dispo || $admin){
 		
 		if (isset($_POST["enregistrer"])) {
 			
-			if (isset($_POST["nomCompagnie"]) && trim($_POST["nomCompagnie"]) != "") {
-				
-				if (isset($_POST["descCompagnie"]) && trim($_POST["descCompagnie"]) != "") {
+			if (!$est_deja) {
+			
+				if (isset($_POST["nomCompagnie"]) && trim($_POST["nomCompagnie"]) != "") {
 					
-					$nom_compagnie 	= addslashes($_POST["nomCompagnie"]);
-					$desc_compagnie	= addslashes($_POST["descCompagnie"]);
-					
-					// Est ce que le nom de cette compagnie est déjà pris ?
-					$sql = "SELECT * FROM compagnies WHERE nom_compagnie='$nom_compagnie'";
-					$res = $mysqli->query($sql);
-					$verif = $res->num_rows;
-					
-					if ($verif == 0) {
-					
-						$sql = "INSERT INTO em_creer_compagnie (id_perso, nom_compagnie, description_compagnie, camp) VALUES ('$id', '$nom_compagnie', '$desc_compagnie', '$camp')";
-						$mysqli->query($sql);
+					if (isset($_POST["descCompagnie"]) && trim($_POST["descCompagnie"]) != "") {
 						
-						echo "<center><font color='blue'>Votre compagnie " . $_POST["nomCompagnie"] . " a bien été soumis a l'état major, vous serez notifié de sa création ou non dans les prochains jours</font></center>";
-					} else {
+						$nom_compagnie 	= addslashes($_POST["nomCompagnie"]);
+						$desc_compagnie	= addslashes($_POST["descCompagnie"]);
 						
-						$_SESSION['desc_compagnie'] = $_POST["descCompagnie"];
+						// Est ce que le nom de cette compagnie est déjà pris ?
+						$sql = "SELECT * FROM compagnies WHERE nom_compagnie='$nom_compagnie'";
+						$res = $mysqli->query($sql);
+						$verif = $res->num_rows;
 						
-						echo "<center><font color='red'>Une compagnie du nom " . $_POST["nomCompagnie"] . " existe déjà, veuillez choisir un autre nom</font></center>";
+						if ($verif == 0) {
+						
+							$sql = "INSERT INTO em_creer_compagnie (id_perso, nom_compagnie, description_compagnie, camp) VALUES ('$id', '$nom_compagnie', '$desc_compagnie', '$camp')";
+							$mysqli->query($sql);
+							
+							echo "<center><font color='blue'>Votre compagnie " . $_POST["nomCompagnie"] . " a bien été soumis a l'état major, vous serez notifié de sa création ou non dans les prochains jours</font></center>";
+						} else {
+							
+							$_SESSION['desc_compagnie'] = $_POST["descCompagnie"];
+							
+							echo "<center><font color='red'>Une compagnie du nom " . $_POST["nomCompagnie"] . " existe déjà, veuillez choisir un autre nom</font></center>";
+						}
+					}
+					else {
+						echo "<center><font color='red'>Veuillez renseigner une description de compagnie</font></center>";
 					}
 				}
 				else {
-					echo "<center><font color='red'>Veuillez renseigner une description de compagnie</font></center>";
+					echo "<center><font color='red'>Veuillez renseigner un nom de compagnie</font></center>";
 				}
 			}
 			else {
-				echo "<center><font color='red'>Veuillez renseigner un nom de compagnie</font></center>";
+				echo "<center><font color='red'>Votre perso fait déjà parti d'une compagnie et ne peux donc pas demander la création d'une autre</font></center>";
 			}
 		}
 		
@@ -89,6 +100,9 @@ if($dispo || $admin){
 			<?php
 			if ($verif_creer_comp > 0) {
 				echo "<center>Vous avez demandé la création d'un nouvelle compagnie, vous devez attendre la délibération de votre état major</a></center>";
+			}
+			else if ($est_deja) {
+				echo "<center>Votre perso fait déjà parti d'une compagnie et ne peux donc pas demander la création d'une autre</a></center>";
 			}
 			else {
 			?>
