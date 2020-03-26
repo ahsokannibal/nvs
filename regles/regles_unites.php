@@ -85,7 +85,7 @@
 					<h4>Les grouillots</h4>
 					
 					<p>Les grouillots sont des personnages supplémentaires que vous jouez. lorsque l'un d'eux est capturé, il voit ses XPI ramenés à 0. Ils conservent cependant les améliorations acquises. Pensez donc à utiliser sciemment les XPI de vos grouillots au risque de grosses pertes.</p>
-					<p>Le recrutement de nouveaux grouillots s'effectue dans les forts et les fortins, au prix de 30 PA par tête.</p>
+					<p>Le recrutement de nouveaux grouillots s'effectue dans les forts et les fortins, au prix de 3 PA par tête.</p>
 					<p>Renvoyer un grouillot ne coûte aucun PA. <b>Mais est définitif et vous perdez toutes les améliorations (expérience) ainsi que le matériel que vous auriez acheté pour cette unité !</b></p>
 					<p>Chaque grouillot vaut un certain nombre de points de grouillot (PG) :
 					<ul>
