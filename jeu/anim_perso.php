@@ -135,6 +135,23 @@ if($dispo || $admin){
 								echo "<center><font color='red'><b>Impossible de valider ce changement de nom car le nom est déjà pris</b></font></center>";
 							}
 						}
+						else if ($type_demande_maj == 3) {
+							// Demande de changement de nom de bataillon
+							
+							// Récupération du nouveau nom
+							$sql = "SELECT info_demande FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='3'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$nouveau_nom_bataillon = addslashes($t['info_demande']);
+							
+							$sql = "UPDATE perso SET bataillon='$nouveau_nom_bataillon' WHERE idJoueur_perso='$id_perso_maj'";
+							$mysqli->query($sql);
+							
+							// Suppression de la demande 
+							$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
+							$mysqli->query($sql);
+						}
 					}
 					else {
 						// Suppression de la demande 
@@ -245,12 +262,22 @@ if($dispo || $admin){
 								else if ($type_demande == 2) {
 									$nom_demande = "Demande de suppression";
 								}
+								else if ($type_demande == 3) {
+									$nom_demande = "Demande de changement de nom de bataillon";
+								}
 								else {
 									$nom_demande = "Inconnu";
 								}
 								
-								// Récupération infos compagnie
-								$sql_c = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso'";
+								if ($type_demande == 3) {
+									// Récupération infos perso
+									$sql_c = "SELECT nom_perso FROM perso WHERE idJoueur_perso='$id_perso' AND chef='1'";
+								}
+								else {
+									// Récupération infos perso
+									$sql_c = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso'";
+								}
+								
 								$res_c = $mysqli->query($sql_c);
 								$t_c = $res_c->fetch_assoc();
 								

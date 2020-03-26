@@ -46,6 +46,14 @@ if(isset($_SESSION["id_perso"])){
 		
 		if($verif){
 			
+			if (isset($_POST["enregistrer"]) && trim($_POST['nomBataillon']) != "") {
+				
+				$nouveau_nom_bataillon = addslashes($_POST['nomBataillon']);
+				
+				$sql = "INSERT INTO perso_demande_anim (id_perso, type_demande, info_demande) VALUES ('$id_joueur', '3', '$nouveau_nom_bataillon')";
+				$mysqli->query($sql);
+			}
+			
 			// Récupération du nom du bataillon du joueur
 			$sql = "SELECT bataillon FROM perso WHERE idJoueur_perso='$id_joueur' LIMIT 1";
 			$res = $mysqli->query($sql);
@@ -63,12 +71,32 @@ if(isset($_SESSION["id_perso"])){
 					</div>
 					
 					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
+					
+					<div align='center'>
+						
+						<?php
+						if (isset($_GET['changer_nom']) && $_GET['changer_nom'] == 'ok') {
+							echo "<form method='POST' action='bataillon.php?id_bataillon=".$id_joueur."'>";
+							echo "	<div class='form-group col-6'>";
+							echo "		<label for='nomBataillon'>Nouveau nom du bataillon</label>";
+							echo "		<input type='text' class='form-control' id='nomBataillon' name='nomBataillon' maxlength='100'>";
+							echo "	</div>";
+							echo "	<div class='form-group col-6'>";
+							echo "		<input type='submit' class='btn btn-warning' name='enregistrer' value='Demander le changement de nom'>";
+							echo "	</div>";
+							echo "</form>";
+						}
+						else {
+							echo "<a href='bataillon.php?id_bataillon=".$id_joueur."&changer_nom=ok' class='btn btn-warning'>Demander à changer le nom du bataillon</a>";
+						}
+						?>
+					</div>
 
 					<center>
 						<div id="table_bataillon" class="table-responsive">
 							<table border="1">
 								<tr>
-									<th>Nom perso [matricule]</th><th>Type d'unité</th><th>Grade</th>
+									<th style='text-align:center'>Nom perso [matricule]</th><th style='text-align:center'>Type d'unité</th><th style='text-align:center'>Grade</th>
 								</tr>
 <?php		
 			// Récupération de la liste des persos du joueur 
