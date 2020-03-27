@@ -347,7 +347,7 @@ CREATE TABLE `config_jeu` (
 CREATE TABLE `contact` (
   `id_contact` int(11) NOT NULL,
   `nom_contact` varchar(50) NOT NULL DEFAULT 'amis',
-  `contacts` varchar(250) DEFAULT NULL
+  `contacts` text DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
