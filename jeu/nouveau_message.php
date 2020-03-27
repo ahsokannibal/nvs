@@ -226,6 +226,22 @@ if(isset($_GET["visu"]) && $_GET["visu"] == "ok"){
 	
 	$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
 	
+	// Bonus visu Tour de guet
+	if (in_bat($mysqli, $id_perso)) {
+		
+		$instance_bat = in_bat($mysqli, $id_perso);
+		
+		$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$instance_bat'";
+		$res = $mysqli->query ($sql);
+		$t = $res->fetch_assoc();
+		
+		$id_bat = $t['id_batiment'];
+		
+		if ($id_bat == 2) {
+			$bonus_visu += 5;
+		}
+	}
+	
 	$perc_finale = $perc + $bonus_visu;
 	
 	if (isset($_GET["camp"]) && trim($_GET["camp"]) != '' && ($_GET["camp"] == "1" || $_GET["camp"] == "2")) {
