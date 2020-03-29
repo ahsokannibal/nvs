@@ -1514,7 +1514,7 @@ if($dispo || $admin){
 				// Traitement ramasser objets à terre
 				if(isset($_GET['ramasser']) && $_GET['ramasser'] == "ok"){
 					
-					if ($pa_perso > 1) {
+					if ($pa_perso >= 1) {
 						
 						// MAJ pa perso
 						$sql = "UPDATE perso SET pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
