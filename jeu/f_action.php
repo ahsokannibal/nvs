@@ -3268,26 +3268,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 			$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
 			$mysqli->query($sql);
 			
-			$pc_perso_chef_final = $pc_perso_chef + $gain_pc;
-			
-			// Verification passage de grade 
-			$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef_final AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-			$res = $mysqli->query($sql);
-			$t_grade = $res->fetch_assoc();
-			
-			$id_grade_final 	= $t_grade["id_grade"];
-			$nom_grade_final	= $t_grade["nom_grade"];
-			
-			if ($id_grade_chef < $id_grade_final) {
-				
-				// Passage de grade								
-				$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_chef'";
-				$mysqli->query($sql);
-				
-				echo "<br /><b>Votre chef de bataillon est passé au grade de $nom_grade_final</b><br />";
-				
-			}
-			
 		} else {
 			// Le perso rate sa cible
 			
