@@ -271,20 +271,21 @@ if($dispo || $admin){
 								
 								if ($type_demande == 3) {
 									// Récupération infos perso
-									$sql_c = "SELECT nom_perso FROM perso WHERE idJoueur_perso='$id_perso' AND chef='1'";
+									$sql_c = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_perso' AND chef='1'";
 								}
 								else {
 									// Récupération infos perso
-									$sql_c = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso'";
+									$sql_c = "SELECT id_perso, nom_perso FROM perso WHERE id_perso='$id_perso'";
 								}
 								
 								$res_c = $mysqli->query($sql_c);
 								$t_c = $res_c->fetch_assoc();
 								
-								$nom_perso = $t_c['nom_perso'];
+								$id_perso_aff	= $t_c['id_perso'];
+								$nom_perso 		= $t_c['nom_perso'];
 								
 								echo "<tr>";
-								echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+								echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso_aff."'>".$id_perso_aff."</a>]</td>";
 								echo "	<td align='center'>".$nom_demande."</td>";
 								echo "	<td align='center'>".$info_demande."</td>";
 								echo "	<td align='center'>";
