@@ -717,7 +717,7 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 				// + Le lien est utile pour les batiments autre que barricade et pont 
 				// + Le lien est utile que pour les unités autre que chien et soigneur
 				// + si batiment tour de guet, seul les infanterie peuvent capturer
-				if((batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') && (($bat == 2 && $type_perso == 3))){
+				if((batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') || (($bat == 2 && $type_perso == 3))){
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 			}

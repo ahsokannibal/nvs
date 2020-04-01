@@ -9,30 +9,6 @@ define ("NB_TYPE_PNJ", 9);
 define ("NB_PNJ_A_CREER", 10);
 define ("NB_PNJ_MAX_TYPE", 30);
 
-
-//*********************************
-//Traitement des persos a mettre en gel
-//*********************************
-$sql = "SELECT id_perso FROM perso WHERE a_gele='1'";
-$res = $mysqli->query($sql);
-
-while ($t = $res->fetch_assoc()){
-	
-	$id_perso = $t["id_perso"];
-	
-	echo "gel du perso $id_perso ";
-	
-	// maj du statut du perso
-	$sql = "UPDATE perso SET est_gele='1', a_gele='0', date_gele=NOW() WHERE id_perso='$id_perso'";
-	$mysqli->query($sql);
-	
-	// maj de la carte => disparition du perso
-	$sql = "UPDATE carte SET occupee_carte='0' WHERE idPerso_carte='$id_perso'";
-	$mysqli->query($sql);
-}
-// Fin traitement des persos a mettre en gel
-
-
 //************************************
 //Traitement de l'ajout des pnj sur la carte
 //************************************
