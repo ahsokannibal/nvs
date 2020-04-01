@@ -181,6 +181,10 @@
 							</tr>
 						</table>
 					</div>
+					
+					<h2>Inactivité</h2>
+					<p>Les unités inactive pendant plus de 10 jours sont placée automatiquement en permission (voir les <a href="regles_action_spe.php">actions spéciales</a> pour connaitre les règles sur la permission).</p>
+					
 				</div>
 			</div>
 		

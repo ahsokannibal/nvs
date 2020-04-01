@@ -124,7 +124,14 @@ Chaque type de chose donnée obéit à des règles spécifiques.<br />
 On peut donner une arme ou un objet directement à un personnage de son camp.
 <br /><br />
 					<h2>Capturer un personnage</h2>	
-Il est possible de capturer RP parlant en informant sa cible. Celle-ci doit accepter la capture. 					
+Il est possible de capturer RP parlant en informant sa cible. Celle-ci doit accepter la capture.
+<br /><br />
+					<h2>Partir en permission</h2>	
+lorsque vous être amenés à ne plus pouvoir vous connecter au jeu pendant un certain temps, vous pouvez partir en permission. Vos personnages seront alors retirés de la carte à minuit le jour même de la demande et ne pourra plus faire l'objet d'attaques d'aucune sorte.<br />
+Il sera entièrement gelé et reviendra quand vous l'aurez décidé dans un Fort ou Fortin. La durée minimum de la permission est de 72h (3 jours).<br />
+Les personnages en permission depuis plus de 30 jours sont définitivement effacés.<br />
+<i>Vous contrôlez normalement votre personnage avant son départ prévu en permission.</i>
+<br /><br />		
 				</div>
 			</div>
 		
