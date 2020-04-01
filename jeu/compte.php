@@ -54,7 +54,7 @@ if($dispo || $admin){
 					}
 					else {
 						$date_gele = time();
-						
+							
 						// maj du perso => statut en gele
 						$sql = "UPDATE perso SET a_gele='1', date_gele=FROM_UNIXTIME($date_gele) WHERE idJoueur_perso='$idJoueur_p'";
 						$mysqli->query($sql);
