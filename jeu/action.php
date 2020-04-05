@@ -1354,7 +1354,20 @@ if($dispo || $admin){
 													
 													//barricade, tours, batiments => constructibles sur plaine seulement
 													if($id_bat == '1' || $id_bat == '2' || $id_bat == '3' || $id_bat == '6' || $id_bat == '7' || $id_bat == '8' || $id_bat == '9' || $id_bat == '10' || $id_bat == '11'){
-														if($fond_carte == '1.gif'){
+														
+														// Possibilité de construire barricade sur rail
+														if($fond_carte == 'rail.gif'){
+															if($id_bat == '1') {
+																echo "
+																<td width=40 height=40> 
+																	<input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																		onMouseOver=\"this.src='../images_perso/$image_bat';\" 
+																		onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
+																	<input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" >
+																</td>";
+															}
+														}
+														else if($fond_carte == '1.gif'){
 															echo "
 																<td width=40 height=40> 
 																	<input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
