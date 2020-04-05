@@ -139,6 +139,49 @@ while ($t = $res->fetch_assoc()) {
 				} else {
 					// Le rail est trouvé => on se déplace dessus
 					
+					// Y a t-il un obstacle sur les rails ?
+					$sql_c = "SELECT occupee_carte, idPerso_carte FROM carte WHERE x_carte='$x_r' AND y_carte='$y_r'";
+					$res_c = $mysqli->query($sql_c);
+					$t_c = $res_c->fetch_assoc();
+					
+					$occupee_carte 	= $t_c['occupee_carte'];
+					$idPerso_carte	= $t_c['idPerso_carte'];
+					
+					if ($occupee_carte && $idPerso_carte >= 50000) {
+						// On sort de la boucle et on se déplace pas
+						break;
+					}
+					else {
+						// Modification coordonnées instance train
+						$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+						$mysqli->query($sql_t);
+						
+						$x_train = $x_r;
+						$y_train = $y_r;
+						
+						if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+							$dep_restant--;
+						}
+					}
+				}
+			}
+			else {
+				// Le rail est trouvé => on se déplace dessus
+				
+				// Y a t-il un obstacle sur les rails ?
+				$sql_c = "SELECT occupee_carte, idPerso_carte FROM carte WHERE x_carte='$x_r' AND y_carte='$y_r'";
+				$res_c = $mysqli->query($sql_c);
+				$t_c = $res_c->fetch_assoc();
+				
+				$occupee_carte 	= $t_c['occupee_carte'];
+				$idPerso_carte	= $t_c['idPerso_carte'];
+				
+				if ($occupee_carte && $idPerso_carte >= 50000) {
+					// On sort de la boucle et on se déplace pas
+					break;
+				}
+				else {
+				
 					// Modification coordonnées instance train
 					$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
 					$mysqli->query($sql_t);
@@ -149,20 +192,6 @@ while ($t = $res->fetch_assoc()) {
 					if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
 						$dep_restant--;
 					}
-				}
-			}
-			else {
-				// Le rail est trouvé => on se déplace dessus
-				
-				// Modification coordonnées instance train
-				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
-				$mysqli->query($sql_t);
-				
-				$x_train = $x_r;
-				$y_train = $y_r;
-				
-				if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
-					$dep_restant--;
 				}
 			}
 			
@@ -238,6 +267,50 @@ while ($t = $res->fetch_assoc()) {
 				} else {
 					// Le rail est trouvé => on se déplace dessus
 					
+					// Y a t-il un obstacle sur les rails ?
+					$sql_c = "SELECT occupee_carte, idPerso_carte FROM carte WHERE x_carte='$x_r' AND y_carte='$y_r'";
+					$res_c = $mysqli->query($sql_c);
+					$t_c = $res_c->fetch_assoc();
+					
+					$occupee_carte 	= $t_c['occupee_carte'];
+					$idPerso_carte	= $t_c['idPerso_carte'];
+					
+					if ($occupee_carte && $idPerso_carte >= 50000) {
+						// On sort de la boucle et on se déplace pas
+						break;
+					}
+					else {
+					
+						// Modification coordonnées instance train
+						$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+						$mysqli->query($sql_t);
+						
+						$x_train = $x_r;
+						$y_train = $y_r;
+						
+						if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+							$dep_restant--;
+						}
+					}
+				}
+			}
+			else {
+				// Le rail est trouvé => on se déplace dessus
+				
+				// Y a t-il un obstacle sur les rails ?
+				$sql_c = "SELECT occupee_carte, idPerso_carte FROM carte WHERE x_carte='$x_r' AND y_carte='$y_r'";
+				$res_c = $mysqli->query($sql_c);
+				$t_c = $res_c->fetch_assoc();
+				
+				$occupee_carte 	= $t_c['occupee_carte'];
+				$idPerso_carte	= $t_c['idPerso_carte'];
+				
+				if ($occupee_carte && $idPerso_carte >= 50000) {
+					// On sort de la boucle et on se déplace pas
+					break;
+				}
+				else {
+				
 					// Modification coordonnées instance train
 					$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
 					$mysqli->query($sql_t);
@@ -248,20 +321,6 @@ while ($t = $res->fetch_assoc()) {
 					if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
 						$dep_restant--;
 					}
-				}
-			}
-			else {
-				// Le rail est trouvé => on se déplace dessus
-				
-				// Modification coordonnées instance train
-				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
-				$mysqli->query($sql_t);
-				
-				$x_train = $x_r;
-				$y_train = $y_r;
-				
-				if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
-					$dep_restant--;
 				}
 			}
 		}
@@ -315,18 +374,32 @@ while ($t = $res->fetch_assoc()) {
 			} else {
 				// Le rail est trouvé => on se déplace dessus
 				
-				// Modification coordonnées instance train
-				$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
-				$mysqli->query($sql_t);
+				// Y a t-il un obstacle sur les rails ?
+				$sql_c = "SELECT occupee_carte, idPerso_carte FROM carte WHERE x_carte='$x_r' AND y_carte='$y_r'";
+				$res_c = $mysqli->query($sql_c);
+				$t_c = $res_c->fetch_assoc();
 				
-				$x_train = $x_r;
-				$y_train = $y_r;
+				$occupee_carte 	= $t_c['occupee_carte'];
+				$idPerso_carte	= $t_c['idPerso_carte'];
 				
-				if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
-					$dep_restant--;
+				if ($occupee_carte && $idPerso_carte >= 50000) {
+					// On sort de la boucle et on se déplace pas
+					break;
+				}
+				else {
+				
+					// Modification coordonnées instance train
+					$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
+					$mysqli->query($sql_t);
+					
+					$x_train = $x_r;
+					$y_train = $y_r;
+					
+					if (deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $image_train, $nom_train, $couleur_camp_train)) {
+						$dep_restant--;
+					}
 				}
 			}
-			
 		}
 	}
 	
