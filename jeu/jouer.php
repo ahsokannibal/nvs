@@ -3731,6 +3731,11 @@ if($dispo || $admin){
 										$res_o = $mysqli->query($sql_o);
 										$nb_o = $res_o->num_rows;
 										
+										$sql_case = "SELECT valid_case FROM joueur WHERE id_joueur='$id_joueur_perso'";
+										$res_case = $mysqli->query($sql_case);
+										$t = $res_case->fetch_assoc();
+										$valid_case = $t['valid_case'];
+										
 										if($y > $y_perso+1 || $y < $y_perso-1 || $x > $x_perso+1 || $x < $x_perso-1) {
 											if($nb_o){
 												echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
@@ -3750,10 +3755,16 @@ if($dispo || $admin){
 												}
 												else {	
 													echo "<td width=40 height=40>";
-													echo "	<a href=\"jouer.php?mouv=3\">";
-													echo "		<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40>";
-													echo "	</a>";
-													//echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div>\" >";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "	<a href=\"jouer.php?mouv=3\">";
+														echo "		<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40>";
+														echo "	</a>";
+													}
 													echo "</td>";
 												}
 											}
@@ -3763,8 +3774,17 @@ if($dispo || $admin){
 													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 													echo "</td>";
 												}
-												else {		
-													echo "<td width=40 height=40> <a href=\"jouer.php?mouv=8\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a></td>";//positionnement du fond
+												else {
+													echo "<td width=40 height=40>";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "	<a href=\"jouer.php?mouv=8\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													}
+													echo "</td>";
 												}
 											}
 											if($y == $y_perso && $x == $x_perso+1){
@@ -3774,7 +3794,16 @@ if($dispo || $admin){
 													echo "</td>";
 												}
 												else {	
-													echo "<td width=40 height=40> <a href=\"jouer.php?mouv=5\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a></td>";//positionnement du fond
+													echo "<td width=40 height=40>";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "<a href=\"jouer.php?mouv=5\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													}
+													echo "</td>";
 												}
 											}
 											if($y == $y_perso && $x == $x_perso-1) {
@@ -3784,7 +3813,16 @@ if($dispo || $admin){
 													echo "</td>";
 												}
 												else {	
-													echo "<td width=40 height=40> <a href=\"jouer.php?mouv=4\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a></td>";//positionnement du fond
+													echo "<td width=40 height=40>";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "<a href=\"jouer.php?mouv=4\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													}
+													echo "</td>";
 												}
 											}
 											if($y == $y_perso+1 && $x == $x_perso-1) {
@@ -3794,7 +3832,16 @@ if($dispo || $admin){
 													echo "</td>";
 												}
 												else {	
-													echo "<td width=40 height=40> <a href=\"jouer.php?mouv=1\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a></td>";//positionnement du fond
+													echo "<td width=40 height=40>";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "<a href=\"jouer.php?mouv=1\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													}
+													echo "</td>";
 												}
 											}
 											if($y == $y_perso-1 && $x == $x_perso-1) {
@@ -3804,7 +3851,16 @@ if($dispo || $admin){
 													echo "</td>";
 												}
 												else {	
-													echo "<td width=40 height=40> <a href=\"jouer.php?mouv=6\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a></td>";//positionnement du fond
+													echo "<td width=40 height=40>";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "<a href=\"jouer.php?mouv=6\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													}
+													echo "</td>";
 												}
 											}
 											if($y == $y_perso+1 && $x == $x_perso) {
@@ -3814,7 +3870,16 @@ if($dispo || $admin){
 													echo "</td>";
 												}
 												else {	
-													echo "<td width=40 height=40> <a href=\"jouer.php?mouv=2\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a></td>";//positionnement du fond
+													echo "<td width=40 height=40>";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "<a href=\"jouer.php?mouv=2\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													}
+													echo "</td>";
 												}
 											}
 											if($y == $y_perso-1 && $x == $x_perso) {
@@ -3824,7 +3889,16 @@ if($dispo || $admin){
 													echo "</td>";
 												}
 												else {	
-													echo "<td width=40 height=40> <a href=\"jouer.php?mouv=7\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a></td>";//positionnement du fond
+													echo "<td width=40 height=40>";
+													if ($valid_case) {
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+														echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div>\" >";
+													}
+													else {
+														echo "<a href=\"jouer.php?mouv=7\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													}
+													echo "</td>";
 												}
 											}
 										}

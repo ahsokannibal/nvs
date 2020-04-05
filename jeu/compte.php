@@ -215,6 +215,21 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 					}
 					
+					// Coche valid_case
+					if (isset($_POST['valid_case'])){
+						
+						$statut = $_POST['valid_case'];
+						
+						if($statut == 'on'){
+							$sql = "UPDATE joueur SET valid_case='1' WHERE id_joueur ='".$id_joueur."'";
+							$mysqli->query($sql);
+						}
+					} 
+					else {
+						$sql = "UPDATE joueur SET valid_case='0' WHERE id_joueur ='".$id_joueur."'";
+						$mysqli->query($sql);
+					}
+					
 					// Dossier img
 					if (isset($_POST["select_dossier_img"])) {
 						
@@ -239,6 +254,7 @@ if($dispo || $admin){
 				$description_joueur = $t["description_joueur"];
 				$mail_info_joueur 	= $t["mail_info"];
 				$mail_mp_joueur		= $t["mail_mp"];
+				$valid_case_joueur	= $t["valid_case"];
 				$dossier_img_joueur = $t["dossier_img"];
 	?>
 <html>
@@ -463,6 +479,12 @@ if($dispo || $admin){
 				<div class="row">
 					<div class="col-2">
 						<input type='checkbox' name='mail_mp' <?php if($mail_mp_joueur) echo 'checked';?> /> Recevoir une copie des MP par mail
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-2">
+						<input type='checkbox' name='valid_case' <?php if($valid_case_joueur) echo 'checked';?> /> Validation du déplacement sur case
 					</div>
 				</div>
 				
