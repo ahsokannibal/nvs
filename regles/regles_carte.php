@@ -108,7 +108,7 @@ Il y a plusieurs types de terrains différents, ayant tous : un coût de déplac
 								<td align='center'><img src='../fond_carte/6.gif' /></td><td align='center'>Marécage</td><td align='center'>2</td><td align='center'> - </td><td align='center'>-10%</td><td align='center'> - </td><td align='center'></td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/7.gif' /></td><td align='center'>Forêt</td><td align='center'>2</td><td align='center'>+20%</td><td align='center'> - </td><td align='center'>-1</td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/7.gif' /></td><td align='center'>Forêt</td><td align='center'>2</td><td align='center'>+20%</td><td align='center'> - </td><td align='center'>-2</td><td align='center'></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../fond_carte/8.gif' /></td><td align='center'>Eau / Rivière</td><td align='center'>4</td><td align='center'>+10%</td><td align='center'>+10%</td><td align='center'> - </td><td align='center'></td>
