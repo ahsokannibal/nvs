@@ -73,7 +73,7 @@ function cout_pm($fond)
 function get_malus_visu($fond) 
 {
 	switch($fond) {
-		case(I_FORET): return -1; break; //foret
+		case(I_FORET): return -2; break; //foret
 		case(I_COLLINE): return 1; break; //colline
 		case(I_MONTAGNE): return 2; break; //montagne
 		default: return 0;
