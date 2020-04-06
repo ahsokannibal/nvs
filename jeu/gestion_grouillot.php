@@ -2,6 +2,7 @@
 session_start();
 require_once("../fonctions.php");
 require_once("f_combat.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
@@ -176,8 +177,17 @@ if($dispo || $admin){
 									$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
 									$mysqli->query($sql);
 									
-									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
+									if (in_bat($mysqli, $matricule_grouillot_renvoi)) {
+										
+										$instance_bat = in_bat($mysqli, $matricule_grouillot_renvoi);
+										
+										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi' AND id_instanceBat='$instance_bat'";
+										$mysqli->query($sql);
+									}
+									else {
+										$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_grouillot_renvoi'";
+										$mysqli->query($sql);
+									}
 									
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_camp_chef><b>$nom_chef</b></font>','a viré le grouillot matricule $matricule_grouillot_renvoi',NULL,'','',NOW(),'0')";
 									$mysqli->query($sql);
