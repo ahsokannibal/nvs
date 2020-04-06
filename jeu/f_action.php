@@ -1748,7 +1748,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 				if ($pv_final_bat <= 0) {
 				
 					// MAJ carte
-					$sql = "UPDATE carte SET fond_carte='8.gif', idPerso_carte=NULL WHERE x_carte=$x_bat AND y_carte=$y_bat";
+					$sql = "UPDATE carte SET fond_carte='8.gif', idPerso_carte=NULL, save_info_carte=NULL WHERE x_carte=$x_bat AND y_carte=$y_bat";
 					$mysqli->query($sql);
 					
 					// Suppression instance bat 
