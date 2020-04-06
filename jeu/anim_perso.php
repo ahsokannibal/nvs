@@ -152,6 +152,78 @@ if($dispo || $admin){
 							$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
 							$mysqli->query($sql);
 						}
+						else if ($type_demande_maj == 4) {
+							// Demande de changement de camp
+							
+							// Récupération du camp cible
+							$sql = "SELECT info_demande FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='4'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$camp_cible = $t['info_demande'];
+							
+							// Récupération des grouillots du joueur 
+							$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_perso_maj' AND chef='0'";
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_grouillot = $t['id_perso'];
+								
+								// Ok - renvoi du perso						
+								$sql = "DELETE FROM perso WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_contact WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_dossiers WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_grade WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_grouillot'";
+								$mysqli->query($sql);
+								
+								if (in_bat($mysqli, $id_perso)) {		
+									$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_grouillot'";
+								}
+								else if (in_train($mysqli, $id_perso)) {
+									$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_grouillot'";
+								}
+								else {
+									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_grouillot'";
+								}
+								$mysqli->query($sql);								
+							}
+							
+							// Récupération batiment de nouveau départ
+							
+							// MAJ du chef 
+							$sql = "";
+						}
 					}
 					else {
 						// Suppression de la demande 
@@ -265,11 +337,14 @@ if($dispo || $admin){
 								else if ($type_demande == 3) {
 									$nom_demande = "Demande de changement de nom de bataillon";
 								}
+								else if ($type_demande == 4) {
+									$nom_demande = "Demande de changement de camp";
+								}
 								else {
 									$nom_demande = "Inconnu";
 								}
 								
-								if ($type_demande == 3) {
+								if ($type_demande == 3 || $type_demande == 4) {
 									// Récupération infos perso
 									$sql_c = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_perso' AND chef='1'";
 								}

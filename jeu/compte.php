@@ -26,7 +26,7 @@ if($dispo || $admin){
 		//recuperation des variables de sessions
 		$id = $_SESSION["id_perso"];
 		
-		$sql = "SELECT idJoueur_perso, pv_perso, a_gele, est_gele, nom_perso, chef FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT idJoueur_perso, pv_perso, a_gele, est_gele, nom_perso, clan, chef FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tpe = $res->fetch_assoc();
 		
@@ -36,6 +36,7 @@ if($dispo || $admin){
 		$pseudo_p 	= $tpe['nom_perso'];
 		$chef		= $tpe['chef'];
 		$idJoueur_p = $tpe['idJoueur_perso'];
+		$camp_p		= $tpe['clan'];
 		
 		$mess 		= "";
 		$mess_err 	= "";
@@ -45,6 +46,21 @@ if($dispo || $admin){
 			header("location:../tour.php");
 		}
 		else {
+			
+			// Traitement Annulation de la demande de changement de camp
+			if (isset($_GET['changement_camp']) && $_GET['changement_camp'] == "annuler") {
+				
+				$sql = "DELETE FROM perso_demande_anim WHERE type_demande='4' AND id_perso='$idJoueur_p'";
+				$mysqli->query($sql);
+				
+				echo "<font color=blue>Votre demande de changement de camp a bien été annulée</font><br />";
+			}
+			
+			$sql = "SELECT * FROM perso_demande_anim WHERE id_perso='$idJoueur_p' AND type_demande='4'";
+			$res = $mysqli->query($sql);
+			$demande_cc = $res->num_rows;
+			
+			// Traitement de la demande de depart en permission
 			if (isset($_GET["gele"])){
 				
 				if ($_GET["gele"] == "ok") {
@@ -69,6 +85,22 @@ if($dispo || $admin){
 					$mysqli->query($sql);
 					
 					$a_g = 0;
+				}
+			}
+			
+			// Traitement de la demande de changement de camp
+			if (isset($_POST['changement_camp'])) {
+				
+				if (!$demande_cc) {
+					$camp_cible = $_POST['changement_camp'];
+						
+					$sql = "INSERT INTO perso_demande_anim (id_perso, type_demande, info_demande) VALUES ('$idJoueur_p', '4', '$camp_cible')";
+					$mysqli->query($sql);
+					
+					$demande_cc = 1;
+				}
+				else {
+					echo "<font color=red>Vous avez déjà demandé à changer de camp, veuillez attendre la réponse des animateurs</font><br />";
 				}
 			}
 			
@@ -321,12 +353,22 @@ if($dispo || $admin){
 				<?php
 				if ($a_g) {
 				?>
-				<a class='btn btn-danger' href="compte.php?gele=annuler" OnClick="return(confirm('êtes vous sûr de vouloir annuler votre départ en permission ? Le départ en permission sera effectif à minuit.'))">Annuler le départ en permission</a>	
+					<a class='btn btn-danger' href="compte.php?gele=annuler" OnClick="return(confirm('êtes vous sûr de vouloir annuler votre départ en permission ? Le départ en permission sera effectif à minuit.'))">Annuler le départ en permission</a>	
 				<?php
 				}
 				else {
 				?>
-				<a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir partir en permission ? Le départ en permission sera effectif à minuit.'))">Partir en permission</a>
+					<a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir partir en permission ? Le départ en permission sera effectif à minuit.'))">Partir en permission</a>
+				<?php
+				}
+				if (!$demande_cc) {
+				?>
+					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirmChangementCamp">Demander à changer de camp</button>
+				<?php
+				}
+				else {
+				?>
+					<a class='btn btn-danger' href="compte.php?changement_camp=annuler" OnClick="return(confirm('êtes vous sûr de vouloir annuler votre demande de changement de camp ?'))">Annuler la demande de changement de camp</a>	
 				<?php
 				}
 				?>
@@ -543,6 +585,43 @@ if($dispo || $admin){
 		echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
 	}
 	?>
+		
+		<!-- Modal -->
+		<form method="post" action="compte.php">
+			<div class="modal fade" id="modalConfirmChangementCamp" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalCenterTitle">Demande de changement de camp</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							Êtes-vous sûr de vouloir changer de camp ? En changeant de camp vous perdrez vos grouillots et un malus sera appliqué sur vos PC.<br /><br />
+							<b>Camp cible :</b> <select name='changement_camp'>
+								<?php
+								if ($camp_p == 1) {
+									$valeur_clan = 2;
+									$libelle_clan = 'Sud';
+								}
+								else {
+									$valeur_clan = 1;
+									$libelle_clan = 'Nord';
+								}
+								?>
+								<option value='<?php echo $valeur_clan; ?>'><?php echo $libelle_clan; ?></option>
+							</select>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+							<button type="button" onclick="this.form.submit()" class="btn btn-primary">Valider</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
