@@ -230,7 +230,7 @@ if(config_dispo_jeu($mysqli)){
 								$unlock = "UNLOCK TABLES";
 								$mysqli->query($unlock);
 								
-								// TODO - creation compte forum 
+								// Creation compte forum 
 								$user_row = array(
 									'username'				=> $nom_perso,
 									'user_password'			=> phpbb_hash($old_mdp_joueur),
