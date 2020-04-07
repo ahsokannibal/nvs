@@ -221,31 +221,37 @@ if($dispo || $admin){
 							}
 							
 							// Récupération infos du chef 
-							$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_perso_maj' AND chef='1'";
+							$sql = "SELECT id_perso, nom_perso, pc_perso FROM perso WHERE idJoueur_perso='$id_perso_maj' AND chef='1'";
 							$res = $mysqli->query($sql);
 							$t_chef = $res->fetch_assoc();
 							
 							$id_perso_chef 	= $t_chef['id_perso'];
 							$nom_perso_chef = $t_chef['nom_perso'];
+							$pc_perso_chef	= $t_chef['pc_perso'];
+							
+							$new_pc_chef = floor(($pc_perso_chef * 90) / 100);
 							
 							if ($camp_cible == 1) {
 								$couleur_clan_p = 'blue';
 								$nom_camp 		= 'Nord';
 								$image_perso	= 'cavalerie_nord.gif';
+								$id_group_forum	= 8;
 							}
 							else if ($camp_cible == 2) {
 								$couleur_clan_p = 'red';
 								$nom_camp 		= 'Sud';
 								$image_perso	= 'cavalerie_sud.gif';
+								$id_group_forum	= 9;
 							}
 							else if ($camp_cible == 3) {
 								$couleur_clan_p = 'green';
 								$nom_camp 		= 'Indien';
 								$image_perso	= 'cavalerie_indien.gif';
+								// TODO
 							}
 							
 							// MAJ Chef
-							$sql = "UPDATE perso SET pv_perso='0', clan='$camp_cible', image_perso WHERE id_perso='$id_perso_chef'";
+							$sql = "UPDATE perso SET pv_perso='0', clan='$camp_cible', image_perso='$image_perso', pc_perso='$new_pc_chef' WHERE id_perso='$id_perso_chef'";
 							$mysqli->query($sql);
 							
 							// Suppression chef de la carte
@@ -266,6 +272,19 @@ if($dispo || $admin){
 							
 							// Suppression de la demande 
 							$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
+							$mysqli->query($sql);
+							
+							// ------- FORUM 
+							// Récupération de l'id de l'utilisateur sur le forum 
+							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+										(SELECT nom_perso FROM perso WHERE id_perso='$id_perso_chef' AND chef='1')";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$id_user_forum = $t['user_id'];
+							
+							// MAJ du groupe de l'utilisateur
+							$sql = "UPDATE ".$table_prefix."user_group SET group_id='$id_group_forum' WHERE user_id='$id_user_forum'";
 							$mysqli->query($sql);
 						}
 					}
