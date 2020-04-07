@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
@@ -207,10 +208,10 @@ if($dispo || $admin){
 								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_grouillot'";
 								$mysqli->query($sql);
 								
-								if (in_bat($mysqli, $id_perso)) {		
+								if (in_bat($mysqli, $id_grouillot)) {		
 									$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_grouillot'";
 								}
-								else if (in_train($mysqli, $id_perso)) {
+								else if (in_train($mysqli, $id_grouillot)) {
 									$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_grouillot'";
 								}
 								else {
@@ -219,10 +220,53 @@ if($dispo || $admin){
 								$mysqli->query($sql);								
 							}
 							
-							// Récupération batiment de nouveau départ
+							// Récupération infos du chef 
+							$sql = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_perso_maj' AND chef='1'";
+							$res = $mysqli->query($sql);
+							$t_chef = $res->fetch_assoc();
 							
-							// MAJ du chef 
-							$sql = "";
+							$id_perso_chef 	= $t_chef['id_perso'];
+							$nom_perso_chef = $t_chef['nom_perso'];
+							
+							if ($camp_cible == 1) {
+								$couleur_clan_p = 'blue';
+								$nom_camp 		= 'Nord';
+								$image_perso	= 'cavalerie_nord.gif';
+							}
+							else if ($camp_cible == 2) {
+								$couleur_clan_p = 'red';
+								$nom_camp 		= 'Sud';
+								$image_perso	= 'cavalerie_sud.gif';
+							}
+							else if ($camp_cible == 3) {
+								$couleur_clan_p = 'green';
+								$nom_camp 		= 'Indien';
+								$image_perso	= 'cavalerie_indien.gif';
+							}
+							
+							// MAJ Chef
+							$sql = "UPDATE perso SET pv_perso='0', clan='$camp_cible', image_perso WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
+							// Suppression chef de la carte
+							if (in_bat($mysqli, $id_perso_chef)) {		
+								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_chef'";
+							}
+							else if (in_train($mysqli, $id_perso_chef)) {
+								$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso_chef'";
+							}
+							else {
+								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso_chef'";
+							}
+							$mysqli->query($sql);
+							
+							// Evenement changement de camp
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso_chef,'<font color=$couleur_clan_p><b>$nom_perso_chef</b></font>','a changé de camp, nouveau camp : <font color=$couleur_clan_p><b>$nom_camp</b></font>',NULL,'','',NOW(),'0')";
+							$mysqli->query($sql);
+							
+							// Suppression de la demande 
+							$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
+							$mysqli->query($sql);
 						}
 					}
 					else {
@@ -314,11 +358,20 @@ if($dispo || $admin){
 							</thead>
 							<tbody>
 							<?php
+							
 							// Récupération des demandes sur la gestion des persos 
-							$sql = "SELECT * FROM perso_demande_anim, perso
+							$sql = "(SELECT perso_demande_anim.id_perso, perso_demande_anim.type_demande, perso_demande_anim.info_demande FROM perso_demande_anim, perso
 									WHERE perso_demande_anim.id_perso = perso.id_perso
 									AND perso.clan = '$camp'
-									ORDER BY perso_demande_anim.id_perso ASC";
+									AND type_demande = 1
+									ORDER BY perso_demande_anim.id_perso ASC)
+									UNION ALL
+									(SELECT perso_demande_anim.id_perso, perso_demande_anim.type_demande, perso_demande_anim.info_demande FROM perso_demande_anim, perso
+									WHERE perso_demande_anim.id_perso = perso.idJoueur_perso
+									AND perso.clan = '$camp'
+									AND type_demande > 1
+									AND perso.chef='1'
+									ORDER BY perso_demande_anim.id_perso ASC)";
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()) {
@@ -339,35 +392,49 @@ if($dispo || $admin){
 								}
 								else if ($type_demande == 4) {
 									$nom_demande = "Demande de changement de camp";
+									
+									if ($info_demande == 1) {
+										$info_demande = 'Nord';
+									}
+									else if(($info_demande == 2)) {
+										$info_demande = 'Sud';
+									}
+									else {
+										$info_demande = 'Valeur incorrecte (à refuser)';
+									}
 								}
 								else {
 									$nom_demande = "Inconnu";
 								}
 								
-								if ($type_demande == 3 || $type_demande == 4) {
-									// Récupération infos perso
-									$sql_c = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_perso' AND chef='1'";
-								}
-								else {
-									// Récupération infos perso
+								// Récupération infos perso
+								if ($type_demande == 1) {
 									$sql_c = "SELECT id_perso, nom_perso FROM perso WHERE id_perso='$id_perso'";
+								}
+								else if ($type_demande == 3 || $type_demande == 4) {
+									$sql_c = "SELECT id_perso, nom_perso FROM perso WHERE idJoueur_perso='$id_perso' AND chef='1'";
 								}
 								
 								$res_c = $mysqli->query($sql_c);
-								$t_c = $res_c->fetch_assoc();
+								$num_c = $res_c->num_rows;
 								
-								$id_perso_aff	= $t_c['id_perso'];
-								$nom_perso 		= $t_c['nom_perso'];
+								if ($num_c) {
 								
-								echo "<tr>";
-								echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso_aff."'>".$id_perso_aff."</a>]</td>";
-								echo "	<td align='center'>".$nom_demande."</td>";
-								echo "	<td align='center'>".$info_demande."</td>";
-								echo "	<td align='center'>";
-								echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter</a>";
-								echo "		<a class='btn btn-danger' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=refus\">Refuser</a>";
-								echo "	</td>";
-								echo "</tr>";
+									$t_c = $res_c->fetch_assoc();
+									
+									$id_perso_aff	= $t_c['id_perso'];
+									$nom_perso 		= $t_c['nom_perso'];
+									
+									echo "<tr>";
+									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso_aff."'>".$id_perso_aff."</a>]</td>";
+									echo "	<td align='center'>".$nom_demande."</td>";
+									echo "	<td align='center'>".$info_demande."</td>";
+									echo "	<td align='center'>";
+									echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter</a>";
+									echo "		<a class='btn btn-danger' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=refus\">Refuser</a>";
+									echo "	</td>";
+									echo "</tr>";
+								}
 							}
 							?>
 							</tbody>

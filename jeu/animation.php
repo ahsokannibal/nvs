@@ -44,9 +44,17 @@ if($dispo || $admin){
 			$nb_demandes_gestion_compagnie = $res->num_rows;
 			
 			// Récupération des demandes sur la gestion des persos 
-			$sql = "SELECT * FROM perso_demande_anim, perso
+			$sql = "(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
 					WHERE perso_demande_anim.id_perso = perso.id_perso
-					AND perso.clan = '$camp'";
+					AND perso.clan = '$camp'
+					AND perso_demande_anim.type_demande = 1)
+					UNION ALL
+					(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
+					WHERE perso_demande_anim.id_perso = perso.idJoueur_perso
+					AND perso.clan = '$camp'
+					AND perso.chef = '1'
+					AND perso_demande_anim.type_demande > 1)
+					";
 			$res = $mysqli->query($sql);
 			$nb_demandes_gestion_perso = $res->num_rows;
 			
