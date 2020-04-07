@@ -254,6 +254,10 @@ if($dispo || $admin){
 							$sql = "UPDATE perso SET pv_perso='0', clan='$camp_cible', image_perso='$image_perso', pc_perso='$new_pc_chef' WHERE id_perso='$id_perso_chef'";
 							$mysqli->query($sql);
 							
+							// Suppression de lieus de rappatriement
+							$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
 							// Suppression chef de la carte
 							if (in_bat($mysqli, $id_perso_chef)) {		
 								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_chef'";
