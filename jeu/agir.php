@@ -323,20 +323,20 @@ if($verif){
 						</table>		
 						<?php
 						
-						// Vérifie si le joueur attaqué a coché l'envoi de mail
-						$mail_info_joueur = verif_coche_mail($mysqli, $id_joueur_cible);
-						
-						if($mail_info_joueur){
-							// Envoi du mail
-							mail_attaque($mysqli, $nom_perso, $id_cible);
-						}
-						
 						// -------------
 						// - ANTI ZERK -
 						// -------------
 						$verif_anti_zerk = gestion_anti_zerk($mysqli, $id);
 						
 						if ($verif_anti_zerk) {
+							
+							// Vérifie si le joueur attaqué a coché l'envoi de mail
+							$mail_info_joueur = verif_coche_mail($mysqli, $id_joueur_cible);
+							
+							if($mail_info_joueur){
+								// Envoi du mail
+								mail_attaque($mysqli, $nom_perso, $id_cible);
+							}
 						
 							// Si perso ou cible est une infanterie 
 							// ou si grade perso >= grade cible - 1
