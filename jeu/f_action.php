@@ -3353,7 +3353,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif' && $fond_carte != 'rail.gif') {
+				if ($fond_carte != '1.gif') {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
