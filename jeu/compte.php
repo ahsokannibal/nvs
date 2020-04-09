@@ -60,6 +60,14 @@ if($dispo || $admin){
 			$res = $mysqli->query($sql);
 			$demande_cc = $res->num_rows;
 			
+			// Est ce que le chef est dans une compagnie ?
+			$sql = "SELECT perso_in_compagnie.id_perso FROM perso_in_compagnie, perso
+					WHERE perso_in_compagnie.id_perso = perso.id_perso 
+					AND perso.idJoueur_perso='2'
+					AND perso.chef='1'";
+			$res = $mysqli->query($sql);
+			$is_chef_in_compagnie = $res->num_rows;
+			
 			// Traitement de la demande de depart en permission
 			if (isset($_GET["gele"])){
 				
@@ -92,12 +100,19 @@ if($dispo || $admin){
 			if (isset($_POST['changement_camp'])) {
 				
 				if (!$demande_cc) {
-					$camp_cible = $_POST['changement_camp'];
-						
-					$sql = "INSERT INTO perso_demande_anim (id_perso, type_demande, info_demande) VALUES ('$idJoueur_p', '4', '$camp_cible')";
-					$mysqli->query($sql);
 					
-					$demande_cc = 1;
+					if (!$is_chef_in_compagnie) {
+					
+						$camp_cible = $_POST['changement_camp'];
+							
+						$sql = "INSERT INTO perso_demande_anim (id_perso, type_demande, info_demande) VALUES ('$idJoueur_p', '4', '$camp_cible')";
+						$mysqli->query($sql);
+						
+						$demande_cc = 1;
+					}
+					else {
+						echo "<font color=red>Vous ne pouvez pas faire de demande de changement de camp tant que vous faites parti d'une compagnie ou qu'une demande d'adhésion est en cours</font><br />";
+					}
 				}
 				else {
 					echo "<font color=red>Vous avez déjà demandé à changer de camp, veuillez attendre la réponse des animateurs</font><br />";
