@@ -77,90 +77,100 @@ if($dispo || $admin){
 						// on souhaite rejoindre une compagnie
 						if($_GET["rejoindre"] == "ok") {
 							
-							$ok_n = 1;
+							$sql = "SELECT * FROM perso_demande_anim WHERE id_perso='$idJoueur_p' AND type_demande='4'";
+							$res = $mysqli->query($sql);
+							$demande_cc = $res->num_rows;
 							
-							// verification que le perso est bien du meme camp que la compagnie				
-							if($clan_perso == $clan_compagnie){
+							if (!$demande_cc) {
 							
-								// verification que le perso n'est pas deja dans la compagnie
-								$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie'";
-								$res = $mysqli->query($sql);
+								$ok_n = 1;
 								
-								while ($n = $res->fetch_assoc()){
-									$id_n = $n["id_perso"];
-									if ($id_n == $id) {
+								// verification que le perso est bien du meme camp que la compagnie				
+								if($clan_perso == $clan_compagnie){
+								
+									// verification que le perso n'est pas deja dans la compagnie
+									$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie'";
+									$res = $mysqli->query($sql);
+									
+									while ($n = $res->fetch_assoc()){
+										$id_n = $n["id_perso"];
+										if ($id_n == $id) {
+											$ok_n = 0;
+											break;
+										}
+									}
+									
+									// verification que le perso n'est pas deja dans une compagnie ou en attente sur une autre
+									$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id'";
+									$res = $mysqli->query($sql);
+									$est_deja = $res->num_rows;
+									
+									if($est_deja){
 										$ok_n = 0;
-										break;
 									}
-								}
-								
-								// verification que le perso n'est pas deja dans une compagnie ou en attente sur une autre
-								$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id'";
-								$res = $mysqli->query($sql);
-								$est_deja = $res->num_rows;
-								
-								if($est_deja){
-									$ok_n = 0;
-								}
-								
-								// Verification nombre dans la compagnie
-								// recuperation des information sur la compagnie
-								$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
-								$res = $mysqli->query($sql);
-								$sec = $res->fetch_assoc();
-								$genie_compagnie		= $sec["genie_civil"];
-								
-								if ($genie_compagnie) {
-									$nb_persos_compagnie_max = 60;
-								} else {
-									$nb_persos_compagnie_max = 80;
-								}
-								
-								// Récupération nombre perso dans la compagnie
-								$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
-								$res = $mysqli->query($sql);
-								$tab = $res->fetch_assoc();
-								
-								$nb_persos_compagnie = $tab["nb_persos_compagnie"];
-								
-								if ($nb_persos_compagnie >= $nb_persos_compagnie_max) {
-									$ok_n = 0;
-								}
-								
-								// si il peut postuler
-								if($ok_n == 1) {
 									
-									// Verification que le type de perso peut postuler dans cette compagnie
-									$sql = "SELECT type_perso FROM perso WHERE id_perso='$id'";
+									// Verification nombre dans la compagnie
+									// recuperation des information sur la compagnie
+									$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
 									$res = $mysqli->query($sql);
-									$t_type = $res->fetch_assoc();
+									$sec = $res->fetch_assoc();
+									$genie_compagnie		= $sec["genie_civil"];
 									
-									$type_perso = $t_type["type_perso"];
-									
-									$sql = "SELECT * FROM compagnie_as_contraintes WHERE id_compagnie='$id_compagnie' AND contrainte_type_perso='$type_perso'";
-									$res = $mysqli->query($sql);
-									$nb_res = $res->num_rows;
-									
-									if ($nb_res >= 1) {
-										
-										// mise a jour de la table perso_in_compagnie
-										$sql = "INSERT INTO perso_in_compagnie VALUES ('$id','$id_compagnie','5','1')";
-										$mysqli->query($sql);
-										
-										echo "<center><font color='blue'>Vous venez de poser votre candidature dans une compagnie, vous devez attendre que le chef de compagnie ou le recruteur valide votre adhésion</font></center><br>";
-										
+									if ($genie_compagnie) {
+										$nb_persos_compagnie_max = 60;
 									} else {
-										echo "<center><font color='red'>Vous ne pouvez pas postuler dans cette compagnie, contraintes non respectées</font></center>";
+										$nb_persos_compagnie_max = 80;
 									}
-					
-									echo "<a href='compagnie.php' class='btn btn-outline-secondary'> retour </a>";
+									
+									// Récupération nombre perso dans la compagnie
+									$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie=$id_compagnie AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+									$res = $mysqli->query($sql);
+									$tab = $res->fetch_assoc();
+									
+									$nb_persos_compagnie = $tab["nb_persos_compagnie"];
+									
+									if ($nb_persos_compagnie >= $nb_persos_compagnie_max) {
+										$ok_n = 0;
+									}
+									
+									// si il peut postuler
+									if($ok_n == 1) {
+										
+										// Verification que le type de perso peut postuler dans cette compagnie
+										$sql = "SELECT type_perso FROM perso WHERE id_perso='$id'";
+										$res = $mysqli->query($sql);
+										$t_type = $res->fetch_assoc();
+										
+										$type_perso = $t_type["type_perso"];
+										
+										$sql = "SELECT * FROM compagnie_as_contraintes WHERE id_compagnie='$id_compagnie' AND contrainte_type_perso='$type_perso'";
+										$res = $mysqli->query($sql);
+										$nb_res = $res->num_rows;
+										
+										if ($nb_res >= 1) {
+											
+											// mise a jour de la table perso_in_compagnie
+											$sql = "INSERT INTO perso_in_compagnie VALUES ('$id','$id_compagnie','5','1')";
+											$mysqli->query($sql);
+											
+											echo "<center><font color='blue'>Vous venez de poser votre candidature dans une compagnie, vous devez attendre que le chef de compagnie ou le recruteur valide votre adhésion</font></center><br>";
+											
+										} else {
+											echo "<center><font color='red'>Vous ne pouvez pas postuler dans cette compagnie, contraintes non respectées</font></center>";
+										}
+						
+										echo "<a href='compagnie.php' class='btn btn-outline-secondary'> retour </a>";
+									}
+									else {
+										echo "<center><font color='red'>Vous êtes déjà inscrit dans une compagnie</font></center>";
+									}
 								}
 								else {
-									echo "<center><font color='red'>Vous êtes déjà inscrit dans une compagnie</font></center>";
+									echo "<center><font color='red'>Vous n'avez pas le droit de postuler dans une compagnie adverse...</font></center>";
 								}
 							}
 							else {
-								echo "<center><font color='red'>Vous n'avez pas le droit de postuler dans une compagnie adverse...</font></center>";
+								echo "<center><font color='red'>Vous ne pouvez pas postuler dans une caompagnie car vous avez effectué une demande de changement de camp</font></center>";
 							}
 						}
 						
