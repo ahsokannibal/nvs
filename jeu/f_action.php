@@ -483,6 +483,145 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 											$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 2, $y_bat - 2, $camp_perso)";
 											$mysqli->query($sql);
 										}
+										else if ($id_bat == '11') {
+											// Gare 
+											
+											// Est ce que la gare est connectée à des rails ?
+											$sql = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte WHERE x_carte >= $x_bat -2 AND x_carte <= $x_bat + 2 AND y_carte >= $y_bat - 2 AND y_carte <= $y_bat + 2 AND fond_carte='rail.gif'";
+											$res = $mysqli->query($sql);
+											$nb_connections = $res->num_rows;
+											
+											if ($nb_connections > 0) {
+											
+												$tab_rail = array();
+											
+												while ($t = $res->fetch_assoc()) {
+													
+													$x_rail 		= $t["x_carte"];
+													$y_rail 		= $t["y_carte"];
+													$occ_rail		= $t["occupee_carte"];
+													$idPerso_rail	= $t["idPerso_carte"];
+													$image_on_rail	= $t["image_carte"];
+													
+													// Coordonnées rail
+													$coord_rail = $x_rail.";".$y_rail;
+													array_push($tab_rail, $coord_rail);
+													
+													if (($camp_perso == 1 && $image_on_rail == 'b12b.png') || ($camp_perso == 2 && $image_on_rail == 'b12r.png')) {
+														
+														// On a trouvé un train du même camp que la gare construite
+														$sql_t = "SELECT id_gare1, id_gare2, direction FROM liaisons_gare WHERE id_train='$idPerso_rail'";
+														$res_t = $mysqli->query($sql_t);
+														$t_t = $res_t->fetch_assoc();
+														
+														$id_gare1 	= $t_t['id_gare1'];
+														$id_gare2 	= $t_t['id_gare2'];
+														$direction 	= $t_t['direction'];
+														
+														// Est-ce que la gare 1 existe toujours ?
+														$sql_e1 = "SELECT * FROM instance_batiment WHERE id_instanceBat = '$id_gare1'";
+														$res_e1 = $mysqli->query($sql_e1);
+														$existe_gare1 = $res_e1->num_rows;
+														
+														if (!$existe_gare1) {
+															if ($direction == $id_gare1) {
+																// On met à jour gare1 ET direction
+																$sql = "UPDATE liaisons_gare SET id_gare1='$id_i_bat', direction='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																$mysqli->query($sql);
+															}
+															else {
+																// On met à jour gare1
+																$sql = "UPDATE liaisons_gare SET id_gare1='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																$mysqli->query($sql);
+															}
+														}
+														else {
+															if ($direction == $id_gare2) {
+																// On met à jour gare2 ET direction
+																$sql = "UPDATE liaisons_gare SET id_gare2='$id_i_bat', direction='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																$mysqli->query($sql);
+															}
+															else {
+																// On met à jour gare2
+																$sql = "UPDATE liaisons_gare SET id_gare2='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																$mysqli->query($sql);
+															}
+														}
+													}
+													else {												
+														
+														$num_res = 1;
+														
+														while ($image_on_rail != 'b12b.png' && $image_on_rail != 'b12r.png' && $num_res > 0) {
+															
+															// On cherche un train sur le chemin des rails
+															$sql = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
+																	WHERE x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1
+																	AND coordonnees NOT IN ( '" . implode( "', '" , $tab_rail ) . "' )
+																	AND fond_carte='rail.gif'";
+															$res_r = $mysqli->query($sql);
+															$num_res = $res_r->num_rows;
+															
+															$t_r = $res_r->fetch_assoc();
+														
+															$x_rail 		= $t_r['x_carte'];
+															$y_rail 		= $t_r['y_carte'];
+															$occ_rail		= $t_r["occupee_carte"];
+															$idPerso_rail	= $t_r["idPerso_carte"];
+															$image_on_rail	= $t_r["image_carte"];
+															
+															// Ajout coordonnées dans tableau des coordonnées des rails
+															$coord_rail = $x_rail.";".$y_rail;
+															array_push($tab_rail, $coord_rail);
+															
+															$condition = $image_on_rail != 'b12b.png' && $image_on_rail != 'b12r.png' && $num_res > 0;													
+														}
+														
+														if (($camp_perso == 1 && $image_on_rail == 'b12b.png') || ($camp_perso == 2 && $image_on_rail == 'b12r.png')) {
+														
+															// On a trouvé un train du même camp que la gare construite
+															$sql_t = "SELECT id_gare1, id_gare2, direction FROM liaisons_gare WHERE id_train='$idPerso_rail'";
+															$res_t = $mysqli->query($sql_t);
+															$t_t = $res_t->fetch_assoc();
+															
+															$id_gare1 	= $t_t['id_gare1'];
+															$id_gare2 	= $t_t['id_gare2'];
+															$direction 	= $t_t['direction'];
+															
+															// Est-ce que la gare 1 existe toujours ?
+															$sql_e1 = "SELECT * FROM instance_batiment WHERE id_instanceBat = '$id_gare1'";
+															$res_e1 = $mysqli->query($sql_e1);
+															$existe_gare1 = $res_e1->num_rows;
+															
+															if (!$existe_gare1) {
+																if ($direction == $id_gare1) {
+																	// On met à jour gare1 ET direction
+																	$sql = "UPDATE liaisons_gare SET id_gare1='$id_i_bat', direction='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																	$mysqli->query($sql);
+																}
+																else {
+																	// On met à jour gare1
+																	$sql = "UPDATE liaisons_gare SET id_gare1='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																	$mysqli->query($sql);
+																}
+															}
+															else {
+																if ($direction == $id_gare2) {
+																	// On met à jour gare2 ET direction
+																	$sql = "UPDATE liaisons_gare SET id_gare2='$id_i_bat', direction='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																	$mysqli->query($sql);
+																}
+																else {
+																	// On met à jour gare2
+																	$sql = "UPDATE liaisons_gare SET id_gare2='$id_i_bat' WHERE id_train='$idPerso_rail'";
+																	$mysqli->query($sql);
+																}
+															}
+														}
+													}
+												}
+											}
+										}
 									}
 								}
 								

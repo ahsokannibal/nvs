@@ -1366,6 +1366,9 @@ if($dispo || $admin){
 																	<input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" >
 																</td>";
 															}
+															else {
+																echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
+															}
 														}
 														else if($fond_carte == '1.gif'){
 															echo "
