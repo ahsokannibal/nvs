@@ -18,5 +18,9 @@ for ($x = 0; $x <= $X_MAX; $x++)
 	}
 }
 
+// Coordonnées carte
+$sql = "UPDATE carte3 SET coordonnees = CONCAT (x_carte, ';', y_carte)";
+$mysqli->query($sql);
+
 echo "c'est bon : la carte est créée";
 ?>

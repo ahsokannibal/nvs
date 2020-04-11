@@ -20,6 +20,10 @@ for ($x = 0; $x <= $X_MAX; $x++)
 	}
 }
 
+// Coordonnées carte
+$sql = "UPDATE carte SET coordonnees = CONCAT (x_carte, ';', y_carte)";
+$mysqli->query($sql);
+
 // creation d'un pnj
 $sql = "INSERT INTO `instance_pnj` VALUES ('200000','2','300','8','1','0','0','0','0')";
 $mysqli->query($sql);
