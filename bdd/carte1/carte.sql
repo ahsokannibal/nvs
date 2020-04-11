@@ -40461,6 +40461,8 @@ INSERT INTO `carte` (`x_carte`, `y_carte`, `occupee_carte`, `fond_carte`, `idPer
 (200, 199, '0', '3.gif', NULL, NULL, NULL),
 (200, 200, '0', '3.gif', NULL, NULL, NULL);
 
+UPDATE carte SET coordonnees = CONCAT (x_carte, ";", y_carte);
+
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

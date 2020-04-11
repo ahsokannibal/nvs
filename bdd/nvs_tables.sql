@@ -201,7 +201,8 @@ CREATE TABLE `carte` (
   `idPerso_carte` int(11) DEFAULT '0',
   `image_carte` varchar(100) DEFAULT NULL,
   `vue_nord` int(11) DEFAULT '0',
-  `vue_sud` int(11) DEFAULT '0'
+  `vue_sud` int(11) DEFAULT '0',
+  `coordonnees` varchar(250) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `carte` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
@@ -218,7 +219,8 @@ CREATE TABLE `carte2` (
   `idPerso_carte` int(11) DEFAULT '0',
   `image_carte` varchar(100) DEFAULT NULL,
   `vue_nord` int(11) DEFAULT '0',
-  `vue_sud` int(11) DEFAULT '0'
+  `vue_sud` int(11) DEFAULT '0',
+  `coordonnees` varchar(250) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `carte2` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
@@ -235,7 +237,8 @@ CREATE TABLE `carte3` (
   `idPerso_carte` int(11) DEFAULT '0',
   `image_carte` varchar(100) DEFAULT NULL,
   `vue_nord` int(11) DEFAULT '0',
-  `vue_sud` int(11) DEFAULT '0'
+  `vue_sud` int(11) DEFAULT '0',
+  `coordonnees` varchar(250) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `carte3` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
