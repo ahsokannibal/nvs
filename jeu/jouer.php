@@ -168,8 +168,8 @@ if($dispo || $admin){
 					// on veut sortir du batiment
 					if(isset($_GET["out"]) && $_GET["out"] == "ok") {
 					
-						// verification que le perso est bien dans un batiment...
-						if(in_bat($mysqli, $id_perso)){
+						// verification que le perso est bien dans le batiment duquel il souhaite sortir...
+						if($id_inst == in_bat($mysqli, $id_perso)){
 							
 							// verification des pm du perso
 							if($pm_perso + $malus_pm >= 1){
@@ -180,257 +180,408 @@ if($dispo || $admin){
 									if (isDirectionOK($_GET["direction"])) {
 									
 										$direction = $_GET["direction"];
+											
+										$sql_b = "SELECT nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
+												WHERE instance_batiment.id_batiment = batiment.id_batiment
+												AND instance_batiment.id_instanceBat = '$id_inst'";
+										$res_b = $mysqli->query($sql_b);
+										$t_b = $res_b->fetch_assoc();
+										
+										$nom_bat 			= $t_b['nom_batiment'];
+										$taille_bat			= $t_b['taille_batiment'];
+										$nom_instance_bat	= $t_b['nom_instance'];
+										
+										$taille_case = ceil($taille_bat / 2);
 										
 										$oc = 1;
-										$seek = 1;
 										
 										switch($direction){
 											case 1: 
 												// Haut gauche
-												// tant que les cases sont occupees
-												while ($oc != 0){
-												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN - 1 AND y_carte >= $y_persoN + 1 AND y_carte <= $y_persoN + $seek";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $taille_case";
 														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}
 												break;
 											case 2:
 												// Haut
-												// tant que les cases sont occupees
-												while ($oc != 0){
-												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN - 1 AND x_carte <= $x_persoN + 1 AND y_carte >= $y_persoN + 1 AND y_carte <= $y_persoN + $seek";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN AND y_carte = $y_persoN + $taille_case";
 														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}												
 												break;
 											case 3:
 												// Haut droite
-												// tant que les cases sont occupees
-												while ($oc != 0){
-												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN + 1 AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN + 1 AND y_carte <= $y_persoN + $seek";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $taille_case";
 														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}												
 												break;
 											case 4: 
 												// Gauche
-												// tant que les cases sont occupees
-												while ($oc != 0){
-												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN - 1 AND y_carte >= $y_persoN - 1 AND y_carte <= $y_persoN + 1";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN";
 														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}												
 												break;
 											case 5: 
 												// Droite
-												// tant que les cases sont occupees
-												while ($oc != 0){
-												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN + 1 AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN - 1 AND y_carte <= $y_persoN + 1";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN";
 														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}												
 												break;
 											case 6: 
 												// Bas gauche
-												// tant que les cases sont occupees
-												while ($oc != 0){
-												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN - $seek AND x_carte <= $x_persoN - 1 AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN - 1";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $taille_case";
 														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}												
 												break;
 											case 7: 
 												// Bas
-												// tant que les cases sont occupees
-												while ($oc != 0){
-												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN - 1 AND x_carte <= $x_persoN + 1 AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN - 1";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN AND y_carte = $y_persoN - $taille_case";
 														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}												
 												break;
 											case 8: 
 												// Bas droite
-												// tant que les cases sont occupees
-												while ($oc != 0){
+												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+														WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $taille_case";
 												
-													// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-															WHERE x_carte >= $x_persoN + 1 AND x_carte <= $x_persoN + $seek AND y_carte >= $y_persoN - $seek AND y_carte <= $y_persoN - 1";
-													$res = $mysqli->query($sql);
-													
-													while($t = $res->fetch_assoc()){
-														
-														$oc 	= $t["occupee_carte"];
-														$xs 	= $t["x_carte"];
-														$ys 	= $t["y_carte"];
-														$fond_c = $t["fond_carte"];
-														
-														if($oc == 0) {
-															break;
-														}
-													}
-													$seek++; // on elargie la recherche
-												}												
 												break;
 										}
 										
-										// mise a jour des coordonnees du perso et de ses pm
-										$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
-										$mysqli->query($sql);
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
 										
-										$x_persoN = $xs;
-										$y_persoN = $ys;
+										$oc 	= $t["occupee_carte"];
 										
-										// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
-										$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
-										$mysqli->query($sql);
+										if ($oc) {
+											switch($direction){
+												case 1: 
+													// Haut gauche
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN + $taille_case";														
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
 										
-										// mise a jour de la table perso_in_batiment
-										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-										$mysqli->query($sql);
-										
-										// mise a jour des evenements
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
-										$mysqli->query($sql);
-										
-										// recuperation des fonds
-										$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
-										$res_map = $mysqli->query ($sql);
-										$t_carte1 = $res_map->fetch_assoc();
-										
-										$fond = $t_carte1["fond_carte"];
-										
-										// mise a jour du bonus de perception
-										$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-										
-										if(bourre($mysqli, $id_perso)){
-											if(!endurance_alcool($mysqli, $id_perso)) {
-												$malus_bourre = bourre($mysqli, $id_perso) * 3;
-												$bonus_visu -= $malus_bourre;
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $i";															
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+											
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+															
+													break;
+												case 2:
+													// Haut
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN + $taille_case";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN + $taille_case";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+															
+													break;
+												case 3:
+													// Haut droite
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN + $taille_case";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $i";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+															
+													break;
+												case 4: 
+													// Gauche
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $i";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $i";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+															
+													break;
+												case 5: 
+													// Droite
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $i";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $i";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+															
+													break;
+												case 6: 
+													// Bas gauche
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN - $taille_case";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $i";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+															
+													break;
+												case 7: 
+													// Bas
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN - $taille_case";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN - $taille_case";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+															
+													break;
+												case 8: 
+													// Bas droite
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN - $taille_case";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													if (!$oc) {
+														break;
+													}
+													
+													for ($i = 1; $i < $taille_case; $i++) {
+														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $i";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$oc = $t["occupee_carte"];
+														
+														if (!$oc) {
+															break;
+														}
+													}
+													
+													break;
 											}
 										}
 										
-										$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
-										$mysqli->query($sql);
+										if (!$oc) {
+											
+											$xs 	= $t["x_carte"];
+											$ys 	= $t["y_carte"];
+											$fond_c = $t["fond_carte"];
 										
-										// maj carte brouillard de guerre
-										$perception_final = $perception_perso + $bonus_visu;
-										if ($clan_p == 1) {
-											$sql = "UPDATE $carte SET vue_nord='1' 
-													WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-													AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+											// mise a jour des coordonnees du perso et de ses pm
+											$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
 											$mysqli->query($sql);
+											
+											$x_persoN = $xs;
+											$y_persoN = $ys;
+											
+											// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+											$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+											$mysqli->query($sql);
+											
+											// mise a jour de la table perso_in_batiment
+											$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+											$mysqli->query($sql);
+											
+											// mise a jour des evenements
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+											$mysqli->query($sql);
+											
+											// recuperation des fonds
+											$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+											$res_map = $mysqli->query ($sql);
+											$t_carte1 = $res_map->fetch_assoc();
+											
+											$fond = $t_carte1["fond_carte"];
+											
+											// mise a jour du bonus de perception
+											$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+											
+											if(bourre($mysqli, $id_perso)){
+												if(!endurance_alcool($mysqli, $id_perso)) {
+													$malus_bourre = bourre($mysqli, $id_perso) * 3;
+													$bonus_visu -= $malus_bourre;
+												}
+											}
+											
+											$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+											$mysqli->query($sql);
+											
+											// maj carte brouillard de guerre
+											$perception_final = $perception_perso + $bonus_visu;
+											if ($clan_p == 1) {
+												$sql = "UPDATE $carte SET vue_nord='1' 
+														WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+														AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+												$mysqli->query($sql);
+											}
+											else if ($clan_p == 2) {
+												$sql = "UPDATE $carte SET vue_sud='1' 
+														WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+														AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+												$mysqli->query($sql);
+											}
 										}
-										else if ($clan_p == 2) {
-											$sql = "UPDATE $carte SET vue_sud='1' 
-													WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-													AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-											$mysqli->query($sql);
+										else {											
+											$erreur .= "Impossible de sortir dans cette direction, la sortie est bloquée";
 										}
 									}
 									else {
@@ -523,7 +674,7 @@ if($dispo || $admin){
 							}
 						}
 						else {
-							$erreur .= "Vous n'êtes pas dans le batiment donc vous ne pouvez pas en sortir";
+							$erreur .= "Vous n'êtes pas dans ce batiment donc vous ne pouvez pas essayer d'en sortir";
 						}
 					}
 					else {
@@ -3738,7 +3889,7 @@ if($dispo || $admin){
 										}
 									}
 									else {
-									
+										
 										// verification s'il y a un objet sur cette case
 										$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
 										$res_o = $mysqli->query($sql_o);
@@ -3749,169 +3900,247 @@ if($dispo || $admin){
 										$t = $res_case->fetch_assoc();
 										$valid_case = $t['valid_case'];
 										
-										if($y > $y_perso+1 || $y < $y_perso-1 || $x > $x_perso+1 || $x < $x_perso-1) {
-											if($nb_o){
-												echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-												echo "	<img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
-												echo "</td>";
+										if (in_bat($mysqli, $id_perso)) {
+											
+											$id_instance_bat = in_bat($mysqli, $id_perso);
+											
+											$sql_b = "SELECT nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
+													WHERE instance_batiment.id_batiment = batiment.id_batiment
+													AND instance_batiment.id_instanceBat = '$id_instance_bat'";
+											$res_b = $mysqli->query($sql_b);
+											$t_b = $res_b->fetch_assoc();
+											
+											$nom_bat 			= $t_b['nom_batiment'];
+											$taille_bat			= $t_b['taille_batiment'];
+											$nom_instance_bat	= $t_b['nom_instance'];
+											
+											$taille_case	= ceil($taille_bat / 2);
+											
+											if($y > $y_perso+$taille_case || $y < $y_perso-$taille_case || $x > $x_perso+$taille_case || $x < $x_perso-$taille_case) {
+												if($nb_o){
+													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+													echo "	<img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
+													echo "</td>";
+												}
+												else {					
+													echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></td>";
+												}
 											}
-											else {										
-												echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></td>";
+											else {
+												if ($x == $x_perso + $taille_case) {
+													for ($i = -$taille_case; $i <= $taille_case; $i++) {
+														if ($y == $y_perso + $i) {
+															echo "<td width=40 height=40>";
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "</td>";
+														}
+													}
+												}
+												else if ($x == $x_perso - $taille_case) {
+													for ($i = -$taille_case; $i <= $taille_case; $i++) {
+														if ($y == $y_perso + $i) {
+															echo "<td width=40 height=40>";
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "</td>";
+														}
+													}
+												}
+												else if ($y == $y_perso + $taille_case) {
+												
+													for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
+														if ($x == $x_perso + $i) {
+															echo "<td width=40 height=40>";
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "</td>";
+														}
+													}
+												}
+												else if ($y == $y_perso - $taille_case) {
+												
+													for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
+														if ($x == $x_perso + $i) {
+															echo "<td width=40 height=40>";
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "</td>";
+														}
+													}
+												}
 											}
 										}
 										else {
-											if($y == $y_perso+1 && $x == $x_perso+1){
+										
+											if($y > $y_perso+1 || $y < $y_perso-1 || $x > $x_perso+1 || $x < $x_perso-1) {
 												if($nb_o){
 													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+													echo "	<img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
 													echo "</td>";
 												}
-												else {	
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div>\" >";
-													}
-													else {
-														echo "	<a href=\"jouer.php?mouv=3\">";
-														echo "		<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40>";
-														echo "	</a>";
-													}
-													echo "</td>";
+												else {										
+													echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></td>";
 												}
 											}
-											if($y == $y_perso-1 && $x == $x_perso+1){
-												if($nb_o){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
-													echo "</td>";
+											else {
+												if($y == $y_perso+1 && $x == $x_perso+1){
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
+													}
+													else {	
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "	<a href=\"jouer.php?mouv=3\">";
+															echo "		<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40>";
+															echo "	</a>";
+														}
+														echo "</td>";
+													}
 												}
-												else {
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div>\" >";
+												if($y == $y_perso-1 && $x == $x_perso+1){
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
 													}
 													else {
-														echo "	<a href=\"jouer.php?mouv=8\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "	<a href=\"jouer.php?mouv=8\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														}
+														echo "</td>";
 													}
-													echo "</td>";
 												}
-											}
-											if($y == $y_perso && $x == $x_perso+1){
-												if($nb_o){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
-													echo "</td>";
+												if($y == $y_perso && $x == $x_perso+1){
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
+													}
+													else {	
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "<a href=\"jouer.php?mouv=5\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														}
+														echo "</td>";
+													}
 												}
-												else {	
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div>\" >";
+												if($y == $y_perso && $x == $x_perso-1) {
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
 													}
-													else {
-														echo "<a href=\"jouer.php?mouv=5\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													else {	
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "<a href=\"jouer.php?mouv=4\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														}
+														echo "</td>";
 													}
-													echo "</td>";
 												}
-											}
-											if($y == $y_perso && $x == $x_perso-1) {
-												if($nb_o){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
-													echo "</td>";
+												if($y == $y_perso+1 && $x == $x_perso-1) {
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
+													}
+													else {	
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "<a href=\"jouer.php?mouv=1\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														}
+														echo "</td>";
+													}
 												}
-												else {	
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div>\" >";
+												if($y == $y_perso-1 && $x == $x_perso-1) {
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
 													}
-													else {
-														echo "<a href=\"jouer.php?mouv=4\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													else {	
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "<a href=\"jouer.php?mouv=6\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														}
+														echo "</td>";
 													}
-													echo "</td>";
 												}
-											}
-											if($y == $y_perso+1 && $x == $x_perso-1) {
-												if($nb_o){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
-													echo "</td>";
+												if($y == $y_perso+1 && $x == $x_perso) {
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
+													}
+													else {	
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "<a href=\"jouer.php?mouv=2\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														}
+														echo "</td>";
+													}
 												}
-												else {	
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div>\" >";
+												if($y == $y_perso-1 && $x == $x_perso) {
+													if($nb_o){
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "</td>";
 													}
-													else {
-														echo "<a href=\"jouer.php?mouv=1\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+													else {	
+														echo "<td width=40 height=40>";
+														if ($valid_case) {
+															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
+															echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div>\" >";
+														}
+														else {
+															echo "<a href=\"jouer.php?mouv=7\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
+														}
+														echo "</td>";
 													}
-													echo "</td>";
-												}
-											}
-											if($y == $y_perso-1 && $x == $x_perso-1) {
-												if($nb_o){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
-													echo "</td>";
-												}
-												else {	
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div>\" >";
-													}
-													else {
-														echo "<a href=\"jouer.php?mouv=6\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
-													}
-													echo "</td>";
-												}
-											}
-											if($y == $y_perso+1 && $x == $x_perso) {
-												if($nb_o){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
-													echo "</td>";
-												}
-												else {	
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div>\" >";
-													}
-													else {
-														echo "<a href=\"jouer.php?mouv=2\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
-													}
-													echo "</td>";
-												}
-											}
-											if($y == $y_perso-1 && $x == $x_perso) {
-												if($nb_o){
-													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
-													echo "</td>";
-												}
-												else {	
-													echo "<td width=40 height=40>";
-													if ($valid_case) {
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-														echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-														echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div>\" >";
-													}
-													else {
-														echo "<a href=\"jouer.php?mouv=7\"><img border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40></a>";
-													}
-													echo "</td>";
 												}
 											}
 										}
