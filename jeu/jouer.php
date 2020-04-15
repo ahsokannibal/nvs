@@ -524,8 +524,8 @@ if($dispo || $admin){
 											
 											$xs 	= $t["x_carte"];
 											$ys 	= $t["y_carte"];
-											$fond_c = $t["fond_carte"];
-										
+											$fond = $t["fond_carte"];
+											
 											// mise a jour des coordonnees du perso et de ses pm
 											$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
 											$mysqli->query($sql);
@@ -544,13 +544,6 @@ if($dispo || $admin){
 											// mise a jour des evenements
 											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
 											$mysqli->query($sql);
-											
-											// recuperation des fonds
-											$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
-											$res_map = $mysqli->query ($sql);
-											$t_carte1 = $res_map->fetch_assoc();
-											
-											$fond = $t_carte1["fond_carte"];
 											
 											// mise a jour du bonus de perception
 											$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
@@ -614,6 +607,13 @@ if($dispo || $admin){
 										$seek++; // on elargie la recherche
 									}
 									
+									// recuperation des fonds
+									$sql = "SELECT fond_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
+									$res_map = $mysqli->query ($sql);
+									$t_carte1 = $res_map->fetch_assoc();
+									
+									$fond = $t_carte1["fond_carte"];
+									
 									// mise a jour des coordonnees du perso et de ses pm
 									$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
 									$mysqli->query($sql);
@@ -632,13 +632,6 @@ if($dispo || $admin){
 									// mise a jour des evenements
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
 									$mysqli->query($sql);
-									
-									// recuperation des fonds
-									$sql = "SELECT fond_carte, image_carte, image_carte FROM $carte WHERE x_carte='$xs' AND y_carte='$ys'";
-									$res_map = $mysqli->query ($sql);
-									$t_carte1 = $res_map->fetch_assoc();
-									
-									$fond = $t_carte1["fond_carte"];
 									
 									// mise a jour du bonus de perception
 									$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
@@ -1160,6 +1153,12 @@ if($dispo || $admin){
 												}
 											}
 											else {
+												// Tentative de triche
+												$text_triche = "Tentative pour entrer dans un batiment sans être à côté de celui-ci";
+										
+												$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+												$mysqli->query($sql);
+												
 												$erreur .= "Il faut être à côté du batiment pour y entrer";
 											}
 										}
@@ -1168,6 +1167,12 @@ if($dispo || $admin){
 										}
 									}
 									else {
+										// Tentative de triche
+										$text_triche = "Tentative entrer dans un natiment qui n existe pas...";
+								
+										$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+										$mysqli->query($sql);
+										
 										$erreur .= "Le batiment n'existe pas";
 									}
 								}
@@ -1176,6 +1181,162 @@ if($dispo || $admin){
 								}
 							}
 						}
+					}
+				}
+				
+				// Traitement sortie
+				if (isset($_GET['sortie'])) {
+					
+					// verification que le perso a encore des pm
+					if($pm_perso + $malus_pm >= 1){
+					
+						$instance_bat = in_bat($mysqli, $id_perso);
+						
+						if($instance_bat){
+							
+							$coord_sortie = $_GET['sortie'];
+							
+							$t_coord = explode(',',$coord_sortie);
+							
+							if (count($t_coord) == 2) {
+							
+								$x_sortie = $t_coord[0];
+								$y_sortie = $t_coord[1];
+								
+								$verif_x = preg_match("#^[0-9]*[0-9]$#i","$x_sortie");
+								$verif_y = preg_match("#^[0-9]*[0-9]$#i","$y_sortie");
+								
+								if ($verif_x && $verif_y) {
+									
+									if (in_map($x_sortie, $y_sortie)) {
+										
+										// Récupération x, y et taille batiment
+										$sql = "SELECT x_instance, y_instance, taille_batiment FROM instance_batiment, batiment 
+												WHERE instance_batiment.id_batiment = batiment.id_batiment
+												AND id_instanceBat = '$instance_bat'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$x_instance = $t['x_instance'];
+										$y_instance = $t['y_instance'];
+										$taille_bat = $t['taille_batiment'];
+										
+										$nb_case_bat = ceil($taille_bat / 2);
+										
+										if (($x_sortie == $x_instance + $nb_case_bat && $y_sortie >= $y_instance - $nb_case_bat && $y_sortie <= $y_instance + $nb_case_bat)
+											|| ($x_sortie == $x_instance - $nb_case_bat && $y_sortie >= $y_instance - $nb_case_bat && $y_sortie <= $y_instance + $nb_case_bat)
+											|| ($y_sortie == $y_instance + $nb_case_bat && $x_sortie >= $x_instance - $nb_case_bat && $x_sortie <= $x_instance + $nb_case_bat)
+											|| ($y_sortie == $y_instance - $nb_case_bat && $x_sortie >= $x_instance - $nb_case_bat && $x_sortie <= $x_instance + $nb_case_bat)) {
+											
+											
+											// recuperation des fonds
+											$sql = "SELECT fond_carte, occupee_carte FROM $carte WHERE x_carte='$x_sortie' AND y_carte='$y_sortie'";
+											$res_map = $mysqli->query ($sql);
+											$t_carte1 = $res_map->fetch_assoc();
+											
+											$fond = $t_carte1["fond_carte"];
+											$oc_c = $t_carte1["occupee_carte"];
+											
+											// On vérifie que la case n'est pas déjà occupée
+											if (!$oc_c) {
+											
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$x_sortie', y_perso = '$y_sortie', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+												$mysqli->query($sql);
+												
+												$x_persoN = $x_sortie;
+												$y_persoN = $y_sortie;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$x_sortie' AND y_carte = '$y_sortie'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $x_sortie/$y_sortie',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+											}
+											else {
+												$erreur .= "La case de sortie est déjà occupée !";
+											}
+										}
+										else {
+											// Tentative de triche
+											$text_triche = "Les coordonnées de sortie en paramètre ne correspondent pas à la sortie du batiment";
+								
+											$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+											$mysqli->query($sql);
+											
+											$erreur .= "Paramètre incorrect !";
+										}
+									}
+									else {
+										$erreur .= "Les coordonnées sont en dehors de la carte !";
+									}
+								}
+								else {
+									// Tentative de triche
+									$text_triche = "Tentative modification parametre sortie, paramètre x ou y incorrect";
+						
+									$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+									$mysqli->query($sql);
+									
+									$erreur .= "Paramètre incorrect !";
+								}
+							}
+							else {
+								// Tentative de triche
+								$text_triche = "Tentative modification parametre sortie, nombre paramètres incorrect";
+					
+								$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+								$mysqli->query($sql);
+								
+								$erreur .= "Paramètre incorrect !";
+							}
+						}
+						else {
+							// Tentative de triche
+							$text_triche = "Tentative utilisation sortie alors que non dans batiment";
+					
+							$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+							$mysqli->query($sql);
+							
+							$erreur .= "Vous ne pouvez pas utiliser cette fonction si vous n'êtes pas dans un bâtiment !";
+						}
+					}
+					else {
+						$erreur .= "Vous n'avez pas assez de PM pour sortir du bâtiment !";
 					}
 				}
 				
@@ -3930,10 +4091,13 @@ if($dispo || $admin){
 												if ($x == $x_perso + $taille_case) {
 													for ($i = -$taille_case; $i <= $taille_case; $i++) {
 														if ($y == $y_perso + $i) {
+															
+															$coord_sortie = $x.",".$y;
+															
 															echo "<td width=40 height=40>";
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";
 														}
 													}
@@ -3941,10 +4105,13 @@ if($dispo || $admin){
 												else if ($x == $x_perso - $taille_case) {
 													for ($i = -$taille_case; $i <= $taille_case; $i++) {
 														if ($y == $y_perso + $i) {
+															
+															$coord_sortie = $x.",".$y;
+															
 															echo "<td width=40 height=40>";
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";
 														}
 													}
@@ -3953,10 +4120,13 @@ if($dispo || $admin){
 												
 													for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
 														if ($x == $x_perso + $i) {
+															
+															$coord_sortie = $x.",".$y;
+															
 															echo "<td width=40 height=40>";
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";
 														}
 													}
@@ -3965,10 +4135,13 @@ if($dispo || $admin){
 												
 													for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
 														if ($x == $x_perso + $i) {
+															
+															$coord_sortie = $x.",".$y;
+															
 															echo "<td width=40 height=40>";
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Sortir ici</a></div>\" >";
+															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";
 														}
 													}
