@@ -212,71 +212,95 @@ if($dispo || $admin){
 						$id_recrue 	= $t_r[0];
 						$nom_recrue = $t_r[1];
 						
-						// On delete le perso de la compagnie
-						$sql = "DELETE FROM perso_in_compagnie WHERE id_perso=$id_recrue";
-						$mysqli->query($sql);
+						// On regarde si le perso n'a pas de dette dans une banque de compagnie
+						$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
+								WHERE id_perso='$id_recrue' 
+								AND id_compagnie='$id_compagnie'";
+						$res = $mysqli->query($sql)
+						$tab = $res->fetch_assoc();
 						
-						// on enleve le perso de la banque
-						$sql = "DELETE FROM banque_compagnie WHERE id_perso=$id_recrue";
-						$mysqli->query($sql);
+						$thune_en_banque = $tab["thune_en_banque"];
 						
-						if ($genie_compagnie) {
-							// On suprime les competences de construction
-							
-							// Construire pont
-							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='23'";
+						if ($thune_en_banque >= 0) {
+						
+							$sql = "DELETE FROM histobanque_compagnie WHERE id_perso='$id_recrue'";
+							$mysqli->query($sql);
+						
+							if ($thune_en_banque > 0) {
+								$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
+										WHERE id_compagnie='$id_compagnie')";
+								$mysqli->query($sql);
+							}
+						
+							// On delete le perso de la compagnie
+							$sql = "DELETE FROM perso_in_compagnie WHERE id_perso=$id_recrue";
 							$mysqli->query($sql);
 							
-							// Construire tour de visu
-							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='24'";
+							// on enleve le perso de la banque
+							$sql = "DELETE FROM banque_compagnie WHERE id_perso=$id_recrue";
 							$mysqli->query($sql);
 							
-							// Construire Hopital
-							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='27'";
-							$mysqli->query($sql);
+							if ($genie_compagnie) {
+								// On suprime les competences de construction
+								
+								// Construire pont
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='23'";
+								$mysqli->query($sql);
+								
+								// Construire tour de visu
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='24'";
+								$mysqli->query($sql);
+								
+								// Construire Hopital
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='27'";
+								$mysqli->query($sql);
+								
+								// Construire Fortin
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='28'";
+								$mysqli->query($sql);
+								
+								// Construire Gare
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='63'";
+								$mysqli->query($sql);
+								
+								// Construire Rails
+								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='64'";
+								$mysqli->query($sql);
+							}
 							
-							// Construire Fortin
-							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='28'";
-							$mysqli->query($sql);
+							// -- FORUM
+							// Récupération de l'id de l'utilisateur sur le forum 
+							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+										(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+											(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue') AND chef='1')";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
 							
-							// Construire Gare
-							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='63'";
-							$mysqli->query($sql);
+							$id_user_forum = $t['user_id'];
 							
-							// Construire Rails
-							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_recrue' AND id_competence='64'";
-							$mysqli->query($sql);
+							// Récupération de l'id du group de la compagnie sur le forum
+							$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$id_group_forum = $t['group_id'];
+							
+							// Est ce qu'il a d'autres persos dans la compagnie en dehors de celui qui part
+							$sql = "SELECT * FROM perso_in_compagnie WHERE id_perso IN (SELECT id_perso FROM perso WHERE idJoueur_perso IN (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue'))";
+							$res = $mysqli->query($sql);
+							$verif = $res->num_rows;
+							
+							if ($verif == 0) {
+								// Suppression de l'utilisateur du groupe
+								$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
+								$mysqli->query($sql);
+							}
+							
+							echo "<center><font color='red'>".$nom_recrue."[".$id_recrue."] a été viré de la compagnie</font></center>";
 						}
-						
-						// -- FORUM
-						// Récupération de l'id de l'utilisateur sur le forum 
-						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-									(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
-										(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue') AND chef='1')";
-						$res = $mysqli->query($sql);
-						$t = $res->fetch_assoc();
-						
-						$id_user_forum = $t['user_id'];
-						
-						// Récupération de l'id du group de la compagnie sur le forum
-						$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
-						$res = $mysqli->query($sql);
-						$t = $res->fetch_assoc();
-						
-						$id_group_forum = $t['group_id'];
-						
-						// Est ce qu'il a d'autres persos dans la compagnie en dehors de celui qui part
-						$sql = "SELECT * FROM perso_in_compagnie WHERE id_perso IN (SELECT id_perso FROM perso WHERE idJoueur_perso IN (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue'))";
-						$res = $mysqli->query($sql);
-						$verif = $res->num_rows;
-						
-						if ($verif == 0) {
-							// Suppression de l'utilisateur du groupe
-							$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
-							$mysqli->query($sql);
+						else {
+							
 						}
-						
-						echo "<center><font color='red'>".$nom_recrue."[".$id_recrue."] a été viré de la compagnie</font></center>";
 					}
 				}
 				
