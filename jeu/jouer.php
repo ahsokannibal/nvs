@@ -2957,7 +2957,7 @@ if($dispo || $admin){
 									}
 									else if ($type_perso == 4) {
 									?>
-									<td nowrap="nowrap"><center><?php echo $precision_arme_cac2; ?></center></td>
+									<td nowrap="nowrap"><center><?php echo $precision_arme_cac2 . "%"; ?></center></td>
 									<?php 	
 									}
 									?>
