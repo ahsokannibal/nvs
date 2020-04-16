@@ -299,7 +299,7 @@ if($dispo || $admin){
 							echo "<center><font color='red'>".$nom_recrue."[".$id_recrue."] a été viré de la compagnie</font></center>";
 						}
 						else {
-							
+							echo "<center><font color='red'>".$nom_recrue."[".$id_recrue."] ne peut pas être viré de la compagnie car il possède des dettes à rembourser</font></center>";
 						}
 					}
 				}
