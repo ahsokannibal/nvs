@@ -140,59 +140,88 @@ if($dispo || $admin){
 								
 								if ($nb == 1) {
 									
-									// Ok - renvoi du perso						
-									$sql = "DELETE FROM perso WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
+									// On regarde si le perso n'est pas chef d'une compagnie 
+									$sql = "SELECT count(id_perso) as is_chef FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi' AND poste_compagnie='1'";
+									$res = $mysqli->query($sql)
+									$tab = $res->fetch_assoc();
+								
+									$is_chef = $tab["is_chef"];
 									
-									$sql = "DELETE FROM perso_as_arme WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
+									if (!$is_chef) {
 									
-									$sql = "DELETE FROM perso_as_armure WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_as_competence WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_as_contact WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_as_dossiers WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_as_grade WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_as_objet WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
-									$mysqli->query($sql);
-									
-									if (in_bat($mysqli, $id_perso)) {		
-										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
-									}
-									else if (in_train($mysqli, $id_perso)) {
-										$sql = "DELETE FROM perso_in_train WHERE id_perso='$matricule_grouillot_renvoi'";
+										// On regarde si le perso n'a pas de dette dans une banque de compagnie
+										$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
+												WHERE id_perso='$matricule_grouillot_renvoi' 
+												AND id_compagnie=( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi')";
+										$res = $mysqli->query($sql)
+										$tab = $res->fetch_assoc();
+										
+										$thune_en_banque = $tab["thune_en_banque"];
+										
+										if ($thune_en_banque >= 0) {
+										
+											// Ok - renvoi du perso						
+											$sql = "DELETE FROM perso WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_arme WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_armure WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_competence WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_contact WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_dossiers WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_grade WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_as_objet WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											if (in_bat($mysqli, $id_perso)) {		
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
+											}
+											else if (in_train($mysqli, $id_perso)) {
+												$sql = "DELETE FROM perso_in_train WHERE id_perso='$matricule_grouillot_renvoi'";
+											}
+											else {
+												$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_grouillot_renvoi'";
+											}
+											$mysqli->query($sql);
+											
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_camp_chef><b>$nom_chef</b></font>','a viré le grouillot matricule $matricule_grouillot_renvoi',NULL,'','',NOW(),'0')";
+											$mysqli->query($sql);
+											
+											echo "<center><font color='blue'>Le grouillot avec la matricule $matricule_grouillot_renvoi a bien été renvoyé de votre bataillon.</font></center><br/>";
+										}
+										else {
+											echo "<font color='red'>Impossible de renvoyer un grouillot qui possède des dettes dans une compagnie, merci de rembourser vos dettes avant de virer votre grouillot.</font><br/>";
+											echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+										}
 									}
 									else {
-										$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_grouillot_renvoi'";
+										echo "<font color='red'>Impossible de renvoyer un grouillot qui est chef d'une compagnie, merci de passer son rôle de chef à un autre avant de le virer.</font><br/>";
+										echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 									}
-									$mysqli->query($sql);
-									
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_camp_chef><b>$nom_chef</b></font>','a viré le grouillot matricule $matricule_grouillot_renvoi',NULL,'','',NOW(),'0')";
-									$mysqli->query($sql);
-									
-									echo "<center><font color='blue'>Le grouillot avec la matricule $matricule_grouillot_renvoi a bien été renvoyé de votre bataillon.</font></center><br/>";
-									
 								} else {
 									// Tentative de triche ?!
 									echo "<font color='red'>Le perso n'a pas pu être renvoyé, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
