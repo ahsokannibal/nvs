@@ -190,13 +190,29 @@ if($dispo || $admin){
 								echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
 							}
 							else { 
-						
-								// MAJ demande de sortie de la compagnie 
-								$sql = "UPDATE perso_in_compagnie SET attenteValidation_compagnie = '2' WHERE id_perso='$id'";
-								$mysqli->query($sql);
-							
-								echo "<center><font color='blue'>Votre demande pour quitter la compagnie a bien été effectuée</font></center>";
-								echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
+								
+								// Est-ce qu'il a une dette dans la compagnie ?
+								$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
+												WHERE id_perso='$id' 
+												AND id_compagnie='$id_compagnie'";
+								$res = $mysqli->query($sql)
+								$tab = $res->fetch_assoc();
+								
+								$thune_en_banque = $tab["thune_en_banque"];
+								
+								if ($thune_en_banque >= 0) {
+									
+									// MAJ demande de sortie de la compagnie 
+									$sql = "UPDATE perso_in_compagnie SET attenteValidation_compagnie = '2' WHERE id_perso='$id'";
+									$mysqli->query($sql);
+								
+									echo "<center><font color='blue'>Votre demande pour quitter la compagnie a bien été effectuée</font></center>";
+									echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
+								}
+								else {
+									echo "<center><font color = red>Vous devez d'abords vous acquitter de vos dette avant de quitter la compagnie</font></center><br>";
+									echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
+								}
 							}
 						}
 					}
@@ -530,7 +546,7 @@ if($dispo || $admin){
 					}
 				}
 				
-				echo "<br/><center><a class='btn btn-danger' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b> >>Demander à quitter la compagnie</b></a></center>";
+				echo "<br/><center><a class='btn btn-danger' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b>Demander à quitter la compagnie</b></a></center>";
 			}
 			else {
 			
