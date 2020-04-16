@@ -194,6 +194,18 @@ if($dispo || $admin){
 											$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
 											$mysqli->query($sql);
 											
+											$sql = "DELETE FROM histobanque_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											$sql = "DELETE FROM banque_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
+											$mysqli->query($sql);
+											
+											if ($thune_en_banque > 0) {
+												$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
+														WHERE id_compagnie= ( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi')";
+												$mysqli->query($sql);
+											}
+											
 											$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
 											$mysqli->query($sql);
 											

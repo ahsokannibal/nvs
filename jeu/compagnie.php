@@ -195,10 +195,10 @@ if($dispo || $admin){
 								$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
 												WHERE id_perso='$id' 
 												AND id_compagnie='$id_compagnie'";
-								$res = $mysqli->query($sql)
-								$tab = $res->fetch_assoc();
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
 								
-								$thune_en_banque = $tab["thune_en_banque"];
+								$thune_en_banque = $t["thune_en_banque"];
 								
 								if ($thune_en_banque >= 0) {
 									
