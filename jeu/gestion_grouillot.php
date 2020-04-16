@@ -142,7 +142,7 @@ if($dispo || $admin){
 									
 									// On regarde si le perso n'est pas chef d'une compagnie 
 									$sql = "SELECT count(id_perso) as is_chef FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi' AND poste_compagnie='1'";
-									$res = $mysqli->query($sql)
+									$res = $mysqli->query($sql);
 									$tab = $res->fetch_assoc();
 								
 									$is_chef = $tab["is_chef"];
@@ -153,7 +153,7 @@ if($dispo || $admin){
 										$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
 												WHERE id_perso='$matricule_grouillot_renvoi' 
 												AND id_compagnie=( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi')";
-										$res = $mysqli->query($sql)
+										$res = $mysqli->query($sql);
 										$tab = $res->fetch_assoc();
 										
 										$thune_en_banque = $tab["thune_en_banque"];
