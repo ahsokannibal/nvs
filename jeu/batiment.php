@@ -1375,14 +1375,15 @@ if($dispo || $admin){
 								echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 								
 								echo "<table width=100% border=1>";
-								echo "<tr><th colspan=6>Objets</th></tr>";
+								echo "<tr><th colspan=7 style='text-align:center'>Objets</th></tr>";
 								echo "<tr bgcolor=\"lightgreen\">";
-								echo "<th>objet</th>";
-								echo "<th>poids</th>";
-								echo "<th>image</th>";
-								echo "<th>description</th>";
-								echo "<th>cout</th>";
-								echo "<th>achat</th>";
+								echo "	<th style='text-align:center'>Objet</th>";
+								echo "	<th style='text-align:center'>Poids</th>";
+								echo "	<th style='text-align:center'>Image</th>";
+								echo "	<th style='text-align:center'>Description</th>";
+								echo "	<th style='text-align:center'>Quantité</th>";
+								echo "	<th style='text-align:center'>Coût</th>";
+								echo "	<th style='text-align:center'>Achat</th>";
 								echo "</tr>";
 								
 								//possibilité achat objets de base
@@ -1406,20 +1407,27 @@ if($dispo || $admin){
 										// rabais
 										$rabais = floor(($coutOr_objet * $pourcentage_rabais)/100);
 										
-										echo "<tr><td><center>$nom_objet</center></td><td><center>$poids_objet</center></td><td align='center'><img src=\"../images/objets/$image_objet\" width=\"40\" height=\"40\" ></td><td>$description_objet</td>";?>
-										<td><?php echo "<center>".$coutOr_objet;
+										echo "<tr>";
+										echo "	<td align='center'>$nom_objet</td>";
+										echo "	<td align='center'>$poids_objet</td>";
+										echo "	<td align='center'><img src=\"../images/objets/$image_objet\" width=\"40\" height=\"40\" ></td>";
+										echo "	<td>$description_objet</td>";
+										echo "	<td align='center'>1</td>";
+										echo "	<td align='center'>";
+										echo $coutOr_objet;
 										if($rabais) {
 											$new_coutOr_objet = $coutOr_objet - $rabais;
 											echo "<font color='blue'> ($new_coutOr_objet)</font>";
 										}
-										echo "</center></td>";
-										echo "<td align=\"center\"><input type='submit' name='achat_objet' value='Acheter' ";
+										echo "</td>";
+										echo "	<td align='center'><input type='submit' name='achat_objet' value='Acheter' ";
 										if ($pa_perso < 2) {
 											echo "disabled";
 										}
 										echo " />";
 										echo "<input type='hidden' name='hid_achat_objet' value=".$id_objet." />";
-										echo "</td></tr>";
+										echo "	</td>";
+										echo "</tr>";
 										
 										echo "</form>";
 									}
@@ -1434,17 +1442,18 @@ if($dispo || $admin){
 								
 								// Armes au CaC
 								echo "<table width=100% border=1>";
-								echo "<tr><th colspan=9>Armes CàC</th></tr>";
+								echo "<tr><th colspan=10 style='text-align:center'>Armes CàC</th></tr>";
 								echo "<tr bgcolor=\"lightgreen\">";
-								echo "<th>arme</th>";
-								echo "<th>unité(s)</th>";
-								echo "<th>coût PA</th>";
-								echo "<th>précision</th>";
-								echo "<th>dégats</th>";
-								echo "<th>poids</th>";
-								echo "<th>image</th>";
-								echo "<th>coût</th>";
-								echo "<th>achat</th>";
+								echo "	<th style='text-align:center'>Arme</th>";
+								echo "	<th style='text-align:center'>Image</th>";
+								echo "	<th style='text-align:center'>Unité(s)</th>";
+								echo "	<th style='text-align:center'>Coût PA</th>";
+								echo "	<th style='text-align:center'>Précision</th>";
+								echo "	<th style='text-align:center'>Dégats</th>";
+								echo "	<th style='text-align:center'>Poids</th>";
+								echo "	<th style='text-align:center'>Quantité</th>";
+								echo "	<th style='text-align:center'>Coût</th>";
+								echo "	<th style='text-align:center'>Achat</th>";
 								echo "</tr>";
 							
 								// Récupération des données des armes de CàC de niveau égal à 6
@@ -1479,6 +1488,7 @@ if($dispo || $admin){
 											
 											echo "<tr>";
 											echo "	<td><center>$nom_arme</center></td>";
+											echo "	<td align=\"center\"><img src=\"../images/armes/$image_arme\" width=\"40\" height=\"40\"></td>";
 											
 											echo "	<td><center>";
 											$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
@@ -1498,20 +1508,23 @@ if($dispo || $admin){
 											echo "	</center></td>";
 											
 											echo "	<td><center>$coutPa_arme</center></td>";
-											echo "	<td><center>$precision_arme</center></td>";
+											echo "	<td><center>".$precision_arme."%</center></td>";
 											if($degatMin_arme && $valeur_des_arme){
 												echo "	<td><center>" . $degatMin_arme . "D". $valeur_des_arme ."</center></td>";
 											}
 											else {
 												echo "	<td><center> - </center></td>";
 											}
-											echo "	<td><center>$poids_arme</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme\" width=\"40\" height=\"40\"></td>";?>
-											<td><?php echo "<center>".$coutOr_arme;
+											echo "	<td><center>$poids_arme</center></td>";
+											echo "	<td align='center'>1</td>";
+											echo "	<td>";
+											echo "<center>".$coutOr_arme;
 											if($rabais) {
 												$new_coutOr_arme = $coutOr_arme - $rabais;
 												echo "<font color='blue'> ($new_coutOr_arme)</font>";
 											}
 											echo "</center></td>"; 
+											
 											echo "	<td align=\"center\"><input type='submit' name='achat_arme' value='Acheter' ";
 											if ($pa_perso < 2) {
 												echo "disabled";
@@ -1532,19 +1545,20 @@ if($dispo || $admin){
 								echo "<table width=100% border=1>";
 								
 								// Armes à Distance
-								echo "<tr><th colspan=11>Armes Dist</th></tr>";
+								echo "<tr><th colspan=12 style='text-align:center'>Armes Dist</th></tr>";
 								echo "<tr bgcolor=\"lightgreen\">";
-								echo "<th>arme</th>";
-								echo "<th>unités</th>";
-								echo "<th>portée</th>";
-								echo "<th>coût PA</th>";
-								echo "<th>précision</th>";
-								echo "<th>dégats</th>";
-								echo "<th>dégats de zone ?</th>";
-								echo "<th>poids</th>";
-								echo "<th>image</th>";
-								echo "<th>coût</th>";
-								echo "<th>achat</th>";
+								echo "	<th style='text-align:center'>Arme</th>";
+								echo "	<th style='text-align:center'>Image</th>";
+								echo "	<th style='text-align:center'>Unités</th>";
+								echo "	<th style='text-align:center'>Portée</th>";
+								echo "	<th style='text-align:center'>Coût PA</th>";
+								echo "	<th style='text-align:center'>Précision</th>";
+								echo "	<th style='text-align:center'>Dégats</th>";
+								echo "	<th style='text-align:center'>Dégats de zone ?</th>";
+								echo "	<th style='text-align:center'>Poids</th>";
+								echo "	<th style='text-align:center'>Quantité</th>";
+								echo "	<th style='text-align:center'>Coût</th>";
+								echo "	<th style='text-align:center'>Achat</th>";
 								
 								// Récupération des données des armes à distance de qualité égal à 6
 								$sql2 = "SELECT id_arme, nom_arme, porteeMin_arme, porteeMax_arme, coutPa_arme, degatMin_arme, degatMax_arme, valeur_des_arme, precision_arme, degatZone_arme, poids_arme, coutOr_arme, image_arme 
@@ -1578,6 +1592,7 @@ if($dispo || $admin){
 										
 										echo "<tr>";
 										echo "	<td><center>$nom_arme2</center></td>";
+										echo "	<td align=\"center\"><img src=\"../images/armes/$image_arme2\" width=\"40\" height=\"40\"></td>";
 										
 										echo "	<td><center>";
 											$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
@@ -1598,7 +1613,7 @@ if($dispo || $admin){
 										
 										echo "	<td><center>$porteeMin_arme2 - $porteeMax_arme2</center></td>";
 										echo "	<td><center>$coutPa_arme2</center></td>";
-										echo "	<td><center>$precision_arme2</center></td>";
+										echo "	<td><center>".$precision_arme2."%</center></td>";
 										if($degatMin_arme2 && $valeur_des_arme2){
 											echo "<td><center>" . $degatMin_arme2 . "D" . $valeur_des_arme2 . "</center></td>";
 										}
@@ -1612,8 +1627,10 @@ if($dispo || $admin){
 										else{
 											echo "<center>non</center></td>";
 										}
-										echo "<td><center>$poids_arme2</center></td><td align=\"center\"><img src=\"../images/armes/$image_arme2\" width=\"40\" height=\"40\"></td>";?>
-										<td><?php echo "<center>".$coutOr_arme2;
+										echo "	<td><center>$poids_arme2</center></td>";
+										echo "	<td align='center'>1</td>";
+										echo "	<td>";
+										echo "<center>".$coutOr_arme2;
 										if($rabais) {
 											$new_coutOr_arme2 = $coutOr_arme2 - $rabais;
 											echo "<font color='blue'> ($new_coutOr_arme2)</font>";
