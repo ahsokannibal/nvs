@@ -3175,9 +3175,9 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 				|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
 				|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) {
 			
-			$gain_pc = 1;
+			$gain_pc_cible = 1;
 		} else {
-			$gain_pc = 0;
+			$gain_pc_cible = 0;
 		}
 	
 	}
@@ -3188,6 +3188,8 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 	
 	// On attaque tant qu'il reste des PA
 	while ($pa_perso >= $coutPa_arme && $cible_alive) {
+		
+		$gain_pc = $gain_pc_cible;
 		
 		// MAJ des pa du perso
 		$pa_perso = $pa_perso - $coutPa_arme;
