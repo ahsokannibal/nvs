@@ -183,8 +183,40 @@ while ($t = $res->fetch_assoc()){
 		$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
+		// Est ce que le perso était dans une compagnie ?
+		$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$is_in_compagnie = $res->num_rows;
+		
+		if ($is_in_compagnie) {
+		
+			// On regarde si le perso n'a pas de dette dans une banque de compagnie
+			$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
+					WHERE id_perso='$id_perso' 
+					AND id_compagnie=( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso')";
+			$res = $mysqli->query($sql);
+			$tab = $res->fetch_assoc();
+			
+			$thune_en_banque = $tab["thune_en_banque"];
+			
+			if ($thune_en_banque > 0 || $thune_en_banque < 0) {
+				// Si le montant est < 0 => On rembourse la compagnie de l'emprunt perdu
+				// Si le montant est > 0 => la compagnie perd la thune déposée par ce perso
+				
+				$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
+						WHERE id_compagnie= ( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso')";
+				$mysqli->query($sql);
+			}
+			
+			$sql = "DELETE FROM histobanque_compagnie WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+			
+			$sql = "DELETE FROM banque_compagnie WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+
+			$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
 		
 		$sql = "DELETE FROM perso_in_em WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
