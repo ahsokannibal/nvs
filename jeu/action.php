@@ -150,7 +150,7 @@ if($dispo || $admin){
 			$direction_charge = $_POST['hid_action_charge'];
 			
 			// Recup infos perso
-			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
@@ -168,9 +168,10 @@ if($dispo || $admin){
 			$grade_perso	= $t_perso["id_grade"];
 			$paMax_perso	= $t_perso['paMax_perso'];
 			$bonusPM_perso	= $t_perso['bonusPM_perso'];
+			$bonusPA_perso	= $t_perso['bonusPA_perso'];
 			
 			// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
-			if ($pa_perso == $paMax_perso && $pm_perso + $bonusPM_perso >= 4) {
+			if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso + $bonusPM_perso >= 4) {
 			
 				// Déplacement du perso dans l'axe choisi
 				if ($direction_charge == 'haut') {
@@ -730,7 +731,7 @@ if($dispo || $admin){
 					if ($verif_anti_zerk) {
 					
 						//recuperation des coordonnees du perso
-						$sql = "SELECT x_perso, y_perso, perception_perso, pa_perso, paMax_perso, pm_perso, bonusPM_perso, clan FROM perso WHERE id_perso='$id_perso'";
+						$sql = "SELECT x_perso, y_perso, perception_perso, pa_perso, paMax_perso, pm_perso, bonusPM_perso, bonusPA_perso, clan FROM perso WHERE id_perso='$id_perso'";
 						$res = $mysqli->query($sql);
 						$t_coord = $res->fetch_assoc();
 							
@@ -742,6 +743,7 @@ if($dispo || $admin){
 						$paMax_perso		= $t_coord['paMax_perso'];
 						$pm_perso			= $t_coord['pm_perso'];
 						$bonusPM_perso		= $t_coord['bonusPM_perso'];
+						$bonusPA_perso		= $t_coord['bonusPA_perso'];
 						
 						// Récupération du type de terrain sur lequel se trouve le perso
 						$sql = "SELECT fond_carte FROM $carte WHERE x_carte = $x_perso AND y_carte = $y_perso";
@@ -765,7 +767,7 @@ if($dispo || $admin){
 						}
 						
 						// Pour pouvoir charger, il faut avoir tout ses PA, 40 PM et être sur de la plaine
-						if ($pa_perso == $paMax_perso && $pm_perso + $bonusPM_perso >= 4 && $fond_carte_perso == '1.gif') {
+						if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso + $bonusPM_perso >= 4 && $fond_carte_perso == '1.gif') {
 							
 							// recuperation des donnees de la carte
 							$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 

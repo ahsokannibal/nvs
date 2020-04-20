@@ -3182,9 +3182,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 	
 	}
 	
-	$nb_attaque = 0;
-	$cible_alive = true;
-	$cumul_degats = 0;
+	$nb_attaque 	= 0;
+	$cible_alive 	= true;
+	$cumul_degats 	= 0;
+	$gain_pc		= 0;
 	
 	// On attaque tant qu'il reste des PA
 	while ($pa_perso >= $coutPa_arme && $cible_alive) {
