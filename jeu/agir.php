@@ -1327,8 +1327,8 @@ if($verif){
 						if ($id_arme_attaque == 10) {
 								
 							// Seringue
-							if ($pv_cible + $degats_final >= $pvM_cible) {
-								$degats_final = $pvM_cible - $pv_cible;
+							if ($pv_cible + $degats_final >= $pvMax_cible) {
+								$degats_final = $pvMax_cible - $pv_cible;
 							}
 								
 							// mise a jour des pv
@@ -1347,9 +1347,10 @@ if($verif){
 							// mise a jour des pv du pnj
 							$sql = "UPDATE instance_pnj SET pv_i = pv_i - $degats_final WHERE idInstance_pnj = '$id_cible'";
 							$mysqli->query($sql);
+							
+							echo "<br>Vous avez infligé <b>$degats_final</b> dégâts à la cible.<br><br>";
 						}
 						
-						echo "<br>Vous avez infligé <b>$degats_final</b> dégâts à la cible.<br><br>";
 						echo "Vous avez gagné <b>$gain_xp</b> xp.";
 						
 						// maj gain xp / pi perso
