@@ -3182,274 +3182,297 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 	
 	}
 	
-	$nb_attaque 	= 0;
-	$cible_alive 	= true;
-	$cumul_degats 	= 0;
-	$gain_pc		= 0;
+	if ($pv_cible > 0) {
 	
-	// On attaque tant qu'il reste des PA
-	while ($pa_perso >= $coutPa_arme && $cible_alive) {
+		$nb_attaque 	= 0;
+		$cible_alive 	= true;
+		$cumul_degats 	= 0;
+		$gain_pc		= 0;
 		
-		$gain_pc = $gain_pc_cible;
-		
-		// MAJ des pa du perso
-		$pa_perso = $pa_perso - $coutPa_arme;
-		
-		$sql = "UPDATE perso SET pa_perso = $pa_perso WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
-		
-		// Est ce que le perso touche sa cible ?
-		$touche = mt_rand(0, 100);
-		$precision_final = $precision_arme - $bonus_cible;
-		
-		$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
-		
-		$precision_final += $bonus_precision_objet;
-		
-		if ($touche <= $precision_final) {
-			// Le perso touche sa cible
+		// On attaque tant qu'il reste des PA
+		while ($pa_perso >= $coutPa_arme && $cible_alive) {
 			
-			// calcul des dégats
-			$bonus_degats_charge = 30 - $nb_attaque*10;
-			$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+			$gain_pc = $gain_pc_cible;
 			
-			$degats_tmp = calcul_des_attaque($degats_arme, $valeur_des_arme);
-			$degats_tmp_bonus = $degats_tmp + $bonus_degats_charge;
+			// MAJ des pa du perso
+			$pa_perso = $pa_perso - $coutPa_arme;
 			
-			// Insertion log attaque
-			$message_log = $id_perso.' a chargé '.$idPerso_carte.' - degats avec bonus : '.$degats_tmp_bonus;
-			$type_action = "Attaque ".$id_arme_attaque;
-			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+			$sql = "UPDATE perso SET pa_perso = $pa_perso WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
-			if ($touche <= 2) {
-				// Coup critique ! Dégats et Gains PC X 2
-				$degats = $degats * 2;
-				$gain_pc = $gain_pc * 2;
-			}
+			// Est ce que le perso touche sa cible ?
+			$touche = mt_rand(0, 100);
+			$precision_final = $precision_arme - $bonus_cible;
 			
-			$cumul_degats = $cumul_degats + $degats;
+			$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
 			
-			// calcul gain experience
-			if ($idPerso_carte >= 200000) {
-				$gain_experience = mt_rand(1, 6);
-			} else {
+			$precision_final += $bonus_precision_objet;
 			
-				$calcul_dif_xp = ceil(($xp_cible - $xp_perso) / 10);
-								
-				if ($calcul_dif_xp < 0) {
-					$valeur_des_xp = 0;
+			if ($touche <= $precision_final) {
+				// Le perso touche sa cible
+				
+				// calcul des dégats
+				$bonus_degats_charge = 30 - $nb_attaque*10;
+				$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
+				
+				$degats_tmp = calcul_des_attaque($degats_arme, $valeur_des_arme);
+				$degats_tmp_bonus = $degats_tmp + $bonus_degats_charge;
+				
+				// Insertion log attaque
+				$message_log = $id_perso.' a chargé '.$idPerso_carte.' - degats avec bonus : '.$degats_tmp_bonus;
+				$type_action = "Attaque ".$id_arme_attaque;
+				$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+				$mysqli->query($sql);
+				
+				if ($touche <= 2) {
+					// Coup critique ! Dégats et Gains PC X 2
+					$degats = $degats * 2;
+					$gain_pc = $gain_pc * 2;
+				}
+				
+				$cumul_degats = $cumul_degats + $degats;
+				
+				// calcul gain experience
+				if ($idPerso_carte >= 200000) {
+					$gain_experience = mt_rand(1, 6);
 				} else {
-					$valeur_des_xp = mt_rand(0, $calcul_dif_xp);
+				
+					$calcul_dif_xp = ceil(($xp_cible - $xp_perso) / 10);
+									
+					if ($calcul_dif_xp < 0) {
+						$valeur_des_xp = 0;
+					} else {
+						$valeur_des_xp = mt_rand(0, $calcul_dif_xp);
+					}
+					
+					$gain_experience = ceil(($degats / 20) + $valeur_des_xp);
+					
+					if ($gain_experience > 10) {
+						$gain_experience = 10;
+					}
+					
+					echo "Gain XP : ".$gain_experience;
 				}
 				
-				$gain_experience = ceil(($degats / 20) + $valeur_des_xp);
-				
-				if ($gain_experience > 10) {
-					$gain_experience = 10;
-				}
-				
-				echo "Gain XP : ".$gain_experience;
-			}
-			
-			// Maj cible malus et PV
-			$bonus_cible -= 2;
-			
-			if ($idPerso_carte < 50000) {
-				$sql = "UPDATE perso SET bonus_perso = bonus_perso - 2, pv_perso = pv_perso - $degats WHERE id_perso='$idPerso_carte'";
-				$mysqli->query($sql);
-			}
-			else {
-				$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 2, pv_i = pv_i - $degats WHERE idInstance_pnj='$idPerso_carte'";
-				$mysqli->query($sql);
-			}
-			
-			// evenement attaque
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a chargé ','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','( Précision : $touche / $precision_final ; Dégât : $degats ; Gain XP : $gain_experience ; Gain PC : $gain_pc )',NOW(),'0')";
-			$mysqli->query($sql);
-			
-			// Verification si cible morte							
-			if ($pv_cible - $cumul_degats <= 0) {
-				
-				$cible_alive = false;
-				
-				// Perte or 
-				$calcul_perte_or = 0;
+				// Maj cible malus et PV
+				$bonus_cible -= 2;
 				
 				if ($idPerso_carte < 50000) {
+					$sql = "UPDATE perso SET bonus_perso = bonus_perso - 2, pv_perso = pv_perso - $degats WHERE id_perso='$idPerso_carte'";
+					$mysqli->query($sql);
+				}
+				else {
+					$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 2, pv_i = pv_i - $degats WHERE idInstance_pnj='$idPerso_carte'";
+					$mysqli->query($sql);
+				}
+				
+				// evenement attaque
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a chargé ','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','( Précision : $touche / $precision_final ; Dégât : $degats ; Gain XP : $gain_experience ; Gain PC : $gain_pc )',NOW(),'0')";
+				$mysqli->query($sql);
+				
+				
+				if ($idPerso_carte >= 200000) {
+					// Récupération des infos de la cible
+					$sql = "SELECT pv_i as pv_perso FROM instance_pnj WHERE idInstance_pnj = '$idPerso_carte'";
+				}
+				else {
+					// Récupération des infos de la cible
+					$sql = "SELECT pv_perso FROM perso WHERE id_perso = '$idPerso_carte'";
+				}
+				
+				$res = $mysqli->query($sql);
+				$t_pv = $res->fetch_assoc();
+				
+				$pv_cible = $t_pv['pv_perso'];
+				
+				// Verification si cible morte							
+				if ($pv_cible - $cumul_degats <= 0) {
+					
+					$cible_alive = false;
+					
 					// Perte or 
-					$calcul_perte_or = floor(($or_cible * 30) / 100);
+					$calcul_perte_or = 0;
 					
-					// MAJ perte thunes cible
-					$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
-					$mysqli->query($sql);
-				}
-				else {
-					// On efface l'instance de PNJ 
-					$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
-					$mysqli->query($sql);
-				}
-				
-				// on l'efface de la carte
-				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-				$mysqli->query($sql);
-				
-				if ($calcul_perte_or > 0) {
-					// On dépose la perte de PO par terre
-					// Verification si l'objet existe deja sur cette case
-					$sql = "SELECT nb_objet FROM objet_in_carte 
-							WHERE objet_in_carte.x_carte = $x_cible
-							AND objet_in_carte.y_carte = $y_cible
-							AND type_objet = '1' AND id_objet = '0'";
-					$res = $mysqli->query($sql);
-					$to = $res->fetch_assoc();
-					
-					$nb_o = $to["nb_objet"];
-					
-					if($nb_o){
-						// On met a jour le nombre
-						$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
-								WHERE type_objet='1' AND id_objet='0'
-								AND x_carte='$x_cible' AND y_carte='$y_cible'";
+					if ($idPerso_carte < 50000) {
+						// Perte or 
+						$calcul_perte_or = floor(($or_cible * 30) / 100);
+						
+						// MAJ perte thunes cible
+						$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
 						$mysqli->query($sql);
 					}
 					else {
-						// Insertion dans la table objet_in_carte : On cree le premier enregistrement
-						$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+						// On efface l'instance de PNJ 
+						$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$idPerso_carte'";
 						$mysqli->query($sql);
 					}
-				}
-				
-				// evenement perso capture
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
-				$mysqli->query($sql);
-				
-				// maj cv
-				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
-				$mysqli->query($sql);
-				
-				if ($idPerso_carte < 50000) {
 					
-					// Recup infos cible
-					$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
-					$res = $mysqli->query($sql);
-					$t = $res->fetch_assoc();
+					// on l'efface de la carte
+					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+					$mysqli->query($sql);
 					
-					$type_perso_cible 	= $t["type_perso"];
-					$xp_perso_cible		= $t["xp_perso"];
-					$pi_perso_cible		= $t["pi_perso"];
-					$pc_perso_cible		= $t["pc_perso"];
-					
-					// Chef
-					if ($type_perso_cible == 1) {
-						// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
-						// Calcul PI
-						$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
-						$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+					if ($calcul_perte_or > 0) {
+						// On dépose la perte de PO par terre
+						// Verification si l'objet existe deja sur cette case
+						$sql = "SELECT nb_objet FROM objet_in_carte 
+								WHERE objet_in_carte.x_carte = $x_cible
+								AND objet_in_carte.y_carte = $y_cible
+								AND type_objet = '1' AND id_objet = '0'";
+						$res = $mysqli->query($sql);
+						$to = $res->fetch_assoc();
 						
-						// Calcul XP
-						$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
-						$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+						$nb_o = $to["nb_objet"];
 						
-						// Calcul PC
-						$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
-						$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+						if($nb_o){
+							// On met a jour le nombre
+							$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $calcul_perte_or 
+									WHERE type_objet='1' AND id_objet='0'
+									AND x_carte='$x_cible' AND y_carte='$y_cible'";
+							$mysqli->query($sql);
+						}
+						else {
+							// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+							$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$calcul_perte_or','$x_cible','$y_cible')";
+							$mysqli->query($sql);
+						}
+					}
+					
+					// evenement perso capture
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
+					$mysqli->query($sql);
+					
+					// maj cv
+					$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
+					$mysqli->query($sql);
+					
+					if ($idPerso_carte < 50000) {
+						
+						// Recup infos cible
+						$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$type_perso_cible 	= $t["type_perso"];
+						$xp_perso_cible		= $t["xp_perso"];
+						$pi_perso_cible		= $t["pi_perso"];
+						$pc_perso_cible		= $t["pc_perso"];
+						
+						// Chef
+						if ($type_perso_cible == 1) {
+							// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+							// Calcul PI
+							$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
+							$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
+							
+							// Calcul XP
+							$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
+							$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
+							
+							// Calcul PC
+							$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
+							$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+						}
+						else {
+							// Quand un grouillot meurt, il perd tout ses Pi
+							$pi_perso_fin = 0;
+							$xp_perso_fin = $xp_perso_cible;
+							$pc_perso_fin = $pc_perso_cible;
+						}
+						
+						// maj stats / XP / PI / PC de la cible
+						$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+						$mysqli->query($sql);
+						
+						// maj stats du perso
+						$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+						$mysqli->query($sql);
+						
+						// maj stats camp
+						if($clan_cible != $clan){
+							$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
+							$mysqli->query($sql);
+						}
+						
+						// maj dernier tombé
+						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$idPerso_carte')";
+						$mysqli->query($sql);
 					}
 					else {
-						// Quand un grouillot meurt, il perd tout ses Pi
-						$pi_perso_fin = 0;
-						$xp_perso_fin = $xp_perso_cible;
-						$pc_perso_fin = $pc_perso_cible;
-					}
-					
-					// maj stats / XP / PI / PC de la cible
-					$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
-					$mysqli->query($sql);
-					
-					// maj stats du perso
-					$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
-					$mysqli->query($sql);
-					
-					// maj stats camp
-					if($clan_cible != $clan){
-						$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan";
+						// maj stats du perso
+						$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 						$mysqli->query($sql);
 					}
-					
-					// maj dernier tombé
-					$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$idPerso_carte')";
-					$mysqli->query($sql);
 				}
-				else {
-					// maj stats du perso
-					$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
-					$mysqli->query($sql);
-				}
-			}
-			
-			// MAJ xp/pi
-			$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
-			$mysqli->query($sql);
-			
-			// recup id joueur perso
-			$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
-			$res = $mysqli->query($sql);
-			$t_j = $res->fetch_assoc();
-			
-			$id_j_perso = $t_j["idJoueur_perso"];
-			
-			// mise à jour des PC du chef
-			$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
-			$res = $mysqli->query($sql);
-			$t_chef = $res->fetch_assoc();
-			
-			$id_perso_chef = $t_chef["id_perso"];
-			$pc_perso_chef = $t_chef["pc_perso"];
-			$id_grade_chef = $t_chef["id_grade"];
-			
-			$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
-			$mysqli->query($sql);
-			
-		} else {
-			// Le perso rate sa cible
-			
-			if ($touche >= 98) {
-				// Echec critique !
-				// Ajout d'un malus supplémentaire à l'attaquant
-				$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id_perso'";
+				
+				// MAJ xp/pi
+				$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
+				$mysqli->query($sql);
+				
+				// recup id joueur perso
+				$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+				$res = $mysqli->query($sql);
+				$t_j = $res->fetch_assoc();
+				
+				$id_j_perso = $t_j["idJoueur_perso"];
+				
+				// mise à jour des PC du chef
+				$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+				$res = $mysqli->query($sql);
+				$t_chef = $res->fetch_assoc();
+				
+				$id_perso_chef = $t_chef["id_perso"];
+				$pc_perso_chef = $t_chef["pc_perso"];
+				$id_grade_chef = $t_chef["id_grade"];
+				
+				$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
+				$mysqli->query($sql);
+				
 			} else {
-				// Ajout d'un malus à la cible
-				$bonus_cible -= 1;
+				// Le perso rate sa cible
 				
-				if ($idPerso_carte < 50000) {
-					$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$idPerso_carte'";
+				if ($touche >= 98) {
+					// Echec critique !
+					// Ajout d'un malus supplémentaire à l'attaquant
+					$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id_perso'";
+				} else {
+					// Ajout d'un malus à la cible
+					$bonus_cible -= 1;
+					
+					if ($idPerso_carte < 50000) {
+						$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$idPerso_carte'";
+					}
+					else {
+						$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 1 WHERE idInstance_pnj='$idPerso_carte'";
+					}
 				}
-				else {
-					$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 1 WHERE idInstance_pnj='$idPerso_carte'";
+				$mysqli->query($sql);
+				
+				// Insertion log attaque
+				$message_log = $id_perso.' a raté sa charge sur '.$idPerso_carte;
+				$type_action = "Attaque ".$id_arme_attaque;
+				$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
+				$mysqli->query($sql);
+				
+				// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
+				if ($idPerso_carte < 50000 && $clan_cible != $clan) {
+					$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1 WHERE id_perso='$idPerso_carte'";
+					$mysqli->query($sql);
 				}
-			}
-			$mysqli->query($sql);
-			
-			// Insertion log attaque
-			$message_log = $id_perso.' a raté sa charge sur '.$idPerso_carte;
-			$type_action = "Attaque ".$id_arme_attaque;
-			$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
-			$mysqli->query($sql);
-			
-			// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
-			if ($idPerso_carte < 50000 && $clan_cible != $clan) {
-				$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1 WHERE id_perso='$idPerso_carte'";
+				
+				// evenement
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','( Précision : $touche / $precision_final ; Gain XP : 0 )',NOW(),'0')";
 				$mysqli->query($sql);
 			}
 			
-			// evenement
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($idPerso_carte,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_perso','<font color=$couleur_clan_perso><b>$nom_perso</b></font>','( Précision : $touche / $precision_final ; Gain XP : 0 )',NOW(),'0')";
-			$mysqli->query($sql);
+			if ($nb_attaque < 3) {
+				$nb_attaque++;
+			}
 		}
-		
-		if ($nb_attaque < 3) {
-			$nb_attaque++;
-		}
+	}
+	else {
+		// evenement charge perso déjà mort
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a chargé trop tard','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','était déjà capturée',NOW(),'0')";
+		$mysqli->query($sql);
 	}
 }
 
