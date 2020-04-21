@@ -27,7 +27,7 @@ while ($t = $res->fetch_assoc()){
 	
 	$id_perso = $t["id_perso"];
 	
-	echo "gel du perso $id_perso ";
+	echo "gel du perso $id_perso <br />";
 	
 	// maj du statut du perso
 	$sql = "UPDATE perso SET est_gele='1', a_gele='0', date_gele=NOW() WHERE id_perso='$id_perso'";
@@ -52,14 +52,14 @@ while ($t = $res->fetch_assoc()){
 // Traitement des persos inactifs a placer en gel
 //***********************************************
 // On place en gel les persos avec une date de DLA ancienne de plus de 10 jours (5 tours)
-$sql = "SELECT id_perso FROM `perso` WHERE DLA_perso < DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY)";
-$res = $mysqli->query($sql);
+$sql = "SELECT id_perso FROM `perso` WHERE DLA_perso < DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY) and est_gele='0'";
+$res_inactif = $mysqli->query($sql);
 
-while ($t = $res->fetch_assoc()){
+while ($t = $res_inactif->fetch_assoc()){
 	
 	$id_perso = $t["id_perso"];
 	
-	echo "gel du perso inactif $id_perso ";
+	echo "gel du perso inactif $id_perso <br />";
 	
 	// maj du statut du perso
 	$sql = "UPDATE perso SET est_gele='1', a_gele='0', date_gele=NOW() WHERE id_perso='$id_perso'";
@@ -123,9 +123,9 @@ while ($t = $res->fetch_assoc()){
 //***********************************************
 // On supprime les persos et le compte du joueur dont les persos sont gelés depuis 30 jours
 $sql = "SELECT DISTINCT(joueur.id_joueur) FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND est_gele='1'";
-$res = $mysqli->query($sql);
+$res_sup = $mysqli->query($sql);
 
-while ($t = $res->fetch_assoc()){
+while ($t = $res_sup->fetch_assoc()){
 	
 	$id_joueur = $t["id_joueur"];
 	
@@ -136,6 +136,8 @@ while ($t = $res->fetch_assoc()){
 	while ($t_p = $res_p->fetch_assoc()){
 		
 		$id_perso = $t_p["id_perso"];
+		
+		echo "Suppression du perso inactif $id_perso <br />";
 		
 		// maj de la carte => suppression du perso
 		if (in_bat($mysqli, $id_perso)) {		
@@ -185,8 +187,8 @@ while ($t = $res->fetch_assoc()){
 		
 		// Est ce que le perso était dans une compagnie ?
 		$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_perso='$id_perso'";
-		$res = $mysqli->query($sql);
-		$is_in_compagnie = $res->num_rows;
+		$res_c = $mysqli->query($sql);
+		$is_in_compagnie = $res_c->num_rows;
 		
 		if ($is_in_compagnie) {
 		
@@ -194,8 +196,8 @@ while ($t = $res->fetch_assoc()){
 			$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
 					WHERE id_perso='$id_perso' 
 					AND id_compagnie=( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso')";
-			$res = $mysqli->query($sql);
-			$tab = $res->fetch_assoc();
+			$res_b = $mysqli->query($sql);
+			$tab = $res_b->fetch_assoc();
 			
 			$thune_en_banque = $tab["thune_en_banque"];
 			
