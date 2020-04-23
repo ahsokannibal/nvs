@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
@@ -35,7 +36,9 @@ if($dispo || $admin){
 			else {
 			
 				// recuperation des infos du perso
-				$sql = "SELECT nom_perso, image_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, chef FROM perso WHERE id_perso='$id'";
+				$sql = "SELECT nom_perso, image_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, bonusPM_perso, pi_perso, pv_perso, pvMax_perso, 
+								pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, bonusPA_perso,
+								charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, chef FROM perso WHERE id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$t_i = $res->fetch_assoc();
 				
@@ -57,6 +60,8 @@ if($dispo || $admin){
 				$per_p 		= $t_i["perception_perso"];
 				$bp_p 		= $t_i["bonusPerception_perso"];
 				$br_p 		= $t_i["bonusRecup_perso"];
+				$bpm_p		= $t_i["bonusPM_perso"];
+				$bpa_p		= $t_i["bonusPA_perso"];
 				$b_p 		= $t_i["bonus_perso"];
 				$ch_p 		= $t_i["charge_perso"];
 				$chM_p 		= $t_i["chargeMax_perso"];
@@ -76,6 +81,18 @@ if($dispo || $admin){
 					$couleur_clan_perso = 'green';
 					$nom_clan = 'Indiens';
 				}
+				
+				// calcul malus pm
+				$malus_pm_charge = getMalusCharge($ch_p);
+				if ($malus_pm_charge == 100) {
+					$malus_pm = -$pmMax_perso;
+				}
+				else {
+					$malus_pm = $bpm_p + $malus_pm_charge;
+				}
+				
+				$pm_perso 		= $pm_p + $malus_pm;
+				$pmMax_perso 	= $pmM_p + $malus_pm;
 				
 				$mes_p = $t_i["message_perso"];
 				$des_p = $t_i["description_perso"];
@@ -168,13 +185,59 @@ if($dispo || $admin){
 											<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_p."/".$y_p; ?></td>
 										</tr>
 										<tr>
-											<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_p."/".$pmM_p; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_p."/".$pvM_p; ?></td>
+											<td><?php 
+											echo "<u><b>Mouvements restants :</b></u> ".$pm_perso ."/".$pmMax_perso;
+											if ($malus_pm) {
+												if ($malus_pm > 0) {
+													echo " (+".$malus_pm.")";
+												}
+												else if ($malus_pm < 0) {
+													echo " (".$malus_pm.")";
+												}
+											}
+											echo " - <u><b>Points de vie :</b></u> ".$pv_p."/".$pvM_p;
+											?></td>
 										</tr>
 										<tr>
-											<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_p."/".$paM_p." - <u><b>Malus de defense :</b></u> "; if($b_p < 0) echo "<font color=red>"; echo $b_p; ?></td>
+											<td><?php
+											// PA
+											echo "<u><b>Points d'action :</b></u> ".$pa_p."/".$paM_p;
+											if ($bpa_p) {
+												if ($bpa_p > 0) {
+													echo " (+".$bpa_p.")";
+												}
+												else {
+													echo " (".$bpa_p.")";
+												}
+											}
+											// Malus defense
+											echo " - <u><b>Malus de defense :</b></u> "; 
+											if($b_p < 0) {
+												echo "<font color=red>".$b_p."</font>";
+											}
+											else {
+												echo $b_p;
+											}
+											?></td>
 										</tr>
 										<tr>
-											<td><?php echo "<u><b>Récupération :</b></u> ".$rec_p; if($br_p) echo " <font color='blue'>(+".$br_p.")</font>"; ?><?php echo " - <u><b>Perception :</b></u> ".$per_p; if($bp_p) {if($bp_p>0) echo " (+".$bp_p.")"; else echo " (".$bp_p.")";} ?></td>
+											<td><?php 
+											// Récupération
+											echo "<u><b>Récupération :</b></u> ".$rec_p; 
+											if($br_p) {
+												echo " <font color='blue'>(+".$br_p.")</font>";
+											}
+											// Perception
+											echo " - <u><b>Perception :</b></u> ".$per_p; 
+											if($bp_p) {
+												if($bp_p > 0) {
+													echo " (+".$bp_p.")";
+												}
+												else {
+													echo " (".$bp_p.")";
+												}
+											}
+											?></td>
 										</tr>
 										<tr>
 											<td>&nbsp;</td>
