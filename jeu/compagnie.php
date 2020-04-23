@@ -535,8 +535,11 @@ if($dispo || $admin){
 						
 						echo "<center>";
 						echo "<a class='btn btn-outline-primary' href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie ";
-						if ($num_a > 0) {
-							echo "<span class='badge badge-pill badge-danger'>$num_a</span>";
+						if ($num_e > 0) {
+							echo "<span class='badge badge-pill badge-success'>$num_e</span>";
+						}
+						if ($num_q > 0) {
+							echo "<span class='badge badge-pill badge-danger'>$num_q</span>";
 						}
 						echo "</a></center>";
 					}
