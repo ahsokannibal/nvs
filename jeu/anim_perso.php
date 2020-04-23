@@ -258,6 +258,10 @@ if($dispo || $admin){
 							$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_perso_chef'";
 							$mysqli->query($sql);
 							
+							// Suppression du perso la compagnie si toujours dans une compagnie
+							$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso_chef'";
+							$mysqli->query($sql);
+							
 							// Suppression chef de la carte
 							if (in_bat($mysqli, $id_perso_chef)) {		
 								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_chef'";
