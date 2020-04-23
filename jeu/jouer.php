@@ -2804,15 +2804,34 @@ if($dispo || $admin){
 											</tr>
 											<tr>
 												<td nowrap="nowrap"><b>Malus Défense</b></td>
-												<td><?php 
+												<td nowrap="nowrap"><?php 
 												
 												$texte_tooltip = "Base : ".$bonus_perso."";
 												
 												$bonus_defense = getBonusDefenseObjet($mysqli, $id_perso);
 												
-												$bonus_final = $bonus_perso + $bonus_defense;
+												// recuperation des données de la carte
+												$sql = "SELECT fond_carte FROM $carte 
+														WHERE x_carte = $x_perso
+														AND y_carte = $y_perso";
+												$res = $mysqli->query($sql);
+												$tab = $res->fetch_assoc();
 												
-												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">'.$bonus_final.'</a>';
+												$fond_carte_perso = $tab['fond_carte'];
+												
+												$bonus_defense_terrain_cac = get_bonus_defense_terrain($fond_carte_perso, 1);
+												$bonus_defense_terrain_dist = get_bonus_defense_terrain($fond_carte_perso, 2);
+												
+												$bonus_final_cac = $bonus_perso + $bonus_defense + $bonus_defense_terrain_cac;
+												$bonus_final_dist = $bonus_perso + $bonus_defense + $bonus_defense_terrain_dist;
+												
+												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">';
+												if ($bonus_final_cac == $bonus_final_dist) {
+													echo $bonus_final_cac;
+												}
+												else {
+													echo 'Cac : '.$bonus_final_cac.' - Dist : '.$bonus_final_dist.'</a>';
+												}
 												?>&nbsp;</td>
 											</tr>
 										</table>

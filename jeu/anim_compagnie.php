@@ -93,9 +93,9 @@ if($dispo || $admin){
 							
 							// récupération des persos dans la compagnie 
 							$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie_maj'";
-							$res = $mysqli->query($sql);
+							$res_perso_a_virer = $mysqli->query($sql);
 							
-							while ($t = $res->fetch_assoc()) {
+							while ($t = $res_perso_a_virer->fetch_assoc()) {
 								
 								$id_perso_a_virer = $t['id_perso'];
 								
@@ -112,8 +112,8 @@ if($dispo || $admin){
 								$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
 											(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
 												(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_virer') AND chef='1')";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
+								$res_forum = $mysqli->query($sql);
+								$t = $res_forum->fetch_assoc();
 								
 								$id_user_forum = $t['user_id'];
 								
@@ -158,7 +158,7 @@ if($dispo || $admin){
 						header("Location:anim_compagnie.php");
 					}
 					else {
-						// Tentaive de triche d'un anim
+						// Tentative de triche d'un anim
 						$text_triche = "L'animateur avec le perso $id a joué avec le paramètre valid !";
 			
 						$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";

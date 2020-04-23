@@ -3091,7 +3091,7 @@ function charge_cible_terrain_impraticable($mysqli, $id_perso, $nom_perso, $imag
 /**
  * Fonction appelée lorsque la charge se passe sans encombre et donc que les attaques peuvent être effectuées
  */
-function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte) {
+function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte) {
 	
 	$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 	$mysqli->query($sql);
@@ -3186,7 +3186,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 	
 		$nb_attaque 	= 0;
 		$cible_alive 	= true;
-		$cumul_degats 	= 0;
 		$gain_pc		= 0;
 		
 		// On attaque tant qu'il reste des PA
@@ -3230,8 +3229,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 					$gain_pc = $gain_pc * 2;
 				}
 				
-				$cumul_degats = $cumul_degats + $degats;
-				
 				// calcul gain experience
 				if ($idPerso_carte >= 200000) {
 					$gain_experience = mt_rand(1, 6);
@@ -3250,8 +3247,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 					if ($gain_experience > 10) {
 						$gain_experience = 10;
 					}
-					
-					echo "Gain XP : ".$gain_experience;
 				}
 				
 				// Maj cible malus et PV
@@ -3286,7 +3281,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_cla
 				$pv_cible = $t_pv['pv_perso'];
 				
 				// Verification si cible morte							
-				if ($pv_cible - $cumul_degats <= 0) {
+				if ($pv_cible <= 0) {
 					
 					$cible_alive = false;
 					
@@ -3548,7 +3543,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 					$x_perso_final = $x_perso;
 					$y_perso_final = $y_perso + $nb_deplacements;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);					
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);					
 				}
 				
 				break;
@@ -3653,7 +3648,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 					$x_perso_final = $x_perso - $nb_deplacements;
 					$y_perso_final = $y_perso + $nb_deplacements;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
 					
 				}
 				
@@ -3758,7 +3753,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 					$x_perso_final = $x_perso - $nb_deplacements;
 					$y_perso_final = $y_perso;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
 					
 				}
 				
@@ -3863,7 +3858,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 					$x_perso_final = $x_perso - $nb_deplacements;
 					$y_perso_final = $y_perso - $nb_deplacements;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
 				}
 				
 				break;
@@ -3967,7 +3962,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 					$x_perso_final = $x_perso;
 					$y_perso_final = $y_perso - $nb_deplacements;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
 				}
 				
 				break;
@@ -4071,7 +4066,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 					$x_perso_final = $x_perso + $nb_deplacements;
 					$y_perso_final = $y_perso - $nb_deplacements;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
 				}
 				
 				break;
@@ -4175,7 +4170,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 					$x_perso_final = $x_perso + $nb_deplacements;
 					$y_perso_final = $y_perso;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
 				}
 				
 				break;
@@ -4279,7 +4274,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 					$x_perso_final = $x_perso + $nb_deplacements;
 					$y_perso_final = $y_perso + $nb_deplacements;
 					
-					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
+					charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte);
 				}
 				
 				break;
