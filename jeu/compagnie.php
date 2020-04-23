@@ -61,11 +61,12 @@ if($dispo || $admin){
 			$clan_compagnie = $t_c["id_clan"];
 			
 			// récupération du clan du perso
-			$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
+			$sql = "SELECT clan, idJoueur_perso FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
 			$t_cp = $res->fetch_assoc();
 			
 			$clan_perso = $t_cp["clan"];
+			$idJoueur_p = $t_cp["idJoueur_perso"];
 			
 			if($exist){
 				
@@ -566,9 +567,8 @@ if($dispo || $admin){
 				else{
 					// en attente de validation
 					if ($c != 0) { 
-						echo "Vous êtes en attente de validation pour une compagnie";
-						echo "<br/><a href='compagnie.php?annuler=ok'>annuler sa candidature</a>";
-						echo "<br/><br/><a href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a>";
+						echo "<div align='center'>Vous êtes en attente de validation pour une compagnie";
+						echo "<br/><a class='btn btn-danger' href='compagnie.php?annuler=ok'>annuler sa candidature</a>";
 					}
 					else {
 				
