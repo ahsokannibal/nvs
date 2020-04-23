@@ -92,7 +92,7 @@ if($dispo || $admin){
 							$id_group_forum = $t['group_id'];
 							
 							// récupération des persos dans la compagnie 
-							$sql = "SELECT * FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie_maj'";
+							$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie_maj'";
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()) {
@@ -100,7 +100,7 @@ if($dispo || $admin){
 								$id_perso_a_virer = $t['id_perso'];
 								
 								// on vire le perso de la compagnie
-								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso_a_virer' AND id_compagnie='$id_compagnie_maj'";
+								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso_a_virer'";
 								$mysqli->query($sql);
 								
 								// on enleve le perso de la banque
@@ -133,6 +133,10 @@ if($dispo || $admin){
 							
 							// Suppression de la banque de la compagnie
 							$sql = "DELETE FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie_maj'";
+							$mysqli->query($sql);
+							
+							// Suppression l'historique de la banque de la compagnie
+							$sql = "DELETE FROM histobanque_compagnie WHERE id_compagnie='$id_compagnie_maj'";
 							$mysqli->query($sql);
 							
 							// Suppression de toutes le demandes liées à cette compagnie
