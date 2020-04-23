@@ -94,6 +94,8 @@ function get_nom_terrain($fond) {
 		case(I_MONTAGNE): return "Montagne"; break;
 		case(I_ROUTE_B): return "Route"; break;
 		case(I_ROUTE_R): return "Route"; break;
+		case(I_PONT_B): return "Pont"; break;
+		case(I_PONT_R): return "Pont"; break;
 		case(I_RAIL): return "Rail"; break;
 		default: return "Inconnu";
 	}
