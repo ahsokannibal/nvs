@@ -324,7 +324,8 @@ if($dispo || $admin){
 						$nom_groupe = $t_s["nom_compagnie"];
 						
 						// on lui envoi un mp
-						$message = "Bonjour $nom_recrue,<br /><br />J\'ai le regret de t\'annoncer que ton départ de la compagnie ". addslashes($nom_groupe) ." a été refusé.";
+						$message = "Bonjour $nom_recrue,
+									J\'ai le regret de t\'annoncer que ton départ de la compagnie ". addslashes($nom_groupe) ." a été refusé.";
 						$objet = "Refus de départ de la compagnie";
 						
 						$lock = "LOCK TABLE (joueur) WRITE";

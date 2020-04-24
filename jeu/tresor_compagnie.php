@@ -208,6 +208,49 @@ if($dispo || $admin){
 						}
 					}
 				}
+				
+				if (isset($_POST['refus_emp']) && $_POST['refus_emp'] == "refuser emprunt") {
+					
+					if(isset($_POST["emprunteur"])){
+						
+						$t_r = explode(",",$_POST["emprunteur"]);
+						
+						$id_emp 		= $t_r[0];
+						$nom_emp 		= $t_r[1];
+						$montant_emp 	= $t_r[2];
+						
+						// on supprime la demande d'emprunt
+						$sql = "UPDATE banque_compagnie SET demande_emprunt='0', montant_emprunt='0' WHERE id_perso='$id_emp'";
+						$mysqli->query($sql);
+						
+						// nom tersorier
+						$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$nom_tresorier = $t['nom_perso'];
+						
+						// on lui envoi un mp
+						$message = "Bonjour $nom_emp,
+									J\'ai le regret de t\'annoncer que ta demande d\'emprunt de $montant_emp thunes a été refusé.";
+						$objet = "Refus emprunt du trésorier de la compagnie";
+						
+						$lock = "LOCK TABLE (joueur) WRITE";
+						$mysqli->query($lock);
+						
+						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . addslashes($nom_tresorier) . "', NOW(), '" . $message . "', '" . $objet . "')";
+						$res = $mysqli->query($sql);
+						$id_message = $mysqli->insert_id;
+						
+						$unlock = "UNLOCK TABLES";
+						$mysqli->query($unlock);
+						
+						$sql = "INSERT INTO message_perso VALUES ('$id_message','$id_emp','1','0','1','0')";
+						$res = $mysqli->query($sql);
+						
+						echo "<center><font color='blue'>Vous avez refusé l'emprunt de $montant_emp po pour $nom_emp</font></center>";
+					}
+				}
 			
 				// verification si quelqu'un a demandé un emprunt
 				$sql = "SELECT banque_compagnie.id_perso, nom_perso, montant_emprunt FROM banque_compagnie, perso_in_compagnie, perso 
@@ -236,6 +279,7 @@ if($dispo || $admin){
 					
 					echo "</select>";
 					echo "&nbsp;<input type=\"submit\" name=\"val_emp\" value=\"valider emprunt\">";
+					echo "&nbsp;<input type=\"submit\" name=\"refus_emp\" value=\"refuser emprunt\">";
 					echo "</form></center>";
 				}
 				else {
