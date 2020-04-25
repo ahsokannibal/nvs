@@ -2,6 +2,7 @@
 session_start();
 require_once("../fonctions.php");
 require_once("f_carte.php");
+require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
@@ -20,12 +21,14 @@ function mail_gel_persos($nom_perso, $email_joueur, $titre, $message){
 //***************************************
 // Traitement des persos a mettre en gel
 //***************************************
-$sql = "SELECT id_perso FROM perso WHERE a_gele='1'";
+$sql = "SELECT id_perso, nom_perso, clan FROM perso WHERE a_gele='1'";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
 	
-	$id_perso = $t["id_perso"];
+	$id_perso 	= $t["id_perso"];
+	$nom_perso	= $t["nom_perso"];
+	$clan_perso	= $t["clan"];
 	
 	echo "gel du perso $id_perso <br />";
 	
@@ -46,18 +49,27 @@ while ($t = $res->fetch_assoc()){
 		$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso'";
 		$mysqli->query($sql);
 	}
+	
+	// Récupération de la couleur associée au clan du perso
+	$couleur_clan_perso = couleur_clan($clan_perso);
+	
+	// Ajout événement
+	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' est parti en permission','','','',NOW(),'0')";
+	$mysqli->query($sql);
 }
 
 //***********************************************
 // Traitement des persos inactifs a placer en gel
 //***********************************************
 // On place en gel les persos avec une date de DLA ancienne de plus de 10 jours (5 tours)
-$sql = "SELECT id_perso FROM `perso` WHERE DLA_perso < DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY) and est_gele='0'";
+$sql = "SELECT id_perso, nom_perso, clan FROM `perso` WHERE DLA_perso < DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY) and est_gele='0'";
 $res_inactif = $mysqli->query($sql);
 
 while ($t = $res_inactif->fetch_assoc()){
 	
-	$id_perso = $t["id_perso"];
+	$id_perso 	= $t["id_perso"];
+	$nom_perso	= $t["nom_perso"];
+	$clan_perso	= $t["clan"];
 	
 	echo "gel du perso inactif $id_perso <br />";
 	
@@ -78,6 +90,13 @@ while ($t = $res_inactif->fetch_assoc()){
 		$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso'";
 		$mysqli->query($sql);
 	}
+	
+	// Récupération de la couleur associée au clan du perso
+	$couleur_clan_perso = couleur_clan($clan_perso);
+	
+	// Ajout événement
+	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a été placé en permission','','','',NOW(),'0')";
+	$mysqli->query($sql);
 	
 	$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE perso.id_perso='$id_perso' AND perso.idJoueur_perso = joueur.id_joueur";
 	$res = $mysqli->query($sql);
