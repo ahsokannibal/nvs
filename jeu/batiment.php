@@ -190,80 +190,13 @@ if($dispo || $admin){
 							}
 						}
 						
-						////////////////////////
-						// On achete une armure
-						if(isset($_POST["achat_armure"])){
-							
-							// recuperation de l'id de l'armure
-							$id_armure = $_POST["hid_achat_armure"];
-							
-							// vérifier que $id_armure est une valeur numérique
-							$verif_id = preg_match("#^[0-9]+$#i",$id_armure);
-							
-							if($verif_id){
-								
-								// vérification que l'armure existe bien
-								if(existe_armure($mysqli, $id_armure)){
-									
-									if ($pa_perso >= 2) {
-								
-										// recuperation des données de l'armure
-										$sql_a = "SELECT nom_armure, coutOr_armure, poids_armure FROM armure WHERE id_armure='$id_armure'";
-										$res_a = $mysqli->query($sql_a);
-										$t_a = $res_a->fetch_assoc();
-										
-										$nom_armure 	= $t_a["nom_armure"];
-										$coutOr_armure 	= $t_a["coutOr_armure"];
-										$pvMax_armure 	= $t_a["pvMax_armure"];
-										
-										// calcul rabais
-										if($nb_points_marchandage){
-											$rabais = floor(($coutOr_armure * $pourcentage_rabais)/100);
-											$coutOr_armure = $coutOr_armure - $rabais;
-										}
-										
-										//verification de l'or du perso
-										if($or >= $coutOr_armure){
-											
-											// insertion perso_as_armure
-											$sql_i = "INSERT INTO perso_as_armure VALUES('$id_perso','$id_armure','0')";
-											$mysqli->query($sql_i);
-										
-											// mis à jour or et charge perso
-											$sql_m = "UPDATE perso SET or_perso=or_perso-$coutOr_armure, charge_perso=charge_perso+$poids_armure, pa_perso=pa_perso-2 WHERE id_perso='$id_perso'";
-											$mysqli->query($sql_m);
-										
-											// MAJ or perso pour affichage
-											$or = $or - $coutOr_armure;
-											
-											// MAJ pa perso pour affichage
-											$pa_perso = $pa_perso - 2;
-											
-											echo "<font color=blue>Vous venez de vous offrir l'armure $nom_armure pour $coutOr_armure Thunes</font>";
-										}
-										else {
-											echo "<font color=red>Vous n'avez pas assez de thunes pour vous offrir cette armure</font>";
-										}
-									}
-									else {
-										echo "<font color=red>Vous n'avez pas assez de PA pour acheter une armure</font>";
-									}
-								}
-								else {
-									echo "<font color=red>L'armure demandée n'est plus en stock ou n'est plus vendue</font>";
-								}
-							}
-							else {
-								echo "Données incorrectes, veuillez contacter l'administrateur.";
-							}
-						}
-						
 						/////////////////////
 						// on achete un objet
 						if(isset($_POST["achat_objet"])) {
 						
 							// recuperation de l'id de l'objet
-							$id_o = $_POST["hid_achat_objet"];
+							$id_o 		= $_POST["hid_achat_objet"];
+							$quantite_o = $_POST['quantite_objet'];
 							
 							// vérifier que $id_o est une valeur numérique
 							$verif_id = preg_match("#^[0-9]+$#i",$id_o);
@@ -281,8 +214,8 @@ if($dispo || $admin){
 										$t_o = $res->fetch_assoc();
 										
 										$nom_o 		= $t_o["nom_objet"];
-										$poids_o 	= $t_o["poids_objet"];
-										$coutOr_o 	= $t_o["coutOr_objet"];
+										$poids_o 	= $t_o["poids_objet"] * $quantite_o;
+										$coutOr_o 	= $t_o["coutOr_objet"] * $quantite_o;
 										
 										// calcul rabais
 										if($nb_points_marchandage){
@@ -297,9 +230,13 @@ if($dispo || $admin){
 											$sql = "UPDATE perso SET or_perso=or_perso-$coutOr_o, charge_perso=charge_perso+$poids_o, pa_perso=pa_perso-2 WHERE id_perso='$id_perso'";
 											$mysqli->query($sql);
 											
-											// On met l'objet dans le sac
-											$sql = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso','$id_o')";
-											$mysqli->query($sql);
+											for ($i = 0; $i < $quantite_o; $i++) {
+											
+												// On met l'objet dans le sac
+												$sql = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso','$id_o')";
+												$mysqli->query($sql);
+												
+											}
 											
 											// MAJ or perso pour affichage
 											$or = $or - $coutOr_o;
@@ -307,76 +244,18 @@ if($dispo || $admin){
 											// MAJ pa perso pour affichage
 											$pa_perso = $pa_perso - 2;
 											
-											echo "<font color=blue>Vous avez acheté l'objet $nom_o pour $coutOr_o thunes</font>";
+											echo "<div align='center'><font color=blue>Vous avez acheté $quantite_o $nom_o pour $coutOr_o thunes</font></div>";
 										}
 										else {
-											echo "<font color=red>Vous ne possédez pas assez de thunes pour acheter l'objet $nom_o</font>";
+											echo "<div align='center'><font color=red>Vous ne possédez pas assez de thunes pour acheter $quantite_o $nom_o : Besoin en or = $coutOr_o</font></div>";
 										}
 									}
 									else {
-										echo "<font color=red>Vous ne possédez pas assez de PA pour acheter un objet</font>";
+										echo "<div align='center'><font color=red>Vous ne possédez pas assez de PA pour acheter un objet</font></div>";
 									}
 								}
 								else {
-									echo "<font color=red>L'objet demandée n'est plus en stock ou n'est plus vendue</font>";
-								}
-							}
-							else {
-								echo "Données incorrectes, veuillez contacter l'administrateur.";
-							}
-						}
-						
-						/////////////////////
-						// on vent une armure
-						if(isset($_POST["vente_armure"])) {
-							
-							// recupération de l'id de l'armure ainsi que de ses pv
-							$t_vente_armure = $_POST["hid_vente_armure"];
-							$t_vente_armure2 = explode(',',$t_vente_armure);
-							$id_armure = $t_vente_armure2[0];
-							
-							// On verifie que l'id de l'armure et les pv de l'armure sont bien des valeurs numeriques
-							$verif_id = preg_match("#^[0-9]+$#i",$id_armure);
-							
-							if($verif_id){
-								
-								// On vérifie que le perso possede bien l'amure et qu'elle n'est pas équipée
-								$sql_v = "SELECT id_armure FROM perso_as_armure WHERE id_armure='$id_armure' AND est_portee='0'";
-								$res_v = $mysqli->query($sql_v);
-								$nb_res_v = $res_v->num_rows;
-								
-								if($nb_res_v > 0){
-									
-									// recuperation des infos sur l'armure
-									$sql_a = "SELECT nom_armure, coutOr_armure, poids_armure FROM armure WHERE id_armure='$id_armure'";
-									$res_a = $mysqli->query($sql_a);
-									$t_a = $res_a->fetch_assoc();
-									
-									$nom_armure = $t_a["nom_armure"];
-									$coutOr_armure = $t_a["coutOr_armure"];
-									$poids_armure = $t_a["poids_armure"];
-									
-									// Calcul du prix de vente
-									$prix_vente_final = ceil($coutOr_armure / 2);
-									
-									// Mise à jour de l'inventaire du perso
-									$sql_d = "DELETE FROM perso_as_armure 
-											  WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' LIMIT 1";
-									$mysqli->query($sql_d);
-									
-									// Mise à jour or et poids perso
-									$sql_u = "UPDATE perso 
-											  SET or_perso=or_perso+$prix_vente_final, charge_perso=charge_perso-$poids_armure
-											  WHERE id_perso='$id_perso'";
-									$mysqli->query($sql_u);
-									
-									echo "<br /><center><font color='blue'>Vous avez vendu votre armure <b>$nom_armure</b> pour <b>$prix_vente_final</b> Thunes</font></center>";
-									
-									// MAJ affichage or perso
-									$or = $or + $prix_vente_final;
-								}
-								else {
-									echo "Vous ne pouvez pas enter de vendre ce que vous ne possédez pas.";
+									echo "<div align='center'><font color=red>L'objet demandée n'est plus en stock ou n'est plus vendue</font></div>";
 								}
 							}
 							else {
@@ -393,7 +272,7 @@ if($dispo || $admin){
 							$t_vente_arme2 = explode(',',$t_vente_arme);
 							$id_arme = $t_vente_arme2[0];
 							
-							// On verifie que l'id de l'armure et les pv de l'armure sont bien des valeurs numeriques
+							// On verifie que l'id de l'arme est bien une valeurs numeriques
 							$verif_id = preg_match("#^[0-9]+$#i",$id_arme);
 							
 							if($verif_id){
@@ -859,47 +738,9 @@ if($dispo || $admin){
 									echo "</form>";
 								}
 								echo "</table><br />";
-									
-								// Armures
-								// Récupération des armures que posséde le perso (non porté)
-								$sql_armures = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0'";
-								$res_armures = $mysqli->query($sql_armures);
-									
-								echo "<table border=1 align=center width='70%'>";
-								echo "<tr><th colspan='5'>Vos armures</th></tr>";
-								echo "<tr><th>Armures</th><th>Poids</th><th>Prix de vente</th><th>Vente</th></tr>";
-									
-								while($t = $res_armures->fetch_assoc()){
-									
-									echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
-									
-									$id_armure = $t['id_armure'];
-										
-									// Récupération des informations sur l'armure
-									$sql_a = "SELECT nom_armure, description_armure, poids_armure, coutOr_armure, image_armure FROM armure WHERE id_armure='$id_armure'";
-									$res_a = $mysqli->query($sql_a);
-									$t_a = $res_a->fetch_assoc();
-									
-									$nom_armure = $t_a["nom_armure"];
-									$description_armure = $t_a["description_armure"];
-									$poids_armure = $t_a["poids_armure"];
-									$coutOr_armure = $t_a["coutOr_armure"];
-									$image_armure = $t_a["image_armure"];
-										
-									// Calcul du prix de vente
-									$prix_vente_final = ceil($coutOr_armure / 2);
-										
-									echo "<tr><td align='center'><img src='../images/armures/".$image_armure."' /><br /><b>$nom_armure</b></td><td align='center'>$poids_armure</td><td align='center'>$prix_vente_final</td>";
-									echo "<td align=\"center\"><input type='submit' name='vente_armure' value='Vendre' />";
-									echo "<input type='hidden' name='hid_vente_armure' value='".$id_armure."' />";
-									echo "</td></tr>";
-													
-									echo "</form>";
-								}
-								echo "</table><br />";
 							}
 							else {
-								// Vos armes / armures / Ressources à vendre
+								// Vos armes / Ressources à vendre
 								echo "<center><a class='btn btn-primary' href=\"batiment.php?bat=$id_i_bat&vente=ok\">Vendre vos biens</a></center>";
 							}
 						}
@@ -1019,7 +860,7 @@ if($dispo || $admin){
 							}
 							
 							/////////////////////////////////////
-							// achat armes et armures en tout genre
+							// achat armes en tout genre
 							echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 							echo "Choix :";
 							echo "<select name=\"choix\" onchange=\"this.form.submit()\">";
@@ -1029,14 +870,7 @@ if($dispo || $admin){
 									echo " selected ";
 								}
 							}
-							echo ">armes</option>"; 
-							echo "<OPTION value=armures";
-							if (isset($_POST["choix"])){
-								if($_POST["choix"] == "armures"){
-									echo " selected ";
-								}
-							}
-							echo ">armures</option>";
+							echo ">armes</option>";
 							echo "</select>";
 							echo "<input type=\"submit\" name=\"ch\" value=\"ok\">";
 							echo "</form>";
@@ -1217,55 +1051,6 @@ if($dispo || $admin){
 									}
 									echo "</table>";
 								}
-								
-								
-								// Armures
-								if($choix == "armures") {
-									
-									echo "<table width=100% border=1>";
-									echo "<tr><th colspan=6>Armures</th></tr>";
-									echo "<tr bgcolor=\"lightgreen\">";
-									echo "<th>armure</th>";
-									echo "<th>defense</th>";
-									echo "<th>poids</th>";
-									echo "<th>image</th>";
-									echo "<th>coût</th>";
-									echo "<th>achat</th>";
-									echo "</tr>";
-								
-									// récupération des données des armures de qualité entre 3 et 5
-									$sql = "SELECT id_armure, nom_armure, poids_armure, coutOr_armure, image_armure, corps_armure, bonusDefense_armure FROM armure 
-											WHERE qualite_armure < 6 AND qualite_armure > 2
-											ORDER BY corps_armure, coutOr_armure";
-									$res = $mysqli->query($sql);
-									$nb_armure = $res->num_rows;
-									
-									if($nb_armure){
-										while ($t = $res->fetch_assoc()) {
-											
-											echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
-											
-											$id_armure = $t["id_armure"];
-											$nom_armure = $t["nom_armure"];
-											$poids_armure = $t["poids_armure"];
-											$coutOr_armure = $t["coutOr_armure"];
-											$image_armure = $t["image_armure"];
-											$corps_armure = $t["corps_armure"];
-											$defense_armure = $t["bonusDefense_armure"];
-											
-											$rabais = floor(($coutOr_armure * $pourcentage_rabais)/100);
-											
-											echo "<tr><td align='center'>$nom_armure</td><td align='center'>$defense_armure</td><td align='center'>$poids_armure</td><td align='center'><img src=\"../images/armures/$image_armure\"</td><td align='center'>$coutOr_armure</td>";
-											echo "<td align=\"center\"><input type='submit' name='achat_armure' value='Acheter' />";
-											echo "<input type='hidden' name='hid_achat_armure' value=".$t["id_armure"]." />";
-											echo "</tr>";
-											echo "</form>";
-										}
-									}
-									else {
-										echo "<tr><td align='center' colspan='9'><i>Aucunes armures disponibles pour le moment</i></td></tr>";
-									}
-								}
 							}							
 						}
 						
@@ -1277,14 +1062,15 @@ if($dispo || $admin){
 							
 							// Objets de soin
 							echo "<table width=100% border=1>";
-							echo "<tr><th colspan=6>Objets de soin</th></tr>";
+							echo "<tr><th colspan='6' style='text-align:center'>Objets de soin</th></tr>";
 							echo "<tr bgcolor=\"lightgreen\">";
-							echo "<th>objet</th>";
-							echo "<th>image</th>";
-							echo "<th>description</th>";
-							echo "<th>poids</th>";
-							echo "<th>coût</th>";
-							echo "<th>achat</th>";
+							echo "<th style='text-align:center'>objet</th>";
+							echo "<th style='text-align:center'>image</th>";
+							echo "<th style='text-align:center'>description</th>";
+							echo "<th style='text-align:center'>poids</th>";
+							echo "<th style='text-align:center'>quantité</th>";
+							echo "<th style='text-align:center'>coût à l'unité</th>";
+							echo "<th style='text-align:center'>achat</th>";
 							echo "</tr>";
 							
 							// achat potions en tout genre + alcool ^^
@@ -1308,20 +1094,37 @@ if($dispo || $admin){
 									// Calcul du rabais
 									$rabais = floor(($cout_o * $pourcentage_rabais)/100);
 									
-									echo "<tr><td><center>$nom_o</center></td><td align='center'><img src=\"../images/objets/$image_o\" width=\"40\" height=\"40\"></td><td><center>$description_o</center></td><td><center>$poid_o</center></td>";?>
-									<td><?php echo "<center>".$cout_o;
+									echo "<tr>";
+									echo "	<td><center>$nom_o</center></td>";
+									echo "	<td align='center'><img src=\"../images/objets/$image_o\" width=\"40\" height=\"40\"></td>";
+									echo "	<td><center>$description_o</center></td>";
+									echo "	<td><center>$poid_o</center></td>";
+									echo "	<td align='center'>";
+									echo "		<select name='quantite_objet'>";
+									echo "			<option value='1'>1</option>";
+									echo "			<option value='2'>2</option>";
+									echo "			<option value='3'>3</option>";
+									echo "			<option value='4'>4</option>";
+									echo "			<option value='5'>5</option>";
+									echo "			<option value='6'>6</option>";
+									echo "		</select>";
+									echo "	</td>";
+									echo "	<td>";
+									echo "		<center>".$cout_o;
 									if($rabais) {
 										$new_cout_o = $cout_o - $rabais;
 										echo "<font color='blue'> ($new_cout_o)</font>";
 									}
-									echo "</center></td>";
-									echo "<td align=\"center\"><input type='submit' name='achat_objet' value='Acheter' ";
+									echo "		</center>";
+									echo "	</td>";
+									echo "	<td align=\"center\"><input type='submit' name='achat_objet' value='Acheter' ";
 									if ($pa_perso < 2) {
 										echo "disabled";
 									}
 									echo " />";
 									echo "<input type='hidden' name='hid_achat_objet' value=".$id_o." />";
-									echo "</td></tr>";
+									echo "	</td>";
+									echo "</tr>";
 									
 									echo "</form>";
 								}
@@ -1349,14 +1152,7 @@ if($dispo || $admin){
 									echo " selected ";
 								}
 							}
-							echo ">armes</option>"; 
-							echo "<OPTION value=armures";
-							if (isset($_POST["choix"])){
-								if($_POST["choix"] == "armures"){
-									echo " selected ";
-								}
-							}
-							echo ">armures</option>";
+							echo ">armes</option>";
 							echo "</select>";
 							echo "<input type=\"submit\" name=\"ch\" value=\"ok\">";
 							echo "</form>";
@@ -1382,7 +1178,7 @@ if($dispo || $admin){
 								echo "	<th style='text-align:center'>Image</th>";
 								echo "	<th style='text-align:center'>Description</th>";
 								echo "	<th style='text-align:center'>Quantité</th>";
-								echo "	<th style='text-align:center'>Coût</th>";
+								echo "	<th style='text-align:center'>Coût à l'unité</th>";
 								echo "	<th style='text-align:center'>Achat</th>";
 								echo "</tr>";
 								
@@ -1412,7 +1208,16 @@ if($dispo || $admin){
 										echo "	<td align='center'>$poids_objet</td>";
 										echo "	<td align='center'><img src=\"../images/objets/$image_objet\" width=\"40\" height=\"40\" ></td>";
 										echo "	<td>$description_objet</td>";
-										echo "	<td align='center'>1</td>";
+										echo "	<td align='center'>";
+										echo "		<select name='quantite_objet'>";
+										echo "			<option value='1'>1</option>";
+										echo "			<option value='2'>2</option>";
+										echo "			<option value='3'>3</option>";
+										echo "			<option value='4'>4</option>";
+										echo "			<option value='5'>5</option>";
+										echo "			<option value='6'>6</option>";
+										echo "		</select>";
+										echo "	</td>";
 										echo "	<td align='center'>";
 										echo $coutOr_objet;
 										if($rabais) {
@@ -1651,59 +1456,6 @@ if($dispo || $admin){
 									echo "<tr><td align='center' colspan='9'><i>Aucunes armes à distance disponibles pour le moment</i></td></tr>";
 								}
 								echo "</table>";
-							}
-							
-							// Armures
-							if($choix == "armures") {
-								
-								echo "<table width=100% border=1>";
-								echo "<tr><th colspan=6>Armures</th></tr>";
-								echo "<tr bgcolor=\"lightgreen\">";
-								echo "<th>armure</th>";
-								echo "<th>defense</th>";
-								echo "<th>poids</th>";
-								echo "<th>image</th>";
-								echo "<th>coût</th>";
-								echo "<th>achat</th>";
-								echo "</tr>";
-							
-								// Récupération des données des armures de niveau égal à 6
-								$sql = "SELECT id_armure, nom_armure, poids_armure, coutOr_armure, image_armure, corps_armure, bonusDefense_armure FROM armure 
-										WHERE qualite_armure = 6
-										ORDER BY corps_armure, coutOr_armure";
-								$res = $mysqli->query($sql);
-								$nb_armure = $res->num_rows;
-								
-								if($nb_armure){
-									while ($t = $res->fetch_assoc()) {
-										
-										echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
-										
-										$id_armure = $t["id_armure"];
-										$nom_armure = $t["nom_armure"];
-										$poids_armure = $t["poids_armure"];
-										$coutOr_armure = $t["coutOr_armure"];
-										$image_armure = $t["image_armure"];
-										$corps_armure = $t["corps_armure"];
-										$defense_armure = $t["bonusDefense_armure"];
-										
-										// Calcul du rabais
-										$rabais = floor(($coutOr_armure * $pourcentage_rabais)/100);
-										
-										echo "<tr><td align='center'>$nom_armure</td><td align='center'>$defense_armure</td><td align='center'>$poids_armure</td><td align='center'><img src=\"../images/armures/$image_armure\"</td><td align='center'>$coutOr_armure</td>";
-										echo "<td align=\"center\"><input type='submit' name='achat_armure' value='Acheter' ";
-										if ($pa_perso < 2) {
-											echo "disabled";
-										}
-										echo " />";
-										echo "<input type='hidden' name='hid_achat_armure' value=".$t["id_armure"]." />";
-										echo "</tr>";
-										echo "</form>";
-									}
-								}
-								else {
-									echo "<tr><td align='center' colspan='9'><i>Aucunes armures disponibles pour le moment</i></td></tr>";
-								}
 							}
 						}
 						

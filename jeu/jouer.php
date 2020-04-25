@@ -2479,6 +2479,8 @@ if($dispo || $admin){
 						$verifx = preg_match("#^[0-9]*[0-9]$#i","$x");
 						$verify = preg_match("#^[0-9]*[0-9]$#i","$y");
 						
+						// TODO - verif si le perso est bien à côté
+						
 						if ($verifx && $verify) {
 						
 							$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
