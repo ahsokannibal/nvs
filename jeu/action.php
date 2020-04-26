@@ -1373,13 +1373,47 @@ if($dispo || $admin){
 															}
 														}
 														else if($fond_carte == '1.gif'){
-															echo "
-																<td width=40 height=40> 
-																	<input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
-																		onMouseOver=\"this.src='../images_perso/$image_bat';\" 
-																		onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
-																	<input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" >
-																</td>";
+															
+															// Cas Gare => doit être relié à des rails
+															if ($id_bat == '11') {
+																// Vérifier la présence de rail à 2 case de la possition
+																$sql_gare = "SELECT fond_carte FROM $carte
+																		WHERE (
+																			(x_carte = $x - 2 AND y_carte >= $y -2 AND y_carte <= $y +2)
+																			OR
+																			(x_carte = $x + 2 AND y_carte >= $y -2 AND y_carte <= $y +2)
+																			OR
+																			(y_carte = $y - 2 AND x_carte >= $x -2 AND x_carte <= $x +2)
+																			OR
+																			(y_carte = $y + 2 AND x_carte >= $x -2 AND x_carte <= $x +2)
+																		)
+																		AND fond_carte='rail.gif'";
+																$res_gare = $mysqli->query($sql_gare);
+																$nb_rails = $res_gare->num_rows;
+																
+																if ($nb_rails > 0) {
+																	
+																	echo "
+																	<td width=40 height=40> 
+																		<input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																			onMouseOver=\"this.src='../images_perso/$image_bat';\" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
+																		<input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" >
+																	</td>";
+																}
+																else {
+																	echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
+																}
+															}
+															else {
+																echo "
+																	<td width=40 height=40> 
+																		<input type=\"image\" name=\"image_bat\" value=\"$x,$y,$id_bat\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																			onMouseOver=\"this.src='../images_perso/$image_bat';\" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
+																		<input type=\"hidden\" name=\"hid_image_bat\" value=\"$x,$y,$id_bat\" >
+																	</td>";
+															}
 														}
 														else {
 															echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
