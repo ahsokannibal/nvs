@@ -621,6 +621,12 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 													}
 												}
 											}
+											else {
+												echo "<center>Vous ne pouvez pas construire de gare si elle n'est pas reliée à des rails<br />";
+												echo "<a href='jouer.php'>[ retour ]</a></center>";
+												
+												return 0;
+											}
 										}
 									}
 								}
