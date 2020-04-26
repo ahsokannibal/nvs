@@ -572,9 +572,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 															
 															// Ajout coordonnées dans tableau des coordonnées des rails
 															$coord_rail = $x_rail.";".$y_rail;
-															array_push($tab_rail, $coord_rail);
-															
-															$condition = $image_on_rail != 'b12b.png' && $image_on_rail != 'b12r.png' && $num_res > 0;													
+															array_push($tab_rail, $coord_rail);												
 														}
 														
 														if (($camp_perso == 1 && $image_on_rail == 'b12b.png') || ($camp_perso == 2 && $image_on_rail == 'b12r.png')) {
