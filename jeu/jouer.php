@@ -2479,9 +2479,10 @@ if($dispo || $admin){
 						$verifx = preg_match("#^[0-9]*[0-9]$#i","$x");
 						$verify = preg_match("#^[0-9]*[0-9]$#i","$y");
 						
-						// TODO - verif si le perso est bien à côté
+						// verif si le perso est bien à côté
+						$verif_prox = prox_coffre($mysqli, $x, $y, $x_perso, $y_perso);
 						
-						if ($verifx && $verify) {
+						if ($verifx && $verify && $verif_prox) {
 						
 							$sql = "SELECT type_objet, id_objet, nb_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
 							$res = $mysqli->query($sql);
@@ -3451,6 +3452,11 @@ if($dispo || $admin){
 							//coordonnées du perso
 							if ($x == $x_perso && $y == $y_perso){
 								
+								// verification s'il y a un objet sur cette case
+								$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
+								$res_o = $mysqli->query($sql_o);
+								$nb_o = $res_o->num_rows;
+								
 								if($clan_perso == '1'){
 									$image_profil 	= "Nord.gif";
 								}
@@ -3484,6 +3490,10 @@ if($dispo || $admin){
 									
 									if (!in_train($mysqli,$id_perso)) {
 										echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+										
+										if ($nb_o) {
+											echo "<div><img src='../fond_carte/o1.png' width='20' height='20'></div>";
+										}
 									}
 									else {
 										$id_instance_in_train = in_train($mysqli,$id_perso);
@@ -3540,6 +3550,11 @@ if($dispo || $admin){
 								
 								// DATA CONTENT POPOVER
 								echo "			data-content=\"";
+								
+								if ($nb_o) {
+									echo "		<div><a href='jouer.php?ramasser=voir&x=".$x."&y=".$y."' >Voir la liste des objets à terre</a></div> ";
+									echo "		<div><a href='jouer.php?ramasser=ok' >Ramasser les objets à terre (1 PA)</a></div> ";
+								}
 								
 								if (in_bat($mysqli,$id_perso)) {
 									
@@ -3677,6 +3692,12 @@ if($dispo || $admin){
 								echo "\" ";
 								// DATA CONTENT POPOVER
 								echo "			data-content=\"";
+								
+								if ($nb_o) {
+									echo "		<div><a href='jouer.php?ramasser=voir&x=".$x."&y=".$y."' >Voir la liste des objets à terre</a></div> ";
+									echo "		<div><a href='jouer.php?ramasser=ok' >Ramasser les objets à terre (1 PA)</a></div> ";
+								}
+								
 								if (in_bat($mysqli,$id_perso)) {
 									
 									$id_instance_in_bat = in_bat($mysqli,$id_perso);
@@ -4100,7 +4121,7 @@ if($dispo || $admin){
 											$taille_bat			= $t_b['taille_batiment'];
 											$nom_instance_bat	= $t_b['nom_instance'];
 											
-											$taille_case	= ceil($taille_bat / 2);
+											$taille_case = ceil($taille_bat / 2);
 											
 											if($y > $y_perso+$taille_case || $y < $y_perso-$taille_case || $x > $x_perso+$taille_case || $x < $x_perso-$taille_case) {
 												if($nb_o){
@@ -4119,8 +4140,14 @@ if($dispo || $admin){
 															
 															$coord_sortie = $x.",".$y;
 															
-															echo "<td width=40 height=40>";
-															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+															if($nb_o){
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 ";
+															}
+															else {
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 ";
+															}
+															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'></div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";
@@ -4133,8 +4160,14 @@ if($dispo || $admin){
 															
 															$coord_sortie = $x.",".$y;
 															
-															echo "<td width=40 height=40>";
-															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+															if($nb_o){
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 ";
+															}
+															else {
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 ";
+															}
+															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";
@@ -4148,8 +4181,14 @@ if($dispo || $admin){
 															
 															$coord_sortie = $x.",".$y;
 															
-															echo "<td width=40 height=40>";
-															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+															if($nb_o){
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 ";
+															}
+															else {
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 ";
+															}
+															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";
@@ -4163,8 +4202,14 @@ if($dispo || $admin){
 															
 															$coord_sortie = $x.",".$y;
 															
-															echo "<td width=40 height=40>";
-															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+															if($nb_o){
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 ";
+															}
+															else {
+																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$tab["fond_carte"]."\" width=40 height=40 ";
+															}
+															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
 															echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															echo "</td>";

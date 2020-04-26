@@ -270,27 +270,16 @@ function chance_objet($nb){
 		return 0;
 }
 
-// fonction qui verifie si le perso est à proximité d'un coffre
-function prox_coffre($mysqli, $x, $y){
+// fonction qui verifie si le perso est à proximité du coffre
+function prox_coffre($mysqli, $x, $y, $x_perso, $y_perso){
 	
-	$nb = 0;
-	
-	// on regarde autour du perso
-	$sql = "SELECT occupee_carte, image_carte FROM carte WHERE x_carte >= $x - 1 AND x_carte <= $x + 1 AND y_carte >= $y - 1 AND y_carte <= $y + 1";
-	$res = $mysqli->query($sql);
-	
-	while ($t = $res->fetch_assoc()){
-		
-		$oc = $t["occupee_carte"];
-		
-		if ($oc){ // si occupee
-			$im_c = $t["image_carte"];
-			if($im_c == "coffre1t.png"){ // si c'est un coffre
-				$nb++;
-			}
-		}
+	if ( $x_perso >= $x - 1 && $x_perso <= $x + 1
+			&& $y_perso >= $y - 1 && $y_perso <= $y + 1) {
+		return true;
 	}
-	return $nb;
+	else {
+		return false;
+	}
 }
 
 function prox_coffre_arene($mysqli, $x, $y){
