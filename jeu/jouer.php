@@ -3489,11 +3489,13 @@ if($dispo || $admin){
 								if (!in_bat($mysqli,$id_perso)) {
 									
 									if (!in_train($mysqli,$id_perso)) {
-										echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+										echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." ";
 										
 										if ($nb_o) {
-											echo "<div><img src='../fond_carte/o1.png' width='20' height='20'></div>";
+											echo "<img src='../fond_carte/o1.gif' width='20' height='20'> Objets à terre";
 										}
+										
+										echo "</div>";
 									}
 									else {
 										$id_instance_in_train = in_train($mysqli,$id_perso);
@@ -3636,7 +3638,13 @@ if($dispo || $admin){
 								if (!in_bat($mysqli,$id_perso)) {
 									
 									if (!in_train($mysqli,$id_perso)) {
-										echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+										echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." ";
+										
+										if ($nb_o) {
+											echo "<img src='../fond_carte/o1.gif' width='20' height='20'> Objets à terre";
+										}
+										
+										echo "</div>";
 									}
 									else {
 										$id_instance_in_train = in_train($mysqli,$id_perso);
