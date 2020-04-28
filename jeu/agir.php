@@ -337,6 +337,8 @@ if($verif){
 								// Envoi du mail
 								mail_attaque($mysqli, $nom_perso, $id_cible);
 							}
+							
+							$soin_termine = false;
 						
 							// Si perso ou cible est une infanterie 
 							// ou si grade perso >= grade cible - 1
@@ -444,20 +446,28 @@ if($verif){
 									// Seringue
 									if ($pv_cible + $degats_final >= $pvM_cible) {
 										$degats_final = $pvM_cible - $pv_cible;
+										
+										$soin_termine = true;
 									}
 									
 									// mise a jour des pv
 									$sql = "UPDATE perso SET pv_perso=pv_perso+$degats_final WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 									
-									echo "<br>Vous avez soigné $degats_final dégâts à la cible.<br><br>";
+									echo "<br>Vous avez soigné $degats_final dégâts à la cible.<br>";
+									
+									if ($soin_termine) {
+										echo "La cible a récupérée tous ses PV<br>";
+									}
 									
 								} else if ($id_arme_attaque == 11) {
 									
 									// Bandage
-									if ($bonus_cible + $degats_final > 0) {
+									if ($bonus_cible + $degats_final >= 0) {
 										$sql = "UPDATE perso SET bonus_perso=0 WHERE id_perso='$id_cible'";
 										echo "<br>Vous avez soigné tous les malus de la cible.<br><br>";
+										
+										$soin_termine = true;
 									} else {
 										$sql = "UPDATE perso SET bonus_perso=bonus_perso+$degats_final WHERE id_perso='$id_cible'";
 										echo "<br>Vous avez soigné $degats_final malus à la cible.<br><br>";
@@ -1017,7 +1027,7 @@ if($verif){
 								$texte_submit = "attaquer à nouveau";
 							}
 							
-							if ($pv_cible > 0) {
+							if ($pv_cible > 0 && !$soin_termine) {
 								?>
 									<br />
 									<form action="agir.php" method="post">
