@@ -2389,13 +2389,11 @@ if($verif){
 			echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 			
 		}
-	}	
+	}
 		
 	// 
-	if ( (!isset($_POST["id_attaque_cac"]) || $_POST["id_attaque_cac"] == "" || $_POST["id_attaque_cac"] == "personne") 
-		&& (!isset($_POST["id_attaque_dist"]) || $_POST["id_attaque_dist"] == "" || $_POST["id_attaque_dist"] == "personne")
-		&& !isset($_POST["re_attaque"])){
-			
+	if (!isset($id_attaque) || $id_attaque == "" || $id_attaque == "personne") {
+		
 		echo "<center>vous devez choisir une cible pour attaquer</center><br>";
 		echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 	}
