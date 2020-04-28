@@ -200,6 +200,7 @@ if($verif){
 				$rec_cible 			= $t_cible["recup_perso"];
 				$protec_cible		= $t_cible["protec_perso"];
 				$br_cible 			= $t_cible["bonusRecup_perso"];
+				$bonusBase_cible	= $t_cible["bonus_perso"];
 				$bonus_cible 		= $t_cible["bonus_perso"] + getBonusDefenseObjet($mysqli, $id_cible);
 				$per_cible 			= $t_cible["perception_perso"];
 				$bp_cible 			= $t_cible["bonusPerception_perso"];
@@ -235,9 +236,14 @@ if($verif){
 				}	
 				else {
 					// le perso a assez de pa
-					// la cible est encore en vie
-					if ($pv_cible > 0) {
-						
+					
+					// Cas particulier soins
+					if (($pv_cible == $pvM_cible && $id_arme_attaque == 10) || ($bonusBase_cible == 0 && $id_arme_attaque == 11)) {
+						echo "<div class=\"erreur\" align=\"center\">La cible n'a pas besoin de soins !</div>";
+						echo "<a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a>";
+					}
+					else if ($pv_cible > 0) {
+						// la cible est encore en vie
 						?>
 						<table border=0 width=100%>
 							<tr height=50%>
