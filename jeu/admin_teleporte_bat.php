@@ -26,49 +26,45 @@ if(isset($_SESSION["id_perso"])){
 		}
 		
 		if (isset($_POST['id_perso_teleport_hid']) 
-				&& isset($_POST['coord_x_teleport']) && trim($_POST['coord_x_teleport']) != ''
-				&& isset($_POST['coord_y_teleport']) && trim($_POST['coord_y_teleport']) != '') {
+				&& isset($_POST['bat_teleport']) && trim($_POST['bat_teleport']) != '') {
 			
 			$id_perso_teleport 	= $_POST['id_perso_teleport_hid'];
-			$x_teleport			= $_POST['coord_x_teleport'];
-			$y_teleport			= $_POST['coord_y_teleport'];
+			$bat_teleport		= $_POST['bat_teleport'];
 			
-			// On verifie si les coordonnées sont dispo
-			$sql = "SELECT occupee_carte FROM carte WHERE x_carte='$x_teleport' AND y_carte='$y_teleport'";
+			// récupération nom et coordonnées batiment
+			$sql = "SELECT nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$bat_teleport'";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
 			
-			$occupee = $t['occupee_carte'];
+			$nom_instance_bat 	= $t['nom_instance'];
+			$x_instance_bat		= $t['x_instance'];
+			$y_instance_bat		= $t['y_instance'];
 			
-			if (!$occupee) {
+			$sql = "SELECT x_perso, y_perso, image_perso FROM perso WHERE id_perso='$id_perso_teleport'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
 			
-				$sql = "SELECT x_perso, y_perso, image_perso FROM perso WHERE id_perso='$id_perso_teleport'";
-				$res = $mysqli->query($sql);
-				$t = $res->fetch_assoc();
-				
-				$x_perso_origin = $t['x_perso'];
-				$y_perso_origin = $t['y_perso'];
-				$image_perso	= $t['image_perso'];
-				
-				if (in_bat($mysqli, $id_perso_teleport)) {
-					$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_teleport'";
-				}
-				else {
-					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
-				}
-				$mysqli->query($sql);
-				
-				$sql = "UPDATE perso SET x_perso='$x_teleport', y_perso='$y_teleport' WHERE id_perso='$id_perso_teleport'";
-				$mysqli->query($sql);
-				
-				$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso_teleport', image_carte='$image_perso' WHERE x_carte='$x_teleport' AND y_carte='$y_teleport'";
-				$mysqli->query($sql);
-				
-				$mess = "Le perso d'id $id_perso_teleport a bien été téléporté en $x_teleport / $y_teleport";
+			$x_perso_origin = $t['x_perso'];
+			$y_perso_origin = $t['y_perso'];
+			$image_perso	= $t['image_perso'];
+			
+			if (in_bat($mysqli, $id_perso_teleport)) {
+				$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_teleport'";
 			}
 			else {
-				$mess_err = "La case cible est déjà occupée";
+				$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
 			}
+			$mysqli->query($sql);
+			
+			// MAJ coordonnées perso
+			$sql = "UPDATE perso SET x_perso='$x_instance_bat', y_perso='$y_instance_bat' WHERE id_perso='$id_perso_teleport'";
+			$mysqli->query($sql);
+			
+			// Ajout du perso dans le batiment
+			$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_teleport','$bat_teleport')";
+			$mysqli->query($sql);
+			
+			$mess = "Le perso d'id $id_perso_teleport a bien été téléporté dans le bâtiment $nom_instance_bat [".$bat_teleport."]";
 		}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -102,12 +98,12 @@ if(isset($_SESSION["id_perso"])){
 			<div class="row">
 				<div class="col-12">
 				
-					<h3>Téléportation d'un perso</h3>
+					<h3>Téléportation d'un perso dans un bâtiment</h3>
 					
 					<center><font color='red'><?php echo $mess_err; ?></font></center>
 					<center><font color='blue'><?php echo $mess; ?></font></center>
 					
-					<form method='POST' action='admin_teleporte.php'>
+					<form method='POST' action='admin_teleporte_bat.php'>
 					
 						<select name="teleporte_perso">
 						
@@ -139,11 +135,31 @@ if(isset($_SESSION["id_perso"])){
 					<?php
 					if (isset($id_perso_a_teleporter) && $id_perso_a_teleporter != 0) {
 						
-						echo "<form method='POST' action='admin_teleporte.php'>";
+						echo "<form method='POST' action='admin_teleporte_bat.php'>";
 						echo "	<input type='text' value='".$id_perso_a_teleporter."' name='id_perso_teleport' disabled>";
 						echo "	<input type='hidden' value='".$id_perso_a_teleporter."' name='id_perso_teleport_hid'>";
-						echo "	<input type='text' value='' name='coord_x_teleport'>";
-						echo "	<input type='text' value='' name='coord_y_teleport'>";
+						echo "	<select name='bat_teleport'>";
+						
+						$sql = "SELECT id_instanceBat, nom_instance, nom_batiment, x_instance, y_instance FROM instance_batiment, batiment, perso 
+								WHERE instance_batiment.camp_instance = perso.clan
+								AND instance_batiment.id_batiment = batiment.id_batiment
+								AND ( instance_batiment.id_batiment='9' OR instance_batiment.id_batiment='8' OR instance_batiment.id_batiment='7' OR instance_batiment.id_batiment='11')
+								AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)
+								AND perso.id_perso = '$id_perso_a_teleporter'
+								ORDER BY id_instanceBat ASC";
+						$res = $mysqli->query($sql);
+							
+						while ($t = $res->fetch_assoc()) {
+							$id_instance_bat	= $t['id_instanceBat'];
+							$nom_instance_bat	= $t['nom_instance'];
+							$nom_batiment		= $t['nom_batiment'];
+							$x_instance_bat		= $t['x_instance'];
+							$y_instance_bat		= $t['y_instance'];
+							
+							echo "		<option value='".$id_instance_bat."'>".$nom_batiment." ".$nom_instance_bat."[".$id_instance_bat."] en ".$x_instance_bat."/".$y_instance_bat."</option>";
+						}
+						
+						echo "	</select>";
 						echo "	<input type='submit' value='téléporter'>";
 						echo "</form>";
 					}
