@@ -144,7 +144,6 @@ if(isset($_SESSION["id_perso"])){
 								WHERE instance_batiment.camp_instance = perso.clan
 								AND instance_batiment.id_batiment = batiment.id_batiment
 								AND ( instance_batiment.id_batiment='9' OR instance_batiment.id_batiment='8' OR instance_batiment.id_batiment='7' OR instance_batiment.id_batiment='11')
-								AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)
 								AND perso.id_perso = '$id_perso_a_teleporter'
 								ORDER BY id_instanceBat ASC";
 						$res = $mysqli->query($sql);
