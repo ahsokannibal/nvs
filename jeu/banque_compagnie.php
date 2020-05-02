@@ -338,7 +338,7 @@ if($dispo || $admin){
 				
 				$sum = $t_sum["montant"];
 				
-				echo "<center><font color=green>Votre compagnie possede <b>$sum</b> thune(s)</font></center><br>";
+				echo "<center><font color=green>Votre compagnie possède <b>$sum</b> thune(s)</font></center><br>";
 				
 				// recuperation des sous que le perso a sur lui
 				$sql = "SELECT or_perso FROM perso WHERE id_perso=$id";

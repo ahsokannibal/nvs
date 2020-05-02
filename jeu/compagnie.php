@@ -344,7 +344,7 @@ if($dispo || $admin){
 		// si le perso souhaite voir la liste des compagnies
 		if(isset($_GET['voir_compagnie']) && $_GET['voir_compagnie']=='ok'){
 			
-			echo "<br/><center><b><u>Liste des compagnies déjà existants</u></b></center><br/>";
+			echo "<br/><center><b><u>Liste des compagnies déjà existantes</u></b></center><br/>";
 			
 			// recuperation des compagnies existantes
 			$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan";

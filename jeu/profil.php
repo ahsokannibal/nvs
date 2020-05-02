@@ -211,7 +211,7 @@ if($dispo || $admin){
 												}
 											}
 											// Malus defense
-											echo " - <u><b>Malus de defense :</b></u> "; 
+											echo " - <u><b>Malus de défense :</b></u> "; 
 											if($b_p < 0) {
 												echo "<font color=red>".$b_p."</font>";
 											}

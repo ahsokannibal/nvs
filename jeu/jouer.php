@@ -617,7 +617,7 @@ if($dispo || $admin){
 											
 											if($nbp[0] != 0){
 												// si la tour est occupee
-												$erreur .= "Vous ne pouvez pas entrée, la tour est déjà occupée";
+												$erreur .= "Vous ne pouvez pas entrer, la tour est déjà occupée";
 											}
 											else { // la tour est vide
 											
@@ -679,7 +679,7 @@ if($dispo || $admin){
 																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé le batiment $nom_bat','$id_inst_bat','','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
 																	$mysqli->query($sql);
 																	
-																	echo "<font color = red>Felicitation, vous venez de capturer un batiment ennemi !</font><br>";
+																	echo "<font color = red>Felicitation, vous venez de capturer un bâtiment ennemi !</font><br>";
 																}
 																else {
 																	// Tentative de triche
@@ -700,7 +700,7 @@ if($dispo || $admin){
 																$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 																$mysqli->query($sql);
 																
-																$erreur .= "Les chiens et les soigneurs ne peuvent pas capturer de batiment !";
+																$erreur .= "Les chiens et les soigneurs ne peuvent pas capturer de bâtiments !";
 															}
 														}
 														
@@ -718,7 +718,7 @@ if($dispo || $admin){
 															$sql = "INSERT INTO `perso_in_batiment` VALUES ('$id_perso','$id_inst_bat')";
 															$mysqli->query($sql);
 															
-															echo"<font color = blue>vous êtes entrée dans le batiment $id_inst_bat</font><br>";
+															echo"<font color = blue>vous êtes entré(e) dans le bâtiment $id_inst_bat</font><br>";
 																
 															// mise a jour table evenement
 															$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est entré dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
@@ -758,7 +758,7 @@ if($dispo || $admin){
 													}
 												}
 												else {
-													$erreur .= "Il faut posséder au moins 1pm pour entrer dans le bâtiment";
+													$erreur .= "Il faut posséder au moins 1PM pour entrer dans le bâtiment";
 												}
 											}
 										}
@@ -771,7 +771,7 @@ if($dispo || $admin){
 									}
 								}
 								else {
-									$erreur .= "Le batiment n'existe pas";
+									$erreur .= "Le bâtiment n'existe pas";
 								}
 							}
 							else {
@@ -965,7 +965,7 @@ if($dispo || $admin){
 																			
 																		}
 																		
-																		echo "<font color = red>Félicitation, vous venez de capturer un batiment ennemi !</font><br>";
+																		echo "<font color = red>Félicitation, vous venez de capturer un bâtiment ennemi !</font><br>";
 																	} 
 																	else {
 																		$entre_bat_ok = 0;
@@ -994,7 +994,7 @@ if($dispo || $admin){
 																$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 																$mysqli->query($sql);
 																
-																$erreur .= "Les chiens et les soigneurs ne peuvent pas capturer de batiment";
+																$erreur .= "Les chiens et les soigneurs ne peuvent pas capturer de bâtiment";
 															}
 														}
 													
@@ -1012,7 +1012,7 @@ if($dispo || $admin){
 															$sql = "INSERT INTO `perso_in_batiment` VALUES ('$id_perso','$id_inst_bat')";
 															$mysqli->query($sql);
 															
-															echo"<font color = blue>vous êtes entrée dans le batiment $nom_bat</font>";
+															echo"<font color = blue>vous êtes entré(e) dans le bâtiment $nom_bat</font>";
 															
 															// mise a jour table evenement
 															$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est entré dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
@@ -1076,17 +1076,17 @@ if($dispo || $admin){
 													}
 												}
 												else {
-													$erreur .= "Il faut posséder au moins 1pm pour entrer dans le bâtiment";
+													$erreur .= "Il faut posséder au moins 1PM pour entrer dans le bâtiment";
 												}
 											}
 											else {
 												// Tentative de triche
-												$text_triche = "Tentative pour entrer dans un batiment sans être à côté de celui-ci";
+												$text_triche = "Tentative pour entrer dans un bâtiment sans être à côté de celui-ci";
 										
 												$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 												$mysqli->query($sql);
 												
-												$erreur .= "Il faut être à côté du batiment pour y entrer";
+												$erreur .= "Il faut être à côté du bâtiment pour y entrer";
 											}
 										}
 										else {

@@ -122,7 +122,7 @@ if($dispo || $admin){
 						
 						// on lui envoi un mp
 						$message = "Bonjour $nom_recrue,
-									J\'ai le plaisir de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été accepté.";
+									J\'ai le plaisir de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été acceptée.";
 						$objet = "Incorporation dans la compagnie";
 						
 						$lock = "LOCK TABLE (joueur) WRITE";
