@@ -2166,6 +2166,10 @@ if($verif){
 									}
 								}
 							}
+							
+							// Mise à jour des respawn
+							$sql = "DELETE FROM perso_as_respawn WHERE id_instance_bat='$id_cible'";
+							$mysqli->query($sql);
 						
 							// Récupération des persos dans le batiment
 							$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";

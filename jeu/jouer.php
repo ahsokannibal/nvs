@@ -989,6 +989,10 @@ if($dispo || $admin){
 																						OR (x_carte=$x_bat + 2 AND y_carte=$y_bat - 2)";
 																				$mysqli->query($sql);
 																			}
+																			
+																			// Mise à jour des respawn
+																			$sql = "DELETE FROM perso_as_respawn WHERE id_instance_bat='$id_inst_bat'";
+																			$mysqli->query($sql);
 																		}
 																		else {
 																			// Mise à jour de l'icone centrale
