@@ -1,10 +1,12 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
+include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
@@ -36,30 +38,7 @@ if($dispo || $admin){
 				$nom_camp = 'Indien';
 			}
 			
-			// Récupération des demandes sur la gestion des compagnies
-			$sql = "SELECT * FROM compagnie_demande_anim, compagnies 
-					WHERE compagnie_demande_anim.id_compagnie = compagnies.id_compagnie
-					AND compagnies.id_clan='$camp'";
-			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_compagnie = $res->num_rows;
-			
-			// Récupération des demandes sur la gestion des persos 
-			$sql = "(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
-					WHERE perso_demande_anim.id_perso = perso.id_perso
-					AND perso.clan = '$camp'
-					AND perso_demande_anim.type_demande = 1)
-					UNION ALL
-					(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
-					WHERE perso_demande_anim.id_perso = perso.idJoueur_perso
-					AND perso.clan = '$camp'
-					AND perso.chef = '1'
-					AND perso_demande_anim.type_demande > 1)
-					";
-			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_perso = $res->num_rows;
-			
-?>
-		
+			?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 	<head>
@@ -79,23 +58,13 @@ if($dispo || $admin){
 				<div class="col-12">
 
 					<div align="center">
-						<h2>Animation du camp <?php echo $nom_camp; ?></h2>
+						<h2>Animation - Gestion des bâtiments</h2>
 					</div>
 				</div>
 			</div>
-			
-			<p align="center"><a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
-			
-			<div class="row">
-				<div class="col-12">
-					<a class='btn btn-info' href='anim_compagnie.php' target='_blank'>Gestion des compagnies <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_compagnie." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_compagnie > 0) { echo $nb_demandes_gestion_compagnie; }?></span></a>
-					<a class='btn btn-info' href='anim_perso.php' target='_blank'>Gestion des persos <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_perso." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_perso > 0) { echo $nb_demandes_gestion_perso; }?></span></a>
-					<a class='btn btn-info' href='anim_batiment.php' target='_blank'>Gestion des bâtiments</a>					
-				</div>
-			</div>
-			
+
 		</div>
-	
+		
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
@@ -103,7 +72,8 @@ if($dispo || $admin){
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	</body>
 </html>
-<?php
+			
+			<?php
 		}
 		else {
 			// Un joueur essaye d'acceder à la page sans être animateur
@@ -126,5 +96,3 @@ else {
 	
 	header("Location:../index2.php");
 }
-?>		
-	
