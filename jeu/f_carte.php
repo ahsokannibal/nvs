@@ -510,6 +510,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment 
 			WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 			AND id_perso='$id_perso' AND id_bat='7'
+			AND instance_batiment.camp_instance = '$clan'
 			AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)";
 	$res = $mysqli->query($sql);
 	$nb_h = $res->num_rows;
@@ -545,6 +546,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 				WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 				AND perso.id_perso = perso_as_respawn.id_perso
 				AND perso_as_respawn.id_perso='$id_perso' AND id_bat='8'
+				AND instance_batiment.camp_instance = '$clan'
 				AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)
 				AND ((instance_batiment.x_instance <= (x_perso - 20) OR instance_batiment.x_instance >= (x_perso + 20))
 				OR (instance_batiment.y_instance <= (y_perso - 20) OR instance_batiment.y_instance >= (y_perso + 20)))";
@@ -582,6 +584,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 					WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 					AND perso.id_perso = perso_as_respawn.id_perso
 					AND perso_as_respawn.id_perso='$id_perso' AND id_bat='9'
+					AND instance_batiment.camp_instance = '$clan'
 					AND instance_batiment.pv_instance >= ((instance_batiment.pvMax_instance * 90) / 100)
 					AND ((instance_batiment.x_instance <= (x_perso - 20) OR instance_batiment.x_instance >= (x_perso + 20))
 					OR (instance_batiment.y_instance <= (y_perso - 20) OR instance_batiment.y_instance >= (y_perso + 20)))";
