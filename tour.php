@@ -181,7 +181,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$new_dla = $date + DUREE_TOUR;
 						
 						// Récupération de tous les perso du joueur
-						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef, genie FROM perso WHERE idJoueur_perso='$id_joueur'";
 						$res = $mysqli->query($sql);
 						
 						while ($t_persos = $res->fetch_assoc()) {
@@ -198,6 +198,7 @@ if(isset($_SESSION["ID_joueur"])){
 							$type_perso_nouveau_tour	= $t_persos["type_perso"];
 							$pm_perso_nouvea_tour		= $t_persos["pm_perso"];
 							$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
+							$genie_nouveau_tour 		= $t_persos["genie"];
 							
 							$new_bonus_perso = 0;
 							
@@ -224,11 +225,17 @@ if(isset($_SESSION["ID_joueur"])){
 							
 							if ($pv_perso_nouveau_tour <= 0) {
 								// MAJ perso avec malus rapat
-								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0 WHERE id_perso='$id_perso'";
+								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0 WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 							}
 							else {
 								$sql = "UPDATE perso SET pm_perso=pmMax_perso+$malus_pm, pa_perso=paMax_perso+bonusPA_perso, pv_perso=$recup_perso_nouveau_tour, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$mysqli->query($sql);
+							}
+							
+							// On decremente le compteur genie si il est > 1
+							if ($genie_nouveau_tour > 1) {
+								$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 							}
 						}
@@ -254,7 +261,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$new_dla = $date + DUREE_TOUR;
 						
 						// Récupération de tous les perso du joueur
-						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, convalescence, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, convalescence, chef, genie FROM perso WHERE idJoueur_perso='$id_joueur'";
 						$res = $mysqli->query($sql);
 						
 						while ($t_persos = $res->fetch_assoc()) {
@@ -274,6 +281,7 @@ if(isset($_SESSION["ID_joueur"])){
 							$conval_nouveau_tour		= $t_persos["convalescence"];
 							$pm_max_perso_nouveau_tour	= $t_persos["pmMax_perso"];
 							$pa_max_perso_nouveau_tour	= $t_persos["paMax_perso"];
+							$genie_nouveau_tour			= $t_persos["genie"];
 							
 							$new_bonus_perso = 0;
 							
@@ -332,6 +340,12 @@ if(isset($_SESSION["ID_joueur"])){
 									$sql = "UPDATE perso SET pm_perso=$pm_nouveau_tour+$malus_pm, pa_perso=$pa_nouveau_tour+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 									$mysqli->query($sql);
 									
+								}
+								
+								// On decremente le compteur genie si il est > 1
+								if ($genie_nouveau_tour > 1) {
+									$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
+									$mysqli->query($sql);
 								}
 								
 								// redirection
@@ -482,7 +496,7 @@ if(isset($_SESSION["ID_joueur"])){
 					$new_dla = $date + DUREE_TOUR;					
 					
 					// Récupération de tous les perso du joueur
-					$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, convalescence, chef FROM perso WHERE idJoueur_perso='$id_joueur'";
+					$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, convalescence, chef, genie FROM perso WHERE idJoueur_perso='$id_joueur'";
 					$res = $mysqli->query($sql);
 					
 					while ($t_persos = $res->fetch_assoc()) {
@@ -503,6 +517,7 @@ if(isset($_SESSION["ID_joueur"])){
 						$pa_max_perso_nouveau_tour	= $t_persos["paMax_perso"];
 						$pm_max_perso_nouveau_tour	= $t_persos["pmMax_perso"];
 						$conval_nouveau_tour		= $t_persos["convalescence"];
+						$genie_nouveau_tour			= $t_persos["genie"];
 						
 						$new_bonus_perso = 0;
 						
@@ -561,6 +576,12 @@ if(isset($_SESSION["ID_joueur"])){
 								$sql = "UPDATE perso SET pm_perso=$pm_nouveau_tour+$malus_pm, pa_perso=$pa_nouveau_tour+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 								
+							}
+							
+							// On decremente le compteur genie si il est > 1
+							if ($genie_nouveau_tour > 1) {
+								$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
+								$mysqli->query($sql);
 							}
 							
 							// redirection
@@ -683,6 +704,12 @@ if(isset($_SESSION["ID_joueur"])){
 								
 								// Grouillot
 								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=pmMax_perso/2, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, or_perso=or_perso+$gain_or, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+								$mysqli->query($sql);
+							}
+							
+							// On decremente le compteur genie si il est > 1
+							if ($genie_nouveau_tour > 1) {
+								$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
 								$mysqli->query($sql);
 							}
 				
