@@ -745,7 +745,8 @@ CREATE TABLE `perso` (
   `date_gele` datetime DEFAULT NULL,
   `chef` tinyint(1) NOT NULL DEFAULT '0',
   `bataillon` varchar(250) NOT NULL DEFAULT '',
-  `convalescence` INT NOT NULL DEFAULT '0'
+  `convalescence` INT NOT NULL DEFAULT '0',
+  `genie` INT NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
