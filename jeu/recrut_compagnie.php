@@ -118,6 +118,10 @@ if($dispo || $admin){
 							// Construire Rails
 							$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$new_recrue', '64', '1')";
 							$mysqli->query($sql);
+							
+							// Compteur Génie sur le perso
+							$sql = "UPDATE perso SET genie='8' WHERE id_perso='$new_recrue'";
+							$mysqli->query($sql);
 						}
 						
 						// on lui envoi un mp
