@@ -3025,13 +3025,18 @@ if($dispo || $admin){
 														} else {
 															
 															// Un Batiment
-															$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+															$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
 															$res = $mysqli->query($sql);
 															$tab = $res->fetch_assoc();
 															
 															$nom_cible_cac = $tab["nom_batiment"];
+															if ($tab["nom_instance"] != "") {
+																$nom_cible_cac .= " ".$tab["nom_instance"];
+															}
 															
-															$couleur_clan_cible = "black";
+															$camp_cible_cac	= $tab["camp_instance"];
+															
+															$couleur_clan_cible = couleur_clan($camp_cible_cac);
 														}
 														
 														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
@@ -3080,13 +3085,18 @@ if($dispo || $admin){
 												} else {
 													
 													// Un Batiment
-													$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
+													$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
 													$res = $mysqli->query($sql);
 													$tab = $res->fetch_assoc();
 													
 													$nom_cible_dist = $tab["nom_batiment"];
+													if ($tab["nom_instance"] != "") {
+														$nom_cible_dist .= " ".$tab["nom_instance"];
+													}
 													
-													$couleur_clan_cible = "black";
+													$camp_cible_dist	= $tab["camp_instance"];
+													
+													$couleur_clan_cible = couleur_clan($camp_cible_dist);
 												}
 												
 												echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
