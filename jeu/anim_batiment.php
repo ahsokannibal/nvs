@@ -56,9 +56,97 @@ if($dispo || $admin){
 		
 			<div class="row">
 				<div class="col-12">
-
 					<div align="center">
 						<h2>Animation - Gestion des bâtiments</h2>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<div id="table_bataillon" class="table-responsive">
+							<table border="1">
+								<tr>
+									<th style='text-align:center'>Bâtiment [matricule]</th><th style='text-align:center'>PV</th><th style='text-align:center'>Position</th><th style='text-align:center'>État</th>
+								</tr>
+								
+								<?php
+								// Liste des batiments du camp de l'animateur Hors barricades / ponts / tour de guet / trains
+								$sql = "SELECT id_instanceBat, nom_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, instance_batiment.id_batiment FROM batiment, instance_batiment
+										WHERE batiment.id_batiment = instance_batiment.id_batiment
+										AND camp_instance='$camp'
+										AND instance_batiment.id_batiment != '1' 
+										AND instance_batiment.id_batiment != '2' 
+										AND instance_batiment.id_batiment != '5' 
+										AND instance_batiment.id_batiment != '12'
+										ORDER BY instance_batiment.id_batiment";
+								$res = $mysqli->query($sql);
+								
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_instance	= $t['id_instanceBat'];
+									$nom_batiment	= $t['nom_batiment'];
+									$nom_instance	= $t['nom_instance'];
+									$pv_instance	= $t['pv_instance'];
+									$pvMax_instance	= $t['pvMax_instance'];
+									$x_instance		= $t['x_instance'];
+									$y_instance		= $t['y_instance'];
+									$id_batiment	= $t['id_batiment'];
+									
+									if ($camp == 1) {
+										$image_bat = "b".$id_batiment."b.png";
+									}
+									else if ($camp == 2) {
+										$image_bat = "b".$id_batiment."r.png";
+									}
+									
+									
+									// La bâtiment est-il en état de siège ?
+									// Calcul pourcentage pv du batiment 
+									$pourc_pv_instance = ($pv_instance / $pvMax_instance) * 100;
+									
+									// Verification si 10 persos ennemis à moins de 15 cases
+									$sql_e = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
+											WHERE perso.id_perso = carte.idPerso_carte 
+											AND x_carte <= $x_instance + 15
+											AND x_carte >= $x_instance - 15
+											AND y_carte <= $y_instance + 15
+											AND y_carte >= $y_instance - 15
+											AND perso.clan != '$camp'";
+									$res_e = $mysqli->query($sql_e);
+									$t_e = $res_e->fetch_assoc();
+									
+									$nb_ennemis_siege = $t_e['nb_ennemi'];
+									
+									echo "<tr>";
+									echo "	<td><img src='../images_perso/".$image_bat."' />".$nom_batiment." ".$nom_instance."[<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]</td>";
+									
+									// PV
+									echo "	<td>";
+									$pourc = affiche_jauge($pv_instance, $pvMax_instance); 
+									echo round($pourc,2)."% ou $pv_instance/$pvMax_instance";
+									echo "	</td>";
+									
+									// Position
+									echo "	<td>".$x_instance."/".$y_instance."</td>";
+									
+									// Etat
+									echo "	<td>";
+									if ($pourc_pv_instance < 90 || $nb_ennemis_siege >= 10) {
+										echo "<b>Bâtiment en état de siège</b><br />";
+									}
+									if ($id_batiment == '11' && $pourc < 50) {
+										echo "<b>Gare désactivée</b>";
+									}
+									echo "	</td>";
+									
+									echo "</tr>";
+								}
+								?>
+								
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
