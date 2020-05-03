@@ -2283,7 +2283,7 @@ if($verif){
 							$mysqli->query($sql);
 								
 							// maj cv
-							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment</font>',NOW())"; 
+							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
 							$mysqli->query($sql);
 							
 							if ($clan_perso != $camp_instance) {
