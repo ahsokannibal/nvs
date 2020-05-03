@@ -2286,41 +2286,49 @@ if($verif){
 							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
 							$mysqli->query($sql);
 							
-							if ($clan_perso != $camp_instance) {
-								// Gain points de victoire
-								if ($id_batiment == 9) {
-									// FORT -> 400
-									$gain_pvict = 400;
-								}
-								else if ($id_batiment == 8) {
-									// FORTIN -> 100
-									$gain_pvict = 100;
-								}
-								else if ($id_batiment == 11) {
-									// GARE -> 75
-									$gain_pvict = 75;
-								}
-								else if ($id_batiment == 7) {
-									// HOPITAL -> 10
-									$gain_pvict = 10;
+							
+							// Gain points de victoire
+							if ($id_batiment == 9) {
+								// FORT -> 400
+								$gain_pvict = 400;
+							}
+							else if ($id_batiment == 8) {
+								// FORTIN -> 100
+								$gain_pvict = 100;
+							}
+							else if ($id_batiment == 11) {
+								// GARE -> 75
+								$gain_pvict = 75;
+							}
+							else if ($id_batiment == 7) {
+								// HOPITAL -> 10
+								$gain_pvict = 10;
+							}
+							else {
+								$gain_pvict = 0;
+							}
+							
+							if ($gain_pvict > 0) {
+								
+								// MAJ stats points victoire
+								if ($clan_perso != $camp_instance) {
+									$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_perso'";
 								}
 								else {
-									$gain_pvict = 0;
+									$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire - ".$gain_pvict." WHERE id_camp='$clan_perso'";
 								}
-								
-								if ($gain_pvict > 0) {
-									
-									// MAJ stats points victoire
-									$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pvict." WHERE id_camp='$clan_perso'";
-									$mysqli->query($sql);
-								
-									// Ajout de l'historique
-									$date = time();
-									$texte = addslashes("Pour la destruction du bâtiment ".$nom_batiment." ".$nom_instance_batiment." [".$id_cible."] par ".$nom_perso." [".$id."]");
+								$mysqli->query($sql);
+							
+								// Ajout de l'historique
+								$date = time();
+								$texte = addslashes("Pour la destruction du bâtiment ".$nom_batiment." ".$nom_instance_batiment." [".$id_cible."] par ".$nom_perso." [".$id."]");
+								if ($clan_perso != $camp_instance) {
 									$sql = "INSERT INTO histo_stats_camp_pv (date_pvict, id_camp, gain_pvict, texte) VALUES (FROM_UNIXTIME($date), '$clan_perso', '$gain_pvict', '$texte')";
-									$mysqli->query($sql);
-									
 								}
+								else {
+									$sql = "INSERT INTO histo_stats_camp_pv (date_pvict, id_camp, gain_pvict, texte) VALUES (FROM_UNIXTIME($date), '$clan_perso', '-$gain_pvict', '$texte')";
+								}
+								$mysqli->query($sql);
 								
 							}
 								
