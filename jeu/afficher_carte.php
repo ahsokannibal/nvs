@@ -50,8 +50,8 @@ if (isset($_SESSION["id_perso"])) {
 			
 			var pos = [];
 			
-			pos['x'] 	= Math.floor((e.clientX - imgId.offsetLeft) / 3);
-			pos['y'] 	= Math.ceil((600 - (e.clientY - imgId.offsetTop)) / 3);
+			pos['x'] 	= Math.floor((e.pageX - imgId.offsetLeft) / 3);
+			pos['y'] 	= Math.ceil((600 - (e.pageY - imgId.offsetTop)) / 3);
 			pos['xy'] 	= pos['x'] +','+ pos['y'];
 		   
 			inputId.value = pos[valueToShow];
