@@ -193,7 +193,7 @@ if($dispo || $admin){
 							else { 
 								
 								// Est-ce qu'il a une dette dans la compagnie ?
-								$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
+								$sql = "SELECT SUM(montant) as thune_en_banque FROM histobanque_compagnie 
 												WHERE id_perso='$id' 
 												AND id_compagnie='$id_compagnie'";
 								$res = $mysqli->query($sql);

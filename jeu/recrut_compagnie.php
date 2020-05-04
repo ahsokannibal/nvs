@@ -217,7 +217,7 @@ if($dispo || $admin){
 						$nom_recrue = $t_r[1];
 						
 						// On regarde si le perso n'a pas de dette dans une banque de compagnie
-						$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
+						$sql = "SELECT SUM(montant) as thune_en_banque FROM histobanque_compagnie 
 								WHERE id_perso='$id_recrue' 
 								AND id_compagnie='$id_compagnie'";
 						$res = $mysqli->query($sql);
@@ -421,7 +421,7 @@ if($dispo || $admin){
 				} else {
 					echo "<center><font color = blue>Votre compagnie a déjà atteind le nombre maximum de membres</font></center>";
 				}
-				echo "<a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a>";
+				echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a></center>";
 			}
 		}
 		else {
