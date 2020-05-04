@@ -310,6 +310,27 @@ if($dispo || $admin){
 					}
 				}
 				
+				if (isset($_POST["select_perso_virement"]) && isset($_POST["hid_montant_virement"])) {
+					
+					$id_perso_virement 	= $_POST["select_perso_virement"];
+					$montant_virement	= $_POST["hid_montant_virement"];
+					
+					// On effectue le virement
+					$sql = "UPDATE banque_compagnie SET montant = montant - $montant_virement WHERE id_perso = '$id'";
+					$mysqli->query($sql);
+					
+					$sql = "UPDATE banque_compagnie SET montant = montant + $montant_virement WHERE id_perso = '$id_perso_virement'";
+					$mysqli->query($sql);
+					
+					// Historique
+					$date = time();
+					$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','4','-$montant_virement', FROM_UNIXTIME($date))";
+					$mysqli->query($sql);
+					
+					$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id_perso_virement','4','$montant_virement', FROM_UNIXTIME($date))";
+					$mysqli->query($sql);
+				}
+				
 				// on recalcule le du
 				// on verifie si le perso ne doit pas des sous a la compagnie
 				$sql = "SELECT SUM(montant) as devoir FROM histobanque_compagnie WHERE id_perso=$id AND id_compagnie=$id_compagnie AND operation='2'";
@@ -377,29 +398,95 @@ if($dispo || $admin){
 				echo "<div class=\"row justify-content-center\">";
 				echo "	<div class=\"col-lg-4 col-md-6 col-10\">";
 				
-				echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"deposer\">";
-				echo "	<div class=\"form-group\">";
-				echo "		<label for=\"depot\">Deposer de l'argent (25 minimum) : </label>";
-				echo "		<input name=\"deposer\" class=\"form-control\" id=\"depot\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-				echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
-				echo "	</div>";
-				echo "</form>";
-				
-				echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"retirer\">";
-				echo "	<div class=\"form-group\">";
-				echo "		<label for=\"retrait\">Retirer de l'argent : </label>";
-				echo "		<input name=\"retirer\" class=\"form-control\" id=\"retrait\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-				echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
-				echo "	</div>";
-				echo "</form>";
-				
-				echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"emprunter\">";
-				echo "	<div class=\"form-group\">";
-				echo "		<label for=\"emprunt\">Emprunter de l'argent (necessite l'accord du tresorier) : </label>";
-				echo "		<input name=\"emprunter\" class=\"form-control\" id=\"emprunt\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-				echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
-				echo "	</div>";
-				echo "</form>";
+				if (isset($_POST['virer'])) {
+					
+					if (trim($_POST['virer']) != "") {
+						
+						$montant_virement = $_POST['virer'];
+						
+						$verif = preg_match("#^[0-9]*[0-9]$#i","$montant_virement");
+						
+						if ($verif) {
+						
+							// Vérification qu'on a bien la thune en banque pour effectuer le virement
+							if ($montant_virement <= $banque) {
+						
+								echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"virement_perso\">";
+								echo "	<div class=\"form-group\">";
+								echo "		<label for=\"select_perso_virement\">Perso chez qui faire le virement : </label>";
+								echo "		<select name='select_perso_virement'>";
+								
+								// liste des membres de la compagnie
+								$sql = "SELECT nom_perso, perso.id_perso FROM perso, perso_in_compagnie 
+										WHERE perso.id_perso = perso_in_compagnie.id_perso
+										AND attenteValidation_compagnie = '0'
+										AND id_compagnie='$id_compagnie'
+										AND perso_in_compagnie.id_perso != '$id'";
+								$res = $mysqli->query($sql);
+								
+								while ($t_pc = $res->fetch_assoc()) {
+									$nom_perso_c	= $t_pc["nom_perso"];
+									$id_perso_c 	= $t_pc["id_perso"];
+									
+									echo "			<option value=".$id_perso_c.">".$nom_perso_c." [".$id_perso_c."]</option>";
+								}
+								
+								echo "";
+								echo "		</select>";
+								echo "		<input type=\"hidden\" name=\"hid_montant_virement\" value=\"".$montant_virement."\">";
+								echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+								echo "	</div>";
+								echo "</form>";
+							}
+							else {
+								echo "<center><font color=red>Vous ne possèdez pas assez d'argent en banque pour effectuer ce virement</color><br />";
+							}
+							
+							echo "<center><a href='banque_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-outline-secondary'>Retour</a></center>";
+						}
+						else {
+							echo "<center><font color=red>Montant renseigné incorrect !</color><br />";
+							echo "<a href='banque_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-outline-secondary'>Retour</a></center>";
+						}
+					}
+					else {
+						echo "<center><font color=red>Veuillez renseigner un montant pour le virement !</color><br />";
+						echo "<a href='banque_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-outline-secondary'>Retour</a></center>";
+					}
+				}
+				else {
+					echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"deposer\">";
+					echo "	<div class=\"form-group\">";
+					echo "		<label for=\"depot\">Deposer de l'argent (25 minimum) : </label>";
+					echo "		<input name=\"deposer\" class=\"form-control\" id=\"depot\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "	</div>";
+					echo "</form>";
+					
+					echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"retirer\">";
+					echo "	<div class=\"form-group\">";
+					echo "		<label for=\"retrait\">Retirer de l'argent : </label>";
+					echo "		<input name=\"retirer\" class=\"form-control\" id=\"retrait\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "	</div>";
+					echo "</form>";
+					
+					echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"emprunter\">";
+					echo "	<div class=\"form-group\">";
+					echo "		<label for=\"emprunt\">Emprunter de l'argent (necessite l'accord du tresorier) : </label>";
+					echo "		<input name=\"emprunter\" class=\"form-control\" id=\"emprunt\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "	</div>";
+					echo "</form>";
+					
+					echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"virer\">";
+					echo "	<div class=\"form-group\">";
+					echo "		<label for=\"virement\">Virer de l'argent sur le compte d'un autre membre de la compagnie : </label>";
+					echo "		<input name=\"virer\" class=\"form-control\" id=\"virement\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "	</div>";
+					echo "</form>";
+				}
 				
 				echo "<br /><br /><center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a></center>";
 				

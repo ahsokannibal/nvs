@@ -95,7 +95,7 @@ if($dispo || $admin){
 						echo "<div id=\"table_tresor\" class=\"table-responsive\">";
 						echo "	<table border='1'>";
 						echo "		<tr>";
-						echo "			<th>Date opération</th><th>Type d'opération</th><th>Montant</th>";
+						echo "			<th style='text-align:center'>Date opération</th><th style='text-align:center'>Type d'opération</th><th style='text-align:center'>Montant</th>";
 						echo "		</tr>";
 						
 						while ($t_solde = $res->fetch_assoc()) {
@@ -121,6 +121,10 @@ if($dispo || $admin){
 							if ($op == 3) {
 								$type_ope = "Remboursement emprunt";
 								$color = "green";
+							}
+							if ($op == 4) {
+								$type_ope = "Virement";
+								$color = "brown";
 							}
 							
 							echo "		<tr>";
