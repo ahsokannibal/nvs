@@ -18,7 +18,7 @@ if($dispo || $admin){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
-		$sql = "SELECT pv_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele, chef FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT pv_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele, chef, clan FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$tpe = $res->fetch_assoc();
 		
@@ -27,6 +27,7 @@ if($dispo || $admin){
 		$dla 		= $tpe["DLA"];
 		$est_gele 	= $tpe["est_gele"];
 		$chef 		= $tpe["chef"];
+		$camp		= $tpe["clan"];
 		
 		$config = '1';
 		
@@ -35,6 +36,17 @@ if($dispo || $admin){
 			header("Location:../tour.php");
 		}
 		else {
+			
+			$image_croquit = "croquit";
+			
+			if ($camp == "1") {
+				 $image_croquit .= "_nord";
+			}
+			else if ($camp == "2") {
+				$image_croquit .= "_sud";
+			}
+			
+			$image_croquit .= ".png";
 ?>
 <html>
 
@@ -145,7 +157,7 @@ if($dispo || $admin){
 				?>
 				<tr>
 					<td>
-						<table border='1' width='350' height='400' align='center' cellpadding='0' cellspacing='0' background='../images/croquit2.jpg'>
+						<table border='1' width='350' height='400' align='center' cellpadding='0' cellspacing='0' background='../images/<?php echo $image_croquit; ?>'>
 							
 							<tr width=350 height=50>
 								<td width=50 height=50 align='center'>&nbsp;</td>
@@ -173,15 +185,8 @@ if($dispo || $admin){
 							</tr>
 							
 							<tr width=350 height=50>
-								<!-- GANTS -->
 								<td width=50 height=50 align='center'>&nbsp;</td>
-							
-								<!-- MAIN DROITE -->
-								<?php if(isset($image_armes[1]) && $image_armes[1] != "vide"){
-									affiche_image_arme($image_armes[1], $nom_armes[1], $description_armes[1], $portee_armes[1], $degats_armes[1]);
-								} else {?>
-									<td width=50 height=50 align='center'>&nbsp;</td>
-								<?php } ?>
+								<td width=50 height=50 align='center'>&nbsp;</td>
 								
 								<td width=50 height=50 align='center'>&nbsp;</td>
 								
@@ -189,13 +194,6 @@ if($dispo || $admin){
 								<td width=50 height=50 align='center'>&nbsp;</td>
 								
 								<td width=50 height=50 align='center'>&nbsp;</td>
-								
-								<!-- MAIN GAUCHE -->
-								<?php if(isset($image_armes[0]) && $image_armes[0] != "vide"){
-									affiche_image_arme($image_armes[0], $nom_armes[0], $description_armes[0], $portee_armes[0], $degats_armes[0]);
-								} else {?>
-									<td width=50 height=50 align='center'>&nbsp;</td>
-								<?php } ?>
 							
 								<!-- BAGUE -->
 								<td width=50 height=50 align='center'>&nbsp;</td>
@@ -213,14 +211,26 @@ if($dispo || $admin){
 							
 							<tr width=350 height=50>
 								<td width=50 height=50 align='center'>&nbsp;</td>
-								<td width=50 height=50 align='center'>&nbsp;</td>
+								<!-- MAIN DROITE -->
+								<?php if(isset($image_armes[1]) && $image_armes[1] != "vide"){
+									affiche_image_arme($image_armes[1], $nom_armes[1], $description_armes[1], $portee_armes[1], $degats_armes[1]);
+								} else {?>
+									<td width=50 height=50 align='center'>&nbsp;</td>
+								<?php } ?>
 								<td width=50 height=50 align='center'>&nbsp;</td>
 								
 								<!-- PANTALON -->
 								<td width=50 height=50 align='center'>&nbsp;</td>
 								
 								<td width=50 height=50 align='center'>&nbsp;</td>
-								<td width=50 height=50 align='center'>&nbsp;</td>
+								
+								<!-- MAIN GAUCHE -->
+								<?php if(isset($image_armes[0]) && $image_armes[0] != "vide"){
+									affiche_image_arme($image_armes[0], $nom_armes[0], $description_armes[0], $portee_armes[0], $degats_armes[0]);
+								} else {?>
+									<td width=50 height=50 align='center'>&nbsp;</td>
+								<?php } ?>
+								
 								<td width=50 height=50 align='center'>&nbsp;</td>  
 							</tr>
 
