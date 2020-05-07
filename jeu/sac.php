@@ -154,8 +154,6 @@ if($dispo || $admin){
 											$sql_c .= " WHERE id_perso='$id'";
 											$mysqli->query($sql_c);
 											
-											echo $sql_c;
-											
 										}
 										else {
 											// Tentative de triche
