@@ -90,7 +90,63 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 			$deplacement_possible = false;
 		}
 		else {
-			// PNJ => rien à faire
+			// PNJ => on lui roule dessus (PV/2) et on l'ejecte
+			
+			// Recherche case libre pour ejection					
+			$trouve = 0;
+			$seek = 1;
+			
+			// Tant qu'on a pas trouvé
+			while (!$trouve){
+			
+				// recuperation des coordonnees des cases et de leur etat (occupee ou non)
+				$sql = "SELECT x_carte, y_carte, fond_carte FROM carte 
+						WHERE occupee_carte='0' 
+						AND x_carte >= $x_train - $seek AND x_carte <= $x_train + $seek AND y_carte >= $y_train - $seek AND y_carte <= $y_train + $seek
+						AND x_carte='$x_train' AND y_carte!='$y_train'";
+				$res = $mysqli->query($sql);
+				$nb_libre = $res->num_rows;
+				
+				if ($nb_libre) {
+				
+					$t = $res->fetch_assoc();
+					
+					$x_libre 	= $t["x_carte"];
+					$y_libre 	= $t["y_carte"];
+					$fond_libre	= $t["fond_carte"];
+					
+					$trouve = 1;
+					
+					break;
+				}
+				else {
+					// on elargie la recherche
+					$seek++;
+				}
+			}
+			
+			// MAJ pnj
+			$sql = "UPDATE instance_pnj SET pv_i = pv_i/2, x_i=$x_libre, y_i=$y_libre WHERE idInstance_pnj='$idPerso_carte'";
+			$mysqli->query($sql);
+			
+			// Récupération infos pnj 
+			$sql = "SELECT instance_pnj.id_pnj, nom_pnj FROM instance_pnj, pnj 
+					WHERE instance_pnj.id_pnj = pnj.id_pnj
+					AND idInstance_pnj='$idPerso_carte'";
+			$res = $mysqli->query($sql);
+			$t_p = $res->fetch_assoc();
+			
+			$nom_pnj	= $t_p["nom_pnj"];
+			$id_pnj		= $t_p["id_pnj"];
+			$image_pnj	= "pnj".$id_pnj."t.png";
+			
+			// MAJ carte
+			$sql = "UPDATE carte SET occupee_carte='1', image_carte='$image_pnj' ,idPerso_carte='$idPerso_carte' WHERE x_carte = '$x_libre' AND y_carte = '$y_libre'";
+			$mysqli->query($sql);
+			
+			// MAJ evenements pnj
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_train,'<font color=$couleur_camp_train><b>$nom_train</b></font>','<b>a roulé sur </b>','$idPerso_carte','<b>$nom_pnj</b>',' : perdu la moitié de ses PV',NOW(),'0')";
+			$mysqli->query($sql);
 		}
 	}
 	
