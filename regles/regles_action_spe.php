@@ -83,7 +83,8 @@ Le bousculé recevra un malus de déplacement correspondant à la valeur du terr
 						<li>Une cavalerie peut bousculer une infanterie ou une cavalerie.</li>
 						<li>Un canon peut bousculer une infanterie ou un soigneur.</li>
 					</ul>
-<b>Les bousculades sur les unités alliés leur coûtent 1 PA à chaque fois mais ne provoque pas de malus en PM.</b>
+<b>Les bousculades sur les unités alliés leur coûtent 1 PA à chaque fois mais ne provoque pas de malus en PM.</b><br />
+Pour bousculer une unité, il vous suffit de vous déplacer sur elle (avec les flèches seulement pour l'instant) et si les conditions sont réuni, alors la bousculade se fera automatiquement.
 <br /><br />
 					<h2>Charger</h2>
 La charge est une option de combat disponible uniquement pour les cavaleries. Celles ci s'élancent dans la plaine et vont enfoncer les lignes adverses infligeant par la même occasion de terribles dégâts.<br />
