@@ -147,7 +147,7 @@ while ($t = $res->fetch_assoc()) {
 					$occupee_carte 	= $t_c['occupee_carte'];
 					$idPerso_carte	= $t_c['idPerso_carte'];
 					
-					if ($occupee_carte && $idPerso_carte >= 50000) {
+					if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
 						// On sort de la boucle et on se déplace pas
 						break;
 					}
@@ -176,7 +176,7 @@ while ($t = $res->fetch_assoc()) {
 				$occupee_carte 	= $t_c['occupee_carte'];
 				$idPerso_carte	= $t_c['idPerso_carte'];
 				
-				if ($occupee_carte && $idPerso_carte >= 50000) {
+				if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
 					// On sort de la boucle et on se déplace pas
 					break;
 				}
@@ -275,7 +275,7 @@ while ($t = $res->fetch_assoc()) {
 					$occupee_carte 	= $t_c['occupee_carte'];
 					$idPerso_carte	= $t_c['idPerso_carte'];
 					
-					if ($occupee_carte && $idPerso_carte >= 50000) {
+					if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
 						// On sort de la boucle et on se déplace pas
 						break;
 					}
@@ -305,7 +305,7 @@ while ($t = $res->fetch_assoc()) {
 				$occupee_carte 	= $t_c['occupee_carte'];
 				$idPerso_carte	= $t_c['idPerso_carte'];
 				
-				if ($occupee_carte && $idPerso_carte >= 50000) {
+				if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
 					// On sort de la boucle et on se déplace pas
 					break;
 				}
@@ -382,7 +382,7 @@ while ($t = $res->fetch_assoc()) {
 				$occupee_carte 	= $t_c['occupee_carte'];
 				$idPerso_carte	= $t_c['idPerso_carte'];
 				
-				if ($occupee_carte && $idPerso_carte >= 50000) {
+				if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
 					// On sort de la boucle et on se déplace pas
 					break;
 				}
