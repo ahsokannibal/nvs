@@ -348,9 +348,9 @@ if($verif){
 						
 							// Si perso ou cible est une infanterie 
 							// ou si grade perso >= grade cible - 1
-							if (($grade_perso <= $grade_cible + 1 
+							if ((( $grade_perso <= $grade_cible + 1 && $grade_cible != 101 && $grade_cible != 102 )
 									|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
-									|| $grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && ($clan_cible != $clan_perso || $type_perso == 4)) {
+									|| (($grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $grade_perso == 2)) && ($clan_cible != $clan_perso || $type_perso == 4)) {
 								
 								// Est-ce que la cible est dans le même bataillon ?
 								if ($id_j_perso == $id_joueur_cible) {
