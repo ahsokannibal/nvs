@@ -3958,7 +3958,7 @@ if($dispo || $admin){
 										
 										if($y > $y_perso+1 || $y < $y_perso-1 || $x > $x_perso+1 || $x < $x_perso-1) {
 											echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-											echo "	<img border=0 src=\"\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='".$nom_bat."'/>";
+											echo "	<img border=0 src=\"".$tab["fond_carte"]."\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='".$nom_bat."'/>";
 											echo "</td>";
 										}
 										if($y == $y_perso+1 && $x == $x_perso+1){
