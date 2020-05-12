@@ -65,12 +65,23 @@ if(@$_SESSION["id_perso"]){
 						// test si le batiment existe
 						$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id'";
 						$res = $mysqli->query($sql);
-						$nb_b = $res->fetch_row();
+						$t_b = $res->fetch_assoc();
+						$nb_b = $res->num_rows;
+						
+						$id_bat = $t_b["id_batiment"];
 						
 						if ($nb_b) { // il existe
-						
-							// recuperation de la liste des persos dans le batiment
-							$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_batiment, perso WHERE perso.id_perso=perso_in_batiment.id_perso AND id_instanceBat='$id'";
+							
+							if ($id_bat == 12) {
+								// recuperation de la liste des persos dans le train
+								$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_train, perso WHERE perso.id_perso=perso_in_train.id_perso AND id_train='$id'";
+							}
+							else {
+								// recuperation de la liste des persos dans le batiment
+								$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_batiment, perso WHERE perso.id_perso=perso_in_batiment.id_perso AND id_instanceBat='$id'";
+								
+							}
+							
 							$res_liste = $mysqli->query($sql_liste);
 							$verif_liste = '1';
 							
@@ -135,7 +146,7 @@ if(@$_SESSION["id_perso"]){
 				if($camp_perso == $camp_bat){
 					
 					// si à l'interieur
-					if(in_instance_bat($mysqli, $id_perso, $id)){
+					if(in_instance_bat($mysqli, $id_perso, $id) || in_instance_train($mysqli, $id_perso, $id)){
 						
 						echo "<center>";
 						echo "<b>Liste des persos dans le bâtiment</b><br />";

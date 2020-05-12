@@ -192,7 +192,7 @@ function est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee) {
 function dechargement_persos_train($mysqli, $id_instance_train, $gare_arrivee, $x_gare_arrivee, $y_gare_arrivee) {
 	
 	// Récupération des persos dans le train 
-	$sql_pt = "SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train'";
+	$sql_pt = "SELECT DISTINCT(id_perso) FROM perso_in_train WHERE id_train='$id_instance_train'";
 	$res_pt = $mysqli->query($sql_pt);
 	
 	while ($t_pt = $res_pt->fetch_assoc()) {
@@ -228,7 +228,7 @@ function dechargement_perso_train($mysqli, $id_perso_dechargement, $gare_arrivee
 function chargement_persos_train($mysqli, $id_instance_train, $x_train, $y_train, $nouvelle_direction, $gare_arrivee, $camp_train) {
 	
 	// récupération des persos dans cette gare ayant un ticket pour la nouvelle direction
-	$sql_perso_ticket_dest = "SELECT id_perso FROM perso_as_objet 
+	$sql_perso_ticket_dest = "SELECT DISTINCT(id_perso) FROM perso_as_objet 
 								WHERE id_objet='1' 
 								AND capacite_objet='$nouvelle_direction' 
 								AND id_perso IN (SELECT perso_in_batiment.id_perso 
