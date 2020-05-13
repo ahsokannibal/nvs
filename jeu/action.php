@@ -101,7 +101,7 @@ if($dispo || $admin){
 		$bonusPM_perso	= $t_perso['bonusPM_perso'];
 		
 		// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
-		if ($pa_perso == $paMax_perso && $pm_perso + $bonusPM_perso >= 4) {
+		if ($pa_perso == $paMax_perso && $pm_perso >= 4) {
 		
 			// Déplacement du perso dans l'axe choisi
 			if ($direction_charge == 'haut') {
@@ -171,7 +171,7 @@ if($dispo || $admin){
 			$bonusPA_perso	= $t_perso['bonusPA_perso'];
 			
 			// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
-			if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso + $bonusPM_perso >= 4) {
+			if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso >= 4) {
 			
 				// Déplacement du perso dans l'axe choisi
 				if ($direction_charge == 'haut') {
@@ -767,7 +767,7 @@ if($dispo || $admin){
 						}
 						
 						// Pour pouvoir charger, il faut avoir tout ses PA, 40 PM et être sur de la plaine
-						if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso + $bonusPM_perso >= 4 && $fond_carte_perso == '1.gif') {
+						if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso >= 4 && $fond_carte_perso == '1.gif') {
 							
 							// recuperation des donnees de la carte
 							$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
