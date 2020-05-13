@@ -39,13 +39,18 @@ function image_action($id_action){
 
 function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 	
-	$sql = "SELECT pa_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT pa_perso, nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
-	$pa_perso = $t['pa_perso'];
+	$camp		= $t['clan'];
+	$nom_perso	= $t['nom_perso'];
+	$pa_perso 	= $t['pa_perso'];
 	
 	if ($pa_perso >= 4) {
+		
+		// recuperation de la couleur du camp du perso
+		$couleur_clan_perso = couleur_clan($camp);
 	
 		// Récupération coordonnées rail
 		if(isset($_POST['pose_rail'])){
@@ -65,6 +70,10 @@ function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 		
 		// maj pa perso 
 		$sql = "UPDATE perso SET pa_perso = pa_perso - 4 WHERE id_perso='$id_perso'";
+		$mysqli->query($sql);
+		
+		//mise a jour de la table evenement
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'','',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		return 1;
