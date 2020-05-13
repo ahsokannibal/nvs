@@ -157,7 +157,7 @@ if($dispo || $admin){
 					$malus_pm = -$pmMax_perso;
 				}
 				else {
-					$malus_pm = $bonusPM_perso_p + $malus_pm_charge;
+					$malus_pm = $malus_pm_charge;
 				}
 				
 				// traitement entrée dans un batiment
@@ -2091,7 +2091,7 @@ if($dispo || $admin){
 				echo "</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonusPA_perso, bonus_perso, image_perso, message_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonusPA_perso, bonusPM_perso, bonus_perso, charge_perso, image_perso, message_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -2113,14 +2113,31 @@ if($dispo || $admin){
 				$bonusPA_perso			= $t_perso2["bonusPA_perso"];
 				$recup_perso 			= $t_perso2["recup_perso"];
 				$bonusRecup_perso		= $t_perso2["bonusRecup_perso"];
+				$bonusPM_perso			= $t_perso2["bonusPM_perso"];
 				$protec_perso 			= $t_perso2["protec_perso"];
 				$bonus_perso 			= $t_perso2["bonus_perso"];
 				$type_perso 			= $t_perso2["type_perso"];
 				$bataillon_perso 		= $t_perso2["bataillon"];
 				$message_perso			= $t_perso2["message_perso"];
+				$charge_perso			= $t_perso2["charge_perso"];
 				
-				$pm_perso 		= $pm_perso_tmp + $malus_pm;
-				$pmMax_perso 	= $pmMax_perso_tmp + $malus_pm;
+				// calcul malus pm
+				$malus_pm_charge = getMalusCharge($charge_perso);
+				if ($malus_pm_charge == 100) {
+					$malus_pm = -$pmMax_perso;
+				}
+				else {
+					$malus_pm = $malus_pm_charge;
+				}
+				
+				$pmMax_perso 	= $pmMax_perso_tmp + $bonusPM_perso;
+				
+				if ($pm_perso_tmp > $pmMax_perso) {
+					$pm_perso = $pmMax_perso;
+				}
+				else {
+					$pm_perso = $pm_perso_tmp + $malus_pm;
+				}
 				
 				$clan_perso = $t_perso2["clan"];				
 				
@@ -2676,28 +2693,35 @@ if($dispo || $admin){
 												<td><b>PM</b></td>
 												<td nowrap="nowrap"><?php 
 												
-												$texte_tooltip = "Base max : ".$pmMax_perso_tmp."";
+												$texte_tooltip_pm = "Base : ".$pm_perso_tmp;
 												
-												if ($malus_pm != 0) {
-													if ($malus_pm < 0) {
-														$texte_tooltip .= " <b>(";
-													} else {
-														$texte_tooltip .= " <b>(+";
-													}
-													$texte_tooltip .= $malus_pm . ")</b>";
+												if ($malus_pm_charge != 0) {
+													$texte_tooltip_pm .= " <b>(";
+													$texte_tooltip_pm .= "charge : ";
+													$texte_tooltip_pm .= $malus_pm_charge;
+													$texte_tooltip_pm .= ")</b>";
 												}
-												else if ($bonusPM_perso_p != 0 || $malus_pm_charge != 0) {
-													$texte_tooltip .= " <b>(";
-													if ($bonusPM_perso_p < 0) {
-														$texte_tooltip .= $bonusPM_perso_p;
-													}
-													else {
-														$texte_tooltip .= "+".$bonusPM_perso_p;
+												
+												$texte_tooltip_pmMax = "Base max : ".$pmMax_perso_tmp."";
+												
+												if ($bonusPM_perso != 0) {
+													$texte_tooltip_pmMax .= " <b>(";
+													
+													if ($bonusPM_perso != 0) {
+														
+														$texte_tooltip_pmMax .= "objets : ";
+														
+														if ($bonusPM_perso < 0) {
+															$texte_tooltip_pmMax .= $bonusPM_perso;
+														}
+														else {
+															$texte_tooltip_pmMax .= "+".$bonusPM_perso;
+														}
 													}
 													
-													$texte_tooltip .= " ".$malus_pm_charge . ")</b>";
+													$texte_tooltip_pmMax .= ")</b>";
 												}
-												echo $pm_perso . ' / <a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">' . $pmMax_perso . '</a>';
+												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip_pm.'">' . $pm_perso  . '</a> / <a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip_pmMax.'">' . $pmMax_perso . '</a>';
 												?>&nbsp;</td>
 											</tr>
 										</table>

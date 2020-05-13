@@ -88,11 +88,11 @@ if($dispo || $admin){
 					$malus_pm = -$pmMax_perso;
 				}
 				else {
-					$malus_pm = $bpm_p + $malus_pm_charge;
+					$malus_pm = $malus_pm_charge;
 				}
 				
 				$pm_perso 		= $pm_p + $malus_pm;
-				$pmMax_perso 	= $pmM_p + $malus_pm;
+				$pmMax_perso 	= $pmM_p + $bpm_p;
 				
 				$mes_p = $t_i["message_perso"];
 				$des_p = $t_i["description_perso"];
@@ -186,15 +186,36 @@ if($dispo || $admin){
 										</tr>
 										<tr>
 											<td><?php 
-											echo "<u><b>Mouvements restants :</b></u> ".$pm_perso ."/".$pmMax_perso;
+											echo "<u><b>Mouvements restants :</b></u> ".$pm_perso;
 											if ($malus_pm) {
+												
+												echo " (";
+												
 												if ($malus_pm > 0) {
-													echo " (+".$malus_pm.")";
+													echo " charge : +".$malus_pm."";
 												}
 												else if ($malus_pm < 0) {
-													echo " (".$malus_pm.")";
+													echo " charge : ".$malus_pm."";
 												}
+												
+												echo " )";
 											}
+											echo " / ".$pmMax_perso;
+												
+											if ($bpm_p) {
+												
+												echo " (";
+												
+												if ($bpm_p > 0) {
+													echo " objets : +".$bpm_p."";
+												}
+												else if ($bpm_p < 0) {
+													echo " objets : ".$bpm_p."";
+												}
+												
+												echo " )";
+											}
+											
 											echo " - <u><b>Points de vie :</b></u> ".$pv_p."/".$pvM_p;
 											?></td>
 										</tr>
