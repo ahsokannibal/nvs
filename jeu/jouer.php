@@ -3572,7 +3572,7 @@ if($dispo || $admin){
 										// Pont
 										// Les chiens ne peuvent pas saboter les ponts
 										if ($bat == 5 && $type_perso != '6') {
-											echo "		<div><a href='action.php?bat=".$id_bat.".&saboter=ok' > Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
+											echo "		<div><a href='action.php?bat=".$id_bat."&saboter=ok' > Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
 										}
 									}
 								}
@@ -3720,7 +3720,7 @@ if($dispo || $admin){
 										// Pont
 										// Les chiens ne peuvent pas saboter les ponts
 										if ($bat == 5 && $type_perso != '6') {
-											echo "<div><a href='action.php?bat=".$id_bat.".&saboter=ok'>Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
+											echo "<div><a href='action.php?bat=".$id_bat."&saboter=ok'>Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
 										}
 									}
 								}
@@ -3991,7 +3991,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso-1 && $x == $x_perso+1){
@@ -4000,7 +4000,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso && $x == $x_perso+1){
@@ -4009,7 +4009,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso && $x == $x_perso-1) {
@@ -4018,7 +4018,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso+1 && $x == $x_perso-1) {
@@ -4027,7 +4027,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso-1 && $x == $x_perso-1) {
@@ -4036,7 +4036,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso+1 && $x == $x_perso) {
@@ -4045,7 +4045,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso-1 && $x == $x_perso) {
@@ -4054,7 +4054,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$tab["fond_carte"]."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat.".&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
 											echo "</td>";
 										}
 									}
