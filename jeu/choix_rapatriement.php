@@ -134,7 +134,7 @@ if(isset($_SESSION["id_perso"])){
 					$sql = "INSERT INTO perso_as_respawn (id_perso, id_bat, id_instance_bat) VALUES ('$id_perso','9','$id_respawn_fort')";
 					$mysqli->query($sql);
 					
-					$mess .= "Ajout du Fort $id_respawn_fortin en choix de rapatriement.<br />";
+					$mess .= "Ajout du Fort $id_respawn_fort en choix de rapatriement.<br />";
 				}
 			}
 			
