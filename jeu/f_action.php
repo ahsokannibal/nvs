@@ -116,6 +116,7 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 							AND perso_in_compagnie.id_compagnie = compagnies.id_compagnie
 							AND compagnies.genie_civil='1'
 							AND compagnies.id_clan = '$camp_perso'
+							AND perso.genie == 1
 							AND x_perso >= $x_bat - 10
 							AND x_perso <= $x_bat + 10
 							AND y_perso >= $y_bat - 10
@@ -726,7 +727,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$coutPa = $t_reparer["coutPa_action"];
 	
 	// recuperation des infos du perso
-	$sql = "SELECT nom_perso, pa_perso, type_perso, clan FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, pa_perso, type_perso, clan, genie FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_i_perso = $res->fetch_assoc();
 	
@@ -734,6 +735,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$pa_perso 	= $t_i_perso['pa_perso'];
 	$type_perso	= $t_i_perso['type_perso'];
 	$camp_perso = $t_i_perso['clan'];
+	$genie_perso= $t_i_perso['genie'];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
@@ -769,7 +771,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			
 			$verif_gc = $t_gc['verif_gc'];
 			
-			if ($verif_gc) {
+			if ($verif_gc && $genie_perso == 1) {
 				$pv_reparation *= 2;
 			}
 			
@@ -1848,13 +1850,14 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 		$pv_bat = $t_bat["pv_instance"];
 	   
 		// recuperation des infos du perso
-		$sql = "SELECT nom_perso, clan, x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT nom_perso, clan, x_perso, y_perso, pa_perso, genie FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
-		$nom_perso = $t_perso['nom_perso'];
-		$camp_perso = $t_perso['clan'];
-		$pa_perso = $t_perso['pa_perso'];
+		$nom_perso 		= $t_perso['nom_perso'];
+		$camp_perso 	= $t_perso['clan'];
+		$pa_perso 		= $t_perso['pa_perso'];
+		$genie_perso	= $t_perso['genie'];
 		
 		// recuperation de la couleur du camp du perso
 		$couleur_clan_perso = couleur_clan($camp_perso);
@@ -1891,7 +1894,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 				
 				$degats_sabotage = rand(50,200);
 				
-				if ($verif_gc) {
+				if ($verif_gc && $genie_perso == 1) {
 					$degats_sabotage *= 2;
 				}
 				

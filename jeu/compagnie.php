@@ -160,7 +160,7 @@ if($dispo || $admin){
 											echo "<center><font color='red'>Vous ne pouvez pas postuler dans cette compagnie, contraintes non respectées</font></center>";
 										}
 						
-										echo "<a href='compagnie.php' class='btn btn-outline-secondary'> retour </a>";
+										echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
 									}
 									else {
 										echo "<center><font color='red'>Vous êtes déjà inscrit dans une compagnie</font></center>";
@@ -567,7 +567,7 @@ if($dispo || $admin){
 					$mysqli->query($sql);
 			
 					echo "Vous venez d'annuler votre demande d'adhésion <br />";
-					echo "<a href='compagnie.php' class='btn btn-outline-secondary'> retour </>";
+					echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </center>";
 				}
 				else{
 					// en attente de validation

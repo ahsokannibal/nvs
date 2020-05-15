@@ -38,7 +38,7 @@ if($dispo || $admin){
 				// recuperation des infos du perso
 				$sql = "SELECT nom_perso, image_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, bonusPM_perso, pi_perso, pv_perso, pvMax_perso, 
 								pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, bonusPA_perso,
-								charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, chef FROM perso WHERE id_perso='$id'";
+								charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, chef, genie FROM perso WHERE id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$t_i = $res->fetch_assoc();
 				
@@ -68,6 +68,7 @@ if($dispo || $admin){
 				$dc_p 		= $t_i["dateCreation_perso"];
 				$clan_perso = $t_i["clan"];
 				$chef		= $t_i["chef"];
+				$genie		= $t_i["genie"];
 				
 				if($clan_perso == '1'){
 					$couleur_clan_perso = 'blue';
@@ -263,6 +264,19 @@ if($dispo || $admin){
 										<tr>
 											<td>&nbsp;</td>
 										</tr>
+										<?php
+										if ($genie > 0) {
+											$nb_tour_acces_bonus_genie = $genie - 1;
+										?>
+										<tr>
+											<td><?php echo "<b><u>Nombre de tours avant accés aux compétences et bonus du génie :</u></b> ".$nb_tour_acces_bonus_genie." tour(s) restant"; ?></td>
+										</tr>
+										<tr>
+											<td>&nbsp;</td>
+										</tr>
+										<?php
+										}
+										?>
 										<tr>
 											<td><a class="btn btn-primary" href="choix_rapatriement.php">Choix des rapatriements</a></td>
 										</tr>
