@@ -450,7 +450,13 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 				$pm_nouveau += $pm_perso_nouveau_tour;
 			}
 			
-			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=pv_perso+$recup_perso_nouveau_tour, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, convalescence=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+			// Calcul pv nouveau tour 
+			$pv_nouveau = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour;
+			if ($pv_nouveau > $pv_max_perso_nouveau_tour) {
+				$pv_nouveau = $pv_max_perso_nouveau_tour;
+			}
+			
+			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, convalescence=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
 		}
 		
