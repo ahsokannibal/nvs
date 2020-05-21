@@ -181,6 +181,11 @@
 							</tr>
 						</table>
 					</div>
+					<br />
+					
+					<h3>Rapatriement  & Convalescence</h3>
+					<p>Une unité capturée est rapatriée dans un bâtiment (<a href='regles_batiments.php'>règles de rapatriement ici</a>). Si l'unité n'a pas entamé un nouveau tour, elle se retrouve alors avec 0PA et 0PM.</p>
+					<p>Si l'unité rapatriée entame un nouveau tour, elle subit les effets de la convalescence. Elle se retrouve donc avec PA/2 et PM/2 (hors bonus / malus qui s'ajoutent) uniquement pour le tour qui suit un rapatriement (le malus de convalescence disparait ensuite au tour suivant).</p>
 					
 					<h2>Inactivité</h2>
 					<p>Les unités inactive pendant plus de 10 jours sont placée automatiquement en permission (voir les <a href="regles_action_spe.php">actions spéciales</a> pour connaitre les règles sur la permission).</p>
