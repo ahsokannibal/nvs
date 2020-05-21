@@ -278,7 +278,7 @@ if($dispo || $admin){
 							if($verif_id){
 								
 								// On vérifie que le perso possede bien l'amure et qu'elle n'est pas équipée
-								$sql_v = "SELECT id_arme FROM perso_as_arme WHERE id_arme='$id_arme' AND est_portee='0'";
+								$sql_v = "SELECT id_arme FROM perso_as_arme WHERE id_arme='$id_arme' AND est_portee='0' AND id_perso='$id_perso'";
 								$res_v = $mysqli->query($sql_v);
 								$nb_res_v = $res_v->num_rows;
 								
@@ -333,7 +333,7 @@ if($dispo || $admin){
 							if($verif_id ){
 								
 								// On vérifie que le perso possede bien l'objet
-								$sql_v = "SELECT id_objet FROM perso_as_objet WHERE id_objet='$id_objet'";
+								$sql_v = "SELECT id_objet FROM perso_as_objet WHERE id_objet='$id_objet' AND equip_objet='0' AND id_perso='$id_perso'";
 								$res_v = $mysqli->query($sql_v);
 								$nb_res_v = $res_v->num_rows;
 								
@@ -377,7 +377,7 @@ if($dispo || $admin){
 									$or = $or + $prix_vente_final;
 								}
 								else {
-									echo "Vous ne pouvez pas enter de vendre ce que vous ne possédez pas.";
+									echo "Vous ne pouvez pas vendre ce que vous ne possédez pas ou ce qui est équipé.";
 								}
 							}
 							else {
@@ -634,7 +634,7 @@ if($dispo || $admin){
 							
 							if(isset($_GET['vente']) && $_GET['vente'] == 'ok'){
 								
-								echo "<center><a href=\"batiment.php?bat=$id_i_bat\">Fermer la partie sur la vente de vos biens</a></center>";
+								echo "<center><a class='btn btn-primary' href=\"batiment.php?bat=$id_i_bat\">Fermer la partie sur la vente de vos biens</a></center><br />";
 								
 								if ($id_bat == '6') {
 									// On ne peut vendre que des objets de type ressources dans un entrepot
@@ -657,7 +657,8 @@ if($dispo || $admin){
 											AND perso_as_objet.id_objet=objet.id_objet
 											AND type_objet!='M' AND type_objet!='MSP'
 											AND type_objet!='S' AND type_objet!='SP' AND type_objet!='SSP'
-											AND objet.id_objet != '1'";
+											AND objet.id_objet != '1'
+											AND perso_as_objet.equip_objet = '0'";
 								}
 								
 								$res_resources = $mysqli->query($sql_ressources);
@@ -753,7 +754,7 @@ if($dispo || $admin){
 							// On veut faire un dépot de ressources
 							if(isset($_GET['depot']) && $_GET['depot'] == 'ok'){
 								
-								echo "<center><a href=\"batiment.php?bat=$id_i_bat\">Fermer la partie sur le dépot de ressources</a></center>";
+								echo "<center><a class='btn btn-primary' href=\"batiment.php?bat=$id_i_bat\">Fermer la partie sur le dépot de ressources</a></center>";
 								
 								// Récupération des ressources (M ou MSP) que posséde le perso
 								$sql = "SELECT DISTINCT objet.id_objet FROM perso_as_objet, objet WHERE id_perso='$id_perso'
@@ -812,7 +813,7 @@ if($dispo || $admin){
 							// On veut récupérer de ressources
 							if(isset($_GET['recup']) && $_GET['recup'] == 'ok'){
 								
-								echo "<center><a href=\"batiment.php?bat=$id_i_bat\">Fermer la partie sur la récupération des ressources</a></center>";
+								echo "<center><a class='btn btn-primary' href=\"batiment.php?bat=$id_i_bat\">Fermer la partie sur la récupération des ressources</a></center>";
 								
 								// récupération des ressources disponibles dans l'entrepôt
 								$sql_res = "SELECT id_ressource, nb_ressource FROM ressources_entrepot WHERE id_entrepot='$id_i_bat'";
