@@ -67,308 +67,37 @@ if(isset($_SESSION["ID_joueur"])){
 			
 			// Le perso appartient-il bien au joueur ?
 			if ($id_joueur_perso == $id_joueur) {
+					
+				$date = time();
 				
-				if ($pv_perso <= 0) {
+				if (nouveau_tour($date, $dla)) {
 					
-					$date = time();
+					// calcul du prochain tour
+					$new_dla = $date + DUREE_TOUR;
 					
-					// Le perso est bien mort
-					//    RESPAWN BATIMENT    //
-								
-					// Récupération du batiment de rappatriement le plus proche du perso
-					$id_instance_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan);
+					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan);
 					
-					if ($id_instance_bat != null && $id_instance_bat != 0) {
-						
-						// récupération coordonnées batiment
-						$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
-						$res_b = $mysqli->query($sql_b);
-						$t_b = $res_b->fetch_assoc();
-						
-						$x 		= $t_b['x_instance'];
-						$y 		= $t_b['y_instance'];
-						$id_bat	= $t_b['id_batiment'];
-						
-						// On met le perso dans le batiment
-						$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_instance_bat')";
-						$mysqli->query($sql);
-						
-						// mise a jour des evenements
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
-						$mysqli->query($sql);
-						
-						// Rapat Chef dans Fort ou Fortin
-						if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
-							
-							// recup grade / pc chef
-							$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
-							$res = $mysqli->query($sql);
-							$t_chef = $res->fetch_assoc();
-							
-							$id_perso_chef = $t_chef["id_perso"];
-							$pc_perso_chef = $t_chef["pc_perso"];
-							$id_grade_chef = $t_chef["id_grade"];
-							
-							// Verification passage de grade 
-							$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-							$res = $mysqli->query($sql);
-							$t_grade = $res->fetch_assoc();
-							
-							$id_grade_final 	= $t_grade["id_grade"];
-							$nom_grade_final	= $t_grade["nom_grade"];
-							
-							if ($id_grade_chef < $id_grade_final) {
-									
-								// Passage de grade								
-								$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
-								$mysqli->query($sql);
-								
-								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
-								$mysqli->query($sql);
-								
-							}
-						}
-						
-					} else {
-						
-						// Respawn aleatoire
-						if ($clan == 1){
-							// bleu
-							$x_min_respawn = 160;
-							$x_max_respawn = 200;
-							$y_min_respawn = 160;
-							$y_max_respawn = 200;
-						}
-						
-						if ($clan == 2){
-							// rouge
-							$x_min_respawn = 0;
-							$x_max_respawn = 40;
-							$y_min_respawn = 0;
-							$y_max_respawn = 40;
-						}
-								
-						// on le replace aleatoirement sur la carte
-						$occup = 1;
-						while ($occup == 1)
-						{
-							$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
-							$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
-							$occup = verif_pos_libre($mysqli, $x, $y);
-						}
-						
-						$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x' AND y_carte='$y'";
-						$mysqli->query($sql);
-						
-						// mise a jour des evenements
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
-						$mysqli->query($sql);
-					}
-					
-					$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x AND y_carte=$y";
-					$res_map = $mysqli->query($sql);
-					$t_carte1 = $res_map->fetch_assoc();
-							
-					$fond = $t_carte1["fond_carte"];
-					
-					// calcul bonus perception perso
-					$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-					
-					if (nouveau_tour($date, $dla)) {
-						
-						// calcul du prochain tour
-						$new_dla = $date + DUREE_TOUR;
-						
-						// Récupération de tous les perso du joueur
-						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pmMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef, genie FROM perso WHERE idJoueur_perso='$id_joueur'";
-						$res = $mysqli->query($sql);
-						
-						while ($t_persos = $res->fetch_assoc()) {
-					
-							$id_perso_nouveau_tour 		= $t_persos["id_perso"];
-							$pv_perso_nouveau_tour 		= $t_persos["pv_perso"];
-							$pv_max_perso_nouveau_tour	= $t_persos["pvMax_perso"];
-							$recup_perso_nouveau_tour 	= $t_persos["recup_perso"] + $t_persos["bonusRecup_perso"];
-							$x_perso_nouveau_tour		= $t_persos["x_perso"];
-							$y_perso_nouveau_tour		= $t_persos["y_perso"];
-							$chef_perso_nouveau_tour	= $t_persos["chef"];
-							$image_perso_nouveau_tour	= $t_persos["image_perso"];
-							$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
-							$type_perso_nouveau_tour	= $t_persos["type_perso"];
-							$pm_perso_nouveau_tour		= $t_persos["pm_perso"];
-							$pm_max_perso_nouveau_tour	= $t_persos["pmMax_perso"];
-							$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
-							$genie_nouveau_tour 		= $t_persos["genie"];
-							
-							$new_bonus_perso = 0;
-							
-							if ($bonus_perso_nouveau_tour + 5 <= 0) {
-								$new_bonus_perso = $bonus_perso_nouveau_tour + 5;
-							}
-							
-							if ($chef_perso_nouveau_tour == '1') {
-									
-									$gain_or = 3;
-									$gain_pc = 1;
-									
-							} else {
-								
-								$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
-								$gain_pc = 0;
-							}
-							
-							if ($pv_perso_nouveau_tour <= 0) {
-								
-								$pm_nouveau = $pm_max_perso_nouveau_tour / 2;
-								
-								// Prise en compte malus PM des bousculades (PM négatifs)
-								if ($pm_perso_nouveau_tour < 0) {
-									$pm_nouveau += $pm_perso_nouveau_tour;
-								}
-								
-								// MAJ perso avec malus rapat
-								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0 WHERE id_perso='$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-							}
-							else {
-								
-								$pm_nouveau = $pm_max_perso_nouveau_tour + $bonusPM_nouveau_tour;
-								
-								// Prise en compte malus PM des bousculades (PM négatifs)
-								if ($pm_perso_nouveau_tour < 0) {
-									$pm_nouveau += $pm_perso_nouveau_tour;
-								}
-								
-								$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=paMax_perso+bonusPA_perso, pv_perso=$recup_perso_nouveau_tour, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-							}
-							
-							// On decremente le compteur genie si il est > 1
-							if ($genie_nouveau_tour > 1) {
-								$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-							}
-						}
-					} else {
-						
-						// MAJ perso rapat
-						$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=0, pa_perso=0, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=1 WHERE id_perso='$id_perso'";
-						$mysqli->query($sql);
-					}
-		
 					//redirection
 					header("location:jeu/jouer.php");
 					
 				} else {
-					// Le perso est vivant
-
-					$date = time();
 					
-					// redirection
-					if (!$est_gele && nouveau_tour($date, $dla)) {
-				
-						// calcul du prochain tour
-						$new_dla = $date + DUREE_TOUR;
-						
-						// Récupération de tous les perso du joueur
-						$sql = "SELECT id_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, convalescence, chef, genie FROM perso WHERE idJoueur_perso='$id_joueur'";
-						$res = $mysqli->query($sql);
-						
-						while ($t_persos = $res->fetch_assoc()) {
+					// Le perso est mort
+					if ($pv_perso <= 0) {
 					
-							$id_perso_nouveau_tour 		= $t_persos["id_perso"];
-							$pv_perso_nouveau_tour 		= $t_persos["pv_perso"];
-							$pv_max_perso_nouveau_tour	= $t_persos["pvMax_perso"];
-							$recup_perso_nouveau_tour 	= $t_persos["recup_perso"] + $t_persos["bonusRecup_perso"];
-							$x_perso_nouveau_tour		= $t_persos["x_perso"];
-							$y_perso_nouveau_tour		= $t_persos["y_perso"];
-							$chef_perso_nouveau_tour	= $t_persos["chef"];
-							$image_perso_nouveau_tour	= $t_persos["image_perso"];
-							$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
-							$type_perso_nouveau_tour	= $t_persos["type_perso"];
-							$pm_perso_nouveau_tour		= $t_persos["pm_perso"];
-							$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
-							$conval_nouveau_tour		= $t_persos["convalescence"];
-							$pm_max_perso_nouveau_tour	= $t_persos["pmMax_perso"];
-							$pa_max_perso_nouveau_tour	= $t_persos["paMax_perso"];
-							$genie_nouveau_tour			= $t_persos["genie"];
-							
-							$new_bonus_perso = 0;
-							
-							if ($bonus_perso_nouveau_tour + 5 <= 0) {
-								$new_bonus_perso = $bonus_perso_nouveau_tour + 5;
-							}
-							
-							//il est encore en vie
-							if ($pv_perso_nouveau_tour > 0) {
-								
-								$pv_after_recup = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour;
-								
-								if ($pv_after_recup > $pv_max_perso_nouveau_tour) {
-									$pv_after_recup = $pv_max_perso_nouveau_tour;
-								}
-								
-								$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x_perso_nouveau_tour AND y_carte=$y_perso_nouveau_tour";
-								$res_map = $mysqli->query($sql);
-								$t_carte1 = $res_map->fetch_assoc();
-								
-								$fond = $t_carte1["fond_carte"];
-								
-								// calcul bonus perception perso
-								$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
-								
-								// Gestion convalescence
-								if ($conval_nouveau_tour) {
-									// PA / 2 et PM / 2
-									$pa_nouveau_tour = ceil($pa_max_perso_nouveau_tour / 2);
-									$pm_nouveau_tour = ceil($pm_max_perso_nouveau_tour / 2);
-								}
-								else {
-									$pa_nouveau_tour = $pa_max_perso_nouveau_tour;
-									$pm_nouveau_tour = $pm_max_perso_nouveau_tour;
-								}
-								
-								// Prise en compte malus PM des bousculades (PM négatifs)
-								if ($pm_perso_nouveau_tour < 0) {
-									$pm_nouveau_tour += $pm_perso_nouveau_tour;
-								}
-								
-								$pm_nouveau_tour += $bonusPM_nouveau_tour;
-								
-								if ($chef_perso_nouveau_tour == '1') {
-									
-									$gain_or = 3;
-									
-									// C'est le chef => gain or et PC
-									$sql = "UPDATE perso SET pm_perso=$pm_nouveau_tour, pa_perso=$pa_nouveau_tour+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
-									$mysqli->query($sql);
-									
-								} else {
-									
-									$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
-									
-									// C'est un grouillot
-									$sql = "UPDATE perso SET pm_perso=$pm_nouveau_tour, pa_perso=$pa_nouveau_tour+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
-									$mysqli->query($sql);
-									
-								}
-								
-								// On decremente le compteur genie si il est > 1
-								if ($genie_nouveau_tour > 1) {
-									$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
-									$mysqli->query($sql);
-								}
-								
-								// redirection
-								header("location:jeu/jouer.php");			
-							}
-						}
+						respawn_perso($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $image_perso, $clan, $couleur_clan_p, $chef_perso);
+						
+						//redirection
+						header("location:jeu/jouer.php");
 					}
 					else {
-						header("location:jeu/jouer.php"); 
+						// Le perso est vivant et ce n'est pas un nouveau tour
+						
+						//redirection
+						header("location:jeu/jouer.php");
 					}
 				}
+				
 			} else {
 				
 				// Tentative de triche !
@@ -507,236 +236,10 @@ if(isset($_SESSION["ID_joueur"])){
 					// calcul du prochain tour
 					$new_dla = $date + DUREE_TOUR;					
 					
-					// Récupération de tous les perso du joueur
-					$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, convalescence, chef, genie FROM perso WHERE idJoueur_perso='$id_joueur'";
-					$res = $mysqli->query($sql);
+					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan);
 					
-					while ($t_persos = $res->fetch_assoc()) {
-				
-						$id_perso_nouveau_tour 		= $t_persos["id_perso"];
-						$nom_perso_nouveau_tour		= $t_persos["nom_perso"];
-						$pv_perso_nouveau_tour 		= $t_persos["pv_perso"];
-						$pv_max_perso_nouveau_tour	= $t_persos["pvMax_perso"];
-						$recup_perso_nouveau_tour 	= $t_persos["recup_perso"] + $t_persos["bonusRecup_perso"];
-						$x_perso_nouveau_tour		= $t_persos["x_perso"];
-						$y_perso_nouveau_tour		= $t_persos["y_perso"];
-						$chef_perso_nouveau_tour	= $t_persos["chef"];
-						$image_perso_nouveau_tour	= $t_persos["image_perso"];
-						$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
-						$type_perso_nouveau_tour	= $t_persos["type_perso"];
-						$pm_perso_nouveau_tour		= $t_persos["pm_perso"];
-						$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
-						$pa_max_perso_nouveau_tour	= $t_persos["paMax_perso"];
-						$pm_max_perso_nouveau_tour	= $t_persos["pmMax_perso"];
-						$conval_nouveau_tour		= $t_persos["convalescence"];
-						$genie_nouveau_tour			= $t_persos["genie"];
-						
-						$new_bonus_perso = 0;
-						
-						if ($bonus_perso_nouveau_tour + 5 <= 0) {
-							$new_bonus_perso = $bonus_perso_nouveau_tour + 5;
-						}
-						
-						//il est encore en vie
-						if ($pv_perso_nouveau_tour > 0) {
-							
-							$pv_after_recup = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour;
-							
-							if ($pv_after_recup > $pv_max_perso_nouveau_tour) {
-								$pv_after_recup = $pv_max_perso_nouveau_tour;
-							}
-							
-							$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x_perso_nouveau_tour AND y_carte=$y_perso_nouveau_tour";
-							$res_map = $mysqli->query($sql);
-							$t_carte1 = $res_map->fetch_assoc();
-							
-							$fond = $t_carte1["fond_carte"];
-							
-							// calcul bonus perception perso
-							$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
-							
-							// Gestion convalescence
-							if ($conval_nouveau_tour) {
-								// PA / 2 et PM / 2
-								$pa_nouveau_tour = ceil($pa_max_perso_nouveau_tour / 2);
-								$pm_nouveau_tour = ceil($pm_max_perso_nouveau_tour / 2);
-							}
-							else {
-								$pa_nouveau_tour = $pa_max_perso_nouveau_tour;
-								$pm_nouveau_tour = $pm_max_perso_nouveau_tour;
-							}
-							
-							// Prise en compte malus PM des bousculades (PM négatifs)
-							if ($pm_perso_nouveau_tour < 0) {
-								$pm_nouveau_tour += $pm_perso_nouveau_tour;
-							}
-							
-							$pm_nouveau_tour += $bonusPM_nouveau_tour;
-							
-							if ($chef_perso_nouveau_tour == '1') {
-								
-								$gain_or = 3;
-								
-								// C'est le chef => gain or et PC
-								$sql = "UPDATE perso SET pm_perso=$pm_nouveau_tour, pa_perso=$pa_nouveau_tour+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, pc_perso=pc_perso+1, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, convalescence=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-								
-							} else {
-								
-								$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
-								
-								// C'est un grouillot
-								$sql = "UPDATE perso SET pm_perso=$pm_nouveau_tour, pa_perso=$pa_nouveau_tour+bonusPA_perso, pv_perso=$pv_after_recup, or_perso=or_perso+$gain_or, bonusRecup_perso=0, bonusPerception_perso=$bonus_visu, bonus_perso=$new_bonus_perso, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-								
-							}
-							
-							// On decremente le compteur genie si il est > 1
-							if ($genie_nouveau_tour > 1) {
-								$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-							}
-							
-							// redirection
-							header("location:jeu/jouer.php");			
-						}
-						else {						
-							//    RESPAWN BATIMENT    //
-							
-							// Récupération du batiment de rappatriement le plus proche du perso
-							$id_instance_bat = selection_bat_rapat($mysqli, $id_perso_nouveau_tour, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
-							
-							if ($id_instance_bat != null && $id_instance_bat != 0) {
-							
-								// récupération coordonnées batiment
-								$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
-								$res_b = $mysqli->query($sql_b);
-								$t_b = $res_b->fetch_assoc();
-								
-								$x 		= $t_b['x_instance'];
-								$y 		= $t_b['y_instance'];
-								$id_bat	= $t_b['id_batiment'];
-								
-								// On met le perso dans le batiment
-								$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_nouveau_tour','$id_instance_bat')";
-								$mysqli->query($sql);
-								
-								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
-								$mysqli->query($sql);
-								
-								// Rapat Chef dans Fort ou Fortin
-								if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
-									
-									// recup grade / pc chef
-									$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
-									$res = $mysqli->query($sql);
-									$t_chef = $res->fetch_assoc();
-									
-									$id_perso_chef = $t_chef["id_perso"];
-									$pc_perso_chef = $t_chef["pc_perso"];
-									$id_grade_chef = $t_chef["id_grade"];
-									
-									// Verification passage de grade 
-									$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-									$res = $mysqli->query($sql);
-									$t_grade = $res->fetch_assoc();
-									
-									$id_grade_final 	= $t_grade["id_grade"];
-									$nom_grade_final	= $t_grade["nom_grade"];
-									
-									if ($id_grade_chef < $id_grade_final) {
-											
-										// Passage de grade								
-										$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
-										$mysqli->query($sql);
-										
-										// mise a jour des evenements
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
-										$mysqli->query($sql);
-										
-									}
-								}
-								
-							} else {
-								
-								// Respawn aleatoire
-								if($clan == 1){
-									// bleu
-									$x_min_respawn = 160;
-									$x_max_respawn = 200;
-									$y_min_respawn = 160;
-									$y_max_respawn = 200;
-								}
-								if($clan == 2){
-									// rouge
-									$x_min_respawn = 0;
-									$x_max_respawn = 40;
-									$y_min_respawn = 0;
-									$y_max_respawn = 40;
-								}
-										
-								// on le replace aleatoirement sur la carte
-								$occup = 1;
-								while ($occup == 1)
-								{
-									$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
-									$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
-									$occup = verif_pos_libre($mysqli, $x, $y);
-								}
-								
-								$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso_nouveau_tour', idPerso_carte='$id_perso_nouveau_tour' WHERE x_carte='$x' AND y_carte='$y'";
-								$mysqli->query($sql);
-								
-								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
-								$mysqli->query($sql);
-							}
-							
-							$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x AND y_carte=$y";
-							$res_map = $mysqli->query($sql);
-							$t_carte1 = $res_map->fetch_assoc();
-							
-							$fond = $t_carte1["fond_carte"];
-							
-							// calcul bonus perception perso
-							$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-							
-							$pm_nouveau_tour = $pm_max_perso_nouveau_tour / 2;
-							
-							// Prise en compte malus PM des bousculades (PM négatifs)
-							if ($pm_perso_nouveau_tour < 0) {
-								$pm_nouveau_tour += $pm_perso_nouveau_tour;
-							}
-							
-							// MAJ perso
-							if ($chef_perso_nouveau_tour == '1') {
-								
-								$gain_or = 3;
-								
-								// C'est le chef => gain or et pc
-								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau_tour, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, pc_perso=pc_perso+1, or_perso=or_perso+$gain_or, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-								
-							} else {
-								
-								$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
-								
-								// Grouillot
-								$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau_tour, pa_perso=paMax_perso+bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, or_perso=or_perso+$gain_or, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-							}
-							
-							// On decremente le compteur genie si il est > 1
-							if ($genie_nouveau_tour > 1) {
-								$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
-								$mysqli->query($sql);
-							}
-				
-							//redirection
-							header("location:jeu/jouer.php");
-						}
-					}
+					//redirection
+					header("location:jeu/jouer.php");
 				}
 				else {
 					if ($pv > 0) {
@@ -747,122 +250,10 @@ if(isset($_SESSION["ID_joueur"])){
 					else {
 						// Il est mort et ce n'est pas un nouveau tour
 						
-						//    RESPAWN BATIMENT    //
+						respawn_perso($mysqli, $id, $nom_perso, $x_perso, $y_perso, $image_perso, $clan, $couleur_clan_p, $chef_perso);
 						
-						// Récupération du batiment de rappatriement le plus proche du perso
-						$id_instance_bat = selection_bat_rapat($mysqli, $id, $x_perso, $y_perso, $clan);
-						
-						if ($id_instance_bat != null && $id_instance_bat != 0) {
-						
-							// récupération coordonnées batiment
-							$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
-							$res_b = $mysqli->query($sql_b);
-							$t_b = $res_b->fetch_assoc();
-							
-							$x 		= $t_b['x_instance'];
-							$y 		= $t_b['y_instance'];
-							$id_bat	= $t_b['id_batiment'];
-							
-							// On met le perso dans le batiment
-							$sql = "INSERT INTO perso_in_batiment VALUES('$id','$id_instance_bat')";
-							$mysqli->query($sql);
-							
-							// calcul bonus perception perso
-							$bonus_visu = getBonusObjet($mysqli, $id);
-							
-							// MAJ perso
-							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=0, pa_perso=0, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=1 WHERE id_perso='$id'";
-							$mysqli->query($sql);
-							
-							// mise a jour des evenements
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_clan_p><b>$pseudo</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
-							$mysqli->query($sql);
-							
-							// Rapat Chef dans Fort ou Fortin
-							if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
-								
-								// recup grade / pc chef
-								$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
-								$res = $mysqli->query($sql);
-								$t_chef = $res->fetch_assoc();
-								
-								$id_perso_chef = $t_chef["id_perso"];
-								$pc_perso_chef = $t_chef["pc_perso"];
-								$id_grade_chef = $t_chef["id_grade"];
-								
-								// Verification passage de grade 
-								$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-								$res = $mysqli->query($sql);
-								$t_grade = $res->fetch_assoc();
-								
-								$id_grade_final 	= $t_grade["id_grade"];
-								$nom_grade_final	= $t_grade["nom_grade"];
-								
-								if ($id_grade_chef < $id_grade_final) {
-										
-									// Passage de grade								
-									$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
-									$mysqli->query($sql);
-									
-									// mise a jour des evenements
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
-									$mysqli->query($sql);
-									
-								}
-							}
-				
-							//redirection
-							header("location:jeu/jouer.php");
-							
-						}
-						else {
-							// Respawn aleatoire
-							if($clan == 1){
-								// bleu
-								$x_min_respawn = 160;
-								$x_max_respawn = 200;
-								$y_min_respawn = 160;
-								$y_max_respawn = 200;
-							}
-							if($clan == 2){
-								// rouge
-								$x_min_respawn = 0;
-								$x_max_respawn = 40;
-								$y_min_respawn = 0;
-								$y_max_respawn = 40;
-							}
-									
-							// on le replace aleatoirement sur la carte
-							$occup = 1;
-							while ($occup == 1)
-							{
-								$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
-								$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
-								$occup = verif_pos_libre($mysqli, $x, $y);
-							}
-							
-							$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id' WHERE x_carte='$x' AND y_carte='$y'";
-							$mysqli->query($sql);
-							
-							$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x AND y_carte=$y";
-							$res_map = $mysqli->query($sql);
-							$t_carte1 = $res_map->fetch_assoc();
-							
-							$fond = $t_carte1["fond_carte"];
-							
-							// calcul bonus perception perso
-							$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-							
-							// MAJ perso
-							$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=0, pa_perso=0, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=1 WHERE id_perso='$id'";
-							$mysqli->query($sql);
-							
-							// mise a jour des evenements
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id','<font color=$couleur_clan_p><b>$pseudo</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
-							$mysqli->query($sql);
-							
-							header("location:jeu/jouer.php");
-						}
+						// redirection
+						header("location:jeu/jouer.php");
 					}
 				}
 			}
@@ -871,5 +262,321 @@ if(isset($_SESSION["ID_joueur"])){
 }
 else{
 	echo "<font color=red>Vous ne pouvez pas acceder a cette page, veuillez vous logguer.</font>";
+}
+
+/**
+ * Fonction permettant de gérer un nouveau tour
+ *
+ */
+function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
+	
+	// Récupération de tous les perso du joueur
+	$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef, genie, convalescence 
+			FROM perso WHERE idJoueur_perso='$id_joueur'";
+	$res = $mysqli->query($sql);
+	
+	while ($t_persos = $res->fetch_assoc()) {
+
+		$id_perso_nouveau_tour 		= $t_persos["id_perso"];
+		$nom_perso_nouveau_tour		= $t_persos["nom_perso"];
+		$pv_perso_nouveau_tour 		= $t_persos["pv_perso"];
+		$pv_max_perso_nouveau_tour	= $t_persos["pvMax_perso"];
+		$recup_perso_nouveau_tour 	= $t_persos["recup_perso"] + $t_persos["bonusRecup_perso"];
+		$x_perso_nouveau_tour		= $t_persos["x_perso"];
+		$y_perso_nouveau_tour		= $t_persos["y_perso"];
+		$chef_perso_nouveau_tour	= $t_persos["chef"];
+		$image_perso_nouveau_tour	= $t_persos["image_perso"];
+		$bonus_perso_nouveau_tour	= $t_persos["bonus_perso"];
+		$type_perso_nouveau_tour	= $t_persos["type_perso"];
+		$pm_perso_nouveau_tour		= $t_persos["pm_perso"];
+		$pm_max_perso_nouveau_tour	= $t_persos["pmMax_perso"];
+		$pa_max_perso_nouveau_tour	= $t_persos["paMax_perso"];
+		$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
+		$genie_nouveau_tour 		= $t_persos["genie"];
+		$convalescence_nouveau_tour	= $t_persos["convalescence"];
+		
+		// Calcul bonus perso
+		$new_bonus_perso = 0;
+		if ($bonus_perso_nouveau_tour + 5 <= 0) {
+			$new_bonus_perso = $bonus_perso_nouveau_tour + 5;
+		}
+		
+		// Calcul gains Or / PC
+		if ($chef_perso_nouveau_tour == '1') {
+				
+			$gain_or = 3;
+			$gain_pc = 1;
+				
+		} else {
+			
+			$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
+			$gain_pc = 0;
+		}
+		
+		// Le perso est mort
+		if ($pv_perso_nouveau_tour <= 0) {
+			
+			// ---------------------- //
+			//    RESPAWN BATIMENT    //
+			// ---------------------- //
+						
+			// Récupération du batiment de rappatriement le plus proche du perso
+			$id_instance_bat = selection_bat_rapat($mysqli, $id_perso_nouveau_tour, $x_perso_nouveau_tour, $y_perso_nouveau_tour, $clan);
+			
+			// Batiment trouvé
+			if ($id_instance_bat != null && $id_instance_bat != 0) {
+				
+				// récupération coordonnées batiment
+				$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
+				$res_b = $mysqli->query($sql_b);
+				$t_b = $res_b->fetch_assoc();
+				
+				$x 		= $t_b['x_instance'];
+				$y 		= $t_b['y_instance'];
+				$id_bat	= $t_b['id_batiment'];
+				
+				// On met le perso dans le batiment
+				$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso_nouveau_tour','$id_instance_bat')";
+				$mysqli->query($sql);
+				
+				// mise a jour des evenements
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
+				$mysqli->query($sql);
+				
+				// Rapat Chef dans Fort ou Fortin
+				if ($chef_perso_nouveau_tour && ($id_bat == 8 || $id_bat == 9)) {
+					
+					// recup grade / pc chef
+					$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso_nouveau_tour'";
+					$res = $mysqli->query($sql);
+					$t_chef = $res->fetch_assoc();
+					
+					$id_perso_chef = $t_chef["id_perso"];
+					$pc_perso_chef = $t_chef["pc_perso"];
+					$id_grade_chef = $t_chef["id_grade"];
+					
+					// Verification passage de grade 
+					$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+					$res = $mysqli->query($sql);
+					$t_grade = $res->fetch_assoc();
+					
+					$id_grade_final 	= $t_grade["id_grade"];
+					$nom_grade_final	= $t_grade["nom_grade"];
+					
+					if ($id_grade_chef < $id_grade_final) {
+							
+						// Passage de grade								
+						$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso_nouveau_tour'";
+						$mysqli->query($sql);
+						
+						// mise a jour des evenements
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+						$mysqli->query($sql);
+						
+					}
+				}
+				
+			} else {
+				
+				// Respawn aleatoire
+				if ($clan == 1){
+					// bleu
+					$x_min_respawn = 160;
+					$x_max_respawn = 200;
+					$y_min_respawn = 160;
+					$y_max_respawn = 200;
+				}
+				
+				if ($clan == 2){
+					// rouge
+					$x_min_respawn = 0;
+					$x_max_respawn = 40;
+					$y_min_respawn = 0;
+					$y_max_respawn = 40;
+				}
+						
+				// on le replace aleatoirement sur la carte
+				$occup = 1;
+				while ($occup == 1)
+				{
+					$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
+					$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
+					$occup = verif_pos_libre($mysqli, $x, $y);
+				}
+				
+				$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso_nouveau_tour', idPerso_carte='$id_perso_nouveau_tour' WHERE x_carte='$x' AND y_carte='$y'";
+				$mysqli->query($sql);
+				
+				// mise a jour des evenements
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
+				$mysqli->query($sql);
+			}
+			
+			$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x AND y_carte=$y";
+			$res_map = $mysqli->query($sql);
+			$t_carte1 = $res_map->fetch_assoc();
+					
+			$fond = $t_carte1["fond_carte"];
+			
+			// calcul bonus perception perso
+			$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso_nouveau_tour);
+			
+			// Calcul PM avec malus rapat
+			$pm_nouveau = ($pm_max_perso_nouveau_tour / 2) + $bonusPM_nouveau_tour;
+			
+			// Prise en compte malus PM des bousculades (PM négatifs)
+			if ($pm_perso_nouveau_tour < 0) {
+				$pm_nouveau += $pm_perso_nouveau_tour;
+			}
+			
+			// MAJ perso avec malus rapat
+			$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau, pa_perso=paMax_perso/2 + bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+			$mysqli->query($sql);
+		}
+		else {
+			
+			// Gestion convalescence
+			if ($convalescence_nouveau_tour) {
+				$pm_nouveau = ($pm_max_perso_nouveau_tour / 2) + $bonusPM_nouveau_tour;
+				$pa_nouveau	= $pa_max_perso_nouveau_tour / 2;
+			}
+			else {
+				$pm_nouveau = $pm_max_perso_nouveau_tour + $bonusPM_nouveau_tour;
+				$pa_nouveau	= $pa_max_perso_nouveau_tour;
+			}
+			
+			// Prise en compte malus PM des bousculades (PM négatifs)
+			if ($pm_perso_nouveau_tour < 0) {
+				$pm_nouveau += $pm_perso_nouveau_tour;
+			}
+			
+			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=pv_perso+$recup_perso_nouveau_tour, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, convalescence=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+			$mysqli->query($sql);
+		}
+		
+		// On decremente le compteur genie si il est > 1
+		if ($genie_nouveau_tour > 1) {
+			$sql = "UPDATE perso SET genie = genie - 1 WHERE id_perso = '$id_perso_nouveau_tour'";
+			$mysqli->query($sql);
+		}
+	}
+}
+
+/**
+ * Fonction qui gère le respawn d'un perso sans nouveau tour
+ */
+function respawn_perso($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $image_perso, $clan, $couleur_clan_p, $chef_perso) {
+	
+	// ---------------------- //
+	//    RESPAWN BATIMENT    //
+	// ---------------------- //
+									
+	// Récupération du batiment de rappatriement le plus proche du perso
+	$id_instance_bat = selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan);
+	
+	if ($id_instance_bat != null && $id_instance_bat != 0) {
+		
+		// récupération coordonnées batiment
+		$sql_b = "SELECT x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat'";
+		$res_b = $mysqli->query($sql_b);
+		$t_b = $res_b->fetch_assoc();
+		
+		$x 		= $t_b['x_instance'];
+		$y 		= $t_b['y_instance'];
+		$id_bat	= $t_b['id_batiment'];
+		
+		// On met le perso dans le batiment
+		$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_instance_bat')";
+		$mysqli->query($sql);
+		
+		// mise a jour des evenements
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+				VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
+		$mysqli->query($sql);
+		
+		// Rapat Chef dans Fort ou Fortin
+		if ($chef_perso && ($id_bat == 8 || $id_bat == 9)) {
+			
+			// recup grade / pc chef
+			$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_chef = $res->fetch_assoc();
+			
+			$id_perso_chef = $t_chef["id_perso"];
+			$pc_perso_chef = $t_chef["pc_perso"];
+			$id_grade_chef = $t_chef["id_grade"];
+			
+			// Verification passage de grade 
+			$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+			$res = $mysqli->query($sql);
+			$t_grade = $res->fetch_assoc();
+			
+			$id_grade_final 	= $t_grade["id_grade"];
+			$nom_grade_final	= $t_grade["nom_grade"];
+			
+			if ($id_grade_chef < $id_grade_final) {
+					
+				// Passage de grade								
+				$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
+				$mysqli->query($sql);
+				
+				// mise a jour des evenements
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+						VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+				$mysqli->query($sql);
+				
+			}
+		}
+		
+	} else {
+		
+		// Respawn aleatoire
+		if ($clan == 1){
+			// bleu
+			$x_min_respawn = 160;
+			$x_max_respawn = 200;
+			$y_min_respawn = 160;
+			$y_max_respawn = 200;
+		}
+		
+		if ($clan == 2){
+			// rouge
+			$x_min_respawn = 0;
+			$x_max_respawn = 40;
+			$y_min_respawn = 0;
+			$y_max_respawn = 40;
+		}
+				
+		// on le replace aleatoirement sur la carte
+		$occup = 1;
+		while ($occup == 1)
+		{
+			$x = pos_zone_rand_x($x_min_respawn, $x_max_respawn); 
+			$y = pos_zone_rand_y($y_min_respawn,$y_max_respawn);
+			$occup = verif_pos_libre($mysqli, $x, $y);
+		}
+		
+		$sql = "UPDATE carte SET occupee_carte = '1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x' AND y_carte='$y'";
+		$mysqli->query($sql);
+		
+		// mise a jour des evenements
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+				VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
+		$mysqli->query($sql);
+	}
+	
+	$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x AND y_carte=$y";
+	$res_map = $mysqli->query($sql);
+	$t_carte1 = $res_map->fetch_assoc();
+			
+	$fond = $t_carte1["fond_carte"];
+	
+	// calcul bonus perception perso
+	$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+	
+	// MAJ perso rapat
+	$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=0, pa_perso=0, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=1 
+			WHERE id_perso='$id_perso'";
+	$mysqli->query($sql);
 }
 ?>
