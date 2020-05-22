@@ -122,8 +122,8 @@ if(isset($_SESSION["ID_joueur"])){
 		}
 	} else {
 	
-		$_SESSION["id_perso"] = $id;
-		$_SESSION["nom_perso"] = $pseudo;
+		$_SESSION["id_perso"] 	= $id;
+		$_SESSION["nom_perso"] 	= $pseudo;
 
 		$date = time();
 		
@@ -250,6 +250,17 @@ if(isset($_SESSION["ID_joueur"])){
 					else {
 						// Il est mort et ce n'est pas un nouveau tour
 						
+						// recuperation des infos du perso
+						$sql = "SELECT nom_perso, x_perso, y_perso, image_perso, chef FROM perso WHERE id_perso='$id'";
+						$res = $mysqli->query($sql);
+						$t_perso = $res->fetch_assoc();
+						
+						$nom_perso			= $t_perso["nom_perso"];
+						$x_perso			= $t_perso["x_perso"];
+						$y_perso			= $t_perso["y_perso"];
+						$image_perso		= $t_perso["image_perso"];
+						$chef_perso 		= $t_perso["chef"];
+						
 						respawn_perso($mysqli, $id, $nom_perso, $x_perso, $y_perso, $image_perso, $clan, $couleur_clan_p, $chef_perso);
 						
 						// redirection
@@ -340,7 +351,8 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 				$mysqli->query($sql);
 				
 				// mise a jour des evenements
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+						VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','dans le bâtiment $id_instance_bat en $x/$y',NOW(),'0')";
 				$mysqli->query($sql);
 				
 				// Rapat Chef dans Fort ou Fortin
@@ -408,7 +420,8 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 				$mysqli->query($sql);
 				
 				// mise a jour des evenements
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+						VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été rapatrié',NULL,'','en $x/$y',NOW(),'0')";
 				$mysqli->query($sql);
 			}
 			
