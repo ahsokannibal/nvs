@@ -437,11 +437,6 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 			// Calcul PM avec malus rapat
 			$pm_nouveau = ($pm_max_perso_nouveau_tour / 2) + $bonusPM_nouveau_tour;
 			
-			// Prise en compte malus PM des bousculades (PM négatifs)
-			if ($pm_perso_nouveau_tour < 0) {
-				$pm_nouveau += $pm_perso_nouveau_tour;
-			}
-			
 			// MAJ perso avec malus rapat
 			$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau, pa_perso=paMax_perso/2 + bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
