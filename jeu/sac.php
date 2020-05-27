@@ -240,6 +240,15 @@ if($dispo || $admin){
 			
 			$nb_objets = $t_nb_objets[0];
 			
+			// recuperation du nombre d'armes non équipées que possede le perso
+			$sql = "SELECT COUNT(id_arme) FROM perso_as_arme WHERE id_perso='$id' AND est_portee='0'";
+			$res = $mysqli->query($sql);
+			$t_nb_armes_non_equip = $res->fetch_row();
+			
+			$nb_armes_non_equip = $t_nb_armes_non_equip[0];
+			
+			$nb_dans_sac = $nb_objets + $nb_armes_non_equip;
+			
 			// recuperation de la thune que possede le perso
 			$sql = "SELECT or_perso, charge_perso, chargeMax_perso, clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
@@ -272,7 +281,7 @@ if($dispo || $admin){
 							<td align=center width=25%><img src="../images/<?php echo $image_sac; ?>"><p align="center"><input type="button" value="Fermer mon sac" onclick="window.open('jouer.php', '_self', ''); window.close();"></p></td>
 							<td width=75%>
 								<center><h2>Mon sac</h2>
-								<p>Le sac vous permet de transporter des objets et de les utiliser.<br>Vous possédez <b><?php echo $nb_objets; ?></b> objet<?php if($nb_objets > 1){echo "s";} ?> dans votre sac.</p>
+								<p>Le sac vous permet de transporter des objets et de les utiliser.<br>Vous possédez <b><?php echo $nb_dans_sac; ?></b> objet<?php if($nb_dans_sac > 1){echo "s";} ?> dans votre sac.</p>
 								<?php 
 								echo "<p><u><b>Charge :</b></u> ";
 								if($charge_perso > $chargeMax_reel){
