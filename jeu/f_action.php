@@ -2759,21 +2759,21 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 			// Objet
 			if($type_objet == 2){
 				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' LIMIT 1";
+				$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0' LIMIT 1";
 				$mysqli->query($sql);
 			}
 			
 			// Arme
 			if($type_objet == 3){
 				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' LIMIT 1";
+				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND est_portee='0' LIMIT 1";
 				$mysqli->query($sql);
 			}
 			
 			// Armure
 			if($type_objet == 4){
 				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' LIMIT 1";
+				$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND est_portee='0' LIMIT 1";
 				$mysqli->query($sql);
 			}
 			
@@ -2805,7 +2805,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 			}
 			
 			echo "<center>Vous venez de déposer un objet à terre</center><br />";
-			echo "<center><a href='jouer.php'>[retour]</a></center>";
+			echo "<center><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
 		}
 	}
 	else {

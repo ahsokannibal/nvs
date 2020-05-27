@@ -1651,14 +1651,14 @@ if($dispo || $admin){
 								if($nom_action == 'Deposer objet'){
 									
 									// lien retour
-									echo "<br /><center><a href='jouer.php'><b>[ retour ]</b></a></center><br />";
+									echo "<br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center><br />";
 								
 									echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets déposables</th></tr>";
 									echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>déposer à terre ?</th></tr>";
 									
 									// Recuperation des objets / armes / armures que possede le perso
 									// Objets (sauf ticket de train qui sont nomminatifs)
-									$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet != '1' ORDER BY id_objet";
+									$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet != '1' AND equip_objet='0' ORDER BY id_objet";
 									$res_o = $mysqli->query($sql_o);
 									
 									while($t_o = $res_o->fetch_assoc()){
@@ -1673,7 +1673,7 @@ if($dispo || $admin){
 										$poids_o = $t1_o["poids_objet"];
 										
 										// recuperation du nombre d'objet de ce type que possede le perso
-										$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'";
+										$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND equip_objet='0' AND id_objet='$id_objet'";
 										$res2_o = $mysqli->query($sql2_o);
 										$nb_o = $res2_o->num_rows;
 										
@@ -1754,7 +1754,7 @@ if($dispo || $admin){
 						}
 						else {
 							echo "<center><font color='red'>Impossible d'effectuer cette action depuis un bâtiment, veuillez sortir pour effectuer cette action</font>";
-							echo "<br /><a href='jouer.php'>[ retour ]</a></center>";
+							echo "<br /><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
 						}
 					}
 				}					
