@@ -541,8 +541,13 @@ if($dispo || $admin){
 		
 		if($verif_idPerso && $id_cible != "" && $id_cible != null){
 		
-			echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets à donner</th></tr>";
-			echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>donner ?</th></tr>";
+			echo "<table border='1' align='center' width='50%'>";
+			echo "	<tr>";
+			echo "		<th style='text-align:center' colspan='4'>Objets à donner</th>";
+			echo "	</tr>";
+			echo "	<tr>";
+			echo "		<th style='text-align:center'>image</td><th style='text-align:center'>poid unitaire</td><th style='text-align:center'>nombre</th><th style='text-align:center'>donner ?</th>";
+			echo "	</tr>";
 							
 			// Recuperation des objets / armes / armures que possede le perso
 			// Or
@@ -673,7 +678,7 @@ if($dispo || $admin){
 		}
 		else {
 			echo "<font color='red'>La cible n'est correcte.</font><br/>";
-			echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+			echo "<center><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
 		}
 	}
 	
@@ -931,17 +936,17 @@ if($dispo || $admin){
 							// fin de la generation de la carte
 								
 							// lien annuler
-							echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
+							echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 						} else {
 							
 							// Besoin de 40PM, de tout ses PA et être sur de la plaine pour pouvoir charger
 							echo "<br /><center>Vous avez besoin de tous vos PA, de 4PM et d'être sur de la plaine afin de pouvoir charger !</center>";
-							echo "<br /><br /><center><a href='jouer.php'><b>[ retour ]</b></a></center>";
+							echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center>";
 						}
 					}
 					else {
 						echo "<br /><center>Loi anti-zerk non respectée ! Vous devez attendre 8h entre votre dernière attaque du tour précédent et une nouvelle attaque sur le nouveau tour.</center>";
-						echo "<br><center><a href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						echo "<br><center><a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">retour</font></a></center>";
 					}
 				} else {
 			
@@ -1089,7 +1094,7 @@ if($dispo || $admin){
 							// fin de la generation de la carte
 							
 							// lien annuler
-							echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
+							echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 						}
 						
 						// action ne pouvant pas cibler son propre perso
@@ -1256,7 +1261,7 @@ if($dispo || $admin){
 							}
 							
 							// lien annuler
-							echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
+							echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 						}
 					}
 				
@@ -1459,7 +1464,7 @@ if($dispo || $admin){
 									// fin de la generation de la carte
 									
 									// lien annuler
-									echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
+									echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 								} 
 								else if ($nom_action == 'Construire - Rail') {
 									
@@ -1535,13 +1540,13 @@ if($dispo || $admin){
 										// fin de la generation de la carte
 										
 										// lien annuler
-										echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
+										echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 									}
 									else {
 										echo "<center>Il vous faut 4 PA pour construire un rail</center>";
 										
-										// lien annuler
-										echo "<br /><br /><center><a href='jouer.php'><b>[ retour ]</b></a></center>";
+										// lien retour
+										echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center>";
 									}
 								}
 								
@@ -1626,7 +1631,7 @@ if($dispo || $admin){
 									// fin de la generation de la carte
 									
 									// lien annuler
-									echo "<br /><br /><center><a href='jouer.php'><b>[ annuler ]</b></a></center>";
+									echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 								}
 							}
 							// action a faire sur la case courante du perso
@@ -1770,11 +1775,11 @@ if($dispo || $admin){
 		else {
 			if(isset($_POST['liste_action']) && $_POST['liste_action'] == 'PA'){
 				echo "Pas assez de PA";
-				echo "<center><a href='jouer.php'>[retour]</a></center>";
+				echo "<center><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
 			}
 			if(isset($_POST['liste_action']) && $_POST['liste_action'] == 'invalide'){
 				echo "Invalide";
-				echo "<center><a href='jouer.php'>[retour]</a></center>";
+				echo "<center><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
 			}
 		}
 	}
