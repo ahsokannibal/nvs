@@ -2934,7 +2934,7 @@ if($dispo || $admin){
 									?>
 								</tr>
 								<?php 
-								if ($type_perso == 5) { 
+								if ($type_perso == 5 && $degatZone_arme_dist) { 
 								?>
 								<tr>
 									<td><b>Spécial</b></td>
