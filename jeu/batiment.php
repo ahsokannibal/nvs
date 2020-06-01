@@ -120,6 +120,7 @@ if($dispo || $admin){
 	
 	<body>
 		<div align="center"><h2><?php echo $nom_bat." ".$nom_i_bat; ?></h2></div>
+		<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 		<center><input type="button" onclick="window.open('evenement.php?infoid=<?php echo $id_i_bat; ?>');" value="Voir les évènements du bâtiment" /></center>
 <?php
 						/////////////////////
