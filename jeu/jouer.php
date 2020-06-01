@@ -2938,7 +2938,15 @@ if($dispo || $admin){
 								?>
 								<tr>
 									<td><b>Spécial</b></td>
-									<td colspan='2'><center>Dégâts de zone et bonus de dégâts sur bâtiments</center></td>
+									<td colspan='2'>
+										<center>Dégâts de zone
+										<?php 
+										if ($id_arme_dist == 13) {
+											echo "<br>Bonus de dégâts sur bâtiments";
+										}
+										?>
+										</center>
+									</td>
 								</tr>
 								<?php 
 								}

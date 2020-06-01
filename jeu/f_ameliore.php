@@ -17,7 +17,7 @@ function ameliore_pa($mysqli, $pa_courant, $type_perso){
 	
 	$resultat = $base_cout_pa + $pa_ameliore_cible * $cout_achat_pa;
 	
-	return $resultat." pi";
+	return $resultat;
 }
 
 /**
@@ -37,7 +37,7 @@ function ameliore_pm($mysqli, $pm_courant, $type_perso){
 	
 	$resultat = $base_cout_pm + $pm_ameliore_cible * $cout_achat_pm;
 	
-	return $resultat." pi";
+	return $resultat;
 }
 
 /**
@@ -57,7 +57,7 @@ function ameliore_pv($mysqli, $pv_courant, $type_perso){
 	
 	$resultat = floor($base_cout_pv + $pv_ameliore_cible * $cout_achat_pv);
 	
-	return $resultat." pi";
+	return $resultat;
 }
 
 /**
@@ -77,7 +77,7 @@ function ameliore_perc($mysqli, $per_courant, $type_perso){
 	
 	$resultat = $base_cout_per + $per_ameliore_cible * $cout_achat_per;
 	
-	return $resultat." pi";
+	return $resultat;
 }
 
 /**
@@ -97,6 +97,6 @@ function ameliore_recup($mysqli, $rec_courant, $type_perso){
 	
 	$resultat = $base_cout_rec + $rec_ameliore_cible * $cout_achat_rec;
 	
-	return $resultat." pi";
+	return $resultat;
 }
 ?>

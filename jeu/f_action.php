@@ -120,7 +120,8 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 							AND x_perso >= $x_bat - 10
 							AND x_perso <= $x_bat + 10
 							AND y_perso >= $y_bat - 10
-							AND y_perso <= $y_bat + 10";							
+							AND y_perso <= $y_bat + 10
+							AND est_gele = 0";							
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
@@ -161,7 +162,8 @@ function verif_contraintes_construction_ennemis($mysqli, $id_bat, $camp_perso, $
 			AND x_perso <= $x_bat + $nb_cases_ennemi
 			AND y_perso >= $y_bat - $nb_cases_ennemi
 			AND y_perso <= $y_bat + $nb_cases_ennemi
-			AND pv_perso > 0";
+			AND pv_perso > 0
+			AND est_gele = 0";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
