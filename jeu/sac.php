@@ -427,10 +427,24 @@ if($dispo || $admin){
 				// calcul poids
 				$poids_total_a = $poids_a * $nb_a;
 				
+				$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
+							WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
+							AND arme_as_type_unite.id_arme = '$id_arme'";
+				$res_u = $mysqli->query($sql_u);
+				$liste_unite = "";
+				while ($t_u = $res_u->fetch_assoc()) {
+					$nom_unite = $t_u["nom_unite"];
+					
+					if ($liste_unite != "") {
+						$liste_unite .= " / ";
+					}
+					$liste_unite .= $nom_unite;
+				}
+				
 				// affichage
 				echo "<tr>";
 				echo "	<td align='center'><img class='img-fluid' src=\"../images/armes/".$image_a."\"></td>";
-				echo "	<td align='center'><font color=green><b>".$nom_a."</b></font><br>".stripslashes($description_a)."</td>";
+				echo "	<td align='center'><font color=green><b>".$nom_a."</b></font><br>Arme utilisable pour les unités suivante : <b>".$liste_unite."</b><br />".stripslashes($description_a)."</td>";
 				echo "	<td align='center'>Vous possédez <b>".$nb_a."</b> ".$nom_a."";
 				if($nb_a > 1){ 
 					echo "s";
