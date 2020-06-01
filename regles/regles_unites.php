@@ -79,7 +79,7 @@
 					<h4>Le Chef</h4>
 					
 					<p>Votre chef de bataillon effectue une carrière militaire et monte progressivement en grade. Lorsqu'il change de grade, il vous permet alors d'augmenter son nombre de grouillots. Donc plus vous êtes gradé, plus vous pourrez jouer de personnages.</p>
-					<p>Lors de sa capture, votre chef perd 5% de ses XP/XPI/PC mais ne peut pas descendre de grade même si ses PC descendent en dessous du niveau requit pour le grade (un grade est acquit définitivement hors rétrogradation par l'animation)</p>
+					<p>Lors de sa capture, votre chef perd 5% de ses XPI/PC mais ne peut pas descendre de grade même si ses PC descendent en dessous du niveau requit pour le grade (un grade est acquit définitivement hors rétrogradation par l'animation)</p>
 					<p>Le nom de votre chef de bataillon est défini lors de votre inscription. Cette unité est une cavalerie, boostée par rapport à un grouillot cavalerie (plus de PV, protection, etc..)</p>
 					
 					<h4>Les grouillots</h4>
