@@ -17,28 +17,33 @@ $dispo = $t_dispo["disponible"];
 
 if($dispo){
 	if(isset($_SESSION["id_perso"])){
+		
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
-		$sql = "SELECT pv_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT pv_perso, pm_perso, bonusPM_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		
-		$testpv = $tpv['pv_perso'];
-		$or = $tpv["or_perso"];
-		$dla = $tpv["DLA"];
-		$est_gele = $tpv["est_gele"];
+		$testpv 	= $tpv['pv_perso'];
+		$pm_perso	= $tpv['pm_perso'];
+		$or 		= $tpv["or_perso"];
+		$dla 		= $tpv["DLA"];
+		$est_gele 	= $tpv["est_gele"];
 		
 		$config = '1';
 		
 		// verification si le perso est encore en vie
-		if ($testpv <= 0) { // le perso est mort
-			// unset($_SESSION['ma_variable']); 
+		if ($testpv <= 0) { 
+			// le perso est mort
 			session_unregister('deDefense');
 			session_unregister('deAttaque');
-			header("Location:../tour.php"); //tour.php se charge de verifier si nouveau tour
+			
+			//tour.php se charge de verifier si nouveau tour
+			header("Location:../tour.php"); 
 		}
-		else { // le perso est vivant
+		else { 
+			// le perso est vivant
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -191,24 +196,31 @@ if($dispo){
 						$bonusPM_arme 	= $tab1["bonusPM_arme"];
 						$poids_arme		= $tab1["poids_arme"];
 						
-						// mise a jour pa perso
-						$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_perso'";
-						$mysqli->query($sql);
-						
-						// mise a jour equipe perso
-						$sql = "UPDATE perso_as_arme SET est_portee='0' WHERE id_arme='$id_arme' AND id_perso='$id_perso' AND est_portee='1' LIMIT 1";
-						$mysqli->query($sql);
-						
-						$mess = "Vous venez de vous desequiper d'une arme.";
-						
-						if($bonusPM_arme != 0){
-							$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso-$bonusPM_arme WHERE id_perso='$id_perso'";
-							$mysqli->query($sql_u);
+						if($bonusPM_arme >= 0 && $bonusPM_arme <= $pm_perso) {
+							
+							// mise a jour pa perso
+							$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_perso'";
+							$mysqli->query($sql);
+							
+							// mise a jour equipe perso
+							$sql = "UPDATE perso_as_arme SET est_portee='0' WHERE id_arme='$id_arme' AND id_perso='$id_perso' AND est_portee='1' LIMIT 1";
+							$mysqli->query($sql);
+							
+							$mess = "Vous venez de vous desequiper d'une arme.";
+							
+							if($bonusPM_arme != 0){
+								$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso-$bonusPM_arme WHERE id_perso='$id_perso'";
+								$mysqli->query($sql_u);
+							}
+						}
+						else {
+							$mess_erreur = "Vous devez posseder au moins ".$bonusPM_arme." PM pour rengainer cette arme !";
 						}
 					}
 				}
-				
-				else $mess_erreur = "Vous n'avez pas assez de pa pour effectuer cette action !";
+				else {
+					$mess_erreur = "Vous n'avez pas assez de pa pour effectuer cette action !";
+				}
 			}
 			
 			// recuperation des donnees des armes que possede le perso et qui peuvent être équipées

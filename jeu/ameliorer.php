@@ -117,18 +117,24 @@ if($dispo || $admin){
 			
 			// calcul du nombre de pi necessaire
 			$nbpi_pm = ameliore_pm($mysqli, $pm, $type);
-		
-			// verification que le perso a assez de pi
-			if($pi >= $nbpi_pm) {
-				
-				$sql2 = "UPDATE perso SET pmMax_perso=pmMax_perso+1, pi_perso=pi_perso-$nbpi_pm WHERE id_perso ='$id'";
-				$mysqli->query($sql2);
-				
-				$pm = $pm + 1;
-				$pi = $pi - $nbpi_pm;
+			
+			if ($type == 5 && $pm >= 6) {
+				echo "<center><font color=red>Il est impossible d'améliorer plus les PM des unités d'artillerie</font></center>";
 			}
 			else {
-				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+		
+				// verification que le perso a assez de pi
+				if($pi >= $nbpi_pm) {
+					
+					$sql2 = "UPDATE perso SET pmMax_perso=pmMax_perso+1, pi_perso=pi_perso-$nbpi_pm WHERE id_perso ='$id'";
+					$mysqli->query($sql2);
+					
+					$pm = $pm + 1;
+					$pi = $pi - $nbpi_pm;
+				}
+				else {
+					echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+				}
 			}
 		}
 		
@@ -198,15 +204,54 @@ if($dispo || $admin){
 				
 				<table border="1" align="center"> 
 				
-					<tr><td>Points de vie</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pv; ?>" disabled>&nbsp;<input type="submit" name="pv" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pv($mysqli, $pv, $type)." pi"; ?></td></tr>
+					<tr>
+						<td>Points de vie</td>
+						<td>
+							<input type="text" size="3" maxlength="3" value="<?php echo $pv; ?>" disabled>&nbsp;
+							<input type="submit" name="pv" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pv($mysqli, $pv, $type); ?>
+						</td>
+					</tr>
 					
-					<tr><td>Points de mouvement</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pm; ?>" disabled>&nbsp;<input type="submit" name="pm" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pm($mysqli, $pm, $type)." pi"; ?></td></tr>
+					<tr>
+						<td>Points de mouvement</td>
+						<td>
+							<input type="text" size="3" maxlength="3" value="<?php echo $pm; ?>" disabled>&nbsp;
+							<?php
+							if ($type == 5 && $pm >= 6) {
+								echo "<b>Maximum atteint</b>";
+							}
+							else {
+							?>
+							<input type="submit" name="pm" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pm($mysqli, $pm, $type); ?>
+							<?php 
+							}
+							?>
+						</td>
+					</tr>
 					
-					<tr><td>Points d'action</td><td><input type="text" size="3" maxlength="3" value="<?php echo $pa; ?>" disabled>&nbsp;<input type="submit" name="pa" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pa($mysqli, $pa, $type)." pi"; ?></td></tr>
+					<tr>
+						<td>Points d'action</td>
+						<td>
+							<input type="text" size="3" maxlength="3" value="<?php echo $pa; ?>" disabled>&nbsp;
+							<input type="submit" name="pa" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pa($mysqli, $pa, $type); ?>
+						</td>
+					</tr>
 					
-					<tr><td>Perception</td><td><input type="text" size="3" maxlength="3" value="<?php echo $per; ?>" disabled>&nbsp;<input type="submit" name="per" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_perc($mysqli, $per, $type)." pi"; ?></td></tr>
+					<tr>
+						<td>Perception</td>
+						<td>
+							<input type="text" size="3" maxlength="3" value="<?php echo $per; ?>" disabled>&nbsp;
+							<input type="submit" name="per" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_perc($mysqli, $per, $type); ?>
+						</td>
+					</tr>
 					
-					<tr><td>Recuperation</td><td><input type="text" size="3" maxlength="3" value="<?php echo $rec; ?>" disabled>&nbsp;<input type="submit" name="rec" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_recup($mysqli, $rec, $type)." pi"; ?></td></tr>
+					<tr>
+						<td>Recuperation</td>
+						<td>
+							<input type="text" size="3" maxlength="3" value="<?php echo $rec; ?>" disabled>&nbsp;
+							<input type="submit" name="rec" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_recup($mysqli, $rec, $type); ?>
+						</td>
+					</tr>
 					
 				</table>
 			</form>
