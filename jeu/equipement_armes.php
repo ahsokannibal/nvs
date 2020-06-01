@@ -167,11 +167,7 @@ if($dispo){
 									}
 								}
 								
-								// MAJ Malus equipement armes lourdes
-								if(port_armes_lourdes($mysqli, $id_perso)){
-									$bonusPM_arme = ceil($bonusPM_arme / 2);
-								}
-								if($bonusPM_arme < 0){
+								if($bonusPM_arme != 0){
 									$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso+$bonusPM_arme WHERE id_perso='$id_perso'";
 									$mysqli->query($sql_u);
 								}
@@ -205,11 +201,7 @@ if($dispo){
 						
 						$mess = "Vous venez de vous desequiper d'une arme.";
 						
-						// MAJ Malus desequipement armes lourdes
-						if(port_armes_lourdes($mysqli, $id_perso)){
-							$bonusPM_arme = ceil($bonusPM_arme / 2);
-						}
-						if($bonusPM_arme < 0){
+						if($bonusPM_arme != 0){
 							$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso-$bonusPM_arme WHERE id_perso='$id_perso'";
 							$mysqli->query($sql_u);
 						}
