@@ -3377,10 +3377,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 							$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
 							$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
 							
-							// Calcul XP
-							$xp_perdu		= floor(($xp_perso_cible * 5) / 100);
-							$xp_perso_fin	= $xp_perso_cible - $xp_perdu;
-							
 							// Calcul PC
 							$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
 							$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
@@ -3388,12 +3384,11 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						else {
 							// Quand un grouillot meurt, il perd tout ses Pi
 							$pi_perso_fin = 0;
-							$xp_perso_fin = $xp_perso_cible;
 							$pc_perso_fin = $pc_perso_cible;
 						}
 						
 						// maj stats / XP / PI / PC de la cible
-						$sql = "UPDATE perso SET xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+						$sql = "UPDATE perso SET pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 						$mysqli->query($sql);
 						
 						// maj stats du perso

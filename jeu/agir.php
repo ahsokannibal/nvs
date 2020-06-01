@@ -676,10 +676,6 @@ if($verif){
 													$pi_perdu 		= floor(($pi_collat_fin * 5) / 100);
 													$pi_perso_fin 	= $pi_collat_fin - $pi_perdu;
 													
-													// Calcul XP
-													$xp_perdu		= floor(($xp_collat_fin * 5) / 100);
-													$xp_perso_fin	= $xp_collat_fin - $xp_perdu;
-													
 													// Calcul PC
 													$pc_perdu		= floor(($pc_collat_fin * 5) / 100);
 													$pc_perso_fin	= $pc_collat_fin - $pc_perdu;
@@ -687,12 +683,11 @@ if($verif){
 												else {
 													// Quand un grouillot meurt, il perd tout ses Pi
 													$pi_perso_fin = 0;
-													$xp_perso_fin = $xp_collat_fin;
 													$pc_perso_fin = $pc_collat_fin;
 												}
 							
 												// MAJ perte xp/po/stat cible
-												$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
+												$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
 												$mysqli->query($sql);
 												
 												if ($perte_po > 0) {
@@ -904,14 +899,10 @@ if($verif){
 									
 									// Chef
 									if ($tp_perso == 1) {
-										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_cible * 5) / 100);
 										$pi_perso_fin 	= $pi_cible - $pi_perdu;
-										
-										// Calcul XP
-										$xp_perdu		= floor(($xp_cible * 5) / 100);
-										$xp_perso_fin	= $xp_cible - $xp_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_perso * 5) / 100);
@@ -920,12 +911,11 @@ if($verif){
 									else {
 										// Quand un grouillot meurt, il perd tout ses Pi
 										$pi_perso_fin = 0;
-										$xp_perso_fin = $xp_cible;
 										$pc_perso_fin = $pc_perso;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 				
 									echo "<div class=\"infoi\">Vous avez capturé votre cible ! <font color=red>Félicitations.</font></div>";
@@ -1528,14 +1518,10 @@ if($verif){
 										
 										// Chef
 										if ($tp_collat_fin == 1) {
-											// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
+											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_collat_fin * 5) / 100);
 											$pi_perso_fin 	= $pi_collat_fin - $pi_perdu;
-											
-											// Calcul XP
-											$xp_perdu		= floor(($xp_collat_fin * 5) / 100);
-											$xp_perso_fin	= $xp_collat_fin - $xp_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_collat_fin * 5) / 100);
@@ -1544,12 +1530,11 @@ if($verif){
 										else {
 											// Quand un grouillot meurt, il perd tout ses Pi
 											$pi_perso_fin = 0;
-											$xp_perso_fin = $xp_collat_fin;
 											$pc_perso_fin = $pc_collat_fin;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
 										$mysqli->query($sql);
 					
 										echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
