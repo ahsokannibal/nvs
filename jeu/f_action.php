@@ -1309,6 +1309,10 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES (0,'marche forcée','$id_perso','<font color=$couleur_clan_perso>$nom_perso</font>',NOW())";
 				$mysqli->query($sql);
 				
+				// maj dernier tombé
+				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso')";
+				$mysqli->query($sql);
+				
 				echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
 				echo "<center>Vous êtes Mort !</center><br />";
 				echo "<center><a href='jouer.php'>[retour]</a></center>";
