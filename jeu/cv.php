@@ -159,9 +159,22 @@ if(isset($id)){
 		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDCible_cv'] == $id) {
+				
+				$id_acteur_cv = $t['IDActeur_cv'];
+				
 				$count++;
-				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>] a été capturé par ";
-				echo $t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>]</td>";
+				echo "<tr>";
+				echo "	<td>".$t['date_cv']."</td><td>".$t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]";
+				if ($id_acteur_cv != 0) {
+					echo " a été capturé par ";
+					echo $t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
+				}
+				else {
+					echo " s'est effondré tout seul à cause de : ";
+					echo $t['nomActeur_cv'];
+				}
+				
+				echo "	</td>";
 			}
 		}
 		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";

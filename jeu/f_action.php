@@ -1305,6 +1305,10 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' s\'est tué en effectuant une marche forcée... ',NULL,'',' : Bravo !',NOW(),'0')";
 				$mysqli->query($sql);
 				
+				// maj cv
+				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES (0,'marche forcée','$id_perso','<font color=$couleur_clan_perso>$nom_perso</font>',NOW())";
+				$mysqli->query($sql);
+				
 				echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
 				echo "<center>Vous êtes Mort !</center><br />";
 				echo "<center><a href='jouer.php'>[retour]</a></center>";
