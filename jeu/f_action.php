@@ -1313,6 +1313,10 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso')";
 				$mysqli->query($sql);
 				
+				// Quand un grouillot meurt, il perd tout ses Pi
+				$sql = "UPDATE perso SET pi_perso = 0 WHERE id_perso='$id_perso'";
+				$mysqli->query($sql);
+				
 				echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
 				echo "<center>Vous êtes Mort !</center><br />";
 				echo "<center><a href='jouer.php'>[retour]</a></center>";
