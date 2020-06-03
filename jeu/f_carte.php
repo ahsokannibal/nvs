@@ -23,34 +23,69 @@ define("I_ROUTE_B","b4b.png");
 define("I_ROUTE_R","b4r.png");
 define("I_RAIL","rail.gif");
 
-function in_map($x, $y) //vérifie si les coordonnées passées en argument sont bien sur la carte
+//vérifie si les coordonnées passées en argument sont bien sur la carte
+function in_map($x, $y)
 {
 	return $x >= X_MIN && $y >= Y_MIN && $x <= X_MAX && $y <= Y_MAX;
 }
 
-function in_map_arene($x, $y) //vérifie si les coordonnées passées en argument sont bien sur la carte
+//vérifie si les coordonnées passées en argument sont bien sur la carte
+function in_map_arene($x, $y)
 {
 	return $x >= X_MIN && $y >= Y_MIN && $x <= X_MAXA && $y <= Y_MAXA;
 }
 
-function reste_pm($pm) //vérifie si le perso à suffisament de pm pour se deplacer
+//vérifie si le perso à suffisament de pm pour se deplacer
+function reste_pm($pm)
 {
 	return $pm > 0;
 }
 
-function is_eau_p($fond) //vérifie si le fond passé en argument est de l'eau profonde
+//vérifie si le fond passé en argument est de l'eau profonde
+function is_eau_p($fond)
 {
 	return $fond == I_EAU_P;
 }
 
-function is_ville($image) //vérifie si l'image de la carte occupée (passée en argument) est une ville
+//vérifie si l'image de la carte occupée (passée en argument) est une ville
+function is_ville($image)
 {
 	return $image == I_VILLE;
 }
 
-function is_pont($image) //vérifie si l'image de la carte occupée (passée en argument) est un pont
+//vérifie si l'image de la carte occupée (passée en argument) est un pont
+function is_pont($image)
 {
 	return $image == I_PONT;
+}
+
+function verif_position_libre($mysqli, $x, $y) {
+	
+	$verif = true;
+	
+	if (in_map($x, $y)) {
+		
+		$sql = "SELECT occupee_carte FROM carte WHERE x_carte='".$x."' AND y_carte='".$y."' AND fond_carte != '9.gif'";
+		$res = $mysqli->query($sql);
+		$num = $res->num_rows;
+		
+		if ($num == 0) {
+			$verif = false;
+		}
+		else {
+			$t = $res->fetch_assoc();
+			$occ = $t['occupee_carte'];
+			
+			if ($occ) {
+				$verif = false;
+			}
+		}
+	}
+	else {
+		$verif = false;
+	}
+	
+	return $verif;
 }
 
 // Donne le nombre de pm que coute le deplacement suivant le terrain

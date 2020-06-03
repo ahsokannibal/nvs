@@ -2196,14 +2196,14 @@ if($verif){
 									$mysqli->query($sql_p);
 									
 									// Traitement répartissement des persos sur la carte
-									$occup = 1;
-									while ($occup == 1)
+									$verif_occ = 0;
+									while (!$verif_occ)
 									{
 										// TODO - changer façon de faire 
 										// TODO - Tourner autour de la position du batiment jusqu'à ce qu'on trouve une position libre
 										$x = pos_zone_rand_x($x_cible-5, $x_cible+5); 
 										$y = pos_zone_rand_y($y_cible-5, $y_cible+5);
-										$occup = verif_pos_libre($mysqli, $x, $y);
+										$verif_occ = verif_position_libre($mysqli, $x, $y);
 									}
 									
 									// maj evenement
