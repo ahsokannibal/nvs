@@ -101,7 +101,6 @@ else {
 	echo "	<th style='text-align:center' width='33%'>Date</th>";
 	echo "	<th style='text-align:center' width='34%' colspan=2>Objet</th>";
 	echo "</tr>";
-	echo '<form method="post" action="traitement/messagerie.php">';
 	$i = 0;
 	
 	while($row = $resultat->fetch_assoc()) {
@@ -110,10 +109,13 @@ else {
 		echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$row["id_message"].'"></td>';
 		
 		if ($row["lu_message"]){
-			echo "<td>" . $row["expediteur_message"] . "</td><td align='center'>" . stripslashes($row["date_message"]) . "</td><td colspan=2><a href=message_lire.php?id=" . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a></td>";
+			echo "	<td>" . $row["expediteur_message"] . "</td>";
+			echo "	<td align='center'>" . stripslashes($row["date_message"]) . "</td><td colspan=2><a href=message_lire.php?id=" . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a></td>";
 		}
 		else {
-			echo '<td><div>' . $row["expediteur_message"] . '</div></td><td align="center"><div>' . stripslashes($row["date_message"]) . '</div></td><td colspan=2><a href=message_lire.php?id=' . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a><b> (non lu)</b></td>";
+			echo '	<td><div>' . $row["expediteur_message"] . '</div></td>';
+			echo '	<td align="center"><div>' . stripslashes($row["date_message"]) . '</div></td>';
+			echo '	<td colspan=2><a href=message_lire.php?id=' . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a><b> (non lu)</b></td>";
 		}
 		echo '</tr>';
 		$i++;

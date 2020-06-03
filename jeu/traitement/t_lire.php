@@ -20,7 +20,7 @@ if (isset($_POST["submit"])) {
 	$action = $_POST["submit"];
 	
 	if ($action == "Effacer") {
-		$sql = "DELETE FROM message_perso WHERE id_perso='$id' AND id_message='" . $id_message . "'";
+		$sql = "UPDATE message_perso SET supprime_message='1' WHERE id_perso='$id' AND id_message='" . $id_message . "'";
 		$mysqli->query($sql);
 		
 		header("Location:../messagerie.php");
