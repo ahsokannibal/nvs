@@ -75,7 +75,7 @@ if(isset($_SESSION["ID_joueur"])){
 					// calcul du prochain tour
 					$new_dla = $date + DUREE_TOUR;
 					
-					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan);
+					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan_p);
 					
 					//redirection
 					header("location:jeu/jouer.php");
@@ -232,16 +232,17 @@ if(isset($_SESSION["ID_joueur"])){
 				
 				//c'est un nouveau tour et le perso n'est pas gele
 				if (!$est_gele && nouveau_tour($date, $dla)) {
-				
+					
 					// calcul du prochain tour
 					$new_dla = $date + DUREE_TOUR;					
 					
-					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan);
+					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan_p);
 					
 					//redirection
 					header("location:jeu/jouer.php");
 				}
 				else {
+					
 					if ($pv > 0) {
 						// il est encore en vie et pas nouveau tour
 						// redirection
@@ -279,7 +280,7 @@ else{
  * Fonction permettant de gérer un nouveau tour
  *
  */
-function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
+function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan_p) {
 	
 	// Récupération de tous les perso du joueur
 	$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef, genie, convalescence 
@@ -359,18 +360,19 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 				if ($chef_perso_nouveau_tour && ($id_bat == 8 || $id_bat == 9)) {
 					
 					// recup grade / pc chef
-					$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso_nouveau_tour'";
-					$res = $mysqli->query($sql);
-					$t_chef = $res->fetch_assoc();
+					$sql_chef = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade 
+									WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso_nouveau_tour'";
+					$res_chef = $mysqli->query($sql_chef);
+					$t_chef = $res_chef->fetch_assoc();
 					
 					$id_perso_chef = $t_chef["id_perso"];
 					$pc_perso_chef = $t_chef["pc_perso"];
 					$id_grade_chef = $t_chef["id_grade"];
 					
 					// Verification passage de grade 
-					$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-					$res = $mysqli->query($sql);
-					$t_grade = $res->fetch_assoc();
+					$sql_grade = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+					$res_grade = $mysqli->query($sql_grade);
+					$t_grade = $res_grade->fetch_assoc();
 					
 					$id_grade_final 	= $t_grade["id_grade"];
 					$nom_grade_final	= $t_grade["nom_grade"];
@@ -382,7 +384,8 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 						$mysqli->query($sql);
 						
 						// mise a jour des evenements
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+								VALUES ('$id_perso_nouveau_tour','<font color=$couleur_clan_p><b>$nom_perso_nouveau_tour</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
 						$mysqli->query($sql);
 						
 					}
@@ -438,7 +441,8 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 			$pm_nouveau = ($pm_max_perso_nouveau_tour / 2) + $bonusPM_nouveau_tour;
 			
 			// MAJ perso avec malus rapat
-			$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau, pa_perso=paMax_perso/2 + bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+			$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau, pa_perso=paMax_perso/2 + bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) 
+					WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
 		}
 		else {
@@ -464,7 +468,8 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan) {
 				$pv_nouveau = $pv_max_perso_nouveau_tour;
 			}
 			
-			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, convalescence=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) WHERE id_perso='$id_perso_nouveau_tour'";
+			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, convalescence=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) 
+					WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
 		}
 		
