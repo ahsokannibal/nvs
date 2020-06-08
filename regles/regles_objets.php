@@ -91,28 +91,208 @@
 					Donner une arme vous coûte 1 PA.<br />
 					L'achat et la vente d'une arme coûte 2 PA.</p>
 					
-					<div id="table_armes" class="table-responsive">
+					<h2>Tableau des armes de Corps à corps</h2>
+					
+					<div id="table_armes_cac" class="table-responsive">
 						<table border='1' align="center" width=100%>
 							<tr>
 								<th style="text-align:center">Image</th>
 								<th style="text-align:center">Nom</th>
 								<th style="text-align:center">Dégâts</th>
-								<th style="text-align:center">Portée</th>
+								<th style="text-align:center">Précision</th>
+								<th style="text-align:center">Coût PA</th>
 								<th style="text-align:center">Unités</th>
 								<th style="text-align:center">Poids</th>
-								<th style="text-align:center">Coût</th>
+								<th style="text-align:center">Coût Or</th>
+								<th style="text-align:center">Description</th>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images/armes/baionette.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>Baïonette</td>
+								<td align='center'>16D6</td>
+								<td align='center'>60%</td>
+								<td align='center'>3</td>
+								<td align='center'>Infanterie</td>
+								<td align='center'>0.5kg</td>
+								<td align='center'>50</td>
+								<td align='center'>Arme de départ de Corps à corps des infanteries</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/armes/sabre.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Sabre</td>
+								<td align='center'>20D6</td>
+								<td align='center'>80%</td>
+								<td align='center'>4</td>
+								<td align='center'>Chef / Cavalerie</td>
+								<td align='center'>2.0kg</td>
+								<td align='center'>0</td>
+								<td align='center'>Arme de départ de Corps à corps des chefs et cavaliers</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/armes/sabre_lourd.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Sabre Lourd</td>
+								<td align='center'>25D6</td>
+								<td align='center'>80%</td>
+								<td align='center'>5</td>
+								<td align='center'>Chef / Cavalerie</td>
+								<td align='center'>2.5kg</td>
+								<td align='center'>250</td>
+								<td align='center'>Sabre lourd, plus lourd, inflige plus de dégâts mais moins maniable qu'un sabre de dotation</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/armes/cannine.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Cannines / Crocs / Morsure</td>
+								<td align='center'>15D4</td>
+								<td align='center'>90%</td>
+								<td align='center'>10</td>
+								<td align='center'>Chien</td>
+								<td align='center'>0.0kg</td>
+								<td align='center'>0</td>
+								<td align='center'>Arme naturelle de Corps à corps des chiens</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/armes/seringue.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Seringue</td>
+								<td align='center'>20D6</td>
+								<td align='center'>90%</td>
+								<td align='center'>5</td>
+								<td align='center'>Soigneur</td>
+								<td align='center'>0.1kg</td>
+								<td align='center'>50</td>
+								<td align='center'>Les seringues permettent de soigner directement les PV des persos / PNJ</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images/armes/bandage.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td align='center'>Bandages</td>
+								<td align='center'>2D10</td>
+								<td align='center'>35%</td>
+								<td align='center'>3</td>
+								<td align='center'>Soigneur</td>
+								<td align='center'>0.2kg</td>
+								<td align='center'>50</td>
+								<td align='center'>Les bandages permettent de soigner les malus des persos / PNJ</td>
 							</tr>
 						</table>
 					</div>
+					
+					<br /><br />
+					
+					<h2>Tableau des armes de combat à distance</h2>
+					
+					<div id="table_armes_dist" class="table-responsive">
+						<table border='1' align="center" width=100%>
+							<tr>
+								<th style="text-align:center">Image</th>
+								<th style="text-align:center">Nom</th>
+								<th style="text-align:center">Dégâts</th>
+								<th style="text-align:center">Précision</th>
+								<th style="text-align:center">Portée</th>
+								<th style="text-align:center">Coût PA</th>
+								<th style="text-align:center">Unités</th>
+								<th style="text-align:center">Poids</th>
+								<th style="text-align:center">Coût Or</th>
+								<th style="text-align:center">Description</th>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/cailloux.gif' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Cailloux</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/pistolet.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Pistolet</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/pistolet_canon_long.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Pistolet canon long</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/magnum.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Magnum</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/fusil.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Fusil</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/fusil_precision.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Fusil Précision</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/canon.jpg' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Canon</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+							<tr>
+								<td style="text-align:center"><img src='../images/armes/gatling.png' style='max-width: 100px; height: auto;' alt=''></td>
+								<td style="text-align:center">Gatling</td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+								<td style="text-align:center"></td>
+							</tr>
+						</table>
+					</div>
+					
+					<br /><br />
 					
 					<h2>Les Objets</h2>
 					
