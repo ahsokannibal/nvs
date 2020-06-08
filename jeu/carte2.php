@@ -167,8 +167,9 @@ if (@$_SESSION["id_perso"]) {
 			// Foret
 			$couleur_brouillard = $couleur_brouillard_foret;
 		}
-		else if ($fond == '8.gif' || $fond == '9.gif' || $fond == '6.gif') {
-			// eau
+		else if ($fond == '8.gif' || $fond == '9.gif' || $fond == '6.gif' 
+				|| $fond == 'b5b.png' || $fond == 'b5r.png') {
+			// eau ou ponts
 			$couleur_brouillard = $couleur_brouillard_eau;
 		}
 		else {
