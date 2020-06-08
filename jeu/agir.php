@@ -348,20 +348,7 @@ if($verif){
 						
 							// Si perso ou cible est une infanterie 
 							// ou si grade perso >= grade cible - 1
-							if ((( $grade_perso <= $grade_cible + 1 && $grade_cible != 101 && $grade_cible != 102 )
-									|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
-									|| (($grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $grade_perso == 2)) && ($clan_cible != $clan_perso || $type_perso == 4)) {
-								
-								// Est-ce que la cible est dans le même bataillon ?
-								if ($id_j_perso == $id_joueur_cible) {
-									$gain_pc = 0;
-								}
-								else {
-									$gain_pc = 1;
-								}
-							} else {
-								$gain_pc = 0;
-							}
+							$gain_pc = calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible);
 							
 							// Seringue ou bandage
 							if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
@@ -443,6 +430,11 @@ if($verif){
 								
 								$gain_xp = ceil(($degats_final / 20) + $valeur_des_xp);
 								
+								// Limite 3XP par attaque de Gatling
+								if ($id_arme_attaque == 14 && $gain_xp > 3) {
+									$gain_xp = 3;
+								}
+								
 								if ($gain_xp > 10) {
 									$gain_xp = 10;
 								}
@@ -495,27 +487,7 @@ if($verif){
 								$mysqli->query($sql);
 								
 								// Passage grade grouillot
-								if ($grade_perso == 1) {
-									
-									if ($xp_perso + $gain_xp >= 500) {
-										// On le passage 1ere classe
-										$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-										$mysqli->query($sql);
-										
-										echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-									}
-								}
-								
-								if ($grade_perso == 101) {
-									
-									if ($xp_perso + $gain_xp >= 1500) {
-										// On le passe élite
-										$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-										$mysqli->query($sql);
-										
-										echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-									}
-								}
+								passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 								
 								// recup id perso chef
 								$sql = "SELECT id_perso FROM `perso` WHERE idJoueur_perso=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1' ";
@@ -542,6 +514,109 @@ if($verif){
 								
 								}
 								
+								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, type_perso FROM perso WHERE id_perso='$id_cible'";
+								$res = $mysqli->query($sql);
+								$tab = $res->fetch_assoc();
+								
+								$pv_cible 	= $tab["pv_perso"];
+								$x_cible 	= $tab["x_perso"];
+								$y_cible 	= $tab["y_perso"];
+								$xp_cible 	= $tab["xp_perso"];
+								$pi_cible 	= $tab["pi_perso"];
+								$pc_perso	= $tab["pc_perso"];
+								$tp_perso	= $tab["type_perso"];
+									
+								// il est mort
+								if ($pv_cible <= 0) {
+									
+									if (in_bat($mysqli, $id_cible)) {
+										
+										// on le supprime du batiment
+										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_cible'";
+										$mysqli->query($sql);
+									}
+									else {
+								
+										// on l'efface de la carte
+										$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+										$mysqli->query($sql);
+									}
+				
+									// Calcul gains (po et xp)
+									$perte_po = gain_po_mort($or_cible);
+									
+									// Chef
+									if ($tp_perso == 1) {
+										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_cible - $pi_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_perso * 5) / 100);
+										$pc_perso_fin	= $pc_perso - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$pc_perso_fin = $pc_perso;
+									}
+				
+									// MAJ perte xp/po/stat cible
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$mysqli->query($sql);
+				
+									echo "<div class=\"infoi\">Vous avez capturé votre cible ! <font color=red>Félicitations.</font></div>";
+									
+									if ($perte_po > 0) {
+										// On dépose la perte de thune par terre
+										// Verification si l'objet existe deja sur cette case
+										$sql = "SELECT nb_objet FROM objet_in_carte 
+												WHERE objet_in_carte.x_carte = $x_cible 
+												AND objet_in_carte.y_carte = $y_cible 
+												AND type_objet = '1' AND id_objet = '0'";
+										$res = $mysqli->query($sql);
+										$to = $res->fetch_assoc();
+										
+										$nb_o = $to["nb_objet"];
+										
+										if($nb_o){
+											// On met a jour le nombre
+											$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
+													WHERE type_objet='1' AND id_objet='0'
+													AND x_carte='$x_cible' AND y_carte='$y_cible'";
+											$mysqli->query($sql);
+										}
+										else {
+											// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+											$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_cible','$y_cible')";
+											$mysqli->query($sql);
+										}
+									}
+									
+									// maj evenements
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
+									$mysqli->query($sql);
+									
+									// maj cv
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
+									$mysqli->query($sql);
+				
+									// maj stats du perso
+									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id";
+									$mysqli->query($sql);
+									
+									// maj stats camp
+									if($clan_cible != $clan_perso){
+										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
+										$mysqli->query($sql);
+									}
+									
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+									$mysqli->query($sql);
+								}
+								
 								// L'arme fait des dégats de zone
 								if ($degatZone_arme_attaque) {
 									
@@ -555,6 +630,7 @@ if($verif){
 									$res_recherche_collat = $mysqli->query($sql);
 									
 									$gain_xp_collat_cumul = 0;
+									$gain_pc_collat_cumul = 0;
 									
 									// On parcours les cibles pour degats collateraux
 									while ($t_recherche_collat = $res_recherche_collat->fetch_assoc()) {
@@ -588,8 +664,15 @@ if($verif){
 											$couleur_clan_collat = couleur_clan($clan_collat);
 											
 											$gain_xp_collat_cumul += 1;
+											$gain_pc_collat_cumul += 1;
 											
-											$gain_pc_collat = 1;
+											$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
+											
+											// Limite 2 PC par attaque de Gatling
+											if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 2) {
+												$gain_pc_collat = 0;
+											}
+											
 											$gain_xp_collat = 1;
 											
 											// mise a jour des pv et des malus de la cible
@@ -598,7 +681,8 @@ if($verif){
 											
 											echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat.<br>";
 											
-											if ($gain_xp_collat_cumul <= 4) {
+											// Limite 3XP par attaque de Gatling
+											if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
 												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 											
 												// mise a jour des xp/pi
@@ -606,27 +690,17 @@ if($verif){
 												$mysqli->query($sql);
 												
 												// Passage grade grouillot
-												if ($grade_perso == 1) {
-													
-													if ($xp_perso + $gain_xp_collat >= 500) {
-														// On le passage 1ere classe
-														$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-														$mysqli->query($sql);
-														
-														echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-													}
-												}
+												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
+											}
+											else if ($gain_xp_collat_cumul <= 4) {
+												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
+											
+												// mise a jour des xp/pi
+												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+												$mysqli->query($sql);
 												
-												if ($grade_perso == 101) {
-													
-													if ($xp_perso + $gain_xp_collat >= 1500) {
-														// On le passe élite
-														$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-														$mysqli->query($sql);
-														
-														echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-													}
-												}
+												// Passage grade grouillot
+												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 												
 											} else {
 												echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
@@ -762,6 +836,7 @@ if($verif){
 											$image_pnj_collat 		= "pnj".$t_cible["id_pnj"]."t.png";
 											
 											$gain_xp_collat = 1;
+											$gain_xp_collat_cumul += 1;
 											
 											// mise a jour des pv de la cible
 											$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
@@ -769,36 +844,27 @@ if($verif){
 											
 											echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
 											
-											if ($gain_xp_collat_cumul <= 4) {
-												
+											// Limite 3XP par attaque de Gatling
+											if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
 												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
-												
+											
 												// mise a jour des xp/pi
 												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
 												$mysqli->query($sql);
 												
 												// Passage grade grouillot
-												if ($grade_perso == 1) {
-													
-													if ($xp_perso + $gain_xp_collat >= 500) {
-														// On le passage 1ere classe
-														$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-														$mysqli->query($sql);
-														
-														echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-													}
-												}
+												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
+											}
+											else if ($gain_xp_collat_cumul <= 4) {
+												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
+											
+												// mise a jour des xp/pi
+												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+												$mysqli->query($sql);
 												
-												if ($grade_perso == 101) {
-													
-													if ($xp_perso + $gain_xp_collat >= 1500) {
-														// On le passe élite
-														$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-														$mysqli->query($sql);
-														
-														echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-													}
-												}
+												// Passage grade grouillot
+												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
+												
 											} else {
 												echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
 											}
@@ -864,111 +930,6 @@ if($verif){
 										}
 									}
 								}
-								
-								
-								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, type_perso FROM perso WHERE id_perso='$id_cible'";
-								$res = $mysqli->query($sql);
-								$tab = $res->fetch_assoc();
-								
-								$pv_cible 	= $tab["pv_perso"];
-								$x_cible 	= $tab["x_perso"];
-								$y_cible 	= $tab["y_perso"];
-								$xp_cible 	= $tab["xp_perso"];
-								$pi_cible 	= $tab["pi_perso"];
-								$pc_perso	= $tab["pc_perso"];
-								$tp_perso	= $tab["type_perso"];
-									
-								// il est mort
-								if ($pv_cible <= 0) {
-									
-									if (in_bat($mysqli, $id_cible)) {
-										
-										// on le supprime du batiment
-										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_cible'";
-										$mysqli->query($sql);
-									}
-									else {
-								
-										// on l'efface de la carte
-										$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-										$mysqli->query($sql);
-									}
-				
-									// Calcul gains (po et xp)
-									$perte_po = gain_po_mort($or_cible);
-									
-									// Chef
-									if ($tp_perso == 1) {
-										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
-										// Calcul PI
-										$pi_perdu 		= floor(($pi_cible * 5) / 100);
-										$pi_perso_fin 	= $pi_cible - $pi_perdu;
-										
-										// Calcul PC
-										$pc_perdu		= floor(($pc_perso * 5) / 100);
-										$pc_perso_fin	= $pc_perso - $pc_perdu;
-									}
-									else {
-										// Quand un grouillot meurt, il perd tout ses Pi
-										$pi_perso_fin = 0;
-										$pc_perso_fin = $pc_perso;
-									}
-				
-									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
-									$mysqli->query($sql);
-				
-									echo "<div class=\"infoi\">Vous avez capturé votre cible ! <font color=red>Félicitations.</font></div>";
-									
-									if ($perte_po > 0) {
-										// On dépose la perte de thune par terre
-										// Verification si l'objet existe deja sur cette case
-										$sql = "SELECT nb_objet FROM objet_in_carte 
-												WHERE objet_in_carte.x_carte = $x_cible 
-												AND objet_in_carte.y_carte = $y_cible 
-												AND type_objet = '1' AND id_objet = '0'";
-										$res = $mysqli->query($sql);
-										$to = $res->fetch_assoc();
-										
-										$nb_o = $to["nb_objet"];
-										
-										if($nb_o){
-											// On met a jour le nombre
-											$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
-													WHERE type_objet='1' AND id_objet='0'
-													AND x_carte='$x_cible' AND y_carte='$y_cible'";
-											$mysqli->query($sql);
-										}
-										else {
-											// Insertion dans la table objet_in_carte : On cree le premier enregistrement
-											$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_cible','$y_cible')";
-											$mysqli->query($sql);
-										}
-									}
-									
-									// maj evenements
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
-									$mysqli->query($sql);
-									
-									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
-									$mysqli->query($sql);
-				
-									// maj stats du perso
-									$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id";
-									$mysqli->query($sql);
-									
-									// maj stats camp
-									if($clan_cible != $clan_perso){
-										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$clan_perso";
-										$mysqli->query($sql);
-									}
-									
-									// maj dernier tombé
-									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
-									$mysqli->query($sql);
-								}
-								
 							}
 							else { // la cible a esquivé l'attaque
 				
@@ -1137,7 +1098,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
+		$sql = "SELECT type_pero, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 				FROM perso, perso_as_grade
 				WHERE perso_as_grade.id_perso = perso.id_perso
 				AND perso.id_perso='$id'";
@@ -1164,6 +1125,7 @@ if($verif){
 		$id_j_perso		= $t_perso["idJoueur_perso"];
 		$clan_perso 	= $t_perso["clan"];
 		$grade_perso 	= $t_perso["id_grade"];
+		$type_perso		= $t_perso["type_perso"];
 		
 		// Récupération de la couleur associée au clan du perso
 		$couleur_clan_perso = couleur_clan($clan_perso);
@@ -1328,7 +1290,12 @@ if($verif){
 						}
 						
 						// TODO - calcul gain XP selon pnj
-						$gain_xp = mt_rand(1, 6);
+						$gain_xp = mt_rand(1, 4);
+						
+						// Limite 3XP par attaque de Gatling
+						if ($id_arme_attaque == 14 && $gain_xp > 3) {
+							$gain_xp = 3;
+						}
 						
 						if ($id_arme_attaque == 10) {
 								
@@ -1364,27 +1331,7 @@ if($verif){
 						$mysqli->query($sql);
 						
 						// Passage grade grouillot
-						if ($grade_perso == 1) {
-							
-							if ($xp_perso + $gain_xp >= 500) {
-								// On le passage 1ere classe
-								$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-								$mysqli->query($sql);
-								
-								echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-							}
-						}
-						
-						if ($grade_perso == 101) {
-							
-							if ($xp_perso + $gain_xp >= 1500) {
-								// On le passe élite
-								$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-								$mysqli->query($sql);
-								
-								echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-							}
-						}
+						passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 						
 						if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
 							
@@ -1400,6 +1347,60 @@ if($verif){
 							
 						}
 						
+						// recuperation des données du pnj aprés attaque
+						$sql = "SELECT id_pnj, pv_i, x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
+						$res = $mysqli->query($sql);
+						$tab = $res->fetch_assoc();
+						
+						$pv_cible = $tab["pv_i"];
+						$x_cible = $tab["x_i"];
+						$y_cible = $tab["y_i"];
+						$id_pnj = $tab["id_pnj"];
+							
+						// il est mort
+						if ($pv_cible <= 0) {
+						
+							echo "Vous avez tué votre cible ! <font color=red>Félicitations.</font>";
+						
+							// on l'efface de la carte
+							$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+							$mysqli->query($sql);
+							
+							// on le delete
+							$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
+							$mysqli->query($sql);
+							
+							// verification que le perso n'a pas déjà tué ce type de pnj
+							$sql_v = "SELECT id_pnj FROM perso_as_killpnj WHERE id_pnj='$id_pnj' AND id_perso='$id'";
+							$res_v = $mysqli->query($sql_v);
+							$verif_pnj = $res_v->num_rows;
+							
+							// nb_pnj 
+							$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso='$id'";
+							$mysqli->query($sql);
+							
+							if($verif_pnj == 0){
+								// il n'a jamais tué de pnj de ce type => insert
+								$sql = "INSERT INTO perso_as_killpnj VALUES('$id','$id_pnj','1')";
+								$mysqli->query($sql);
+							}
+							else { 
+								// il en a déjà tué => update
+								$sql = "UPDATE perso_as_killpnj SET nb_pnj=nb_pnj+1 WHERE id_perso='$id' AND id_pnj='$id_pnj'";
+								$mysqli->query($sql);
+							}
+							
+							// maj evenement
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a tué','$id_cible','<b>$nom_cible</b>','',NOW(),'0')";
+							$mysqli->query($sql);
+							
+							// maj cv
+							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','$nom_cible',NOW())";
+							$mysqli->query($sql);
+							
+							echo "<br><center><a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
+						}
+						
 						// L'arme fait des dégats de zone
 						if ($degatZone_arme_attaque) {
 							
@@ -1411,6 +1412,9 @@ if($verif){
 									AND occupee_carte = '1'
 									AND idPerso_carte != '$id_cible'";
 							$res_recherche_collat = $mysqli->query($sql);
+							
+							$gain_xp_collat_cumul = 0;
+							$gain_pc_collat_cumul = 0;
 							
 							// On parcours les cibles pour degats collateraux
 							while ($t_recherche_collat = $res_recherche_collat->fetch_assoc()) {
@@ -1443,41 +1447,47 @@ if($verif){
 									// Récupération de la couleur associée au clan de la cible
 									$couleur_clan_collat = couleur_clan($clan_collat);
 									
-									$gain_pc_collat = 1;
 									$gain_xp_collat = 1;
+									
+									$gain_xp_collat_cumul += 1;
+									$gain_pc_collat_cumul += 1;
+									
+									$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
+									
+									// Limite 2 PC par attaque de Gatling
+									if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 2) {
+										$gain_pc_collat = 0;
+									}
 									
 									// mise a jour des pv et des malus de la cible
 									$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_collat, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible_collat'";
 									$mysqli->query($sql);
 									
 									echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat.<br>";
-									echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 									
-									// mise a jour des xp/pi
-									$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
-									$mysqli->query($sql);
+									// Limite 3XP par attaque de Gatling
+									if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
+										echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 									
-									// Passage grade grouillot
-									if ($grade_perso == 1) {
+										// mise a jour des xp/pi
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+										$mysqli->query($sql);
 										
-										if ($xp_perso + $gain_xp_collat >= 500) {
-											// On le passage 1ere classe
-											$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-											$mysqli->query($sql);
-											
-											echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-										}
+										// Passage grade grouillot
+										passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 									}
+									else if ($gain_xp_collat_cumul <= 4) {
+										echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 									
-									if ($grade_perso == 101) {
+										// mise a jour des xp/pi
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+										$mysqli->query($sql);
 										
-										if ($xp_perso + $gain_xp_collat >= 1500) {
-											// On le passe élite
-											$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-											$mysqli->query($sql);
-											
-											echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-										}
+										// Passage grade grouillot
+										passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
+										
+									} else {
+										echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
 									}
 									
 									// recup id perso chef
@@ -1583,39 +1593,37 @@ if($verif){
 									$image_pnj_collat 		= "pnj".$t_cible["id_pnj"]."t.png";
 									
 									$gain_xp_collat = 1;
+									$gain_xp_collat_cumul += 1;
 									
 									// mise a jour des pv de la cible
 									$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
 									$mysqli->query($sql);
 									
 									echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
-									echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 									
-									// mise a jour des xp/pi
-									$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
-									$mysqli->query($sql);
+									// Limite 3XP par attaque de Gatling
+									if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
+										echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 									
-									// Passage grade grouillot
-									if ($grade_perso == 1) {
+										// mise a jour des xp/pi
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+										$mysqli->query($sql);
 										
-										if ($xp_perso + $gain_xp_collat >= 500) {
-											// On le passage 1ere classe
-											$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-											$mysqli->query($sql);
-											
-											echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-										}
+										// Passage grade grouillot
+										passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 									}
+									else if ($gain_xp_collat_cumul <= 4) {
+										echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 									
-									if ($grade_perso == 101) {
+										// mise a jour des xp/pi
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+										$mysqli->query($sql);
 										
-										if ($xp_perso + $gain_xp_collat >= 1500) {
-											// On le passe élite
-											$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-											$mysqli->query($sql);
-											
-											echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-										}
+										// Passage grade grouillot
+										passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
+										
+									} else {
+										echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
 									}
 									
 									// maj evenement
@@ -1678,60 +1686,6 @@ if($verif){
 									// Batiment => pas de collat sur batiment
 								}
 							}
-						}
-						
-						// recuperation des données du pnj aprés attaque
-						$sql = "SELECT id_pnj, pv_i, x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
-						$res = $mysqli->query($sql);
-						$tab = $res->fetch_assoc();
-						
-						$pv_cible = $tab["pv_i"];
-						$x_cible = $tab["x_i"];
-						$y_cible = $tab["y_i"];
-						$id_pnj = $tab["id_pnj"];
-							
-						// il est mort
-						if ($pv_cible <= 0) {
-						
-							echo "Vous avez tué votre cible ! <font color=red>Félicitations.</font>";
-						
-							// on l'efface de la carte
-							$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-							$mysqli->query($sql);
-							
-							// on le delete
-							$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
-							$mysqli->query($sql);
-							
-							// verification que le perso n'a pas déjà tué ce type de pnj
-							$sql_v = "SELECT id_pnj FROM perso_as_killpnj WHERE id_pnj='$id_pnj' AND id_perso='$id'";
-							$res_v = $mysqli->query($sql_v);
-							$verif_pnj = $res_v->num_rows;
-							
-							// nb_pnj 
-							$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso='$id'";
-							$mysqli->query($sql);
-							
-							if($verif_pnj == 0){
-								// il n'a jamais tué de pnj de ce type => insert
-								$sql = "INSERT INTO perso_as_killpnj VALUES('$id','$id_pnj','1')";
-								$mysqli->query($sql);
-							}
-							else { 
-								// il en a déjà tué => update
-								$sql = "UPDATE perso_as_killpnj SET nb_pnj=nb_pnj+1 WHERE id_perso='$id' AND id_pnj='$id_pnj'";
-								$mysqli->query($sql);
-							}
-							
-							// maj evenement
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a tué','$id_cible','<b>$nom_cible</b>','',NOW(),'0')";
-							$mysqli->query($sql);
-							
-							// maj cv
-							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','$nom_cible',NOW())";
-							$mysqli->query($sql);
-							
-							echo "<br><center><a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 						}
 						
 						if ($pv_cible > 0) {
@@ -1880,7 +1834,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
+		$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 				FROM perso, perso_as_grade
 				WHERE perso_as_grade.id_perso = perso.id_perso
 				AND perso.id_perso='$id'";
@@ -1906,6 +1860,7 @@ if($verif){
 		$dc_perso 		= $t_perso["dateCreation_perso"];
 		$clan_perso 	= $t_perso["clan"];
 		$grade_perso 	= $t_perso["id_grade"];
+		$type_perso		= $t_perso["type_perso"];
 		
 		// Récupération de la couleur associée au clan du perso
 		$couleur_clan_perso = couleur_clan($clan_perso);
@@ -2093,27 +2048,7 @@ if($verif){
 						$mysqli->query($sql);
 						
 						// Passage grade grouillot
-						if ($grade_perso == 1) {
-							
-							if ($xp_perso + $gain_xp >= 500) {
-								// On le passage 1ere classe
-								$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
-								$mysqli->query($sql);
-								
-								echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
-							}
-						}
-						
-						if ($grade_perso == 101) {
-							
-							if ($xp_perso + $gain_xp >= 1500) {
-								// On le passe élite
-								$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
-								$mysqli->query($sql);
-								
-								echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
-							}
-						}
+						passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 							
 						// maj evenement
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";

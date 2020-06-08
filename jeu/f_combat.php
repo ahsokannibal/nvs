@@ -357,6 +357,58 @@ function calcul_des_attaque($nbDes, $valeurDes) {
 }
 
 /**
+ * Fonction permettant de calculer le gain de PC après une attaque sur un perso
+ */
+function calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible) {
+	
+	$gain_pc = 0;
+	
+	if ((( $grade_perso <= $grade_cible + 1 && $grade_cible != 101 && $grade_cible != 102 )
+			|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
+			|| (($grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $grade_perso == 2)) && ($clan_cible != $clan_perso || $type_perso == 4)) {
+		
+		// Est-ce que la cible est dans le même bataillon ?
+		if ($id_j_perso == $id_joueur_cible) {
+			$gain_pc = 0;
+		}
+		else {
+			$gain_pc = 1;
+		}
+	}
+	
+	return $gain_pc;
+}
+
+/**
+ * Fonction permettant de verifier et de faire le passage de grade des grouillots
+ */
+function passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp) {
+	
+	if ($grade_perso == 1) {
+													
+		if ($xp_perso + $gain_xp >= 500) {
+			// On le passage 1ere classe
+			$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
+			$mysqli->query($sql);
+			
+			echo "<br /><b>Vous êtes passé au grade de Grouillot 1ere classe</b><br />";
+		}
+	}
+	
+	if ($grade_perso == 101) {
+		
+		if ($xp_perso + $gain_xp >= 1500) {
+			// On le passe élite
+			$sql = "UPDATE perso_as_grade SET id_grade='102' WHERE id_perso='$id'";
+			$mysqli->query($sql);
+			
+			echo "<br /><b>Vous êtes passé au grade de Grouillot d'élite</b><br />";
+		}
+	}
+	
+}
+
+/**
  * Fonction permettant de gérer la loi anti-zerk
  */
 function gestion_anti_zerk($mysqli, $id_perso) {
