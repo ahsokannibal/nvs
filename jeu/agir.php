@@ -1098,7 +1098,7 @@ if($verif){
 		}
 		
 		// recup des données du perso
-		$sql = "SELECT type_pero, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
+		$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 				FROM perso, perso_as_grade
 				WHERE perso_as_grade.id_perso = perso.id_perso
 				AND perso.id_perso='$id'";
