@@ -111,7 +111,6 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (6, 3),
 (7, 3),
 (8, 3),
-(9, 6),
 (10, 4),
 (11, 4),
 (9, 6),
