@@ -1,3 +1,8 @@
+<?php
+require_once("../fonctions.php");
+
+$mysqli = db_connexion();
+?>
 <html>
 	<head>
 		<title>Nord VS Sud</title>
@@ -100,78 +105,60 @@
 								<th style="text-align:center">Nom</th>
 								<th style="text-align:center">Dégâts</th>
 								<th style="text-align:center">Précision</th>
+								<th style="text-align:center">Portée</th>
 								<th style="text-align:center">Coût PA</th>
 								<th style="text-align:center">Unités</th>
 								<th style="text-align:center">Poids</th>
 								<th style="text-align:center">Coût Or</th>
 								<th style="text-align:center">Description</th>
 							</tr>
-							<tr>
-								<td align='center'><img src='../images/armes/baionette.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'>Baïonette</td>
-								<td align='center'>16D6</td>
-								<td align='center'>60%</td>
-								<td align='center'>3</td>
-								<td align='center'>Infanterie</td>
-								<td align='center'>0.5kg</td>
-								<td align='center'>50</td>
-								<td align='center'>Arme de départ de Corps à corps des infanteries</td>
-							</tr>
-							<tr>
-								<td align='center'><img src='../images/armes/sabre.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'>Sabre</td>
-								<td align='center'>20D6</td>
-								<td align='center'>80%</td>
-								<td align='center'>4</td>
-								<td align='center'>Chef / Cavalerie</td>
-								<td align='center'>2.0kg</td>
-								<td align='center'>0</td>
-								<td align='center'>Arme de départ de Corps à corps des chefs et cavaliers</td>
-							</tr>
-							<tr>
-								<td align='center'><img src='../images/armes/sabre_lourd.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'>Sabre Lourd</td>
-								<td align='center'>25D6</td>
-								<td align='center'>80%</td>
-								<td align='center'>5</td>
-								<td align='center'>Chef / Cavalerie</td>
-								<td align='center'>2.5kg</td>
-								<td align='center'>250</td>
-								<td align='center'>Sabre lourd, plus lourd, inflige plus de dégâts mais moins maniable qu'un sabre de dotation</td>
-							</tr>
-							<tr>
-								<td align='center'><img src='../images/armes/cannine.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'>Cannines / Crocs / Morsure</td>
-								<td align='center'>15D4</td>
-								<td align='center'>90%</td>
-								<td align='center'>10</td>
-								<td align='center'>Chien</td>
-								<td align='center'>0.0kg</td>
-								<td align='center'>0</td>
-								<td align='center'>Arme naturelle de Corps à corps des chiens</td>
-							</tr>
-							<tr>
-								<td align='center'><img src='../images/armes/seringue.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'>Seringue</td>
-								<td align='center'>20D6</td>
-								<td align='center'>90%</td>
-								<td align='center'>5</td>
-								<td align='center'>Soigneur</td>
-								<td align='center'>0.1kg</td>
-								<td align='center'>50</td>
-								<td align='center'>Les seringues permettent de soigner directement les PV des persos / PNJ</td>
-							</tr>
-							<tr>
-								<td align='center'><img src='../images/armes/bandage.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'>Bandages</td>
-								<td align='center'>2D10</td>
-								<td align='center'>35%</td>
-								<td align='center'>3</td>
-								<td align='center'>Soigneur</td>
-								<td align='center'>0.2kg</td>
-								<td align='center'>50</td>
-								<td align='center'>Les bandages permettent de soigner les malus des persos / PNJ</td>
-							</tr>
+							
+							<?php 
+							$sql = "SELECT id_arme, image_arme, description_arme, poids_arme, precision_arme, degatMin_arme, valeur_des_arme, coutOr_arme, coutPa_arme, nom_arme
+									FROM arme
+									WHERE  porteeMax_arme = 1
+									ORDER BY arme.id_arme ASC";
+							$res = $mysqli->query($sql);
+							while ($t_arme_cac = $res->fetch_assoc()) {
+								
+								$id_arme		= $t_arme_cac['id_arme'];
+								$image_arme 	= $t_arme_cac['image_arme'];
+								$desc_arme		= $t_arme_cac['description_arme'];
+								$poids_arme		= $t_arme_cac['poids_arme'];
+								$precision_arme	= $t_arme_cac['precision_arme'];
+								$degats_arme	= $t_arme_cac['degatMin_arme'] . "D" . $t_arme_cac['valeur_des_arme'];
+								$coutOr_arme	= $t_arme_cac['coutOr_arme'];
+								$coutPa_arme	= $t_arme_cac['coutPa_arme'];
+								$nom_arme		= $t_arme_cac['nom_arme'];
+								$nom_unite		= "";
+								
+								$sql_unite = "SELECT nom_unite
+												FROM arme_as_type_unite, type_unite 
+												WHERE arme_as_type_unite.id_type_unite = type_unite.id_unite
+												AND arme_as_type_unite.id_arme = $id_arme";
+								$res_unite = $mysqli->query($sql_unite);
+								while ($t_unite = $res_unite->fetch_assoc()) {
+									if (trim($nom_unite) != "") {
+										$nom_unite .= " - ";
+									}
+									$nom_unite .= $t_unite['nom_unite'];
+								}
+								
+								echo "<tr>";
+								echo "	<td style='text-align:center'><img src='../images/armes/".$image_arme."' style='max-width: 100px; height: auto;' alt=''></td>";
+								echo "	<td style='text-align:center'>".$nom_arme."</td>";
+								echo "	<td style='text-align:center'>".$degats_arme."</td>";
+								echo "	<td style='text-align:center'>".$precision_arme."%</td>";
+								echo "	<td style='text-align:center'>1</td>";
+								echo "	<td style='text-align:center'>".$coutPa_arme."</td>";
+								echo "	<td style='text-align:center'>".$nom_unite."</td>";
+								echo "	<td style='text-align:center'>".$poids_arme."kg</td>";
+								echo "	<td style='text-align:center'>".$coutOr_arme."</td>";
+								echo "	<td style='text-align:center'>".$desc_arme."</td>";
+								echo "</tr>";
+							
+							}
+							?>
 						</table>
 					</div>
 					
@@ -193,102 +180,53 @@
 								<th style="text-align:center">Coût Or</th>
 								<th style="text-align:center">Description</th>
 							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/cailloux.gif' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Cailloux</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/pistolet.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Pistolet</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/pistolet_canon_long.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Pistolet canon long</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/magnum.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Magnum</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/fusil.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Fusil</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/fusil_precision.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Fusil Précision</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/canon.jpg' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Canon</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
-							<tr>
-								<td style="text-align:center"><img src='../images/armes/gatling.png' style='max-width: 100px; height: auto;' alt=''></td>
-								<td style="text-align:center">Gatling</td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-								<td style="text-align:center"></td>
-							</tr>
+							
+							<?php 
+							$sql = "SELECT id_arme, image_arme, description_arme, poids_arme, precision_arme, degatMin_arme, valeur_des_arme, coutOr_arme, coutPa_arme, nom_arme, porteeMin_arme, porteeMax_arme
+									FROM arme WHERE porteeMax_arme > 1
+									ORDER BY id_arme ASC";
+							$res = $mysqli->query($sql);
+							while ($t_arme_dist = $res->fetch_assoc()) {
+								
+								$id_arme		= $t_arme_dist['id_arme'];
+								$image_arme 	= $t_arme_dist['image_arme'];
+								$desc_arme		= $t_arme_dist['description_arme'];
+								$poids_arme		= $t_arme_dist['poids_arme'];
+								$precision_arme	= $t_arme_dist['precision_arme'];
+								$degats_arme	= $t_arme_dist['degatMin_arme'] . "D" . $t_arme_dist['valeur_des_arme'];
+								$coutOr_arme	= $t_arme_dist['coutOr_arme'];
+								$coutPa_arme	= $t_arme_dist['coutPa_arme'];
+								$nom_arme		= $t_arme_dist['nom_arme'];
+								$portee_arme	= $t_arme_dist['porteeMin_arme'] . " - " . $t_arme_dist['porteeMax_arme'];
+								$nom_unite		= "";
+								
+								$sql_unite = "SELECT nom_unite
+												FROM arme_as_type_unite, type_unite 
+												WHERE arme_as_type_unite.id_type_unite = type_unite.id_unite
+												AND arme_as_type_unite.id_arme = $id_arme";
+								$res_unite = $mysqli->query($sql_unite);
+								while ($t_unite = $res_unite->fetch_assoc()) {
+									if (trim($nom_unite) != "") {
+										$nom_unite .= " - ";
+									}
+									$nom_unite .= $t_unite['nom_unite'];
+								}
+								
+								echo "<tr>";
+								echo "	<td style='text-align:center'><img src='../images/armes/".$image_arme."' style='max-width: 100px; height: auto;' alt=''></td>";
+								echo "	<td style='text-align:center'>".$nom_arme."</td>";
+								echo "	<td style='text-align:center'>".$degats_arme."</td>";
+								echo "	<td style='text-align:center'>".$precision_arme."%</td>";
+								echo "	<td style='text-align:center'>".$portee_arme."</td>";
+								echo "	<td style='text-align:center'>".$coutPa_arme."</td>";
+								echo "	<td style='text-align:center'>".$nom_unite."</td>";
+								echo "	<td style='text-align:center'>".$poids_arme."kg</td>";
+								echo "	<td style='text-align:center'>".$coutOr_arme."</td>";
+								echo "	<td style='text-align:center'>".$desc_arme."</td>";
+								echo "</tr>";
+								
+							}
+							?>
 						</table>
 					</div>
 					
@@ -325,70 +263,70 @@
 								<td align='center'><img src='../images/objets/objet1.png' style='max-width: 100px; height: auto;' alt=''></td>
 								<td align='center'>Ticket de train</td>
 								<td align='center'>Spécial</td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>-</td>
+								<td align='center'>-</td>
+								<td align='center'>0kg</td>
+								<td align='center'>5 thunes</td>
 								<td align='center'>Gare</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images/objets/objet2.png' style='max-width: 100px; height: auto;' alt=''></td>
 								<td align='center'>Gourde d'eau</td>
 								<td align='center'>Consommable</td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>+30 en recupération</td>
+								<td align='center'>-</td>
+								<td align='center'>0.5kg</td>
+								<td align='center'>5 thunes</td>
 								<td align='center'>Fort / Fortin</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images/objets/objet3.png' style='max-width: 100px; height: auto;' alt=''></td>
 								<td align='center'>Whisky</td>
 								<td align='center'>Consommable</td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>+50 en récupération</td>
+								<td align='center'>-3 en perception pendant 1 tour</td>
+								<td align='center'>0.5kg</td>
+								<td align='center'>1 thune</td>
 								<td align='center'>Fort / Fortin</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images/objets/objet4.png' style='max-width: 100px; height: auto;' alt=''></td>
 								<td align='center'>Trousse de soin</td>
 								<td align='center'>Consommable</td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>+60 en récupération</td>
+								<td align='center'>-</td>
+								<td align='center'>2kg</td>
+								<td align='center'>50 thunes</td>
 								<td align='center'>Fort / Fortin / Hôpital</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images/objets/objet5.png' style='max-width: 100px; height: auto;' alt=''></td>
 								<td align='center'>Bottes légères</td>
 								<td align='center'>Équipable</td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>+1 PM</td>
+								<td align='center'>-5 en defense</td>
+								<td align='center'>2,5kg</td>
+								<td align='center'>50 thunes</td>
 								<td align='center'>Fort / Fortin</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images/objets/objet6.png' style='max-width: 100px; height: auto;' alt=''></td>
-								<td align='center'>Lunnette de vue</td>
+								<td align='center'>Longue vue</td>
 								<td align='center'>Équipable</td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>+2 en perception</td>
+								<td align='center'>-1 PA</td>
+								<td align='center'>0.2kg</td>
+								<td align='center'>200 thunes</td>
 								<td align='center'>Fort / Fortin</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images/objets/objet7.png' style='max-width: 100px; height: auto;' alt=''></td>
 								<td align='center'>Lunette de visée</td>
 								<td align='center'>Équipable</td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
-								<td align='center'></td>
+								<td align='center'>+10 en précision au Corps à corps | +15 en précision à distance</td>
+								<td align='center'>-</td>
+								<td align='center'>0.2kg</td>
+								<td align='center'>200 thunes</td>
 								<td align='center'>Fort / Fortin</td>
 							</tr>
 						</table>
