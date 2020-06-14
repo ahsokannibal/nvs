@@ -71,73 +71,73 @@ if($verif){
 	//traitement de l'attaque sur un perso
 	if ((isset($id_attaque) && $id_attaque != "" && $id_attaque != "personne" && $id_attaque < 50000)) {
 	
-		if(!in_bat($mysqli, $id)){
-	
-			$id_cible = $id_attaque;			
+		$id_cible = $id_attaque;			
+		
+		// arme bien passée
+		if(isset($id_arme_attaque) && $id_arme_attaque != 1000 && $id_arme_attaque != 2000) {
 			
-			// arme bien passée
-			if(isset($id_arme_attaque) && $id_arme_attaque != 1000 && $id_arme_attaque != 2000) {
+			// Recupération des caracs de l'arme
+			$sql = "SELECT nom_arme, coutPa_arme, porteeMin_arme, porteeMax_arme, degatMin_arme, degatMax_arme, degatZone_arme, precision_arme, valeur_des_arme
+					FROM arme WHERE id_arme='$id_arme_attaque'";
+			$res = $mysqli->query($sql);
+			$t_a = $res->fetch_assoc();
+			
+			$nom_arme_attaque 				= $t_a["nom_arme"];
+			$coutPa_arme_attaque 			= $t_a["coutPa_arme"];
+			$porteeMin_arme_attaque 		= $t_a["porteeMin_arme"];
+			$porteeMax_arme_attaque 		= $t_a["porteeMax_arme"];
+			$valeur_des_arme_attaque		= $t_a["valeur_des_arme"];
+			$degatMin_arme_attaque 			= $t_a["degatMin_arme"];
+			$degatMax_arme_attaque 			= $t_a["degatMax_arme"];
+			$precision_arme_attaque 		= $t_a["precision_arme"];
+			$degatZone_arme_attaque 		= $t_a["degatZone_arme"];
+		}
+		else {
+			if ($id_arme_attaque == 1000) {
 				
-				// Recupération des caracs de l'arme
-				$sql = "SELECT nom_arme, coutPa_arme, porteeMin_arme, porteeMax_arme, degatMin_arme, degatMax_arme, degatZone_arme, precision_arme, valeur_des_arme
-						FROM arme WHERE id_arme='$id_arme_attaque'";
-				$res = $mysqli->query($sql);
-				$t_a = $res->fetch_assoc();
+				// Poings = arme de Corps a corps					
+				$nom_arme_attaque 				= "Poings";
+				$coutPa_arme_attaque 			= 3;
+				$porteeMin_arme_attaque 		= 1;
+				$porteeMax_arme_attaque 		= 1;
+				$valeur_des_arme_attaque		= 6;
+				$degatMin_arme_attaque 			= 4;
+				$degatMax_arme_attaque 			= 4;
+				$precision_arme_attaque			= 30;
+				$degatZone_arme_attaque 		= 0;
 				
-				$nom_arme_attaque 				= $t_a["nom_arme"];
-				$coutPa_arme_attaque 			= $t_a["coutPa_arme"];
-				$porteeMin_arme_attaque 		= $t_a["porteeMin_arme"];
-				$porteeMax_arme_attaque 		= $t_a["porteeMax_arme"];
-				$valeur_des_arme_attaque		= $t_a["valeur_des_arme"];
-				$degatMin_arme_attaque 			= $t_a["degatMin_arme"];
-				$degatMax_arme_attaque 			= $t_a["degatMax_arme"];
-				$precision_arme_attaque 		= $t_a["precision_arme"];
-				$degatZone_arme_attaque 		= $t_a["degatZone_arme"];
+				
+			} else if ($id_arme_attaque == 2000) {
+				
+				// Cailloux
+				$nom_arme_attaque 				= "Cailloux";
+				$coutPa_arme_attaque 			= 3;
+				$porteeMin_arme_attaque 		= 1;
+				$porteeMax_arme_attaque 		= 2;
+				$valeur_des_arme_attaque		= 6;
+				$degatMin_arme_attaque 			= 5;
+				$degatMax_arme_attaque 			= 5;
+				$precision_arme_attaque			= 25;
+				$degatZone_arme_attaque 		= 0;
+				
+			} else {
+				
+				// On ne devrait pas arriver ici
+				// Par défaut on va mettre les poings
+				$nom_arme_attaque 				= "Poings";
+				$coutPa_arme_attaque 			= 3;
+				$porteeMin_arme_attaque 		= 1;
+				$porteeMax_arme_attaque 		= 1;
+				$valeur_des_arme_attaque		= 6;
+				$degatMin_arme_attaque 			= 4;
+				$degatMax_arme_attaque 			= 4;
+				$precision_arme_attaque			= 30;
+				$degatZone_arme_attaque 		= 0;
+				
 			}
-			else {
-				if ($id_arme_attaque == 1000) {
-					
-					// Poings = arme de Corps a corps					
-					$nom_arme_attaque 				= "Poings";
-					$coutPa_arme_attaque 			= 3;
-					$porteeMin_arme_attaque 		= 1;
-					$porteeMax_arme_attaque 		= 1;
-					$valeur_des_arme_attaque		= 6;
-					$degatMin_arme_attaque 			= 4;
-					$degatMax_arme_attaque 			= 4;
-					$precision_arme_attaque			= 30;
-					$degatZone_arme_attaque 		= 0;
-					
-					
-				} else if ($id_arme_attaque == 2000) {
-					
-					// Cailloux
-					$nom_arme_attaque 				= "Cailloux";
-					$coutPa_arme_attaque 			= 3;
-					$porteeMin_arme_attaque 		= 1;
-					$porteeMax_arme_attaque 		= 2;
-					$valeur_des_arme_attaque		= 6;
-					$degatMin_arme_attaque 			= 5;
-					$degatMax_arme_attaque 			= 5;
-					$precision_arme_attaque			= 25;
-					$degatZone_arme_attaque 		= 0;
-					
-				} else {
-					
-					// On ne devrait pas arriver ici
-					// Par défaut on va mettre les poings
-					$nom_arme_attaque 				= "Poings";
-					$coutPa_arme_attaque 			= 3;
-					$porteeMin_arme_attaque 		= 1;
-					$porteeMax_arme_attaque 		= 1;
-					$valeur_des_arme_attaque		= 6;
-					$degatMin_arme_attaque 			= 4;
-					$degatMax_arme_attaque 			= 4;
-					$precision_arme_attaque			= 30;
-					$degatZone_arme_attaque 		= 0;
-					
-				}
-			}
+		}
+		
+		if(!in_bat($mysqli, $id) || (in_bat($mysqli, $id) && $porteeMax_arme_attaque > 1)){
 			
 			// recup des données du perso
 			$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, id_grade
@@ -243,6 +243,17 @@ if($verif){
 						echo "<a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a>";
 					}
 					else if ($pv_cible > 0) {
+						
+						$id_inst_bat = 0;
+						$id_inst_batiment 	= in_bat($mysqli, $id);
+						$id_inst_train		= in_train($mysqli, $id);
+						if ($id_inst_batiment != null && $id_inst_batiment != 0) {
+							$id_inst_bat = $id_inst_batiment;
+						}
+						else if ($id_inst_train != null && $id_inst_train != 0) {
+							$id_inst_bat = $id_inst_train;
+						}
+						
 						// la cible est encore en vie
 						?>
 						<table border=0 width=100%>
@@ -357,20 +368,34 @@ if($verif){
 								echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
 							}						
 							
-							// Où se trouve la cible ?
-							$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-							$res = $mysqli->query($sql);
-							$t = $res->fetch_assoc();
-							
-							$fond_carte_cible = $t['fond_carte'];
-							
-							$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
+							// Bonus Précision batiment
+							$bonus_precision_bat = 0;
+							if ($id_inst_bat != 0) {
+								$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$id_bat = $t['id_batiment'];
+								
+								$bonus_defense_terrain = get_bonus_defense_batiment($id_bat);
+							}
+							else {
+								// Où se trouve la cible ?
+								$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$fond_carte_cible = $t['fond_carte'];
+								
+								$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
+							}
 							
 							// Calcul touche
 							$touche = mt_rand(0,100);
 							
 							$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain;
 							
+							// Bonus Precision Objets
 							$bonus_precision_objet = 0;
 							if ($porteeMax_arme_attaque == 1) {
 								$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id);
@@ -1023,7 +1048,7 @@ if($verif){
 			}
 		}
 		else {
-			echo "Erreur : Il est impossible d'attaquer un perso depuis l'intérieur d'un batiment!";
+			echo "Erreur : Il est impossible d'attaquer un perso depuis l'intérieur d'un batiment avec une arme de Corps à corps!";
 			echo "<br /><center><a class='btn btn-primary' href=\"jouer.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 		}
 	}

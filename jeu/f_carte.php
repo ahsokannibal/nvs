@@ -136,6 +136,19 @@ function get_nom_terrain($fond) {
 	}
 }
 
+function get_bonus_defense_batiment($id_bat) {
+	switch($id_bat) {
+		case(2): return +10; break;
+		case(5): return -10; break;
+		case(7): return +15; break;
+		case(8): return +25; break;
+		case(9): return +25; break;
+		case(11): return +25; break;
+		case(12): return +25; break;
+		default: return 0;
+	}
+}
+
 function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 	
 	if ($porteeMax_arme_attaque > 1) {
