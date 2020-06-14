@@ -100,6 +100,8 @@ function cout_pm($fond)
 		case(I_MONTAGNE): return 4; break; 	// montagne
 		case(I_ROUTE_B): return 1; break; 	// route bleu
 		case(I_ROUTE_R): return 1; break; 	// route rouge
+		case(I_PONT_B): return 1; break; 	// pont bleu
+		case(I_PONT_R): return 1; break; 	// pont rouge
 		default: return 1;
 	}
 }
@@ -159,6 +161,8 @@ function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 			case(I_DESERT): return -10; break;
 			case(I_COLLINE): return -10; break;
 			case(I_MONTAGNE): return 10; break;
+			case(I_PONT_B): return -10; break;
+			case(I_PONT_R): return -10; break;
 			default: return 0;
 		}
 	}
@@ -168,6 +172,8 @@ function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 			case(I_MARECAGE): return -10; break;
 			case(I_DESERT): return -10; break;
 			case(I_EAU): return 10; break;
+			case(I_PONT_B): return -10; break;
+			case(I_PONT_R): return -10; break;
 			default: return 0;
 		}
 	}
