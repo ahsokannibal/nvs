@@ -905,6 +905,22 @@ function getBonusDefenseObjet($mysqli, $id_perso) {
 	return $bonusDefense;
 }
 
+function get_bonus_defense_objet($mysqli, $id_perso) {
+	
+	$bonusDefenseObjet = 0;
+	
+	$sql = "SELECT SUM(bonusDefense_objet) as bonus_defense_objet FROM perso_as_objet, objet 
+			WHERE perso_as_objet.id_objet = objet.id_objet
+			AND id_perso='$id_perso' 
+			AND equip_objet='1'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$bonusDefenseObjet += $t['bonus_defense_objet'];
+	
+	return $bonusDefenseObjet;
+}
+
 /**
  * Fonction permettant de récupérer les bonus / malus de precision au CaC du aux objets équipés
  */

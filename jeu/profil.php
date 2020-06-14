@@ -70,6 +70,24 @@ if($dispo || $admin){
 				$chef		= $t_i["chef"];
 				$genie		= $t_i["genie"];
 				
+				$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_p' AND y_carte='$y_p'";
+				$res = $mysqli->query($sql);
+				$t_f = $res->fetch_assoc();
+				
+				$fond = $t_f['fond_carte'];
+				
+				// Bonus / Malus defense objets 
+				$bonus_def_obj = get_bonus_defense_objet($mysqli, $id);
+				
+				// Bonus / Malus defense terrain / batiment
+				$bonus_def_terrain_cac = get_bonus_defense_terrain($fond, $id);
+				$bonus_def_terrain_dist = get_bonus_defense_terrain($fond, $id);
+				
+				$bonus_def = $b_p + $bonus_def_obj;
+				
+				$bonus_def_final_cac = $bonus_def + $bonus_def_terrain_cac;
+				$bonus_def_final_dist = $bonus_def + $bonus_def_terrain_dist;
+				
 				if($clan_perso == '1'){
 					$couleur_clan_perso = 'blue';
 					$nom_clan = 'Nord';
@@ -82,6 +100,8 @@ if($dispo || $admin){
 					$couleur_clan_perso = 'green';
 					$nom_clan = 'Indiens';
 				}
+				
+				$im_p = $nom_clan.".gif";
 				
 				// calcul malus pm
 				$malus_pm_charge = getMalusCharge($ch_p);
@@ -97,9 +117,6 @@ if($dispo || $admin){
 				
 				$mes_p = $t_i["message_perso"];
 				$des_p = $t_i["description_perso"];
-				
-				$im_p = $nom_clan.".gif";
-				
 		?>
 <html>
 	<head>
@@ -232,14 +249,28 @@ if($dispo || $admin){
 													echo " (".$bpa_p.")";
 												}
 											}
-											// Malus defense
-											echo " - <u><b>Malus de défense :</b></u> "; 
-											if($b_p < 0) {
-												echo "<font color=red>".$b_p."</font>";
+											// Malus defense CaC
+											echo " - <u><b>Malus de défense CàC :</b></u> "; 
+											if($bonus_def_final_cac < 0) {
+												echo "<font color=red>".$bonus_def_final_cac."</font>";
 											}
 											else {
-												echo $b_p;
+												echo $bonus_def_final_cac;
 											}
+											
+											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_cac." )";
+											
+											// Malus defense Dist
+											echo " - <u><b>Malus de défense Dist :</b></u> "; 
+											if($bonus_def_final_dist < 0) {
+												echo "<font color=red>".$bonus_def_final_dist."</font>";
+											}
+											else {
+												echo $bonus_def_final_dist;
+											}
+											
+											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_dist." )";
+											
 											?></td>
 										</tr>
 										<tr>
