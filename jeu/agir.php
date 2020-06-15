@@ -1303,7 +1303,7 @@ if($verif){
 					$precision_final += $bonus_precision_objet;
 					
 					echo "Votre score de touche : ".$touche."<br>";
-					echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Defense cible : ".$bonus_cible." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
+					echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Defense cible : ".$bonus_cible." -- Defense terrain : ".$bonus_defense_terrain." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
 					
 					// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 					if ($touche <= $precision_final) {
