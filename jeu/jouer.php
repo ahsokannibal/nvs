@@ -1320,10 +1320,18 @@ if($dispo || $admin){
 					
 					$bonus_perc = 0;
 					
-					// calcul du bonus de perception
-					// Tour de guet
+					// calcul du bonus/malus de perception
 					if($bat == 2){
+						// Tour de guet
 						$bonus_perc += 5;
+					}
+					else if ($bat == 8 || $bat == 9 || $bat == 11) {
+						// Fort / Fortin / Gare
+						$bonus_perc += -1;
+					}
+					else if ($bat == 7 || $bat == 10) {
+						// Hopital / Pénitencier
+						$bonus_perc += -2;
 					}
 					
 					// mise a jour du bonus de perception du perso
