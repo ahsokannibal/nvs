@@ -1280,7 +1280,17 @@ if($verif){
 						
 					// Calcul touche
 					$touche = mt_rand(0,100);
-					$precision_final = $precision_arme_attaque - $bonus_cible;
+					
+					// Où se trouve la cible ?
+					$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$fond_carte_cible = $t['fond_carte'];
+					
+					$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
+					
+					$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain;
 					
 					$bonus_precision_objet = 0;
 					if ($porteeMax_arme_attaque == 1) {
