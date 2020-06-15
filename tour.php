@@ -462,8 +462,11 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 				$pm_nouveau += $pm_perso_nouveau_tour;
 			}
 			
+			// Bonus recup batiment
+			$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso_nouveau_tour);
+			
 			// Calcul pv nouveau tour 
-			$pv_nouveau = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour;
+			$pv_nouveau = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour + $bonus_recup_bat;
 			if ($pv_nouveau > $pv_max_perso_nouveau_tour) {
 				$pv_nouveau = $pv_max_perso_nouveau_tour;
 			}
