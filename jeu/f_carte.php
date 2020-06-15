@@ -179,6 +179,34 @@ function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 	}
 }
 
+function get_bonus_recup_bat_perso($mysqli, $id_perso) {
+	
+	$bonus_recup_bat = 0;
+	
+	if (in_bat($mysqli, $id_perso)) {
+		
+		$id_inst_bat = in_bat($mysqli, $id_perso);
+		
+		$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$id_bat = $t['id_batiment'];
+		
+		$bonus_recup_bat = get_bonus_recup_bat($id_bat);
+	}
+	
+	return $bonus_recup_bat;	
+}
+
+function get_bonus_recup_bat($id_bat) {
+	switch($id_bat) {
+		case(8): return 10; break;
+		case(9): return 20; break;
+		default: return 0;
+	}
+}
+
 function isDirectionOK($direction) {
 	return $direction == 1 || $direction == 2 || $direction == 3
 		|| $direction == 4 || $direction == 5 || $direction == 6
