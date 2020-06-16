@@ -201,7 +201,7 @@ if($verif){
 				$protec_cible		= $t_cible["protec_perso"];
 				$br_cible 			= $t_cible["bonusRecup_perso"];
 				$bonusBase_cible	= $t_cible["bonus_perso"];
-				$bonus_cible 		= $t_cible["bonus_perso"] + getBonusDefenseObjet($mysqli, $id_cible);
+				$bonus_cible 		= $t_cible["bonus_perso"];
 				$per_cible 			= $t_cible["perception_perso"];
 				$bp_cible 			= $t_cible["bonusPerception_perso"];
 				$dc_cible 			= $t_cible["dateCreation_perso"];

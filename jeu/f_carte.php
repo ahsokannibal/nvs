@@ -151,6 +151,15 @@ function get_bonus_defense_batiment($id_bat) {
 	}
 }
 
+function get_bonus_attaque_from_batiment($id_bat) {
+	switch($id_bat) {
+		case(7): return -25; break;
+		case(11): return -25; break;
+		case(12): return -30; break;
+		default: return 0;
+	}
+}
+
 function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 	
 	if ($porteeMax_arme_attaque > 1) {

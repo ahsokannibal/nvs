@@ -3184,7 +3184,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		$pv_cible			= $t_cible['pv_perso'];
 		$xp_cible 			= $t_cible['xp_perso'];
 		$or_cible 			= $t_cible['or_perso'];
-		$bonus_cible		= $t_cible['bonus_perso'] + getBonusDefenseObjet($mysqli, $idPerso_carte);
+		$bonus_cible		= $t_cible['bonus_perso'];
 		$protec_cible		= $t_cible['protec_perso'];
 		$grade_cible		= $t_cible['id_grade'];
 		$id_joueur_cible 	= $t_cible['idJoueur_perso'];
@@ -3242,8 +3242,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			$fond_carte_cible = $t['fond_carte'];
 			
 			$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, 1);
+			// Bonus defense objets cible 
+			$bonus_defense_objet = get_bonus_defense_objet($mysqli, $idPerso_carte);
 			
-			$precision_final = $precision_arme - $bonus_cible - $bonus_defense_terrain;
+			$precision_final = $precision_arme - $bonus_cible - $bonus_defense_terrain + $bonus_defense_objet;
 			
 			$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
 			
