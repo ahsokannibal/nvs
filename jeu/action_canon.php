@@ -96,7 +96,7 @@ while ($t_b = $res_b->fetch_assoc()) {
 			if ($touche <= $precision_final) {
 				
 				// calcul degats arme
-				$degats_final = mt_rand($nb_des_canon, $nb_des_canon * $valeur_des_canon) - $protec_cible;
+				$degats_final = calcul_des_attaque($nb_des_canon, $valeur_des_canon) - $protec_cible;
 				
 				// Cible autre artillerie
 				if ($type_cible == 5) {
