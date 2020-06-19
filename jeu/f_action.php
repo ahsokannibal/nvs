@@ -3245,7 +3245,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			// Bonus defense objets cible 
 			$bonus_defense_objet = get_bonus_defense_objet($mysqli, $idPerso_carte);
 			
-			$precision_final = $precision_arme - $bonus_cible - $bonus_defense_terrain + $bonus_defense_objet;
+			$precision_final = $precision_arme - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet;
 			
 			$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id_perso);
 			
