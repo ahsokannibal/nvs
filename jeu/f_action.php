@@ -184,41 +184,48 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		$nb_cases_bat 	= 2;
 		$nb_cases_gare	= 2;
 		$nb_cases_rapat = 2;
+		$nb_cases_tour	= 7;
 	}
 	else if ($id_bat == '5' || $id_bat == '1') {
 		// Barricades et Ponts
 		$nb_cases_bat 	= 0;
 		$nb_cases_gare	= 2;
 		$nb_cases_rapat = 2;
+		$nb_cases_tour	= 0;
 	}
 	else if ($id_bat == '7') {
 		// Hopital
 		$nb_cases_bat 	= 2;
 		$nb_cases_gare	= 20;
 		$nb_cases_rapat = 40;
+		$nb_cases_tour	= 0;
 	}
 	else if ($id_bat == '8') {
 		// Fortin
 		$nb_cases_bat 	= 2;
 		$nb_cases_gare	= 20;
 		$nb_cases_rapat = 40;
+		$nb_cases_tour	= 0;
 	}
 	else if ($id_bat == '9') {
 		// Fort
 		$nb_cases_bat 	= 2;
 		$nb_cases_gare	= 20;
 		$nb_cases_rapat = 40;
+		$nb_cases_tour	= 0;
 	}
 	else if ($id_bat == '11') {
 		// Gare
 		$nb_cases_bat 	= 2;
 		$nb_cases_gare	= 40;
 		$nb_cases_rapat = 20;
+		$nb_cases_tour	= 0;
 	}
 	else {
 		$nb_cases_bat 	= 2;
 		$nb_cases_gare	= 2;
 		$nb_cases_rapat = 2;
+		$nb_cases_tour	= 0;
 	}
 	
 	// Verification distance avec autre batiment
@@ -226,7 +233,8 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			WHERE x_instance >= $x_bat - $nb_cases_bat
 			AND x_instance <= $x_bat + $nb_cases_bat
 			AND y_instance >= $y_bat - $nb_cases_bat
-			AND y_instance <= $y_bat + $nb_cases_bat";
+			AND y_instance <= $y_bat + $nb_cases_bat
+			AND pv_instance > 0";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
@@ -238,7 +246,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			AND x_instance <= $x_bat + $nb_cases_gare
 			AND y_instance >= $y_bat - $nb_cases_gare
 			AND y_instance <= $y_bat + $nb_cases_gare
-			AND id_batiment='11' AND camp_instance='$camp_perso'";
+			AND id_batiment='11' AND camp_instance='$camp_perso' AND pv_instance > 0";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
@@ -251,13 +259,29 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			AND y_instance >= $y_bat - $nb_cases_rapat
 			AND y_instance <= $y_bat + $nb_cases_rapat
 			AND camp_instance='$camp_perso'
-			AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9')";
+			AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9') AND pv_instance > 0";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
 	$verif_nb_rapats = $t['nb_rapat'];
 	
-	return $verif_nb_bats == 0 && $verif_nb_gares == 0 && $verif_nb_rapats == 0;
+	$verif_distance_tour = 0;
+	
+	// Verification distance tour de guet
+	if ($id_bat == '2') {
+		$sql = "SELECT count(id_instanceBat) as nb_tour FROM instance_batiment 
+			WHERE x_instance >= $x_bat - $nb_cases_tour
+			AND x_instance <= $x_bat + $nb_cases_tour
+			AND y_instance >= $y_bat - $nb_cases_tour
+			AND y_instance <= $y_bat + $nb_cases_tour
+			AND id_batiment='2' AND camp_instance='$camp_perso' AND pv_instance > 0";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$verif_distance_tour = $t['nb_tour'];
+	}
+	
+	return $verif_nb_bats == 0 && $verif_nb_gares == 0 && $verif_nb_rapats == 0 && $verif_distance_tour == 0;
 }
 
 /**

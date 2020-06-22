@@ -56,7 +56,7 @@ include ('../nb_online.php');
 								<td>Hôpital</td><td align='center'>3</td><td align='center'>10</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Tour de visu</td><td align='center'>1</td><td align='center'>5</td><td>2 cases d'un autre batiment.</td>
+								<td>Tour de visu</td><td align='center'>1</td><td align='center'>5</td><td>2 cases d'un autre batiment. 7 cases d'une autre tour.</td>
 							</tr>
 							<tr>
 								<td>Barricades</td><td align='center'>0</td><td align='center'> - </td><td>2 cases d'une gare. 2 cases d'un lieu de rapatriement.</td>
