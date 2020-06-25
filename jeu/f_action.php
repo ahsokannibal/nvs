@@ -286,8 +286,10 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 	
 	if ($id_bat == '5') {
 		
+		$ban_id_pont = array();
+		
 		// Récupération de tous les id des ponts rattachés au pont en construction
-		$ban_id_pont = get_cases_pont($mysqli, $x_bat, $y_bat);
+		$ban_id_pont = get_cases_pont($mysqli, $x_bat, $y_bat, $ban_id_pont);
 		
 		// 30 PM entre chaque pont
 		$distance_min_pont = 30;
@@ -314,9 +316,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 				&& $verif_distance_pont_bat == 0;
 }
 
-function get_cases_pont($mysqli, $x_pont, $y_pont) {
-	
-	$ban_id_pont = array();
+function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
 	
 	$sql = "SELECT x_carte, y_carte, idPerso_carte FROM carte
 				WHERE x_carte >= $x_pont - 1
@@ -324,7 +324,7 @@ function get_cases_pont($mysqli, $x_pont, $y_pont) {
 				AND y_carte >= $y_pont - 1
 				AND y_carte <= $y_pont + 1
 				AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
-				AND idPerso_carte NOT IN (SELECT idPerso_carte FROM carte WHERE x_carte=$x_pont AND y_carte=$y_pont)
+				AND coordonnees NOT IN (SELECT coordonnees FROM carte WHERE x_carte=$x_pont AND y_carte=$y_pont)
 				AND idPerso_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
 	$res = $mysqli->query($sql);
 	$nb_ponts = $res->num_rows;
@@ -339,7 +339,7 @@ function get_cases_pont($mysqli, $x_pont, $y_pont) {
 			
 			array_push($ban_id_pont, $id_pont);
 			
-			get_cases_pont($x_pont, $y_pont);
+			get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont);
 		}		
 	}
 	
