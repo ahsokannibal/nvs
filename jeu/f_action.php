@@ -281,7 +281,69 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		$verif_distance_tour = $t['nb_tour'];
 	}
 	
-	return $verif_nb_bats == 0 && $verif_nb_gares == 0 && $verif_nb_rapats == 0 && $verif_distance_tour == 0;
+	$verif_distance_pont = 0;
+	$verif_distance_pont_bat = 0;
+	
+	if ($id_bat == '5') {
+		
+		// Récupération de tous les id des ponts rattachés au pont en construction
+		$ban_id_pont = get_cases_pont($mysqli, $x_bat, $y_bat);
+		
+		// 30 PM entre chaque pont
+		$distance_min_pont = 30;
+		
+		$sql = "SELECT idPerso_carte FROM carte 
+					WHERE x_carte >= $x_bat - $distance_min_pont
+					AND x_carte <= $x_bat + $distance_min_pont
+					AND y_carte >= $y_bat - $distance_min_pont
+					AND y_carte <= $y_bat + $distance_min_pont
+					AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
+					AND idPerso_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
+		$res = $mysqli->query($sql);
+		$verif_distance_pont = $res->num_rows;
+		
+		// 3 PM entre pont et bat 
+		
+	}
+	
+	return $verif_nb_bats == 0 
+				&& $verif_nb_gares == 0 
+				&& $verif_nb_rapats == 0 
+				&& $verif_distance_tour == 0 
+				&& $verif_distance_pont == 0
+				&& $verif_distance_pont_bat == 0;
+}
+
+function get_cases_pont($mysqli, $x_pont, $y_pont) {
+	
+	$ban_id_pont = array();
+	
+	$sql = "SELECT x_carte, y_carte, idPerso_carte FROM carte
+				WHERE x_carte >= $x_pont - 1
+				AND x_carte <= $x_pont + 1
+				AND y_carte >= $y_pont - 1
+				AND y_carte <= $y_pont + 1
+				AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
+				AND idPerso_carte NOT IN (SELECT idPerso_carte FROM carte WHERE x_carte=$x_pont AND y_carte=$y_pont)
+				AND idPerso_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
+	$res = $mysqli->query($sql);
+	$nb_ponts = $res->num_rows;
+	
+	if ($nb_ponts > 0) {
+		
+		while ($t = $res->fetch_assoc()) {
+			
+			$x_pont 	= $t['x_carte'];
+			$y_pont		= $t['y_carte'];
+			$id_pont	= $t['idPerso_carte'];
+			
+			array_push($ban_id_pont, $id_pont);
+			
+			get_cases_pont($x_pont, $y_pont);
+		}		
+	}
+	
+	return $ban_id_pont;
 }
 
 /**
