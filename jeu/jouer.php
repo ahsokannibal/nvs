@@ -4011,7 +4011,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso-1 && $x == $x_perso+1){
@@ -4020,7 +4020,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso && $x == $x_perso+1){
@@ -4029,7 +4029,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso && $x == $x_perso-1) {
@@ -4038,7 +4038,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso+1 && $x == $x_perso-1) {
@@ -4047,7 +4047,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso-1 && $x == $x_perso-1) {
@@ -4056,7 +4056,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso+1 && $x == $x_perso) {
@@ -4065,7 +4065,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 										else if($y == $y_perso-1 && $x == $x_perso) {
@@ -4074,7 +4074,7 @@ if($dispo || $admin){
 											echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'> ".$nom_bat."</div>\" ";
 											echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer (".$cout_pm." PM)</a></div>
 																			<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter</a></div>\" >";
+																			<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
 											echo "</td>";
 										}
 									}

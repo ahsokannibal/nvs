@@ -284,6 +284,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 	$verif_berge_pont			= 1;
 	$verif_distance_pont 		= 0;
 	$verif_distance_pont_bat 	= 0;
+	$verif_largeur_pont			= 0;
 	
 	if ($id_bat == '5') {
 		
@@ -304,6 +305,31 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 						AND fond_carte!='9.gif'";
 			$res = $mysqli->query($sql);
 			$verif_berge_pont = $res->num_rows;
+		}
+		else {
+			
+			$limite_basse_x = $x_bat - 2;
+			$limite_haute_x = $x_bat + 2;
+			
+			$limite_basse_y = $y_bat - 2;
+			$limite_haute_y = $y_bat + 2;
+			
+			// Verification largeur pont 
+			foreach ($ban_id_pont as $id_pont){
+				
+				$sql = "SELECT x_carte, y_carte FROM carte WHERE save_info_carte='$id_pont'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$x_pont_verif = $t['x_carte'];
+				$y_pont_verif = $t['y_carte'];
+				
+				if (($x_pont_verif <= $limite_basse_x || $x_pont_verif >= $limite_haute_x)
+						&& ($y_pont_verif <= $limite_basse_y || $y_pont_verif >= $limite_haute_y)) {
+					$verif_largeur_pont = 1;
+					break;
+				}
+			}
 		}
 		
 		// 30 PM entre chaque pont
@@ -340,6 +366,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 				&& $verif_distance_tour == 0 
 				&& $verif_distance_pont == 0
 				&& $verif_distance_pont_bat == 0
+				&& $verif_largeur_pont == 0
 				&& $verif_berge_pont > 0;
 }
 
