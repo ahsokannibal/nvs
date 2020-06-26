@@ -61,6 +61,9 @@ include ('../nb_online.php');
 							<tr>
 								<td>Barricades</td><td align='center'>0</td><td align='center'> - </td><td>2 cases d'une gare. 2 cases d'un lieu de rapatriement.</td>
 							</tr>
+							<tr>
+								<td>Ponts</td><td align='center'>0</td><td align='center'> - </td><td>3 cases d'un autre batiment. 30 cases d'un autre pont. La construction doit démarrer de la terre ferme (pas de pont flottant).</td>
+							</tr>
 						</table>
 					</div>
 				</div>

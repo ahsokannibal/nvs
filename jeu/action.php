@@ -34,7 +34,7 @@ if($dispo || $admin){
 		
 		if($ok){
 			// header (retour a la page de jeu)
-			header("location:jouer.php");
+			//header("location:jouer.php");
 		}
 	}
 	else {
@@ -46,7 +46,7 @@ if($dispo || $admin){
 			
 			if($ok){
 				// header (retour a la page de jeu)
-				header("location:jouer.php");
+				//header("location:jouer.php");
 			}
 		}
 	}
