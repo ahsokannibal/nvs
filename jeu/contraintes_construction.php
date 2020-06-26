@@ -69,6 +69,22 @@ include ('../nb_online.php');
 				</div>
 			</div>
 			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+					<h2>Exemple contrainte largeur pont</h2>
+					
+					<img src='../images/regle_largeur_pont.png'>
+					
+					<p>
+					P1 posséde bien une largeur de 2 cases max (2 cases en longueur : voir fleches), il est donc valide.<br />
+					P2 possède une largeur supérieur à 2 cases (3 cases que ce soit en longueur ou en hauteur), il est donc invalide, il sera impossible de le construire.<br />
+					P3 possède bien une largeur de 2 cases max (2 cases en hauteur : voir fleches), cependant, il sera impossible de construire les cases de pont pour traverser la rivière (car dans ce cas, il dépassera les 2 cases max).
+					</p>
+				</div>
+			</div>
+			
 		</div>
 		
 		<!-- Optional JavaScript -->
