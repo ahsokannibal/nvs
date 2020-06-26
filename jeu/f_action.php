@@ -334,10 +334,6 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		$verif_distance_pont_bat = $res->num_rows;
 	}
 	
-	echo "distance autre pont : ".$verif_distance_pont."<br>";
-	echo "berge pont : ".$verif_berge_pont."<br>";
-	echo "distance autre bat : ".$verif_distance_pont_bat."<br>";
-	
 	return $verif_nb_bats == 0 
 				&& $verif_nb_gares == 0 
 				&& $verif_nb_rapats == 0 
