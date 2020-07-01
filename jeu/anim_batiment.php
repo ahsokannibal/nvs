@@ -38,6 +38,76 @@ if($dispo || $admin){
 				$nom_camp = 'Indien';
 			}
 			
+			$mess = "";
+			$mess_erreur = "";
+			
+			// Creation pénitencier
+			if (isset($_POST['coord_x_penitencier']) && $_POST['coord_x_penitencier'] != ''
+					&& isset($_POST['coord_y_penitencier']) && $_POST['coord_y_penitencier'] != '') {
+				
+				$x_penitencier = $_POST['coord_x_penitencier'];
+				$y_penitencier = $_POST['coord_y_penitencier'];
+				
+				$verif_x = preg_match("#^[0-9]*[0-9]$#i","$x_penitencier");
+				$verif_y = preg_match("#^[0-9]*[0-9]$#i","$y_penitencier");
+				
+				if ($verif_x && $verif_y && in_map($x_penitencier, $y_penitencier)) {
+					
+					$autorisation_construction_taille = true;
+					
+					$taille_bat = 3;
+					$taille_search = floor($taille_bat / 2);
+					
+					// Est ce que les coordonnées sont libres pour la construction ?
+					$sql = "SELECT occupee_carte, fond_carte FROM carte 
+							WHERE x_carte <= $x_penitencier + $taille_search AND x_carte >= $x_penitencier - $taille_search 
+							AND y_carte <= $y_penitencier + $taille_search AND y_carte >= $y_penitencier - $taille_search";
+					$res = $mysqli->query($sql);
+					
+					while ($t = $res->fetch_assoc()) {
+						
+						$occupee_carte 	= $t["occupee_carte"];
+						$fond_carte 	= $t["fond_carte"];
+						
+						if ($occupee_carte || $fond_carte != '1.gif') {
+							$autorisation_construction_taille = false;
+						}
+					}
+					
+					if ($autorisation_construction_taille) {
+					
+						$img_bat = "b10".$camp.".png";
+						$img_bat_sup = $camp.".png";
+						
+						// mise a jour de la table instance_bat
+						$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
+								VALUES ('1', '10', '', '15000', '15000', '$x_penitencier', '$y_penitencier', '$camp', '50')";
+						$mysqli->query($sql);
+						$id_i_bat = $mysqli->insert_id;
+						
+						for ($x = $x_penitencier - $taille_search; $x <= $x_penitencier + $taille_search; $x++) {
+							for ($y = $y_penitencier - $taille_search; $y <= $y_penitencier + $taille_search; $y++) {
+								
+								// mise a jour de la carte
+								$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
+								$mysqli->query($sql);
+								
+							}
+						}
+					
+						// mise a jour de la carte image centrale
+						$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_penitencier' AND y_carte='$y_penitencier'";
+						$mysqli->query($sql);
+					}
+					else {
+						$mess_erreur .= "Impossible de construire sur ces coordonnées, les cases ne dont pas libre ou ne sont pas des plaines";
+					}
+				}
+				else {
+					$mess_erreur .= "Coordonnées du pénitencier incorrectes";
+				}
+			}
+			
 			?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -65,7 +135,41 @@ if($dispo || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
-						<div id="table_bataillon" class="table-responsive">
+						<?php
+						echo "<font color='blue'>".$mess."</font><br />";
+						echo "<font color='red'><b>".$mess_erreur."</b></font><br />";
+						?>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<?php						
+						// Vérification si présence ou non d'un pénitencier
+						$sql = "SELECT id_instanceBat FROM instance_batiment WHERE id_batiment=10 AND camp_instance='$camp'";
+						$res = $mysqli->query($sql);
+						$verif_penitencier = $res->num_rows;
+						
+						if (!$verif_penitencier) {
+							echo "<form method='POST' action='anim_batiment.php'>";
+							echo "	<input type='text' value='' placeholder='coordonnée x' name='coord_x_penitencier'>";
+							echo "	<input type='text' value='' placeholder='coordonnée y' name='coord_y_penitencier'>";
+							echo "	<button type='submit' class='btn btn-danger'>Créer un pénitencier pour mon camp</button>";
+							echo '</form>';
+							
+							echo "<br /><br />";
+						}
+						?>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">					
+						<div id="table_bataillon" class="table-responsive">						
 							<table border="1">
 								<tr>
 									<th style='text-align:center'>Bâtiment [matricule]</th><th style='text-align:center'>PV</th><th style='text-align:center'>Position</th><th style='text-align:center'>État</th>
@@ -120,7 +224,7 @@ if($dispo || $admin){
 									$nb_ennemis_siege = $t_e['nb_ennemi'];
 									
 									echo "<tr>";
-									echo "	<td><img src='../images_perso/".$image_bat."' />".$nom_batiment." ".$nom_instance."[<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]</td>";
+									echo "	<td><img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." ".$nom_instance."[<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]</td>";
 									
 									// PV
 									echo "	<td>";
@@ -144,7 +248,6 @@ if($dispo || $admin){
 									echo "</tr>";
 								}
 								?>
-								
 							</table>
 						</div>
 					</div>

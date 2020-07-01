@@ -5,17 +5,25 @@ require_once("../fonctions.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
+include ('../forum/config.php');
 
-if(isset($_SESSION["id_perso"])){
+if (@$_SESSION["id_perso"]) {
 	
-	$id_perso = $_SESSION['id_perso'];
+	//recuperation des varaibles de sessions
+	$id = $_SESSION["id_perso"];
 	
-	// recupération config jeu
-	$admin = admin_perso($mysqli, $id_perso);
+	$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id'";
+	$res = $mysqli->query($sql);
+	$tpv = $res->fetch_assoc();
 	
-	if($admin){
-		
-		
+	$testpv = $tpv['pv_perso'];
+	
+	if ($testpv <= 0) {
+		echo "<font color=red>Vous êtes mort...</font>";
+	}
+	else {
+		//$erreur = "<div class=\"erreur\">";
+
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -28,34 +36,10 @@ if(isset($_SESSION["id_perso"])){
 		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
 	</head>
-	
 	<body>
 		<div class="container-fluid">
-		
-			<div class="row">
-				<div class="col-12">
 
-					<div align="center">
-						<h2>Adminstration</h2>
-					</div>
-				</div>
-			</div>
-			
-			<p align="center"><a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
-			
-			<div class="row">
-				<div class="col-12">
-					<a class='btn btn-danger' href='admin_triche.php' target='_blank'>Vérification multi-compte</a>
-					<a class='btn btn-danger' href='admin_teleporte.php'>Téléporter un perso sur la carte</a>
-					<a class='btn btn-danger' href='admin_teleporte_bat.php'>Téléporter un perso dans un batiment</a>
-					<a class='btn btn-danger' href='admin_acces.php'>Donner des accès à un perso</a>
-					<a class='btn btn-danger' href='admin_perso.php'>Consulter / Modifier les données d'un perso</a>
-					<a class='btn btn-danger' href='admin_batiments.php'>Administration des bâtiments</a>					
-				</div>
-			</div>
-			
 		</div>
 		
 		<!-- Optional JavaScript -->
@@ -67,15 +51,7 @@ if(isset($_SESSION["id_perso"])){
 </html>
 <?php
 	}
-	else {
-		// logout
-		$_SESSION = array(); // On écrase le tableau de session
-		session_destroy(); // On détruit la session
-		
-		header("Location:../index2.php");
-	}
 }
 else{
-	echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
-}
-?>
+	echo "<font color=red>Vous ne pouvez pas acceder a cette page, veuillez vous logguer.</font>";
+}?>
