@@ -441,7 +441,7 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 			$pm_nouveau = ($pm_max_perso_nouveau_tour / 2) + $bonusPM_nouveau_tour;
 			
 			// MAJ perso avec malus rapat
-			$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau, pa_perso=paMax_perso/2 + bonusPA_perso, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) 
+			$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=$pm_nouveau, pa_perso=paMax_perso/2 + bonusPA_perso, pv_perso=pvMax_perso, or_perso=or_perso+$gain_or, bonusPerception_perso=$bonus_visu, bonus_perso=0, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) 
 					WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
 		}
@@ -471,7 +471,7 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 				$pv_nouveau = $pv_max_perso_nouveau_tour;
 			}
 			
-			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, convalescence=0, bourre_perso=0, DLA_perso=FROM_UNIXTIME($new_dla) 
+			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) 
 					WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
 		}
