@@ -53,7 +53,7 @@ if (@$_SESSION["id_perso"]) {
 			<div class="row">
 				<div class="col-12">
 				
-					<h3>Administration des batiments</h3>
+					<h3>Administration des compagnies</h3>
 					
 				</div>
 			</div>

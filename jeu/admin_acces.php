@@ -95,7 +95,7 @@ if(isset($_SESSION["id_perso"])){
 				</div>
 			</div>
 			
-			<p align="center"><a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
+			<p align="center"><a class="btn btn-primary" href="admin_nvs.php">Retour à l'administration</a> <a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
 			
 			<div class="row">
 				<div class="col-12">
