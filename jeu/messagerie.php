@@ -6,7 +6,7 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
-if(@$_SESSION["id_perso"]){
+if(isset($_SESSION["id_perso"])){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
