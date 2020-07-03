@@ -209,10 +209,10 @@ if($dispo || $admin){
 											$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
 											$mysqli->query($sql);
 											
-											if (in_bat($mysqli, $id_perso)) {		
+											if (in_bat($mysqli, $matricule_grouillot_renvoi)) {		
 												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_grouillot_renvoi'";
 											}
-											else if (in_train($mysqli, $id_perso)) {
+											else if (in_train($mysqli, $matricule_grouillot_renvoi)) {
 												$sql = "DELETE FROM perso_in_train WHERE id_perso='$matricule_grouillot_renvoi'";
 											}
 											else {
