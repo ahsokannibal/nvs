@@ -337,8 +337,8 @@ if(isset($_GET['id_contact']) && $_GET['id_contact'] != ""){
 	else {
 		echo "<center><b><font color='red'>L'identifiant passé en paramètre n'est pas valide</font></b></center><br />";
 	}
-	// Ajouter un lien de retour vers la liste des contacts
-	echo "<center><a href=\"messagerie_contacts.php\">[retour à la liste des contacts]</a></center>";
+	
+	echo "<center><a href=\"messagerie_contacts.php\" class='btn btn-primary'>retour à la liste des contacts</a></center>";
 }
 else {
 	echo "<center><h2>Liste des groupes de contacts</h2></center>";
