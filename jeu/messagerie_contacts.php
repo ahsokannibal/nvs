@@ -37,13 +37,76 @@ if($camp == "3"){
 	$couleur = "purple";
 }
 
+function nettoyer_contact($noms_contact) {
+	
+	$contacts_retour = "";
+	
+	$t_contact = explode(";",$noms_contact);
+	
+	foreach($t_contact as $contact) {
+		
+		if (trim($contact) != "") {
+			if ($contacts_retour != "") {
+				$contacts_retour .= ";";
+			}
+			
+			$contacts_retour .= $contact;
+		}
+	}
+	
+	return $contacts_retour;
+	
+}
+
+if (isset($_GET['nettoyer']) && $_GET['nettoyer'] != "") {
+	
+	$id_contact = $_GET['nettoyer'];
+	
+	$verif1 = preg_match("#^[0-9]*[0-9]$#i","$id_contact");
+	
+	if ($verif1) {
+	
+		$sql = "SELECT * FROM perso_as_contact WHERE id_contact='$id_contact'";
+		$res = $mysqli->query($sql);
+		$verif2 = $res->num_rows;
+		
+		if ($verif2) {
+			
+			$sql = "SELECT contacts FROM contact WHERE id_contact='$id_contact'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$contacts = $t['contacts'];
+			
+			$contacts_net = nettoyer_contact($contacts);
+			
+			$sql = "UPDATE contact SET contacts='$contacts_net' WHERE id_contact='$id_contact'";
+			$mysqli->query($sql);
+			
+			echo "<center><b><font color='blue'>Contacts nettoyés</font></b></center>";
+			
+		}
+		else {
+			// Tentative de triche
+		
+			echo "<center><b><font color='red'>Paramètre invalide</font></b></center>";
+		}
+	}
+	else {
+		// Tentative de triche
+		
+		echo "<center><b><font color='red'>Paramètre invalide</font></b></center>";
+	}
+}
+
+
 //creation du contact
 if(isset($_POST['creation_contact2'])){
 	
 	if(isset($_SESSION['nom_contact'])){
 		
 		$nom_contact 	= addslashes($_SESSION['nom_contact']);
-		$noms_contact 	= $_POST['nom_contact2'];
+		$noms_contact 	= nettoyer_contact($_POST['nom_contact2']);
 		
 		if(filtre_contact($nom_contact) && filtre_contact($noms_contact)){
 		
@@ -237,11 +300,12 @@ if(isset($_GET['id_contact']) && $_GET['id_contact'] != ""){
 				$t_contacts = explode(';',$contacts);
 				$taille_contacts = sizeof($t_contacts);
 				
-				echo "&nbsp;&nbsp;&nbsp;&nbsp;<b>Groupe de contacts $nom_contact</b> :<br />";
+				echo "&nbsp;&nbsp;&nbsp;&nbsp;<b>Groupe de contacts $nom_contact</b> : <a href='messagerie_contacts.php?nettoyer=".$id_contact."' class='btn btn-primary'>Nettoyer ce groupe de contact</a><br />";
 				echo "";
 				for($i = 0; $i < $taille_contacts; $i++){
 					echo "&nbsp;&nbsp;&nbsp;&nbsp;<a href='messagerie_contacts.php?id_contact=$id_contact&supprime_contact=$t_contacts[$i]'><img src='../images/delete_group.png' alt='supprimer_contact' border='0' /></a>$t_contacts[$i] ";
 				}
+				
 				echo "<br /><br />";
 				
 				// faire l'ajout d'un perso dans la liste
