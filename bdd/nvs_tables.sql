@@ -614,6 +614,7 @@ CREATE TABLE `log` (
 
 CREATE TABLE `message` (
   `id_message` int(11) NOT NULL,
+  `id_expediteur` int(11) NULL,
   `expediteur_message` text NOT NULL,
   `date_message` datetime NOT NULL,
   `contenu_message` longtext NOT NULL,
