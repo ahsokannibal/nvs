@@ -81,6 +81,9 @@ include ('../nb_online.php');
 					P1 posséde bien une largeur de 2 cases max (2 cases en longueur : voir fleches), il est donc valide.<br />
 					P2 possède une largeur supérieur à 2 cases (3 cases que ce soit en longueur ou en hauteur), il est donc invalide, il sera impossible de le construire.<br />
 					P3 possède bien une largeur de 2 cases max (2 cases en hauteur : voir fleches), cependant, il sera impossible de construire les cases de pont pour traverser la rivière (car dans ce cas, il dépassera les 2 cases max).
+					<br /><br />
+					<b><font color='red'>Attention</font> : La construction d'un pont sur une rivière de 2 cases de hauteur ne doit pas dépasser 2 cases de largeur (le Y sur 3 cases est toléré et à l'appréciation des animateurs).
+					De même pour les rivières de 2 cases de largeur, le pont ne doit pas dépasser 2 cases de hauteur. Les pontons du style P3 ne doivent pas être exagérés (3 cases de sont tolérés) et seront soumis aussi à l'appréciation des animateurs</b>
 					</p>
 				</div>
 			</div>
