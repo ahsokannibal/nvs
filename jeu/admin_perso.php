@@ -25,6 +25,12 @@ if(isset($_SESSION["id_perso"])){
 			
 		}
 		
+		if (isset($_GET['consulter_mp'])) {
+			
+			$id_perso_select = $_GET['consulter_mp'];
+			
+		}
+		
 		if (isset($_POST['id_perso_select']) && $_POST['id_perso_select'] != '') {
 			
 			$id_perso_select = $_POST['id_perso_select'];
@@ -59,6 +65,15 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 			}
 			
+			if (isset($_POST['or_perso']) && trim($_POST['or_perso']) != '') {
+				
+				$new_or_perso = $_POST['or_perso'];
+				
+				$mess = "MAJ THUNE perso matricule ".$id_perso_select." vers ".$new_or_perso;
+				
+				$sql = "UPDATE perso SET or_perso=$new_or_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+			}
 		}
 		
 ?>
@@ -100,7 +115,7 @@ if(isset($_SESSION["id_perso"])){
 					
 					<form method='POST' action='admin_perso.php'>
 					
-						<select name="select_perso">
+						<select name="select_perso" onchange="this.form.submit()">
 						
 							<?php
 							$sql = "SELECT id_perso, nom_perso, x_perso, y_perso FROM perso ORDER BY id_perso ASC";
@@ -140,6 +155,7 @@ if(isset($_SESSION["id_perso"])){
 						$pi_perso	= $t['pi_perso'];
 						$pv_perso 	= $t['pv_perso'];
 						$pm_perso 	= $t['pm_perso'];
+						$or_perso 	= $t['or_perso'];
 						$camp_perso	= $t['clan'];
 						
 						if ($camp_perso == 1) {
@@ -161,6 +177,7 @@ if(isset($_SESSION["id_perso"])){
 						
 						$im_camp_perso = $nom_camp_perso.".gif";
 						
+						echo "<br />";
 						echo "<table border='1' width='100%'>";
 						echo "	<tr>";
 						echo "		<td align='center'><img src='../images/".$im_camp_perso."'></td>";
@@ -174,9 +191,43 @@ if(isset($_SESSION["id_perso"])){
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>PC : </b><input type='text' name='pc_perso' value='".$pc_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
 						echo "</form>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>THUNE : </b><input type='text' name='or_perso' value='".$or_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
 						echo "	</tr>";
 						echo "</table>";
 						
+						if (isset($_GET['consulter_mp'])) {
+							
+							echo "<br />";
+							echo "<table border='1' width='100%'>";
+							echo "	<tr>";
+							echo "		<th style='text-align:center'>Date</th><th style='text-align:center'>Objet</th><th style='text-align:center'>Contenu</th>";
+							echo "	</tr>";
+							
+							$sql_mp = "SELECT * FROM message WHERE expediteur_message='".$nom_perso."' ORDER BY id_message DESC";
+							$res_mp = $mysqli->query($sql_mp);
+							while ($t_mp = $res_mp->fetch_assoc()) {
+								
+								$date_mp 	= $t_mp['date_message'];
+								$contenu_mp = $t_mp['contenu_message'];
+								$objet_mp 	= $t_mp['objet_message'];
+								$id_mp		= $t_mp['id_message'];
+								
+								echo "	<tr>";
+								echo "		<td>".$date_mp."</td>";
+								echo "		<td>".$objet_mp."</td>";
+								echo "		<td>".$contenu_mp."</td>";
+								echo "	</tr>";
+							}
+							
+							echo "	</tr>";
+							echo "</table>";
+							
+						}
+						else {
+							echo "<br /><a href='admin_perso.php?consulter_mp=".$id_perso_select."' class='btn btn-primary'>Consulter les MP du perso</a>";
+						}
 					}
 					?>
 				</div>
