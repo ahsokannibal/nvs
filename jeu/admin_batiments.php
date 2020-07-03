@@ -7,22 +7,25 @@ $mysqli = db_connexion();
 include ('../nb_online.php');
 include ('../forum/config.php');
 
-if (@$_SESSION["id_perso"]) {
+if(isset($_SESSION["id_perso"])){
 	
-	//recuperation des varaibles de sessions
-	$id = $_SESSION["id_perso"];
+	$id_perso = $_SESSION['id_perso'];
 	
-	$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id'";
-	$res = $mysqli->query($sql);
-	$tpv = $res->fetch_assoc();
+	// recupération config jeu
+	$admin = admin_perso($mysqli, $id_perso);
 	
-	$testpv = $tpv['pv_perso'];
-	
-	if ($testpv <= 0) {
-		echo "<font color=red>Vous êtes mort...</font>";
-	}
-	else {
-		//$erreur = "<div class=\"erreur\">";
+	if($admin){
+		
+		$mess_err 	= "";
+		$mess 		= "";
+		
+		
+		if (isset($_POST["destruction_pont"]) && $_POST["destruction_pont"] == 'ok') {
+			
+			// TODO - Destruction des ponts
+			
+			
+		}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -55,10 +58,36 @@ if (@$_SESSION["id_perso"]) {
 				
 					<h3>Administration des batiments</h3>
 					
+					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirmPont">Détruire tous les ponts du jeu</button>
+					
 				</div>
 			</div>
 		
 		</div>
+		
+		<!-- Modal -->
+		<form method="post" action="admin_batiments.php">
+			<div class="modal fade" id="modalConfirmPont" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalCenterTitle">Détruire tous les ponts du jeu</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							Êtes-vous sûr de vouloir détruire tous les ponts du jeu ?
+							<input type='hidden' name='destruction_pont' value='ok'>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+							<button type="button" onclick="this.form.submit()" class="btn btn-primary">Détruire</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
 		
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
