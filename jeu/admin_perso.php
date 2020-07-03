@@ -108,7 +108,7 @@ if(isset($_SESSION["id_perso"])){
 			<div class="row">
 				<div class="col-12">
 				
-					<h3>Consultation / Modification d'un perso</h3>
+					<h3>Administration des persos</h3>
 					
 					<center><font color='red'><?php echo $mess_err; ?></font></center>
 					<center><font color='blue'><?php echo $mess; ?></font></center>

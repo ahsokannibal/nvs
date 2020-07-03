@@ -7,22 +7,23 @@ $mysqli = db_connexion();
 include ('../nb_online.php');
 include ('../forum/config.php');
 
-if (@$_SESSION["id_perso"]) {
+if(isset($_SESSION["id_perso"])){
 	
-	//recuperation des varaibles de sessions
-	$id = $_SESSION["id_perso"];
+	$id_perso = $_SESSION['id_perso'];
 	
-	$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id'";
-	$res = $mysqli->query($sql);
-	$tpv = $res->fetch_assoc();
+	// recupération config jeu
+	$admin = admin_perso($mysqli, $id_perso);
 	
-	$testpv = $tpv['pv_perso'];
-	
-	if ($testpv <= 0) {
-		echo "<font color=red>Vous êtes mort...</font>";
-	}
-	else {
-		//$erreur = "<div class=\"erreur\">";
+	if($admin){
+		
+		$mess_err 	= "";
+		$mess 		= "";
+		
+		if(isset($_POST['select_compagnie']) && $_POST['select_compagnie'] != '') {
+			
+			$id_compagnie_select = $_POST['select_compagnie'];
+			
+		}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -54,6 +55,37 @@ if (@$_SESSION["id_perso"]) {
 				<div class="col-12">
 				
 					<h3>Administration des compagnies</h3>
+					
+					<center><font color='red'><?php echo $mess_err; ?></font></center>
+					<center><font color='blue'><?php echo $mess; ?></font></center>
+					
+					<form method='POST' action='admin_compagnies.php'>
+					
+						<select name="select_compagnie" onchange="this.form.submit()">
+						
+							<?php
+							$sql = "SELECT id_compagnie, nom_compagnie, id_clan FROM compagnies ORDER BY id_compagnie ASC";
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_compagnie 	= $t["id_compagnie"];
+								$nom_compagnie 	= $t["nom_compagnie"];
+								$id_clan		= $t["id_clan"];
+								
+								echo "<option value='".$id_compagnie."'";
+								if (isset($id_compagnie_select) && $id_compagnie_select == $id_compagnie) {
+									echo " selected";
+								}
+								echo ">".$nom_compagnie." [".$id_compagnie."] - ".$id_clan."</option>";
+							}
+							?>
+						
+						</select>
+						
+						<input type="submit" value="choisir">
+						
+					</form>
 					
 				</div>
 			</div>

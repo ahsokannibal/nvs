@@ -222,7 +222,9 @@ if(isset($_GET["id_compagnie"])) {
 		
 			echo "<h3>";
 			echo "	<center>Page d'administration de la compagnie ".$nom_compagnie." ";
-			echo "	<a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a>";
+			if (!$genie_compagnie) {
+				echo "	<a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a>";
+			}
 			if (!$demande_suppression && !$genie_compagnie) {
 				echo "	<button type='button' class='btn btn-danger' data-toggle='modal' data-target=\"#modalConfirm\">Supprimer la compagnie</button>";
 			}

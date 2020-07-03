@@ -51,7 +51,8 @@ if(isset($_SESSION["id_perso"])){
 					<a class='btn btn-danger' href='admin_teleporte.php'>Téléporter un perso sur la carte</a>
 					<a class='btn btn-danger' href='admin_teleporte_bat.php'>Téléporter un perso dans un batiment</a>
 					<a class='btn btn-danger' href='admin_acces.php'>Donner des accès à un perso</a>
-					<a class='btn btn-danger' href='admin_perso.php'>Consulter / Modifier les données d'un perso</a>
+					<a class='btn btn-danger' href='admin_perso.php'>Administration des perso</a>
+					<a class='btn btn-danger' href='admin_compagnies.php'>Administration des compagnies</a>
 					<a class='btn btn-danger' href='admin_batiments.php'>Administration des bâtiments</a>					
 				</div>
 			</div>
