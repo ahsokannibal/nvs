@@ -81,7 +81,8 @@ if(isset($_POST["envoyer"])) {
 		$mysqli->query($lock);
 		
 		// creation du message
-		$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ('" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
+		$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
+				VALUES ('" . $id_perso . "', '" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
 		$mysqli->query($sql);
 		$id_message = $mysqli->insert_id;
 		

@@ -142,7 +142,8 @@ if($dispo || $admin){
 						$lock = "LOCK TABLE (joueur) WRITE";
 						$mysqli->query($lock);
 						
-						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . addslashes($nom_tresorier) . "', NOW(), '" . $message . "', '" . $objet . "')";
+						$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
+								VALUES ('" . $id . "', '" . addslashes($nom_tresorier) . "', NOW(), '" . $message . "', '" . $objet . "')";
 						$res = $mysqli->query($sql);
 						$id_message = $mysqli->insert_id;
 						
