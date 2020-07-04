@@ -284,7 +284,7 @@ if($dispo || $admin){
 								<p>Le sac vous permet de transporter des objets et de les utiliser.<br>Vous possédez <b><?php echo $nb_dans_sac; ?></b> objet<?php if($nb_dans_sac > 1){echo "s";} ?> dans votre sac.</p>
 								<?php 
 								echo "<p><u><b>Charge :</b></u> ";
-								if($charge_perso > $chargeMax_reel){
+								if($charge_perso >= $chargeMax_reel){
 									echo "<font color='red'>";
 								}
 								else {
