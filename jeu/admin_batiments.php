@@ -22,9 +22,15 @@ if(isset($_SESSION["id_perso"])){
 		
 		if (isset($_POST["destruction_pont"]) && $_POST["destruction_pont"] == 'ok') {
 			
-			// TODO - Destruction des ponts
+			// Destruction des ponts
+			$sql = "UPDATE carte SET fond_carte='8.gif', save_info_carte=NULL WHERE fond_carte='b5b.png' OR fond_carte='b5r.png'";
+			$mysqli->query($sql);
 			
+			$sql = "DELETE FROM instance_batiment WHERE id_batiment='5'";
+			$mysqli->query($sql);
 			
+			$sql = "UPDATE carte SET idPerso_carte=NULL WHERE idPerso_carte > 50000 AND idPerso_carte < 200000 AND idPerso_carte NOT IN (SELECT id_instanceBat FROM instance_batiment) ";
+			$mysqli->query($sql);
 		}
 
 ?>

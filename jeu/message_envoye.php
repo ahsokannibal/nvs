@@ -25,13 +25,6 @@ if(isset($_SESSION["id_perso"])){
 <?php
 $id = $_SESSION["id_perso"];
 
-// recuperation du nom du perso
-$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
-$res = $mysqli->query($sql);
-$t = $res->fetch_assoc();
-
-$pseudo = $t["nom_perso"];
-
 $sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."'";
 $res_a_lire = $mysqli->query($sql_a_lire);
 $a_lire = $res_a_lire->num_rows;
@@ -67,7 +60,7 @@ $a_lire = $res_a_lire->num_rows;
 // recupération des infos sur le message
 $sql = "SELECT DISTINCT(message.id_message) as id_mes, expediteur_message, date_message, objet_message
 		FROM message, message_perso 
-		WHERE expediteur_message='".$pseudo."'
+		WHERE id_expediteur='".$id."'
 		AND message_perso.id_message = message.id_message
 		ORDER BY date_message DESC";
 $resultat = $mysqli->query($sql);
