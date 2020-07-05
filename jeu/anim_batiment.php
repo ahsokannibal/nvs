@@ -169,7 +169,7 @@ if($dispo || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">					
-						<div id="table_bataillon" class="table-responsive">						
+						<div id="table_batiment" class="table-responsive">						
 							<table border="1">
 								<tr>
 									<th style='text-align:center'>Bâtiment [matricule]</th><th style='text-align:center'>PV</th><th style='text-align:center'>Position</th><th style='text-align:center'>État</th>

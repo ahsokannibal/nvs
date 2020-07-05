@@ -19,7 +19,6 @@ if(isset($_SESSION["id_perso"])){
 		$mess_err 	= "";
 		$mess 		= "";
 		
-		
 		if (isset($_POST["destruction_pont"]) && $_POST["destruction_pont"] == 'ok') {
 			
 			// Destruction des ponts
@@ -31,6 +30,63 @@ if(isset($_SESSION["id_perso"])){
 			
 			$sql = "UPDATE carte SET idPerso_carte=NULL WHERE idPerso_carte > 50000 AND idPerso_carte < 200000 AND idPerso_carte NOT IN (SELECT id_instanceBat FROM instance_batiment) ";
 			$mysqli->query($sql);
+			
+			$mess .= "Tous les ponts ont été détruit avec succès";
+		}
+		
+		if (isset($_POST["destruction_barricade"]) && $_POST["destruction_barricade"] == 'ok') {
+			
+			// Destruction des ponts
+			$sql = "UPDATE carte SET idPerso_carte=NULL, save_info_carte=NULL, image_carte=NULL WHERE fond_carte='b1b.png' OR fond_carte='b1r.png'";
+			$mysqli->query($sql);
+			
+			$sql = "DELETE FROM instance_batiment WHERE id_batiment='1'";
+			$mysqli->query($sql);
+			
+			$mess .= "Toutes les barricades ont été détruites avec succès";
+		}
+		
+		if (isset($_POST['id_instance_bat_destruction']) && $_POST['id_instance_bat_destruction'] != "") {
+			
+			$id_instance_bat_destruction = $_POST['id_instance_bat_destruction'];
+			
+			// Est ce qu'il y a des persos dans le batiment ?
+			$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_instance_bat_destruction'";
+			$res = $mysqli->query($sql);
+			$nb_persos_bat = $res->num_rows;
+			
+			if ($nb_persos_bat == 0) {
+				
+				// recup id_batiment
+				$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat_destruction'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$id_bat = $t['id_batiment'];
+				
+				if ($id_bat == 5) {
+					// Ponts
+					$sql = "UPDATE carte SET fond_carte='8.gif', save_info_carte=NULL WHERE save_info_carte='$id_instance_bat_destruction'";
+					$mysqli->query($sql);
+					
+					$sql = "UPDATE carte SET idPerso_carte=NULL WHERE idPerso_carte=''$id_instance_bat_destruction''";
+					$mysqli->query($sql);
+				}
+				else {
+					// Autres batiments
+					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, save_info_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_instance_bat_destruction'";
+					$mysqli->query($sql);
+				}
+			
+				$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_instance_bat_destruction'";
+				$mysqli->query($sql);
+				
+				$mess .= "le batiment ".$id_instance_bat_destruction." a été détruit avec succès";
+			}
+			else {
+				$mess_err .= "Des persos se trouvent encore dans le batiment, batiment impossible à détruire";
+			}
+			
 		}
 
 ?>
@@ -53,6 +109,9 @@ if(isset($_SESSION["id_perso"])){
 
 					<div align="center">
 						<h2>Administration</h2>
+						
+						<center><font color='red'><?php echo $mess_err; ?></font></center>
+						<center><font color='blue'><?php echo $mess; ?></font></center>
 					</div>
 				</div>
 			</div>
@@ -65,7 +124,78 @@ if(isset($_SESSION["id_perso"])){
 					<h3>Administration des batiments</h3>
 					
 					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirmPont">Détruire tous les ponts du jeu</button>
+					<button type="button" class="btn btn-danger" data-toggle="modal" data-target="#modalConfirmBarricade">Détruire toutes les barricades du jeu</button>
 					
+				</div>
+			</div>
+			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">					
+						<div id="table_batiments" class="table-responsive">	
+					
+							<?php
+							$sql = "SELECT id_instanceBat, instance_batiment.id_batiment, nom_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance 
+									FROM instance_batiment, batiment 
+									WHERE instance_batiment.id_batiment = batiment.id_batiment
+									ORDER BY camp_instance, instance_batiment.id_batiment, x_instance, y_instance ASC";
+							$res = $mysqli->query($sql);
+							
+							echo "<table class='table'>";
+							echo "	<thead>";
+							echo "		<tr>";
+							echo "			<th>Batiment</th><th>Coordonnées</th><th>PV</th><th>Action</th>";
+							echo "		</tr>";
+							echo "	</thead>";
+							echo "	<tbody>";
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_instance_bat 	= $t['id_instanceBat'];
+								$id_bat				= $t['id_batiment'];
+								$nom_bat			= $t['nom_batiment'];
+								$nom_instance_bat	= $t['nom_instance'];
+								$pv_instance_bat	= $t['pv_instance'];
+								$pvMax_instance_bat	= $t['pvMax_instance'];
+								$x_instance_bat		= $t['x_instance'];
+								$y_instance_bat		= $t['y_instance'];
+								$camp_instance_bat	= $t['camp_instance'];
+								
+								if ($camp_instance_bat == 1) {
+									$color_camp = "blue";
+								}
+								else if ($camp_instance_bat == 2) {
+									$color_camp = "red";
+								}
+								else if ($camp_instance_bat == 3) {
+									$color_camp = "green";
+								}
+								else {
+									$color_camp = "black";
+								}
+								
+								echo "		<tr>";
+								echo "			<td><font color='".$color_camp."'>".$nom_bat." ".$nom_instance_bat." [".$id_instance_bat."]</font></td>";
+								echo "			<td>".$x_instance_bat."/".$y_instance_bat."</td>";
+								echo "			<td>".$pv_instance_bat."/".$pvMax_instance_bat."</td>";
+								echo "<form method=\"post\" action=\"admin_batiments.php\">";	
+								echo "			<td>";
+								echo "				<input type='hidden' name='id_instance_bat_destruction' value='".$id_instance_bat."'>";
+								echo "				<input type='submit' name='destruire_bat' value='Détruire' class='btn btn-danger'>";
+								echo "			</td>";
+								echo "</form>";
+								echo "		</tr>";
+								
+							}
+							
+							echo "	</tbody>";
+							echo "</table>";
+							?>
+						
+						</div>
+					</div>
 				</div>
 			</div>
 		
@@ -85,6 +215,29 @@ if(isset($_SESSION["id_perso"])){
 						<div class="modal-body">
 							Êtes-vous sûr de vouloir détruire tous les ponts du jeu ?
 							<input type='hidden' name='destruction_pont' value='ok'>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+							<button type="button" onclick="this.form.submit()" class="btn btn-primary">Détruire</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+		
+		<form method="post" action="admin_batiments.php">
+			<div class="modal fade" id="modalConfirmbarricade" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+				<div class="modal-dialog modal-dialog-centered" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="exampleModalCenterTitle">Détruire toutes les barricades du jeu</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							Êtes-vous sûr de vouloir détruire toutes les barricades du jeu ?
+							<input type='hidden' name='destruction_barricade' value='ok'>
 						</div>
 						<div class="modal-footer">
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
