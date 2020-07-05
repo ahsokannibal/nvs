@@ -108,6 +108,18 @@ if($dispo || $admin){
 				}
 			}
 			
+			if (isset($_POST['hid_id_instance_rename']) && isset($_POST['nom_batiment']) && $_POST['nom_batiment'] != "") {
+			
+				$id_instance_bat_rename = $_POST['hid_id_instance_rename'];
+				$nouveau_nom_bat		= addslashes($_POST['nom_batiment']);
+				
+				$sql = "UPDATE instance_batiment SET nom_instance='$nouveau_nom_bat' WHERE id_instanceBat='$id_instance_bat_rename'";
+				$mysqli->query($sql);
+				
+				$mess .= "le batiment ".$id_instance_bat_rename." a été renommé avec succès en ".$nouveau_nom_bat;
+				
+			}
+			
 			?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -191,7 +203,7 @@ if($dispo || $admin){
 									
 									$id_instance	= $t['id_instanceBat'];
 									$nom_batiment	= $t['nom_batiment'];
-									$nom_instance	= $t['nom_instance'];
+									$nom_instance	= htmlentities($t['nom_instance'],ENT_QUOTES);
 									$pv_instance	= $t['pv_instance'];
 									$pvMax_instance	= $t['pvMax_instance'];
 									$x_instance		= $t['x_instance'];
@@ -224,7 +236,12 @@ if($dispo || $admin){
 									$nb_ennemis_siege = $t_e['nb_ennemi'];
 									
 									echo "<tr>";
-									echo "	<td><img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." ".$nom_instance."[<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]</td>";
+									echo "<form method=\"post\" action=\"anim_batiment.php\">";
+									echo "	<td>";
+									echo "		<input type='hidden' name='hid_id_instance_rename' value='$id_instance'>";
+									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." <input type='text' name='nom_batiment' value='".$nom_instance."' > <input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'>[<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]";
+									echo "	</td>";
+									echo "</form>";
 									
 									// PV
 									echo "	<td>";
