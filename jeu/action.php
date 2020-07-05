@@ -30,7 +30,9 @@ if($dispo || $admin){
 	// Traitement action construction batiment
 	if(isset($_POST['image_bat'])){
 		
-		$ok = construire_bat($mysqli, $_POST['image_bat'], $id_perso, $carte);
+		$nom_bat = addslashes($_POST['nom_batiment']);
+		
+		$ok = construire_bat($mysqli, $_POST['image_bat'], $id_perso, $carte, $nom_bat);
 		
 		if($ok){
 			// header (retour a la page de jeu)
@@ -42,7 +44,9 @@ if($dispo || $admin){
 		// passage par le champ cache pour IE
 		if(isset($_POST['hid_image_bat'])){
 			
-			$ok = construire_bat($mysqli, $_POST['hid_image_bat'], $id_perso, $carte);
+			$nom_bat = addslashes($_POST['nom_batiment']);
+			
+			$ok = construire_bat($mysqli, $_POST['hid_image_bat'], $id_perso, $carte, $nom_bat);
 			
 			if($ok){
 				// header (retour a la page de jeu)
@@ -1325,6 +1329,8 @@ if($dispo || $admin){
 									$tab = $res->fetch_assoc(); 
 									
 									//<!--Generation de la carte-->
+									echo "<form method=\"post\" action=\"action.php\" >";
+									echo "	<center>Nom du batiment : <input type='text' name='nom_batiment' value=''></center>";
 									echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 									
 									echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -1354,7 +1360,6 @@ if($dispo || $admin){
 													}
 												}
 												else{
-													echo "<form method=\"post\" action=\"action.php\" >";
 												
 													//positionnement du fond
 													$fond_carte = $tab["fond_carte"];
@@ -1451,7 +1456,7 @@ if($dispo || $admin){
 													else {
 														echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
 													}
-													echo "</form>";
+													
 												}
 												$tab = $res->fetch_assoc();
 											}
@@ -1460,6 +1465,7 @@ if($dispo || $admin){
 										}
 										echo "</tr>";
 									}
+									echo "</form>";
 									echo "</table>";
 									// fin de la generation de la carte
 									

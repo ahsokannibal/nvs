@@ -408,7 +408,7 @@ function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
   * @param $carte 		: La carte sur laquelle le batiment doit etre construit
   * @return Bool		: Si oui ou non le batiment est constructible
   */
-function construire_bat($mysqli, $t_bat, $id_perso, $carte){
+function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 	
 	if(isset($_POST['image_bat'])){
 		$t_bat = $_POST['image_bat'];
@@ -545,7 +545,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte){
 								else {
 									// mise a jour de la table instance_bat
 									$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
-											VALUES ('$niveau_bat', '$id_bat', '', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
+											VALUES ('$niveau_bat', '$id_bat', '$nom_instance', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
 									$mysqli->query($sql);
 									$id_i_bat = $mysqli->insert_id;
 									

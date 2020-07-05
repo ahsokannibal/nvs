@@ -88,6 +88,18 @@ if(isset($_SESSION["id_perso"])){
 			}
 			
 		}
+		
+		if (isset($_POST['hid_id_instance_rename']) && isset($_POST['nom_batiment']) && $_POST['nom_batiment'] != "") {
+			
+			$id_instance_bat_rename = $_POST['hid_id_instance_rename'];
+			$nouveau_nom_bat		= $_POST['nom_batiment'];
+			
+			$sql = "UPDATE instance_batiment SET nom_instance='$nouveau_nom_bat' WHERE id_instanceBat='$id_instance_bat_rename'";
+			$mysqli->query($sql);
+			
+			$mess .= "le batiment ".$id_instance_bat_rename." a été renommé avec succès en ".$nouveau_nom_bat;
+			
+		}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -177,7 +189,12 @@ if(isset($_SESSION["id_perso"])){
 								}
 								
 								echo "		<tr>";
-								echo "			<td><font color='".$color_camp."'>".$nom_bat." ".$nom_instance_bat." [".$id_instance_bat."]</font></td>";
+								echo "<form method=\"post\" action=\"admin_batiments.php\">";
+								echo "			<td>";
+								echo "				<input type='hidden' name='hid_id_instance_rename' value='$id_instance_bat'>";
+								echo "				<font color='".$color_camp."'>".$nom_bat." <input type='text' name='nom_batiment' value='".$nom_instance_bat."' ><input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'> [<a href='evenement.php?infoid=".$id_instance_bat."'>".$id_instance_bat."</a>]</font>";
+								echo "			</td>";
+								echo "</form>";
 								echo "			<td>".$x_instance_bat."/".$y_instance_bat."</td>";
 								echo "			<td>".$pv_instance_bat."/".$pvMax_instance_bat."</td>";
 								echo "<form method=\"post\" action=\"admin_batiments.php\">";	
