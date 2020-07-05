@@ -70,25 +70,24 @@ if(@$_SESSION["id_perso"]){
 						
 						$id_bat = $t_b["id_batiment"];
 						
-						if ($nb_b) { // il existe
+						if ($nb_b == 0) { // il existe
 							
-							if ($id_bat == 12) {
-								// recuperation de la liste des persos dans le train
-								$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_train, perso WHERE perso.id_perso=perso_in_train.id_perso AND id_train='$id'";
-							}
-							else {
-								// recuperation de la liste des persos dans le batiment
-								$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_batiment, perso WHERE perso.id_perso=perso_in_batiment.id_perso AND id_instanceBat='$id'";
-								
-							}
+							echo "<font color = red><center>Le batiment selectionné n'existe pas ou a été détruit</center></font>";
 							
-							$res_liste = $mysqli->query($sql_liste);
-							$verif_liste = '1';
-							
+						}
+						
+						if ($id_bat == 12) {
+							// recuperation de la liste des persos dans le train
+							$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_train, perso WHERE perso.id_perso=perso_in_train.id_perso AND id_train='$id'";
 						}
 						else {
-							echo "<font color = red><center>Le batiment selectionné n'existe pas</center></font>";
+							// recuperation de la liste des persos dans le batiment
+							$sql_liste = "SELECT nom_perso, perso.id_perso FROM perso_in_batiment, perso WHERE perso.id_perso=perso_in_batiment.id_perso AND id_instanceBat='$id'";
+							
 						}
+						
+						$res_liste = $mysqli->query($sql_liste);
+						$verif_liste = '1';
 					}
 					else {
 						echo "<font color = red><center>vous ne pouvez lister la liste des perso que sur un batiment</center></font>";
@@ -133,43 +132,49 @@ if(@$_SESSION["id_perso"]){
 			// l'entité existe bien
 			entete($mysqli, $id);
 		
-			if(isset($verif_liste) && $verif_liste){
+		}
+		else {
+			echo "<font color='red'><b>";
+			if($id < 50000){
+				echo "<center>Ce perso n'existe pas ou a été viré</center>";
+			}
+			else if ($id >= 200000) {
+				echo "<center>Ce pnj n'existe pas ou a été tué</center>";
+			}
+			else {
+				echo "<center>Ce bâtiment n'existe pas ou a été détruit</center>";
+			}
+			echo "</b></font>";
+		}
+	
+		if(isset($verif_liste) && $verif_liste){
+			
+			// verifier camp perso
+			$sql = "select clan from perso where id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_c = $res->fetch_assoc();
+			
+			$camp_perso = $t_c["clan"];
+			$camp_bat 	= $t_ci["camp_instance"];
+			
+			if($camp_perso == $camp_bat){
 				
-				// verifier camp perso
-				$sql = "select clan from perso where id_perso='$id_perso'";
-				$res = $mysqli->query($sql);
-				$t_c = $res->fetch_assoc();
-				
-				$camp_perso = $t_c["clan"];
-				$camp_bat 	= $t_ci["camp_instance"];
-				
-				if($camp_perso == $camp_bat){
+				// si à l'interieur
+				if(in_instance_bat($mysqli, $id_perso, $id) || in_instance_train($mysqli, $id_perso, $id)){
 					
-					// si à l'interieur
-					if(in_instance_bat($mysqli, $id_perso, $id) || in_instance_train($mysqli, $id_perso, $id)){
+					echo "<center>";
+					echo "<b>Liste des persos dans le bâtiment</b><br />";
+					
+					while($liste = $res_liste->fetch_assoc()) {
 						
-						echo "<center>";
-						echo "<b>Liste des persos dans le bâtiment</b><br />";
+						$nom_p 	= $liste["nom_perso"];
+						$id_p 	= $liste["id_perso"];
 						
-						while($liste = $res_liste->fetch_assoc()) {
-							
-							$nom_p = $liste["nom_perso"];
-							$id_p = $liste["id_perso"];
-							
-							echo "$nom_p [<a href=\"evenement.php?infoid=".$id_p."\">$id_p</a>]";
-						}
-						
-						echo "</center>";
-						echo "<br />";
+						echo "$nom_p [<a href=\"evenement.php?infoid=".$id_p."\">$id_p</a>]";
 					}
-					else {
-						echo "<center>";
-						echo "<b>Nombre de persos dans le bâtiment</b><br />";
-						$nb_l = $res_liste->num_rows;
-						echo "<i>Il y a <b>$nb_l</b> persos dans ce batiment</i>";
-						echo "</center>";
-						echo "<br />";
-					}
+					
+					echo "</center>";
+					echo "<br />";
 				}
 				else {
 					echo "<center>";
@@ -180,82 +185,86 @@ if(@$_SESSION["id_perso"]){
 					echo "<br />";
 				}
 			}
-		
-			if ($id) {
-		
-				?> 
+			else {
+				echo "<center>";
+				echo "<b>Nombre de persos dans le bâtiment</b><br />";
+				$nb_l = $res_liste->num_rows;
+				echo "<i>Il y a <b>$nb_l</b> persos dans ce batiment</i>";
+				echo "</center>";
+				echo "<br />";
+			}
+		}
+	
+		if ($id) {
+	
+			?> 
 		<table align="center" width="80%" border=1>
 			<tr>
 				<th style='text-align:center' width="25%">date</th>
 				<th style='text-align:center' width="75%">Évènement</th>
 			</tr>
-				<?php
+			<?php
+			
+			if(isset($_GET['infoid'])) {
+			
+				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
+				$res = $mysqli->query($sql);
 				
-				if(isset($_GET['infoid'])) {
-				
-					$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
-					$res = $mysqli->query($sql);
+				while ($t = $res->fetch_assoc()) {
 					
-					while ($t = $res->fetch_assoc()) {
+					echo "<tr>";
+					echo "	<td>".$t['date_evenement']."</td>";
+					echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					
+					if ($t['IDCible_evenement'] == 0) {
 						
-						echo "<tr>";
-						echo "	<td>".$t['date_evenement']."</td>";
-						echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
+							echo " ".stripslashes($t['effet_evenement']);
+						}
 						
-						if ($t['IDCible_evenement'] == 0) {
-							
-							if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-								echo " ".stripslashes($t['effet_evenement']);
-							}
-							
-							echo "</td>";
+						echo "</td>";
+					}
+					else {
+						echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
+						
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
+							echo " ".stripslashes($t['effet_evenement']);
 						}
-						else {
-							echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
-							
-							if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-								echo " ".stripslashes($t['effet_evenement']);
-							}
-							
-							echo "</td>";
-						}
+						
+						echo "</td>";
 					}
 				}
-				else {
+			}
+			else {
+			
+				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
+				$res = $mysqli->query($sql);
 				
-					$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
-					$res = $mysqli->query($sql);
+				while ($t = $res->fetch_assoc()) {
 					
-					while ($t = $res->fetch_assoc()) {
+					echo "<tr>";
+					echo "	<td>".$t['date_evenement']."</td>";
+					echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					
+					if ($t['IDCible_evenement'] == 0) {
 						
-						echo "<tr>";
-						echo "	<td>".$t['date_evenement']."</td>";
-						echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
+							echo stripslashes($t['effet_evenement'])."</td>";
+						}
 						
-						if ($t['IDCible_evenement'] == 0) {
-							
-							if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-								echo stripslashes($t['effet_evenement'])."</td>";
-							}
-							
-							echo "</td>";
+						echo "</td>";
+					}
+					else {
+						echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
+						
+						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
+							echo " ".stripslashes($t['effet_evenement'])."</td>";
 						}
-						else {
-							echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
-							
-							if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-								echo " ".stripslashes($t['effet_evenement'])."</td>";
-							}
-							
-							echo "</td>";
-						}
+						
+						echo "</td>";
 					}
 				}
-			}	
-		}
-		else {
-			// le perso n'existe pas
-			echo "<br/><center><b>Erreur :</b>Ce perso n'existe pas !</center>";
+			}
 		}
 	}
 	else {
