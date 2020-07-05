@@ -92,7 +92,7 @@ if(isset($_SESSION["id_perso"])){
 		if (isset($_POST['hid_id_instance_rename']) && isset($_POST['nom_batiment']) && $_POST['nom_batiment'] != "") {
 			
 			$id_instance_bat_rename = $_POST['hid_id_instance_rename'];
-			$nouveau_nom_bat		= $_POST['nom_batiment'];
+			$nouveau_nom_bat		= addslashes($_POST['nom_batiment']);
 			
 			$sql = "UPDATE instance_batiment SET nom_instance='$nouveau_nom_bat' WHERE id_instanceBat='$id_instance_bat_rename'";
 			$mysqli->query($sql);
@@ -168,7 +168,7 @@ if(isset($_SESSION["id_perso"])){
 								$id_instance_bat 	= $t['id_instanceBat'];
 								$id_bat				= $t['id_batiment'];
 								$nom_bat			= $t['nom_batiment'];
-								$nom_instance_bat	= $t['nom_instance'];
+								$nom_instance_bat	= htmlentities($t['nom_instance'],ENT_QUOTES);
 								$pv_instance_bat	= $t['pv_instance'];
 								$pvMax_instance_bat	= $t['pvMax_instance'];
 								$x_instance_bat		= $t['x_instance'];
