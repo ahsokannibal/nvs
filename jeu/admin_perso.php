@@ -74,6 +74,36 @@ if(isset($_SESSION["id_perso"])){
 				$sql = "UPDATE perso SET or_perso=$new_or_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 			}
+			
+			if (isset($_POST['pv_perso']) && trim($_POST['pv_perso']) != '') {
+				
+				$new_pv_perso = $_POST['pv_perso'];
+				
+				$mess = "MAJ PV perso matricule ".$id_perso_select." vers ".$new_pv_perso;
+				
+				$sql = "UPDATE perso SET pv_perso=$new_pv_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+			}
+			
+			if (isset($_POST['pm_perso']) && trim($_POST['pm_perso']) != '') {
+				
+				$new_pm_perso = $_POST['pm_perso'];
+				
+				$mess = "MAJ PM perso matricule ".$id_perso_select." vers ".$new_pm_perso;
+				
+				$sql = "UPDATE perso SET pm_perso=$new_pm_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+			}
+			
+			if (isset($_POST['pa_perso']) && trim($_POST['pa_perso']) != '') {
+				
+				$new_pa_perso = $_POST['pa_perso'];
+				
+				$mess = "MAJ PA perso matricule ".$id_perso_select." vers ".$new_pv_perso;
+				
+				$sql = "UPDATE perso SET pa_perso=$new_pa_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+			}
 		}
 		
 ?>
@@ -155,6 +185,7 @@ if(isset($_SESSION["id_perso"])){
 						$pi_perso	= $t['pi_perso'];
 						$pv_perso 	= $t['pv_perso'];
 						$pm_perso 	= $t['pm_perso'];
+						$pa_perso	= $t['pa_perso'];
 						$or_perso 	= $t['or_perso'];
 						$camp_perso	= $t['clan'];
 						
@@ -193,6 +224,18 @@ if(isset($_SESSION["id_perso"])){
 						echo "</form>";
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>THUNE : </b><input type='text' name='or_perso' value='".$or_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
+						echo "	</tr>";
+						echo "	<tr>";
+						echo "		<td></td><td></td>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>PV : </b><input type='text' name='pv_perso' value='".$pv_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>PM : </b><input type='text' name='pm_perso' value='".$pm_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>PA : </b><input type='text' name='pa_perso' value='".$pa_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
 						echo "</form>";
 						echo "	</tr>";
 						echo "</table>";

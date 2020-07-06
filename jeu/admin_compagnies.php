@@ -86,7 +86,66 @@ if(isset($_SESSION["id_perso"])){
 						<input type="submit" value="choisir">
 						
 					</form>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">					
+						<div id="table_batiments" class="table-responsive">	
 					
+						<?php 
+						if (isset($id_compagnie_select)) {
+							
+							$sql = "SELECT nom_compagnie, id_clan, montant
+									FROM compagnies, banque_as_compagnie
+									WHERE compagnies.id_compagnie = banque_as_compagnie.id_compagnie
+									AND compagnies.id_compagnie='$id_compagnie_select'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$nom_compagnie 	= $t['nom_compagnie'];
+							$id_clan		= $t["id_clan"];
+							$montant_banque	= $t["montant"];
+							
+							echo "<h3>".$nom_compagnie."</h3>";
+							echo "".$montant_banque." thunes";
+
+							$sql = "SELECT nom_perso, perso_in_compagnie.id_perso, attenteValidation_compagnie, nom_poste 
+									FROM perso_in_compagnie, perso, poste
+									WHERE perso_in_compagnie.id_perso = perso.id_perso
+									AND perso_in_compagnie.poste_compagnie = poste.id_poste
+									AND perso_in_compagnie.id_compagnie='$id_compagnie_select'";
+							$res = $mysqli->query($sql);
+							
+							echo "<table class='table'>";
+							echo "	<thead>";
+							echo "		<tr>";
+							echo "			<th>Perso</th><th>Poste</th><th>Action</th>";
+							echo "		</tr>";
+							echo "	</thead>";
+							echo "	<tbody>";
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_perso						= $t['id_perso'];
+								$nom_perso						= $t['nom_perso'];
+								$poste_perso_compagnie			= $t['nom_poste'];
+								$attenteValidation_compagnie	= $t['attenteValidation_compagnie'];
+								
+								echo "		<tr>";
+								echo "			<td>".$nom_perso." [".$id_perso."]</td>";
+								echo "			<td>".$poste_perso_compagnie."</td>";
+								echo "			<td></td>";
+								echo "		</tr>";
+							}
+							
+							echo "	</tbody>";
+						}
+						?>
+						
+						</div>
+					</div>
 				</div>
 			</div>
 		

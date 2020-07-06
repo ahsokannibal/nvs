@@ -30,7 +30,7 @@ if($dispo || $admin){
 	// Traitement action construction batiment
 	if(isset($_POST['image_bat'])){
 		
-		$nom_bat = addslashes($_POST['nom_batiment']);
+		$nom_bat = '';//addslashes($_POST['hid_nom_bat']);
 		
 		$ok = construire_bat($mysqli, $_POST['image_bat'], $id_perso, $carte, $nom_bat);
 		
@@ -44,7 +44,7 @@ if($dispo || $admin){
 		// passage par le champ cache pour IE
 		if(isset($_POST['hid_image_bat'])){
 			
-			$nom_bat = addslashes($_POST['nom_batiment']);
+			$nom_bat = '';//addslashes($_POST['hid_nom_bat']);
 			
 			$ok = construire_bat($mysqli, $_POST['hid_image_bat'], $id_perso, $carte, $nom_bat);
 			
@@ -1329,8 +1329,6 @@ if($dispo || $admin){
 									$tab = $res->fetch_assoc(); 
 									
 									//<!--Generation de la carte-->
-									echo "<form method=\"post\" action=\"action.php\" >";
-									echo "	<center>Nom du batiment : <input type='text' name='nom_batiment' value=''></center>";
 									echo '<table border=0 align="center" cellspacing="0" cellpadding="0" style:no-padding>';
 									
 									echo "<tr><td>y \ x</td>";  //affichage des abscisses
@@ -1340,7 +1338,9 @@ if($dispo || $admin){
 									echo "</tr>";
 									
 									for ($y = $y_perso + $taille_batiment; $y >= $y_perso - $taille_batiment; $y--) {
+										
 										echo "<th>$y</th>";
+										
 										for ($x = $x_perso - $taille_batiment; $x <= $x_perso + $taille_batiment; $x++) {
 											
 											//les coordonnees sont dans les limites
@@ -1351,15 +1351,32 @@ if($dispo || $admin){
 													$idPerso_carte = $tab['idPerso_carte'];
 													
 													if ($idPerso_carte < 200000) {
-														// Perso ou batiment
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+														
+														if ($idPerso_carte < 50000) {
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+															echo "	<div width=40 height=40 style=\"position: relative;\">";
+															echo "		<div tabindex='0' style='position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;'>" . $idPerso_carte . "</div>";
+															echo "		<img tabindex='0' class='' border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 >";
+															echo "	</div>";
+															echo "</td>";
+														}
+														else {
+															// batiment
+															echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+															echo "	<img border=0 src=\"../images_perso/".$tab["image_carte"]."\" width=40 height=40 \>";
+															echo "</td>";
+														}
 													}
 													else {
 														// PNJ
-														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\"><img border=0 src=\"../images/pnj/".$tab["image_carte"]."\" width=40 height=40 \></td>";
+														echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
+														echo "	<img border=0 src=\"../images/pnj/".$tab["image_carte"]."\" width=40 height=40 \>";
+														echo "</td>";
 													}
 												}
 												else{
+													
+													echo "<form method=\"post\" action=\"action.php\" >";
 												
 													//positionnement du fond
 													$fond_carte = $tab["fond_carte"];
@@ -1458,6 +1475,9 @@ if($dispo || $admin){
 													}
 													
 												}
+												
+												echo "</form>";
+												
 												$tab = $res->fetch_assoc();
 											}
 											else //les coordonnees sont hors limites
@@ -1465,7 +1485,7 @@ if($dispo || $admin){
 										}
 										echo "</tr>";
 									}
-									echo "</form>";
+									
 									echo "</table>";
 									// fin de la generation de la carte
 									
