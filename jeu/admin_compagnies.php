@@ -24,6 +24,22 @@ if(isset($_SESSION["id_perso"])){
 			$id_compagnie_select = $_POST['select_compagnie'];
 			
 		}
+		
+		if (isset($_POST['thune_compagnie']) && $_POST['thune_compagnie'] != "") {
+			
+			$id_compagnie_select = $_POST['hid_id_compagnie'];
+			
+			$thune_compagnie = $_POST['thune_compagnie'];
+			
+			$mess = "La thune de la banque de la compagnie est passée à ".$thune_compagnie;
+		}
+		
+		if (isset($_POST['delete_compagnie'])) {
+			
+			$id_compagnie_to_delete = $_POST['hid_id_compagnie_to_delete'];
+			
+			$mess = "la compagnie d'id ".$id_compagnie_to_delete." a bien été supprimée";
+		}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -108,8 +124,15 @@ if(isset($_SESSION["id_perso"])){
 							$id_clan		= $t["id_clan"];
 							$montant_banque	= $t["montant"];
 							
-							echo "<h3>".$nom_compagnie."</h3>";
-							echo "".$montant_banque." thunes";
+							echo "<form method='POST' action='admin_compagnies.php'>";
+							echo "	<h3>".$nom_compagnie." <input type='submit' name='delete_compagnie' class='btn btn-danger' value='Supprimer cette compagnie'></h3>";
+							echo "	<input type='hidden' name='hid_id_compagnie_to_delete' value='$id_compagnie_select'>";
+							echo "</form>";
+							echo "<form method='POST' action='admin_compagnies.php'>";
+							echo "	<input type='text' style='text-align:center;' name='thune_compagnie' value='".$montant_banque."'> thunes ";
+							echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
+							echo "	<input type='submit' class='btn btn-warning' value='modifier'>";
+							echo "</form>";
 
 							$sql = "SELECT nom_perso, perso_in_compagnie.id_perso, attenteValidation_compagnie, nom_poste 
 									FROM perso_in_compagnie, perso, poste
@@ -117,6 +140,8 @@ if(isset($_SESSION["id_perso"])){
 									AND perso_in_compagnie.poste_compagnie = poste.id_poste
 									AND perso_in_compagnie.id_compagnie='$id_compagnie_select'";
 							$res = $mysqli->query($sql);
+							
+							echo "<br /><br /><h4>Liste des persos de la compagnie</h4>";
 							
 							echo "<table class='table'>";
 							echo "	<thead>";
@@ -134,9 +159,22 @@ if(isset($_SESSION["id_perso"])){
 								$attenteValidation_compagnie	= $t['attenteValidation_compagnie'];
 								
 								echo "		<tr>";
-								echo "			<td>".$nom_perso." [".$id_perso."]</td>";
-								echo "			<td>".$poste_perso_compagnie."</td>";
-								echo "			<td></td>";
+								echo "			<td>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+								echo "<form method='POST' action='admin_compagnies.php'>";
+								echo "			<td>".$poste_perso_compagnie;
+								echo "	<input type='submit' class='btn btn-warning' value='changer de poste'>";
+								echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
+								echo "			</td>";
+								echo "</form>";
+								echo "<form method='POST' action='admin_compagnies.php'>";
+								echo "			<td>";
+								if ($attenteValidation_compagnie) {
+									echo "	<input type='submit' class='btn btn-warning' value='Valider ce perso'>";
+								}
+								echo "	<input type='submit' class='btn btn-danger' value='Virer ce perso'>";
+								echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
+								echo "			</td>";
+								echo "</form>";
 								echo "		</tr>";
 							}
 							
