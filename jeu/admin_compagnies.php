@@ -207,6 +207,119 @@ if(isset($_SESSION["id_perso"])){
 			
 			$mess = "le perso d'id ".$id_perso_a_virer." a bien été viré de la compagnie ".$nom_compagnie;
 		}
+		
+		/************************************************************/
+		/* 	On valide l'intégration d'un perso dans une compagnie 	*/
+		/************************************************************/
+		if (isset($_POST['hid_id_perso_valider'])) {
+			
+			$id_compagnie_select 	= $_POST['hid_id_compagnie'];
+			$id_perso_a_valider 	= $_POST['hid_id_perso_valider'];
+			
+			// recuperation des information sur la compagnie
+			$sql = "SELECT genie_civil, nom_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie_select";
+			$res = $mysqli->query($sql);
+			$sec = $res->fetch_assoc();
+			
+			$genie_compagnie 	= $sec["genie_civil"];
+			$nom_compagnie		= addslashes($sec["nom_compagnie"]);
+			
+			// récupération des informations du perso 
+			$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_a_valider'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$nom_recrue = $t['nom_perso'];
+			
+			// on met a jour le champ attenteValidation de la table perso_in_compagnie
+			$sql = "UPDATE perso_in_compagnie SET attenteValidation_compagnie='0' WHERE id_perso=$id_perso_a_valider";
+			$mysqli->query($sql);
+			
+			// insertion dans la table banque compagnie
+			$sql = "INSERT INTO banque_compagnie VALUES ($id_perso_a_valider,'0','0','0')";
+			$mysqli->query($sql);
+			
+			if ($genie_compagnie) {
+				// Nouvelles compétences de construction pour le perso
+				
+				// Construire pont
+				$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_a_valider', '23', '1')";
+				$mysqli->query($sql);
+				
+				// Construire tour de visu
+				$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_a_valider', '24', '1')";
+				$mysqli->query($sql);
+				
+				// Construire Hopital
+				$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_a_valider', '27', '1')";
+				$mysqli->query($sql);
+				
+				// Construire Fortin
+				$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_a_valider', '28', '1')";
+				$mysqli->query($sql);
+				
+				// Construire Gare
+				$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_a_valider', '63', '1')";
+				$mysqli->query($sql);
+				
+				// Construire Rails
+				$sql = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id_perso_a_valider', '64', '1')";
+				$mysqli->query($sql);
+				
+				// Compteur Génie sur le perso
+				$sql = "UPDATE perso SET genie='8' WHERE id_perso='$id_perso_a_valider'";
+				$mysqli->query($sql);
+			}
+			
+			// on lui envoi un mp
+			$message = "Bonjour $nom_recrue,
+						J\'ai le plaisir de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été acceptée.";
+			$objet = "Incorporation dans la compagnie";
+			
+			$lock = "LOCK TABLE (joueur) WRITE";
+			$mysqli->query($lock);
+			
+			$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . $nom_compagnie . "', NOW(), '" . $message . "', '" . $objet . "')";
+			$res = $mysqli->query($sql);
+			$id_message = $mysqli->insert_id;
+			
+			$unlock = "UNLOCK TABLES";
+			$mysqli->query($unlock);
+			
+			$sql = "INSERT INTO message_perso VALUES ('$id_message','$id_perso_a_valider','1','0','1','0')";
+			$res = $mysqli->query($sql);
+			
+			// -- FORUM
+			// Récupération de l'id de l'utilisateur sur le forum 
+			$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+						(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+							(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_valider') AND chef='1')";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$id_user_forum = $t['user_id'];
+			
+			// Récupération de l'id du group de la compagnie sur le forum
+			$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$id_group_forum = $t['group_id'];
+			
+			// Est ce qu'il est déjà dans le groupe ?
+			$sql = "SELECT * FROM ".$table_prefix."user_group WHERE group_id = '$id_group_forum' AND user_id='$id_user_forum'";
+			$res = $mysqli->query($sql);
+			$verif = $res->num_rows;
+			
+			if ($verif == 0) {
+				// Insertion de l'utilisateur dans le groupe
+				$sql = "INSERT INTO ".$table_prefix."user_group (group_id, user_id, user_pending, group_leader) VALUES ('$id_group_forum', '$id_user_forum', 0, 0)";
+				$mysqli->query($sql);
+			}
+			
+			$mess = "le perso ".$nom_recrue." [".$id_perso_a_valider."] a bien été intégré à la compagnie ".$nom_compagnie;
+			
+		}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -333,14 +446,19 @@ if(isset($_SESSION["id_perso"])){
 								echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
 								echo "			</td>";
 								echo "</form>";
-								echo "<form method='POST' action='admin_compagnies.php'>";
 								echo "			<td>";
 								if ($attenteValidation_compagnie) {
+									echo "<form method='POST' action='admin_compagnies.php'>";
 									echo "	<input type='submit' class='btn btn-warning' value='Valider ce perso'>";
+									echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
+									echo "	<input type='hidden' name='hid_id_perso_valider' value='$id_perso'>";
+									echo "</form>";
 								}
+								echo "<form method='POST' action='admin_compagnies.php'>";
 								echo "	<input type='submit' class='btn btn-danger' value='Virer ce perso'>";
 								echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
 								echo "	<input type='hidden' name='hid_id_perso_virer' value='$id_perso'>";
+								echo "</form>";
 								echo "			</td>";
 								echo "</form>";
 								echo "		</tr>";
