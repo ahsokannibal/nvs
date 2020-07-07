@@ -25,6 +25,9 @@ if(isset($_SESSION["id_perso"])){
 			
 		}
 		
+		/***********************************************************/
+		/* Modification de la thune dans la banque de la compagnie */
+		/***********************************************************/
 		if (isset($_POST['thune_compagnie']) && $_POST['thune_compagnie'] != "") {
 			
 			$id_compagnie_select = $_POST['hid_id_compagnie'];
@@ -46,6 +49,9 @@ if(isset($_SESSION["id_perso"])){
 			}
 		}
 		
+		/****************************************/
+		/*		Suppression d'une compagnie		*/
+		/****************************************/
 		if (isset($_POST['delete_compagnie'])) {
 			
 			$id_compagnie_to_delete = $_POST['hid_id_compagnie_to_delete'];
@@ -119,6 +125,9 @@ if(isset($_SESSION["id_perso"])){
 			$mess = "la compagnie d'id ".$id_compagnie_to_delete." a bien été supprimée";
 		}
 		
+		/****************************************/
+		/* 	On vire un perso d'une compagnie 	*/
+		/****************************************/
 		if (isset($_POST['hid_id_perso_virer'])) {
 			
 			$id_compagnie_select 	= $_POST['hid_id_compagnie'];
