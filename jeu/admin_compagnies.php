@@ -31,14 +31,172 @@ if(isset($_SESSION["id_perso"])){
 			
 			$thune_compagnie = $_POST['thune_compagnie'];
 			
-			$mess = "La thune de la banque de la compagnie est passée à ".$thune_compagnie;
+			$verif = preg_match("#^[0-9]*[0-9]$#i","$thune_compagnie");
+			
+			if ($verif) {
+			
+				$sql = "UPDATE banque_as_compagnie SET montant='$thune_compagnie' WHERE id_compagnie='$id_compagnie_select'";
+				$mysqli->query($sql);
+				
+				$mess = "La thune de la banque de la compagnie est passée à ".$thune_compagnie;
+			
+			}
+			else {
+				$mess_err = "valeur thune incorrecte";
+			}
 		}
 		
 		if (isset($_POST['delete_compagnie'])) {
 			
 			$id_compagnie_to_delete = $_POST['hid_id_compagnie_to_delete'];
 			
+			// recuperation des information sur la compagnie
+			$sql = "SELECT nom_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie_to_delete";
+			$res = $mysqli->query($sql);
+			$sec = $res->fetch_assoc();
+			
+			$nom_compagnie		= addslashes($sec["nom_compagnie"]);
+			
+			// Récupération de l'id du group de la compagnie sur le forum
+			$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$id_group_forum = $t['group_id'];
+			
+			// récupération des persos dans la compagnie 
+			$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie_to_delete'";
+			$res_perso_a_virer = $mysqli->query($sql);
+			
+			while ($t = $res_perso_a_virer->fetch_assoc()) {
+				
+				$id_perso_a_virer = $t['id_perso'];
+				
+				// on vire le perso de la compagnie
+				$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso_a_virer'";
+				$mysqli->query($sql);
+				
+				// on enleve le perso de la banque
+				$sql = "DELETE FROM banque_compagnie WHERE id_perso='$id_perso_a_virer'";
+				$mysqli->query($sql);
+				
+				// -- FORUM
+				// Récupération de l'id de l'utilisateur sur le forum 
+				$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+							(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+								(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_virer') AND chef='1')";
+				$res_forum = $mysqli->query($sql);
+				$t = $res_forum->fetch_assoc();
+				
+				$id_user_forum = $t['user_id'];
+				
+				// Suppression de l'utilisateur du groupe sur le forum
+				$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
+				$mysqli->query($sql);
+				
+			}
+			
+			// Suppression du groupe sur le forum 
+			$sql = "DELETE FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+			$mysqli->query($sql);
+			
+			// Suppression de la compagnie sur le jeu 
+			$sql = "DELETE FROM compagnies WHERE id_compagnie='$id_compagnie_to_delete'";
+			$mysqli->query($sql);
+			
+			// Suppression de la banque de la compagnie
+			$sql = "DELETE FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie_to_delete'";
+			$mysqli->query($sql);
+			
+			// Suppression l'historique de la banque de la compagnie
+			$sql = "DELETE FROM histobanque_compagnie WHERE id_compagnie='$id_compagnie_to_delete'";
+			$mysqli->query($sql);
+			
+			// Suppression de toutes le demandes liées à cette compagnie
+			$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_to_delete'";
+			$mysqli->query($sql);
+			
 			$mess = "la compagnie d'id ".$id_compagnie_to_delete." a bien été supprimée";
+		}
+		
+		if (isset($_POST['hid_id_perso_virer'])) {
+			
+			$id_compagnie_select 	= $_POST['hid_id_compagnie'];
+			$id_perso_a_virer 		= $_POST['hid_id_perso_virer'];
+			
+			// recuperation des information sur la compagnie
+			$sql = "SELECT genie_civil, nom_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie_select";
+			$res = $mysqli->query($sql);
+			$sec = $res->fetch_assoc();
+			
+			$genie_compagnie 	= $sec["genie_civil"];
+			$nom_compagnie		= addslashes($sec["nom_compagnie"]);
+		
+			// on vire le perso de la compagnie
+			$sql = "DELETE FROM perso_in_compagnie WHERE id_perso=$id_perso_a_virer AND id_compagnie=$id_compagnie_select";
+			$mysqli->query($sql);
+			
+			// on enleve le perso de la banque
+			$sql = "DELETE FROM banque_compagnie WHERE id_perso=$id_perso_a_virer";
+			$mysqli->query($sql);
+			
+			if ($genie_compagnie) {
+				// On suprime les competences de construction
+				
+				// Construire pont
+				$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_perso_a_virer' AND id_competence='23'";
+				$mysqli->query($sql);
+				
+				// Construire tour de visu
+				$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_perso_a_virer' AND id_competence='24'";
+				$mysqli->query($sql);
+				
+				// Construire Hopital
+				$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_perso_a_virer' AND id_competence='27'";
+				$mysqli->query($sql);
+				
+				// Construire Fortin
+				$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_perso_a_virer' AND id_competence='28'";
+				$mysqli->query($sql);
+				
+				// Construire Gare
+				$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_perso_a_virer' AND id_competence='63'";
+				$mysqli->query($sql);
+				
+				// Construire Rails
+				$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_perso_a_virer' AND id_competence='64'";
+				$mysqli->query($sql);
+			}
+			
+			// -- FORUM
+			// Récupération de l'id de l'utilisateur sur le forum 
+			$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+						(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+							(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_virer') AND chef='1')";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$id_user_forum = $t['user_id'];
+			
+			// Récupération de l'id du group de la compagnie sur le forum
+			$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$id_group_forum = $t['group_id'];
+			
+			// Est ce qu'il a d'autres persos dans la compagnie en dehors de celui qui part
+			$sql = "SELECT * FROM perso_in_compagnie WHERE id_perso IN (SELECT id_perso FROM perso WHERE idJoueur_perso IN (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_virer'))";
+			$res = $mysqli->query($sql);
+			$verif = $res->num_rows;
+			
+			if ($verif == 0) {
+				// Suppression de l'utilisateur du groupe
+				$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
+				$mysqli->query($sql);
+			}
+			
+			$mess = "le perso d'id ".$id_perso_a_virer." a bien été viré de la compagnie ".$nom_compagnie;
 		}
 
 ?>
@@ -173,6 +331,7 @@ if(isset($_SESSION["id_perso"])){
 								}
 								echo "	<input type='submit' class='btn btn-danger' value='Virer ce perso'>";
 								echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
+								echo "	<input type='hidden' name='hid_id_perso_virer' value='$id_perso'>";
 								echo "			</td>";
 								echo "</form>";
 								echo "		</tr>";
