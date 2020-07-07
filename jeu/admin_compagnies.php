@@ -128,10 +128,15 @@ if(isset($_SESSION["id_perso"])){
 		/****************************************/
 		/* 	On vire un perso d'une compagnie 	*/
 		/****************************************/
-		if (isset($_POST['hid_id_perso_virer'])) {
+		if (isset($_POST['hid_id_perso_virer']) || isset($_POST['hid_id_perso_valider_depart'])) {
 			
 			$id_compagnie_select 	= $_POST['hid_id_compagnie'];
-			$id_perso_a_virer 		= $_POST['hid_id_perso_virer'];
+			if (isset($_POST['hid_id_perso_virer'])) {
+				$id_perso_a_virer 		= $_POST['hid_id_perso_virer'];
+			}
+			else {
+				$id_perso_a_virer 		= $_POST['hid_id_perso_valider_depart'];
+			}
 			
 			// recuperation des information sur la compagnie
 			$sql = "SELECT genie_civil, nom_compagnie FROM compagnies WHERE id_compagnie=$id_compagnie_select";
@@ -140,6 +145,23 @@ if(isset($_SESSION["id_perso"])){
 			
 			$genie_compagnie 	= $sec["genie_civil"];
 			$nom_compagnie		= addslashes($sec["nom_compagnie"]);
+			
+			$sql = "SELECT SUM(montant) as thune_en_banque FROM histobanque_compagnie 
+					WHERE id_perso='$id_perso_a_virer' 
+					AND id_compagnie='$id_compagnie_select'";
+			$res = $mysqli->query($sql);
+			$tab = $res->fetch_assoc();
+			
+			$thune_en_banque = $tab["thune_en_banque"];
+			
+			$sql = "DELETE FROM histobanque_compagnie WHERE id_perso='$id_perso_a_virer'";
+			$mysqli->query($sql);
+			
+			if ($thune_en_banque > 0) {
+				$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
+						WHERE id_compagnie='$id_compagnie_select')";
+				$mysqli->query($sql);
+			}
 		
 			// on vire le perso de la compagnie
 			$sql = "DELETE FROM perso_in_compagnie WHERE id_perso=$id_perso_a_virer AND id_compagnie=$id_compagnie_select";
@@ -447,11 +469,18 @@ if(isset($_SESSION["id_perso"])){
 								echo "			</td>";
 								echo "</form>";
 								echo "			<td>";
-								if ($attenteValidation_compagnie) {
+								if ($attenteValidation_compagnie == 1) {
 									echo "<form method='POST' action='admin_compagnies.php'>";
-									echo "	<input type='submit' class='btn btn-warning' value='Valider ce perso'>";
+									echo "	<input type='submit' class='btn btn-warning' value='Valider l'intégration de ce perso'>";
 									echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
 									echo "	<input type='hidden' name='hid_id_perso_valider' value='$id_perso'>";
+									echo "</form>";
+								}
+								else if ($attenteValidation_compagnie == 2) {
+									echo "<form method='POST' action='admin_compagnies.php'>";
+									echo "	<input type='submit' class='btn btn-warning' value='Valider le départ ce perso'>";
+									echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
+									echo "	<input type='hidden' name='hid_id_perso_valider_depart' value='$id_perso'>";
 									echo "</form>";
 								}
 								echo "<form method='POST' action='admin_compagnies.php'>";
