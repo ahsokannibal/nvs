@@ -442,7 +442,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 			FROM perso, perso_as_grade
 			WHERE perso.id_perso>'10' 
 			AND perso_as_grade.id_perso = perso.id_perso 
-			AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
+			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='1'";
 	$res = $mysqli->query($sql);
 	$t_b = $res->fetch_assoc();
@@ -476,7 +476,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 			FROM perso, perso_as_grade
 			WHERE perso.id_perso>'10' 
 			AND perso_as_grade.id_perso = perso.id_perso 
-			AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
+			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='2'";
 	$res = $mysqli->query($sql);
 	$t_r = $res->fetch_assoc();
