@@ -120,6 +120,49 @@ if($dispo || $admin){
 				
 			}
 			
+			if (isset($_POST['id_instance_bat_destruction']) && $_POST['id_instance_bat_destruction'] != "") {
+			
+				$id_instance_bat_destruction = $_POST['id_instance_bat_destruction'];
+			
+				// Est ce qu'il y a des persos dans le batiment ?
+				$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_instance_bat_destruction'";
+				$res = $mysqli->query($sql);
+				$nb_persos_bat = $res->num_rows;
+				
+				if ($nb_persos_bat == 0) {
+					
+					// recup id_batiment
+					$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_instance_bat_destruction'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$id_bat = $t['id_batiment'];
+					
+					if ($id_bat == 5) {
+						// Ponts
+						$sql = "UPDATE carte SET fond_carte='8.gif', save_info_carte=NULL WHERE save_info_carte='$id_instance_bat_destruction'";
+						$mysqli->query($sql);
+						
+						$sql = "UPDATE carte SET idPerso_carte=NULL WHERE idPerso_carte=''$id_instance_bat_destruction''";
+						$mysqli->query($sql);
+					}
+					else {
+						// Autres batiments
+						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, save_info_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_instance_bat_destruction'";
+						$mysqli->query($sql);
+					}
+				
+					$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_instance_bat_destruction'";
+					$mysqli->query($sql);
+					
+					$mess .= "le batiment ".$id_instance_bat_destruction." a été détruit avec succès";
+				}
+				else {
+					$mess_err .= "Des persos se trouvent encore dans le batiment, batiment impossible à détruire";
+				}
+				
+			}
+			
 			?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -261,6 +304,85 @@ if($dispo || $admin){
 										echo "<b>Gare désactivée</b>";
 									}
 									echo "	</td>";
+									
+									echo "</tr>";
+								}
+								?>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">					
+						<div id="table_batiment_autre" class="table-responsive">						
+							<table border="1">
+								<tr>
+									<th style='text-align:center'>Bâtiment [matricule]</th><th style='text-align:center'>PV</th><th style='text-align:center'>Position</th><th style='text-align:center'>Action</th>
+								</tr>
+								
+								<?php
+								// Liste des batiments du camp de l'animateur Hors barricades / ponts / tour de guet / trains
+								$sql = "SELECT id_instanceBat, nom_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, instance_batiment.id_batiment FROM batiment, instance_batiment
+										WHERE batiment.id_batiment = instance_batiment.id_batiment
+										AND camp_instance='$camp'
+										AND (instance_batiment.id_batiment = '1' 
+											OR instance_batiment.id_batiment = '2' 
+											OR instance_batiment.id_batiment = '5')
+										ORDER BY instance_batiment.id_batiment";
+								$res = $mysqli->query($sql);
+								
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_instance	= $t['id_instanceBat'];
+									$nom_batiment	= $t['nom_batiment'];
+									$nom_instance	= htmlentities($t['nom_instance'],ENT_QUOTES);
+									$pv_instance	= $t['pv_instance'];
+									$pvMax_instance	= $t['pvMax_instance'];
+									$x_instance		= $t['x_instance'];
+									$y_instance		= $t['y_instance'];
+									$id_batiment	= $t['id_batiment'];
+									
+									if ($camp == 1) {
+										$image_bat = "b".$id_batiment."b.png";
+									}
+									else if ($camp == 2) {
+										$image_bat = "b".$id_batiment."r.png";
+									}
+									
+									
+									// La bâtiment est-il en état de siège ?
+									// Calcul pourcentage pv du batiment 
+									$pourc_pv_instance = ($pv_instance / $pvMax_instance) * 100;
+									
+									echo "<tr>";
+									echo "<form method=\"post\" action=\"anim_batiment.php\">";
+									echo "	<td>";
+									echo "		<input type='hidden' name='hid_id_instance_rename' value='$id_instance'>";
+									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." <input type='text' name='nom_batiment' value='".$nom_instance."' > <input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'>[<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]";
+									echo "	</td>";
+									echo "</form>";
+									
+									// PV
+									echo "	<td>";
+									$pourc = affiche_jauge($pv_instance, $pvMax_instance); 
+									echo round($pourc,2)."% ou $pv_instance/$pvMax_instance";
+									echo "	</td>";
+									
+									// Position
+									echo "	<td>".$x_instance."/".$y_instance."</td>";
+									
+									// Action
+									echo "<form method=\"post\" action=\"anim_batiment.php\">";	
+									echo "			<td>";
+									echo "				<input type='hidden' name='id_instance_bat_destruction' value='".$id_instance."'>";
+									echo "				<input type='submit' name='destruire_bat' value='Détruire' class='btn btn-danger'>";
+									echo "			</td>";
+									echo "</form>";
 									
 									echo "</tr>";
 								}
