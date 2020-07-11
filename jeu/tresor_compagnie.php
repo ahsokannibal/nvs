@@ -156,6 +156,57 @@ if($dispo || $admin){
 						echo "<center><font color='blue'>Vous avez refusé l'emprunt de $montant_emp po pour $nom_emp</font></center>";
 					}
 				}
+				
+				if (isset($_POST['select_perso_virement_1']) && isset($_POST['select_perso_virement_dest']) && isset($_POST['montant_virement'])) {
+					
+					$id_perso_thune_deduite = $_POST['select_perso_virement_1'];
+					$id_perso_thune_dest	= $_POST['select_perso_virement_dest'];
+					$montant_virement		= $_POST['montant_virement'];
+					
+					if ($id_perso_thune_deduite != $id_perso_thune_dest) {
+						
+						$verif = preg_match("#^[0-9]+$#i",$montant_virement);
+						
+						if ($verif && $montant_virement > 0) {
+							
+							// Est ce que le perso possède assez de thunes sur son compte
+							$sql = "SELECT montant FROM banque_compagnie WHERE id_perso='$id_perso_thune_deduite'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$montant_perso = $t['montant'];
+							
+							if ($montant_perso >= $montant_virement) {
+							
+								// On effectue le virement
+								$sql = "UPDATE banque_compagnie SET montant = montant - $montant_virement WHERE id_perso = '$id_perso_thune_deduite'";
+								$mysqli->query($sql);
+								
+								$sql = "UPDATE banque_compagnie SET montant = montant + $montant_virement WHERE id_perso = '$id_perso_thune_dest'";
+								$mysqli->query($sql);
+								
+								// Historique
+								$date = time();
+								$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id_perso_thune_deduite','4','-$montant_virement', FROM_UNIXTIME($date))";
+								$mysqli->query($sql);
+								
+								$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id_perso_thune_dest','4','$montant_virement', FROM_UNIXTIME($date))";
+								$mysqli->query($sql);
+								
+								echo "<center><font color='blue'>Virement de $montant_virement effectué entre les persos $id_perso_thune_deduite et $id_perso_thune_dest.</font></center>";
+							}
+							else {
+								echo "<center><font color='red'>Le perso prélevé ne possède pas assez de thunes.</font></center>";
+							}
+						}
+						else {
+							echo "<center><font color='red'>Montant thune incorrect.</font></center>";
+						}
+					}
+					else {
+						echo "<center><font color='red'>Le perso destinataire de la thune doit être différent du perso prélevé.</font></center>";
+					}
+				}
 			
 				// verification si quelqu'un a demandé un emprunt
 				$sql = "SELECT banque_compagnie.id_perso, nom_perso, montant_emprunt FROM banque_compagnie, perso_in_compagnie, perso 
@@ -323,11 +374,76 @@ if($dispo || $admin){
 					
 					echo "</center><br>";
 				}
+				else {
+					echo "<br />";
+					echo "<center>";
+					echo "	<a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok' class='btn btn-primary'> Voir les soldes par perso </a><br>";
+					echo "</center>";
+				}
 				
-				echo "<center><font color=green>Votre compagnie possède <b>$sum</b> thune(s)</font></center><br>";
+				if(isset($_GET['transfert']) && $_GET['transfert'] == "ok") {
+					
+					$sql = "SELECT perso.id_perso, perso.nom_perso, banque_compagnie.montant FROM perso, perso_in_compagnie, banque_compagnie 
+							WHERE perso.id_perso = perso_in_compagnie.id_perso
+							AND perso.id_perso = banque_compagnie.id_perso
+							AND perso_in_compagnie.id_compagnie = '$id_compagnie'
+							AND banque_compagnie.montant > 0";
+					$res = $mysqli->query($sql);
+					
+					echo "<br />";
+					echo "<div align='center'>";
+					echo "<form action=\"tresor_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"virement_perso\">";
+					echo "	<div class=\"form-group\">";
+					echo "		<label for=\"select_perso_virement_1\">Perso chez qui faire on prélève la thune : </label>";
+					echo "		<select name='select_perso_virement_1'>";
+					
+					while ($t = $res->fetch_assoc()) {
+						$nom_perso	= $t["nom_perso"];
+						$id_perso 	= $t["id_perso"];
+						$montant	= $t["montant"];
+						
+						echo "			<option value=".$id_perso.">".$nom_perso." [".$id_perso."] : $montant thunes</option>";
+					}
+					
+					echo "		</select>";
+					echo "		<label for=\"select_perso_virement_dest\">Perso cible : </label>";
+					echo "		<select name='select_perso_virement_dest'>";
+					
+					$sql = "SELECT perso.id_perso, perso.nom_perso, banque_compagnie.montant FROM perso, perso_in_compagnie, banque_compagnie 
+							WHERE perso.id_perso = perso_in_compagnie.id_perso
+							AND perso.id_perso = banque_compagnie.id_perso
+							AND perso_in_compagnie.id_compagnie = '$id_compagnie'";
+					$res = $mysqli->query($sql);
+					while ($t = $res->fetch_assoc()) {
+						$nom_perso	= $t["nom_perso"];
+						$id_perso 	= $t["id_perso"];
+						$montant	= $t["montant"];
+						
+						echo "			<option value=".$id_perso.">".$nom_perso." [".$id_perso."] : $montant thunes</option>";
+					}
+					
+					echo "		</select>";
+					echo "		<label for='montant_virement'>Montant : </label>";
+					echo "		<input type='text' id='montant_virement' name='montant_virement' value='' >";
+					echo "		<input type='submit' name='Submit' class='btn btn-primary' value='valider'>";
+					echo "	</div>";
+					echo "</form>";
+					echo "</div>";
+					
+				}
+				else {
+					echo "<br />";
+					echo "<center>";
+					echo "	<a href='tresor_compagnie.php?id_compagnie=$id_compagnie&transfert=ok' class='btn btn-primary'> Faire un transfert de thunes </a><br>";
+					echo "</center>";
+				}
 				
-				echo "<br /><center><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok' class='btn btn-primary'> Voir les soldes par perso </a></center><br>";
-				echo "<a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a>";
+				echo "<br><center><font color=green>Votre compagnie possède <b>$sum</b> thune(s)</font></center><br>";
+				
+				echo "<br />";
+				echo "<center>";
+				echo "	<a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a>";
+				echo "</center>";
 			}
 		}
 		else {
