@@ -463,10 +463,11 @@ INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_p
 -- 
 
 INSERT INTO `poste` VALUES (1, 'chef');
-INSERT INTO `poste` VALUES (2, 'tresorier');
-INSERT INTO `poste` VALUES (3, 'recruteur');
-INSERT INTO `poste` VALUES (4, 'diplomate');
-INSERT INTO `poste` VALUES (5, 'membre');
+INSERT INTO `poste` VALUES (2, 'sous-chef');
+INSERT INTO `poste` VALUES (3, 'tresorier');
+INSERT INTO `poste` VALUES (4, 'recruteur');
+INSERT INTO `poste` VALUES (5, 'diplomate');
+INSERT INTO `poste` VALUES (10, 'membre');
 
 -- --------------------------------------------------------
 
