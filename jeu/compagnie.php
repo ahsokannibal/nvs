@@ -382,7 +382,7 @@ if($dispo || $admin){
 			echo "<center><a class='btn btn-outline-info' href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a></center><br />";
 			
 			// verification si le perso appartient deja a une compagnie
-			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+			$sql = "SELECT id_compagnie, poste_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res = $mysqli->query($sql);
 			$c = $res->fetch_row();
 			
@@ -390,7 +390,8 @@ if($dispo || $admin){
 			if ($c != 0) {
 				
 				// recuperation de la compagnie a laquelle on appartient
-				$id_compagnie = $c[0];
+				$id_compagnie 		= $c[0];
+				$poste_compagnie	= $c[1];
 				
 				// recuperation des information sur la compagnie
 				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
@@ -423,21 +424,24 @@ if($dispo || $admin){
 				echo "<center><b>$nom_compagnie</b></center>";
 				echo "<table border=\"1\" width = 100%>";
 				echo "	<tr>";
-				echo "		<td width=40 height=40>";
+				echo "		<th width=40 height=40>";
 				if ($image_compagnie != "0" && trim($image_compagnie) != "") {
 					echo "<img src=\"".htmlspecialchars($image_compagnie)."\" width=\"40\" height=\"40\">";
 				}
-				echo "		</td>";
-				echo "		<td>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</td>";
-				echo "		<td width=20%><center>Liste des membres  (". $nb_persos_compagnie ."/".$nb_persos_compagnie_max.")</center></td>";
+				echo "		</th>";
+				echo "		<th style='text-align:center'>".bbcode(htmlentities(stripslashes($resume_compagnie)))."</th>";
+				echo "		<th style='text-align:center' width=30%>Liste des membres  (". $nb_persos_compagnie ."/".$nb_persos_compagnie_max.")";
+				if ($poste_compagnie == 1) {
+					echo "<span style='text-align:right; float:right;padding-right:5px;'>Position</span>";
+				}
+				echo "		</th>";
 				echo "	</tr>";
 				echo "	<tr>";
-				echo "		<td></td>";
-				echo "		<td>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td>";
+				echo "		<td colspan='2'>".bbcode(htmlentities(stripslashes($description_compagnie)))."</td>";
 				echo "		<td>";
 					
 				// recuperation de la liste des membres de la compagnie
-				$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie, perso_as_grade.id_grade, nom_grade FROM perso, perso_in_compagnie, perso_as_grade, grades
+				$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie, perso_as_grade.id_grade, nom_grade, x_perso, y_perso FROM perso, perso_in_compagnie, perso_as_grade, grades
 						WHERE perso_in_compagnie.id_perso=perso.ID_perso 
 						AND perso_as_grade.id_perso = perso.id_perso
 						AND perso_as_grade.id_grade = grades.id_grade
@@ -448,10 +452,12 @@ if($dispo || $admin){
 				while ($membre = $res->fetch_assoc()) {
 					
 					$nom_membre 		= $membre["nom_perso"];
-					$poste_compagnie 	= $membre["poste_compagnie"];
+					$poste_membre 		= $membre["poste_compagnie"];
 					$id_membre			= $membre["id_perso"];
 					$id_grade			= $membre["id_grade"];
 					$nom_grade			= $membre["nom_grade"];
+					$x_membre			= $membre["x_perso"];
+					$y_membre			= $membre["y_perso"];
 							
 					// cas particuliers grouillot
 					if ($id_grade == 101) {
@@ -461,20 +467,25 @@ if($dispo || $admin){
 						$id_grade = "1.2";
 					}
 					
-					if($poste_compagnie != 5){
+					echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]";
+					
+					if($poste_membre != 5){
 						
 						// recuperation du nom de poste
-						$sql2 = "SELECT nom_poste FROM poste WHERE id_poste=$poste_compagnie";
+						$sql2 = "SELECT nom_poste FROM poste WHERE id_poste=$poste_membre";
 						$res2 = $mysqli->query($sql2);
 						$t_p = $res2->fetch_assoc();
 						
 						$nom_poste = $t_p["nom_poste"];
 						
-						echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>] ($nom_poste)<br />";
+						echo " ($nom_poste)";
 					}
-					else {
-						echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]<br />";
+					
+					if ($poste_compagnie == 1) {
+						echo "<span style='text-align:right; float:right;padding-right:5px;'> ".$x_membre."/".$y_membre."</span>";
 					}
+					
+					echo "<br />";
 				}
 				
 				echo "		</td>";
