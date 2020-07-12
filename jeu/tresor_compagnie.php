@@ -27,7 +27,6 @@ if($dispo || $admin){
 			echo "<font color=red>Vous êtes mort...</font>";
 		}
 		else {
-			//$erreur = "<div class=\"erreur\">";
 	
 	?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -62,8 +61,8 @@ if($dispo || $admin){
 		
 		if($verif1){
 		
-			// verification que le perso appartient bien a la compagnie
-			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+			// verification que le perso appartient bien a la compagnie et en est le tresorier
+			$sql = "SELECT id_compagnie, poste_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND id_compagnie='$id_compagnie' AND poste_compagnie='3'";
 			$res = $mysqli->query($sql);
 			$verif = $res->num_rows;
 				
@@ -444,6 +443,14 @@ if($dispo || $admin){
 				echo "<center>";
 				echo "	<a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a>";
 				echo "</center>";
+			}
+			else {
+				echo "<center><font color='red'>Vous n'avez pas les habilitations pour accéder à cette page !</font></center>";
+			
+				$text_triche 	= "Test accès page tresor compagnie d'id : $id_compagnie";
+					
+				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+				$mysqli->query($sql);
 			}
 		}
 		else {

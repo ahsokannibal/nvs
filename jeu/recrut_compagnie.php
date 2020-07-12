@@ -55,8 +55,8 @@ if($dispo || $admin){
 	
 			$id_compagnie = $_GET["id_compagnie"];
 		
-			// verification que le perso appartient bien a la compagnie
-			$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+			// verification que le perso appartient bien a la compagnie et en est le recruteur ou chef
+			$sql = "SELECT id_compagnie, poste_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND id_compagnie='$id_compagnie' AND (poste_compagnie='4' OR poste_compagnie='1')";
 			$res = $mysqli->query($sql);
 			$verif = $res->num_rows;
 				
@@ -422,6 +422,14 @@ if($dispo || $admin){
 					echo "<center><font color = blue>Votre compagnie a déjà atteind le nombre maximum de membres</font></center>";
 				}
 				echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a></center>";
+			}
+			else {
+				echo "<center><font color='red'>Vous n'avez pas les habilitations pour accéder à cette page !</font></center>";
+			
+				$text_triche 	= "Test accès page recrutement compagnie d'id : $id_compagnie";
+					
+				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+				$mysqli->query($sql);
 			}
 		}
 		else {

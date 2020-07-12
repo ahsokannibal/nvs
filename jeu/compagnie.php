@@ -469,7 +469,7 @@ if($dispo || $admin){
 					
 					echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]";
 					
-					if($poste_membre != 5){
+					if($poste_membre != 10){
 						
 						// recuperation du nom de poste
 						$sql2 = "SELECT nom_poste FROM poste WHERE id_poste=$poste_membre";
@@ -501,7 +501,7 @@ if($dispo || $admin){
 				$poste_s = $boss["poste_compagnie"];
 				
 				// le perso a un poste
-				if($poste_s != 5) { 
+				if($poste_s != 10) { 
 				
 					// c'est le chef
 					if($poste_s == 1) { 
@@ -509,7 +509,7 @@ if($dispo || $admin){
 					}
 					
 					// c'est le tresorier
-					if($poste_s == 2){ 
+					if($poste_s == 3){ 
 					
 						// verification si quelqu'un a demande un emprunt
 						$sql = "SELECT banque_compagnie.id_perso FROM banque_compagnie, perso_in_compagnie WHERE demande_emprunt='1' AND id_compagnie=$id_compagnie AND banque_compagnie.id_perso=perso_in_compagnie.id_perso";
@@ -526,7 +526,7 @@ if($dispo || $admin){
 					}
 					
 					// c'est le recruteur
-					if($poste_s == 3 || $poste_s == 1){ 
+					if($poste_s == 4 || $poste_s == 1){ 
 					
 						// on verifie si il y a des nouveau persos qui veulent integrer la compagnie
 						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
@@ -558,7 +558,7 @@ if($dispo || $admin){
 					}
 					
 					// c'est le diplomate
-					if($poste_s == 4){ 
+					if($poste_s == 5){ 
 						echo "<center><a href='diplo_compagnie.php?id_compagnie=$id_compagnie'> Page diplomatie de la compagnie</a></center>";
 					}
 				}
