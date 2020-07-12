@@ -65,6 +65,8 @@ if($dispo || $admin){
 					
 					echo "<h3><center>Donner des postes aux membres de sa compagnie</center></h3>";
 					
+					echo "<center><a href='admin_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-info'>retour a la page d'administration de compagnie</a></center>";
+					
 					if (isset($_POST["poste"])) {
 						
 						$m = $_POST["membre"];

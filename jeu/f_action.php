@@ -2583,13 +2583,17 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 					
 				// On verifie que la cible est bien au CaC avec le perso
 				// Recuperation coordonnees perso
-				$sql_p = "SELECT x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
+				$sql_p = "SELECT x_perso, y_perso, pa_perso, nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
 				$res_p = $mysqli->query($sql_p);
 				$t_p = $res_p->fetch_assoc();
 				
 				$x_perso 	= $t_p['x_perso'];
 				$y_perso 	= $t_p['y_perso'];
 				$pa_perso	= $t_p['pa_perso'];
+				$nom_perso	= $t_p['nom_perso'];
+				$camp_perso	= $t_p['clan'];
+				
+				$couleur_clan_p = couleur_clan($clan_p);
 				
 				// Perso dans un batiment
 				if (in_bat($mysqli, $id_perso)) {
@@ -2650,6 +2654,10 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$nom_cible = $t['nom_perso'];
 								$clan_cible = $t['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
+								
+								// mise a jour des evenements
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : $quantite thunes',NOW(),'0')";
+								$mysqli->query($sql);
 									
 								echo "Vous avez donné <b>$quantite thunes</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
@@ -2704,6 +2712,10 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$nom_cible 			= $t_c['nom_perso'];
 								$clan_cible 		= $t_c['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
+								
+								// mise a jour des evenements
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : <b>$nom_objet</b>',NOW(),'0')";
+								$mysqli->query($sql);
 									
 								echo "Vous avez donné <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
@@ -2757,7 +2769,11 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$nom_cible = $t_c['nom_perso'];
 								$clan_cible = $t_c['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
-									
+								
+								// mise a jour des evenements
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : <b>$nom_arme</b>',NOW(),'0')";
+								$mysqli->query($sql);
+								
 								echo "Vous avez donné <b>$nom_arme</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 									
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
@@ -2812,6 +2828,10 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$nom_cible = $t_c['nom_perso'];
 								$clan_cible = $t_c['clan'];
 								$couleur_clan_cible = couleur_clan($clan_cible);
+								
+								// mise a jour des evenements
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : <b>$nom_armure</b>',NOW(),'0')";
+								$mysqli->query($sql);
 									
 								echo "Vous avez donné <b>$nom_armure</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
 								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
