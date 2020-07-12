@@ -386,7 +386,8 @@ if($dispo || $admin){
 							WHERE perso.id_perso = perso_in_compagnie.id_perso
 							AND perso.id_perso = banque_compagnie.id_perso
 							AND perso_in_compagnie.id_compagnie = '$id_compagnie'
-							AND banque_compagnie.montant > 0";
+							AND banque_compagnie.montant > 0
+							ORDER BY perso.nom_perso";
 					$res = $mysqli->query($sql);
 					
 					echo "<br />";
@@ -411,7 +412,8 @@ if($dispo || $admin){
 					$sql = "SELECT perso.id_perso, perso.nom_perso, banque_compagnie.montant FROM perso, perso_in_compagnie, banque_compagnie 
 							WHERE perso.id_perso = perso_in_compagnie.id_perso
 							AND perso.id_perso = banque_compagnie.id_perso
-							AND perso_in_compagnie.id_compagnie = '$id_compagnie'";
+							AND perso_in_compagnie.id_compagnie = '$id_compagnie'
+							ORDER BY perso.nom_perso";
 					$res = $mysqli->query($sql);
 					while ($t = $res->fetch_assoc()) {
 						$nom_perso	= $t["nom_perso"];
