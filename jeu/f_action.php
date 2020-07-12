@@ -776,7 +776,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 											}
 											else {
 												echo "<center>Vous ne pouvez pas construire de gare si elle n'est pas reliée à des rails<br />";
-												echo "<a href='jouer.php'>[ retour ]</a></center>";
+												echo "<a href='jouer.php class='btn btn-primary'>retour</a></center>";
 												
 												return 0;
 											}
@@ -810,7 +810,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 							}
 							else {
 								echo "<center>Vous ne pouvez pas construire ce bâtiment car la carte est occupée ou le terrain n'est pas que de la plaine<br />";
-								echo "<a href='jouer.php'>[ retour ]</a></center>";
+								echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 								
 								return 0;
 							}
@@ -818,7 +818,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 						else {
 							echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte sur la distance avec un autre batiment n'a pas été respecté<br />";
 							echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
-							echo "<a href='jouer.php'>[ retour ]</a></center>";
+							echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 							
 							return 0;
 						}
@@ -826,7 +826,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 					else {
 						echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'ennemis présent autour de la zone de construction n'a pas été respecté. Veuillez nettoyer la zone !<br />";
 						echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
-						echo "<a href='jouer.php'>[ retour ]</a></center>";
+						echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 						
 						return 0;
 					}
@@ -834,25 +834,25 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 				else {
 					echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'unités de Génie Civil qui doit être présente n'a pas été respecté<br />";
 					echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
-					echo "<a href='jouer.php'>[ retour ]</a></center>";
+					echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 					
 					return 0;
 				}
 			}
 			else {
 				echo "<center>Vous n'avez pas assez d'or ou assez de bois pour construire ce batiment</center><br />";
-				echo "<a href='jouer.php'>[ retour ]</a>";
+				echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 				return 0;
 			}
 		}
 		else {
 			echo "<center>Vous n'avez pas assez de PA</center><br />";
-			echo "<a href='jouer.php'>[ retour ]</a>";
+			echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 		}
 	}
 	else {
 		echo "<center>Vous n'avez pas choisi de batiment</center><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 	}
 }
 
@@ -992,7 +992,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 		
 		echo "<center><font color='red'>Les chiens ne peuvent pas réparer les bâtiments...</font></center><br />";
 	}
-	echo "<br /><br /><a href='jouer.php'>[ retour ]</a>";
+	echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -1128,7 +1128,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<br /><br /><a href='jouer.php'>[ retour ]</a>";
+	echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 
@@ -1343,7 +1343,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<br /><br /><a href='jouer.php'>[ retour ]</a>";
+	echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -1393,11 +1393,11 @@ function action_dormir($mysqli, $id_perso){
 		$mysqli->query($sql);
 		
 		echo "<center>Vous dormez profondément, votre sommeil vous permet de récupérer ".$gain_pv." PV <br />";
-		echo "<a href='jouer.php'>[ retour ]</a></center>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 	else {
 		echo "<center>Vous devez posséder la totalité de vos PA / PM pour effectuer cette action</center><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 	}
 }
 
@@ -1460,7 +1460,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				
 				echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
 				echo "<center>Vous êtes Mort !</center><br />";
-				echo "<center><a href='jouer.php'>[retour]</a></center>";
+				echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 			}
 			else {	
 				//mise a jour de la table evenement
@@ -1468,17 +1468,17 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$mysqli->query($sql);
 			
 				echo "<center>Vous vous êtes dépassé et gagnez 1PM ! ($cout_pv PV perdu)<br /><br />";
-				echo "<a href='jouer.php'>[ retour ]</a></center>";
+				echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 			}
 		}
 		else {
 			echo "<center>Vous ne pouvez pas faire de marche forcée dans un bâtiment<br />";
-			echo "<a href='jouer.php'>[ retour ]</a></center>";
+			echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 		}
 	}
 	else {
 		echo "<center>Vous n'avez pas assez de PA<br />";
-		echo "<a href='jouer.php'>[ retour ]</a></center>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }
 
@@ -1654,11 +1654,11 @@ function action_courir($mysqli, $id_perso, $direction, $nb_points_action, $coutP
 			echo "<center>Vous avez rencontré un obstacle</center><br />";
 		}
 		echo "<center>Vous avez utilisé $pm_utilise PM et êtes arrivé en $x_perso_final / $y_perso_final</center><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 	}
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 	}
 }
 
@@ -1725,16 +1725,16 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 			
 			echo "<center><font color=red><b>Vous avez coupé une forêt, vous avez récupéré $gain_bois morceaux de bois </b></font></center><br />";
 			echo "<center>Vous avez gagné 1xp</center><br /><br />";
-			echo "<a href='jouer.php'>[ retour ]</a>";
+			echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 		}
 		else {
 			echo "<center><font color=red><b>Vous devez être sur une case de forêt afin de pouvoir la couper</b></font></center><br />";
-			echo "<a href='jouer.php'>[ retour ]</a>";
+			echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 		}
 	}
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 	}
 }
 
@@ -1810,7 +1810,7 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 				
 				echo "<center><font color=red><b>Vous avez miné la montagne, vous avez récupéré $gain_fer morceaux de fer </b></font></center><br />";
 				echo "<center>Vous avez gagné 2xp</center><br /><br />";
-				echo "<a href='jouer.php'>[ retour ]</a>";
+				echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 			}
 			else {
 				$gain_fer = 0;
@@ -1825,17 +1825,17 @@ function action_miner_montagne($mysqli, $id_perso, $id_action, $nb_points_action
 				
 				echo "<center><font color=red><b>Vous avez miné la montagne mais vous n'avez rien trouvé </b></font></center><br />";
 				echo "<center>Vous avez gagné 1xp</center><br /><br />";
-				echo "<a href='jouer.php'>[ retour ]</a>";
+				echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 			}
 		}
 		else {
 			echo "<center><font color=red><b>Vous devez être sur une case de montagne afin de pouvoir la miner</b></font></center><br />";
-			echo "<a href='jouer.php'>[ retour ]</a>";
+			echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 		}
 	}
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
-		echo "<a href='jouer.php'>[ retour ]</a>";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 	}
 }
 
@@ -1908,7 +1908,7 @@ function action_sauter($mysqli, $id_perso, $x_cible, $y_cible, $coutPa, $carte){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -1975,7 +1975,7 @@ function action_planterArbre($mysqli, $id_perso, $id_action, $nb_points_action){
 	else {
 		echo "<center>Vous ne pouvez pas planter d'arbre en dehors d'une case de plaine</center>";
 	} 
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2152,7 +2152,7 @@ function action_chanter($mysqli, $id_perso,$id_action){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2189,7 +2189,7 @@ function action_chanter_perso($mysqli, $id_perso,$phrase){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2232,7 +2232,7 @@ function action_danser($mysqli, $id_perso,$id_action){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2269,7 +2269,7 @@ function action_danser_perso($mysqli, $id_perso, $phrase){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2312,7 +2312,7 @@ function action_peindre($mysqli, $id_perso, $id_action){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2349,7 +2349,7 @@ function action_peindre_perso($mysqli, $id_perso,$phrase){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2392,7 +2392,7 @@ function action_sculter($mysqli, $id_perso,$id_action){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2429,7 +2429,7 @@ function action_scuplter_perso($mysqli, $id_perso, $phrase){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<a href='jouer.php'>[ retour ]</a>";
+	echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
 }
 
 /**
@@ -2497,7 +2497,7 @@ function action_entrainement($mysqli, $id_perso){
 					
 					echo "<center>Vous venez d'effectuer votre $new_niveau ème entrainement avec succès</center><br />";
 					echo "<center>Vous avez gagné $gain_xp xp</center>";
-					echo "<center><a href='jouer.php'>[retour]</a></center>";
+					echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 				}
 				else {
 					// maj pa
@@ -2515,7 +2515,7 @@ function action_entrainement($mysqli, $id_perso){
 					$mysqli->query($sql);
 					
 					echo "<center>Vous avez réussi votre entrainement, entrainez vous encore $nb_entrainement_restant fois pour passer au niveau supérieur d'entrainement</center><br />";
-					echo "<center><a href='jouer.php'>[retour]</a></center>";
+					echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 				}				
 			}
 			else {
@@ -2529,7 +2529,7 @@ function action_entrainement($mysqli, $id_perso){
 			
 				echo "<center>Vous avez raté votre entrainement</center><br />";
 				echo "<center>Vous êtes fatigué</center>";
-				echo "<center><a href='jouer.php'>[retour]</a></center>";
+				echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 			}
 		}
 		else {
@@ -2547,12 +2547,12 @@ function action_entrainement($mysqli, $id_perso){
 			
 			echo "<center>Vous venez d'effectuer votre premier entrainement avec succès</center><br />";
 			echo "<center>Vous avez gagné 1xp</center>";
-			echo "<center><a href='jouer.php'>[retour]</a></center>";
+			echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 		}
 	}
 	else {
 		echo "Pas assez de PA";
-		echo "<center><a href='jouer.php'>[retour]</a></center>";
+		echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }
 
@@ -2593,7 +2593,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 				$nom_perso	= $t_p['nom_perso'];
 				$camp_perso	= $t_p['clan'];
 				
-				$couleur_clan_p = couleur_clan($clan_p);
+				$couleur_clan_p = couleur_clan($camp_perso);
 				
 				// Perso dans un batiment
 				if (in_bat($mysqli, $id_perso)) {
@@ -2660,12 +2660,11 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql);
 									
 								echo "Vous avez donné <b>$quantite thunes</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
 								echo "<font color='red'>Vous ne possédez pas assez d'or.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
+							echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 						}
 						
 						// Si c'est un objet ou une arme ou une armure : on verifie qu'il le/la possede
@@ -2718,12 +2717,11 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql);
 									
 								echo "Vous avez donné <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
 								echo "<font color='red'>Vous ne possédez pas l'objet que vous souhaitiez donner.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
+							echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 						}
 								
 						// Arme
@@ -2775,13 +2773,11 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql);
 								
 								echo "Vous avez donné <b>$nom_arme</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-									
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
 								echo "<font color='red'>Vous ne possédez pas l'arme que vous souhaitiez donner.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
+							echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 						}
 								
 						// Armure
@@ -2834,37 +2830,36 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql);
 									
 								echo "Vous avez donné <b>$nom_armure</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
 							else {
 								echo "<font color='red'>Vous ne possédez pas l'armure que vous souhaitiez donner.</font>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
 							}
+							echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 						}
 					}
 					else {
 						echo "<font color='red'>Vous ne possédez pas assez de PA pour pouvoir faire un don (cout : 1 PA)</font>";
-						echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+						echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 					}
 				}
 				else {
 					echo "<font color='red'>La cible n'est pas au Corps à corps.</font>";
-					echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+					echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 				}
 			}
 			else {
 				echo "<font color='red'>L'objet choisi n'est pas correct, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
-				echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+				echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 			}
 		}
 		else {
 			echo "<font color='red'>La cible n'est pas correcte, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
-			echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+			echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 		}
 	}
 	else {
 		echo "<font color='red'>Votre identifiant est mal renseigné, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
-		echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+		echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }
  
@@ -2985,7 +2980,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 	}
 	else {
 		// Triche ?
-		echo "<center><a href='jouer.php'>[retour]</a></center>";
+		echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }
 
