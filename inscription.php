@@ -232,6 +232,7 @@ if(config_dispo_jeu($mysqli)){
 								
 								// Creation compte forum 
 								$user_row = array(
+									'id_perso'				=> $id,
 									'username'				=> $nom_perso,
 									'user_password'			=> phpbb_hash($old_mdp_joueur),
 									'user_email'			=> $email_joueur,
