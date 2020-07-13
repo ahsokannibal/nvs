@@ -151,7 +151,7 @@ if($dispo || $admin){
 										if ($nb_res >= 1) {
 											
 											// mise a jour de la table perso_in_compagnie
-											$sql = "INSERT INTO perso_in_compagnie VALUES ('$id','$id_compagnie','5','1')";
+											$sql = "INSERT INTO perso_in_compagnie VALUES ('$id','$id_compagnie','10','1')";
 											$mysqli->query($sql);
 											
 											echo "<center><font color='blue'>Vous venez de poser votre candidature dans une compagnie, vous devez attendre que le chef de compagnie ou le recruteur valide votre adhésion</font></center><br>";
@@ -286,7 +286,7 @@ if($dispo || $admin){
 								$id_grade = "1.2";
 							}
 							
-							if($poste_compagnie != 5){
+							if($poste_compagnie != 10){
 								
 								// recuperation du nom de poste
 								$sql2 = "SELECT nom_poste FROM poste WHERE id_poste=$poste_compagnie";

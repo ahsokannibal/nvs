@@ -237,7 +237,10 @@ while ($t = $res_sup->fetch_assoc()){
 
 			$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
+			
+			// FORUM - TODO = supprimer perso du groupe
 		}
+		
 		
 		$sql = "DELETE FROM perso_in_em WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);

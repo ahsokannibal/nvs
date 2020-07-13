@@ -120,10 +120,15 @@ if($dispo || $admin){
 				//--------------------
 				// -- Partie FORUM --
 				//--------------------
+				// Récupération de l'id perso du chef
+				$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso = (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_comp') AND chef=1";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$id_perso_chef = $t['id_perso'];
+				
 				// Récupération de l'id de l'utilisateur sur le forum 
-				$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-							(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
-								(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_comp') AND chef='1')";
+				$sql = "SELECT user_id FROM ".$table_prefix."users WHERE id_perso='$id_perso_chef'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
 				
@@ -134,7 +139,8 @@ if($dispo || $admin){
 				
 				// Insertion group compagnie forum
 				// phpbb_groups
-				$sql = "INSERT INTO ".$table_prefix."groups (group_name, group_type, group_founder_manage, group_colour, group_legend, group_avatar, group_desc, group_desc_uid, group_max_recipients) VALUES ('$nom_comp', 0, 0, '', 0, '', '', '', 0);";
+				$sql = "INSERT INTO ".$table_prefix."groups (group_name, group_type, group_founder_manage, group_colour, group_legend, group_avatar, group_desc, group_desc_uid, group_max_recipients) 
+						VALUES ('$nom_comp', 0, 0, '', 0, '', '', '', 0);";
 				$mysqli->query($sql);
 				
 				$id_new_group = $mysqli->insert_id;
