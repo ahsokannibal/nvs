@@ -30,10 +30,10 @@ if($dispo || $admin){
 			
 			if ($camp_em == 1) {
 				$image_em = "em_nord.png";
-				$forum_parent_id = '3';
+				$forum_parent_id = '7';
 			} else {
 				$image_em = "em_sud.png";
-				$forum_parent_id = '4';
+				$forum_parent_id = '8';
 			}
 			
 			// Récupération du nombre de personnes dans l'etat major de ce camp
