@@ -31,23 +31,26 @@ if(config_dispo_jeu($mysqli)){
 				echo "<center>Erreur: Le Pseudo est incorrect! Veuillez en choisir un autre (taille entre 1 et 20, par de quote, pas que des chiffres, etc.) </center><br /><br />";
 			}
 			else {
+				$sql = "SELECT username FROM ".$table_prefix."users WHERE username='".$nom_perso."'";
+				$resultat_user_forum = $mysqli->query($sql);
+				
 				$sql = "SELECT nom_perso FROM perso WHERE nom_perso='".$nom_perso."'";
 				$resultat_user = $mysqli->query($sql);
 				
 				$sql2 = "SELECT email_joueur FROM joueur WHERE email_joueur='".$email_joueur."'";
 				$resultat_user2 = $mysqli->query($sql2);
 					
-				if( $resultat_user->num_rows != 0 ) {
-					echo "<center>Erreur: Le pseudo est déjà choisi! Veuillez en choisir un autre</center><br /><br />";
+				if( $resultat_user->num_rows != 0 || $resultat_user_forum->num_rows != 0) {
+					echo "<center><font color='red'>Erreur: Le pseudo est déjà choisi ou interdit ! Veuillez en choisir un autre</font></center><br /><br />";
 				}
 				elseif ($resultat_user2->num_rows != 0) {
-					echo "<center>Erreur: Vous avez déjà creer un perso avec cet email, un seul perso par joueur</center><br /><br />";
+					echo "<center><font color='red'>Erreur: Vous avez déjà creer un perso avec cet email, un seul perso par joueur</font></center><br /><br />";
 				}
 				elseif (!filtremail($email_joueur)) {
-					echo "<center>Erreur: Email incorrect</center><br /><br />";
+					echo "<center><font color='red'>Erreur: Email incorrect</font></center><br /><br />";
 				}
 				elseif ($mdp_joueur == "") {
-					echo "<center>Erreur: Veuillez entrer un mot de passe</center><br /><br />";
+					echo "<center><font color='red'>Erreur: Veuillez entrer un mot de passe</font></center><br /><br />";
 				}
 				else {
 					if($_POST['creation']=="ok") {
