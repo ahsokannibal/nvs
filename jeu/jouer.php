@@ -2228,7 +2228,7 @@ if($dispo || $admin){
 					$poste_perso_compagnie = $t['poste_compagnie'];
 					
 					// Chef ou Recruteur
-					if ($poste_perso_compagnie == 1 || $poste_perso_compagnie == 3) {
+					if ($poste_perso_compagnie == 1 || $poste_perso_compagnie == 4) {
 						
 						// Vérifier nouvelles demandes d'adhésion
 						$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND attenteValidation_compagnie='1'";
@@ -2242,7 +2242,7 @@ if($dispo || $admin){
 					}
 					
 					// Trésorier
-					if ($poste_perso_compagnie == 2) {
+					if ($poste_perso_compagnie == 3) {
 						
 						// Vérifier nouvelles demandes d'emprunt
 						$sql = "SELECT banque_compagnie.id_perso FROM banque_compagnie, perso, perso_in_compagnie 
