@@ -260,6 +260,8 @@ if($dispo || $admin){
 						
 						$nom_perso = $t['nom_perso'];
 						
+						$fond_total = 0;
+						
 						$sql = "SELECT operation, montant, date_operation FROM histobanque_compagnie, perso 
 								WHERE id_compagnie=$id_compagnie 
 								AND histobanque_compagnie.id_perso=perso.ID_perso 
@@ -282,6 +284,8 @@ if($dispo || $admin){
 							$op 		= $t_solde['operation'];
 							$montant 	= $t_solde['montant'];
 							$date_ope	= $t_solde['date_operation'];
+							
+							$fond_total += $montant;
 							
 							if ($op == 0) {
 								$type_ope = "Dépot";
@@ -311,14 +315,23 @@ if($dispo || $admin){
 							echo "		</tr>";
 						}
 						
+						echo "			<tr>";
+						echo "				<td align='center'><b>TOTAL</b></td><td></td><td align='center'><b>".$fond_total."</b></td>";
+						echo "			</tr>";
+						
 						echo "	</table>";
 						echo "</div>";
+						
+						echo "<br />";
+						echo "<center>";
+						echo "	<a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok' class='btn btn-primary'> Voir les soldes par perso </a><br>";
+						echo "</center>";
 					}
 					else {
 						// on recupere l'historique pour les persos de sa compagnie
-						$sql = "SELECT histobanque_compagnie.id_perso, nom_perso, SUM(montant) as fond FROM histobanque_compagnie, perso 
+						$sql = "SELECT histobanque_compagnie.id_perso, nom_perso, SUM(montant) as fond_calcul  FROM histobanque_compagnie, perso 
 								WHERE id_compagnie=$id_compagnie 
-								AND histobanque_compagnie.id_perso=perso.ID_perso 
+								AND histobanque_compagnie.id_perso=perso.id_perso 
 								GROUP BY id_perso";
 						$res = $mysqli->query($sql);
 						
@@ -327,35 +340,58 @@ if($dispo || $admin){
 						echo "<div id=\"table_tresor_perso\" class=\"table-responsive\">";
 						echo "	<table border='1' width='100%'>";
 						echo "		<tr>";
-						echo "			<th>Nom [matricule]</th><th style='text-align: center;'>Montant</th><th style='text-align: center;'>Action</th>";
+						echo "			<th>Nom [matricule]</th><th style='text-align: center;'>Montant en banque</th><th style='text-align: center;'>Montant calculé des transactions</th><th style='text-align: center;'>Action</th>";
 						echo "		</tr>";
 						
 						$fond_total = 0;
+						$total_banque = 0;
 						
 						while ($t_solde = $res->fetch_assoc()) {
 							
-							$id_p 	= $t_solde['id_perso'];
-							$nom_p 	= $t_solde['nom_perso'];
-							$fond 	= $t_solde['fond'];
+							$id_p 			= $t_solde['id_perso'];
+							$nom_p 			= $t_solde['nom_perso'];
+							$fond_calcul 	= $t_solde['fond_calcul'];
 							
-							$fond_total += $fond;
+							$fond_total += $fond_calcul;
+							
+							$sql_m = "SELECT montant FROM banque_compagnie WHERE id_perso='$id_p'";
+							$res_m = $mysqli->query($sql_m);
+							$t_m = $res_m->fetch_assoc();
+							
+							$montant_perso_banque = $t_m['montant'];
+							
+							$total_banque += $montant_perso_banque;
 							
 							echo "		<tr>";
 							echo "			<td>".$nom_p."[<a href='evenement.php?infoid=".$id_p."'>".$id_p."</a>]</td>";
-							echo "			<td align='center'>".$fond."</td>";
+							echo "			<td align='center'>".$montant_perso_banque."</td>";
+							echo "			<td align='center'>".$fond_calcul."</td>";
 							echo "			<td align='center'><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok&detail=$id_p' class='btn btn-info'> Consulter détails </a> <a href='nouveau_message.php?pseudo=".$nom_p."' target='_blank'><img src='../images/messagerie.png' width='40' height='40'></a></td>";
 							echo "		</tr>";
 						}
 						
 						echo "		<tr>";
-						echo "			<td align='center'><b>TOTAL</b></td><td align='center'>";
+						echo "			<td align='center'><b>TOTAL</b></td>";
+						echo "			<td align='center'>";
 						if ($fond_total < 0) {
 							echo "<font color='red'>";
 						}
 						else {
 							echo "<font color='green'>";
 						}
-						echo "<b>".$fond_total."</b></font></td>";
+						echo "<b>".$fond_total."</b></font>";
+						echo "			</td>";
+						
+						echo "			<td align='center'>";
+						if ($total_banque < 0) {
+							echo "<font color='red'>";
+						}
+						else {
+							echo "<font color='green'>";
+						}
+						echo "<b>".$total_banque."</b></font>";
+						echo "			</td>";
+						
 						if ($sum > $fond_total) {
 							echo "<td align='center'>Des persos ont quittés la compagnie en laissant de la thune en banque</td>";
 						}
