@@ -115,7 +115,7 @@ if($dispo || $admin){
 				$y_persoN 			= $t_perso1["y_perso"];
 				$pm_perso 			= $t_perso1["pm_perso"];
 				$pmMax_perso		= $t_perso1["pmMax_perso"];
-				$n_dla 				= $t_perso1["DLA_perso"];
+				$dla_perso			= $t_perso1["DLA_perso"];
 				$image_perso 		= $t_perso1["image_perso"];
 				$bonusPM_perso_p 	= $t_perso1["bonusPM_perso"];
 				$clan_p 			= $t_perso1["clan"];
@@ -123,6 +123,12 @@ if($dispo || $admin){
 				$pa_perso			= $t_perso1["pa_perso"];
 				$perception_perso	= $t_perso1["perception_perso"];	
 				$charge_perso		= $t_perso1["charge_perso"];
+				
+				$sql = "SELECT DLA_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
+				$res = $mysqli->query($sql);
+				$t_c = $res->fetch_assoc();
+				
+				$n_dla 				= $t_c["DLA_perso"];
 				
 				// récupération de la couleur du camp
 				$couleur_clan_p = couleur_clan($clan_p);
