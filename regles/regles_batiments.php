@@ -203,7 +203,7 @@
 						<li>Respawn aléatoire dans un bâtiment</li>
 					</ul>
 					
-					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelquesoit le bâtiment) ou s'il a été capturé à moins de 20 cases de ce dernier (Hors hôpital).</p>
+					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelquesoit le bâtiment) ou s'il a été capturé à moins de 20 cases strictement (une capture à 20 cases pile du centre du bâtiment de rapatriement permet d'âtre rappatrié dans le bâtiment) de ce dernier (Hors hôpital).</p>
 					
 					<p>Pour définir vos choix de rapatriement, allez dans votre profil et cliquez sur le bouton "Choix des rapatriements".</p>
 					
@@ -211,7 +211,7 @@
 					
 					<h4>Etat de siège d'un bâtiment</h4>
 					
-					<p>Un bâtiment est considéré en état de siège s'il descend en dessous de 90% de ses PV maximum ou qu'il y a 10 persos ennemi à moins de 15 cases.<br />
+					<p>Un bâtiment est considéré en état de siège s'il descend en dessous de 90% de ses PV maximum ou qu'il y a 10 persos ennemi à moins de 15 cases (15eme case inclus).<br />
 					Cet état a pour effet de bloquer immédiatement les rapatriements, incorportations de nouveaux sur ce bâtiment.<br />
 					Le recrutement de grouillot se trouve aussi bloqué pour ce bâtiment.</p>
 					
