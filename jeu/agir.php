@@ -2244,6 +2244,8 @@ if($verif){
 							}
 							$mysqli->query($sql);
 							
+							// TODO - Si gare -> maj liaisons_gare ?
+							
 							// on delete le bâtiment
 							$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_cible'";
 							$mysqli->query($sql);

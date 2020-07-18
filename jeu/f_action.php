@@ -649,6 +649,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 											if ($nb_connections > 0) {
 											
 												$tab_rail = array();
+												
+												$trouve = false;
 											
 												while ($t = $res->fetch_assoc()) {
 													
@@ -665,6 +667,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 													if (($camp_perso == 1 && $image_on_rail == 'b12b.png') || ($camp_perso == 2 && $image_on_rail == 'b12r.png')) {
 														
 														// On a trouvé un train du même camp que la gare construite
+														$trouve = true;
+														
 														$sql_t = "SELECT id_gare1, id_gare2, direction FROM liaisons_gare WHERE id_train='$idPerso_rail'";
 														$res_t = $mysqli->query($sql_t);
 														$t_t = $res_t->fetch_assoc();
@@ -733,6 +737,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 														if (($camp_perso == 1 && $image_on_rail == 'b12b.png') || ($camp_perso == 2 && $image_on_rail == 'b12r.png')) {
 														
 															// On a trouvé un train du même camp que la gare construite
+															$trouve = true;
+															
 															$sql_t = "SELECT id_gare1, id_gare2, direction FROM liaisons_gare WHERE id_train='$idPerso_rail'";
 															$res_t = $mysqli->query($sql_t);
 															$t_t = $res_t->fetch_assoc();
@@ -772,6 +778,14 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 															}
 														}
 													}
+												}
+												
+												if (!$trouve) {
+													// On n'a pas trouvé de train sur les rails
+													// Est ce qu'on trouve une gare liée par les rails à cette nouvelle gare ?
+													// TODO
+													
+													
 												}
 											}
 											else {

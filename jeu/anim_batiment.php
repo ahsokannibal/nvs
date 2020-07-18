@@ -360,8 +360,6 @@ if($dispo || $admin){
 									
 									
 									// La bâtiment est-il en état de siège ?
-									// Calcul pourcentage pv du batiment 
-									$pourc_pv_instance = ($pv_instance / $pvMax_instance) * 100;
 									
 									echo "<tr>";
 									echo "<form method=\"post\" action=\"anim_batiment.php\">";
