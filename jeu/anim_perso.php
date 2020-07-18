@@ -284,8 +284,7 @@ if($dispo || $admin){
 							
 							// ------- FORUM 
 							// Récupération de l'id de l'utilisateur sur le forum 
-							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-										(SELECT nom_perso FROM perso WHERE id_perso='$id_perso_chef' AND chef='1')";
+							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE id_perso='$id_perso_chef'";
 							$res = $mysqli->query($sql);
 							$t = $res->fetch_assoc();
 							

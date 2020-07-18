@@ -68,10 +68,6 @@ if($dispo || $admin){
 							$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj' AND type_demande='$type_demande_maj'";
 							$mysqli->query($sql);
 							
-							// -- FORUM
-							$sql = "UPDATE ".$table_prefix."groups SET group_name='$nouveau_nom_compagnie' WHERE group_name='$nom_compagnie'";
-							$mysqli->query($sql);
-							
 							// TODO - Envoi d'un MP
 						}
 						else if ($type_demande_maj == 2) {
@@ -107,25 +103,7 @@ if($dispo || $admin){
 								$sql = "DELETE FROM banque_compagnie WHERE id_perso='$id_perso_a_virer'";
 								$mysqli->query($sql);
 								
-								// -- FORUM
-								// Récupération de l'id de l'utilisateur sur le forum 
-								$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-											(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
-												(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_virer') AND chef='1')";
-								$res_forum = $mysqli->query($sql);
-								$t = $res_forum->fetch_assoc();
-								
-								$id_user_forum = $t['user_id'];
-								
-								// Suppression de l'utilisateur du groupe sur le forum
-								$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
-								$mysqli->query($sql);
-								
 							}
-							
-							// Suppression du groupe sur le forum 
-							$sql = "DELETE FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
-							$mysqli->query($sql);
 							
 							// Suppression de la compagnie sur le jeu 
 							$sql = "DELETE FROM compagnies WHERE id_compagnie='$id_compagnie_maj'";
