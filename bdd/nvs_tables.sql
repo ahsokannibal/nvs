@@ -573,7 +573,7 @@ CREATE TABLE `joueur_as_ip` (
 CREATE TABLE `liaisons_gare` (
   `id_gare1` int(11) NOT NULL,
   `id_gare2` int(11) NOT NULL,
-  `id_train` int(11) NOT NULL,
+  `id_train` int(11) NULL,
   `direction` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
