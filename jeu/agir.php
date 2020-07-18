@@ -2128,9 +2128,16 @@ if($verif){
 							// Mise à jour des respawn
 							$sql = "DELETE FROM perso_as_respawn WHERE id_instance_bat='$id_cible'";
 							$mysqli->query($sql);
-						
-							// Récupération des persos dans le batiment
-							$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
+							
+							if (is_train($mysqli, $id_cible)) {
+								// Récupération des persos dans le train
+								$sql = "SELECT id_perso FROM perso_in_train WHERE id_train='$id_cible'";
+							}
+							else {
+								// Récupération des persos dans le batiment
+								$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
+							}
+							
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()){
@@ -2222,8 +2229,19 @@ if($verif){
 								}
 							}
 							
-							// on supprime les persos du batiment
-							$sql = "DELETE FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
+							if (is_train($mysqli, $id_cible)) {
+								
+								// On supprime le train de la liaison
+								$sql = "UPDATE liaisons_gare SET id_train=NULL WHERE id_train='$id_cible'";
+								$mysqli->query($sql);
+								
+								// on supprime les persos du batiment
+								$sql = "DELETE FROM perso_in_train WHERE id_instanceBat='$id_cible'";
+							}
+							else {
+								// on supprime les persos du batiment
+								$sql = "DELETE FROM perso_in_batiment WHERE id_instanceBat='$id_cible'";
+							}
 							$mysqli->query($sql);
 							
 							// on delete le bâtiment

@@ -187,6 +187,8 @@ if($dispo || $admin){
 				</div>
 			</div>
 			
+			<p align="center"><a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a></p>
+			
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
@@ -223,7 +225,8 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<div align="center">					
+					<div align="center">
+						<h2>Bâtiments importants</h2>
 						<div id="table_batiment" class="table-responsive">						
 							<table border="1">
 								<tr>
@@ -318,7 +321,8 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<div align="center">					
+					<div align="center">
+						<h2>Autres Bâtiments</h2>
 						<div id="table_batiment_autre" class="table-responsive">						
 							<table border="1">
 								<tr>

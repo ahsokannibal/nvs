@@ -519,6 +519,13 @@ function in_train($mysqli, $id){
 	return $t['id_train'];
 }
 
+function is_train($mysqli, $id_i_bat) {
+	$sql = "SELECT id_instanceBat FROM instance_batiment WHERE id_instanceBat='$id_i_bat' AND id_batiment='12'";
+	$res = $mysqli->query($sql);
+	
+	return $res->num_rows;
+}
+
 // fonction qui verifie si le perso est dans un batiment precis ou non
 function in_instance_bat($mysqli, $id_perso, $id_i_bat){
 	$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_perso='$id_perso' AND id_instanceBat='$id_i_bat'";
