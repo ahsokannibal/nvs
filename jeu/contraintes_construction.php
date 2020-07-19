@@ -31,7 +31,7 @@ include ('../nb_online.php');
 					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
 
 					<div align="center">
-						<h2>Contraintes de constructions</h2>
+						<h2>Contraintes et rappel des règles de constructions</h2>
 					</div>
 				</div>
 			</div>
@@ -63,6 +63,9 @@ include ('../nb_online.php');
 							</tr>
 							<tr>
 								<td>Ponts</td><td align='center'>0</td><td align='center'> - </td><td>3 cases d'un autre batiment. 30 cases d'un autre pont. La construction doit démarrer de la terre ferme (pas de pont flottant). Les ponts ne peuvent pas faire plus de 2 cases de largeur.</td>
+							</tr>
+							<tr>
+								<td>Rails</td><td align='center'>0</td><td align='center'> - </td><td>Il est possible pour le génie de construire des rails mais aussi de les détruire. <b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
 							</tr>
 						</table>
 					</div>
