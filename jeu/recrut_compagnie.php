@@ -9,11 +9,12 @@ include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
-$admin = admin_perso($mysqli, $_SESSION["id_perso"]);
 
-if($dispo || $admin){
-	
-	if(isset($_SESSION["id_perso"])){
+if(isset($_SESSION["id_perso"])){
+
+	$admin = admin_perso($mysqli, $_SESSION["id_perso"]);
+
+	if($dispo || $admin){
 		
 		//recuperation des varaibles de sessions
 		$id = $_SESSION["id_perso"];
@@ -453,7 +454,11 @@ if($dispo || $admin){
 		}
 	}
 	else{
-		echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
+		// logout
+		$_SESSION = array(); // On ecrase le tableau de session
+		session_destroy(); // On detruit la session
+		
+		header("Location:../index2.php");
 	}?>
 <?php
 }
