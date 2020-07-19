@@ -184,6 +184,18 @@
 								<td align='center'>-10%</td>
 								<td>Le pont peut être posé sur les case d'eau et d'eau profonde. Il permet aux persos de traverser l'eau pour le cout d'un PM au lieu de 4 ainsi que de traverser l'eau profonde qui est infranchissable sans pont. C'est donc un outil stratégique très important à ne pas négliger ! Les ponts peuvent être sabotés par les persos, il suffit de se trouver à côté d'un pont afin d'avoir la possibilité de le <a href='regles_action_spe.php'>saboter</a> comme de le <a href='regles_action_spe.php'>réparer</a>. On ne peut peut pour l'instant pas saboter un pont avec un perso dessus.</td>
 							</tr>
+							<tr>
+								<td align='center'><img src='../fond_carte/rail.gif' alt='pont'></td>
+								<td align='center'>Rail</td>
+								<td align='center'>1 case</td>
+								<td align='center'>-</td>
+								<td align='center'>-</td>
+								<td align='center'>-</td>
+								<td align='center'>-</td>
+								<td align='center'>-</td>
+								<td align='center'>-</td>
+								<td>Il est possible pour le génie de construire des rails mais aussi de les détruire. <b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
+							</tr>
 						</table>
 					</div>
 					
