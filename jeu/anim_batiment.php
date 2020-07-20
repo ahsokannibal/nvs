@@ -30,12 +30,15 @@ if($dispo || $admin){
 			
 			if ($camp == '1') {
 				$nom_camp = 'Nord';
+				$b_camp = 'b';
 			}
 			else if ($camp == '2') {
 				$nom_camp = 'Sud';
+				$b_camp = 'r';
 			}
 			else if ($camp == '3') {
 				$nom_camp = 'Indien';
+				$b_camp = 'g';
 			}
 			
 			$mess = "";
@@ -76,8 +79,8 @@ if($dispo || $admin){
 					
 					if ($autorisation_construction_taille) {
 					
-						$img_bat = "b10".$camp.".png";
-						$img_bat_sup = $camp.".png";
+						$img_bat = "b10".$b_camp.".png";
+						$img_bat_sup = $b_camp.".png";
 						
 						// mise a jour de la table instance_bat
 						$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
