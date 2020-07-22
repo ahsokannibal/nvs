@@ -66,8 +66,7 @@ if (isset($_SESSION["id_perso"])) {
 			echo "<center><h1>Carte Stratégique - sans Topographie</h1></center>";
 			
 			echo "<center><input type='text' id='idInput' disabled /><br />";
-			echo "<img id='carto' src=\"image_carte.php?imagename=perso$id.png\"></center>"; 
-			echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+			echo "<img id='carto' src=\"image_carte.php?imagename=perso$id.png\"></center>";
 		
 			echo "<div align=\"center\"><br>";
 			echo "Vous pouvez remettre la topographie si vous le souhaitez<br>";
@@ -81,8 +80,7 @@ if (isset($_SESSION["id_perso"])) {
 			// Enlever la legende
 			if($_POST['Submit'] == "enlever la legende"){
 				echo "<center><input type='text' id='idInput' disabled /><br />";
-				echo "<img id='carto' src=\"image_carte.php?imagename=carte_sl$id.png\"></center>"; 
-				echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+				echo "<img id='carto' src=\"image_carte.php?imagename=carte_sl$id.png\"></center>";
 			
 				echo "<div align=\"center\"><br>";
 				echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
@@ -96,8 +94,7 @@ if (isset($_SESSION["id_perso"])) {
 				// Remettre la legende
 				if($_POST['Submit'] == "remettre la legende"){
 					echo "<center><input type='text' id='idInput' disabled /><br />";
-					echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>"; 
-					echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+					echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
 				
 					echo "<div align=\"center\"><br>";
 					echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
@@ -113,8 +110,7 @@ if (isset($_SESSION["id_perso"])) {
 						echo "<center><h1>Carte Stratégique - Mon bataillon</h1></center>";
 						
 						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte_bataillon_sl$id.png\"></center>"; 
-						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						echo "<img id='carto' src=\"image_carte.php?imagename=carte_bataillon_sl$id.png\"></center>";
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
@@ -132,8 +128,7 @@ if (isset($_SESSION["id_perso"])) {
 						echo "<center><h1>Carte Stratégique - Ma compagnie</h1></center>";
 						
 						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte_compagnie_sl$id.png\"></center>"; 
-						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						echo "<img id='carto' src=\"image_carte.php?imagename=carte_compagnie_sl$id.png\"></center>";
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
@@ -149,8 +144,7 @@ if (isset($_SESSION["id_perso"])) {
 						echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";							
 							
 						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>"; 
-						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
@@ -167,8 +161,7 @@ if (isset($_SESSION["id_perso"])) {
 						echo "<center><h1>Carte Stratégique</h1></center>";
 						
 						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>"; 
-						echo 'Mise a jour de la carte dans '.$Tpsrestant.'mn.';
+						echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
