@@ -854,19 +854,19 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 				}
 			}
 			else {
-				echo "<center>Vous n'avez pas assez d'or ou assez de bois pour construire ce batiment</center><br />";
-				echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
+				echo "<center>Vous n'avez pas assez d'or ou assez de bois pour construire ce batiment<br />";
+				echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 				return 0;
 			}
 		}
 		else {
-			echo "<center>Vous n'avez pas assez de PA</center><br />";
-			echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
+			echo "<center>Vous n'avez pas assez de PA<br />";
+			echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 		}
 	}
 	else {
-		echo "<center>Vous n'avez pas choisi de batiment</center><br />";
-		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
+		echo "<center>Vous n'avez pas choisi de batiment<br />";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }
 
@@ -1006,7 +1006,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 		
 		echo "<center><font color='red'>Les chiens ne peuvent pas réparer les bâtiments...</font></center><br />";
 	}
-	echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>retour</a>";
+	echo "<br /><br /><center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 }
 
 /**
@@ -1142,7 +1142,7 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>retour</a>";
+	echo "<br /><br /><center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 }
 
 
@@ -1357,7 +1357,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	else {
 		echo "<center>Vous n'avez pas assez de PA</center><br />";
 	}
-	echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>retour</a>";
+	echo "<br /><br /><center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 }
 
 /**
@@ -1410,8 +1410,8 @@ function action_dormir($mysqli, $id_perso){
 		echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 	else {
-		echo "<center>Vous devez posséder la totalité de vos PA / PM pour effectuer cette action</center><br />";
-		echo "<a href='jouer.php' class='btn btn-primary'>retour</a>";
+		echo "<center>Vous devez posséder la totalité de vos PA / PM pour effectuer cette action<br />";
+		echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }
 

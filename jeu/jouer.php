@@ -188,400 +188,407 @@ if($dispo || $admin){
 									
 										$direction = $_GET["direction"];
 											
-										$sql_b = "SELECT nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
+										$sql_b = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
 												WHERE instance_batiment.id_batiment = batiment.id_batiment
 												AND instance_batiment.id_instanceBat = '$id_inst'";
 										$res_b = $mysqli->query($sql_b);
 										$t_b = $res_b->fetch_assoc();
 										
+										$type_bat			= $t_b['id_batiment'];
 										$nom_bat 			= $t_b['nom_batiment'];
 										$taille_bat			= $t_b['taille_batiment'];
 										$nom_instance_bat	= $t_b['nom_instance'];
 										
-										$taille_case = ceil($taille_bat / 2);
+										if ($type_bat != 10) {
 										
-										$oc = 1;
-										
-										switch($direction){
-											case 1: 
-												// Haut gauche
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $taille_case";
-														
-												break;
-											case 2:
-												// Haut
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN AND y_carte = $y_persoN + $taille_case";
-														
-												break;
-											case 3:
-												// Haut droite
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $taille_case";
-														
-												break;
-											case 4: 
-												// Gauche
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN";
-														
-												break;
-											case 5: 
-												// Droite
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN";
-														
-												break;
-											case 6: 
-												// Bas gauche
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $taille_case";
-														
-												break;
-											case 7: 
-												// Bas
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN AND y_carte = $y_persoN - $taille_case";
-														
-												break;
-											case 8: 
-												// Bas droite
-												$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-														WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $taille_case";
-												
-												break;
-										}
-										
-										$res = $mysqli->query($sql);
-										$t = $res->fetch_assoc();
-										
-										$oc 	= $t["occupee_carte"];
-										
-										if ($oc) {
+											$taille_case = ceil($taille_bat / 2);
+											
+											$oc = 1;
+											
 											switch($direction){
 												case 1: 
 													// Haut gauche
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																	WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN + $taille_case";														
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-										
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $i";															
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-											
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $taille_case";
 															
 													break;
 												case 2:
 													// Haut
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN + $taille_case";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN + $taille_case";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN AND y_carte = $y_persoN + $taille_case";
 															
 													break;
 												case 3:
 													// Haut droite
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN + $taille_case";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $i";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $taille_case";
 															
 													break;
 												case 4: 
 													// Gauche
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $i";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $i";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN";
 															
 													break;
 												case 5: 
 													// Droite
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $i";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $i";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN";
 															
 													break;
 												case 6: 
 													// Bas gauche
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN - $taille_case";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $i";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $taille_case";
 															
 													break;
 												case 7: 
 													// Bas
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN - $taille_case";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN - $taille_case";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN AND y_carte = $y_persoN - $taille_case";
 															
 													break;
 												case 8: 
 													// Bas droite
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN - $taille_case";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
-													
-													if (!$oc) {
-														break;
-													}
-													
-													for ($i = 1; $i < $taille_case; $i++) {
-														$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
-																WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $i";
-														$res = $mysqli->query($sql);
-														$t = $res->fetch_assoc();
-														
-														$oc = $t["occupee_carte"];
-														
-														if (!$oc) {
-															break;
-														}
-													}
+													$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+															WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $taille_case";
 													
 													break;
 											}
-										}
-										
-										if (!$oc) {
 											
-											$xs 	= $t["x_carte"];
-											$ys 	= $t["y_carte"];
-											$fond = $t["fond_carte"];
+											$res = $mysqli->query($sql);
+											$t = $res->fetch_assoc();
 											
-											// mise a jour des coordonnees du perso et de ses pm
-											$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
-											$mysqli->query($sql);
+											$oc 	= $t["occupee_carte"];
 											
-											$x_persoN = $xs;
-											$y_persoN = $ys;
+											if ($oc) {
+												switch($direction){
+													case 1: 
+														// Haut gauche
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																		WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN + $taille_case";														
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
 											
-											// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
-											$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
-											$mysqli->query($sql);
-											
-											// mise a jour de la table perso_in_batiment
-											$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-											$mysqli->query($sql);
-											
-											// mise a jour des evenements
-											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
-											$mysqli->query($sql);
-											
-											// mise a jour du bonus de perception
-											$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-											
-											if(bourre($mysqli, $id_perso)){
-												if(!endurance_alcool($mysqli, $id_perso)) {
-													$malus_bourre = bourre($mysqli, $id_perso) * 3;
-													$bonus_visu -= $malus_bourre;
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $i";															
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+												
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+																
+														break;
+													case 2:
+														// Haut
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN + $taille_case";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN + $taille_case";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+																
+														break;
+													case 3:
+														// Haut droite
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN + $taille_case";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $i";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+																
+														break;
+													case 4: 
+														// Gauche
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN + $i";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $i";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+																
+														break;
+													case 5: 
+														// Droite
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN + $i";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $i";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+																
+														break;
+													case 6: 
+														// Bas gauche
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN - $taille_case";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $taille_case AND y_carte = $y_persoN - $i";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+																
+														break;
+													case 7: 
+														// Bas
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN - $taille_case";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN - $i AND y_carte = $y_persoN - $taille_case";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+																
+														break;
+													case 8: 
+														// Bas droite
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $i AND y_carte = $y_persoN - $taille_case";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														if (!$oc) {
+															break;
+														}
+														
+														for ($i = 1; $i < $taille_case; $i++) {
+															$sql = "SELECT occupee_carte, x_carte, y_carte, fond_carte FROM $carte 
+																	WHERE x_carte = $x_persoN + $taille_case AND y_carte = $y_persoN - $i";
+															$res = $mysqli->query($sql);
+															$t = $res->fetch_assoc();
+															
+															$oc = $t["occupee_carte"];
+															
+															if (!$oc) {
+																break;
+															}
+														}
+														
+														break;
 												}
 											}
 											
-											$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
-											$mysqli->query($sql);
-											
-											// maj carte brouillard de guerre
-											$perception_final = $perception_perso + $bonus_visu;
-											if ($clan_p == 1) {
-												$sql = "UPDATE $carte SET vue_nord='1' 
-														WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-														AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+											if (!$oc) {
+												
+												$xs 	= $t["x_carte"];
+												$ys 	= $t["y_carte"];
+												$fond = $t["fond_carte"];
+												
+												// mise a jour des coordonnees du perso et de ses pm
+												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
 												$mysqli->query($sql);
+												
+												$x_persoN = $xs;
+												$y_persoN = $ys;
+												
+												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+												$mysqli->query($sql);
+												
+												// mise a jour de la table perso_in_batiment
+												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// mise a jour des evenements
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												// mise a jour du bonus de perception
+												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+												
+												if(bourre($mysqli, $id_perso)){
+													if(!endurance_alcool($mysqli, $id_perso)) {
+														$malus_bourre = bourre($mysqli, $id_perso) * 3;
+														$bonus_visu -= $malus_bourre;
+													}
+												}
+												
+												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($clan_p == 1) {
+													$sql = "UPDATE $carte SET vue_nord='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
+												else if ($clan_p == 2) {
+													$sql = "UPDATE $carte SET vue_sud='1' 
+															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+													$mysqli->query($sql);
+												}
 											}
-											else if ($clan_p == 2) {
-												$sql = "UPDATE $carte SET vue_sud='1' 
-														WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-														AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-												$mysqli->query($sql);
+											else {											
+												$erreur .= "Impossible de sortir dans cette direction, la sortie est bloquée";
 											}
 										}
-										else {											
-											$erreur .= "Impossible de sortir dans cette direction, la sortie est bloquée";
+										else {
+											$erreur .= "Impossible de sortir d'un pénitencier";
 										}
 									}
 									else {
@@ -787,7 +794,7 @@ if($dispo || $admin){
 						}
 						// traitement des autres cas
 						else {
-							if(isset($_GET["bat"]) && $_GET["bat"]!="" && isset($_GET["bat2"]) && $_GET["bat2"]!="" && $_GET["bat2"] != 1) {
+							if(isset($_GET["bat"]) && $_GET["bat"]!="" && isset($_GET["bat2"]) && $_GET["bat2"]!="" && $_GET["bat2"] != 1 && $_GET["bat2"] != 5 && $_GET["bat2"] != 10) {
 								
 								// Vérification que le perso soit pas déjà dans un bâtiment
 								if(!in_bat($mysqli, $id_perso) && !in_train($mysqli, $id_perso)){
@@ -2264,6 +2271,9 @@ if($dispo || $admin){
 						
 					}
 				}
+				else {
+					$image_compagnie_perso = "";
+				}
 				
 				// Le perso est-il membre de l'etat major de son camp ?
 				$sql_em = "SELECT * FROM perso_in_em WHERE id_perso='$id_perso' AND camp_em='$clan_perso'";
@@ -3631,12 +3641,12 @@ if($dispo || $admin){
 												echo "<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												
 												if (!nation_perso_bat($mysqli, $id_perso, $idI_bat)) {
-													if((batiment_vide($mysqli, $idI_bat) && $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 11 && $type_perso != '6' && $type_perso != '4') && (($type_bat == 2 && $type_perso == 3))){
+													if((batiment_vide($mysqli, $idI_bat) && $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 10 && $type_bat != 11 && $type_perso != '6' && $type_perso != '4') && (($type_bat == 2 && $type_perso == 3))){
 														echo "<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."'>Capturer ce bâtiment</a></div>";
 													}
 												}
 												else {
-													if($type_bat != 1 && $type_bat != 5){
+													if($type_bat != 1 && $type_bat != 5 && $type_bat != 10){
 														if (($type_bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $type_bat != 2 ) {
 															echo "<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."'>Entrer dans ce bâtiment</a></div>";
 														}
@@ -3898,12 +3908,13 @@ if($dispo || $admin){
 											
 											$id_instance_bat = in_bat($mysqli, $id_perso);
 											
-											$sql_b = "SELECT nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
+											$sql_b = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
 													WHERE instance_batiment.id_batiment = batiment.id_batiment
 													AND instance_batiment.id_instanceBat = '$id_instance_bat'";
 											$res_b = $mysqli->query($sql_b);
 											$t_b = $res_b->fetch_assoc();
 											
+											$type_bat			= $t_b['id_batiment'];
 											$nom_bat 			= $t_b['nom_batiment'];
 											$taille_bat			= $t_b['taille_batiment'];
 											$nom_instance_bat	= $t_b['nom_instance'];
@@ -3935,8 +3946,10 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															if ($type_bat != 10) {
+																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															}
 															echo "</td>";
 														}
 													}
@@ -3955,8 +3968,10 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															if ($type_bat != 10) {
+																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															}
 															echo "</td>";
 														}
 													}
@@ -3976,8 +3991,10 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															if ($type_bat != 10) {
+																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															}
 															echo "</td>";
 														}
 													}
@@ -3997,8 +4014,10 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
-															echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															if ($type_bat != 10) {
+																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
+																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
+															}
 															echo "</td>";
 														}
 													}

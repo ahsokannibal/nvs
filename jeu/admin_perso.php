@@ -31,6 +31,12 @@ if(isset($_SESSION["id_perso"])){
 			
 		}
 		
+		if (isset($_GET['modifier_mdp'])) {
+			
+			$id_perso_select = $_GET['modifier_mdp'];
+			
+		}
+		
 		if (isset($_POST['id_perso_select']) && $_POST['id_perso_select'] != '') {
 			
 			$id_perso_select = $_POST['id_perso_select'];
@@ -104,6 +110,18 @@ if(isset($_SESSION["id_perso"])){
 				$sql = "UPDATE perso SET pa_perso=$new_pa_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 			}
+			
+			if (isset($_POST['mdp_perso']) && trim($_POST['mdp_perso']) != "") {
+				
+				$new_password = $_POST['mdp_perso'];
+				$new_password_md5 = MD5($new_password);
+				
+				$sql = "UPDATE joueur SET mdp_joueur='$new_password_md5' WHERE id_joueur = (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_select')";
+				$mysqli->query($sql);
+				
+				$mess = "Changement du mot de passe du perso matricule ".$id_perso_select." vers ".$new_password ;
+				
+			}
 		}
 		
 ?>
@@ -175,6 +193,12 @@ if(isset($_SESSION["id_perso"])){
 					<?php
 					if (isset($id_perso_select) && $id_perso_select != 0) {
 						
+						$sql = "SELECT email_joueur FROM joueur, perso WHERE id_joueur = idJoueur_perso AND id_perso='$id_perso_select'";
+						$res = $mysqli->query($sql);
+						$t_j = $res->fetch_assoc();
+						
+						$email_joueur = $t_j['email_joueur'];
+						
 						$sql = "SELECT * FROM perso WHERE id_perso='$id_perso_select'";
 						$res = $mysqli->query($sql);
 						$t = $res->fetch_assoc();
@@ -208,7 +232,7 @@ if(isset($_SESSION["id_perso"])){
 						
 						$im_camp_perso = $nom_camp_perso.".gif";
 						
-						echo "<br />";
+						echo "<b>Email joueur :</b> ".$email_joueur."<br />";
 						echo "<table border='1' width='100%'>";
 						echo "	<tr>";
 						echo "		<td align='center'><img src='../images/".$im_camp_perso."'></td>";
@@ -270,6 +294,17 @@ if(isset($_SESSION["id_perso"])){
 						}
 						else {
 							echo "<br /><a href='admin_perso.php?consulter_mp=".$id_perso_select."' class='btn btn-primary'>Consulter les MP du perso</a>";
+						}
+						
+						if (isset($_GET['modifier_mdp'])) {
+							echo "<form method='POST' action='admin_perso.php'>";
+							echo "	<label for='mdp_perso'>Nouveau Mot de passe : </label>";
+							echo "	<input type='text' id='mdp_perso' name='mdp_perso' value='' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'>";
+							echo "	<button type='submit' class='btn btn-primary'>Modifier</button>";
+							echo "</form>";
+						}
+						else {
+							echo "<br /><a href='admin_perso.php?modifier_mdp=".$id_perso_select."' class='btn btn-danger'>Modifier Mot de passe</a>";
 						}
 					}
 					?>

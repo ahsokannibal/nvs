@@ -826,7 +826,7 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 				}
 			}
 			else {
-				if($bat != 1 && $bat != 5){
+				if($bat != 1 && $bat != 5 && $bat != 10){
 					// Si batiment tour de guet, seul les infanteries, soigneurs et chiens peuvent rentrer
 					if (($bat == 2 && ($type_perso == 3 || $type_perso == 4 || $type_perso == 6)) || $bat != 2 ) {
 						$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > entrer dans le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
