@@ -2143,6 +2143,22 @@ if($dispo || $admin){
 				$message_perso			= $t_perso2["message_perso"];
 				$charge_perso			= $t_perso2["charge_perso"];
 				
+				if (in_bat($mysqli, $id_perso)) {
+											
+					$id_instance_bat_perso = in_bat($mysqli, $id_perso);
+					
+					$sql_b = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
+							WHERE instance_batiment.id_batiment = batiment.id_batiment
+							AND instance_batiment.id_instanceBat = '$id_instance_bat_perso'";
+					$res_b = $mysqli->query($sql_b);
+					$t_b = $res_b->fetch_assoc();
+					
+					$id_bat_perso 			= $t_b['id_batiment'];
+					$nom_bat_perso			= $t_b['nom_batiment'];
+					$taille_bat_perso		= $t_b['taille_batiment'];
+					$nom_instance_bat_perso	= $t_b['nom_instance'];
+				}
+				
 				// calcul malus pm
 				$malus_pm_charge = getMalusCharge($charge_perso);
 				if ($malus_pm_charge == 100) {
@@ -3116,51 +3132,53 @@ if($dispo || $admin){
 										<select name='id_attaque_dist' style="width: -moz-available;">
 											<option value="personne">Personne</option>
 											<?php
-											while($t_cible_portee_dist = $res_portee_dist->fetch_assoc()) {
-												
-												$id_cible_dist = $t_cible_portee_dist["idPerso_carte"];
-												
-												if ($id_cible_dist < 50000) {
+											if (!isset($id_bat_perso) || (isset($id_bat_perso) && $id_bat_perso != 10)) {
+												while($t_cible_portee_dist = $res_portee_dist->fetch_assoc()) {
+													
+													$id_cible_dist = $t_cible_portee_dist["idPerso_carte"];
+													
+													if ($id_cible_dist < 50000) {
 
-													// Un autre perso
-													$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_dist'";
-													$res = $mysqli->query($sql);
-													$tab = $res->fetch_assoc();
-													
-													$nom_cible_dist = $tab["nom_perso"];
-													$camp_cible_cac	= $tab["clan"];
+														// Un autre perso
+														$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_dist'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
 														
-													$couleur_clan_cible = couleur_clan($camp_cible_cac);
-													
-												} else if ($id_cible_dist >= 200000) {
-													
-													// Un PNJ
-													$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_dist'";
-													$res = $mysqli->query($sql);
-													$tab = $res->fetch_assoc();
-													
-													$nom_cible_dist = $tab["nom_pnj"];
-													
-													$couleur_clan_cible = "grey";
-													
-												} else {
-													
-													// Un Batiment
-													$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
-													$res = $mysqli->query($sql);
-													$tab = $res->fetch_assoc();
-													
-													$nom_cible_dist = $tab["nom_batiment"];
-													if ($tab["nom_instance"] != "") {
-														$nom_cible_dist .= " ".$tab["nom_instance"];
+														$nom_cible_dist = $tab["nom_perso"];
+														$camp_cible_cac	= $tab["clan"];
+															
+														$couleur_clan_cible = couleur_clan($camp_cible_cac);
+														
+													} else if ($id_cible_dist >= 200000) {
+														
+														// Un PNJ
+														$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_dist'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_dist = $tab["nom_pnj"];
+														
+														$couleur_clan_cible = "grey";
+														
+													} else {
+														
+														// Un Batiment
+														$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
+														$res = $mysqli->query($sql);
+														$tab = $res->fetch_assoc();
+														
+														$nom_cible_dist = $tab["nom_batiment"];
+														if ($tab["nom_instance"] != "") {
+															$nom_cible_dist .= " ".$tab["nom_instance"];
+														}
+														
+														$camp_cible_dist	= $tab["camp_instance"];
+														
+														$couleur_clan_cible = couleur_clan($camp_cible_dist);
 													}
 													
-													$camp_cible_dist	= $tab["camp_instance"];
-													
-													$couleur_clan_cible = couleur_clan($camp_cible_dist);
+													echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
 												}
-												
-												echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
 											}
 											?>
 										</select>
@@ -3908,20 +3926,7 @@ if($dispo || $admin){
 										
 										if (in_bat($mysqli, $id_perso)) {
 											
-											$id_instance_bat = in_bat($mysqli, $id_perso);
-											
-											$sql_b = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, nom_instance FROM batiment, instance_batiment 
-													WHERE instance_batiment.id_batiment = batiment.id_batiment
-													AND instance_batiment.id_instanceBat = '$id_instance_bat'";
-											$res_b = $mysqli->query($sql_b);
-											$t_b = $res_b->fetch_assoc();
-											
-											$type_bat			= $t_b['id_batiment'];
-											$nom_bat 			= $t_b['nom_batiment'];
-											$taille_bat			= $t_b['taille_batiment'];
-											$nom_instance_bat	= $t_b['nom_instance'];
-											
-											$taille_case = ceil($taille_bat / 2);
+											$taille_case = ceil($taille_bat_perso / 2);
 											
 											if($y > $y_perso+$taille_case || $y < $y_perso-$taille_case || $x > $x_perso+$taille_case || $x < $x_perso-$taille_case) {
 												if($nb_o){
@@ -3948,7 +3953,7 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															if ($type_bat != 10) {
+															if ($id_bat_perso != 10) {
 																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															}
@@ -3970,7 +3975,7 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															if ($type_bat != 10) {
+															if ($id_bat_perso != 10) {
 																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															}
@@ -3993,7 +3998,7 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															if ($type_bat != 10) {
+															if ($id_bat_perso != 10) {
 																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															}
@@ -4016,7 +4021,7 @@ if($dispo || $admin){
 																echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";
 															}
 															echo "			data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom'";
-															if ($type_bat != 10) {
+															if ($id_bat_perso != 10) {
 																echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>\" ";
 																echo "			data-content=\"<div><a href='jouer.php?sortie=".$coord_sortie."'>Sortir ici</a></div>\" >";
 															}
