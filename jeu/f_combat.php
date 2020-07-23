@@ -197,7 +197,7 @@ function resource_liste_cibles_a_portee_attaque($mysqli, $carte, $id_perso, $por
 					FROM instance_batiment, perso_in_batiment, perso
 					WHERE instance_batiment.id_instanceBat = perso_in_batiment.id_instanceBat
 					AND perso.id_perso = '$id_perso'
-					AND id_batiment!='12' 
+					AND id_batiment!='12' AND id_batiment != '10'
 					AND ((x_instance>=x_perso+$portee_min AND x_instance<=x_perso+$portee_max AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
 						OR 	(x_instance>=x_perso-$portee_max AND x_instance<=x_perso-$portee_min AND y_instance>=y_perso-$portee_max AND y_instance<=y_perso+$portee_max)
 						OR	(y_instance>=y_perso+$portee_min AND y_instance<=y_perso+$portee_max AND x_instance>=x_perso-$portee_max AND x_instance<=x_perso+$portee_max)
