@@ -79,14 +79,17 @@ if($dispo || $admin){
 				// Bonus / Malus defense objets 
 				$bonus_def_obj = get_bonus_defense_objet($mysqli, $id);
 				
+				// Bonus / Malus defense batiment
+				$bonus_defense_bat = get_bonus_defense_instance_bat($mysqli, $id);
+				
 				// Bonus / Malus defense terrain / batiment
 				$bonus_def_terrain_cac = get_bonus_defense_terrain($fond, $id);
 				$bonus_def_terrain_dist = get_bonus_defense_terrain($fond, $id);
 				
 				$bonus_def = $b_p + $bonus_def_obj;
 				
-				$bonus_def_final_cac = $bonus_def + $bonus_def_terrain_cac;
-				$bonus_def_final_dist = $bonus_def + $bonus_def_terrain_dist;
+				$bonus_def_final_cac = $bonus_def + $bonus_def_terrain_cac + $bonus_defense_bat;
+				$bonus_def_final_dist = $bonus_def + $bonus_def_terrain_dist + $bonus_defense_bat;
 				
 				if($clan_perso == '1'){
 					$couleur_clan_perso = 'blue';
@@ -258,7 +261,11 @@ if($dispo || $admin){
 												echo $bonus_def_final_cac;
 											}
 											
-											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_cac." )";
+											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_cac;
+											if ($bonus_defense_bat != 0) {
+												echo " - batiment : ".$bonus_defense_bat;
+											}
+											echo " )";
 											
 											// Malus defense Dist
 											echo " - <u><b>Malus de défense Dist :</b></u> "; 
@@ -269,8 +276,11 @@ if($dispo || $admin){
 												echo $bonus_def_final_dist;
 											}
 											
-											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_dist." )";
-											
+											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_dist;
+											if ($bonus_defense_bat != 0) {
+												echo " - batiment : ".$bonus_defense_bat;
+											}
+											echo " )";
 											?></td>
 										</tr>
 										<tr>

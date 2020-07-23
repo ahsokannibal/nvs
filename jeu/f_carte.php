@@ -138,6 +138,27 @@ function get_nom_terrain($fond) {
 	}
 }
 
+function get_bonus_defense_instance_bat($mysqli, $id_perso) {
+	
+	$defense_bat = 0;
+	
+	if (in_bat($mysqli, $id_perso)) {
+		
+		$id_inst_bat = in_bat($mysqli, $id_perso);
+		
+		$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$id_bat = $t['id_batiment'];
+		
+		$defense_bat = get_bonus_defense_batiment($id_bat);
+		
+	}
+	
+	return $defense_bat;
+}
+
 function get_bonus_defense_batiment($id_bat) {
 	switch($id_bat) {
 		case(2): return +10; break;

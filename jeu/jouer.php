@@ -2789,6 +2789,8 @@ if($dispo || $admin){
 												
 												$bonus_defense = getBonusDefenseObjet($mysqli, $id_perso);
 												
+												$bonus_defense_bat = get_bonus_defense_instance_bat($mysqli, $id_perso);
+												
 												// recuperation des données de la carte
 												$sql = "SELECT fond_carte FROM $carte 
 														WHERE x_carte = $x_perso
@@ -2801,8 +2803,8 @@ if($dispo || $admin){
 												$bonus_defense_terrain_cac = get_bonus_defense_terrain($fond_carte_perso, 1);
 												$bonus_defense_terrain_dist = get_bonus_defense_terrain($fond_carte_perso, 2);
 												
-												$bonus_final_cac = $bonus_perso + $bonus_defense + $bonus_defense_terrain_cac;
-												$bonus_final_dist = $bonus_perso + $bonus_defense + $bonus_defense_terrain_dist;
+												$bonus_final_cac = $bonus_perso + $bonus_defense + $bonus_defense_terrain_cac + $bonus_defense_bat;
+												$bonus_final_dist = $bonus_perso + $bonus_defense + $bonus_defense_terrain_dist + $bonus_defense_bat;
 												
 												echo '<a tabindex="0" href="#" data-toggle="popover" data-trigger="focus" data-placement="top" data-html="true" data-content="'.$texte_tooltip.'">';
 												if ($bonus_final_cac == $bonus_final_dist) {
