@@ -85,7 +85,7 @@ if($dispo || $admin){
 		$direction_charge = $_POST['action_charge'];
 		
 		// Recup infos perso
-		$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+		$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
 				WHERE perso_as_grade.id_perso = perso.id_perso
 				AND perso.id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
@@ -103,9 +103,10 @@ if($dispo || $admin){
 		$grade_perso	= $t_perso["id_grade"];
 		$paMax_perso	= $t_perso['paMax_perso'];
 		$bonusPM_perso	= $t_perso['bonusPM_perso'];
+		$bonusPA_perso	= $t_perso['bonusPA_perso'];
 		
 		// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
-		if ($pa_perso == $paMax_perso && $pm_perso >= 4) {
+		if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso >= 4) {
 		
 			// Déplacement du perso dans l'axe choisi
 			if ($direction_charge == 'haut') {
