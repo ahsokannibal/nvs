@@ -44,25 +44,25 @@ include ('../nb_online.php');
 								<th>Batiment</th><th>Nombre d'unités de génie civil (à 10 cases autour du point de construction)</th><th>Distance ennemis</th><th>Distance autre batiment</th>
 							</tr>
 							<tr>
-								<td>Fort</td><td align='center'>16</td><td align='center'>30</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Fort</td><td align='center'>16</td><td align='center'>30</td><td>plus de 20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Fortin</td><td align='center'>10</td><td align='center'>30</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Fortin</td><td align='center'>10</td><td align='center'>30</td><td>plus de 20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Gare</td><td align='center'>6</td><td align='center'>30</td><td>40 cases d'une autre gare. 20 cases d'un lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Gare</td><td align='center'>6</td><td align='center'>30</td><td>plus de 40 cases d'une autre gare. 20 cases d'un lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Hôpital</td><td align='center'>3</td><td align='center'>10</td><td>20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
+								<td>Hôpital</td><td align='center'>3</td><td align='center'>10</td><td>plus de 20 cases d'une gare. 40 cases d'un autre lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Tour de visu</td><td align='center'>1</td><td align='center'>5</td><td>2 cases d'un autre batiment. 7 cases d'une autre tour.</td>
+								<td>Tour de visu</td><td align='center'>1</td><td align='center'>5</td><td>plus de 2 cases d'un autre batiment. 7 cases d'une autre tour.</td>
 							</tr>
 							<tr>
-								<td>Barricades</td><td align='center'>0</td><td align='center'> - </td><td>2 cases d'une gare. 2 cases d'un lieu de rapatriement.</td>
+								<td>Barricades</td><td align='center'>0</td><td align='center'> - </td><td>plus de 2 cases d'une gare. 2 cases d'un lieu de rapatriement.</td>
 							</tr>
 							<tr>
-								<td>Ponts</td><td align='center'>0</td><td align='center'> - </td><td>3 cases d'un autre batiment. 30 cases d'un autre pont. La construction doit démarrer de la terre ferme (pas de pont flottant). Les ponts ne peuvent pas faire plus de 2 cases de largeur.</td>
+								<td>Ponts</td><td align='center'>0</td><td align='center'> - </td><td>plus de 3 cases d'un autre batiment. 30 cases d'un autre pont. La construction doit démarrer de la terre ferme (pas de pont flottant). Les ponts ne peuvent pas faire plus de 2 cases de largeur.</td>
 							</tr>
 							<tr>
 								<td>Rails</td><td align='center'>0</td><td align='center'> - </td><td>Il est possible pour le génie de construire des rails mais aussi de les détruire. <b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
