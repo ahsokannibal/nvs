@@ -158,7 +158,10 @@ if(isset($_SESSION["id_perso"])){
 							echo "<table class='table'>";
 							echo "	<thead>";
 							echo "		<tr>";
-							echo "			<th>Batiment</th><th>Coordonnées</th><th>PV</th><th>Action</th>";
+							echo "			<th style='text-align:center'>Batiment</th>";
+							echo "			<th style='text-align:center'>Coordonnées</th>";
+							echo "			<th style='text-align:center'>PV</th>";
+							echo "			<th style='text-align:center'>Action</th>";
 							echo "		</tr>";
 							echo "	</thead>";
 							echo "	<tbody>";
@@ -190,15 +193,15 @@ if(isset($_SESSION["id_perso"])){
 								
 								echo "		<tr>";
 								echo "<form method=\"post\" action=\"admin_batiments.php\">";
-								echo "			<td>";
+								echo "			<td align='center'>";
 								echo "				<input type='hidden' name='hid_id_instance_rename' value='$id_instance_bat'>";
 								echo "				<font color='".$color_camp."'>".$nom_bat." <input type='text' name='nom_batiment' value='".$nom_instance_bat."' ><input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'> [<a href='evenement.php?infoid=".$id_instance_bat."'>".$id_instance_bat."</a>]</font>";
 								echo "			</td>";
 								echo "</form>";
-								echo "			<td>".$x_instance_bat."/".$y_instance_bat."</td>";
-								echo "			<td>".$pv_instance_bat."/".$pvMax_instance_bat."</td>";
+								echo "			<td align='center'>".$x_instance_bat."/".$y_instance_bat."</td>";
+								echo "			<td align='center'>".$pv_instance_bat."/".$pvMax_instance_bat."</td>";
 								echo "<form method=\"post\" action=\"admin_batiments.php\">";	
-								echo "			<td>";
+								echo "			<td align='center'>";
 								echo "				<input type='hidden' name='id_instance_bat_destruction' value='".$id_instance_bat."'>";
 								echo "				<input type='submit' name='destruire_bat' value='Détruire' class='btn btn-danger'>";
 								echo "			</td>";

@@ -95,6 +95,14 @@ if($dispo || $admin){
 				</div>
 			</div>
 			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+					<a class='btn btn-warning' href='anim_missions.php' target='_blank'>Gestion des missions</a>					
+				</div>
+			</div>
+			
 		</div>
 	
 		<!-- Optional JavaScript -->
