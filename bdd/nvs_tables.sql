@@ -639,6 +639,26 @@ CREATE TABLE `message_perso` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `missions`
+--
+CREATE TABLE IF NOT EXISTS `missions` (
+  `id_mission` int(11) NOT NULL AUTO_INCREMENT,
+  `nom_mission` varchar(255) NOT NULL,
+  `texte_mission` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
+  `nombre_participant` INT(11) NULL DEFAULT NULL,
+  `recompense_thune` int(11) NOT NULL DEFAULT '0',
+  `recompense_xp` int(11) NOT NULL DEFAULT '0',
+  `recompense_pc` int(11) NOT NULL DEFAULT '0',
+  `date_debut_mission` datetime DEFAULT NULL,
+  `date_fin_mission` datetime DEFAULT NULL,
+  `camp_mission` INT NOT NULL,
+  `objectif_atteint` INT NULL,
+  PRIMARY KEY (`id_mission`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `nb_online`
 --
 
@@ -912,6 +932,16 @@ CREATE TABLE `perso_in_compagnie` (
 CREATE TABLE `perso_in_em` (
   `id_perso` int(11) NOT NULL,
   `camp_em` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `perso_in_mission`
+--
+CREATE TABLE IF NOT EXISTS `perso_in_mission` (
+  `id_perso` int(11) NOT NULL,
+  `id_mission` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
