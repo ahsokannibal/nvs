@@ -107,14 +107,34 @@ if($dispo || $admin){
 				}
 			}
 			
-			if (isset($_POST['id_mission']) && $_POST['id_mission'] != "") {
+			if (isset($_GET['id_mission']) && $_GET['id_mission'] != "") {
 				
-				$id_mission = $_POST['id_mission'];
+				$id_mission = $_GET['id_mission'];
 				
 				$verif_id_mission = preg_match("#^[0-9]*[0-9]$#i","$id_mission");
 				
 				if ($verif_id_mission ) {
 					
+					if (isset($_GET['activer']) && $_GET['activer'] == 'ok') {
+					
+						$sql = "UPDATE missions SET date_debut_mission=NOW() WHERE id_mission='$id_mission' AND camp_mission='$camp'";
+						$mysqli->query($sql);
+						
+					}
+					
+					if (isset($_GET['valider']) && $_GET['valider'] == 'ok') {
+					
+						$sql = "UPDATE missions SET date_fin_mission=NOW(), objectif_atteint='1' WHERE id_mission='$id_mission' AND camp_mission='$camp'";
+						$mysqli->query($sql);
+						
+					}
+					
+					if (isset($_GET['echec']) && $_GET['echec'] == 'ok') {
+					
+						$sql = "UPDATE missions SET date_fin_mission=NOW(), objectif_atteint='0' WHERE id_mission='$id_mission' AND camp_mission='$camp'";
+						$mysqli->query($sql);
+						
+					}
 				}
 				else {
 					$mess_erreur = "Merci d'éviter de ne pas jouer avec les paramètres de l'URL...";
@@ -219,14 +239,76 @@ if($dispo || $admin){
 						<h2>Liste des missions actives</h2>
 						<?php
 						// Récupération de la liste des missions actives
-						$sql = "SELECT * FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission <= CURDATE())";
+						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
+								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission <= CURDATE())";
 						$res = $mysqli->query($sql);
 						$nb_missions_actives = $res->num_rows;
 						
-						if ($nb_missions_actives > 0) {						
+						if ($nb_missions_actives > 0) {
+
+							echo "<div id='table_mission' class='table-responsive'>";						
+							echo "	<table class='table'>";
+							echo "		<thead>";
+							echo "			<tr>";
+							echo "				<th style='text-align:center'>Nom mission</th>";
+							echo "				<th style='text-align:center'>Date d'activation de la mission</th>";
+							echo "				<th style='text-align:center'>Date d'expiration de la mission</th>";
+							echo "				<th style='text-align:center'>Récompense Thune</th>";
+							echo "				<th style='text-align:center'>Récompense XP/XPI</th>";
+							echo "				<th style='text-align:center'>Récompense PC</th>";
+							echo "				<th style='text-align:center'>Nombre participant Max</th>";
+							echo "				<th style='text-align:center'>Liste des participants à la mission</th>";
+							echo "				<th style='text-align:center'>Actions</th>";
+							echo "			</tr>";
+							echo "		</thead>";
+							echo "		<tbody>";
+						
 							while ($t = $res->fetch_assoc()) {
 								
+								$id_mission		= $t['id_mission'];
+								$nom_mission 	= stripslashes($t['nom_mission']);
+								$desc_mission 	= stripslashes($t['texte_mission']);
+								$rec_thune		= $t['recompense_thune'];
+								$rec_xp			= $t['recompense_xp'];
+								$rec_pc			= $t['recompense_pc'];
+								$nb_participant	= $t['nombre_participant'];
+								$date_debut		= $t['date_debut_mission'];
+								$date_fin		= $t['date_fin_mission'];
+								
+								$sql_p = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission
+										WHERE perso.id_perso = perso_in_mission.id_perso
+										AND id_mission='$id_mission'";
+								$res_p = $mysqli->query($sql_p);
+								
+								echo "				<tr>";
+								echo "					<td align='center'>".$nom_mission."</td>";
+								echo "					<td align='center'>".$date_debut."</td>";
+								echo "					<td align='center'>".$date_fin."</td>";
+								echo "					<td align='center'>".$rec_thune."</td>";
+								echo "					<td align='center'>".$rec_xp."</td>";
+								echo "					<td align='center'>".$rec_pc."</td>";
+								echo "					<td align='center'>".$nb_participant."</td>";
+								echo "					<td align='center'>";
+								while ($t_p = $res_p->fetch_assoc()) {
+									
+									$id_perso_mission 	= $t_p['id_perso'];
+									$nom_perso_mission	= $t_p['nom_perso'];
+									
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>] <br />";
+									
+								}
+								echo "					</td>";
+								echo "					<td align='center'>";
+								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&affecter_perso=ok' class='btn btn-info'>Ajouter des participants</a>";
+								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&valider=ok' class='btn btn-success'>Valider la mission</a>";
+								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&echec=ok' class='btn btn-danger'>Fin de la mission (echec)</a>";
+								echo "					</td>";
+								echo "				</tr>";
 							}
+							
+							echo "		</tbody>";
+							echo "	</table>";
+							echo "</div>";
 						}
 						else {
 							echo "<i>Aucune mission n'est actuellement active</i>";
@@ -244,7 +326,8 @@ if($dispo || $admin){
 						<h2>Liste des missions non actives</h2>
 						<?php
 						// Récupération de la liste des missions non actives
-						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant FROM missions WHERE date_debut_mission IS NULL";
+						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant 
+								FROM missions WHERE date_debut_mission IS NULL";
 						$res = $mysqli->query($sql);
 						$nb_missions_non_actives = $res->num_rows;
 						
@@ -259,6 +342,7 @@ if($dispo || $admin){
 							echo "				<th style='text-align:center'>Récompense XP/XPI</th>";
 							echo "				<th style='text-align:center'>Récompense PC</th>";
 							echo "				<th style='text-align:center'>Nombre participant Max</th>";
+							echo "				<th style='text-align:center'>Liste des participants à la mission</th>";
 							echo "				<th style='text-align:center'>Actions</th>";
 							echo "			</tr>";
 							echo "		</thead>";
@@ -274,6 +358,11 @@ if($dispo || $admin){
 								$rec_pc			= $t['recompense_pc'];
 								$nb_participant	= $t['nombre_participant'];
 								
+								$sql_p = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission
+										WHERE perso.id_perso = perso_in_mission.id_perso
+										AND id_mission='$id_mission'";
+								$res_p = $mysqli->query($sql_p);
+								
 								echo "				<tr>";
 								echo "					<td align='center'>".$nom_mission."</td>";
 								echo "					<td align='center'>".$rec_thune."</td>";
@@ -281,7 +370,17 @@ if($dispo || $admin){
 								echo "					<td align='center'>".$rec_pc."</td>";
 								echo "					<td align='center'>".$nb_participant."</td>";
 								echo "					<td align='center'>";
-								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&affecter_perso=ok' class='btn btn-info'>Affecter des persos à la mission</a>";
+								while ($t_p = $res_p->fetch_assoc()) {
+									
+									$id_perso_mission 	= $t_p['id_perso'];
+									$nom_perso_mission	= $t_p['nom_perso'];
+									
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>] <br />";
+									
+								}
+								echo "					</td>";
+								echo "					<td align='center'>";
+								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&affecter_perso=ok' class='btn btn-info'>Ajouter des participants</a>";
 								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&modifier=ok' class='btn btn-info'>Modifier la mission</a>";
 								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&activer=ok' class='btn btn-warning'>Activer la mission</a>";
 								echo "					</td>";
@@ -309,14 +408,78 @@ if($dispo || $admin){
 						<h2>Liste des missions terminées</h2>
 						<?php
 						// Récupération de la liste des missions terminées
-						$sql = "SELECT * FROM missions WHERE date_fin_mission IS NOT NULL AND date_fin_mission > CURDATE()";
+						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, date_debut_mission, date_fin_mission, objectif_atteint 
+								FROM missions WHERE date_fin_mission IS NOT NULL AND date_fin_mission > CURDATE()";
 						$res = $mysqli->query($sql);
 						$nb_missions_terminees = $res->num_rows;
 						
-						if ($nb_missions_terminees > 0) {						
+						if ($nb_missions_terminees > 0) {
+
+							echo "<div id='table_mission' class='table-responsive'>";						
+							echo "	<table class='table'>";
+							echo "		<thead>";
+							echo "			<tr>";
+							echo "				<th style='text-align:center'>Nom mission</th>";
+							echo "				<th style='text-align:center'>Date d'activation de la mission</th>";
+							echo "				<th style='text-align:center'>Date de fin de la mission</th>";
+							echo "				<th style='text-align:center'>Récompense Thune</th>";
+							echo "				<th style='text-align:center'>Récompense XP/XPI</th>";
+							echo "				<th style='text-align:center'>Récompense PC</th>";
+							echo "				<th style='text-align:center'>Liste des participants à la mission</th>";
+							echo "				<th style='text-align:center'>Statut de la mission</th>";
+							echo "			</tr>";
+							echo "		</thead>";
+							echo "		<tbody>";
+						
 							while ($t = $res->fetch_assoc()) {
 								
+								$id_mission		= $t['id_mission'];
+								$nom_mission 	= stripslashes($t['nom_mission']);
+								$desc_mission 	= stripslashes($t['texte_mission']);
+								$rec_thune		= $t['recompense_thune'];
+								$rec_xp			= $t['recompense_xp'];
+								$rec_pc			= $t['recompense_pc'];
+								$date_debut		= $t['date_debut_mission'];
+								$date_fin		= $t['date_fin_mission'];
+								$objectif		= $t['objectif_atteint'];
+								
+								$sql_p = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission
+										WHERE perso.id_perso = perso_in_mission.id_perso
+										AND id_mission='$id_mission'";
+								$res_p = $mysqli->query($sql_p);
+								
+								echo "				<tr>";
+								echo "					<td align='center'>".$nom_mission."</td>";
+								echo "					<td align='center'>".$date_debut."</td>";
+								echo "					<td align='center'>".$date_fin."</td>";
+								echo "					<td align='center'>".$rec_thune."</td>";
+								echo "					<td align='center'>".$rec_xp."</td>";
+								echo "					<td align='center'>".$rec_pc."</td>";
+								echo "					<td align='center'>";
+								while ($t_p = $res_p->fetch_assoc()) {
+									
+									$id_perso_mission 	= $t_p['id_perso'];
+									$nom_perso_mission	= $t_p['nom_perso'];
+									
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>] <br />";
+									
+								}
+								echo "					</td>";
+								echo "					<td align='center'>";
+								if ($objectif) {
+									echo "<img src='../images/success3.png' width='50' height='50'>";
+								}
+								else {
+									echo "<img src='../images/failed.png' width='80' height='50'>";
+								}
+								echo "					</td>";
+								echo "				</tr>";
+								
 							}
+							
+							echo "		</tbody>";
+							echo "	</table>";
+							echo "</div>";
 						}
 						else {
 							echo "<i>Aucune mission n'est pour l'instant terminée</i>";
