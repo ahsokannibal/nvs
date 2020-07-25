@@ -93,7 +93,7 @@ if($dispo || $admin){
 					if ($nb == 0) {
 					
 						$sql = "INSERT INTO missions (nom_mission, texte_mission, nombre_participant, recompense_thune, recompense_xp, recompense_pc, camp_mission)
-								VALUES ('".$nom_mission."', '".$texte_mission."', '".$rec_thune."', '".$rec_xp."', '".$rec_pc."', '".$nombre_part."', '".$camp."')";
+								VALUES ('".$nom_mission."', '".$texte_mission."', '".$nombre_part."', '".$rec_thune."', '".$rec_xp."', '".$rec_pc."', '".$camp."')";
 						$mysqli->query($sql);
 						
 						$mess = "Mission ".$nom_mission." créée avec succès !";
