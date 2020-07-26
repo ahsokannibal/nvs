@@ -86,7 +86,7 @@ if($dispo || $admin){
 				if($verif_thune && $verif_xp && $verif_pc && $verif_part) {
 					
 					// On vérifie si la mission existe déjà
-					$sql = "SELECT id_mission FROM missions WHERE nom_mission='$nom_mission'";
+					$sql = "SELECT id_mission FROM missions WHERE nom_mission='$nom_mission' AND camp_mission='$camp'";
 					$res = $mysqli->query($sql);
 					$nb = $res->num_rows;
 					
@@ -126,6 +126,36 @@ if($dispo || $admin){
 					
 						$sql = "UPDATE missions SET date_fin_mission=NOW(), objectif_atteint='1' WHERE id_mission='$id_mission' AND camp_mission='$camp'";
 						$mysqli->query($sql);
+						
+						// Récupération recompenses mission 
+						$sql = "SELECT recompense_thune, recompense_xp, recompense_pc FROM missions WHERE id_mission='$id_mission'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$rec_thune 	= $t['recompense_thune'];
+						$res_xp		= $t['recompense_xp'];
+						$res_pc		= $t['recompense_pc'];
+						
+						// Récuoération des persos assignés à la mission
+						$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission 
+								WHERE perso.id_perso = perso_in_mission.id_perso 
+								AND id_mission='$id_mission'";
+						$res = $mysqli->query($sql);
+						
+						while ($t = $res->fetch_assoc()) {
+							
+							$id_perso 	= $t['id_perso'];
+							$nom_perso	= $t['nom_perso'];
+							
+							$sql = "UPDATE perso SET or_perso = or_perso + $rec_thune, xp_perso = xp_perso + $res_xp, pi_perso = pi_perso + $xp_perso, pc_perso = pc_perso + $rec_pc WHERE id_perso='$id_perso'";
+							$mysqli->query($sql);
+							
+							// evenements perso
+							
+							
+							// cv perso
+							
+						}
 						
 					}
 					
@@ -185,7 +215,7 @@ if($dispo || $admin){
 					<form method='POST' action='anim_missions.php'>
 						<div class="form-row">
 							<div class="form-group col-md-12">
-								<label for="nom_mission"><b>Nom de la mission <font color='red'>*</font></b></label>
+								<label for="nom_mission"><b>Nom de la mission (le nom doit être unique) <font color='red'>*</font></b></label>
 								<input type="text" class="form-control" id="nom_mission" name="nom_mission">
 							</div>
 						</div>
