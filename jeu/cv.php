@@ -84,8 +84,8 @@ if(isset($id)){
 		
 		entete($mysqli, $id); 
 		
-		//Évènements spéciaux
-		$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' AND special='1'";
+		// CV spéciaux
+		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='1'";
 		$res = $mysqli->query($sql);
 		$nb_event = $res->num_rows;
 		
@@ -96,19 +96,16 @@ if(isset($id)){
 		
 			while ($t = $res->fetch_assoc()){
 				echo "<tr>";
-				echo "<td>".$t['date_evenement']."</td><td align='center'>".$t['nomActeur_evenement']." ".stripslashes($t['phrase_evenement'])." ";
-				if($_SESSION["id_perso"] == $id){
-					echo stripslashes($t['effet_evenement'])."";
-				}
+				echo "<td>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." ";
 				echo "</td></tr>";
 			}
 			echo "</table></center><br />";
 		}
 		
 		
-		//missions
+		// Missions
 		$count = 0;
-		$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' AND special='2'";
+		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='2'";
 		$res = $mysqli->query($sql);
 		$nb_mission = $res->num_rows;
 		
@@ -120,10 +117,7 @@ if(isset($id)){
 			while ($t = $res->fetch_assoc()){
 				$count++;
 				echo "<tr>";
-				echo "<td>".$t['date_evenement']."</td><td align='center'>".$t['nomActeur_evenement']." ".stripslashes($t['phrase_evenement'])." ";
-				if($_SESSION["id_perso"] == $id){
-					echo stripslashes($t['effet_evenement'])."";
-				}
+				echo "<td>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
 				echo "</td></tr>";
 			}
 			echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
@@ -133,7 +127,7 @@ if(isset($id)){
 		
 		// nombre de kills
 		$count = 0;
-		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
+		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
 		
 		echo "<center><font color=red><b>Le bon...</b></font></center>";
@@ -151,7 +145,7 @@ if(isset($id)){
 		
 		// nombre de morts
 		$count = 0;
-		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
+		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
 		
 		echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
@@ -182,7 +176,7 @@ if(isset($id)){
 		
 		// nombre de pnj tu"s
 		$count = 0;
-		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
+		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
 		
 		echo "<center><font color=red><b>PNJ</b></font></center>";
@@ -198,9 +192,9 @@ if(isset($id)){
 		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
 		echo "</table></center><br />";
 		
-		// nombre de batiments d"truits
+		// nombre de batiments détruits
 		$count = 0;
-		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' OR IDCible_cv='$id' ORDER BY date_cv DESC";
+		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 		$res = $mysqli->query($sql);
 		
 		echo "<center><font color=red><b>Batiments</b></font></center>";

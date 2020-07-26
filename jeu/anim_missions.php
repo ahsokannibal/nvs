@@ -30,15 +30,15 @@ if($dispo || $admin){
 			
 			if ($camp == '1') {
 				$nom_camp = 'Nord';
-				$b_camp = 'b';
+				$couleur_clan_perso = 'blue';
 			}
 			else if ($camp == '2') {
 				$nom_camp = 'Sud';
-				$b_camp = 'r';
+				$couleur_clan_perso = 'red';
 			}
 			else if ($camp == '3') {
 				$nom_camp = 'Indien';
-				$b_camp = 'g';
+				$couleur_clan_perso = 'green';
 			}
 			
 			$mess = "";
@@ -128,13 +128,14 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 						
 						// Récupération recompenses mission 
-						$sql = "SELECT recompense_thune, recompense_xp, recompense_pc FROM missions WHERE id_mission='$id_mission'";
+						$sql = "SELECT nom_mission, recompense_thune, recompense_xp, recompense_pc FROM missions WHERE id_mission='$id_mission'";
 						$res = $mysqli->query($sql);
 						$t = $res->fetch_assoc();
 						
-						$rec_thune 	= $t['recompense_thune'];
-						$res_xp		= $t['recompense_xp'];
-						$res_pc		= $t['recompense_pc'];
+						$nom_mission	= $t['nom_mission'];
+						$rec_thune 		= $t['recompense_thune'];
+						$rec_xp			= $t['recompense_xp'];
+						$rec_pc			= $t['recompense_pc'];
 						
 						// Récuoération des persos assignés à la mission
 						$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission 
@@ -147,14 +148,16 @@ if($dispo || $admin){
 							$id_perso 	= $t['id_perso'];
 							$nom_perso	= $t['nom_perso'];
 							
-							$sql = "UPDATE perso SET or_perso = or_perso + $rec_thune, xp_perso = xp_perso + $res_xp, pi_perso = pi_perso + $xp_perso, pc_perso = pc_perso + $rec_pc WHERE id_perso='$id_perso'";
+							$sql = "UPDATE perso SET or_perso = or_perso + $rec_thune, xp_perso = xp_perso + $rec_xp, pi_perso = pi_perso + $rec_xp, pc_perso = pc_perso + $rec_pc WHERE id_perso='$id_perso'";
 							$mysqli->query($sql);
 							
 							// evenements perso
-							
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a réussi la mission </b>','$id_mission','<b>$nom_mission</b>',' - Récompenses : $rec_thune thunes, $rec_xp XP, $rec_pc PC',NOW(),'2')";
+							$mysqli->query($sql);
 							
 							// cv perso
-							
+							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_mission','$nom_mission',NOW(),'2')";
+							$mysqli->query($sql);
 						}
 						
 					}
@@ -167,7 +170,28 @@ if($dispo || $admin){
 					}
 				}
 				else {
-					$mess_erreur = "Merci d'éviter de ne pas jouer avec les paramètres de l'URL...";
+					$mess_erreur = "Merci d'éviter de jouer avec les paramètres de l'URL...";
+				}
+			}
+			
+			if (isset($_POST['hid_id_mission']) && trim($_POST['hid_id_mission']) != "" && isset($_POST['select_perso']) && trim($_POST['select_perso']) != "") {
+				
+				$id_mission 	= $_POST['hid_id_mission'];
+				$id_perso_aff	= $_POST['select_perso'];
+				
+				$verif_id_mission 	= preg_match("#^[0-9]*[0-9]$#i","$id_mission");
+				$verif_id_perso 	= preg_match("#^[0-9]*[0-9]$#i","$id_perso_aff");
+				
+				if ($verif_id_mission && $verif_id_perso) {
+					
+					$sql = "INSERT INTO perso_in_mission (id_perso, id_mission) VALUES ('$id_perso_aff','$id_mission')";
+					$mysqli->query($sql);
+					
+					$mess = "Affectation du perso à la mission réussie";
+					
+				}
+				else {
+					$mess_erreur = "Merci d'éviter de jouer avec les informations passées par les formulaires...";
 				}
 			}
 			?>
@@ -247,6 +271,61 @@ if($dispo || $admin){
 					</form>
 					
 					<?php						
+					}
+					else if (isset($_GET['affecter_perso']) && $_GET['affecter_perso'] == 'ok' && isset($_GET['id_mission'])) {
+						
+						$id_mission = $_GET['id_mission'];
+						
+						$verif_id_mission = preg_match("#^[0-9]*[0-9]$#i","$id_mission");
+				
+						if ($verif_id_mission ) {
+							
+							$sql = "SELECT nom_mission FROM missions WHERE id_mission='$id_mission' AND camp_mission='$camp'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							$v = $res->num_rows;
+							
+							if ($v == 1) {
+							
+								$nom_mission = stripslashes($t['nom_mission']);
+								
+								echo "<h4>Mission ".$nom_mission."</h4>";
+								
+								?>
+								<form method='POST' action='anim_missions.php'>
+									<div class="form-row">
+										<div class="form-group col-md-12">
+											<input type="hidden" class="form-control" id="hid_id_mission" name="hid_id_mission" value="<?php echo $id_mission; ?>">
+											<label for="select_perso"><b>Perso à ajouter à la mission :</b></label>
+											<select id='select_perso' name='select_perso'>
+											<?php
+											// récuopération de tous les persos de son camp 
+											$sql = "SELECT id_perso, nom_perso FROM perso WHERE clan='$camp' ORDER BY id_perso ASC";
+											$res = $mysqli->query($sql);
+											
+											while ($t = $res->fetch_assoc()) {
+												
+												$id_perso_list 	= $t["id_perso"];
+												$nom_perso_list	= $t["nom_perso"];
+												
+												echo "<option value='".$id_perso_list."'>".$nom_perso_list." [".$id_perso_list."]</option>";
+												
+											}
+											?>
+											</select>
+										</div>
+									</div>
+									<button type="submit" class="btn btn-primary">Affecter le perso à la mission</button>
+								</form>
+								<?php
+							}
+							else {
+								echo "<center><font color='red'><b>Mission invalide !</b></font></center>";
+							}
+						}
+						else {
+							echo "<center><font color='red'><b>Mission invalide !</b></font></center>";
+						}
 					}
 					else {
 					?>
