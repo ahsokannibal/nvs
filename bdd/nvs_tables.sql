@@ -365,7 +365,8 @@ CREATE TABLE `cv` (
   `nomActeur_cv` varchar(100) NOT NULL DEFAULT '',
   `IDCible_cv` int(11) DEFAULT NULL,
   `nomCible_cv` varchar(100) DEFAULT NULL,
-  `date_cv` datetime NOT NULL
+  `date_cv` datetime NOT NULL,
+  `special` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
