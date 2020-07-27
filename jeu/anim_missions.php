@@ -163,9 +163,33 @@ if($dispo || $admin){
 					}
 					
 					if (isset($_GET['echec']) && $_GET['echec'] == 'ok') {
+						
+						// Récupération info mission 
+						$sql = "SELECT nom_mission FROM missions WHERE id_mission='$id_mission'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$nom_mission	= $t['nom_mission'];
 					
 						$sql = "UPDATE missions SET date_fin_mission=NOW(), objectif_atteint='0' WHERE id_mission='$id_mission' AND camp_mission='$camp'";
 						$mysqli->query($sql);
+						
+						// Récuoération des persos assignés à la mission
+						$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission 
+								WHERE perso.id_perso = perso_in_mission.id_perso 
+								AND id_mission='$id_mission'";
+						$res = $mysqli->query($sql);
+						
+						while ($t = $res->fetch_assoc()) {
+							
+							$id_perso 	= $t['id_perso'];
+							$nom_perso	= $t['nom_perso'];
+						
+							// evenements perso
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a échoué la mission </b>','$id_mission','<b>$nom_mission</b>',' - Pas de récompense',NOW(),'2')";
+							$mysqli->query($sql);
+						
+						}
 						
 					}
 				}
