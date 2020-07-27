@@ -212,23 +212,38 @@ if(@$_SESSION["id_perso"]){
 				
 				while ($t = $res->fetch_assoc()) {
 					
+					$date_evenement 		= $t['date_evenement'];
+					$nom_action_evenement	= $t['nomActeur_evenement'];
+					$id_acteur_evenement	= $t['IDActeur_evenement'];
+					$phrase_evenement		= $t['phrase_evenement'];
+					$id_cible_evenement		= $t['IDCible_evenement'];
+					$nom_cible_evenement	= $t['nomCible_evenement'];
+					$effet_evenement		= $t['effet_evenement'];
+					$special_evenement		= $t['special'];
+					
 					echo "<tr>";
-					echo "	<td>".$t['date_evenement']."</td>";
-					echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					echo "	<td>".$date_evenement."</td>";
+					echo "	<td>".$nom_action_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ".stripslashes($phrase_evenement)." ";
 					
 					if ($t['IDCible_evenement'] == 0) {
 						
-						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-							echo " ".stripslashes($t['effet_evenement']);
+						if ($id_acteur_evenement == $id_perso || $id_cible_evenement == $id_perso) {
+							echo " ".stripslashes($effet_evenement);
 						}
 						
 						echo "</td>";
 					}
 					else {
-						echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
+						echo $nom_cible_evenement." [";
+						if ($special_evenement == 2) {
+							echo "".$id_cible_evenement."] ";
+						}
+						else {
+							echo "<a href=\"evenement.php?infoid=".$id_cible_evenement."\">".$id_cible_evenement."</a>] ";
+						}					
 						
-						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-							echo " ".stripslashes($t['effet_evenement']);
+						if ($id_acteur_evenement == $id_perso || $id_cible_evenement == $id_perso) {
+							echo " ".stripslashes($effet_evenement);
 						}
 						
 						echo "</td>";
@@ -242,23 +257,38 @@ if(@$_SESSION["id_perso"]){
 				
 				while ($t = $res->fetch_assoc()) {
 					
+					$date_evenement 		= $t['date_evenement'];
+					$nom_action_evenement	= $t['nomActeur_evenement'];
+					$id_acteur_evenement	= $t['IDActeur_evenement'];
+					$phrase_evenement		= $t['phrase_evenement'];
+					$id_cible_evenement		= $t['IDCible_evenement'];
+					$nom_cible_evenement	= $t['nomCible_evenement'];
+					$effet_evenement		= $t['effet_evenement'];
+					$special_evenement		= $t['special'];
+					
 					echo "<tr>";
-					echo "	<td>".$t['date_evenement']."</td>";
-					echo "	<td>".$t['nomActeur_evenement']." [<a href=\"evenement.php?infoid=".$t['IDActeur_evenement']."\">".$t['IDActeur_evenement']."</a>] ".stripslashes($t['phrase_evenement'])." ";
+					echo "	<td>".$date_evenement."</td>";
+					echo "	<td>".$nom_action_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ".stripslashes($phrase_evenement)." ";
 					
 					if ($t['IDCible_evenement'] == 0) {
 						
-						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-							echo stripslashes($t['effet_evenement'])."</td>";
+						if ($id_acteur_evenement == $id_perso || $id_cible_evenement == $id_perso) {
+							echo stripslashes($effet_evenement)."</td>";
 						}
 						
 						echo "</td>";
 					}
 					else {
-						echo $t['nomCible_evenement']." [<a href=\"evenement.php?infoid=".$t['IDCible_evenement']."\">".$t['IDCible_evenement']."</a>]";
+						echo $nom_cible_evenement." [";
+						if ($special_evenement == 2) {
+							echo "".$id_cible_evenement."] ";
+						}
+						else {
+							echo "<a href=\"evenement.php?infoid=".$id_cible_evenement."\">".$id_cible_evenement."</a>] ";
+						}
 						
-						if ($t['IDActeur_evenement'] == $id_perso || $t['IDCible_evenement'] == $id_perso) {
-							echo " ".stripslashes($t['effet_evenement'])."</td>";
+						if ($id_acteur_evenement == $id_perso || $id_cible_evenement == $id_perso) {
+							echo " ".stripslashes($effet_evenement)."</td>";
 						}
 						
 						echo "</td>";

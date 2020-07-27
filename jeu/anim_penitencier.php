@@ -133,27 +133,53 @@ if($dispo || $admin){
 				
 				if ($verif_id_perso) {
 					
-					// recuperation coordonnées perso
-					$sql = "SELECT x_perso, y_perso FROM perso WHERE id_perso='$id_perso_envoi_penitencier'";
+					// perso déjà dans pénitencier ?
+					$sql = "SELECT * FROM perso_in_batiment WHERE id_perso='$id_perso_envoi_penitencier' AND id_instanceBat='$id_penitencier'";
 					$res = $mysqli->query($sql);
-					$t = $res->fetch_assoc();
+					$verif_peni = $res->num_rows;
 					
-					$x_perso_origin = $t['x_perso'];
-					$y_perso_origin = $t['y_perso'];
+					if ($verif_peni == 0) {
 					
-					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
-					$mysqli->query($sql);
-					
-					// MAJ coordonnées perso
-					$sql = "UPDATE perso SET x_perso='$x_penitencier', y_perso='$y_penitencier' WHERE id_perso='$id_perso_envoi_penitencier'";
-					$mysqli->query($sql);
-					
-					// Ajout du perso dans le batiment
-					$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_envoi_penitencier','$id_penitencier')";
-					$mysqli->query($sql);
-					
-					$mess = "Le perso d'id $id_perso_envoi_penitencier a bien été envoyé dans le Pénitencier";
-					
+						// recuperation coordonnées perso
+						$sql = "SELECT nom_perso, x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso_envoi_penitencier'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$nom_perso		= $t['nom_perso'];
+						$x_perso_origin = $t['x_perso'];
+						$y_perso_origin = $t['y_perso'];
+						$camp_perso		= $t['clan'];
+						
+						if ($camp_perso == 1) {
+							$couleur_clan_perso = 'blue';
+						}
+						else if ($camp_perso == 2) {
+							$couleur_clan_perso = 'red';
+						}
+						else if ($camp_perso == 3) {
+							$couleur_clan_perso = 'green';
+						}
+						
+						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+						$mysqli->query($sql);
+						
+						// MAJ coordonnées perso
+						$sql = "UPDATE perso SET x_perso='$x_penitencier', y_perso='$y_penitencier' WHERE id_perso='$id_perso_envoi_penitencier'";
+						$mysqli->query($sql);
+						
+						// Ajout du perso dans le batiment
+						$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_envoi_penitencier','$id_penitencier')";
+						$mysqli->query($sql);
+						
+						// evenements perso
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_envoi_penitencier,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','','',NOW())";
+						$mysqli->query($sql);
+						
+						$mess = "Le perso ".$nom_perso." [".$id_perso_envoi_penitencier."] a bien été envoyé dans le Pénitencier";
+					}
+					else {
+						$mess_erreur .= "Le perso est déjà dans le Pénitencier";
+					}
 				}
 				else {
 					$mess_erreur .= "Id perso incorrect";
