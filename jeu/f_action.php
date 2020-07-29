@@ -355,7 +355,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 					AND y_carte <= $y_bat + $distance_min_bat
 					AND fond_carte!='b5b.png'
 					AND fond_carte!='b5r.png'
-					AND idPerso_carte >= 50000";
+					AND idPerso_carte >= 50000 AND idPerso_carte < 200000";
 		$res = $mysqli->query($sql);
 		$verif_distance_pont_bat = $res->num_rows;
 	}
