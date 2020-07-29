@@ -83,8 +83,8 @@ if($dispo || $admin){
 				$bonus_defense_bat = get_bonus_defense_instance_bat($mysqli, $id);
 				
 				// Bonus / Malus defense terrain / batiment
-				$bonus_def_terrain_cac = get_bonus_defense_terrain($fond, $id);
-				$bonus_def_terrain_dist = get_bonus_defense_terrain($fond, $id);
+				$bonus_def_terrain_cac = get_bonus_defense_terrain($fond, 1);
+				$bonus_def_terrain_dist = get_bonus_defense_terrain($fond, 2);
 				
 				$bonus_def = $b_p + $bonus_def_obj;
 				

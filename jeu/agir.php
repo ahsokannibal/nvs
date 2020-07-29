@@ -139,7 +139,7 @@ if($verif){
 			if(!in_bat($mysqli, $id) || (in_bat($mysqli, $id) && $porteeMax_arme_attaque > 1)){
 				
 				// recup des données du perso
-				$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, id_grade
+				$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, id_grade
 						FROM perso, perso_as_grade
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso.id_perso='$id'";
@@ -160,6 +160,7 @@ if($verif){
 				$paM_perso 		= $t_perso["paMax_perso"];
 				$rec_perso 		= $t_perso["recup_perso"];
 				$br_perso 		= $t_perso["bonusRecup_perso"];
+				$bPM_perso		= $t_perso["bonusPM_perso"];
 				$per_perso 		= $t_perso["perception_perso"];
 				$bp_perso 		= $t_perso["bonusPerception_perso"];
 				$dc_perso 		= $t_perso["dateCreation_perso"];
@@ -284,7 +285,7 @@ if($verif){
 															<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 														</tr>
 														<tr>
-															<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
+															<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".($pmM_perso + $bPM_perso); ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
 														</tr>
 														<tr>
 															<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_restant."/".$paM_perso; ?></td>
@@ -1132,7 +1133,7 @@ if($verif){
 		if ($verif_arme) {
 		
 			// recup des données du perso
-			$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
+			$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 					FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id'";
@@ -1153,6 +1154,7 @@ if($verif){
 			$paM_perso 		= $t_perso["paMax_perso"];
 			$rec_perso 		= $t_perso["recup_perso"];
 			$br_perso 		= $t_perso["bonusRecup_perso"];
+			$bPM_perso		= $t_perso["bonusPM_perso"];
 			$per_perso 		= $t_perso["perception_perso"];
 			$bp_perso 		= $t_perso["bonusPerception_perso"];
 			$dc_perso 		= $t_perso["dateCreation_perso"];
@@ -1225,7 +1227,7 @@ if($verif){
 												<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 											</tr>
 											<tr>
-												<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
+												<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".($pmM_perso + $bPM_perso); ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
 											</tr>
 											<tr>
 												<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_restant."/".$paM_perso; ?></td>
@@ -1884,7 +1886,7 @@ if($verif){
 		if ($verif_arme) {
 		
 			// recup des données du perso
-			$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
+			$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, id_grade
 					FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id'";
@@ -1905,6 +1907,7 @@ if($verif){
 			$paM_perso 		= $t_perso["paMax_perso"];
 			$rec_perso 		= $t_perso["recup_perso"];
 			$br_perso 		= $t_perso["bonusRecup_perso"];
+			$bPM_perso		= $t_perso["bonusPM_perso"];
 			$per_perso 		= $t_perso["perception_perso"];
 			$bp_perso 		= $t_perso["bonusPerception_perso"];
 			$dc_perso 		= $t_perso["dateCreation_perso"];
@@ -1986,7 +1989,7 @@ if($verif){
 												<td><?php echo "<u><b>Position sur la carte :</b></u> ".$x_perso."/".$y_perso; ?></td>
 											<tr>
 											<tr>
-												<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".$pmM_perso; ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
+												<td><?php echo "<u><b>Mouvements restants :</b></u> ".$pm_perso."/".($pmM_perso + $bPM_perso); ?><?php echo " - <u><b>Points de vie :</b></u> ".$pv_perso."/".$pvM_perso; ?></td>
 											<tr>
 											<tr>
 												<td><?php echo "<u><b>Points d'action :</b></u> ".$pa_restant."/".$paM_perso; ?></td>
