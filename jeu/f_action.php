@@ -2650,7 +2650,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								
 							$or_perso = $t_vo['or_perso'];
 							
-							if($or_perso >= $quantite){
+							if($or_perso >= $quantite && $quantite > 0){
 									
 								// On met a jour l'or et les PA du perso
 								$sql_u = "UPDATE perso SET pa_perso=pa_perso-1, or_perso=or_perso-$quantite WHERE id_perso='$id_perso'";
@@ -2691,7 +2691,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								
 							$q_obj = $t_vo['q_obj'];
 							
-							if($q_obj >= $quantite){
+							if($q_obj >= $quantite && $quantite > 0){
 									
 								// On supprime l'objet de l'inventaire du perso
 								$sql_d = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0' LIMIT 1";
@@ -2747,7 +2747,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								
 							$q_arme = $t_vo['q_arme'];
 								
-							if($q_arme >= $quantite){
+							if($q_arme >= $quantite && $quantite > 0){
 									
 								// On supprime l'arme de l'inventaire du perso
 								$sql_d = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND est_portee='0' LIMIT 1";
@@ -2803,7 +2803,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								
 							$q_armure = $t_vo['q_armure'];
 								
-							if($q_armure >= $quantite){
+							if($q_armure >= $quantite && $quantite > 0){
 									
 								// On supprime l'armure de l'inventaire du perso
 								$sql_d = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND est_portee='0' LIMIT 1";
