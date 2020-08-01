@@ -88,6 +88,18 @@ function verif_position_libre($mysqli, $x, $y) {
 	return $verif;
 }
 
+function verif_coord_in_perception($x, $y, $x_perso, $y_perso, $perception) {
+	
+	$verif = true;
+	
+	if ($x > $x_perso + $perception || $x < $x_perso - $perception 
+			|| $y > $y_perso + $perception || $y < $y_perso - $perception) {
+		$verif = false;
+	}
+	
+	return $verif;
+}
+
 // Donne le nombre de pm que coute le deplacement suivant le terrain
 function cout_pm($fond) 
 {
