@@ -6,7 +6,6 @@ require_once("f_carte.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
-include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
@@ -448,7 +447,7 @@ if($dispo || $admin){
 						<?php
 						// Récupération de la liste des missions actives
 						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
-								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission <= CURDATE())
+								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission >= CURDATE())
 								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$nb_missions_actives = $res->num_rows;
@@ -625,7 +624,7 @@ if($dispo || $admin){
 						<?php
 						// Récupération de la liste des missions terminées
 						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, date_debut_mission, date_fin_mission, objectif_atteint 
-								FROM missions WHERE date_fin_mission IS NOT NULL AND date_fin_mission > CURDATE()
+								FROM missions WHERE date_fin_mission IS NOT NULL AND date_fin_mission < CURDATE()
 								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$nb_missions_terminees = $res->num_rows;

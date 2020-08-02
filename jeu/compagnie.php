@@ -660,8 +660,7 @@ if($dispo || $admin){
 	}
 	else{
 		echo "<center><font color='red'>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font></center>";
-	}?>
-<?php
+	}
 }
 else {
 	// logout
