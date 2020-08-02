@@ -96,10 +96,10 @@ if($dispo || $admin){
 									WHERE id_mission='$id_mission_modif_hid' AND camp_mission='$camp'";
 							$mysqli->query($sql);
 							
-							$mess = "Mission ".$nom_mission." modifiée avec succès !";
+							$mess .= "Mission ".$nom_mission." modifiée avec succès !";
 						}
 						else {
-							$mess_erreur = "Merci d'éviter de jouer avec les champs cachés";
+							$mess_erreur .= "Merci d'éviter de jouer avec les champs cachés";
 						}						
 					}
 					else {
@@ -117,12 +117,12 @@ if($dispo || $admin){
 							$mess = "Mission ".$nom_mission." créée avec succès !";
 						}
 						else {
-							$mess_erreur = "Une mission du même nom existe déjà";
+							$mess_erreur .= "Une mission du même nom existe déjà";
 						}
 					}
 				}
 				else {
-					$mess_erreur = "Merci d'éviter de mettre n'importe quoi dans les champs du formulaire...";
+					$mess_erreur .= "Merci d'éviter de mettre n'importe quoi dans les champs du formulaire...";
 				}
 			}
 			
@@ -140,14 +140,12 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 						
 					}
-					
-					if (isset($_GET['modifier']) && $_GET['modifier'] == 'ok') {
+					else if (isset($_GET['modifier']) && $_GET['modifier'] == 'ok') {
 						
 						$id_mission_modif = $id_mission;
 						
 					}
-					
-					if (isset($_GET['valider']) && $_GET['valider'] == 'ok') {
+					else if (isset($_GET['valider']) && $_GET['valider'] == 'ok') {
 					
 						$sql = "UPDATE missions SET date_fin_mission=NOW(), objectif_atteint='1' WHERE id_mission='$id_mission' AND camp_mission='$camp'";
 						$mysqli->query($sql);
@@ -186,8 +184,7 @@ if($dispo || $admin){
 						}
 						
 					}
-					
-					if (isset($_GET['echec']) && $_GET['echec'] == 'ok') {
+					else if (isset($_GET['echec']) && $_GET['echec'] == 'ok') {
 						
 						// Récupération info mission 
 						$sql = "SELECT nom_mission FROM missions WHERE id_mission='$id_mission'";
@@ -215,11 +212,29 @@ if($dispo || $admin){
 							$mysqli->query($sql);
 						
 						}
+					}
+					else if (isset($_GET['desaffecter_perso']) && $_GET['desaffecter_perso'] != "" && $_GET['desaffecter_perso'] != 0) {
 						
+						$id_perso_desaffecter = $_GET['desaffecter_perso'];
+						
+						$verif_id_perso = preg_match("#^[0-9]*[0-9]$#i","$id_perso_desaffecter");
+						
+						if ($verif_id_perso) {
+							
+							$sql = "DELETE FROM perso_in_mission WHERE id_mission='$id_mission' AND id_perso='$id_perso_desaffecter'";
+							$mysqli->query($sql);
+							
+							// TODO - Envoi MP
+							
+							$mess .= "Désaffectation du perso ".$id_perso_desaffecter." de la mission";
+						}
+						else {
+							$mess_erreur .= "Merci d'éviter de jouer avec les paramètres de l'URL...";
+						}
 					}
 				}
 				else {
-					$mess_erreur = "Merci d'éviter de jouer avec les paramètres de l'URL...";
+					$mess_erreur .= "Merci d'éviter de jouer avec les paramètres de l'URL...";
 				}
 			}
 			
@@ -236,11 +251,11 @@ if($dispo || $admin){
 					$sql = "INSERT INTO perso_in_mission (id_perso, id_mission) VALUES ('$id_perso_aff','$id_mission')";
 					$mysqli->query($sql);
 					
-					$mess = "Affectation du perso à la mission réussie";
+					$mess .= "Affectation du perso à la mission réussie";
 					
 				}
 				else {
-					$mess_erreur = "Merci d'éviter de jouer avec les informations passées par les formulaires...";
+					$mess_erreur .= "Merci d'éviter de jouer avec les informations passées par les formulaires...";
 				}
 			}
 			?>
@@ -503,7 +518,8 @@ if($dispo || $admin){
 									$id_perso_mission 	= $t_p['id_perso'];
 									$nom_perso_mission	= $t_p['nom_perso'];
 									
-									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>] <br />";
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>]";
+									echo " <a href='anim_missions.php?id_mission=".$id_mission."&desaffecter_perso=".$id_perso_mission."' class='btn btn-danger'>Désaffecter</a><br />";
 									
 								}
 								echo "					</td>";
@@ -588,7 +604,8 @@ if($dispo || $admin){
 									$id_perso_mission 	= $t_p['id_perso'];
 									$nom_perso_mission	= $t_p['nom_perso'];
 									
-									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>] <br />";
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>]";
+									echo " <a href='anim_missions.php?id_mission=".$id_mission."&desaffecter_perso=".$id_perso_mission."' class='btn btn-danger'>Désaffecter</a><br />";
 									
 								}
 								echo "					</td>";

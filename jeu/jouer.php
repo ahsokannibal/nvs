@@ -2089,7 +2089,9 @@ if($dispo || $admin){
 				echo "<tr>";
 				echo "	<td>Prochain tour :  ".$n_dla."</td>";
 				echo "	<td align=right>";
-				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a> <a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
+				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
+				echo "		<a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
+				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions</b></a>";
 				
 				// Redacteur
 				if(redac_perso($mysqli, $id_perso)) { 

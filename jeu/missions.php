@@ -95,6 +95,11 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 						
 					}
+					else if (isset($_GET['consulter']) && $_GET['consulter'] == "ok") {
+						
+						$id_mission_consult = $id_mission;
+						
+					}
 				}
 				else {
 					// Tentative de triche
@@ -130,17 +135,9 @@ if($dispo || $admin){
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	<body>
-		<p align="center"><input type="button" value="Fermer la fenêtre de compagnie" onclick="window.close()"></p>
+		<p align="center"><input type="button" value="Fermer la fenêtre de missions" onclick="window.close()"></p>
 		
 		<div class="container-fluid">
-		
-			<div class="row">
-				<div class="col-12">
-					<div align="center">
-						<h2>Missions <?php echo $nom_camp; ?></h2>
-					</div>
-				</div>
-			</div>
 			
 			<div class="row">
 				<div class="col-12">
@@ -152,6 +149,38 @@ if($dispo || $admin){
 					</div>
 				</div>
 			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<?php
+						if (isset($id_mission_consult) && $id_mission_consult != 0) {
+							
+							// récupération des infos de la mission
+							$sql = "SELECT nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
+									FROM missions WHERE id_mission='$id_mission_consult'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+							
+							$nom_mission 	= stripslashes($t['nom_mission']);
+							$desc_mission 	= stripslashes($t['texte_mission']);
+							$rec_thune		= $t['recompense_thune'];
+							$rec_xp			= $t['recompense_xp'];
+							$rec_pc			= $t['recompense_pc'];
+							$nb_participant	= $t['nombre_participant'];
+							$date_debut		= $t['date_debut_mission'];
+							$date_fin		= $t['date_fin_mission'];
+							
+							echo "<b><u>Nom de la mission : </u></b>".$nom_mission."<br />";
+							echo "<b><u>Détail de la mission : </u></b><br />";
+							echo $desc_mission;
+						}
+						?>
+					</div>
+				</div>
+			</div>
+			
+			<br />
 			
 			<div class="row">
 				<div class="col-12">
