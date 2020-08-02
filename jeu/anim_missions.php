@@ -85,21 +85,41 @@ if($dispo || $admin){
 				
 				if($verif_thune && $verif_xp && $verif_pc && $verif_part) {
 					
-					// On vérifie si la mission existe déjà
-					$sql = "SELECT id_mission FROM missions WHERE nom_mission='$nom_mission' AND camp_mission='$camp'";
-					$res = $mysqli->query($sql);
-					$nb = $res->num_rows;
-					
-					if ($nb == 0) {
-					
-						$sql = "INSERT INTO missions (nom_mission, texte_mission, nombre_participant, recompense_thune, recompense_xp, recompense_pc, camp_mission)
-								VALUES ('".$nom_mission."', '".$texte_mission."', '".$nombre_part."', '".$rec_thune."', '".$rec_xp."', '".$rec_pc."', '".$camp."')";
-						$mysqli->query($sql);
+					if (isset($_POST['hid_id_mission_modif']) && $_POST['hid_id_mission_modif'] != "") {
 						
-						$mess = "Mission ".$nom_mission." créée avec succès !";
+						$id_mission_modif_hid = $_POST['hid_id_mission_modif'];
+						
+						$verif_id_mission = preg_match("#^[0-9]*[0-9]$#i","$id_mission_modif_hid");
+						
+						if ($verif_id_mission) {
+							$sql = "UPDATE missions SET nom_mission='".$nom_mission."', texte_mission='".$texte_mission."', nombre_participant='".$nombre_part."', 
+									recompense_thune='".$rec_thune."', recompense_xp='".$rec_xp."', recompense_pc='".$rec_pc."'
+									WHERE id_mission='$id_mission_modif_hid' AND camp_mission='$camp'";
+							$mysqli->query($sql);
+							
+							$mess = "Mission ".$nom_mission." modifiée avec succès !";
+						}
+						else {
+							$mess_erreur = "Merci d'éviter de jouer avec les champs cachés";
+						}						
 					}
 					else {
-						$mess_erreur = "Une mission du même nom existe déjà";
+						// On vérifie si la mission existe déjà
+						$sql = "SELECT id_mission FROM missions WHERE nom_mission='$nom_mission' AND camp_mission='$camp'";
+						$res = $mysqli->query($sql);
+						$nb = $res->num_rows;
+						
+						if ($nb == 0) {
+						
+							$sql = "INSERT INTO missions (nom_mission, texte_mission, nombre_participant, recompense_thune, recompense_xp, recompense_pc, camp_mission)
+									VALUES ('".$nom_mission."', '".$texte_mission."', '".$nombre_part."', '".$rec_thune."', '".$rec_xp."', '".$rec_pc."', '".$camp."')";
+							$mysqli->query($sql);
+							
+							$mess = "Mission ".$nom_mission." créée avec succès !";
+						}
+						else {
+							$mess_erreur = "Une mission du même nom existe déjà";
+						}
 					}
 				}
 				else {
@@ -119,6 +139,12 @@ if($dispo || $admin){
 					
 						$sql = "UPDATE missions SET date_debut_mission=NOW() WHERE id_mission='$id_mission' AND camp_mission='$camp'";
 						$mysqli->query($sql);
+						
+					}
+					
+					if (isset($_GET['modifier']) && $_GET['modifier'] == 'ok') {
+						
+						$id_mission_modif = $id_mission;
 						
 					}
 					
@@ -296,6 +322,55 @@ if($dispo || $admin){
 					
 					<?php						
 					}
+					else if (isset($id_mission_modif) && $id_mission_modif != 0) {
+						
+						$sql = "SELECT nom_mission, texte_mission, nombre_participant, recompense_thune, recompense_xp, recompense_pc FROM missions 
+								WHERE id_mission='$id_mission_modif' AND camp_mission='$camp'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$nom_mission 	= stripslashes($t['nom_mission']);
+						$texte_mission	= stripslashes($t['texte_mission']);
+						$nb_participant	= $t['nombre_participant'];
+						$rec_thune		= $t['recompense_thune'];
+						$rec_xp			= $t['recompense_xp'];
+						$rec_pc			= $t['recompense_pc'];
+						
+						echo "<form method='POST' action='anim_missions.php'>";
+						echo "	<div class='form-row'>";
+						echo "		<div class='form-group col-md-12'>";
+						echo "			<label for='nom_mission'><b>Nom de la mission (le nom doit être unique) <font color='red'>*</font></b></label>";
+						echo "			<input type='text' class='form-control' id='nom_mission' name='nom_mission' value='".$nom_mission."'>";
+						echo "		</div>";
+						echo "	</div>";
+						echo "	<div class='form-row'>";
+						echo "		<div class='form-group col-md-3'>";
+						echo "			<label for='nombre_part'><b>Nombre de participant maximum</b></label>";
+						echo "			<input type='text' class='form-control' id='nombre_part' name='nombre_part' value='".$nb_participant."'>";
+						echo "		</div>";
+						echo "		<div class='form-group col-md-3'>";
+						echo "			<label for='rec_thune'><b>Récompense thunes</b></label>";
+						echo "			<input type='text' class='form-control' id='rec_thune' name='rec_thune' value='".$rec_thune."'>";
+						echo "		</div>";
+						echo "		<div class='form-group col-md-3'>";
+						echo "			<label for='rec_xp'><b>Récompense XP / XPI</b></label>";
+						echo "			<input type='text' class='form-control' id='rec_xp' name='rec_xp' value='".$rec_xp."'>";
+						echo "		</div>";
+						echo "		<div class='form-group col-md-3'>";
+						echo "			<label for='rec_pc'><b>Récompense PC</b></label>";
+						echo "			<input type='text' class='form-control' id='rec_pc' name='rec_pc' value='".$rec_pc."'>";
+						echo "		</div>";
+						echo "	</div>";
+						echo "	<div class='form-row'>";
+						echo "		<div class='form-group col-md-12'>";
+						echo "			<label for='desc_mission'><b>Description de la mission <font color='red'>*</font></b></label>";
+						echo "			<textarea class='form-control' id='desc_mission' name='desc_mission' rows='10'>".$texte_mission."</textarea>";
+						echo "		</div>";
+						echo "	</div>";
+						echo "	<input type='hidden' id='hid_id_mission_modif' name='hid_id_mission_modif' value='".$id_mission_modif."'>";
+						echo "	<button type='submit' class='btn btn-primary'>Modifier la mission</button>";
+						echo "</form>";
+					}
 					else if (isset($_GET['affecter_perso']) && $_GET['affecter_perso'] == 'ok' && isset($_GET['id_mission'])) {
 						
 						$id_mission = $_GET['id_mission'];
@@ -373,7 +448,8 @@ if($dispo || $admin){
 						<?php
 						// Récupération de la liste des missions actives
 						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
-								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission <= CURDATE())";
+								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission <= CURDATE())
+								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$nb_missions_actives = $res->num_rows;
 						
@@ -412,6 +488,7 @@ if($dispo || $admin){
 										WHERE perso.id_perso = perso_in_mission.id_perso
 										AND id_mission='$id_mission'";
 								$res_p = $mysqli->query($sql_p);
+								$num_p = $res_p->num_rows;
 								
 								echo "				<tr>";
 								echo "					<td align='center'>".$nom_mission."</td>";
@@ -432,7 +509,9 @@ if($dispo || $admin){
 								}
 								echo "					</td>";
 								echo "					<td align='center'>";
-								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&affecter_perso=ok' class='btn btn-info'>Ajouter des participants</a>";
+								if ($num_p < $nb_participant) {
+									echo "						<a href='anim_missions.php?id_mission=".$id_mission."&affecter_perso=ok' class='btn btn-info'>Ajouter des participants</a>";
+								}
 								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&valider=ok' class='btn btn-success'>Valider la mission</a>";
 								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&echec=ok' class='btn btn-danger'>Fin de la mission (echec)</a>";
 								echo "					</td>";
@@ -460,7 +539,8 @@ if($dispo || $admin){
 						<?php
 						// Récupération de la liste des missions non actives
 						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant 
-								FROM missions WHERE date_debut_mission IS NULL";
+								FROM missions WHERE date_debut_mission IS NULL
+								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$nb_missions_non_actives = $res->num_rows;
 						
@@ -495,6 +575,7 @@ if($dispo || $admin){
 										WHERE perso.id_perso = perso_in_mission.id_perso
 										AND id_mission='$id_mission'";
 								$res_p = $mysqli->query($sql_p);
+								$num_p = $res_p->num_rows;
 								
 								echo "				<tr>";
 								echo "					<td align='center'>".$nom_mission."</td>";
@@ -513,7 +594,9 @@ if($dispo || $admin){
 								}
 								echo "					</td>";
 								echo "					<td align='center'>";
-								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&affecter_perso=ok' class='btn btn-info'>Ajouter des participants</a>";
+								if ($num_p < $nb_participant) {
+									echo "						<a href='anim_missions.php?id_mission=".$id_mission."&affecter_perso=ok' class='btn btn-info'>Ajouter des participants</a>";
+								}
 								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&modifier=ok' class='btn btn-info'>Modifier la mission</a>";
 								echo "						<a href='anim_missions.php?id_mission=".$id_mission."&activer=ok' class='btn btn-warning'>Activer la mission</a>";
 								echo "					</td>";
@@ -542,7 +625,8 @@ if($dispo || $admin){
 						<?php
 						// Récupération de la liste des missions terminées
 						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, date_debut_mission, date_fin_mission, objectif_atteint 
-								FROM missions WHERE date_fin_mission IS NOT NULL AND date_fin_mission > CURDATE()";
+								FROM missions WHERE date_fin_mission IS NOT NULL AND date_fin_mission > CURDATE()
+								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$nb_missions_terminees = $res->num_rows;
 						
