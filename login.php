@@ -17,7 +17,7 @@ if(isSet ($_POST['pseudo']) && isSet ($_POST['password']))
 		echo "<div class=\"erreur\" align=\"center\">Merci de remplir tous les champs</div><br>";
 	}
 	else {
-		if (!filtre($pseudo,1,20) || ctype_digit($pseudo) || strpos($pseudo,'--') !== false) {
+		if (/*!filtre($pseudo,1,20) ||*/ ctype_digit($pseudo) || strpos($pseudo,'--') !== false) {
 			echo "<center><font color='red'>Le Pseudo est incorrect!</font>";
 			echo "<a href=\"index.php\"><font color=\"#000000\" size=\"1\" face=\"Verdana, Arial, Helvetica, sans-serif\">[ retour ]</font></a></center>";
 		}
