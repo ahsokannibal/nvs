@@ -27,8 +27,8 @@ if(config_dispo_jeu($mysqli)){
 			$mdp_joueur 	= $_POST['mdp_joueur'];
 			$camp 			= $_POST['camp_perso'];
 		
-			if (!filtre($nom_perso,1,20) || ctype_digit($nom_perso)){
-				echo "<center>Erreur: Le Pseudo est incorrect! Veuillez en choisir un autre (taille entre 1 et 20, par de quote, pas que des chiffres, etc.) </center><br /><br />";
+			if (!filtre($nom_perso,1,20) || ctype_digit($nom_perso) || strpos($nom_perso,'--') !== false){
+				echo "<center>Erreur: Le Pseudo est incorrect! Veuillez en choisir un autre (taille entre 1 et 20, pas de quote, pas que des chiffres, pas la chaine --, etc..) </center><br /><br />";
 			}
 			else {
 				$sql = "SELECT username FROM ".$table_prefix."users WHERE username='".$nom_perso."'";

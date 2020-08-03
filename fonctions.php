@@ -182,9 +182,6 @@ function filtre($chaine,$lenghtMin,$lenghtMax)
 	$chaine = trim(htmlentities($chaine) );
 	$lenghtAfter = strlen($chaine);
 	
-	//echo $lenghtAfter;
-	//echo " et ".$lenghtBefore;
-	
 	return !(($lenghtBefore < $lenghtAfter) || ($lenghtAfter < $lenghtMin) || ($lenghtBefore > $lenghtMax));
 }
 
