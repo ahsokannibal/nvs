@@ -248,14 +248,15 @@ if ($verif_id_perso_session) {
 							}
 							else if ($pv_cible > 0) {
 								
-								$id_inst_bat = 0;
-								$id_inst_batiment 	= in_bat($mysqli, $id);
-								$id_inst_train		= in_train($mysqli, $id);
+								$id_inst_bat_cible = 0;
+								$id_inst_batiment 	= in_bat($mysqli, $id_cible);
+								$id_inst_train		= in_train($mysqli, $id_cible);
+								
 								if ($id_inst_batiment != null && $id_inst_batiment != 0) {
-									$id_inst_bat = $id_inst_batiment;
+									$id_inst_bat_cible = $id_inst_batiment;
 								}
 								else if ($id_inst_train != null && $id_inst_train != 0) {
-									$id_inst_bat = $id_inst_train;
+									$id_inst_bat_cible = $id_inst_train;
 								}
 								
 								// la cible est encore en vie
@@ -370,12 +371,10 @@ if ($verif_id_perso_session) {
 										echo "Vous avez lancé un soin sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
 									} else {
 										echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
-									}						
+									}
 									
-									// Bonus Précision batiment
-									$bonus_precision_bat = 0;
-									if ($id_inst_bat != 0) {
-										$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat'";
+									if ($id_inst_bat_cible != 0) {
+										$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat_cible'";
 										$res = $mysqli->query($sql);
 										$t = $res->fetch_assoc();
 										
@@ -394,13 +393,32 @@ if ($verif_id_perso_session) {
 										$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
 									}
 									
+									// Bonus Précision batiment
+									$bonus_precision_bat = 0;
+									
+									if (in_bat($mysqli, $id)) {
+										
+										$id_inst_bat_perso = in_bat($mysqli, $id);
+										
+										$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat_perso'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$id_bat_perso = $t['id_batiment'];
+										
+										$bonus_precision_bat = get_bonus_attaque_from_batiment($id_bat_perso);
+									}
+									else if (in_train($mysqli, $id)) {
+										$bonus_precision_bat = -30;
+									}
+									
 									// Calcul touche
 									$touche = mt_rand(0,100);
 									
 									// Bonus defense objets cible 
 									$bonus_defense_objet = get_bonus_defense_objet($mysqli, $id_cible);
 									
-									$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet;
+									$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet + $bonus_precision_bat;
 									
 									// Bonus Precision Objets
 									$bonus_precision_objet = 0;
@@ -414,7 +432,11 @@ if ($verif_id_perso_session) {
 									$precision_final += $bonus_precision_objet;
 									
 									echo "Votre score de touche : ".$touche."<br>";
-									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus Précision objet : ".$bonus_precision_objet." -- Defense cible : ".$bonus_cible." -- Bonus Defense objets cible : ".$bonus_defense_objet." -- Defense terrain cible : ".$bonus_defense_terrain.")<br>";
+									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus Précision objet : ".$bonus_precision_objet;
+									if ($bonus_precision_bat != 0) {
+										echo " -- Bonus du batiment : ".$bonus_precision_bat;
+									}
+									echo " -- Defense cible : ".$bonus_cible." -- Bonus Defense objets cible : ".$bonus_defense_objet." -- Defense terrain cible : ".$bonus_defense_terrain.")<br>";
 									
 									// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 									if ($touche <= $precision_final) {
@@ -1301,7 +1323,26 @@ if ($verif_id_perso_session) {
 							
 							$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
 							
-							$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain;
+							// Bonus Précision batiment
+							$bonus_precision_bat = 0;
+							
+							if (in_bat($mysqli, $id)) {
+								
+								$id_inst_bat_perso = in_bat($mysqli, $id);
+								
+								$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat_perso'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$id_bat_perso = $t['id_batiment'];
+								
+								$bonus_precision_bat = get_bonus_attaque_from_batiment($id_bat_perso);
+							}
+							else if (in_train($mysqli, $id)) {
+								$bonus_precision_bat = -30;
+							}
+							
+							$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain + $bonus_precision_bat;
 							
 							$bonus_precision_objet = 0;
 							if ($porteeMax_arme_attaque == 1) {
@@ -1314,7 +1355,11 @@ if ($verif_id_perso_session) {
 							$precision_final += $bonus_precision_objet;
 							
 							echo "Votre score de touche : ".$touche."<br>";
-							echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Defense cible : ".$bonus_cible." -- Defense terrain : ".$bonus_defense_terrain." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
+							echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque;
+							if ($bonus_precision_bat != 0) {
+								echo " -- Bonus du batiment : ".$bonus_precision_bat;
+							}
+							echo " -- Defense cible : ".$bonus_cible." -- Defense terrain : ".$bonus_defense_terrain." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
 							
 							// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 							if ($touche <= $precision_final) {
@@ -2050,7 +2095,27 @@ if ($verif_id_perso_session) {
 				
 							// Calcul touche
 							$touche = mt_rand(0,100);
-							$precision_final = $precision_arme_attaque;
+							
+							// Bonus Précision batiment
+							$bonus_precision_bat = 0;
+							
+							if (in_bat($mysqli, $id)) {
+								
+								$id_inst_bat_perso = in_bat($mysqli, $id);
+								
+								$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat_perso'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$id_bat_perso = $t['id_batiment'];
+								
+								$bonus_precision_bat = get_bonus_attaque_from_batiment($id_bat_perso);
+							}
+							else if (in_train($mysqli, $id)) {
+								$bonus_precision_bat = -30;
+							}							
+							
+							$precision_final = $precision_arme_attaque + $bonus_precision_bat;
 							
 							$bonus_precision_objet = 0;
 							if ($porteeMax_arme_attaque == 1) {
@@ -2063,7 +2128,11 @@ if ($verif_id_perso_session) {
 							$precision_final += $bonus_precision_objet;
 							
 							echo "Votre score de touche : ".$touche."<br>";
-							echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
+							echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Bonus Précision objet : ".$bonus_precision_objet."";
+							if ($bonus_precision_bat != 0) {
+								echo " -- Bonus du batiment : ".$bonus_precision_bat."";
+							}
+							echo ")<br>";
 							
 							// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
 							if ($touche <= $precision_final) {

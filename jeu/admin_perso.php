@@ -105,7 +105,7 @@ if(isset($_SESSION["id_perso"])){
 				
 				$new_pa_perso = $_POST['pa_perso'];
 				
-				$mess = "MAJ PA perso matricule ".$id_perso_select." vers ".$new_pv_perso;
+				$mess = "MAJ PA perso matricule ".$id_perso_select." vers ".$new_pa_perso;
 				
 				$sql = "UPDATE perso SET pa_perso=$new_pa_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
