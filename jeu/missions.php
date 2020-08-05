@@ -17,93 +17,107 @@ if($dispo || $admin){
 		//recuperation des variables de sessions
 		$id_perso = $_SESSION["id_perso"];
 		
-		// Récupération du camp du perso
-		$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso'";
-		$res = $mysqli->query($sql);
-		$t = $res->fetch_assoc();
+		$verif_id_perso_session = preg_match("#^[0-9]*[0-9]$#i","$id_perso");
 		
-		$camp = $t['clan'];
+		if ($verif_id_perso_session) {
 		
-		if ($camp == '1') {
-			$nom_camp = 'Nord';
-			$couleur_clan_perso = 'blue';
-		}
-		else if ($camp == '2') {
-			$nom_camp = 'Sud';
-			$couleur_clan_perso = 'red';
-		}
-		else if ($camp == '3') {
-			$nom_camp = 'Indien';
-			$couleur_clan_perso = 'green';
-		}
-		
-		$mess = "";
-		$mess_erreur = "";
-		
-		if (isset($_GET['id_mission']) && $_GET['id_mission'] != "") {
+			// Récupération du camp du perso
+			$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
 			
-			$id_mission = $_GET['id_mission'];
+			$camp = $t['clan'];
 			
-			$verif_id_mission 	= preg_match("#^[0-9]*[0-9]$#i","$id_mission");
+			if ($camp == '1') {
+				$nom_camp = 'Nord';
+				$couleur_clan_perso = 'blue';
+			}
+			else if ($camp == '2') {
+				$nom_camp = 'Sud';
+				$couleur_clan_perso = 'red';
+			}
+			else if ($camp == '3') {
+				$nom_camp = 'Indien';
+				$couleur_clan_perso = 'green';
+			}
 			
-			if ($verif_id_mission) {
+			$mess = "";
+			$mess_erreur = "";
 			
-				// On verifie que la mission existe bien
-				$sql = "SELECT id_mission FROM missions WHERE id_mission='$id_mission' AND camp_mission='$camp'";
-				$res = $mysqli->query($sql);
-				$num_m = $res->num_rows;
+			if (isset($_GET['id_mission']) && $_GET['id_mission'] != "") {
 				
-				if ($num_m == 1) {
-					if (isset($_GET['affecter_perso']) && $_GET['affecter_perso'] == "ok") {
-						
-						// Est ce que le perso est déjà affecté à la mission ?
-						$sql = "SELECT id_perso FROM perso_in_mission WHERE id_mission='$id_mission' AND id_perso='$id_perso'";
-						$res = $mysqli->query($sql);
-						$verif_p = $res->num_rows;
-						
-						if ($verif_p == 0) {
+				$id_mission = $_GET['id_mission'];
+				
+				$verif_id_mission 	= preg_match("#^[0-9]*[0-9]$#i","$id_mission");
+				
+				if ($verif_id_mission) {
+				
+					// On verifie que la mission existe bien
+					$sql = "SELECT id_mission FROM missions WHERE id_mission='$id_mission' AND camp_mission='$camp'";
+					$res = $mysqli->query($sql);
+					$num_m = $res->num_rows;
+					
+					if ($num_m == 1) {
+						if (isset($_GET['affecter_perso']) && $_GET['affecter_perso'] == "ok") {
 							
-							// Recup nombre participant autorisé
-							$sql = "SELECT nombre_participant FROM missions WHERE id_mission='$id_mission'";
+							// Est ce que le perso est déjà affecté à la mission ?
+							$sql = "SELECT id_perso FROM perso_in_mission WHERE id_mission='$id_mission' AND id_perso='$id_perso'";
 							$res = $mysqli->query($sql);
-							$t = $res->fetch_assoc();
+							$verif_p = $res->num_rows;
 							
-							$nb_participant_autorise = $t['nombre_participant'];
-							
-							// Récup nombre participant actuel
-							$sql = "SELECT id_perso FROM perso_in_mission WHERE id_mission='$id_mission'";
-							$res = $mysqli->query($sql);
-							$num_participant = $res->num_rows;
-							
-							if ($num_participant < $nb_participant_autorise) {
-								$sql = "INSERT INTO perso_in_mission (id_perso, id_mission) VALUES ('$id_perso','$id_mission')";
-								$mysqli->query($sql);
+							if ($verif_p == 0) {
 								
-								$mess .= "Affectation du perso à la mission réussie";
+								// Recup nombre participant autorisé
+								$sql = "SELECT nombre_participant FROM missions WHERE id_mission='$id_mission'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$nb_participant_autorise = $t['nombre_participant'];
+								
+								// Récup nombre participant actuel
+								$sql = "SELECT id_perso FROM perso_in_mission WHERE id_mission='$id_mission'";
+								$res = $mysqli->query($sql);
+								$num_participant = $res->num_rows;
+								
+								if ($num_participant < $nb_participant_autorise) {
+									$sql = "INSERT INTO perso_in_mission (id_perso, id_mission) VALUES ('$id_perso','$id_mission')";
+									$mysqli->query($sql);
+									
+									$mess .= "Affectation du perso à la mission réussie";
+								}
+								else {
+									$mess_erreur .= "Vous ne pouvez pas participer à cette mission : nombre de participants maximum atteint";
+								}
 							}
 							else {
-								$mess_erreur .= "Vous ne pouvez pas participer à cette mission : nombre de participants maximum atteint";
+								$mess_erreur .= "Vous participez déjà à cette mission";
 							}
 						}
-						else {
-							$mess_erreur .= "Vous participez déjà à cette mission";
+						else if (isset($_GET['desaffecter_perso']) && $_GET['desaffecter_perso'] == "ok") {
+							
+							$sql = "DELETE FROM perso_in_mission WHERE id_perso='$id_perso' AND id_mission='$id_mission'";
+							$mysqli->query($sql);
+							
+						}
+						else if (isset($_GET['consulter']) && $_GET['consulter'] == "ok") {
+							
+							$id_mission_consult = $id_mission;
+							
 						}
 					}
-					else if (isset($_GET['desaffecter_perso']) && $_GET['desaffecter_perso'] == "ok") {
-						
-						$sql = "DELETE FROM perso_in_mission WHERE id_perso='$id_perso' AND id_mission='$id_mission'";
+					else {
+						// Tentative de triche
+						$text_triche = "Tentative modification id mission affectation perso - id mission : ".$id_mission;
+					
+						$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 						$mysqli->query($sql);
 						
-					}
-					else if (isset($_GET['consulter']) && $_GET['consulter'] == "ok") {
-						
-						$id_mission_consult = $id_mission;
-						
+						$mess_erreur .= "Merci de ne pas jouer avec les paramètres de l'url...";
 					}
 				}
 				else {
 					// Tentative de triche
-					$text_triche = "Tentative modification id mission affectation perso - id mission : ".$id_mission;
+					$text_triche = "Tentative modification id mission non numerique affectation perso";
 				
 					$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 					$mysqli->query($sql);
@@ -111,16 +125,6 @@ if($dispo || $admin){
 					$mess_erreur .= "Merci de ne pas jouer avec les paramètres de l'url...";
 				}
 			}
-			else {
-				// Tentative de triche
-				$text_triche = "Tentative modification id mission non numerique affectation perso";
-			
-				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
-				$mysqli->query($sql);
-				
-				$mess_erreur .= "Merci de ne pas jouer avec les paramètres de l'url...";
-			}
-		}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -290,6 +294,14 @@ if($dispo || $admin){
 	</body>
 </html>
 <?php
+		}
+		else {
+			// logout
+			$_SESSION = array();
+			session_destroy();
+			
+			header("Location:../index2.php");
+		}
 	}
 	else{
 		echo "<center><font color='red'>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font></center>";

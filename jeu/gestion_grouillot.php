@@ -19,27 +19,31 @@ if($dispo || $admin){
 		//recuperation des varaibles de sessions
 		$id = $_SESSION["id_perso"];
 		
-		$sql = "SELECT idJoueur_perso, chef, pv_perso, nom_perso, clan FROM perso WHERE id_perso='$id'";
-		$res = $mysqli->query($sql);
-		$tab = $res->fetch_assoc();
+		$verif_id_perso_session = preg_match("#^[0-9]*[0-9]$#i","$id");
 		
-		$testpv 	= $tab['pv_perso'];
-		$id_joueur	= $tab["idJoueur_perso"];
-		$chef 		= $tab["chef"];
-		$nom_chef	= $tab["nom_perso"];
-		$clan		= $tab["clan"];
+		if ($verif_id_perso_session) {
 		
-		$couleur_camp_chef = couleur_clan($clan);
-		
-		if ($testpv <= 0) {
-			echo "<font color=red>Vous êtes mort...</font>";
-		}
-		else {
+			$sql = "SELECT idJoueur_perso, chef, pv_perso, nom_perso, clan FROM perso WHERE id_perso='$id'";
+			$res = $mysqli->query($sql);
+			$tab = $res->fetch_assoc();
 			
-			// Seul le chef peut gérer ses grouillots
-			if ($chef) {
+			$testpv 	= $tab['pv_perso'];
+			$id_joueur	= $tab["idJoueur_perso"];
+			$chef 		= $tab["chef"];
+			$nom_chef	= $tab["nom_perso"];
+			$clan		= $tab["clan"];
+			
+			$couleur_camp_chef = couleur_clan($clan);
+			
+			if ($testpv <= 0) {
+				echo "<font color=red>Vous êtes mort...</font>";
+			}
+			else {
 				
-			?>
+				// Seul le chef peut gérer ses grouillots
+				if ($chef) {
+					
+				?>
 <html>
 	<head>
 		<title>Nord VS Sud</title>
@@ -317,10 +321,18 @@ if($dispo || $admin){
 				}
 			}
 		}
-		else{
-			echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
+		else {
+			// logout
+			$_SESSION = array(); // On écrase le tableau de session
+			session_destroy(); // On détruit la session
+			
+			header("Location:../index2.php");
 		}
-		?>
+	}
+	else{
+		echo "<font color=red>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font>";
+	}
+	?>
 		</div>
 		
 		<!-- Optional JavaScript -->
