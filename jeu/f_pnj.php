@@ -123,7 +123,14 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 	
 	echo "deplacement_fuite<br>";
 
-	$image_pnj = "pnj".$type_pnj."t.png";	
+	$image_pnj = "pnj".$type_pnj."t.png";
+	
+	$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$X_MAX = $t['x_max'];
+	$Y_MAX  = $t['y_max'];
 	
 	// il faut se deplacer vers la gauche
 	if ($x_d > 0){
@@ -146,7 +153,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj-1,$y_pnj))) {
+			if($oc || (!in_map($x_pnj-1, $y_pnj, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
@@ -157,7 +164,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
 						
@@ -195,7 +202,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 			else {
 				// la case est libre
 				// on s'y deplace
-				if(in_map($x_pnj-1,$y_pnj)){
+				if(in_map($x_pnj-1, $y_pnj, $X_MAX, $Y_MAX)){
 				
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_pnj' AND y_carte='$y_pnj'";
 					$mysqli->query($sql);
@@ -245,7 +252,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj+1,$y_pnj))) {
+			if($oc || (!in_map($x_pnj+1, $y_pnj, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj+1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
@@ -256,7 +263,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
 						
@@ -293,7 +300,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 			else {
 				// la case est libre
 				// on s'y deplace
-				if(in_map($x_pnj+1,$y_pnj)){
+				if(in_map($x_pnj+1, $y_pnj, $X_MAX, $Y_MAX)){
 				
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_pnj' AND y_carte='$y_pnj'";
 					$mysqli->query($sql);
@@ -347,7 +354,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 				$oc = $t_oc["occupee_carte"];
 				
 				// la case est occupee
-				if($oc || (!in_map($x_pnj,$y_pnj+1))) {
+				if($oc || (!in_map($x_pnj, $y_pnj+1, $X_MAX, $Y_MAX))) {
 					
 					// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
 					$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
@@ -358,7 +365,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						$occupee = $t_o["occupee_carte"];
 						
 						// la case est libre
-						if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+						if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 							$x_ok = $t_o["x_carte"];
 							$y_ok = $t_o["y_carte"];
 							
@@ -394,7 +401,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 				}
 				else { 
 					// la case est libre
-					if(in_map($x_pnj,$y_pnj+1)){
+					if(in_map($x_pnj, $y_pnj+1, $X_MAX, $Y_MAX)){
 					
 						// on s'y deplace
 						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_pnj' AND y_carte='$y_pnj'";
@@ -443,7 +450,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 				$oc = $t_oc["occupee_carte"];
 				
 				// la case est occupee
-				if($oc || (!in_map($x_pnj,$y_pnj-1))) {
+				if($oc || (!in_map($x_pnj, $y_pnj-1, $X_MAX, $Y_MAX))) {
 					
 					// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
 					$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte<=$y_pnj AND y_carte>=$y_pnj-1";
@@ -454,7 +461,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 						$occupee = $t_o["occupee_carte"];
 						
 						// la case est libre
-						if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+						if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 							$x_ok = $t_o["x_carte"];
 							$y_ok = $t_o["y_carte"];
 							
@@ -491,7 +498,7 @@ function deplacement_fuite($mysqli, $x_d, $y_d, $x_pj, $y_pj, $pm_pnj, $id_pnj, 
 				}
 				else {
 					// la case est libre
-					if(in_map($x_pnj,$y_pnj-1)){
+					if(in_map($x_pnj, $y_pnj-1, $X_MAX, $Y_MAX)){
 						
 						// on s'y deplace
 						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_pnj' AND y_carte='$y_pnj'";
@@ -532,7 +539,14 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 	
 	echo "deplacement_vers_cible<br>";
 
-	$image_pnj = "pnj".$type_pnj."t.png";	
+	$image_pnj = "pnj".$type_pnj."t.png";
+	
+	$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$X_MAX = $t['x_max'];
+	$Y_MAX  = $t['y_max'];
 	
 	if ($x_d < 0){
 		
@@ -555,7 +569,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj-1,$y_pnj+1))) {
+			if($oc || (!in_map($x_pnj-1, $y_pnj+1, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
@@ -566,7 +580,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -600,7 +614,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			}
 			else {
 				// on s'y deplace
-				if(in_map($x_pnj-1,$y_pnj+1)){
+				if(in_map($x_pnj-1, $y_pnj+1, $X_MAX, $Y_MAX)){
 				
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
 					$mysqli->query($sql);
@@ -645,7 +659,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj-1,$y_pnj-1))) {
+			if($oc || (!in_map($x_pnj-1, $y_pnj-1, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj";
@@ -656,7 +670,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -688,7 +702,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			}
 			else {
 				// on s'y deplace
-				if(in_map($x_pnj-1,$y_pnj-1)){
+				if(in_map($x_pnj-1, $y_pnj-1, $X_MAX, $Y_MAX)){
 						
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
 					$mysqli->query($sql);
@@ -732,7 +746,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj-1,$y_pnj))) {
+			if($oc || (!in_map($x_pnj-1, $y_pnj, $X_MAX, $Y_MAX))) {
 			
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj-1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
@@ -743,7 +757,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -775,7 +789,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			}
 			else {
 				// on s'y deplace
-				if(in_map($x_pnj-1,$y_pnj)){
+				if(in_map($x_pnj-1, $y_pnj, $X_MAX, $Y_MAX)){
 				
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
 					$mysqli->query($sql);
@@ -820,7 +834,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj+1,$y_pnj+1))) {
+			if($oc || (!in_map($x_pnj+1, $y_pnj+1, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj+1 AND x_carte>=$x_pnj AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
@@ -831,7 +845,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -864,7 +878,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			}
 			else {
 				// on s'y deplace
-				if(in_map($x_pnj+1,$y_pnj+1)){
+				if(in_map($x_pnj+1, $y_pnj+1, $X_MAX, $Y_MAX)){
 						
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
 					$mysqli->query($sql);
@@ -907,7 +921,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj+1,$y_pnj-1))) {
+			if($oc || (!in_map($x_pnj+1, $y_pnj-1, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj+1 AND x_carte>=$x_pnj AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj";
@@ -918,7 +932,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -950,7 +964,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			}
 			else {
 				// on s'y deplace
-				if(in_map($x_pnj+1,$y_pnj-1)){
+				if(in_map($x_pnj+1, $y_pnj-1, $X_MAX, $Y_MAX)){
 						
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
 					$mysqli->query($sql);
@@ -993,7 +1007,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj+1,$y_pnj))) {
+			if($oc || (!in_map($x_pnj+1, $y_pnj, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant du haut jusqu'en bas et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte<=$x_pnj AND x_carte>=$x_pnj+1 AND y_carte>=$y_pnj-1 AND y_carte<=$y_pnj+1";
@@ -1004,7 +1018,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -1037,7 +1051,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			else {
 				
 				// on s'y deplace
-				if(in_map($x_pnj+1,$y_pnj)){
+				if(in_map($x_pnj+1, $y_pnj, $X_MAX, $Y_MAX)){
 						
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
 					$mysqli->query($sql);
@@ -1084,7 +1098,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj,$y_pnj+1))) {
+			if($oc || (!in_map($x_pnj, $y_pnj+1, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte>=$y_pnj AND y_carte<=$y_pnj+1";
@@ -1095,7 +1109,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -1127,7 +1141,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			}
 			else {
 				
-				if(in_map($x_pnj,$y_pnj+1)){
+				if(in_map($x_pnj, $y_pnj+1, $X_MAX, $Y_MAX)){
 				
 					// on s'y deplace
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
@@ -1154,7 +1168,9 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 		
 		// deplacement vers le bas
 		if($y_d < 0) {
+			
 			echo "deplacement vers le bas<br>";
+			
 			// on recupere les coordonnées du pnj
 			$sql = "SELECT x_i, y_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
 			$res = $mysqli->query($sql);
@@ -1171,7 +1187,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$oc = $t_oc["occupee_carte"];
 			
 			// la case est occupee
-			if($oc || (!in_map($x_pnj,$y_pnj-1))) {
+			if($oc || (!in_map($x_pnj, $y_pnj-1, $X_MAX, $Y_MAX))) {
 				
 				// on cherche une case libre autour du pnj en partant de la gauche vers la droite et seulement du coté de la fuite
 				$sql = "SELECT occupee_carte,x_carte,y_carte FROM carte WHERE x_carte>=$x_pnj-1 AND x_carte<=$x_pnj+1 AND y_carte<=$y_pnj AND y_carte>=$y_pnj-1";
@@ -1182,7 +1198,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 					$occupee = $t_o["occupee_carte"];
 					
 					// la case est libre
-					if(!$occupee && (in_map($t_o["x_carte"],$t_o["y_carte"]))) {
+					if(!$occupee && (in_map($t_o["x_carte"], $t_o["y_carte"], $X_MAX, $Y_MAX))) {
 						
 						$x_ok = $t_o["x_carte"];
 						$y_ok = $t_o["y_carte"];
@@ -1214,7 +1230,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			}
 			else {
 				
-				if(in_map($x_pnj,$y_pnj-1)){
+				if(in_map($x_pnj, $y_pnj-1, $X_MAX, $Y_MAX)){
 					
 					// on s'y deplace
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte=$x_pnj AND y_carte=$y_pnj";
@@ -1252,6 +1268,13 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 	$x_h=$x;
 	$y_h=$y;
 	
+	$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$X_MAX = $t['x_max'];
+	$Y_MAX  = $t['y_max'];
+	
 	// eviter de se deplacer sur soi-meme...
 	while($ok){ 
 	
@@ -1269,7 +1292,7 @@ function deplacement_hasard($mysqli, $x, $y, $id_i_pnj, $type,$nom_pnj){
 			if ($x_h != $x || $y_h != $y) {
 				
 				// on verifie que les coordonnees sont bien dans la carte
-				if ($x_h < X_MAX && $x_h > X_MIN && $y_h > Y_MIN && $y_h < Y_MAX){
+				if ($x_h < $X_MAX && $x_h > X_MIN && $y_h > Y_MIN && $y_h < $Y_MAX){
 					
 					// on verifie que la case est libre
 					$sql = "SELECT occupee_carte FROM carte WHERE x_carte=$x_h AND y_carte=$y_h";

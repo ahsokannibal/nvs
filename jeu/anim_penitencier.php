@@ -68,7 +68,14 @@ if($dispo || $admin){
 				$verif_x = preg_match("#^[0-9]*[0-9]$#i","$x_penitencier");
 				$verif_y = preg_match("#^[0-9]*[0-9]$#i","$y_penitencier");
 				
-				if ($verif_x && $verif_y && in_map($x_penitencier, $y_penitencier)) {
+				$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$X_MAX = $t['x_max'];
+				$Y_MAX  = $t['y_max'];
+				
+				if ($verif_x && $verif_y && in_map($x_penitencier, $y_penitencier, $X_MAX, $Y_MAX)) {
 					
 					$autorisation_construction_taille = true;
 					

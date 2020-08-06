@@ -136,8 +136,13 @@ if($dispo || $admin){
 				
 				$dossier_img_joueur = get_dossier_image_joueur($mysqli, $id_joueur_perso);
 				
-				$X_MAX = X_MAX;
-				$Y_MAX = Y_MAX;
+				$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$X_MAX = $t['x_max'];
+				$Y_MAX  = $t['y_max'];
+				
 				$carte = "carte";
 				
 				if(isset($_GET['erreur'])){
@@ -1149,7 +1154,7 @@ if($dispo || $admin){
 								
 								if ($verif_x && $verif_y) {
 									
-									if (in_map($x_sortie, $y_sortie)) {
+									if (in_map($x_sortie, $y_sortie, $X_MAX, $Y_MAX)) {
 										
 										// Récupération x, y et taille batiment
 										$sql = "SELECT x_instance, y_instance, taille_batiment FROM instance_batiment, batiment 
@@ -1444,7 +1449,7 @@ if($dispo || $admin){
 								$ys 	= $t["y_carte"];
 								$fond_c = $t["fond_carte"];
 								
-								if (!$oc && in_map($xs, $ys) && !is_eau_p($fond_c)) {
+								if (!$oc && in_map($xs, $ys, $X_MAX, $Y_MAX) && !is_eau_p($fond_c)) {
 									// On peut sauter
 									
 									// mise a jour du bonus de perception
@@ -1625,7 +1630,7 @@ if($dispo || $admin){
 								case 8: $x_persoN=$x_persoE+1; $y_persoN=$y_persoE-1; break;
 							}
 								
-							$in_map = in_map($x_persoN, $y_persoN);
+							$in_map = in_map($x_persoN, $y_persoN, $X_MAX, $Y_MAX);
 							
 							if ($in_map) {
 								
@@ -1742,7 +1747,7 @@ if($dispo || $admin){
 												if($pm_perso  + $malus_pm >= $cout_pm && $pa_perso >= 3){
 												
 													// Case cible de la bousculade est-elle hors carte ?
-													if (in_map($x_persoB, $y_persoB)) {
+													if (in_map($x_persoB, $y_persoB, $X_MAX, $Y_MAX)) {
 														
 														$sql = "SELECT occupee_carte, fond_carte, image_carte FROM $carte WHERE x_carte=$x_persoB AND y_carte=$y_persoB";
 														$res_map = $mysqli->query($sql);
@@ -1934,7 +1939,7 @@ if($dispo || $admin){
 									$mess_bat .= afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_perso);
 								}
 							}
-							else if (!in_map($x_persoN, $y_persoN)){
+							else if (!in_map($x_persoN, $y_persoN, $X_MAX, $Y_MAX)){
 							
 								$erreur .= "Vous ne pouvez pas vous déplacer sur cette case, elle est hors limites !";
 								

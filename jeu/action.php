@@ -28,8 +28,13 @@ if($dispo || $admin) {
 		$id_joueur = $t["idJoueur_perso"];
 		
 		$carte = "carte";
-		$X_MAX = X_MAX;
-		$Y_MAX = Y_MAX;
+		
+		$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$X_MAX = $t['x_max'];
+		$Y_MAX  = $t['y_max'];
 		
 		// Traitement action construction batiment
 		if(isset($_POST['image_bat'])){

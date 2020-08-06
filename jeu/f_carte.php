@@ -2,8 +2,6 @@
 // définition des abscisses et ordonnées limites de la carte
 define ("X_MIN", 0);
 define ("Y_MIN", 0);
-define ("X_MAX", 200);
-define ("Y_MAX", 200);
 
 // définition des abscisses et ordonnées limites de la carte
 define ("I_PLAINE", "1.gif");
@@ -24,9 +22,9 @@ define("I_ROUTE_R","b4r.png");
 define("I_RAIL","rail.gif");
 
 //vérifie si les coordonnées passées en argument sont bien sur la carte
-function in_map($x, $y)
+function in_map($x, $y, $X_MAX, $Y_MAX)
 {
-	return $x >= X_MIN && $y >= Y_MIN && $x <= X_MAX && $y <= Y_MAX;
+	return $x >= X_MIN && $y >= Y_MIN && $x <= $X_MAX && $y <= $Y_MAX;
 }
 
 //vérifie si les coordonnées passées en argument sont bien sur la carte
@@ -59,11 +57,11 @@ function is_pont($image)
 	return $image == I_PONT;
 }
 
-function verif_position_libre($mysqli, $x, $y) {
+function verif_position_libre($mysqli, $x, $y, $X_MAX, $Y_MAX) {
 	
 	$verif = true;
 	
-	if (in_map($x, $y)) {
+	if (in_map($x, $y, $X_MAX, $Y_MAX)) {
 		
 		$sql = "SELECT occupee_carte FROM carte WHERE x_carte='".$x."' AND y_carte='".$y."' AND fond_carte != '9.gif'";
 		$res = $mysqli->query($sql);

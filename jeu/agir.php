@@ -2217,6 +2217,13 @@ if ($verif_id_perso_session) {
 									$sql = "DELETE FROM perso_as_respawn WHERE id_instance_bat='$id_cible'";
 									$mysqli->query($sql);
 									
+									$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$X_MAX = $t['x_max'];
+									$Y_MAX  = $t['y_max'];
+									
 									if (is_train($mysqli, $id_cible)) {
 										// Récupération des persos dans le train
 										$sql = "SELECT id_perso FROM perso_in_train WHERE id_train='$id_cible'";
@@ -2271,7 +2278,7 @@ if ($verif_id_perso_session) {
 												// TODO - Tourner autour de la position du batiment jusqu'à ce qu'on trouve une position libre
 												$x = pos_zone_rand_x($x_cible-5, $x_cible+5); 
 												$y = pos_zone_rand_y($y_cible-5, $y_cible+5);
-												$verif_occ = verif_position_libre($mysqli, $x, $y);
+												$verif_occ = verif_position_libre($mysqli, $x, $y, $X_MAX, $Y_MAX);
 											}
 											
 											// maj evenement

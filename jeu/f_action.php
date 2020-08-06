@@ -490,7 +490,14 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 				
 				if($or_perso >= $coutOr && $nb_bois >= $coutBois){
 					
-					$verif_occ_in_map = verif_position_libre($mysqli, $x_bat, $y_bat);
+					$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$X_MAX = $t['x_max'];
+					$Y_MAX  = $t['y_max'];
+					
+					$verif_occ_in_map = verif_position_libre($mysqli, $x_bat, $y_bat, $X_MAX, $Y_MAX);
 					
 					if ($verif_occ_in_map) {
 						
