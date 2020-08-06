@@ -61,7 +61,8 @@ if(isset($_SESSION["id_perso"])){
 			
 			<div class="row">
 				<div class="col-12">
-					<a class='btn btn-warning' href='admin_tentative_triche.php' target='_blank'>LOGS Tentatives de triche</a>				
+					<a class='btn btn-warning' href='admin_tentative_triche.php' target='_blank'>LOGS Tentatives de triche</a>
+					<a class='btn btn-warning' href='../creation_carte/utils_carte.php' target='_blank'>Editeur de carte</a>
 				</div>
 			</div>
 			
