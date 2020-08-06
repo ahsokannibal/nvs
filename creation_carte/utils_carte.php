@@ -14,6 +14,9 @@ if(isset($_SESSION["id_perso"])){
 	
 	if($admin){
 
+		$mess = "";
+		$mess_err = "";
+	
 		if (isset ($_POST['liste_x']) && isset ($_POST['liste_y']) && isSet ($_POST['perception'])) {
 			
 			$x_choix = $_SESSION['x_choix'] = $_POST['liste_x'];
@@ -41,6 +44,27 @@ if(isset($_SESSION["id_perso"])){
 				$carte = $_SESSION['choix_carte'];
 			}
 			
+			if (isset($_POST['creation_x_max']) && $_POST['creation_x_max'] != "" && isset($_POST['creation_y_max']) && $_POST['creation_y_max']) {
+				
+				$x_max_new_carte = $_POST['creation_x_max'];
+				$y_max_new_carte = $_POST['creation_y_max'];
+				
+				for ($x = 0; $x <= $x_max_new_carte; $x++)
+{
+					for ($y = 0; $y <= $y_max_new_carte; $y++)
+					{
+						$sql2 = "INSERT INTO $carte VALUES ($x, $y, '0', '1.gif', NULL, NULL)";
+						$mysqli->query($sql2);
+					}
+				}
+
+				// Coordonnées carte
+				$sql = "UPDATE $carte SET coordonnees = CONCAT (x_carte, ';', y_carte)";
+				$mysqli->query($sql);
+				
+				$mess .= "Carte ".$carte." créée avec x max = ".$x_max_new_carte." et y max = ".$y_max_new_carte;
+			}			
+			
 			if($carte == "carte2"){
 				// Récupération XMAX et YMAX
 				$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte2";
@@ -60,6 +84,8 @@ if(isset($_SESSION["id_perso"])){
 			$Y_MAXD  = $t['y_max'];
 		}
 		else {
+			// carte par défaut
+			$_SESSION['choix_carte'] = 'carte';
 			
 			// Récupération XMAX et YMAX
 			$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
@@ -68,6 +94,22 @@ if(isset($_SESSION["id_perso"])){
 			
 			$X_MAXD = $t['x_max'];
 			$Y_MAXD  = $t['y_max'];
+		}
+		
+		if (isset($_GET['delete_carte'])) {
+			
+			$carte_delete = $_SESSION['choix_carte'];
+			
+			if ($carte_delete != "") {
+				
+				$sql = "DELETE FROM $carte_delete";
+				$mysqli->query($sql);
+				
+				$X_MAXD = null;
+				$Y_MAXD  = null;
+				
+				$mess .= "Suppression complète de la carte $carte_delete terminé";
+			}
 		}
 ?>
 <html>
@@ -86,8 +128,35 @@ if(isset($_SESSION["id_perso"])){
 	
 		<div class="container-fluid">
 
-			<center><h1>Vous modifiez <?php if( isset($_SESSION['choix_carte'])) { echo $_SESSION['choix_carte'] . " (" . $X_MAXD . "X" . $Y_MAXD . ")"; } else { echo "carte (200X200)"; } ?></h1></center>
-
+			<div class="row">
+				<div class="col-12">
+					<div align='center'>
+						<h1>Vous modifiez <?php
+						if( isset($_SESSION['choix_carte'])) { 
+						
+							echo $_SESSION['choix_carte'];
+							
+							if (isset($X_MAXD) && isset($Y_MAXD)) {
+								echo " (" . $X_MAXD . "X" . $Y_MAXD . ")";
+							}
+						} 
+						else { 
+							echo "carte (200X200)"; 
+						} 
+						?></h1>
+						
+						<?php
+						if (isset($X_MAXD) && isset($Y_MAXD)) {
+							echo "<a href='utils_carte.php?delete_carte=ok' class='btn btn-danger'>Supprimer la carte</a>";
+						}
+						?>
+						
+						<font color='red'><?php echo $mess_err; ?></font>
+						<font color='blue'><?php echo $mess; ?></font>
+					</div>
+				</div>
+			</div>
+			
 			<form method="post" action="utils_carte.php">
 				<u>Choix de la carte à modifier :</u><br>
 				<select name="choix_carte" onchange="this.form.submit()">
