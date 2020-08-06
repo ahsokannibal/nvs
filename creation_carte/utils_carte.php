@@ -148,6 +148,13 @@ if(isset($_SESSION["id_perso"])){
 						<?php
 						if (isset($X_MAXD) && isset($Y_MAXD)) {
 							echo "<a href='utils_carte.php?delete_carte=ok' class='btn btn-danger'>Supprimer la carte</a>";
+							if (isset($_SESSION['choix_carte'])) {
+								$carte = $_SESSION['choix_carte'];
+								
+								$link_creation_carte_fond = "creation_".$carte."_fond.php";
+								
+								echo " <a href='".$link_creation_carte_fond."' class='btn btn-warning'>création fond $carte</a>";
+							}
 						}
 						?>
 						
