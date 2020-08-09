@@ -518,7 +518,7 @@ if($dispo || $admin){
 									$id_perso_mission 	= $t_p['id_perso'];
 									$nom_perso_mission	= $t_p['nom_perso'];
 									
-									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>]";
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."' target='_blank'>".$id_perso_mission."</a>]";
 									echo " <a href='anim_missions.php?id_mission=".$id_mission."&desaffecter_perso=".$id_perso_mission."' class='btn btn-danger'>Désaffecter</a><br />";
 									
 								}
@@ -604,7 +604,7 @@ if($dispo || $admin){
 									$id_perso_mission 	= $t_p['id_perso'];
 									$nom_perso_mission	= $t_p['nom_perso'];
 									
-									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>]";
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."' target='_blank'>".$id_perso_mission."</a>]";
 									echo " <a href='anim_missions.php?id_mission=".$id_mission."&desaffecter_perso=".$id_perso_mission."' class='btn btn-danger'>Désaffecter</a><br />";
 									
 								}
@@ -694,7 +694,7 @@ if($dispo || $admin){
 									$id_perso_mission 	= $t_p['id_perso'];
 									$nom_perso_mission	= $t_p['nom_perso'];
 									
-									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."'>".$id_perso_mission."</a>] <br />";
+									echo $nom_perso_mission." [<a href='evenement.php?infoid=".$id_perso_mission."' target='_blank'>".$id_perso_mission."</a>] <br />";
 									
 								}
 								echo "					</td>";

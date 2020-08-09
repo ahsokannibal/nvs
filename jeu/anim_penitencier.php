@@ -366,7 +366,7 @@ if($dispo || $admin){
 									}
 									
 									echo "		<tr>";
-									echo "			<td><font color='".$couleur_camp_perso_peni."'><b>".$nom_perso_peni."</b> [<a href='evenement.php?infoid=".$id_perso_peni."''>".$id_perso_peni."</a>]</font></td>";
+									echo "			<td><font color='".$couleur_camp_perso_peni."'><b>".$nom_perso_peni."</b> [<a href='evenement.php?infoid=".$id_perso_peni."'' target='_blank'>".$id_perso_peni."</a>]</font></td>";
 									echo "			<td align='center'><a class='btn btn-danger' href='anim_penitencier.php?relacher=".$id_perso_peni."'>Relacher</a></td>";
 									echo "		</tr>";
 								}

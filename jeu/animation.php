@@ -88,11 +88,11 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<a class='btn btn-info' href='anim_compagnie.php' target='_blank'>Gestion des compagnies <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_compagnie." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_compagnie > 0) { echo $nb_demandes_gestion_compagnie; }?></span></a>
-					<a class='btn btn-info' href='anim_perso.php' target='_blank'>Gestion des persos <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_perso." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_perso > 0) { echo $nb_demandes_gestion_perso; }?></span></a>
-					<a class='btn btn-info' href='anim_batiment.php' target='_blank'>Gestion des bâtiments</a>
-					<a class='btn btn-info' href='anim_penitencier.php' target='_blank'>Gestion du pénitencier</a>
-					<a class='btn btn-info' href='anim_trains.php' target='_blank'>Gestion des trains</a>					
+					<a class='btn btn-info' href='anim_compagnie.php'>Gestion des compagnies <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_compagnie." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_compagnie > 0) { echo $nb_demandes_gestion_compagnie; }?></span></a>
+					<a class='btn btn-info' href='anim_perso.php'>Gestion des persos <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_perso." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_perso > 0) { echo $nb_demandes_gestion_perso; }?></span></a>
+					<a class='btn btn-info' href='anim_batiment.php'>Gestion des bâtiments</a>
+					<a class='btn btn-info' href='anim_penitencier.php'>Gestion du pénitencier</a>
+					<a class='btn btn-info' href='anim_trains.php'>Gestion des trains</a>					
 				</div>
 			</div>
 			
@@ -100,7 +100,7 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<a class='btn btn-warning' href='anim_missions.php' target='_blank'>Gestion des missions</a>
+					<a class='btn btn-warning' href='anim_missions.php'>Gestion des missions</a>
 				</div>
 			</div>
 			

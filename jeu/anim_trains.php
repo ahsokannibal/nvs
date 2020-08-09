@@ -350,7 +350,7 @@ if($dispo || $admin){
 									
 									echo "	<td>";
 									if ($id_train != NULL && $id_train != 0) {
-										echo "<img src='../images_perso/b12b.gif' width='40' height='40' />Train [<a href='evenement.php?infoid=".$id_train."'>".$id_train."</a>]";
+										echo "<img src='../images_perso/b12b.gif' width='40' height='40' />Train [<a href='evenement.php?infoid=".$id_train."' target='_blank'>".$id_train."</a>]";
 										$pourc_pv_train = affiche_jauge($pv_train, $pvMax_train); 
 										echo round($pourc_pv_train,2)."% ou $pv_train/$pvMax_train";
 									}
@@ -359,7 +359,7 @@ if($dispo || $admin){
 									}
 									echo "	</td>";
 									echo "	<td>";
-									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare1." [<a href='evenement.php?infoid=".$id_gare1."'>".$id_gare1."</a>]";
+									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare1." [<a href='evenement.php?infoid=".$id_gare1."' target='_blank'>".$id_gare1."</a>]";
 									if ($pv_gare1 != null) {
 										$pourc_pv_gare1 = affiche_jauge($pv_gare1, $pvMax_gare1); 
 										echo round($pourc_pv_gare1,2)."% ou $pv_gare1/$pvMax_gare1";
@@ -369,7 +369,7 @@ if($dispo || $admin){
 									}
 									echo "	</td>";
 									echo "	<td>";
-									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare2." [<a href='evenement.php?infoid=".$id_gare2."'>".$id_gare2."</a>]";
+									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare2." [<a href='evenement.php?infoid=".$id_gare2."' target='_blank'>".$id_gare2."</a>]";
 									if ($pv_gare2 != null) {
 										$pourc_pv_gare2 = affiche_jauge($pv_gare2, $pvMax_gare2); 
 										echo round($pourc_pv_gare2,2)."% ou $pv_gare2/$pvMax_gare2";
@@ -380,7 +380,7 @@ if($dispo || $admin){
 									echo "	</td>";
 									echo "	<td>";
 									if ($id_train != NULL && $id_train != 0) {
-										echo "Position actuelle : ".$x_train."/".$y_train." - En direction de la Gare ".$nom_gare_direction." [<a href='evenement.php?infoid=".$gare_direction."'>".$gare_direction."</a>]";
+										echo "Position actuelle : ".$x_train."/".$y_train." - En direction de la Gare ".$nom_gare_direction." [<a href='evenement.php?infoid=".$gare_direction."' target='_blank'>".$gare_direction."</a>]";
 									}
 									echo "	</td>";
 									
