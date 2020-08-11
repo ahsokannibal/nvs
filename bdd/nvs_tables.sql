@@ -256,6 +256,20 @@ CREATE TABLE `carte_time` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `choix_carte_suivante`
+--
+
+CREATE TABLE `choix_carte_suivante` ( 
+	`id_choix` INT NOT NULL AUTO_INCREMENT, 
+	`id_camp` INT NOT NULL , 
+	`carte` VARCHAR(255) NOT NULL , 
+	`date_choix` DATETIME NOT NULL ,
+	PRIMARY KEY (`id_choix`)
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `compagnies`
 --
 
@@ -404,6 +418,36 @@ CREATE TABLE `em_creer_compagnie` (
   `description_compagnie` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `camp` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `em_position_infra_carte_suivante`
+--
+
+CREATE TABLE IF NOT EXISTS `em_position_infra_carte_suivante` (
+  `id_infra_carte` int(11) NOT NULL AUTO_INCREMENT,
+  `id_camp` int(11) NOT NULL,
+  `carte` varchar(255) NOT NULL,
+  `id_batiment` int(11) NOT NULL,
+  `position_x` int(11) NOT NULL,
+  `position_y` int(11) NOT NULL,
+  PRIMARY KEY (`id_infra_carte`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `em_vote_choix_carte`
+--
+
+CREATE TABLE `em_vote_choix_carte` ( 
+	`id_vote` INT NOT NULL AUTO_INCREMENT, 
+	`id_em_perso` INT NOT NULL , 
+	`vote` VARCHAR(255) NOT NULL , 
+	`date_vote` DATETIME NOT NULL , 
+	PRIMARY KEY (`id_vote`)
+) ENGINE = MyISAM; 
 
 -- --------------------------------------------------------
 
