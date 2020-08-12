@@ -3455,8 +3455,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 	} else {
 	
 		// Récupération des infos de la cible
-		$sql = "SELECT nom_perso, x_perso, y_perso, pv_perso, xp_perso, or_perso, protec_perso, bonus_perso, idJoueur_perso, clan, id_grade FROM perso, perso_as_grade 
+		$sql = "SELECT nom_perso, x_perso, y_perso, pv_perso, xp_perso, or_perso, protec_perso, bonus_perso, idJoueur_perso, clan, perso_as_grade.id_grade, nom_grade 
+				FROM perso, perso_as_grade, grades
 				WHERE perso_as_grade.id_perso = perso.id_perso
+				AND perso_as_grade.id_grade = grades.id_grade
 				AND perso.id_perso = '$idPerso_carte'";
 		$res = $mysqli->query($sql);
 		$t_cible = $res->fetch_assoc();
@@ -3470,6 +3472,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		$bonus_cible		= $t_cible['bonus_perso'];
 		$protec_cible		= $t_cible['protec_perso'];
 		$grade_cible		= $t_cible['id_grade'];
+		$nom_grade_cible	= $t_cible['nom_grade'];
 		$id_joueur_cible 	= $t_cible['idJoueur_perso'];
 		$clan_cible 		= $t_cible['clan'];
 		
@@ -3659,15 +3662,15 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						}
 					}
 					
-					// evenement perso capture
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
-					$mysqli->query($sql);
-					
-					// maj cv
-					$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
-					$mysqli->query($sql);
-					
 					if ($idPerso_carte < 50000) {
+						
+						// evenement perso capture
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font> ($nom_grade_cible)','',NOW(),'0')";
+						$mysqli->query($sql);
+						
+						// maj cv
+						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font> ($nom_grade_cible)',NOW())";
+						$mysqli->query($sql);
 						
 						// Recup infos cible
 						$sql = "SELECT type_perso, xp_perso, pi_perso, pc_perso FROM perso WHERE id_perso='$idPerso_carte'";
@@ -3715,6 +3718,14 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						$mysqli->query($sql);
 					}
 					else {
+						// evenement perso capture
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
+						$mysqli->query($sql);
+						
+						// maj cv
+						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
+						$mysqli->query($sql);
+						
 						// maj stats du perso
 						$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso=$id_perso";
 						$mysqli->query($sql);
