@@ -184,22 +184,12 @@ if($dispo || $admin){
 		
 		function checkMousePos(imgId, inputId, valueToShow, e) {
 			
-			bounds=imgId.getBoundingClientRect();
-			var left=bounds.left;
-			var top=bounds.top;
-			var x = event.pageX - left;
-			var y = event.pageY - top;
-			var cw=imgId.clientWidth
-			var ch=imgId.clientHeight
-			var iw=imgId.naturalWidth
-			var ih=imgId.naturalHeight
-			var px=x/cw*iw
-			var py=y/ch*ih
+			var ih=imgId.naturalHeight;
 			
 			var pos = [];
 			
-			pos['x'] 	= Math.floor(x / 3);
-			pos['y'] 	= Math.floor((ih - y) / 3);
+			pos['x'] 	= Math.floor((e.pageX - imgId.offsetLeft) / 3) - 127;
+			pos['y'] 	= Math.ceil((ih - (e.pageY - imgId.offsetTop)) / 3) + 93;
 			pos['xy'] 	= pos['x'] +','+ pos['y'];
 		   
 			inputId.value = pos[valueToShow];
