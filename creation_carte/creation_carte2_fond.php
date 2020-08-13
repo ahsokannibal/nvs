@@ -80,6 +80,8 @@ while ($t = $res->fetch_assoc()){
 }
 
 // on affiche l'image
-imagepng($image_carte, "../jeu/carte/carte2.png");
+imagepng($image_carte, "../jeu/carte/fond_carte2.png");
 ImageDestroy ($image_carte);
+
+header("Location:utils_carte.php");
 ?>
