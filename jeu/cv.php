@@ -154,11 +154,12 @@ if(isset($id)){
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDCible_cv'] == $id) {
 				
-				$id_acteur_cv = $t['IDActeur_cv'];
+				$id_acteur_cv 	= $t['IDActeur_cv'];
+				$id_cible_cv	= $t['IDCible_cv'];
 				
 				$count++;
 				echo "<tr>";
-				echo "	<td>".$t['date_cv']."</td><td>".$t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]";
+				echo "	<td>".$t['date_cv']."</td><td>".$t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 				if ($id_acteur_cv != 0) {
 					echo " a été capturé par ";
 					echo $t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";

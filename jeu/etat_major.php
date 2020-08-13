@@ -245,7 +245,7 @@ if($dispo || $admin){
 									Carte suivante
 								</a>
 								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkCarte">
-									<a class="dropdown-item" href="em_cartes_suivante.php">Voir la carte suivante</a>
+									<a class="dropdown-item" href="em_cartes_suivante.php">Voir les carte suivante</a>
 									<a class="dropdown-item" href="em_definir_infra.php">Positionner les infrastructures</a>
 								</div>
 							</li>

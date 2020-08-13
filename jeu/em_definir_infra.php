@@ -66,18 +66,18 @@ if($dispo || $admin){
 							</li>
 						</ul>
 						<ul class="navbar-nav">
-							<li class="nav-item dropdown">
+							<li class="nav-item dropdown active">
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLinkCarte" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									Carte suivante
 								</a>
 								<div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLinkCarte">
-									<a class="dropdown-item" href="em_cartes_suivante.php">Voir la carte suivante</a>
+									<a class="dropdown-item" href="em_cartes_suivante.php">Voir les carte suivante</a>
 									<a class="dropdown-item" href="em_definir_infra.php">Positionner les infrastructures</a>
 								</div>
 							</li>
 						</ul>
 						<ul class="navbar-nav">
-							<li class="nav-item dropdown active">
+							<li class="nav-item dropdown">
 								<a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 									Messages
 								</a>
