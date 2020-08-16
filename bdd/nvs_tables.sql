@@ -377,8 +377,10 @@ CREATE TABLE `cv` (
   `ID_cv` int(11) NOT NULL,
   `IDActeur_cv` int(11) NOT NULL DEFAULT '0',
   `nomActeur_cv` varchar(100) NOT NULL DEFAULT '',
+  `gradeActeur_cv` varchar(255) DEFAULT NULL,
   `IDCible_cv` int(11) DEFAULT NULL,
   `nomCible_cv` varchar(100) DEFAULT NULL,
+  `gradeCible_cv` varchar(255) DEFAULT NULL,
   `date_cv` datetime NOT NULL,
   `special` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
