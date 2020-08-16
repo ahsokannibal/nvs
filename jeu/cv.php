@@ -96,7 +96,7 @@ if(isset($id)){
 		
 			while ($t = $res->fetch_assoc()){
 				echo "<tr>";
-				echo "<td>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." ";
+				echo "<td align='center'>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." ";
 				echo "</td></tr>";
 			}
 			echo "</table></center><br />";
@@ -117,7 +117,7 @@ if(isset($id)){
 			while ($t = $res->fetch_assoc()){
 				$count++;
 				echo "<tr>";
-				echo "<td>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
+				echo "<td align='center'>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
 				echo "</td></tr>";
 			}
 			echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
@@ -146,7 +146,7 @@ if(isset($id)){
 				
 				$count++;
 				echo "<tr>";
-				echo "	<td>".$t['date_cv']."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
+				echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
 				echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 				if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
 					echo " (".$grade_cible_cv.")";
@@ -179,7 +179,7 @@ if(isset($id)){
 				
 				$count++;
 				echo "<tr>";
-				echo "	<td>".$t['date_cv']."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+				echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 				if ($id_acteur_cv != 0) {
 					echo " a été capturé par ";
 					echo $nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
@@ -189,7 +189,7 @@ if(isset($id)){
 				}
 				else {
 					echo " s'est effondré tout seul à cause de : ";
-					echo $tnom_acteur_cv;
+					echo $nom_acteur_cv;
 				}
 				
 				echo "	</td>";
@@ -210,7 +210,7 @@ if(isset($id)){
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
 				$count++;
-				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
+				echo "<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 			}
 		}
@@ -232,7 +232,7 @@ if(isset($id)){
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000 && $t['IDCible_cv'] < 200000) {
 				$count++;
-				echo "		<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
+				echo "		<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
 				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 			}
 		}

@@ -205,27 +205,29 @@ if(@$_SESSION["id_perso"]){
 			</tr>
 			<?php
 			
-			if(isset($_GET['infoid'])) {
+			$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
+			$res = $mysqli->query($sql);
 			
-				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
-				$res = $mysqli->query($sql);
+			while ($t = $res->fetch_assoc()) {
 				
-				while ($t = $res->fetch_assoc()) {
+				$date_evenement 		= $t['date_evenement'];
+				$nom_acteur_evenement	= $t['nomActeur_evenement'];
+				$id_acteur_evenement	= $t['IDActeur_evenement'];
+				$phrase_evenement		= $t['phrase_evenement'];
+				$id_cible_evenement		= $t['IDCible_evenement'];
+				$nom_cible_evenement	= $t['nomCible_evenement'];
+				$effet_evenement		= $t['effet_evenement'];
+				$special_evenement		= $t['special'];
+				
+				echo "<tr>";
+				echo "	<td align='center'>".$date_evenement."</td>";
+				
+				if ($id == $id_acteur_evenement) {
+					echo "	<td>".$nom_acteur_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ";
 					
-					$date_evenement 		= $t['date_evenement'];
-					$nom_action_evenement	= $t['nomActeur_evenement'];
-					$id_acteur_evenement	= $t['IDActeur_evenement'];
-					$phrase_evenement		= $t['phrase_evenement'];
-					$id_cible_evenement		= $t['IDCible_evenement'];
-					$nom_cible_evenement	= $t['nomCible_evenement'];
-					$effet_evenement		= $t['effet_evenement'];
-					$special_evenement		= $t['special'];
+					echo stripslashes($phrase_evenement)." ";
 					
-					echo "<tr>";
-					echo "	<td>".$date_evenement."</td>";
-					echo "	<td>".$nom_action_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ".stripslashes($phrase_evenement)." ";
-					
-					if ($t['IDCible_evenement'] == 0) {
+					if ($id_cible_evenement == 0) {
 						
 						if ($id_acteur_evenement == $id_perso || $id_cible_evenement == $id_perso) {
 							echo " ".stripslashes($effet_evenement);
@@ -249,46 +251,49 @@ if(@$_SESSION["id_perso"]){
 						echo "</td>";
 					}
 				}
-			}
-			else {
-			
-				$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
-				$res = $mysqli->query($sql);
-				
-				while ($t = $res->fetch_assoc()) {
+				else if ($id == $id_cible_evenement) {
+					echo "	<td>".$nom_cible_evenement." [<a href=\"evenement.php?infoid=".$id_cible_evenement."\">".$id_cible_evenement."</a>] ";
 					
-					$date_evenement 		= $t['date_evenement'];
-					$nom_action_evenement	= $t['nomActeur_evenement'];
-					$id_acteur_evenement	= $t['IDActeur_evenement'];
-					$phrase_evenement		= $t['phrase_evenement'];
-					$id_cible_evenement		= $t['IDCible_evenement'];
-					$nom_cible_evenement	= $t['nomCible_evenement'];
-					$effet_evenement		= $t['effet_evenement'];
-					$special_evenement		= $t['special'];
+					if ($phrase_evenement == "a détruit") {
+						$phrase_evenement = "a été détruit";
+					}
+					else if ($phrase_evenement == "a attaqué ") {
+						$phrase_evenement = "a été attaqué par";
+					}
+					else if ($phrase_evenement == " a raté son attaque contre") {
+						$phrase_evenement = "a esquivé l'attaque de";
+					}
+					else if ($phrase_evenement == "a construit ") {
+						$phrase_evenement = "a été construit par";
+					}
+					else if ($phrase_evenement == "a esquivé l'attaque de") {
+						$phrase_evenement = "a raté son attaque contre";
+					}
+					else if ($phrase_evenement == "a fait un don à ") {
+						$phrase_evenement = "a reçu un don de";
+					}
 					
-					echo "<tr>";
-					echo "	<td>".$date_evenement."</td>";
-					echo "	<td>".$nom_action_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ".stripslashes($phrase_evenement)." ";
+					echo stripslashes($phrase_evenement)." ";
 					
-					if ($t['IDCible_evenement'] == 0) {
+					if ($id_acteur_evenement == 0) {
 						
 						if ($id_acteur_evenement == $id_perso || $id_cible_evenement == $id_perso) {
-							echo stripslashes($effet_evenement)."</td>";
+							echo " ".stripslashes($effet_evenement);
 						}
 						
 						echo "</td>";
 					}
 					else {
-						echo $nom_cible_evenement." [";
+						echo $nom_acteur_evenement." [";
 						if ($special_evenement == 2) {
-							echo "".$id_cible_evenement."] ";
+							echo "".$id_acteur_evenement."] ";
 						}
 						else {
-							echo "<a href=\"evenement.php?infoid=".$id_cible_evenement."\">".$id_cible_evenement."</a>] ";
-						}
+							echo "<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ";
+						}					
 						
 						if ($id_acteur_evenement == $id_perso || $id_cible_evenement == $id_perso) {
-							echo " ".stripslashes($effet_evenement)."</td>";
+							echo " ".stripslashes($effet_evenement);
 						}
 						
 						echo "</td>";
