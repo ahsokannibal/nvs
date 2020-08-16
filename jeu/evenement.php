@@ -272,6 +272,21 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "a fait un don à ") {
 						$phrase_evenement = "a reçu un don de";
 					}
+					else if ($phrase_evenement == "a soigné ") {
+						$phrase_evenement = "a été soigné par";
+					}
+					else if ($phrase_evenement == "<b>a capturé</b>") {
+						$phrase_evenement = "<b>a été capturé par</b>";
+					}
+					else if ($phrase_evenement == " a raté son soin sur") {
+						$phrase_evenement = "a trop remué pour recevoir le soin de";
+					}
+					else if ($phrase_evenement == "a chargé ") {
+						$phrase_evenement = "a été chargé par ";
+					}
+					else if ($phrase_evenement == "a chargé trop tard") {
+						$phrase_evenement = "a failli recevoir une charge supplémentaire de";
+					}
 					
 					echo stripslashes($phrase_evenement)." ";
 					
