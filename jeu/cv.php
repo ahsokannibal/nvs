@@ -135,9 +135,24 @@ if(isset($id)){
 		
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 50000) {
+				
+				$id_acteur_cv 		= $t['IDActeur_cv'];
+				$nom_acteur_cv		= $t['nomActeur_cv'];
+				$grade_acteur_cv	= $t['gradeActeur_cv'];
+				
+				$id_cible_cv		= $t['IDCible_cv'];
+				$nom_cible_cv		= $t['nomCible_cv'];
+				$grade_cible_cv		= $t['gradeCible_cv'];
+				
 				$count++;
-				echo "<tr><td>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a capturé ";
-				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
+				echo "<tr>";
+				echo "	<td>".$t['date_cv']."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
+				echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+				if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
+					echo " (".$grade_cible_cv.")";
+				}
+				echo "	</td>";
+				echo "</tr>";
 			}
 		}
 		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
@@ -154,22 +169,31 @@ if(isset($id)){
 		while ($t = $res->fetch_assoc()) {
 			if ($t['IDCible_cv'] == $id) {
 				
-				$id_acteur_cv 	= $t['IDActeur_cv'];
-				$id_cible_cv	= $t['IDCible_cv'];
+				$id_acteur_cv 		= $t['IDActeur_cv'];
+				$nom_acteur_cv		= $t['nomActeur_cv'];
+				$grade_acteur_cv	= $t['gradeActeur_cv'];
+				
+				$id_cible_cv		= $t['IDCible_cv'];
+				$nom_cible_cv		= $t['nomCible_cv'];
+				$grade_cible_cv		= $t['gradeCible_cv'];
 				
 				$count++;
 				echo "<tr>";
-				echo "	<td>".$t['date_cv']."</td><td>".$t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+				echo "	<td>".$t['date_cv']."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 				if ($id_acteur_cv != 0) {
 					echo " a été capturé par ";
-					echo $t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
+					echo $nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
+					if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
+						echo " (".$grade_cible_cv.")";
+					}
 				}
 				else {
 					echo " s'est effondré tout seul à cause de : ";
-					echo $t['nomActeur_cv'];
+					echo $tnom_acteur_cv;
 				}
 				
 				echo "	</td>";
+				echo "</tr>";
 			}
 		}
 		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";

@@ -143,9 +143,10 @@ if ($verif_id_perso_session) {
 				if(!in_bat($mysqli, $id) || (in_bat($mysqli, $id) && $porteeMax_arme_attaque > 1)){
 					
 					// recup des données du perso
-					$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, perso_as_grade.id_grade
-							FROM perso, perso_as_grade
+					$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, perso_as_grade.id_grade, nom_grade
+							FROM perso, perso_as_grade, grades
 							WHERE perso_as_grade.id_perso = perso.id_perso
+							AND perso_as_grade.id_grade = grades.id_grade
 							AND perso.id_perso='$id'";
 					$res = $mysqli->query($sql);
 					$t_perso = $res->fetch_assoc();
@@ -173,6 +174,7 @@ if ($verif_id_perso_session) {
 					$dla_perso		= $t_perso["DLA_perso"];
 					$grade_perso 	= $t_perso["id_grade"];
 					$type_perso		= $t_perso["type_perso"];
+					$nom_grade_perso= $t_perso["nom_grade"];
 					
 					// Récupération de la couleur associée au clan du perso
 					$couleur_clan_perso = couleur_clan($clan_perso);
@@ -651,11 +653,11 @@ if ($verif_id_perso_session) {
 											}
 											
 											// maj evenements
-											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font> ($nom_grade_cible)','',NOW(),'0')";
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
 											$mysqli->query($sql);
 											
 											// maj cv
-											$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_clan_cible>$nom_cible</font> ($nom_grade_cible)',NOW())";
+											$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible','<font color=$couleur_clan_cible>$nom_cible</font>', '$nom_grade_cible', NOW())";
 											$mysqli->query($sql);
 						
 											// maj stats du perso
@@ -851,11 +853,11 @@ if ($verif_id_perso_session) {
 														echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
 														
 														// maj evenements
-														$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font> ($nom_grade_collat)','',NOW(),'0')";
+														$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>','',NOW(),'0')";
 														$mysqli->query($sql);
 														
 														// maj cv
-														$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font> ($nom_grade_collat)',NOW())";
+														$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>', '$nom_grade_collat', NOW())";
 														$mysqli->query($sql);
 									
 														// maj stats du perso
@@ -978,7 +980,7 @@ if ($verif_id_perso_session) {
 														$mysqli->query($sql);
 														
 														// maj cv
-														$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','$nom_cible_collat',NOW())";
+														$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','$nom_cible_collat',NOW())";
 														$mysqli->query($sql);
 														
 														echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
@@ -1163,9 +1165,10 @@ if ($verif_id_perso_session) {
 			if ($verif_arme) {
 			
 				// recup des données du perso
-				$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, perso_as_grade.id_grade
-						FROM perso, perso_as_grade
+				$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, perso_as_grade.id_grade, nom_grade
+						FROM perso, perso_as_grade, grades
 						WHERE perso_as_grade.id_perso = perso.id_perso
+						AND perso_as_grade.id_grade = grades.id_grade
 						AND perso.id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$t_perso = $res->fetch_assoc();
@@ -1192,6 +1195,7 @@ if ($verif_id_perso_session) {
 				$clan_perso 	= $t_perso["clan"];
 				$grade_perso 	= $t_perso["id_grade"];
 				$type_perso		= $t_perso["type_perso"];
+				$nom_grade_perso= $t_perso["nom_grade"];
 				
 				// Récupération de la couleur associée au clan du perso
 				$couleur_clan_perso = couleur_clan($clan_perso);
@@ -1493,7 +1497,7 @@ if ($verif_id_perso_session) {
 									$mysqli->query($sql);
 									
 									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','$nom_cible',NOW())";
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible','$nom_cible',NOW())";
 									$mysqli->query($sql);
 									
 									echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour ]</a></center>";
@@ -1650,11 +1654,11 @@ if ($verif_id_perso_session) {
 												echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
 												
 												// maj evenements
-												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font> ($nom_grade_collat)','',NOW(),'0')";
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible_collat','<font color=$couleur_clan_collat><b>$nom_collat</b></font>','',NOW(),'0')";
 												$mysqli->query($sql);
 												
 												// maj cv
-												$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font> ($nom_grade_collat)',NOW())";
+												$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>', '$nom_grade_collat', NOW())";
 												$mysqli->query($sql);
 							
 												// maj stats de la cible
@@ -1777,7 +1781,7 @@ if ($verif_id_perso_session) {
 												$mysqli->query($sql);
 												
 												// maj cv
-												$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible_collat','$nom_cible_collat',NOW())";
+												$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','$nom_cible_collat',NOW())";
 												$mysqli->query($sql);
 												
 												echo "<br><center><a href=\"jouer.php\">retour</a></center>";
@@ -1941,9 +1945,10 @@ if ($verif_id_perso_session) {
 			if ($verif_arme) {
 			
 				// recup des données du perso
-				$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, perso_as_grade.id_grade
-						FROM perso, perso_as_grade
+				$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, perso_as_grade.id_grade, nom_grade
+						FROM perso, perso_as_grade, grades
 						WHERE perso_as_grade.id_perso = perso.id_perso
+						AND perso_as_grade.id_grade = grades.id_grade
 						AND perso.id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$t_perso = $res->fetch_assoc();
@@ -1969,6 +1974,7 @@ if ($verif_id_perso_session) {
 				$clan_perso 	= $t_perso["clan"];
 				$grade_perso 	= $t_perso["id_grade"];
 				$type_perso		= $t_perso["type_perso"];
+				$nom_grade_perso= $t_perso["nom_grade"];
 				
 				// Récupération de la couleur associée au clan du perso
 				$couleur_clan_perso = couleur_clan($clan_perso);
@@ -2301,7 +2307,10 @@ if ($verif_id_perso_session) {
 										}
 										else {
 											// Le perso est mort
-											$sql_g = "SELECT perso_as_grade.id_grade, nom_grade FROM perso_as_grade, grades WHERE perso_as_grade.id_grade = grades.id_grade AND perso_as_grade.id_perso = '$id_p'";
+											$sql_g = "SELECT perso_as_grade.id_grade, nom_grade 
+														FROM perso_as_grade, grades 
+														WHERE perso_as_grade.id_grade = grades.id_grade 
+														AND perso_as_grade.id_perso = '$id_p'";
 											$res_g = $mysqli->query($sql_g);
 											$t_g = $res_g->fetch_assoc();
 											
@@ -2320,7 +2329,7 @@ if ($verif_id_perso_session) {
 											$mysqli->query($sql);
 												
 											// maj cv
-											$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_p','<font color=$couleur_clan_p>$nom_p</font> ($nom_grade_p)',NOW())"; 
+											$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_p','<font color=$couleur_clan_p>$nom_p</font>', '$nom_grade_p', NOW())"; 
 											$mysqli->query($sql);
 											
 											// maj stats camp
@@ -2368,9 +2377,8 @@ if ($verif_id_perso_session) {
 									$mysqli->query($sql);
 										
 									// maj cv
-									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_cible','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
+									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
 									$mysqli->query($sql);
-									
 									
 									// Gain points de victoire
 									if ($id_batiment == 9) {

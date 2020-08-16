@@ -3506,6 +3506,12 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		$cible_alive 	= true;
 		$gain_pc		= 0;
 		
+		$sql = "SELECT nom_grade FROM grades WHERE id_grade='$grade_perso'";
+		$res = $mysqli->query($sql);
+		$tgp = $res->fetch_assoc();
+		
+		$nom_grade_perso = $tgp["nom_grade"];
+		
 		// On attaque tant qu'il reste des PA
 		while ($pa_perso >= $coutPa_arme && $cible_alive) {
 			
@@ -3669,7 +3675,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						$mysqli->query($sql);
 						
 						// maj cv
-						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font> ($nom_grade_cible)',NOW())";
+						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>', '$nom_grade_cible', NOW())";
 						$mysqli->query($sql);
 						
 						// Recup infos cible
@@ -3723,7 +3729,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						$mysqli->query($sql);
 						
 						// maj cv
-						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
+						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$idPerso_carte','<font color=$couleur_clan_cible>$nom_cible</font>',NOW())";
 						$mysqli->query($sql);
 						
 						// maj stats du perso
