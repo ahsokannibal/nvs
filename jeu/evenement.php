@@ -287,6 +287,15 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "a chargé trop tard") {
 						$phrase_evenement = "a failli recevoir une charge supplémentaire de";
 					}
+					else if ($phrase_evenement == "a infligé des dégâts collatéraux ") {
+						$phrase_evenement = "a reçu des dégâts collatéraux de";
+					}
+					else if ($phrase_evenement == "a bousculé ") {
+						$phrase_evenement = "a été bousculé par";
+					}
+					else if ($phrase_evenement == " a reparé le batiment ") {
+						$phrase_evenement = "a été réparé par";
+					}
 					
 					echo stripslashes($phrase_evenement)." ";
 					
