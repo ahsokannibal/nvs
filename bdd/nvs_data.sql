@@ -367,7 +367,7 @@ INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_o
 (4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 'N'),
 (5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 0, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 'E'),
 (6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 'E'),
-(7, 'Lunette de visée', 0, 0, 0, 0, 0, 10, 15, 0, 0, 0, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Bonus Precision au CàC +10, Bonus Précision à distance +15)', 'E');
+(7, 'Lunette de visée', 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Coût attaque à distance +1, Bonus Précision à distance +15)', 'E');
 
 --
 -- Contenu de la table `perso`
