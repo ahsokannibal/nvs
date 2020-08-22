@@ -138,6 +138,10 @@ if ($verif_id_perso_session) {
 				}
 			}
 			
+			if ($porteeMax_arme_attaque > 1 && possede_lunette_visee($mysqli, $id)) {
+				$coutPa_arme_attaque = $coutPa_arme_attaque + 1;
+			}
+			
 			if ($verif_arme) {
 			
 				if(!in_bat($mysqli, $id) || (in_bat($mysqli, $id) && $porteeMax_arme_attaque > 1)){
@@ -1162,6 +1166,10 @@ if ($verif_id_perso_session) {
 				}
 			}
 			
+			if ($porteeMax_arme_attaque > 1 && possede_lunette_visee($mysqli, $id)) {
+				$coutPa_arme_attaque = $coutPa_arme_attaque + 1;
+			}
+			
 			if ($verif_arme) {
 			
 				// recup des données du perso
@@ -1940,6 +1948,10 @@ if ($verif_id_perso_session) {
 					
 					$verif_arme = 1;
 				}
+			}
+			
+			if ($porteeMax_arme_attaque > 1 && possede_lunette_visee($mysqli, $id)) {
+				$coutPa_arme_attaque = $coutPa_arme_attaque + 1;
 			}
 			
 			if ($verif_arme) {

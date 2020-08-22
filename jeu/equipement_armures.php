@@ -103,10 +103,6 @@ if($dispo){
 							$sql = "UPDATE perso_as_armure SET est_portee='1', corps_armure=$corps_armure WHERE id_armure='$id_armure' AND id_perso='$id_perso' LIMIT 1";
 							$mysqli->query($sql);
 							
-							// MAJ Malus equipement armures lourdes
-							if(port_armures_lourdes($id_perso)){
-								$bonusPM_armure = ceil($bonusPM_armure / 2);
-							}
 							if($bonusPM_armure < 0){
 								$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso+$bonusPM_armure WHERE id_perso='$id_perso'";
 								$mysqli->query($sql_u);
@@ -134,10 +130,6 @@ if($dispo){
 						$sql = "UPDATE perso_as_armure SET est_portee='0' WHERE id_armure='$id_armure' AND id_perso='$id_perso' and est_portee='1' LIMIT 1";
 						$mysqli->query($sql);
 						
-						// MAJ Malus desequipement armures lourdes
-						if(port_armures_lourdes($id_perso)){
-							$bonusPM_armure = ceil($bonusPM_armure / 2);
-						}
 						if($bonusPM_armure < 0){
 							$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso-$bonusPM_armure WHERE id_perso='$id_perso'";
 							$mysqli->query($sql_u);

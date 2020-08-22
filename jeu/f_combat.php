@@ -70,6 +70,17 @@ function id_arme_equipee($mysqli, $id_perso){
 }
 
 /**
+ * Function permettant de vérifier si un perso a une lunette de visée équipée
+ */
+function possede_lunette_visee($mysqli, $id_perso) {
+	
+	$sql = "SELECT * FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='7' AND equip_objet='1'";
+	$res = $mysqli->query($sql);
+	
+	return $res->num_rows;
+}
+
+/**
   * Fonction qui verifie si un pnj ou un pj est bien a portee d'attaque sur la carte
   * @param $carte	: La carte sur laquelle se trouve le pj qui attaque
   * @param $id_perso	: L'identifiant du perso qui attaque
@@ -230,80 +241,6 @@ function gain_xp($clan_perso, $clan_cible){
 	return $gain_xp;
 }
 
-/**
-  * Fonction qui recupere le total de defense qu'apporte les armures sur un perso
-  * @param $id_perso	: L'identifiant du perso
-  * @return Int		: Le nombre correspondant au total des defenses des armures que le perso a d'equipe sur lui, 0 si pas d'armure
-  */
-function defense_armure($mysqli, $id_perso){
-	
-	// malus
-	$malus = 0;
-	
-	// On fait la somme des bonus en defense apporte par les armures que porte le perso
-	$sql = "SELECT SUM(bonusDefense_armure) as sum_armure FROM armure, perso_as_armure
-			WHERE armure.id_armure = perso_as_armure.id_armure
-			AND est_portee='1' AND id_perso='$id_perso'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$total_armure = $t["sum_armure"];
-	
-	// On vefie s'il soufre ou non de malus s'il est nu
-	if(!possede_comp_nu($mysqli, $id_perso)){
-		
-		// On verifie s'il porte une armure
-		$sql_c = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='1'";
-		$res_c = $mysqli->query($sql_c);
-		$ok_c = $res_c->num_rows;
-		if($ok_c == 0) {
-			$malus = $malus - 1;
-		}
-			
-	}
-	
-	if($total_armure == null)
-		$total_armure = 0;
-		
-	$total_armure = $total_armure - $malus;	
-	return $total_armure;
-}
-
-/**
-  * Fonction qui permet de verifier si un perso possede la competence defense d'armure
-  * @param $id_perso			: L'identifiant du perso
-  * @return $nb_point			: Le nombre de point dans la competence, 0 si pas possede
-  */
-function possede_defense_armure($mysqli, $id_perso){
-	$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='57'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$nb = $res->num_rows;
-	
-	if($nb){
-		return $t['nb_points'];
-	}
-
-	return 0;
-}
-
-/**
-  * Fonction qui permet de verifier si un perso possede la competence nudiste invetere
-  * @param $id_perso			: L'identifiant du perso
-  * @return $nb_point			: Le nombre de point dans la competence, 0 si pas possede
-  */
-function possede_comp_nu($mysqli, $id_perso){
-	$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='58'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$nb = $res->num_rows;
-	
-	if($nb){
-		return $t['nb_points'];
-	}
-
-	return 0;
-}
-
 /** 
   * Fonction qui verifie si un perso est chanceux et retourne le nombre de points de chance
   * @param $id_perso	: L'identifiant du personnage
@@ -311,32 +248,6 @@ function possede_comp_nu($mysqli, $id_perso){
   */
 function est_chanceux($mysqli, $id_perso){
 	$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='31'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	
-	return $t['nb_points'];
-}
-
-/** 
-  * Fonction qui verifie si un perso possede la competence de port d'armes lourdes
-  * @param $id_perso	: L'identifiant du personnage
-  * @return Int			: 1 si possede, 0 si non
-  */
-function port_armes_lourdes($mysqli, $id_perso){
-	$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='60'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	
-	return $t['nb_points'];
-}
-
-/** 
-  * Fonction qui verifie si un perso possede la competence de port d'armures lourdes
-  * @param $id_perso	: L'identifiant du personnage
-  * @return Int			: 1 si possede, 0 si non
-  */
-function port_armures_lourdes($mysqli, $id_perso){
-	$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='61'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	

@@ -2720,7 +2720,7 @@ if($dispo || $admin){
 											</tr>
 											<tr>
 												<td><b>PA</b></td>
-												<td nowrap="nowrap">
+												<td align='center' nowrap="nowrap">
 												<?php 
 												
 												$texte_tooltip = "Base max : ".$paMax_perso."";
@@ -2741,7 +2741,7 @@ if($dispo || $admin){
 											</tr>
 											<tr>
 												<td><b>PM</b></td>
-												<td nowrap="nowrap"><?php 
+												<td align='center' nowrap="nowrap"><?php 
 												
 												$texte_tooltip_pm = "Base : ".$pm_perso_tmp;
 												
@@ -2781,11 +2781,11 @@ if($dispo || $admin){
 										<table border="2" bordercolor="white" style="width: 100%;">
 											<tr>
 												<td><b>Protection</b></td>
-												<td><?php echo $protec_perso; ?>&nbsp;</td>
+												<td align='center'><?php echo $protec_perso; ?>&nbsp;</td>
 											</tr>
 											<tr>
 												<td><b>Récuperation</b></td>
-												<td nowrap="nowrap">
+												<td align='center' nowrap="nowrap">
 												<?php 
 												$texte_tooltip = "Base : ".$recup_perso."";
 												
@@ -2806,7 +2806,7 @@ if($dispo || $admin){
 											</tr>
 											<tr>
 												<td nowrap="nowrap"><b>Malus Défense</b></td>
-												<td nowrap="nowrap"><?php 
+												<td align='center' nowrap="nowrap"><?php 
 												
 												$texte_tooltip = "Base : ".$bonus_perso."";
 												
@@ -2847,25 +2847,25 @@ if($dispo || $admin){
 							
 							<table border="2" style="background-color: palevioletred;" width="100%">
 								<tr>
-									<td colspan='3'bgcolor="lightgrey"><center><b>Caractéristiques de combat</b></center></td>
+									<td colspan='3' bgcolor="lightgrey" align='center'><b>Caractéristiques de combat</b></td>
 								</tr>
 								<tr>
 									<td width='20%'></td>
 									<?php 
 									if ($type_perso != 5) { 
 									?>
-									<td width='40%'><center><b>Rapproché</b></center></td>
+									<td width='40%' align='center'><b>Rapproché</b></td>
 									<?php 
 									}
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td width='40%' nowrap="nowrap"><center><b>A distance</b></center></td>
+									<td width='40%' align='center' nowrap="nowrap"><b>A distance</b></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
 									?>
-									<td width='40%'><center><b>Rapproché</b></center></td>
+									<td width='40%' align='center'><b>Rapproché</b></td>
 									<?php 	
 									}
 									?>
@@ -2875,18 +2875,18 @@ if($dispo || $admin){
 									<?php 
 									if ($type_perso != 5) { 
 									?>
-									<td nowrap="nowrap"><center><?php echo $nom_arme_cac; ?></center></td>
+									<td align='center' nowrap="nowrap"><?php echo $nom_arme_cac; ?></td>
 									<?php 
 									}
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td nowrap="nowrap"><center><?php echo $nom_arme_dist; ?></center></td>
+									<td align='center' nowrap="nowrap"><?php echo $nom_arme_dist; ?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
 									?>
-									<td nowrap="nowrap"><center><?php echo $nom_arme_cac2; ?></center></td>
+									<td align='center' nowrap="nowrap"><?php echo $nom_arme_cac2; ?></td>
 									<?php 	
 									}
 									?>
@@ -2896,18 +2896,18 @@ if($dispo || $admin){
 									<?php 
 									if ($type_perso != 5) { 
 									?>
-									<td><center><?php echo $coutPa_arme_cac; ?></center></td>
+									<td align='center'><?php echo $coutPa_arme_cac; ?></td>
 									<?php 
 									}
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td><center><?php echo $coutPa_arme_dist; ?></center></td>
+									<td align='center'><?php echo $coutPa_arme_dist; if (possede_lunette_visee($mysqli, $id_perso)) { echo " (+1)"; } ?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
 									?>
-									<td nowrap="nowrap"><center><?php echo $coutPa_arme_cac2; ?></center></td>
+									<td align='center' nowrap="nowrap"><?php echo $coutPa_arme_cac2; ?></td>
 									<?php 	
 									}
 									?>
@@ -2927,18 +2927,18 @@ if($dispo || $admin){
 									<?php 
 									if ($type_perso != 5) { 
 									?>
-									<td><center><?php echo $degats_arme_cac; ?></center></td>
+									<td align='center'><?php echo $degats_arme_cac; ?></td>
 									<?php 
 									}
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td><center><?php echo $degats_arme_dist; ?></center></td>
+									<td align='center'><?php echo $degats_arme_dist; ?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
 									?>
-									<td nowrap="nowrap"><center><?php echo $degats_arme_cac2; ?></center></td>
+									<td align='center' nowrap="nowrap"><?php echo $degats_arme_cac2; ?></td>
 									<?php 	
 									}
 									?>
@@ -2948,18 +2948,18 @@ if($dispo || $admin){
 									<?php 
 									if ($type_perso != 5) { 
 									?>
-									<td><center><?php echo $porteeMax_arme_cac; ?></center></td>
+									<td align='center'><?php echo $porteeMax_arme_cac; ?></td>
 									<?php 
 									}
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td><center><?php echo $porteeMax_arme_dist; ?></center></td>
+									<td align='center'><?php echo $porteeMax_arme_dist; ?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
 									?>
-									<td nowrap="nowrap"><center><?php echo $porteeMax_arme_cac2; ?></center></td>
+									<td align='center' nowrap="nowrap"><?php echo $porteeMax_arme_cac2; ?></td>
 									<?php 	
 									}
 									?>
@@ -2969,18 +2969,18 @@ if($dispo || $admin){
 									<?php 
 									if ($type_perso != 5) { 
 									?>
-									<td><center><?php echo $precision_arme_cac . "%"; ?></center></td>
+									<td align='center'><?php echo $precision_arme_cac . "%"; ?></td>
 									<?php 
 									}
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td><center><?php echo $precision_arme_dist . "%"; ?></center></td>
+									<td align='center'><?php echo $precision_arme_dist . "%"; ?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
 									?>
-									<td nowrap="nowrap"><center><?php echo $precision_arme_cac2 . "%"; ?></center></td>
+									<td align='center' nowrap="nowrap"><?php echo $precision_arme_cac2 . "%"; ?></td>
 									<?php 	
 									}
 									?>
