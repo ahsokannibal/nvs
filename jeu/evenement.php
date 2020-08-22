@@ -219,10 +219,10 @@ if(@$_SESSION["id_perso"]){
 				$effet_evenement		= $t['effet_evenement'];
 				$special_evenement		= $t['special'];
 				
-				echo "<tr>";
-				echo "	<td align='center'>".$date_evenement."</td>";
-				
 				if ($id == $id_acteur_evenement) {
+					echo "<tr>";
+					echo "	<td align='center'>".$date_evenement."</td>";
+					
 					echo "	<td>".$nom_acteur_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ";
 					
 					echo stripslashes($phrase_evenement)." ";
@@ -251,11 +251,15 @@ if(@$_SESSION["id_perso"]){
 						echo "</td>";
 					}
 				}
-				else if ($id == $id_cible_evenement) {
+				else if ($id == $id_cible_evenement && $special_evenement == 0) {
+					
+					echo "<tr>";
+					echo "	<td align='center'>".$date_evenement."</td>";
+					
 					echo "	<td>".$nom_cible_evenement." [<a href=\"evenement.php?infoid=".$id_cible_evenement."\">".$id_cible_evenement."</a>] ";
 					
 					if ($phrase_evenement == "a détruit") {
-						$phrase_evenement = "a été détruit";
+						$phrase_evenement = "a été détruit par";
 					}
 					else if ($phrase_evenement == "a attaqué ") {
 						$phrase_evenement = "a été attaqué par";
@@ -295,6 +299,9 @@ if(@$_SESSION["id_perso"]){
 					}
 					else if ($phrase_evenement == " a reparé le batiment ") {
 						$phrase_evenement = "a été réparé par";
+					}
+					else if ($phrase_evenement == "a raté sa bousculade sur ") {
+						$phrase_evenement = "a resisté à la tentative de bousculade de";
 					}
 					
 					echo stripslashes($phrase_evenement)." ";
