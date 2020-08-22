@@ -147,42 +147,53 @@ if($dispo || $admin){
 					}
 					else if (isset($_GET['valider']) && $_GET['valider'] == 'ok') {
 					
-						$sql = "UPDATE missions SET date_fin_mission=NOW(), objectif_atteint='1' WHERE id_mission='$id_mission' AND camp_mission='$camp'";
-						$mysqli->query($sql);
-						
-						// Récupération recompenses mission 
-						$sql = "SELECT nom_mission, recompense_thune, recompense_xp, recompense_pc FROM missions WHERE id_mission='$id_mission'";
+						// On vérifie que la mission n'est pas déjà validée
+						$sql = "SELECT objectif_atteint FROM missions WHERE id_mission='$id_mission' AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
-						$t = $res->fetch_assoc();
+						$t_m = $res->fetch_assoc();
 						
-						$nom_mission	= $t['nom_mission'];
-						$rec_thune 		= $t['recompense_thune'];
-						$rec_xp			= $t['recompense_xp'];
-						$rec_pc			= $t['recompense_pc'];
+						$obj_atteint = $t_m['objectif_atteint'];
 						
-						// Récuoération des persos assignés à la mission
-						$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission 
-								WHERE perso.id_perso = perso_in_mission.id_perso 
-								AND id_mission='$id_mission'";
-						$res = $mysqli->query($sql);
-						
-						while ($t = $res->fetch_assoc()) {
-							
-							$id_perso 	= $t['id_perso'];
-							$nom_perso	= $t['nom_perso'];
-							
-							$sql = "UPDATE perso SET or_perso = or_perso + $rec_thune, xp_perso = xp_perso + $rec_xp, pi_perso = pi_perso + $rec_xp, pc_perso = pc_perso + $rec_pc WHERE id_perso='$id_perso'";
+						if (!$obj_atteint) {
+					
+							$sql = "UPDATE missions SET date_fin_mission=NOW(), objectif_atteint='1' WHERE id_mission='$id_mission' AND camp_mission='$camp'";
 							$mysqli->query($sql);
 							
-							// evenements perso
-							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a réussi la mission </b>','$id_mission','<b>$nom_mission</b>',' - Récompenses : $rec_thune thunes, $rec_xp XP, $rec_pc PC',NOW(),'2')";
-							$mysqli->query($sql);
+							// Récupération recompenses mission 
+							$sql = "SELECT nom_mission, recompense_thune, recompense_xp, recompense_pc FROM missions WHERE id_mission='$id_mission'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
 							
-							// cv perso
-							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_mission','$nom_mission',NOW(),'2')";
-							$mysqli->query($sql);
+							$nom_mission	= $t['nom_mission'];
+							$rec_thune 		= $t['recompense_thune'];
+							$rec_xp			= $t['recompense_xp'];
+							$rec_pc			= $t['recompense_pc'];
+							
+							// Récupération des persos assignés à la mission
+							$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission 
+									WHERE perso.id_perso = perso_in_mission.id_perso 
+									AND id_mission='$id_mission'";
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_perso 	= $t['id_perso'];
+								$nom_perso	= $t['nom_perso'];
+								
+								$sql = "UPDATE perso SET or_perso = or_perso + $rec_thune, xp_perso = xp_perso + $rec_xp, pi_perso = pi_perso + $rec_xp, pc_perso = pc_perso + $rec_pc WHERE id_perso='$id_perso'";
+								$mysqli->query($sql);
+								
+								// evenements perso
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+										VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a réussi la mission </b>','$id_mission','<b>$nom_mission</b>',' - Récompenses : $rec_thune thunes, $rec_xp XP, $rec_pc PC',NOW(),'2')";
+								$mysqli->query($sql);
+								
+								// cv perso
+								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv, special) 
+										VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_mission','$nom_mission',NOW(),'2')";
+								$mysqli->query($sql);
+							}
 						}
-						
 					}
 					else if (isset($_GET['echec']) && $_GET['echec'] == 'ok') {
 						
