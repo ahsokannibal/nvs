@@ -571,12 +571,12 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 												
 													if($coutPa == -1){
 														// mise a jour des pa, or et charge du perso + xp/pi
-														$sql = "UPDATE perso SET pa_perso='0' , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
+														$sql = "UPDATE perso SET pa_perso='0' , or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
 														$mysqli->query($sql);
 													}
 													else {
 														// mise a jour des pa, or et charge du perso + xp/pi
-														$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, charge_perso=charge_perso-$coutBois, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
+														$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
 														$mysqli->query($sql);
 													}
 													
@@ -953,7 +953,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 					}
 				}
 				else {
-					echo "<center>Vous n'avez pas assez d'or ou assez de bois pour construire ce batiment<br />";
+					echo "<center>Vous n'avez pas assez d'or pour construire ce batiment<br />";
 					echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 					return 0;
 				}
@@ -1833,12 +1833,13 @@ function action_couper_bois($mysqli, $id_perso, $id_action, $nb_points_action){
 			
 			// MAJ objets perso
 			for ($i = 1; $i <= $gain_bois; $i++){
-				$sql = "INSERT INTO perso_as_objet VALUES('$id_perso', '7')";
+				$sql = "INSERT INTO perso_as_objet VALUES('$id_perso', '70')";
 				$mysqli->query($sql);
 			}
 			
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a coupé des arbres ',NULL,'',' : + $gain_bois morceaux de bois',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+					VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a coupé des arbres ',NULL,'',' : + $gain_bois morceaux de bois',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			echo "<center><font color=red><b>Vous avez coupé une forêt, vous avez récupéré $gain_bois morceaux de bois </b></font></center><br />";
@@ -3137,9 +3138,10 @@ function est_ami_animaux($mysqli, $id_perso){
   */
 function nb_bois_perso($mysqli, $id_perso){
 	
-	$sql = "SELECT count(*) as nb_bois FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='7'";
+	$sql = "SELECT count(*) as nb_bois FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='70'";
 	$res = $mysqli->query($sql);
 	$t_nb_bois = $res->fetch_assoc();
+	
 	return $t_nb_bois['nb_bois'];
 	
 }
