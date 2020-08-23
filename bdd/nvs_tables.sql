@@ -595,7 +595,8 @@ CREATE TABLE `joueur` (
   `animateur` enum('0','1') NOT NULL DEFAULT '0',
   `redacteur` INT NOT NULL DEFAULT '0',
   `mail_mp` INT NOT NULL DEFAULT '0',
-  `valid_case` INT NOT NULL DEFAULT '0'
+  `valid_case` INT NOT NULL DEFAULT '0',
+  `afficher_rosace` INT NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
