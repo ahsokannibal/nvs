@@ -484,11 +484,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 		
 			// test pa
 			if($pa_perso >= $coutPa){
-			
-				// recuperation nombre bois du perso
-				$nb_bois = nb_bois_perso($mysqli, $id_perso);
 				
-				if($or_perso >= $coutOr && $nb_bois >= $coutBois){
+				if($or_perso >= $coutOr){
 					
 					$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
 					$res = $mysqli->query($sql);
@@ -583,13 +580,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 														$mysqli->query($sql);
 													}
 													
-													// MAJ bois
-													for($i=1; $i <= $coutBois; $i++){
-														$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='7' LIMIT 1";
-														$mysqli->query($sql);
-													}
-													
-													$pv_bat = rand($pvMin, $pvMax);
+													$pv_bat = rand($pvMin, $pvMin * 2);
 													$img_bat = "b".$id_bat."".$bat_camp.".png";
 													
 													if ($id_bat == 4){
