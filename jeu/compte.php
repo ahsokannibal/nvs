@@ -277,6 +277,21 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 					}
 					
+					// Coche afficher rosace
+					if (isset($_POST['afficher_rosace'])){
+						
+						$statut = $_POST['afficher_rosace'];
+						
+						if($statut == 'on'){
+							$sql = "UPDATE joueur SET afficher_rosace='1' WHERE id_joueur ='".$id_joueur."'";
+							$mysqli->query($sql);
+						}
+					} 
+					else {
+						$sql = "UPDATE joueur SET afficher_rosace='0' WHERE id_joueur ='".$id_joueur."'";
+						$mysqli->query($sql);
+					}
+					
 					// Dossier img
 					if (isset($_POST["select_dossier_img"])) {
 						
@@ -292,17 +307,18 @@ if($dispo || $admin){
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
 				
-				$nom_joueur 		= $t["nom_joueur"];
-				$email_joueur 		= $t["email_joueur"];
-				$mdp_joueur 		= $t["mdp_joueur"];
-				$age_joueur 		= $t["age_joueur"];
-				$pays_joueur 		= $t["pays_joueur"];
-				$region_joueur 		= $t["region_joueur"];
-				$description_joueur = $t["description_joueur"];
-				$mail_info_joueur 	= $t["mail_info"];
-				$mail_mp_joueur		= $t["mail_mp"];
-				$valid_case_joueur	= $t["valid_case"];
-				$dossier_img_joueur = $t["dossier_img"];
+				$nom_joueur 			= $t["nom_joueur"];
+				$email_joueur 			= $t["email_joueur"];
+				$mdp_joueur 			= $t["mdp_joueur"];
+				$age_joueur 			= $t["age_joueur"];
+				$pays_joueur 			= $t["pays_joueur"];
+				$region_joueur 			= $t["region_joueur"];
+				$description_joueur 	= $t["description_joueur"];
+				$mail_info_joueur 		= $t["mail_info"];
+				$mail_mp_joueur			= $t["mail_mp"];
+				$valid_case_joueur		= $t["valid_case"];
+				$afficher_rosace_joueur	= $t["afficher_rosace"];
+				$dossier_img_joueur 	= $t["dossier_img"];
 	?>
 <html>
 	<head>
@@ -542,6 +558,12 @@ if($dispo || $admin){
 				<div class="row">
 					<div class="col-2">
 						<input type='checkbox' name='valid_case' <?php if($valid_case_joueur) echo 'checked';?> /> Validation du déplacement sur case
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-2">
+						<input type='checkbox' name='afficher_rosace' <?php if($afficher_rosace_joueur) echo 'checked';?> /> Afficher la rosace de déplacement
 					</div>
 				</div>
 				

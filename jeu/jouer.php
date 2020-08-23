@@ -136,6 +136,13 @@ if($dispo || $admin){
 				
 				$dossier_img_joueur = get_dossier_image_joueur($mysqli, $id_joueur_perso);
 				
+				// affichage rosace
+				$sql = "SELECT afficher_rosace FROM joueur WHERE id_joueur='$id_joueur_perso'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$afficher_rosace = $t['afficher_rosace'];
+				
 				$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
@@ -3312,6 +3319,9 @@ if($dispo || $admin){
 							
 							<br />
 							
+							<?php
+							if ($afficher_rosace) {
+							?>
 							<table border='2' width="100%">
 								<tr>
 									<td background='../images/background.jpg'>
@@ -3410,6 +3420,9 @@ if($dispo || $admin){
 									</td>
 								</tr>
 							</table>
+							<?php
+							}
+							?>
 						</td>
 						
 						<td valign="top">
