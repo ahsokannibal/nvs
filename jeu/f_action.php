@@ -2117,13 +2117,16 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 	if(prox_bat_perso($mysqli, $id_perso, $id_bat)){ 
 	
 		// récupération des infos du pont 
-		$sql = "SELECT x_instance, y_instance, pv_instance FROM instance_batiment WHERE id_instanceBat = '$id_bat'";
+		$sql = "SELECT x_instance, y_instance, pv_instance, camp_instance FROM instance_batiment WHERE id_instanceBat = '$id_bat'";
 		$res = $mysqli->query($sql);
 		$t_bat = $res->fetch_assoc();
 		
 		$x_bat 	= $t_bat["x_instance"];
 		$y_bat 	= $t_bat["y_instance"];
 		$pv_bat = $t_bat["pv_instance"];
+		$c_bat	= $t_bat["camp_instance"];
+		
+		$couleur_bat = couleur_clan($c_bat);
 	   
 		// recuperation des infos du perso
 		$sql = "SELECT nom_perso, clan, x_perso, y_perso, pa_perso, genie FROM perso WHERE id_perso='$id_perso'";
@@ -2187,7 +2190,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 					$mysqli->query($sql);
 					
 					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a détruit un <b>pont</b> ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a détruit un ',$id_bat,'<font color=$couleur_bat><b>Pont</b></font>',' en $x_bat / $y_bat',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					echo "<center>Vous avez détruit un pont en $x_bat / $y_bat</center>";
@@ -2199,7 +2202,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 					$mysqli->query($sql);
 					
 					//mise a jour de la table evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a saboté un <b>pont</b> ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a saboté un ',$id_bat,'<font color=$couleur_bat><b>pont</b></font>',' en $x_bat / $y_bat',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					echo "<center>Vous avez saboté un pont en $x_bat / $y_bat : $degats_sabotage dégats</center>";
