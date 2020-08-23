@@ -78,8 +78,8 @@ if($dispo || $admin){
 						$id_poste = $t_poste[0];
 						$nom_poste = $t_poste[1];
 						
-						//on regarde si il n'existe pas dejan membre qui a ce poste
-						$sql = "SELECT id_perso FROM perso_in_compagnie, poste WHERE poste_compagnie=id_poste AND id_compagnie=$id_compagnie AND id_poste='$id_poste' AND id_poste!='5'"; 
+						//on regarde si il n'existe pas deja un membre qui a ce poste
+						$sql = "SELECT id_perso FROM perso_in_compagnie, poste WHERE poste_compagnie=id_poste AND id_compagnie=$id_compagnie AND id_poste='$id_poste' AND id_poste!='10'"; 
 						$res = $mysqli->query($sql);
 						$ch = $res->fetch_assoc();
 						
