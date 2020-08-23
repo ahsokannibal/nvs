@@ -37,6 +37,12 @@ if(isset($_SESSION["id_perso"])){
 			
 		}
 		
+		if (isset($_GET['verifier_charge'])) {
+			
+			$id_perso_select = $_GET['verifier_charge'];
+			
+		}
+		
 		if (isset($_POST['id_perso_select']) && $_POST['id_perso_select'] != '') {
 			
 			$id_perso_select = $_POST['id_perso_select'];
@@ -211,6 +217,7 @@ if(isset($_SESSION["id_perso"])){
 						$pm_perso 	= $t['pm_perso'];
 						$pa_perso	= $t['pa_perso'];
 						$or_perso 	= $t['or_perso'];
+						$ch_perso	= $t['charge_perso'];
 						$camp_perso	= $t['clan'];
 						
 						if ($camp_perso == 1) {
@@ -261,6 +268,9 @@ if(isset($_SESSION["id_perso"])){
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>PA : </b><input type='text' name='pa_perso' value='".$pa_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
 						echo "</form>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>Charge : </b><input type='text' name='ch_perso' value='".$ch_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
 						echo "	</tr>";
 						echo "</table>";
 						
@@ -296,6 +306,38 @@ if(isset($_SESSION["id_perso"])){
 							echo "<br /><a href='admin_perso.php?consulter_mp=".$id_perso_select."' class='btn btn-primary'>Consulter les MP du perso</a>";
 						}
 						
+						if (isset($_GET['verifier_charge'])) {
+							
+							echo "<br /><br />";
+							
+							$sql = "SELECT SUM(poids_objet) as somme_poids_objets FROM perso_as_objet, objet WHERE perso_as_objet.id_objet = objet.id_objet AND id_perso='$id_perso_select'";
+							$res = $mysqli->query($sql);
+							$t_o = $res->fetch_assoc();
+							
+							$poids_objets = $t_o['somme_poids_objets'];
+							if ($poids_objets == null) {
+								$poids_objets = 0;
+							}
+							
+							$sql = "SELECT SUM(poids_arme) as somme_poids_armes FROM perso_as_arme, arme WHERE perso_as_arme.id_arme = arme.id_arme AND id_perso='$id_perso_select' AND est_portee='0'";
+							$res = $mysqli->query($sql);
+							$t_a = $res->fetch_assoc();
+							
+							$poids_armes = $t_a['somme_poids_armes'];
+							if ($poids_armes == null) {
+								$poids_armes = 0;
+							}
+							
+							echo "Somme total du poids des objets dans le sac du perso : <b>".$poids_objets."</b><br />";
+							echo "Somme total du poids des armes dans le sac du perso : <b>".$poids_armes."</b><br />";
+							
+						}
+						else {
+							echo " <a href='admin_perso.php?verifier_charge=".$id_perso_select."' class='btn btn-primary'>vérifier la charge du perso</a>";
+						}
+						
+						echo "<br /><br />";
+						
 						if (isset($_GET['modifier_mdp'])) {
 							echo "<form method='POST' action='admin_perso.php'>";
 							echo "	<label for='mdp_perso'>Nouveau Mot de passe : </label>";
@@ -304,8 +346,8 @@ if(isset($_SESSION["id_perso"])){
 							echo "</form>";
 						}
 						else {
-							echo "<br /><a href='admin_perso.php?modifier_mdp=".$id_perso_select."' class='btn btn-danger'>Modifier Mot de passe</a>";
-						}
+							echo "<a href='admin_perso.php?modifier_mdp=".$id_perso_select."' class='btn btn-danger'>Modifier Mot de passe</a>";
+						}						
 					}
 					?>
 				</div>
