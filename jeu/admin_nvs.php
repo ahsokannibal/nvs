@@ -15,6 +15,17 @@ if(isset($_SESSION["id_perso"])){
 	
 	if($admin){
 		
+		if (isset($_GET['mode_maj'])) {
+			$sql = "UPDATE config_jeu SET disponible='0'";
+			$mysqli->query($sql);
+		}
+		
+		if (isset($_GET['mode_jeu'])) {
+			$sql = "UPDATE config_jeu SET disponible='1'";
+			$mysqli->query($sql);
+		}
+		
+		$dispo = config_dispo_jeu($mysqli);
 		
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -63,6 +74,18 @@ if(isset($_SESSION["id_perso"])){
 				<div class="col-12">
 					<a class='btn btn-warning' href='admin_tentative_triche.php' target='_blank'>LOGS Tentatives de triche</a>
 					<a class='btn btn-warning' href='../creation_carte/utils_carte.php' target='_blank'>Editeur de carte</a>
+				</div>
+			</div>
+			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+				<?php if ($dispo) { ?>
+					<a class='btn btn-success' href='admin_nvs.php?mode_maj=ok'>Passer le jeu en mode Mise à jour</a>
+				<?php } else { ?>
+					<a class='btn btn-success' href='admin_nvs.php?mode_jeu=ok'>Ouvrir le jeu</a>
+				<?php } ?>
 				</div>
 			</div>
 			
