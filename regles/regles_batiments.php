@@ -231,6 +231,8 @@
 					
 					<p><b>Attention</b>, de graves sanctions pourront être prises contre les joueurs qui attaqueront leur bâtiment pour abuser de cette règle.</p>
 					
+					<p><b>Attention</b>, quand un bâtiment de votre camp est encerclé par au moins 10 ennemis à 15 cases et qu'il posséde moins de 25% de PV restant, il ne vous est plus possible de l'attaquer et donc de le détruire avant l'arrivée des ennemis, c'est trop tard !</p>
+					
 					<br />
 					<h2>Les trains</h2>
 					
