@@ -636,10 +636,23 @@ function calcul_nb_cases($x_depart, $y_depart, $x_arrivee, $y_arrivee){
 	return ceil(SQRT(POW($x, 2)+POW($y, 2)));
 }
 
-// fontion qui calcule la distance de construction possible d'un bâtiment selon le nombre de points
-function calcul_distance_construction($nombre_points){
+/**
+ * Fonction permettant de trouver le nombre d'ennemis à 15 cases du bâtiment
+ */
+function nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $camp) {
 	
-	return 200;
+	$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
+			WHERE perso.id_perso = carte.idPerso_carte 
+			AND x_carte <= $x_ibat + 15
+			AND x_carte >= $x_ibat - 15
+			AND y_carte <= $y_ibat + 15
+			AND y_carte >= $y_ibat - 15
+			AND perso.clan != '$camp'";
+	$res = $mysqli->query($sql);
+	$t_e = $res->fetch_assoc();
+	
+	return $t_e['nb_ennemi'];
+	
 }
 
 // fonction qui récupère le batiment de rapatriement le plus proche d'un perso
@@ -660,18 +673,8 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	$x_ibat		= $t['x_instance'];
 	$y_ibat		= $t['y_instance'];
 	
-	// Verification si 10 persos ennemis à moins de 15 cases
-	$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
-			WHERE perso.id_perso = carte.idPerso_carte 
-			AND x_carte <= $x_ibat + 15
-			AND x_carte >= $x_ibat - 15
-			AND y_carte <= $y_ibat + 15
-			AND y_carte >= $y_ibat - 15
-			AND perso.clan != '$clan'";
-	$res = $mysqli->query($sql);
-	$t_e = $res->fetch_assoc();
-	
-	$nb_ennemis_siege7 = $t_e['nb_ennemi'];
+	// Verification si 10 persos ennemis à moins de 15 cases	
+	$nb_ennemis_siege7 = nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $clan);
 	
 	if ($nb_h > 0 && $nb_ennemis_siege7 < 10) {
 		
@@ -698,18 +701,8 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 		$x_ibat		= $t['x_instance'];
 		$y_ibat		= $t['y_instance'];
 		
-		// Verification si 10 persos ennemis à moins de 15 cases
-		$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
-				WHERE perso.id_perso = carte.idPerso_carte 
-				AND x_carte <= $x_ibat + 15
-				AND x_carte >= $x_ibat - 15
-				AND y_carte <= $y_ibat + 15
-				AND y_carte >= $y_ibat - 15
-				AND perso.clan != '$clan'";
-		$res = $mysqli->query($sql);
-		$t_e = $res->fetch_assoc();
-		
-		$nb_ennemis_siege8 = $t_e['nb_ennemi'];
+		// Verification si 10 persos ennemis à moins de 15 cases		
+		$nb_ennemis_siege8 = nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $clan);
 		
 		if ($nb_f > 0 && $nb_ennemis_siege8 < 10) {
 			
@@ -737,17 +730,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 			$y_ibat		= $t['y_instance'];
 			
 			// Verification si 10 persos ennemis à moins de 15 cases
-			$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
-					WHERE perso.id_perso = carte.idPerso_carte 
-					AND x_carte <= $x_ibat + 15
-					AND x_carte >= $x_ibat - 15
-					AND y_carte <= $y_ibat + 15
-					AND y_carte >= $y_ibat - 15
-					AND perso.clan != '$clan'";
-			$res = $mysqli->query($sql);
-			$t_e = $res->fetch_assoc();
-			
-			$nb_ennemis_siege9 = $t_e['nb_ennemi'];
+			$nb_ennemis_siege9 = nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $clan);
 			
 			if ($nb_fort > 0 && $nb_ennemis_siege9 < 10) {
 				
@@ -780,17 +763,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 					$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
 					
 					// Verification si 10 persos ennemis à moins de 15 cases
-					$sql = "SELECT count(id_perso) as nb_ennemi FROM perso, carte 
-							WHERE perso.id_perso = carte.idPerso_carte 
-							AND x_carte <= $x_bat + 15
-							AND x_carte >= $x_bat - 15
-							AND y_carte <= $y_bat + 15
-							AND y_carte >= $y_bat - 15
-							AND perso.clan != '$clan'";
-					$res = $mysqli->query($sql);
-					$t_e = $res->fetch_assoc();
-					
-					$nb_ennemis_siege = $t_e['nb_ennemi'];
+					$nb_ennemis_siege = nb_ennemis_siege_batiment($mysqli, $x_bat, $y_bat, $clan);
 					
 					// Récupération du nombre de perso dans ce batiment
 					$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
