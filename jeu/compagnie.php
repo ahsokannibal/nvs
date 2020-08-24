@@ -379,7 +379,7 @@ if($dispo || $admin){
 		}
 		else {
 			
-			echo "<center><a class='btn btn-outline-info' href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a></center><br />";
+			echo "<div align='center'><a class='btn btn-outline-info' href='compagnie.php?voir_compagnie=ok'>Voir les autres compagnies</a></div>";
 			
 			// verification si le perso appartient deja a une compagnie
 			$sql = "SELECT id_compagnie, poste_compagnie FROM perso_in_compagnie WHERE id_perso = '$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
@@ -392,6 +392,77 @@ if($dispo || $admin){
 				// recuperation de la compagnie a laquelle on appartient
 				$id_compagnie 		= $c[0];
 				$poste_compagnie	= $c[1];
+				
+				echo "<div align='center'><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Banque de la compagnie</a>";
+				
+				// verification si le perso est le chef de la compagnie
+				$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_perso=$id";
+				$res = $mysqli->query($sql);
+				$boss = $res->fetch_assoc();
+				$poste_s = $boss["poste_compagnie"];
+				
+				// le perso a un poste
+				if($poste_s != 10) {
+				
+					// c'est le chef
+					if($poste_s == 1) { 
+						echo " <a class='btn btn-outline-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la compagnie</a>";
+					}
+					
+					// c'est le tresorier
+					if($poste_s == 3){ 
+					
+						// verification si quelqu'un a demande un emprunt
+						$sql = "SELECT banque_compagnie.id_perso FROM banque_compagnie, perso_in_compagnie WHERE demande_emprunt='1' AND id_compagnie=$id_compagnie AND banque_compagnie.id_perso=perso_in_compagnie.id_perso";
+						$res = $mysqli->query($sql);
+						
+						$nb = $res->num_rows;
+						
+						echo " <a class='btn btn-outline-primary' href='tresor_compagnie.php?id_compagnie=$id_compagnie'> Page tresorerie de la compagnie ";
+						if ($nb > 0) {
+							echo "<span class='badge badge-pill badge-danger'>$nb</span>";
+						}
+						echo "</a>";
+					}
+					
+					// c'est le recruteur
+					if($poste_s == 4 || $poste_s == 1){ 
+					
+						// on verifie si il y a des nouveau persos qui veulent integrer la compagnie
+						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
+								WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
+						$res = $mysqli->query($sql);
+						
+						// nombre de persos en attente de validation pour rentrer
+						$num_e = $res->num_rows; 
+						
+						// on verifie si il y a des nouveau persos qui veulent quitter la compagnie
+						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
+								WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='2'";
+						$res = $mysqli->query($sql);
+						
+						// nombre de persos en attente pour quitter la compagnie
+						$num_q = $res->num_rows; 
+						
+						$num_a = $num_e + $num_q;
+						
+						echo " <a class='btn btn-outline-primary' href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie ";
+						if ($num_e > 0) {
+							echo "<span class='badge badge-pill badge-success'>$num_e</span>";
+						}
+						if ($num_q > 0) {
+							echo "<span class='badge badge-pill badge-danger'>$num_q</span>";
+						}
+						echo "</a>";
+					}
+					
+					// c'est le diplomate
+					if($poste_s == 5){ 
+						echo " <a href='diplo_compagnie.php?id_compagnie=$id_compagnie'> Page diplomatie de la compagnie</a>";
+					}
+				}
+				
+				echo "</div>";
 				
 				// recuperation des information sur la compagnie
 				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
@@ -491,77 +562,6 @@ if($dispo || $admin){
 				echo "		</td>";
 				echo "	</tr>";
 				echo "</table><br>";
-				
-				echo "<center><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Banque de la compagnie</a></center>";
-				
-				// verification si le perso est le chef de la compagnie
-				$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_perso=$id";
-				$res = $mysqli->query($sql);
-				$boss = $res->fetch_assoc();
-				$poste_s = $boss["poste_compagnie"];
-				
-				// le perso a un poste
-				if($poste_s != 10) { 
-				
-					// c'est le chef
-					if($poste_s == 1) { 
-						echo "<center><a class='btn btn-outline-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la compagnie</a></center>";
-					}
-					
-					// c'est le tresorier
-					if($poste_s == 3){ 
-					
-						// verification si quelqu'un a demande un emprunt
-						$sql = "SELECT banque_compagnie.id_perso FROM banque_compagnie, perso_in_compagnie WHERE demande_emprunt='1' AND id_compagnie=$id_compagnie AND banque_compagnie.id_perso=perso_in_compagnie.id_perso";
-						$res = $mysqli->query($sql);
-						
-						$nb = $res->num_rows;
-						
-						echo "<center>";
-						echo "<a class='btn btn-outline-primary' href='tresor_compagnie.php?id_compagnie=$id_compagnie'> Page tresorerie de la compagnie ";
-						if ($nb > 0) {
-							echo "<span class='badge badge-pill badge-danger'>$nb</span>";
-						}
-						echo "</a></center>";
-					}
-					
-					// c'est le recruteur
-					if($poste_s == 4 || $poste_s == 1){ 
-					
-						// on verifie si il y a des nouveau persos qui veulent integrer la compagnie
-						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
-								WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
-						$res = $mysqli->query($sql);
-						
-						// nombre de persos en attente de validation pour rentrer
-						$num_e = $res->num_rows; 
-						
-						// on verifie si il y a des nouveau persos qui veulent quitter la compagnie
-						$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
-								WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='2'";
-						$res = $mysqli->query($sql);
-						
-						// nombre de persos en attente pour quitter la compagnie
-						$num_q = $res->num_rows; 
-						
-						$num_a = $num_e + $num_q;
-						
-						echo "<center>";
-						echo "<a class='btn btn-outline-primary' href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie ";
-						if ($num_e > 0) {
-							echo "<span class='badge badge-pill badge-success'>$num_e</span>";
-						}
-						if ($num_q > 0) {
-							echo "<span class='badge badge-pill badge-danger'>$num_q</span>";
-						}
-						echo "</a></center>";
-					}
-					
-					// c'est le diplomate
-					if($poste_s == 5){ 
-						echo "<center><a href='diplo_compagnie.php?id_compagnie=$id_compagnie'> Page diplomatie de la compagnie</a></center>";
-					}
-				}
 				
 				echo "<br/><center><a class='btn btn-danger' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b>Demander à quitter la compagnie</b></a></center>";
 			}
