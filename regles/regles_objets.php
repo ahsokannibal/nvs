@@ -323,8 +323,8 @@ $mysqli = db_connexion();
 								<td align='center'><img src='../images/objets/objet7.png' style='max-width: 100px; height: auto;' alt=''></td>
 								<td align='center'>Lunette de visée</td>
 								<td align='center'>Équipable</td>
-								<td align='center'>+10 en précision au Corps à corps | +15 en précision à distance</td>
-								<td align='center'>-</td>
+								<td align='center'>+15 en précision à distance</td>
+								<td align='center'>Coût +1 PA par attaque à distance</td>
 								<td align='center'>0.2kg</td>
 								<td align='center'>200 thunes</td>
 								<td align='center'>Fort / Fortin</td>
