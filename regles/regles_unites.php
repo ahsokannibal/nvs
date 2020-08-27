@@ -190,6 +190,8 @@
 						<li>Le chien aura un malus de perception de 3 s'il se trouve a plus de 15 cases de son maitre (le chef de bataillon)</li>
 						<li>La charge maximale du chien avant d'avoir un malus de PM est de 2kg. Au dessus, il aura un malus de 4PM et ainsi de suite pour chaque kilo au dessus (de 2,1kg à 3kg de charge : il aura 4PM de malus, de 3,1kg à 4kg de charge, il aura 8PM de malus, etc...). A partir de 6kg de charge, le chien perd tous ses PM !</li>
 						<li>Les chiens ne peuvent pas capturer les bâtiments ennemis</li>
+						<li>Les chiens ne peuvent pas s'équiper d'objets (comme les bottes, les lunettes de visée, etc...)</li>
+						<li>Les chiens ne peuvent pas réparer les bâtiments</li>
 					</ul>
 					
 					<h3>Rapatriement  & Convalescence</h3>
