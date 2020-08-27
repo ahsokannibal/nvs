@@ -18,12 +18,13 @@ if($dispo || $admin){
 		$id = $_SESSION["id_perso"];
 		
 		// recuperation des donnees sur le perso
-		$sql = "SELECT pv_perso, pa_perso FROM perso WHERE ID_perso='$id'";
+		$sql = "SELECT pv_perso, pa_perso, type_perso FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		
 		$testpv = $tpv['pv_perso'];
 		$testpa = $tpv['pa_perso'];
+		$type_p = $tpv['type_perso'];
 		
 		// On verifie que le perso soit toujours vivant
 		if ($testpv <= 0) {
@@ -120,8 +121,8 @@ if($dispo || $admin){
 									$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1, charge_perso=charge_perso-$poids WHERE id_perso='$id'";
 									$mysqli->query($sql_c);
 								}
-								else if ($type_o == 'E') {
-									// Objet équipable 
+								else if ($type_o == 'E' && $type_p != 6) {
+									// Objet équipable - non utilisables sur chien
 									
 									// On verifie si on est pas déjà équipé de cet objet
 									$sql = "SELECT * FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o' AND equip_objet='1'";
@@ -386,7 +387,7 @@ if($dispo || $admin){
 				$res2 = $mysqli->query($sql2);
 				$is_equipe = $res2->num_rows;
 				
-				if($type_o == 'E' && !$is_equipe){
+				if($type_o == 'E' && !$is_equipe && $type_p != 6){
 					echo "<br /><a class='btn btn-outline-primary' href=\"sac.php?id_obj=".$id_obj."\">équiper (cout : 1 PA)</a>";
 				}
 				
