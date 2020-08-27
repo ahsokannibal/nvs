@@ -1018,16 +1018,30 @@ function getBonusPrecisionDistObjet($mysqli, $id_perso) {
 /**
  * Fonction qui retourne le malus de PM du à la charge
  */
-function getMalusCharge($charge_perso) {
+function getMalusCharge($charge_perso, $chargeMax_perso) {
 	
 	$malus = 0;
 	
-	if ($charge_perso >= 70) {
-		$malus = 100;
+	if ($chargeMax_perso == 2) {
+		
+		if ($charge_perso >= 6) {
+			$malus = 100;
+		}
+		else {
+			$taille_malus = $charge_perso - $chargeMax_perso;
+			if ($taille_malus > 0) {
+				$malus = -4 * $taille_malus;
+			}
+		}
 	}
 	else {
-		$taille_malus = floor($charge_perso / 10);
-		$malus = -$taille_malus;
+		if ($charge_perso >= 70) {
+			$malus = 100;
+		}
+		else {
+			$taille_malus = floor($charge_perso / 10);
+			$malus = -$taille_malus;
+		}
 	}
 	
 	return $malus;

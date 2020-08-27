@@ -36,7 +36,7 @@ if($dispo || $admin){
 			else {
 			
 				// recuperation des infos du perso
-				$sql = "SELECT nom_perso, image_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, bonusPM_perso, pi_perso, pv_perso, pvMax_perso, 
+				$sql = "SELECT nom_perso, image_perso, type_perso, idJoueur_perso, xp_perso, pc_perso, x_perso, y_perso, pm_perso, bonusPM_perso, pi_perso, pv_perso, pvMax_perso, 
 								pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, perception_perso, bonusPerception_perso, bonus_perso, bonusPA_perso,
 								charge_perso, chargeMax_perso, message_perso, description_perso, dateCreation_perso, clan, chef, genie FROM perso WHERE id_perso='$id'";
 				$res = $mysqli->query($sql);
@@ -44,6 +44,8 @@ if($dispo || $admin){
 				
 				$nom_p 		= $t_i["nom_perso"];
 				$image_p 	= $t_i["image_perso"];
+				$type_p		= $t_i["type_perso"];
+				$id_j_p		= $t_i["idJoueur_perso"];
 				$xp_p 		= $t_i["xp_perso"];
 				$pc_p 		= $t_i["pc_perso"];
 				$x_p 		= $t_i["x_perso"];
@@ -69,6 +71,22 @@ if($dispo || $admin){
 				$clan_perso = $t_i["clan"];
 				$chef		= $t_i["chef"];
 				$genie		= $t_i["genie"];
+				
+				// Si perso chien
+				if ($type_p == 6) {
+					
+					// Récupération des coordonnées du chef
+					$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_j_p' AND chef=1";
+					$res = $mysqli->query($sql);
+					$t_coord_chef = $res->fetch_assoc();
+					
+					$x_perso_chef = $t_coord_chef['x_perso'];
+					$y_perso_chef = $t_coord_chef['y_perso'];
+					
+					if (abs($x_perso_chef - $x_p) > 15 || abs($y_perso_chef - $y_p) > 15) {
+						$bp_p -= 3;
+					}					
+				}
 				
 				$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_p' AND y_carte='$y_p'";
 				$res = $mysqli->query($sql);
@@ -107,7 +125,7 @@ if($dispo || $admin){
 				$im_p = $nom_clan.".gif";
 				
 				// calcul malus pm
-				$malus_pm_charge = getMalusCharge($ch_p);
+				$malus_pm_charge = getMalusCharge($ch_p, $chM_p);
 				if ($malus_pm_charge == 100) {
 					$malus_pm = -$pmMax_perso;
 				}
@@ -246,16 +264,16 @@ if($dispo || $admin){
 											echo "<u><b>Points d'action :</b></u> ".$pa_p."/".$paM_p;
 											if ($bpa_p) {
 												if ($bpa_p > 0) {
-													echo " (+".$bpa_p.")";
+													echo " <font color='green'>(+".$bpa_p.")</font>";
 												}
 												else {
-													echo " (".$bpa_p.")";
+													echo " <font color='red'>(".$bpa_p.")</font>";
 												}
 											}
 											// Malus defense CaC
 											echo " - <u><b>Malus de défense CàC :</b></u> "; 
 											if($bonus_def_final_cac < 0) {
-												echo "<font color=red>".$bonus_def_final_cac."</font>";
+												echo "<font color='red'>".$bonus_def_final_cac."</font>";
 											}
 											else {
 												echo $bonus_def_final_cac;
@@ -270,7 +288,7 @@ if($dispo || $admin){
 											// Malus defense Dist
 											echo " - <u><b>Malus de défense Dist :</b></u> "; 
 											if($bonus_def_final_dist < 0) {
-												echo "<font color=red>".$bonus_def_final_dist."</font>";
+												echo "<font color='red'>".$bonus_def_final_dist."</font>";
 											}
 											else {
 												echo $bonus_def_final_dist;
@@ -288,16 +306,16 @@ if($dispo || $admin){
 											// Récupération
 											echo "<u><b>Récupération :</b></u> ".$rec_p; 
 											if($br_p) {
-												echo " <font color='blue'>(+".$br_p.")</font>";
+												echo " <font color='green'>(+".$br_p.")</font>";
 											}
 											// Perception
 											echo " - <u><b>Perception :</b></u> ".$per_p; 
 											if($bp_p) {
 												if($bp_p > 0) {
-													echo " (+".$bp_p.")";
+													echo " <font color='green'>(+".$bp_p.")</font>";
 												}
 												else {
-													echo " (".$bp_p.")";
+													echo " <font color='red'>(".$bp_p.")</font>";
 												}
 											}
 											?></td>

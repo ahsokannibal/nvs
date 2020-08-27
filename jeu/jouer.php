@@ -106,7 +106,7 @@ if($dispo || $admin){
 				}
 				
 				// recuperation des anciennes données du perso
-				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, image_perso, pa_perso, perception_perso, recup_perso, bonusRecup_perso, bonusPM_perso, type_perso, paMax_perso, pv_perso, charge_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
+				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, image_perso, pa_perso, perception_perso, recup_perso, bonusRecup_perso, bonusPM_perso, type_perso, paMax_perso, pv_perso, charge_perso, chargeMax_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
 				$t_perso1 = $res->fetch_assoc();
 				
@@ -124,6 +124,7 @@ if($dispo || $admin){
 				$pa_perso			= $t_perso1["pa_perso"];
 				$perception_perso	= $t_perso1["perception_perso"];	
 				$charge_perso		= $t_perso1["charge_perso"];
+				$chargeMax_perso	= $t_perso1["chargeMax_perso"];
 				
 				$sql = "SELECT DLA_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
 				$res = $mysqli->query($sql);
@@ -171,7 +172,7 @@ if($dispo || $admin){
 				}			
 				
 				// calcul malus pm
-				$malus_pm_charge = getMalusCharge($charge_perso);
+				$malus_pm_charge = getMalusCharge($charge_perso, $chargeMax_perso);
 				if ($malus_pm_charge == 100) {
 					$malus_pm = -$pmMax_perso;
 				}
@@ -2127,7 +2128,7 @@ if($dispo || $admin){
 				echo "</tr>";
 				echo "</table>";
 	
-				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonusPA_perso, bonusPM_perso, bonus_perso, charge_perso, image_perso, message_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
+				$sql_info = "SELECT xp_perso, pc_perso, pv_perso, pvMax_perso, pa_perso, paMax_perso, pi_perso, pm_perso, pmMax_perso, recup_perso, protec_perso, type_perso, x_perso, y_perso, perception_perso, bonusPerception_perso, bonusRecup_perso, bonusPA_perso, bonusPM_perso, bonus_perso, charge_perso, chargeMax_perso, image_perso, message_perso, clan, bataillon FROM perso WHERE ID_perso ='$id_perso'"; 
 				$res_info = $mysqli->query($sql_info);
 				$t_perso2 = $res_info->fetch_assoc();
 				
@@ -2156,6 +2157,24 @@ if($dispo || $admin){
 				$bataillon_perso 		= $t_perso2["bataillon"];
 				$message_perso			= $t_perso2["message_perso"];
 				$charge_perso			= $t_perso2["charge_perso"];
+				$chargeMax_perso		= $t_perso2["chargeMax_perso"];
+				
+				// Si perso chien
+				if ($type_perso == 6) {
+					
+					// Récupération des coordonnées du chef
+					$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
+					$res = $mysqli->query($sql);
+					$t_coord_chef = $res->fetch_assoc();
+					
+					$x_perso_chef = $t_coord_chef['x_perso'];
+					$y_perso_chef = $t_coord_chef['y_perso'];
+					
+					if (abs($x_perso_chef - $x_perso) > 15 || abs($y_perso_chef - $y_perso) > 15) {
+						$bonusPerception_perso -= 3;
+						$perc -= 3;
+					}					
+				}
 				
 				if (in_bat($mysqli, $id_perso)) {
 											
@@ -2174,7 +2193,7 @@ if($dispo || $admin){
 				}
 				
 				// calcul malus pm
-				$malus_pm_charge = getMalusCharge($charge_perso);
+				$malus_pm_charge = getMalusCharge($charge_perso, $chargeMax_perso);
 				if ($malus_pm_charge == 100) {
 					$malus_pm = -$pmMax_perso;
 				}
