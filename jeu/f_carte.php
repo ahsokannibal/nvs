@@ -1028,7 +1028,7 @@ function getMalusCharge($charge_perso, $chargeMax_perso) {
 			$malus = 100;
 		}
 		else {
-			$taille_malus = $charge_perso - $chargeMax_perso;
+			$taille_malus = ceil($charge_perso - $chargeMax_perso);
 			if ($taille_malus > 0) {
 				$malus = -4 * $taille_malus;
 			}
