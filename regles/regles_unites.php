@@ -183,6 +183,15 @@
 					</div>
 					<br />
 					
+					<h3>Spécificités du chien</h3>
+					<p>Le chien possède plusieurs spécificités : </p>
+					<ul>
+						<li>Le chien n'a pas de malus de perception en forêt</li>
+						<li>Le chien aura un malus de perception de 3 s'il se trouve a plus de 15 cases de son maitre (le chef de bataillon)</li>
+						<li>La charge maximale du chien avant d'avoir un malus de PM est de 2kg. Au dessus, il aura un malus de 4PM et ainsi de suite pour chaque kilo au dessus (de 2,1kg à 3kg de charge : il aura 4PM de malus, de 3,1kg à 4kg de charge, il aura 8PM de malus, etc...). A partir de 6kg de charge, le chien perd tous ses PM !</li>
+						<li>Les chiens ne peuvent pas capturer les bâtiments ennemis</li>
+					</ul>
+					
 					<h3>Rapatriement  & Convalescence</h3>
 					<p>Une unité capturée est rapatriée dans un bâtiment (<a href='regles_batiments.php'>règles de rapatriement ici</a>). Si l'unité n'a pas entamé un nouveau tour, elle se retrouve alors avec 0PA et 0PM.</p>
 					<p>Si l'unité rapatriée entame un nouveau tour, elle subit les effets de la convalescence. Elle se retrouve donc avec PA/2 et PM/2 (hors bonus / malus qui s'ajoutent) uniquement pour le tour qui suit un rapatriement (le malus de convalescence disparait ensuite au tour suivant).</p>
