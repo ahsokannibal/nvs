@@ -51,9 +51,9 @@ function ameliore_pv($mysqli, $pv_courant, $type_perso){
 	
 	$pv_base_unite = $tab["pv_unite"];
 	
-	$pv_ameliore_cible = $pv_courant - $pv_base_unite;
-	$base_cout_pv 	= 1.2;
-	$cout_achat_pv 	= 0.4;
+	$pv_ameliore_cible = floor(($pv_courant - $pv_base_unite) / 10);
+	$base_cout_pv 	= 1;
+	$cout_achat_pv 	= 1;
 	
 	$resultat = floor($base_cout_pv + $pv_ameliore_cible * $cout_achat_pv);
 	
@@ -91,7 +91,7 @@ function ameliore_recup($mysqli, $rec_courant, $type_perso){
 	
 	$rec_base_unite = $tab["recup_unite"];
 	
-	$rec_ameliore_cible = $rec_courant - $rec_base_unite;
+	$rec_ameliore_cible = floor(($rec_courant - $rec_base_unite) / 10);
 	$base_cout_rec 	= 10;
 	$cout_achat_rec = 3;
 	
