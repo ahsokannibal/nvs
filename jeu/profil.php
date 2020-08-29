@@ -351,13 +351,18 @@ if($dispo || $admin){
 							<tr align=center>
 								<td align=center>
 									<u><b>Description</b></u> (<a href="changer_description.php">Changer</a>)<br><br><?php if($des_p == "") echo "Pas de description"; else echo bbcode(htmlentities(stripslashes($des_p))); ?>
+									<?php
+									if ($type_p != 6) {
+									?>	
 									<br><br>
 									<u><b>Message du jour</b></u> (<a href="changer_message.php">Changer</a>)<br><br><?php if($mes_p == "") echo "Pas de message du jour"; else echo stripslashes(br2nl2($mes_p)); ?></td>
+									<?php
+									}
+									?>
 							</tr>
 						</table>
 					</td>
 				</tr>
-				
 			</table>
 		</div>
 		<?php

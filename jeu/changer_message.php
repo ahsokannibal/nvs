@@ -10,15 +10,23 @@ if(@$_SESSION["id_perso"]){
 
 	$id = $_SESSION["id_perso"];
 	
-	if(isset($_POST["changer"])) {
-		
-		$message = htmlentities(addslashes(nl2br($_POST["message"])));
-		
-		$sql = "UPDATE perso SET message_perso='$message' WHERE ID_perso='$id'";
-		$mysqli->query($sql);
-		
-		header("Location:profil.php");
-	}
+	$sql = "SELECT type_perso FROM perso WHERE id_perso='$id'";
+	$res = $mysqli->query($sql);
+	$t_p = $res->fetch_assoc();
+	
+	$type_p = $t_p['type_perso'];
+	
+	if ($type_p != 6) {
+	
+		if(isset($_POST["changer"])) {
+			
+			$message = htmlentities(addslashes(nl2br($_POST["message"])));
+			
+			$sql = "UPDATE perso SET message_perso='$message' WHERE ID_perso='$id'";
+			$mysqli->query($sql);
+			
+			header("Location:profil.php");
+		}
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -65,6 +73,13 @@ if(@$_SESSION["id_perso"]){
 				</form>
 			</div>
 		</div>
+		
+<?php
+	}
+	else {
+		echo "<center><font color='red'>Les chiens ne peuvent pas accèder à cette page.</font></center>";
+	}
+?>		
 		
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
