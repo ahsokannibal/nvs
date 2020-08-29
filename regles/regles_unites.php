@@ -192,6 +192,9 @@
 						<li>Les chiens ne peuvent pas capturer les bâtiments ennemis</li>
 						<li>Les chiens ne peuvent pas s'équiper d'objets (comme les bottes, les lunettes de visée, etc...)</li>
 						<li>Les chiens ne peuvent pas réparer les bâtiments</li>
+						<li>Les chiens ne peuvent pas lire ou envoyer de télégrammes</li>
+						<li>Les chiens ne peuvent pas créer ou postuler dans des compagnies</li>
+						<li>Les chiens ne peuvent pas acheter ou vendre des objets / armes / tickets de train</li>
 					</ul>
 					
 					<h3>Rapatriement  & Convalescence</h3>
