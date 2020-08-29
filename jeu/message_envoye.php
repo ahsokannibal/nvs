@@ -22,17 +22,24 @@ if(isset($_SESSION["id_perso"])){
 	</head>
 
 	<body>
-<?php
-$id = $_SESSION["id_perso"];
-
-$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."'";
-$res_a_lire = $mysqli->query($sql_a_lire);
-$a_lire = $res_a_lire->num_rows;
-?>
 		<div class="container-fluid">
 		
 			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+<?php
+	$id = $_SESSION["id_perso"];
+	
+	$sql = "SELECT type_perso FROM perso WHERE id_perso='$id'";
+	$res = $mysqli->query($sql);
+	$t_p = $res->fetch_assoc();
+	
+	$type_p = $t_p['type_perso'];
+	
+	if ($type_p != 6) {
 
+		$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."'";
+		$res_a_lire = $mysqli->query($sql_a_lire);
+		$a_lire = $res_a_lire->num_rows;
+?>
 			<div class="row justify-content-center">
 				<div class="col-12">
 					<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
@@ -57,55 +64,59 @@ $a_lire = $res_a_lire->num_rows;
 					<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
 
 <?php
-// recupération des infos sur le message
-$sql = "SELECT DISTINCT(message.id_message) as id_mes, expediteur_message, date_message, objet_message
-		FROM message, message_perso 
-		WHERE id_expediteur='".$id."'
-		AND message_perso.id_message = message.id_message
-		ORDER BY date_message DESC";
-$resultat = $mysqli->query($sql);
+		// recupération des infos sur le message
+		$sql = "SELECT DISTINCT(message.id_message) as id_mes, expediteur_message, date_message, objet_message
+				FROM message, message_perso 
+				WHERE id_expediteur='".$id."'
+				AND message_perso.id_message = message.id_message
+				ORDER BY date_message DESC";
+		$resultat = $mysqli->query($sql);
 
-if ($resultat->num_rows == 0){
-    echo "<tr align=center><td colspan=4>Aucun message envoyé</td></tr>";
-}
-else {
-	
-	echo '<tr>';
-	echo '	<th style="text-align:center" width="33%">Destinataire</th><th style="text-align:center" width="33%">Date</th><th style="text-align:center" colspan=2>Objet</th>';
-	echo '</tr>';
-	
-	while($row = $resultat->fetch_assoc()) {
-		
-		$destinataires = "";
-		
-		$id_mes 		= $row['id_mes'];
-		$date_message	= $row["date_message"];
-		$objet_message	= $row["objet_message"];
-		
-		// recupération des destinataires
-		$sql_dest = "SELECT nom_perso FROM perso, message_perso WHERE perso.id_perso = message_perso.id_perso AND id_message='$id_mes'";
-		$res_dest = $mysqli->query($sql_dest);
-		
-		while($t_dest = $res_dest->fetch_assoc()){
-			
-			$nom_dest = $t_dest["nom_perso"];
-			
-			if(isset($destinataires) && $destinataires != ""){
-				$destinataires .= " ; ".$nom_dest;
-			}
-			else {
-				$destinataires = $nom_dest;
-			}
+		if ($resultat->num_rows == 0){
+			echo "<tr align=center><td colspan=4>Aucun message envoyé</td></tr>";
 		}
-	
-		echo "<tr>";
-		echo "	<td>" . $destinataires . "</td>";
-		echo "	<td align='center'>" . $date_message . "</td>";
-		echo "	<td colspan=2><a href=message_lire.php?id=" . $id_mes . "&methode=e>" . stripslashes($objet_message) . "</a></td>";
-		echo "</tr>";
+		else {
+			
+			echo '<tr>';
+			echo '	<th style="text-align:center" width="33%">Destinataire</th><th style="text-align:center" width="33%">Date</th><th style="text-align:center" colspan=2>Objet</th>';
+			echo '</tr>';
+			
+			while($row = $resultat->fetch_assoc()) {
+				
+				$destinataires = "";
+				
+				$id_mes 		= $row['id_mes'];
+				$date_message	= $row["date_message"];
+				$objet_message	= $row["objet_message"];
+				
+				// recupération des destinataires
+				$sql_dest = "SELECT nom_perso FROM perso, message_perso WHERE perso.id_perso = message_perso.id_perso AND id_message='$id_mes'";
+				$res_dest = $mysqli->query($sql_dest);
+				
+				while($t_dest = $res_dest->fetch_assoc()){
+					
+					$nom_dest = $t_dest["nom_perso"];
+					
+					if(isset($destinataires) && $destinataires != ""){
+						$destinataires .= " ; ".$nom_dest;
+					}
+					else {
+						$destinataires = $nom_dest;
+					}
+				}
+			
+				echo "<tr>";
+				echo "	<td>" . $destinataires . "</td>";
+				echo "	<td align='center'>" . $date_message . "</td>";
+				echo "	<td colspan=2><a href=message_lire.php?id=" . $id_mes . "&methode=e>" . stripslashes($objet_message) . "</a></td>";
+				echo "</tr>";
 
-	}	
-}
+			}	
+		}
+	}
+	else {
+		echo "<center><font color='red'>Les chiens ne peuvent pas accèder à cette page.</font></center>";
+	}
 ?>
 				</table>
 			</div>

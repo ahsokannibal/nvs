@@ -42,22 +42,29 @@ if(isset($_SESSION["id_perso"])){
 	</script>
 	
 	<body>
-<?php
-$id = $_SESSION["id_perso"];
-
-// recuperation des message dont il est le destinataire
-$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier='1'";
-$res_a_lire = $mysqli->query($sql_a_lire);
-$a_lire = $res_a_lire->num_rows;
-
-$sql_dossier = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier!='1'";
-$res_dossier = $mysqli->query($sql_dossier);
-$a_lire_dossier = $res_dossier->num_rows;
-?>
 		<div class="container-fluid">
 		
 			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+<?php
+	$id = $_SESSION["id_perso"];
+	
+	$sql = "SELECT type_perso FROM perso WHERE id_perso='$id'";
+	$res = $mysqli->query($sql);
+	$t_p = $res->fetch_assoc();
+	
+	$type_p = $t_p['type_perso'];
+	
+	if ($type_p != 6) {
 
+		// recuperation des message dont il est le destinataire
+		$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier='1'";
+		$res_a_lire = $mysqli->query($sql_a_lire);
+		$a_lire = $res_a_lire->num_rows;
+
+		$sql_dossier = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier!='1'";
+		$res_dossier = $mysqli->query($sql_dossier);
+		$a_lire_dossier = $res_dossier->num_rows;
+?>
 			<div class="row justify-content-center">
 				<div class="col-12">
 					<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
@@ -82,45 +89,45 @@ $a_lire_dossier = $res_dossier->num_rows;
 					<form name= "chk" method="post" action="traitement/t_messagerie.php">
 						<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
 <?php
-$sql = "SELECT message.id_message, expediteur_message, date_message, objet_message, lu_message 
-		FROM message, message_perso 
-		WHERE id_perso='".$id."' 
-		AND message_perso.id_message = message.id_message
-		AND id_dossier='1'
-		AND supprime_message='0'
-		ORDER BY date_message DESC";
-$resultat = $mysqli->query($sql);
+		$sql = "SELECT message.id_message, expediteur_message, date_message, objet_message, lu_message 
+				FROM message, message_perso 
+				WHERE id_perso='".$id."' 
+				AND message_perso.id_message = message.id_message
+				AND id_dossier='1'
+				AND supprime_message='0'
+				ORDER BY date_message DESC";
+		$resultat = $mysqli->query($sql);
 
-if ($resultat->num_rows == 0) {
-    echo "<tr align=center><td colspan=4>Aucun message</td></tr>";
-}
-else {
-	echo '<tr>';
-	echo "	<th><input type='checkbox' name='test' onclick='test_chk()'></th>";
-	echo "	<th style='text-align:center' width='30%'>Expediteur</th>";
-	echo "	<th style='text-align:center' width='33%'>Date</th>";
-	echo "	<th style='text-align:center' width='34%' colspan=2>Objet</th>";
-	echo "</tr>";
-	$i = 0;
-	
-	while($row = $resultat->fetch_assoc()) {
-		
-		echo '<tr>';
-		echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$row["id_message"].'"></td>';
-		
-		if ($row["lu_message"]){
-			echo "	<td>" . $row["expediteur_message"] . "</td>";
-			echo "	<td align='center'>" . stripslashes($row["date_message"]) . "</td><td colspan=2><a href=message_lire.php?id=" . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a></td>";
+		if ($resultat->num_rows == 0) {
+			echo "<tr align=center><td colspan=4>Aucun message</td></tr>";
 		}
 		else {
-			echo '	<td><div>' . $row["expediteur_message"] . '</div></td>';
-			echo '	<td align="center"><div>' . stripslashes($row["date_message"]) . '</div></td>';
-			echo '	<td colspan=2><a href=message_lire.php?id=' . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a><b> (non lu)</b></td>";
+			echo '<tr>';
+			echo "	<th><input type='checkbox' name='test' onclick='test_chk()'></th>";
+			echo "	<th style='text-align:center' width='30%'>Expediteur</th>";
+			echo "	<th style='text-align:center' width='33%'>Date</th>";
+			echo "	<th style='text-align:center' width='34%' colspan=2>Objet</th>";
+			echo "</tr>";
+			$i = 0;
+			
+			while($row = $resultat->fetch_assoc()) {
+				
+				echo '<tr>';
+				echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$row["id_message"].'"></td>';
+				
+				if ($row["lu_message"]){
+					echo "	<td>" . $row["expediteur_message"] . "</td>";
+					echo "	<td align='center'>" . stripslashes($row["date_message"]) . "</td><td colspan=2><a href=message_lire.php?id=" . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a></td>";
+				}
+				else {
+					echo '	<td><div>' . $row["expediteur_message"] . '</div></td>';
+					echo '	<td align="center"><div>' . stripslashes($row["date_message"]) . '</div></td>';
+					echo '	<td colspan=2><a href=message_lire.php?id=' . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a><b> (non lu)</b></td>";
+				}
+				echo '</tr>';
+				$i++;
+			}
 		}
-		echo '</tr>';
-		$i++;
-	}
-}
 ?>
 					</table>
 
@@ -135,7 +142,12 @@ else {
 				</form>
 			</div>
 		</div>
-
+<?php
+	}
+	else {
+		echo "<center><font color='red'>Les chiens ne peuvent pas accèder à cette page.</font></center>";
+	}
+?>
 		<br>
 		
 		<!-- Optional JavaScript -->
