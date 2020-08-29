@@ -195,6 +195,7 @@
 						<li>Les chiens ne peuvent pas lire ou envoyer de télégrammes</li>
 						<li>Les chiens ne peuvent pas créer ou postuler dans des compagnies</li>
 						<li>Les chiens ne peuvent pas acheter ou vendre des objets / armes / tickets de train</li>
+						<li>Les chiens ne peuvent pas définir / modifier de message du jour</li>
 					</ul>
 					
 					<h3>Rapatriement  & Convalescence</h3>
