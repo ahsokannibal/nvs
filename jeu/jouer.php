@@ -2338,7 +2338,7 @@ if($dispo || $admin){
 					$nb_compagnie_attente_em = $res->num_rows;
 					
 				} else if ($type_perso == 6) {
-					$pourc_icone = "16%";
+					$pourc_icone = "20%";
 				} else {
 					$pourc_icone = "14%";
 				}
@@ -2408,7 +2408,13 @@ if($dispo || $admin){
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
+							<?php
+							if ($type_perso != 6) {
+							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_messagerie; ?>" alt="messagerie"></a></td>
+							<?php
+							}
+							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=88 height=92 border=0 src="../images/classement2.png" alt="classement"></a></td>
 							<?php
 							if ($type_perso != 6) {
@@ -2437,6 +2443,9 @@ if($dispo || $admin){
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
+							<?php
+							if ($type_perso != 6) {
+							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
 								<a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a>
 								<?php 
@@ -2445,6 +2454,9 @@ if($dispo || $admin){
 								} 
 								?>
 							</td>
+							<?php
+							}
+							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=16 border=0 src="../images/classement_titrev2.png"></a></td>
 							<?php
 							if ($type_perso != 6) {
