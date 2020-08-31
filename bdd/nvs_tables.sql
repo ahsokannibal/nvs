@@ -76,10 +76,12 @@ CREATE TABLE `action_as_batiment` (
 --
 
 CREATE TABLE `anim_question` ( 
-	`id` INT NOT NULL AUTO_INCREMENT , 
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`date_question` DATETIME NOT NULL ,
 	`id_perso` INT NOT NULL , 
 	`titre` TEXT NOT NULL , 
-	`question` INT NOT NULL , 
+	`question` INT NOT NULL ,
+	`id_camp` INT NOT NULL , 
 	`status` INT NOT NULL DEFAULT '0' , 
 	PRIMARY KEY (`id`)
 ) ENGINE = MyISAM; 

@@ -5,6 +5,7 @@ require_once("../fonctions.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
+include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
@@ -36,27 +37,13 @@ if($dispo || $admin){
 				$nom_camp = 'Indien';
 			}
 			
-			// Récupération des demandes sur la gestion des compagnies
-			$sql = "SELECT * FROM compagnie_demande_anim, compagnies 
-					WHERE compagnie_demande_anim.id_compagnie = compagnies.id_compagnie
-					AND compagnies.id_clan='$camp'";
+			// Récupération des questions anims
+			$sql = "SELECT anim_question.id, perso.id_perso, perso.nom_perso, date_question, titre, question, status FROM perso, anim_question 
+					WHERE anim_question.id_perso = perso.id_perso
+					AND anim_question.id_camp='$camp'
+					AND status = '0'
+					ORDER BY anim_question.id ASC";
 			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_compagnie = $res->num_rows;
-			
-			// Récupération des demandes sur la gestion des persos 
-			$sql = "(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
-					WHERE perso_demande_anim.id_perso = perso.id_perso
-					AND perso.clan = '$camp'
-					AND perso_demande_anim.type_demande = 1)
-					UNION ALL
-					(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
-					WHERE perso_demande_anim.id_perso = perso.idJoueur_perso
-					AND perso.clan = '$camp'
-					AND perso.chef = '1'
-					AND perso_demande_anim.type_demande > 1)
-					";
-			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_perso = $res->num_rows;
 			
 ?>
 		
@@ -79,29 +66,50 @@ if($dispo || $admin){
 				<div class="col-12">
 
 					<div align="center">
-						<h2>Animation du camp <?php echo $nom_camp; ?></h2>
+						<h2>Animation - Questions / remontées des joueurs</h2>
 					</div>
 				</div>
 			</div>
 			
-			<p align="center"><a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
+			<p align="center"><a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a></p>
 			
 			<div class="row">
 				<div class="col-12">
-					<a class='btn btn-info' href='anim_compagnie.php'>Gestion des compagnies <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_compagnie." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_compagnie > 0) { echo $nb_demandes_gestion_compagnie; }?></span></a>
-					<a class='btn btn-info' href='anim_perso.php'>Gestion des persos <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_perso." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_perso > 0) { echo $nb_demandes_gestion_perso; }?></span></a>
-					<a class='btn btn-info' href='anim_batiment.php'>Gestion des bâtiments</a>
-					<a class='btn btn-info' href='anim_penitencier.php'>Gestion du pénitencier</a>
-					<a class='btn btn-info' href='anim_trains.php'>Gestion des trains</a>					
-				</div>
-			</div>
-			
-			<br />
-			
-			<div class="row">
-				<div class="col-12">
-					<a class='btn btn-warning' href='anim_missions.php'>Gestion des missions</a>
-					<a class='btn btn-warning' href='anim_questions.php'>Les questions / remontées des joueurs</a>
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th style='text-align:center'>Perso</th>
+									<th style='text-align:center'>Titre</th>
+									<th style='text-align:center'>Question / remontée</th>
+									<th style='text-align:center'>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_question		= $t['id'];
+									$id_perso 			= $t['id_perso'];
+									$nom_perso			= $t['nom_perso'];
+									$date_question		= $t['date_question'];
+									$titre_question		= $t['titre'];
+									$question			= $t['question'];
+									$status_question	= $t['status'];
+									
+									echo "<tr>";
+									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+									echo "	<td align='center'>".$titre_question."</td>";
+									echo "	<td align='center'>".$question."</td>";
+									echo "	<td align='center'>";
+									echo "		<a class='btn btn-success' href=\"anim_questions.php?id=".$id_question."&action=repondre\">Répondre</a>";
+									echo "	</td>";
+									echo "</tr>";
+								}
+								?>
+							</tbody>
+						</table>
+					</div>			
 				</div>
 			</div>
 			
