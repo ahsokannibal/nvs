@@ -268,7 +268,35 @@ if($dispo || $admin){
 		
 			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 			
-			<center>Nombre de membres dans l'état major : <?php echo $nb_persos_em; ?></center>
+			<div align='center'>Nombre de membres dans l'état major : <?php echo $nb_persos_em; ?></div>
+			<?php
+			if (isset($_GET['liste']) && $_GET['liste'] == "ok") {
+				
+				$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso_in_em, perso WHERE perso.id_perso = perso_in_em.id_perso AND camp_em='$camp_em'";
+				$res = $mysqli->query($sql);
+				
+				echo "<div align='center'>";
+				echo "<table>";
+				
+				while ($t = $res->fetch_assoc()) {
+					
+					$id_perso_em 	= $t['id_perso'];
+					$nom_perso_em	= $t['nom_perso'];
+					
+					echo "<tr>";
+					echo "	<td>".$nom_perso_em." [<a href='evenement.php?infoid=".$id_perso_em."'>".$id_perso_em."</a>]</td>";
+					echo "</tr>";
+				}
+				
+				echo "</table>";
+				echo "</div>";
+				
+				echo "<div align='center'><a href='etat_major.php' class='btn btn-primary'>Fermer la liste</a></div>";
+			}
+			else {
+				echo "<div align='center'><a href='etat_major.php?liste=ok' class='btn btn-primary'>Liste des membres de l'EM</a></div>";
+			}
+			?>
 			
 			<center><h2>Validation des créations de compagnie</h2></center>
 			<br />
