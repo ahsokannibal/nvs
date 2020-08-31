@@ -72,6 +72,21 @@ CREATE TABLE `action_as_batiment` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `anim_question`
+--
+
+CREATE TABLE `anim_question` ( 
+	`id` INT NOT NULL AUTO_INCREMENT , 
+	`id_perso` INT NOT NULL , 
+	`titre` TEXT NOT NULL , 
+	`question` INT NOT NULL , 
+	`status` INT NOT NULL DEFAULT '0' , 
+	PRIMARY KEY (`id`)
+) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `anti_zerk`
 --
 
@@ -80,6 +95,8 @@ CREATE TABLE `anti_zerk` (
 	`date_derniere_attaque` DATETIME NOT NULL,
 	`date_nouveau_tour` DATETIME NOT NULL
 ) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
 
 --
 -- Structure de la table `arme`
