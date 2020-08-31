@@ -80,7 +80,7 @@ CREATE TABLE `anim_question` (
 	`date_question` DATETIME NOT NULL ,
 	`id_perso` INT NOT NULL , 
 	`titre` TEXT NOT NULL , 
-	`question` INT NOT NULL ,
+	`question` TEXT NOT NULL ,
 	`id_camp` INT NOT NULL , 
 	`status` INT NOT NULL DEFAULT '0' , 
 	PRIMARY KEY (`id`)
