@@ -309,6 +309,9 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == " a saboté un ") {
 						$phrase_evenement = "a été saboté par ";
 					}
+					else if ($phrase_evenement == " a fait une révision sur le batiment ") {
+						$phrase_evenement = "a été résvisé par ";
+					}
 					
 					echo stripslashes($phrase_evenement)." ";
 					
