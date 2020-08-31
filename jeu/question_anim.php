@@ -27,7 +27,14 @@ if($dispo || $admin){
 				$titre 		= addslashes($_POST['titreQuestion']);
 				$question 	= addslashes($_POST['question']);
 				
-				$sql = "INSERT INTO anim_question(id_perso, titre, question) VALUES ('$id', '$titre','$question')";
+				$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$id_camp = $t['clan'];
+				
+				$sql = "INSERT INTO anim_question(date_question, id_perso, titre, question, id_camp) VALUES (NOW(), '$id', '$titre', '$question', '$id_camp')";
+				$mysqli->query($sql);
 				
 				$mess = "Question envoyée avec succès, la réponse sera envoyée sur votre messagerie.";
 				
