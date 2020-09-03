@@ -20,6 +20,9 @@ if($dispo || $admin){
 		
 		if (anim_perso($mysqli, $id)) {
 			
+			$mess = "";
+			$mess_erreur = "";
+			
 			// Récupération du camp de l'animateur 
 			$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
@@ -35,6 +38,48 @@ if($dispo || $admin){
 			}
 			else if ($camp == '3') {
 				$nom_camp = 'Indien';
+			}
+			
+			if (isset($_POST['reponse']) && trim($_POST['reponse']) != "" && isset($_POST['hid_rep_id_perso']) && isset($_POST['hid_rep_id_question'])) {
+				
+				$message 			= addslashes($_POST['reponse']);
+				$id_perso_rep		= $_POST['hid_rep_id_perso'];
+				$id_question_rep	= $_POST['hid_rep_id_question'];
+				
+				$objet = "[Animation] Réponse à votre question / remontée";
+				
+				$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_rep'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+			
+				$dest = $t['nom_perso'];
+				
+				$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+			
+				$expediteur = $t['nom_perso'];
+				
+				$lock = "LOCK TABLE (message) WRITE";
+				$mysqli->query($lock);
+				
+				// creation du message
+				$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
+						VALUES ('" . $id . "', '" . $expediteur . "', NOW(), '" . $message. "', '" . $objet. "')";
+				$mysqli->query($sql);
+				$id_message = $mysqli->insert_id;
+				
+				$unlock = "UNLOCK TABLES";
+				$mysqli->query($unlock);
+				
+				// assignation du message au perso
+				$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso_rep', '1', '0', '0', '0')";
+				$mysqli->query($sql);
+				
+				$sql = "UPDATE anim_question SET status='1' WHERE id='$id_question_rep'";
+				$mysqli->query($sql);
+				
+				$mess .= "Réponse envoyée avec succés";
 			}
 			
 			// Récupération des questions anims
@@ -75,6 +120,85 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
+					<div align="center">
+						<?php
+						echo "<font color='blue'>".$mess."</font><br />";
+						echo "<font color='red'><b>".$mess_erreur."</b></font><br />";
+						?>
+					</div>
+				</div>
+			</div>
+			
+			<?php
+			if (isset($_GET['id']) && isset($_GET['action']) && $_GET['action'] == 'repondre') {
+				
+				$id_question = $_GET['id'];
+				
+				$verif = preg_match("#^[0-9]*[0-9]$#i","$id_question");
+				
+				if ($verif) {
+				
+					$sql_q = "SELECT perso.id_perso, perso.nom_perso, date_question, titre, question 
+								FROM anim_question, perso 
+								WHERE anim_question.id_perso = perso.id_perso
+								AND id='$id_question'";
+					$res_q = $mysqli->query($sql_q);
+					$t_q = $res_q->fetch_assoc();
+					
+					$id_perso 			= $t_q['id_perso'];
+					$nom_perso 			= $t_q['nom_perso'];
+					$date_question		= $t_q['date_question'];
+					$titre_question		= $t_q['titre'];
+					$question			= $t_q['question'];
+			?>
+			<div class="row">
+				<div class="col-12">
+					<div class="table-responsive">
+						<table border='1' width='100%'>
+							<tr>
+								<td><b>Auteur de la question : </b></td><td><?php echo $nom_perso." [<a href='evenement.php?infoid='>".$id_perso."</a>]"; ?></td>
+								<td><b>Date d'envoi : </b></td><td><?php echo $date_question; ?></td>
+							</tr>
+							<tr>
+								<td><b>Titre : </b></td><td colspan='3'><?php echo $titre_question; ?></td>
+							</tr>
+							<tr>
+								<td colspan='4'><?php echo $question; ?></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div class="table-responsive">
+						<form method='post' action='anim_questions.php'>
+							<div class="form-group col-md-12">
+								<label for="reponse">Réponse</label>
+								<textarea  class="form-control" cols="100" rows="20" id="reponse" name="reponse"></textarea>
+								<input type='hidden' name='hid_rep_id_perso' value='<?php echo $id_perso; ?>' />
+								<input type='hidden' name='hid_rep_id_question' value='<?php echo $id_question; ?>' />
+							</div>
+							<div class="form-group col-md-6">
+								<input type="submit" name="envoyer" value="envoyer" class='btn btn-primary'>
+								<input type="submit" name="annuler" value="annuler" class='btn btn-warning'>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+			<?php
+				}
+				else {
+					echo "<center><font color='red'><b>Merci de ne pas jouer avec les paramètres de l'url...</b></font></center>";
+				}
+			}
+			else {
+			?>
+			
+			<div class="row">
+				<div class="col-12">
 					<div class="table-responsive">
 						<table class="table">
 							<thead>
@@ -112,6 +236,9 @@ if($dispo || $admin){
 					</div>			
 				</div>
 			</div>
+			<?php
+			}
+			?>
 			
 		</div>
 	

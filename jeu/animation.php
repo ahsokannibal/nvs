@@ -58,6 +58,10 @@ if($dispo || $admin){
 			$res = $mysqli->query($sql);
 			$nb_demandes_gestion_perso = $res->num_rows;
 			
+			// Récupération du nombre de questions / remontées anims en attente de réponse
+			$sql = "SELECT id FROM anim_question WHERE id_camp='$camp' AND status='0'";
+			$res = $mysqli->query($sql);
+			$nb_questions_anim = $res->num_rows;
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -101,7 +105,7 @@ if($dispo || $admin){
 			<div class="row">
 				<div class="col-12">
 					<a class='btn btn-warning' href='anim_missions.php'>Gestion des missions</a>
-					<a class='btn btn-warning' href='anim_questions.php'>Les questions / remontées des joueurs</a>
+					<a class='btn btn-warning' href='anim_questions.php'>Les questions / remontées des joueurs <span class="badge badge-danger" title='<?php echo $nb_questions_anim." questions en attente"; ?>'><?php if ($nb_questions_anim > 0) { echo $nb_questions_anim; }?></span></a>
 				</div>
 			</div>
 			
