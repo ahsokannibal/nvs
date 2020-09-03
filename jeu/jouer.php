@@ -1165,94 +1165,108 @@ if($dispo || $admin){
 									if (in_map($x_sortie, $y_sortie, $X_MAX, $Y_MAX)) {
 										
 										// Récupération x, y et taille batiment
-										$sql = "SELECT x_instance, y_instance, taille_batiment FROM instance_batiment, batiment 
+										$sql = "SELECT x_instance, y_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment 
 												WHERE instance_batiment.id_batiment = batiment.id_batiment
 												AND id_instanceBat = '$instance_bat'";
 										$res = $mysqli->query($sql);
 										$t = $res->fetch_assoc();
 										
+										$id_bat		= $t['id_batiment'];
 										$x_instance = $t['x_instance'];
 										$y_instance = $t['y_instance'];
 										$taille_bat = $t['taille_batiment'];
 										
-										$nb_case_bat = ceil($taille_bat / 2);
+										// Cas particulier pénitencier
+										if ($id_bat != 10) {
 										
-										if (($x_sortie == $x_instance + $nb_case_bat && $y_sortie >= $y_instance - $nb_case_bat && $y_sortie <= $y_instance + $nb_case_bat)
-											|| ($x_sortie == $x_instance - $nb_case_bat && $y_sortie >= $y_instance - $nb_case_bat && $y_sortie <= $y_instance + $nb_case_bat)
-											|| ($y_sortie == $y_instance + $nb_case_bat && $x_sortie >= $x_instance - $nb_case_bat && $x_sortie <= $x_instance + $nb_case_bat)
-											|| ($y_sortie == $y_instance - $nb_case_bat && $x_sortie >= $x_instance - $nb_case_bat && $x_sortie <= $x_instance + $nb_case_bat)) {
+											$nb_case_bat = ceil($taille_bat / 2);
 											
-											
-											// recuperation des fonds
-											$sql = "SELECT fond_carte, occupee_carte FROM $carte WHERE x_carte='$x_sortie' AND y_carte='$y_sortie'";
-											$res_map = $mysqli->query ($sql);
-											$t_carte1 = $res_map->fetch_assoc();
-											
-											$fond = $t_carte1["fond_carte"];
-											$oc_c = $t_carte1["occupee_carte"];
-											
-											// On vérifie que la case n'est pas déjà occupée
-											if (!$oc_c) {
-											
-												// mise a jour des coordonnees du perso et de ses pm
-												$sql = "UPDATE perso SET x_perso = '$x_sortie', y_perso = '$y_sortie', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
-												$mysqli->query($sql);
+											if (($x_sortie == $x_instance + $nb_case_bat && $y_sortie >= $y_instance - $nb_case_bat && $y_sortie <= $y_instance + $nb_case_bat)
+												|| ($x_sortie == $x_instance - $nb_case_bat && $y_sortie >= $y_instance - $nb_case_bat && $y_sortie <= $y_instance + $nb_case_bat)
+												|| ($y_sortie == $y_instance + $nb_case_bat && $x_sortie >= $x_instance - $nb_case_bat && $x_sortie <= $x_instance + $nb_case_bat)
+												|| ($y_sortie == $y_instance - $nb_case_bat && $x_sortie >= $x_instance - $nb_case_bat && $x_sortie <= $x_instance + $nb_case_bat)) {
 												
-												$x_persoN = $x_sortie;
-												$y_persoN = $y_sortie;
 												
-												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
-												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$x_sortie' AND y_carte = '$y_sortie'";
-												$mysqli->query($sql);
+												// recuperation des fonds
+												$sql = "SELECT fond_carte, occupee_carte FROM $carte WHERE x_carte='$x_sortie' AND y_carte='$y_sortie'";
+												$res_map = $mysqli->query ($sql);
+												$t_carte1 = $res_map->fetch_assoc();
 												
-												// mise a jour de la table perso_in_batiment
-												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-												$mysqli->query($sql);
+												$fond = $t_carte1["fond_carte"];
+												$oc_c = $t_carte1["occupee_carte"];
 												
-												// mise a jour des evenements
-												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $x_sortie/$y_sortie',NOW(),'0')";
-												$mysqli->query($sql);
+												// On vérifie que la case n'est pas déjà occupée
+												if (!$oc_c) {
 												
-												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-												
-												if(bourre($mysqli, $id_perso)){
-													if(!endurance_alcool($mysqli, $id_perso)) {
-														$malus_bourre = bourre($mysqli, $id_perso) * 3;
-														$bonus_visu -= $malus_bourre;
+													// mise a jour des coordonnees du perso et de ses pm
+													$sql = "UPDATE perso SET x_perso = '$x_sortie', y_perso = '$y_sortie', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
+													$mysqli->query($sql);
+													
+													$x_persoN = $x_sortie;
+													$y_persoN = $y_sortie;
+													
+													// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+													$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$x_sortie' AND y_carte = '$y_sortie'";
+													$mysqli->query($sql);
+													
+													// mise a jour de la table perso_in_batiment
+													$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+													$mysqli->query($sql);
+													
+													// mise a jour des evenements
+													$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $x_sortie/$y_sortie',NOW(),'0')";
+													$mysqli->query($sql);
+													
+													// mise a jour du bonus de perception
+													$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+													
+													if(bourre($mysqli, $id_perso)){
+														if(!endurance_alcool($mysqli, $id_perso)) {
+															$malus_bourre = bourre($mysqli, $id_perso) * 3;
+															$bonus_visu -= $malus_bourre;
+														}
+													}
+													
+													$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+													$mysqli->query($sql);
+													
+													// maj carte brouillard de guerre
+													$perception_final = $perception_perso + $bonus_visu;
+													if ($clan_p == 1) {
+														$sql = "UPDATE $carte SET vue_nord='1' 
+																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+														$mysqli->query($sql);
+													}
+													else if ($clan_p == 2) {
+														$sql = "UPDATE $carte SET vue_sud='1' 
+																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+														$mysqli->query($sql);
 													}
 												}
-												
-												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
-												$mysqli->query($sql);
-												
-												// maj carte brouillard de guerre
-												$perception_final = $perception_perso + $bonus_visu;
-												if ($clan_p == 1) {
-													$sql = "UPDATE $carte SET vue_nord='1' 
-															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-													$mysqli->query($sql);
-												}
-												else if ($clan_p == 2) {
-													$sql = "UPDATE $carte SET vue_sud='1' 
-															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-													$mysqli->query($sql);
+												else {
+													$erreur .= "La case de sortie est déjà occupée !";
 												}
 											}
 											else {
-												$erreur .= "La case de sortie est déjà occupée !";
+												// Tentative de triche
+												$text_triche = "Les coordonnées de sortie en paramètre ne correspondent pas à la sortie du batiment";
+									
+												$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+												$mysqli->query($sql);
+												
+												$erreur .= "Paramètre incorrect !";
 											}
 										}
 										else {
 											// Tentative de triche
-											$text_triche = "Les coordonnées de sortie en paramètre ne correspondent pas à la sortie du batiment";
+											$text_triche = "Tentative de sortie de pénitencier";
 								
 											$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 											$mysqli->query($sql);
 											
-											$erreur .= "Paramètre incorrect !";
+											$erreur .= "Votre tentative d'évasion s'est soldée par un echec, les gardes vous ont rattrapés et remis au cachot !";
 										}
 									}
 									else {
@@ -2089,7 +2103,12 @@ if($dispo || $admin){
 					$res = $mysqli->query($sql);
 					$nb_demandes_gestion_perso = $res->num_rows;
 					
-					$nb_demande_a_traiter = $nb_demandes_gestion_compagnie + $nb_demandes_gestion_perso;
+					// Récupération du nombre de questions / remontées anims en attente de réponse
+					$sql = "SELECT id FROM anim_question WHERE id_camp='$clan_p' AND status='0'";
+					$res = $mysqli->query($sql);
+					$nb_questions_anim = $res->num_rows;
+					
+					$nb_demande_a_traiter = $nb_demandes_gestion_compagnie + $nb_demandes_gestion_perso + $nb_questions_anim;
 				}
 				
 				//affichage de l'heure serveur et de nouveau tour

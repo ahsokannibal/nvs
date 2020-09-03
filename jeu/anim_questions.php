@@ -79,17 +79,11 @@ if($dispo || $admin){
 				$sql = "UPDATE anim_question SET status='1' WHERE id='$id_question_rep'";
 				$mysqli->query($sql);
 				
+				$sql = "INSERT INTO anim_question(date_question, id_perso, titre, question, id_camp, status, id_parent) VALUES (NOW(), '$id', '$objet', '$message', '$camp', '9', '$id_question_rep')";
+				$mysqli->query($sql);
+				
 				$mess .= "Réponse envoyée avec succés";
 			}
-			
-			// Récupération des questions anims
-			$sql = "SELECT anim_question.id, perso.id_perso, perso.nom_perso, date_question, titre, question, status FROM perso, anim_question 
-					WHERE anim_question.id_perso = perso.id_perso
-					AND anim_question.id_camp='$camp'
-					AND status = '0'
-					ORDER BY anim_question.id ASC";
-			$res = $mysqli->query($sql);
-			
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -109,14 +103,27 @@ if($dispo || $admin){
 		
 			<div class="row">
 				<div class="col-12">
-
 					<div align="center">
 						<h2>Animation - Questions / remontées des joueurs</h2>
 					</div>
 				</div>
 			</div>
 			
-			<p align="center"><a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a></p>
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a>
+						<a class="btn btn-success" href="anim_questions.php">Retour à la liste des questions en attente</a>
+						<?php
+						if (!isset($_GET['reponses'])) {
+						?>
+						<a class="btn btn-success" href="anim_questions.php?reponses=ok">Voir les questions déjà répondues</a>
+						<?php 
+						}
+						?>
+					</div>
+				</div>
+			</div>
 			
 			<div class="row">
 				<div class="col-12">
@@ -194,52 +201,201 @@ if($dispo || $admin){
 					echo "<center><font color='red'><b>Merci de ne pas jouer avec les paramètres de l'url...</b></font></center>";
 				}
 			}
-			else {
-			?>
-			
+			else if (isset($_GET['id']) && isset($_GET['action']) && $_GET['action'] == 'voir') {
+				
+				$id_question = $_GET['id'];
+				
+				$verif = preg_match("#^[0-9]*[0-9]$#i","$id_question");
+				
+				if ($verif) {
+				
+					$sql_q = "SELECT perso.id_perso, perso.nom_perso, date_question, titre, question 
+								FROM anim_question, perso 
+								WHERE anim_question.id_perso = perso.id_perso
+								AND id='$id_question'";
+					$res_q = $mysqli->query($sql_q);
+					$t_q = $res_q->fetch_assoc();
+					
+					$id_perso 			= $t_q['id_perso'];
+					$nom_perso 			= $t_q['nom_perso'];
+					$date_question		= $t_q['date_question'];
+					$titre_question		= $t_q['titre'];
+					$question			= $t_q['question'];
+					
+					// Réponse 
+					$sql_a = "SELECT perso.id_perso, perso.nom_perso, date_question, question 
+								FROM anim_question, perso 
+								WHERE anim_question.id_perso = perso.id_perso
+								AND id_parent='$id_question'";
+					$res_a = $mysqli->query($sql_a);
+					$t_a = $res_a->fetch_assoc();
+					$nb_rep = $res_a->num_rows;
+					
+					$id_perso_rep 		= $t_a['id_perso'];
+					$nom_perso_rep		= $t_a['nom_perso'];
+					$date_reponse		= $t_a['date_question'];
+					$reponse			= $t_a['question'];
+					?>
+					
 			<div class="row">
 				<div class="col-12">
 					<div class="table-responsive">
-						<table class="table">
-							<thead>
-								<tr>
-									<th style='text-align:center'>Perso</th>
-									<th style='text-align:center'>Titre</th>
-									<th style='text-align:center'>Question / remontée</th>
-									<th style='text-align:center'>Action</th>
-								</tr>
-							</thead>
-							<tbody>
-								<?php
-								while ($t = $res->fetch_assoc()) {
-									
-									$id_question		= $t['id'];
-									$id_perso 			= $t['id_perso'];
-									$nom_perso			= $t['nom_perso'];
-									$date_question		= $t['date_question'];
-									$titre_question		= $t['titre'];
-									$question			= $t['question'];
-									$status_question	= $t['status'];
-									
-									echo "<tr>";
-									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
-									echo "	<td align='center'>".$titre_question."</td>";
-									echo "	<td align='center'>".$question."</td>";
-									echo "	<td align='center'>";
-									echo "		<a class='btn btn-success' href=\"anim_questions.php?id=".$id_question."&action=repondre\">Répondre</a>";
-									echo "	</td>";
-									echo "</tr>";
-								}
-								?>
-							</tbody>
+						<table border='1' width='100%'>
+							<tr>
+								<td width='20%'><b>Auteur de la question : </b></td><td width='30%'><?php echo $nom_perso." [<a href='evenement.php?infoid='>".$id_perso."</a>]"; ?></td>
+								<td width='20%'><b>Date d'envoi : </b></td><td width='30%'><?php echo $date_question; ?></td>
+							</tr>
+							<tr>
+								<td><b>Titre : </b></td><td colspan='3'><?php echo $titre_question; ?></td>
+							</tr>
+							<tr>
+								<td colspan='4'><?php echo $question; ?></td>
+							</tr>
 						</table>
-					</div>			
+					</div>
 				</div>
 			</div>
+			
 			<?php
+					if ($nb_rep > 0) {
+			?>
+			<br />
+			<div class="row">
+				<div class="col-12">
+					<div class="table-responsive">
+						<table border='1' width='100%'>
+							<tr>
+								<td width='20%'><b>Auteur de la réponse : </b></td><td width='30%'><?php echo $nom_perso_rep." [<a href='evenement.php?infoid='>".$id_perso_rep."</a>]"; ?></td>
+								<td width='20%'><b>Date de la réponse : </b></td><td width='30%'><?php echo $date_reponse; ?></td>
+							</tr>
+							<tr>
+								<td colspan='4'><?php echo $reponse; ?></td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+					<?php
+					}
+					else {
+					?>
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						Réponse pour cette question non accessible
+					</div>
+				</div>
+			</div>
+					<?php
+					}
+				}				
 			}
+			else {
+				if (isset($_GET['reponses']) && $_GET['reponses'] == "ok") {
+					
+					// Récupération des questions anims répondues
+					$sql = "SELECT anim_question.id, perso.id_perso, perso.nom_perso, date_question, titre, question, status FROM perso, anim_question 
+							WHERE anim_question.id_perso = perso.id_perso
+							AND anim_question.id_camp='$camp'
+							AND status = '1'
+							ORDER BY anim_question.id ASC";
+					$res = $mysqli->query($sql);
+			?>
+				<div class="row">
+					<div class="col-12">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th style='text-align:center'>Perso</th>
+										<th style='text-align:center'>Titre</th>
+										<th style='text-align:center'>Question / remontée</th>
+										<th style='text-align:center'>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									while ($t = $res->fetch_assoc()) {
+										
+										$id_question		= $t['id'];
+										$id_perso 			= $t['id_perso'];
+										$nom_perso			= $t['nom_perso'];
+										$date_question		= $t['date_question'];
+										$titre_question		= $t['titre'];
+										$question			= $t['question'];
+										$status_question	= $t['status'];
+										
+										echo "<tr>";
+										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+										echo "	<td align='center'>".$titre_question."</td>";
+										echo "	<td align='center'>".$question."</td>";
+										echo "	<td align='center'>";
+										echo "		<a class='btn btn-success' href=\"anim_questions.php?id=".$id_question."&action=voir\">Voir</a>";
+										echo "	</td>";
+										echo "</tr>";
+									}
+									?>
+								</tbody>
+							</table>
+						</div>			
+					</div>
+				</div>
+			<?php
+				}
+				else {
+					
+					// Récupération des questions anims
+					$sql = "SELECT anim_question.id, perso.id_perso, perso.nom_perso, date_question, titre, question, status FROM perso, anim_question 
+							WHERE anim_question.id_perso = perso.id_perso
+							AND anim_question.id_camp='$camp'
+							AND status = '0'
+							ORDER BY anim_question.id ASC";
+					$res = $mysqli->query($sql);
 			?>
 			
+				<div class="row">
+					<div class="col-12">
+						<div class="table-responsive">
+							<table class="table">
+								<thead>
+									<tr>
+										<th style='text-align:center'>Perso</th>
+										<th style='text-align:center'>Titre</th>
+										<th style='text-align:center'>Question / remontée</th>
+										<th style='text-align:center'>Action</th>
+									</tr>
+								</thead>
+								<tbody>
+									<?php
+									while ($t = $res->fetch_assoc()) {
+										
+										$id_question		= $t['id'];
+										$id_perso 			= $t['id_perso'];
+										$nom_perso			= $t['nom_perso'];
+										$date_question		= $t['date_question'];
+										$titre_question		= $t['titre'];
+										$question			= $t['question'];
+										$status_question	= $t['status'];
+										
+										echo "<tr>";
+										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+										echo "	<td align='center'>".$titre_question."</td>";
+										echo "	<td align='center'>".$question."</td>";
+										echo "	<td align='center'>";
+										echo "		<a class='btn btn-success' href=\"anim_questions.php?id=".$id_question."&action=repondre\">Répondre</a>";
+										echo "	</td>";
+										echo "</tr>";
+									}
+									?>
+								</tbody>
+							</table>
+						</div>			
+					</div>
+				</div>
+			<?php
+				}
+			}
+			?>
 		</div>
 	
 		<!-- Optional JavaScript -->

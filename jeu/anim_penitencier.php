@@ -179,7 +179,7 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 						
 						// evenements perso
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_envoi_penitencier,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','','',NOW())";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_envoi_penitencier,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','Pénitencier','',NOW())";
 						$mysqli->query($sql);
 						
 						$mess = "Le perso ".$nom_perso." [".$id_perso_envoi_penitencier."] a bien été envoyé dans le Pénitencier";
