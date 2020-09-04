@@ -283,7 +283,7 @@ else{
 function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan_p) {
 	
 	// Récupération de tous les perso du joueur
-	$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, chef, genie, convalescence 
+	$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, bourre_perso, chef, genie, convalescence 
 			FROM perso WHERE idJoueur_perso='$id_joueur'";
 	$res = $mysqli->query($sql);
 	
@@ -304,6 +304,7 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 		$pm_max_perso_nouveau_tour	= $t_persos["pmMax_perso"];
 		$pa_max_perso_nouveau_tour	= $t_persos["paMax_perso"];
 		$bonusPM_nouveau_tour 		= $t_persos["bonusPM_perso"];
+		$bourre_perso_nouveau_tour	= $t_persos["bourre_perso"];
 		$genie_nouveau_tour 		= $t_persos["genie"];
 		$convalescence_nouveau_tour	= $t_persos["convalescence"];
 		
@@ -471,7 +472,13 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 				$pv_nouveau = $pv_max_perso_nouveau_tour;
 			}
 			
-			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=0, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) 
+			// calcul bourre perso
+			$bourre_perso = $bourre_perso_nouveau_tour - 1;
+			if ($bourre_perso < 0) {
+				$bourre_perso = 0;
+			}
+			
+			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=$bourre_perso, convalescence=0, DLA_perso=FROM_UNIXTIME($new_dla) 
 					WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
 		}
