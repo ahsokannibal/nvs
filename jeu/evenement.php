@@ -282,6 +282,9 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "<b>a capturé</b>") {
 						$phrase_evenement = "<b>a été capturé par</b>";
 					}
+					else if ($phrase_evenement == "a capturé") {
+						$phrase_evenement = "<b>a été capturé par</b>";
+					}					
 					else if ($phrase_evenement == " a raté son soin sur") {
 						$phrase_evenement = "a trop remué pour recevoir le soin de";
 					}
@@ -310,7 +313,7 @@ if(@$_SESSION["id_perso"]){
 						$phrase_evenement = "a été saboté par ";
 					}
 					else if ($phrase_evenement == " a fait une révision sur le batiment ") {
-						$phrase_evenement = "a été résvisé par ";
+						$phrase_evenement = "a été révisé par ";
 					}
 					else if ($phrase_evenement == "a été envoyé au Pénitencier ") {
 						$phrase_evenement = "<b>a reçu un nouveau prisonnier :</b> ";

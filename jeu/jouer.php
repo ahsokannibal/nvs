@@ -703,7 +703,7 @@ if($dispo || $admin){
 																	$mysqli->query($sql);
 																	
 																	// mise a jour table evenement
-																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé le batiment $nom_bat','$id_inst_bat','','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
+																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé','$id_inst_bat','le batiment $nom_bat','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
 																	$mysqli->query($sql);
 																	
 																	echo "<font color = red>Felicitation, vous venez de capturer un bâtiment ennemi !</font><br>";
