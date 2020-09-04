@@ -18,13 +18,14 @@ if($dispo || $admin){
 		$id = $_SESSION["id_perso"];
 		
 		// recuperation des donnees sur le perso
-		$sql = "SELECT pv_perso, pa_perso, type_perso FROM perso WHERE id_perso='$id'";
+		$sql = "SELECT pv_perso, pa_perso, type_perso, bourre_perso FROM perso WHERE id_perso='$id'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		
 		$testpv = $tpv['pv_perso'];
 		$testpa = $tpv['pa_perso'];
 		$type_p = $tpv['type_perso'];
+		$test_b = $tpv['bourre_perso'];
 		
 		// On verifie que le perso soit toujours vivant
 		if ($testpv <= 0) {
@@ -75,7 +76,10 @@ if($dispo || $admin){
 								$poids 				= $bonus_o["poids_objet"];
 								$type_o 			= $bonus_o["type_objet"];
 								
-								if ($type_o == 'N') {
+								if ($test_b >= 2 && $nom_ob == "Whisky") {
+									$mess_err .= "Vous ne pouvez pas consommer plus de Whisky ce tour ci";
+								}
+								else if ($type_o == 'N') {
 										
 									// on supprime l'objet de l'inventaire
 									$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
@@ -92,7 +96,7 @@ if($dispo || $admin){
 									$br_p 	= $t_p["bonusRecup_perso"];
 										
 									// si l'objet donne des bonus
-									if($bonusRecup) { 
+									if($bonusRecup) {
 											
 										// on applique les effets de l'objet sur le perso
 										$sql = "UPDATE perso 
@@ -379,7 +383,12 @@ if($dispo || $admin){
 				}
 				
 				if($type_o == 'N'){
-					echo "<br /><a class='btn btn-outline-success' href=\"sac.php?id_obj=".$id_obj."\">utiliser (cout : 1 PA)</a>";
+					if ($test_b >= 2 && $id_obj == 3) {
+						echo "<br /><font color='red'>Vous ne pouvez plus consommer de Whisky ce tour-ci</font>";
+					}
+					else {
+						echo "<br /><a class='btn btn-outline-success' href=\"sac.php?id_obj=".$id_obj."\">utiliser (cout : 1 PA)</a>";
+					}
 				}
 				
 				// Est ce que le perso est déjà équipé de cet objet ?
