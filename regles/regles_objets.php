@@ -284,7 +284,7 @@ $mysqli = db_connexion();
 								<td align='center'>Whisky</td>
 								<td align='center'>Consommable</td>
 								<td align='center'>+50 en récupération</td>
-								<td align='center'>-3 en perception pendant 1 tour</td>
+								<td align='center'>+1 au compteur "Bourré" du perso. Chaque point à ce compteur donne -3 en perception. Ce compteur descend de 1 par tour (et remis à 0 si rapatriement)</td>
 								<td align='center'>0.5kg</td>
 								<td align='center'>1 thune</td>
 								<td align='center'>Fort / Fortin</td>
@@ -334,6 +334,7 @@ $mysqli = db_connexion();
 					
 					<br />
 					<p>Les objets consommable disparaissent après utilisation.<br />
+					Chaque consommation de Whisky augmente de 1 le compteur "Bourré" du perso. Il n'est plus possible de consommer de Whisky si ce compteur est supérieur ou égal à 2.<br />
 					Les objets équipable peuvent être équipés/déséquipés et octroie les bonus/malus uniquement lorsqu'ils sont équipés.</p>
 					
 					<h2>Les Thunes</h2>
