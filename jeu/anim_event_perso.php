@@ -84,6 +84,49 @@ if($dispo || $admin){
 						}
 						else {
 							
+							$sql_b 	= "SELECT * FROM declaration_babysitte WHERE id_baby='$id_perso_event' AND date_debut <= CURDATE() AND date_fin >= CURDATE()";
+							$res_b 	= $mysqli->query($sql_b);
+							$nb_b	= $res_b->num_rows;
+							
+							if ($nb_b) {
+								
+								$t_b = $res_b->fetch_assoc();
+								
+								$id_perso_baby = $t_b['id_perso'];
+								
+								// récup infos perso qui babysitte
+								$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_baby'";
+								$res_p = $mysqli->query($sql_p);
+								$t_p = $res_p->fetch_assoc();
+
+								$nom_perso_baby 	= $t_p['nom_perso'];
+								$camp_perso_baby	= $t_p['clan'];
+								
+								echo "<div align='center'><b>Ce perso est actuellement babysitté par ".$nom_perso_baby." [".$id_perso_baby."]</b></div>";
+							}
+							
+							$sql_b 	= "SELECT * FROM declaration_babysitte WHERE id_perso='$id_perso_event' AND date_debut <= CURDATE() AND date_fin >= CURDATE()";
+							$res_b 	= $mysqli->query($sql_b);
+							$nb_b	= $res_b->num_rows;
+							
+							if ($nb_b) {
+								
+								while ($t_b = $res_b->fetch_assoc()) {
+									
+									$id_perso_baby = $t_b['id_baby'];
+									
+									// récup infos perso qui babysitte
+									$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_baby'";
+									$res_p = $mysqli->query($sql_p);
+									$t_p = $res_p->fetch_assoc();
+
+									$nom_perso_baby 	= $t_p['nom_perso'];
+									$camp_perso_baby	= $t_p['clan'];
+									
+									echo "<div align='center'><b>Ce perso est actuellement en train de babysitter le perso ".$nom_perso_baby." [".$id_perso_baby."]</b></div>";
+								}
+							}
+							
 							echo "<div align='center'><h3>Les 100 derniers événements de ".$nom_perso_event." [".$id_perso_event."]</h3></div>";
 							
 							echo "<div class='table-responsive'>";
