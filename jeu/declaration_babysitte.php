@@ -17,8 +17,96 @@ if($dispo || $admin){
 		//recuperation des variables de sessions
 		$id = $_SESSION["id_perso"];
 		
+		$sql = "SELECT id_perso, clan FROM perso WHERE perso.idJoueur_perso = (SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1'";
+		$res =  $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$id_chef = $t['id_perso'];
+		$id_camp = $t['clan'];
+		
 		$mess = "";
 		$mess_erreur = "";
+		
+		if (isset($_POST['nomBaby']) && $_POST['nomBaby'] != "" && isset($_POST['idBaby']) && $_POST['idBaby'] != "" 
+			&& isset($_POST['dateDebut']) && $_POST['dateDebut'] != "" && isset($_POST['dateFin']) && $_POST['dateFin'] != "") {
+			
+			$nomBaby 		= $_POST['nomBaby'];
+			$idBaby			= $_POST['idBaby'];
+			$dateDebutBaby	= $_POST['dateDebut'];
+			$dateFinBaby	= $_POST['dateFin'];
+			
+			$tabDateDebut 	= explode("/", $dateDebutBaby);
+			$tabDateFin 	= explode("/", $dateFinBaby);
+			
+			$verifId = preg_match("#^[0-9]*[0-9]$#i","$idBaby");
+			
+			if (!filtre($nomBaby,1,20) || ctype_digit($nomBaby) || strpos($nomBaby,'--') !== false){
+				$mess_erreur .= "Le nom du perso renseigné n'est pas conforme";
+			}
+			else {
+				if ($verifId) {
+					
+					if ($idBaby != $id_chef) {
+					
+						if (count($tabDateDebut) == 3 && count($tabDateFin) == 3) {
+							
+							$jourDateDebut 	= $tabDateDebut[0];
+							$moisDateDebut 	= $tabDateDebut[1];
+							$anneeDateDebut = $tabDateDebut[2];
+							
+							$jourDateFin 	= $tabDateFin[0];
+							$moisDateFin 	= $tabDateFin[1];
+							$anneeDateFin 	= $tabDateFin[2];
+						
+							if (checkdate($moisDateDebut, $jourDateDebut, $anneeDateDebut) && checkdate($moisDateFin, $jourDateFin, $anneeDateFin)) {
+								
+								// On verifie que l'id du perso existe bien
+								$sql = "SELECT clan FROM perso WHERE id_perso='$idBaby' AND chef='1'";
+								$res = $mysqli->query($sql);
+								$nb = $res->num_rows;
+								
+								if ($nb == 1) {
+									$t = $res->fetch_assoc();
+									
+									$campBaby = $t['clan'];
+									
+									if ($id_camp == $campBaby) {
+										$sql = "INSERT INTO declaration_babysitte (id_perso, id_baby, date_debut, date_fin) 
+												VALUES ('$id_chef', '$idBaby', STR_TO_DATE(\"$dateDebutBaby\", '%d/%m/%Y'), STR_TO_DATE(\"$dateFinBaby\", '%d/%m/%Y'))";
+										$mysqli->query($sql);
+										
+										$mess .= "Déclaration de babysitte du perso ".$nomBaby."[".$idBaby."] du ".$dateDebutBaby." au ".$dateFinBaby." bien enregistré";
+									}
+									else {
+										$mess_erreur .= "Vous n'avez pas le droit de babysitter un perso d'un autre camp !";
+									}
+								}
+								else {
+									$mess_erreur .= "L'id du perso renseigné n'existe pas";
+								}
+							}
+							else {
+								$mess_erreur .= "Les dates renseignées ne sont pas conforme";
+							}
+						}
+						else {
+							$mess_erreur .= "Les dates renseignées ne sont pas conforme";
+						}
+					}
+					else {
+						$mess_erreur .= "Vous ne pouvez pas déclarer un babysitte de votre propre perso...";
+					}
+				}
+				else {
+					$mess_erreur .= "L'id renseigné n'est pas conforme";
+				}
+			}
+		}
+		
+		// Récupération des babysittes déclarés
+		$sql_baby_courant = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef' AND date_debut <= CURDATE() AND date_fin >= CURDATE()";
+		$res_baby_courant = $mysqli->query($sql_baby_courant);
+		$nb_baby_courant = $res_baby_courant->num_rows;
 		
 		?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -44,7 +132,7 @@ if($dispo || $admin){
 				</div>
 			</div>
 			
-			<p align="center"><input type="button" value="Fermer la fenêtre de question / remontée aux animateurs" onclick="window.close()"></p>
+			<p align="center"><input type="button" value="Fermer la fenêtre" onclick="window.close()"></p>
 			
 			<div class="row">
 				<div class="col-12">
@@ -57,25 +145,115 @@ if($dispo || $admin){
 				</div>
 			</div>
 			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<?php
+						if ($nb_baby_courant) {
+							
+							echo "<font color='blue'>Vous babysittez actuellement les persos suivant : </font><br />";
+							
+							while ($t_baby_courant = $res_baby_courant->fetch_assoc()) {
+								
+								$id_baby_courant = $t_baby_courant['id_baby'];
+								
+								$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_baby_courant'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$nom_perso_baby_courant = $t['nom_perso'];
+								
+								echo $nom_perso_baby_courant." [".$id_baby_courant."]<br />";
+							}
+							
+							echo "<br />";
+						
+							if (isset($_GET['voir']) && $_GET['voir'] == 'ok') {
+						?>
+						<a href='declaration_babysitte.php' class='btn btn-success'>Fermer le tableau des déclarations de babysitte</a>
+						<?php
+								echo "<div id='table_baby' class='table-responsive'>";
+								echo "	<table class='table' width='80%'>";
+								echo "		<thead>";
+								echo "			<tr>";
+								echo "				<th>Perso babysitté</th><th>Date de début de babysitte</th><th>Date de fin</th>";
+								echo "			</tr>";
+								echo "		</thead>";
+								echo "		<tbody>";
+							
+								$sql = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef'";	
+								$res = $mysqli->query($sql);
+								
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_baby 			= $t['id_baby'];
+									$date_debut_baby 	= $t['date_debut'];
+									$date_fin_baby 		= $t['date_fin'];
+									
+									$tab_dateDebut 	= explode(" ",$date_debut_baby);
+									$tab_dateFin 	= explode(" ",$date_fin_baby);
+									
+									$date_debut_baby 	= $tab_dateDebut[0];
+									$date_fin_baby		= $tab_dateFin[0];
+									
+									$tab_dateDebut 	= explode("-", $date_debut_baby);
+									$tab_dateFin 	= explode("-",$date_fin_baby);
+									
+									$date_debut_baby 	= $tab_dateDebut[2]."/".$tab_dateDebut[1]."/".$tab_dateDebut[0];
+									$date_fin_baby 		= $tab_dateFin[2]."/".$tab_dateFin[1]."/".$tab_dateFin[0];
+									
+									$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_baby'";
+									$res_p = $mysqli->query($sql_p);
+									$t_p = $res_p->fetch_assoc();
+									
+									$nom_perso_baby = $t_p['nom_perso'];
+									
+									echo "			<tr>";
+									echo "				<td>".$nom_perso_baby." [".$id_baby."]</td>";
+									echo "				<td>".$date_debut_baby."</td>";
+									echo "				<td>".$date_fin_baby."</td>";
+									echo "			</tr>";
+								}
+								
+								echo "		</tbody>";
+								echo "	</table>";
+								echo "</div>";
+							}
+							else {
+						?>
+						<a href='declaration_babysitte.php?voir=ok' class='btn btn-success'>Voir mes déclarations de babysitte</a>
+						<?php
+							}
+						}
+						?>
+					</div>
+				</div>
+			</div>
+			
 			<br />
 			
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
-						<form method='post' action='question_anim.php'>
+						<form method='post' action='declaration_babysitte.php'>
 							<div class="form-group col-md-6">
 								<label for="nomBaby">Nom du chef du compte babysitté <font color='red'>*</font></label>
-								<input type="text" class="form-control" id="nomBaby" name="nomBaby" maxlength="40">
+								<input type="text" class="form-control" id="nomBaby" name="nomBaby" maxlength="20">
 							</div>
 							<div class="form-group col-md-6">
 								<label for="idBaby">Id du chef du compte babysitté <font color='red'>*</font></label>
-								<input type="text" class="form-control" id="idBaby" name="idBaby" maxlength="40">
+								<input type="text" class="form-control" id="idBaby" name="idBaby" maxlength="10">
 							</div>
 							<div class="form-group col-md-8">
-								<label for="dateDebut">Date de début du babysitte <font color='red'>*</font></label>
-							</div>
-							<div class="form-group col-md-8">
-								<label for="dateFin">Date de fin du babysitte <font color='red'>*</font></label>
+								<div class="input-group input-daterange">
+									<div class="input-group-addon">Du&nbsp;&nbsp;&nbsp;&nbsp;</div>
+									<input type="text" class="form-control" id="dateDebut" name="dateDebut" placeholder="DD/MM/YYYY">
+									<div class="input-group-addon">
+										<span class="glyphicon glyphicon-th"></span>
+									</div>
+									<div class="input-group-addon">&nbsp;&nbsp;&nbsp;&nbsp;jusqu'au&nbsp;&nbsp;&nbsp;&nbsp;</div>
+									<input type="text" class="form-control" id="dateFin" name="dateFin" placeholder="DD/MM/YYYY">
+								</div>
 							</div>
 							<div class="form-group col-md-6">
 								<input type="submit" name="envoyer" value="envoyer" class='btn btn-primary'>
@@ -92,6 +270,40 @@ if($dispo || $admin){
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	
+		<!-- Bootstrap date picker -->
+		<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css"/>
+		
+		<script>
+			;(function($){
+				$.fn.datepicker.dates['fr'] = {
+					days: ["dimanche", "lundi", "mardi", "mercredi", "jeudi", "vendredi", "samedi"],
+					daysShort: ["dim.", "lun.", "mar.", "mer.", "jeu.", "ven.", "sam."],
+					daysMin: ["d", "l", "ma", "me", "j", "v", "s"],
+					months: ["janvier", "février", "mars", "avril", "mai", "juin", "juillet", "août", "septembre", "octobre", "novembre", "décembre"],
+					monthsShort: ["janv.", "févr.", "mars", "avril", "mai", "juin", "juil.", "août", "sept.", "oct.", "nov.", "déc."],
+					today: "Aujourd'hui",
+					monthsTitle: "Mois",
+					clear: "Effacer",
+					weekStart: 1,
+					format: "dd/mm/yyyy"
+				};
+			}(jQuery));
+		
+			$(document).ready(function(){
+				var options={
+					autoclose: true,
+					startDate: '-0d',
+					language: 'fr',
+					todayHighlight: true
+				};
+				
+				$('.input-daterange input').each(function() {
+					$(this).datepicker(options);
+				});
+			})			
+		</script>
 	</body>
 <?php
 	}

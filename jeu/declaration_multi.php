@@ -62,7 +62,7 @@ if($dispo || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
-						<form method='post' action='question_anim.php'>
+						<form method='post' action='declaration_multi.php'>
 							<div class="form-group col-md-6">
 								<label for="nomMulti">Nom du chef du perso avec lequel vous déclarez le multi <font color='red'>*</font></label>
 								<input type="text" class="form-control" id="nomMulti" name="nomMulti" maxlength="40">

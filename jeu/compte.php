@@ -381,6 +381,8 @@ if($dispo || $admin){
 			<br />
 			
 			<center>
+				<a class='btn btn-warning' href="declaration_multi.php">Déclarer un multi</a>
+				<a class='btn btn-warning' href="declaration_babysitte.php">Déclarer un babysitte</a>
 				<?php
 				if ($a_g) {
 				?>
