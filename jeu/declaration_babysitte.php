@@ -71,11 +71,23 @@ if($dispo || $admin){
 									$campBaby = $t['clan'];
 									
 									if ($id_camp == $campBaby) {
-										$sql = "INSERT INTO declaration_babysitte (id_perso, id_baby, date_debut, date_fin) 
-												VALUES ('$id_chef', '$idBaby', STR_TO_DATE(\"$dateDebutBaby\", '%d/%m/%Y'), STR_TO_DATE(\"$dateFinBaby\", '%d/%m/%Y'))";
-										$mysqli->query($sql);
 										
-										$mess .= "Déclaration de babysitte du perso ".$nomBaby."[".$idBaby."] du ".$dateDebutBaby." au ".$dateFinBaby." bien enregistré";
+										// On vérifie s'il n'est pas déjà déclaré pour cette période
+										$sql = "SELECT * FROM declaration_babysitte 
+												WHERE id_perso='$id_chef' AND id_baby='$idBaby' AND date_debut = STR_TO_DATE(\"$dateDebutBaby\", '%d/%m/%Y') AND date_fin=STR_TO_DATE(\"$dateFinBaby\", '%d/%m/%Y')";
+										$res =$mysqli->query($sql);
+										$verif = $res->num_rows;
+										
+										if ($verif == 0) {
+											$sql = "INSERT INTO declaration_babysitte (id_perso, id_baby, date_debut, date_fin) 
+													VALUES ('$id_chef', '$idBaby', STR_TO_DATE(\"$dateDebutBaby\", '%d/%m/%Y'), STR_TO_DATE(\"$dateFinBaby\", '%d/%m/%Y'))";
+											$mysqli->query($sql);
+											
+											$mess .= "Déclaration de babysitte du perso ".$nomBaby."[".$idBaby."] du ".$dateDebutBaby." au ".$dateFinBaby." bien enregistré";
+										}
+										else {
+											$mess_erreur .= "Vous avez déjà déclaré un babysitte pour ce perso sur cette période";
+										}
 									}
 									else {
 										$mess_erreur .= "Vous n'avez pas le droit de babysitter un perso d'un autre camp !";
@@ -181,7 +193,7 @@ if($dispo || $admin){
 								echo "		</thead>";
 								echo "		<tbody>";
 							
-								$sql = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef'";	
+								$sql = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef' ORDER BY date_debut";	
 								$res = $mysqli->query($sql);
 								
 								while ($t = $res->fetch_assoc()) {

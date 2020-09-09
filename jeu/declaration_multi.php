@@ -17,9 +17,77 @@ if($dispo || $admin){
 		//recuperation des variables de sessions
 		$id = $_SESSION["id_perso"];
 		
+		$sql = "SELECT id_perso, clan FROM perso WHERE perso.idJoueur_perso = (SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1'";
+		$res =  $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$id_chef = $t['id_perso'];
+		$id_camp = $t['clan'];
+		
 		$mess = "";
 		$mess_erreur = "";
 		
+		if (isset($_POST['nomMulti']) && $_POST['nomMulti'] != "" 
+				&& isset($_POST['idMulti']) && $_POST['idMulti'] != "" 
+				&& isset($_POST['situation']) && $_POST['situation'] != "") {
+			
+			$nom_multi 	= $_POST['nomMulti'];
+			$id_multi	= $_POST['idMulti'];
+			$situation	= htmlentities(addslashes($_POST['situation']));
+			
+			$verifId = preg_match("#^[0-9]*[0-9]$#i","$id_multi");
+			
+			if (!filtre($nom_multi,1,20) || ctype_digit($nom_multi) || strpos($nom_multi,'--') !== false){
+				$mess_erreur .= "Le nom du perso renseigné n'est pas conforme";
+			}
+			else {
+				if ($verifId) {
+					
+					// On verifie que l'id du perso existe bien
+					$sql = "SELECT clan FROM perso WHERE id_perso='$id_multi' AND chef='1'";
+					$res = $mysqli->query($sql);
+					$nb = $res->num_rows;
+					
+					if ($nb == 1) {
+						$t = $res->fetch_assoc();
+						
+						$campBaby = $t['clan'];
+						
+						if ($id_camp == $campBaby) {
+							
+							// On vérifie s'il n'est pas déjà déclaré
+							$sql = "SELECT * FROM declaration_multi WHERE id_perso='$id_chef' AND id_multi='$id_multi'";
+							$res = $mysqli->query($sql);
+							$verif = $res->num_rows;
+							
+							if ($verif == 0) {
+								$sql = "INSERT INTO declaration_multi (id_perso, id_multi, situation) VALUES ('$id_chef', '$id_multi', '$situation')";
+								$mysqli->query($sql);
+								
+								$mess .= "Déclaration de multi avec le perso ".$nom_multi."[".$id_multi."] bien enregistré";
+							}
+							else {
+								$mess_erreur .= "Vous avez déjà effectué une déclaration de multi avec ce perso !";
+							}
+						}
+						else {
+							$mess_erreur .= "Vous n'avez pas le droit d'être en multi avec un perso d'un autre camp !";
+						}
+					}
+					else {
+						$mess_erreur .= "L'id du perso renseigné n'existe pas";
+					}
+				}
+				else {
+					$mess_erreur .= "L'id renseigné n'est pas conforme";
+				}
+			}
+		}
+		
+		// Récupération des multis déclarés
+		$sql_multi_courant = "SELECT * FROM declaration_multi WHERE id_perso='$id_chef'";
+		$res_multi_courant = $mysqli->query($sql_multi_courant);
+		$nb_multi_courant = $res_multi_courant->num_rows;		
 		?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -52,6 +120,34 @@ if($dispo || $admin){
 						<?php
 						echo "<font color='blue'>".$mess."</font><br />";
 						echo "<font color='red'><b>".$mess_erreur."</b></font><br />";
+						?>
+					</div>
+				</div>
+			</div>
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<?php
+						if ($nb_multi_courant) {
+							
+							echo "<font color='blue'><u>Vous êtes déclaré en multi avec les persos (chefs) suivant</u> : </font><br />";
+							
+							while ($t_multi_courant = $res_multi_courant->fetch_assoc()) {
+								
+								$id_multi_courant = $t_multi_courant['id_multi'];
+								
+								$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_multi_courant'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$nom_perso_multi_courant = $t['nom_perso'];
+								
+								echo $nom_perso_multi_courant." [".$id_multi_courant."]<br />";
+							}
+							
+							echo "<br />";
+						}
 						?>
 					</div>
 				</div>
