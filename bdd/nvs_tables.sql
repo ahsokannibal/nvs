@@ -422,6 +422,20 @@ CREATE TABLE `declaration_babysitte` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `declaration_multi`
+--
+
+CREATE TABLE `declaration_multi` ( 
+	`id_declaration` INT NOT NULL AUTO_INCREMENT , 
+	`id_perso` INT NOT NULL , 
+	`id_multi` INT NOT NULL , 
+	`situation` TEXT NOT NULL , 
+	PRIMARY KEY (`id_declaration`)
+) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `dernier_tombe`
 --
 
