@@ -408,6 +408,20 @@ CREATE TABLE `cv` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `declaration_babysitte`
+--
+
+CREATE TABLE `declaration_babysitte` (
+	`id_declaration` int(11) NOT NULL,
+	`id_perso` INT NOT NULL , 
+	`id_baby` INT NOT NULL , 
+	`date_debut` DATETIME NOT NULL , 
+	`date_fin` DATETIME NOT NULL 
+) ENGINE = MyISAM;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `dernier_tombe`
 --
 
@@ -1433,6 +1447,11 @@ ALTER TABLE `contact`
 --
 ALTER TABLE `cv`
   MODIFY `ID_cv` int(11) NOT NULL AUTO_INCREMENT;
+--
+-- AUTO_INCREMENT pour la table `declaration_babysitte`
+--
+ALTER TABLE `declaration_babysitte`
+  MODIFY `id_declaration` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `dossier`
 --
