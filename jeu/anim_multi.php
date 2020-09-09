@@ -43,7 +43,7 @@ if(isset($_SESSION["id_perso"])){
 				</div>
 			</div>
 		
-			<p align="center"><a class="btn btn-primary" href="admin_nvs.php">Retour à l'administration</a> <a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
+			<p align="center"><a class="btn btn-primary" href="animation.php">Retour à l'animation</a> <a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
 			
 			<?php
 			if (isset($_GET['detail_id']) && trim($_GET['detail_id']) != "") {
@@ -115,7 +115,7 @@ if(isset($_SESSION["id_perso"])){
 								echo "		<tr>";
 								echo "			<td align='center'>".$nom_perso." [".$id_perso."]</td>";
 								echo "			<td align='center'>".$nom_multi." [".$id_multi."]</td>";
-								echo "			<td align='center'><a href='admin_multi.php?detail_id=".$id_decla."' class='btn btn-primary'>Consulter le détail</a></td>";
+								echo "			<td align='center'><a href='anim_multi.php?detail_id=".$id_decla."' class='btn btn-primary'>Consulter le détail</a></td>";
 								echo "		</tr>";
 							}
 							

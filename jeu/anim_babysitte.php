@@ -43,7 +43,7 @@ if(isset($_SESSION["id_perso"])){
 				</div>
 			</div>
 		
-			<p align="center"><a class="btn btn-primary" href="admin_nvs.php">Retour à l'administration</a> <a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
+			<p align="center"><a class="btn btn-primary" href="animation.php">Retour à l'animation</a> <a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
 			
 			<div class="row">
 				<div class="col-12">
@@ -51,7 +51,7 @@ if(isset($_SESSION["id_perso"])){
 						<?php
 						if (isset($_GET['voir_old']) && $_GET['voir_old'] == 'ok') {
 						?>
-						<a href='admin_babysitte.php' class='btn btn-warning'>Fermer le tableau des déclarations passées</a>
+						<a href='anim_babysitte.php' class='btn btn-warning'>Fermer le tableau des déclarations passées</a>
 						<?php
 							$sql = "SELECT * FROM declaration_babysitte WHERE date_fin < CURDATE() ORDER BY date_debut ASC";
 							$res = $mysqli->query($sql);
@@ -127,7 +127,7 @@ if(isset($_SESSION["id_perso"])){
 						}
 						else {
 						?>
-						<a href='admin_babysitte.php?voir_old=ok' class='btn btn-warning'>Voir le tableau des déclarations passées</a>
+						<a href='anim_babysitte.php?voir_old=ok' class='btn btn-warning'>Voir le tableau des déclarations passées</a>
 						<?php
 						}
 						?>

@@ -109,6 +109,15 @@ if($dispo || $admin){
 				</div>
 			</div>
 			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+					<a class='btn btn-secondary' href='anim_multi.php'>Tableau des multis déclarés</a>
+					<a class='btn btn-secondary' href='anim_babysitte.php'>tableau des Babysittes déclarés</a>
+				</div>
+			</div>
+			
 		</div>
 	
 		<!-- Optional JavaScript -->
