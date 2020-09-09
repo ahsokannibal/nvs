@@ -2123,7 +2123,9 @@ if($dispo || $admin){
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
 				echo "		<a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
-				echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Question animateur</b></a>";
+				if ($type_perso != 6) {
+					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Question animateur</b></a>";
+				}
 				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions</b></a>";
 				
 				// Redacteur

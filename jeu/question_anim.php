@@ -17,35 +17,43 @@ if($dispo || $admin){
 		//recuperation des variables de sessions
 		$id = $_SESSION["id_perso"];
 		
-		$mess = "";
-		$mess_erreur = "";
+		$sql = "SELECT type_perso FROM perso WHERE id_perso='$id'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
 		
-		if (isset($_POST['titreQuestion']) && trim($_POST['titreQuestion']) != "") {
+		$type_perso = $t['type_perso'];
+		
+		if ($type_perso != 6) {
+		
+			$mess = "";
+			$mess_erreur = "";
 			
-			if (isset($_POST['question']) && trim($_POST['question']) != "") {
+			if (isset($_POST['titreQuestion']) && trim($_POST['titreQuestion']) != "") {
 				
-				$titre 		= addslashes($_POST['titreQuestion']);
-				$question 	= addslashes($_POST['question']);
-				
-				$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
-				$res = $mysqli->query($sql);
-				$t = $res->fetch_assoc();
-				
-				$id_camp = $t['clan'];
-				
-				$sql = "INSERT INTO anim_question(date_question, id_perso, titre, question, id_camp) VALUES (NOW(), '$id', '$titre', '$question', '$id_camp')";
-				$mysqli->query($sql);
-				
-				$mess = "Question envoyée avec succès, la réponse sera envoyée sur votre messagerie.";
-				
+				if (isset($_POST['question']) && trim($_POST['question']) != "") {
+					
+					$titre 		= addslashes($_POST['titreQuestion']);
+					$question 	= addslashes($_POST['question']);
+					
+					$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$id_camp = $t['clan'];
+					
+					$sql = "INSERT INTO anim_question(date_question, id_perso, titre, question, id_camp) VALUES (NOW(), '$id', '$titre', '$question', '$id_camp')";
+					$mysqli->query($sql);
+					
+					$mess = "Question envoyée avec succès, la réponse sera envoyée sur votre messagerie.";
+					
+				}
+				else {
+					$mess_erreur .= "La question /remontée est obligatoire";
+				}
 			}
 			else {
-				$mess_erreur .= "La question /remontée est obligatoire";
+				$mess_erreur .= "Les champs titre et question/remontée sont obligatoire, pensez à les remplir avant envoi";
 			}
-		}
-		else {
-			$mess_erreur .= "Les champs titre et question/remontée sont obligatoire, pensez à les remplir avant envoi";
-		}
 		
 		?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -115,6 +123,10 @@ if($dispo || $admin){
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 	</body>
 <?php
+		}
+		else {
+			echo "<center><font color='red'>Les chiens ne peuvent pas accéder à cette page.</font></center>";
+		}
 	}
 	else{
 		echo "<center><font color='red'>Vous ne pouvez pas accéder à cette page, veuillez vous loguer.</font></center>";
