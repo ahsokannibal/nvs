@@ -129,27 +129,32 @@ if(isset($id)){
 	}
 	
 	// nombre de kills
-	$count = 0;
-	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$count_capture = 0;
+	$count_promotion = 0;
+	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '9') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>Le bon...</b></font></center>";
 	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 	
 	while ($t = $res->fetch_assoc()) {
-		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 50000) {
+		
+		$date_cv			= $t['date_cv'];
+		$id_acteur_cv 		= $t['IDActeur_cv'];
+		$id_cible_cv		= $t['IDCible_cv'];
+		$nom_acteur_cv		= $t['nomActeur_cv'];
+		$grade_acteur_cv	= $t['gradeActeur_cv'];
+		$special			= $t['special'];
+		
+		if ($id_acteur_cv == $id && $id_cible_cv < 50000 && $id_cible_cv != NULL) {			
 			
-			$id_acteur_cv 		= $t['IDActeur_cv'];
-			$nom_acteur_cv		= $t['nomActeur_cv'];
-			$grade_acteur_cv	= $t['gradeActeur_cv'];
-			
-			$id_cible_cv		= $t['IDCible_cv'];
 			$nom_cible_cv		= $t['nomCible_cv'];
 			$grade_cible_cv		= $t['gradeCible_cv'];
 			
-			$count++;
+			$count_capture++;
+			
 			echo "<tr>";
-			echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
 			echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
 				echo " (".$grade_cible_cv.")";
@@ -157,8 +162,19 @@ if(isset($id)){
 			echo "	</td>";
 			echo "</tr>";
 		}
+		else if ($id_acteur_cv == $id && $special == '9') {
+			
+			$count_promotion++;
+			
+			echo "<tr>";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été promu <b>".$grade_acteur_cv."</b></td>";
+			echo "</tr>";
+		}
 	}
-	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
+	
+	$cout_total = $count_capture + $count_promotion;
+	echo "<tr><td align='center'><font color = red>total captures</font></td><td align='center'>$count_capture</td></tr>";
+	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$cout_total</td></tr>";
 	echo "</table></center><br />";
 	
 	// nombre de morts
