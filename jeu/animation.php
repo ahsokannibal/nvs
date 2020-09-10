@@ -81,7 +81,6 @@ if($dispo || $admin){
 		
 			<div class="row">
 				<div class="col-12">
-
 					<div align="center">
 						<h2>Animation du camp <?php echo $nom_camp; ?></h2>
 					</div>
