@@ -184,4 +184,35 @@ function entete($mysqli, $id) {
 		echo "<center>aucun perso selectionné</center>";
 	}
 }
+
+function entete_mort($mysqli, $id) {
+	
+	if ($id) {
+		
+		// Perso ou PNJ
+		if($id < 50000 || $id >= 200000) {
+			
+			echo "<div align='center'>";
+			echo "	<a class='btn btn-primary' href='evenement.php?infoid=$id'>Évènement</a>&nbsp;&nbsp;";
+			echo "	<a class='btn btn-primary' href='cv.php?infoid=$id'>CV</a>&nbsp;&nbsp;";
+			echo "</div>";
+			
+		}
+		
+		echo "<font color='red'><b>";
+		if($id < 50000){
+			echo "<center>Ce perso n'existe pas ou a été viré</center>";
+		}
+		else if ($id >= 200000) {
+			echo "<center>Ce pnj n'existe pas ou a été tué</center>";
+		}
+		else {
+			echo "<center>Ce bâtiment n'existe pas ou a été détruit</center>";
+		}
+		echo "</b></font>";
+	}
+	else {
+		echo "<center>aucun perso selectionné</center>";
+	}
+}
 ?>

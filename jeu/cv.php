@@ -81,173 +81,171 @@ if(isset($id)){
 	}
 
 	if($nb_p == '1'){
+		entete($mysqli, $id);
+	}
+	else {
+		entete_mort($mysqli, $id);
+	}
 		
-		entete($mysqli, $id); 
+	// CV spéciaux
+	$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='1'";
+	$res = $mysqli->query($sql);
+	$nb_event = $res->num_rows;
+	
+	if ($nb_event) {
 		
-		// CV spéciaux
-		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='1'";
-		$res = $mysqli->query($sql);
-		$nb_event = $res->num_rows;
-		
-		if ($nb_event) {
-			
-			echo "<center><font color=red><b>Évènements spéciaux</b></font></center>";
-			echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
-		
-			while ($t = $res->fetch_assoc()){
-				echo "<tr>";
-				echo "<td align='center'>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." ";
-				echo "</td></tr>";
-			}
-			echo "</table></center><br />";
+		echo "<center><font color=red><b>Évènements spéciaux</b></font></center>";
+		echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
+	
+		while ($t = $res->fetch_assoc()){
+			echo "<tr>";
+			echo "<td align='center'>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." ";
+			echo "</td></tr>";
 		}
+		echo "</table></center><br />";
+	}
+	
+	
+	// Missions
+	$count = 0;
+	$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='2'";
+	$res = $mysqli->query($sql);
+	$nb_mission = $res->num_rows;
+	
+	if ($nb_mission) {
 		
+		echo "<center><font color=red><b>Missions</b></font></center>";
+		echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 		
-		// Missions
-		$count = 0;
-		$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='2'";
-		$res = $mysqli->query($sql);
-		$nb_mission = $res->num_rows;
-		
-		if ($nb_mission) {
-			
-			echo "<center><font color=red><b>Missions</b></font></center>";
-			echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
-			
-			while ($t = $res->fetch_assoc()){
-				$count++;
-				echo "<tr>";
-				echo "<td align='center'>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
-				echo "</td></tr>";
-			}
-			echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
-			echo "</table></center><br />";
-			
+		while ($t = $res->fetch_assoc()){
+			$count++;
+			echo "<tr>";
+			echo "<td align='center'>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
+			echo "</td></tr>";
 		}
+		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
+		echo "</table></center><br />";
 		
-		// nombre de kills
-		$count = 0;
-		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
-		$res = $mysqli->query($sql);
-		
-		echo "<center><font color=red><b>Le bon...</b></font></center>";
-		echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
-		
-		while ($t = $res->fetch_assoc()) {
-			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 50000) {
-				
-				$id_acteur_cv 		= $t['IDActeur_cv'];
-				$nom_acteur_cv		= $t['nomActeur_cv'];
-				$grade_acteur_cv	= $t['gradeActeur_cv'];
-				
-				$id_cible_cv		= $t['IDCible_cv'];
-				$nom_cible_cv		= $t['nomCible_cv'];
-				$grade_cible_cv		= $t['gradeCible_cv'];
-				
-				$count++;
-				echo "<tr>";
-				echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
-				echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+	}
+	
+	// nombre de kills
+	$count = 0;
+	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$res = $mysqli->query($sql);
+	
+	echo "<center><font color=red><b>Le bon...</b></font></center>";
+	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
+	
+	while ($t = $res->fetch_assoc()) {
+		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] < 50000) {
+			
+			$id_acteur_cv 		= $t['IDActeur_cv'];
+			$nom_acteur_cv		= $t['nomActeur_cv'];
+			$grade_acteur_cv	= $t['gradeActeur_cv'];
+			
+			$id_cible_cv		= $t['IDCible_cv'];
+			$nom_cible_cv		= $t['nomCible_cv'];
+			$grade_cible_cv		= $t['gradeCible_cv'];
+			
+			$count++;
+			echo "<tr>";
+			echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
+			echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+			if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
+				echo " (".$grade_cible_cv.")";
+			}
+			echo "	</td>";
+			echo "</tr>";
+		}
+	}
+	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
+	echo "</table></center><br />";
+	
+	// nombre de morts
+	$count = 0;
+	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$res = $mysqli->query($sql);
+	
+	echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
+	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
+	
+	while ($t = $res->fetch_assoc()) {
+		if ($t['IDCible_cv'] == $id) {
+			
+			$id_acteur_cv 		= $t['IDActeur_cv'];
+			$nom_acteur_cv		= $t['nomActeur_cv'];
+			$grade_acteur_cv	= $t['gradeActeur_cv'];
+			
+			$id_cible_cv		= $t['IDCible_cv'];
+			$nom_cible_cv		= $t['nomCible_cv'];
+			$grade_cible_cv		= $t['gradeCible_cv'];
+			
+			$count++;
+			echo "<tr>";
+			echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+			if ($id_acteur_cv != 0) {
+				echo " a été capturé par ";
+				echo $nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
 				if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
 					echo " (".$grade_cible_cv.")";
 				}
-				echo "	</td>";
-				echo "</tr>";
 			}
-		}
-		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
-		echo "</table></center><br />";
-		
-		// nombre de morts
-		$count = 0;
-		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
-		$res = $mysqli->query($sql);
-		
-		echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
-		echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
-		
-		while ($t = $res->fetch_assoc()) {
-			if ($t['IDCible_cv'] == $id) {
-				
-				$id_acteur_cv 		= $t['IDActeur_cv'];
-				$nom_acteur_cv		= $t['nomActeur_cv'];
-				$grade_acteur_cv	= $t['gradeActeur_cv'];
-				
-				$id_cible_cv		= $t['IDCible_cv'];
-				$nom_cible_cv		= $t['nomCible_cv'];
-				$grade_cible_cv		= $t['gradeCible_cv'];
-				
-				$count++;
-				echo "<tr>";
-				echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
-				if ($id_acteur_cv != 0) {
-					echo " a été capturé par ";
-					echo $nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
-					if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
-						echo " (".$grade_cible_cv.")";
-					}
-				}
-				else {
-					echo " s'est effondré tout seul à cause de : ";
-					echo $nom_acteur_cv;
-				}
-				
-				echo "	</td>";
-				echo "</tr>";
+			else {
+				echo " s'est effondré tout seul à cause de : ";
+				echo $nom_acteur_cv;
 			}
+			
+			echo "	</td>";
+			echo "</tr>";
 		}
-		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
-		echo "</table></center><br />";
-		
-		// nombre de pnj tu"s
-		$count = 0;
-		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
-		$res = $mysqli->query($sql);
-		
-		echo "<center><font color=red><b>PNJ</b></font></center>";
-		echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center' >Évènement</th></tr>";
-		
-		while ($t = $res->fetch_assoc()) {
-			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
-				$count++;
-				echo "<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
-				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
-			}
-		}
-		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
-		echo "</table></center><br />";
-		
-		// nombre de batiments détruits
-		$count = 0;
-		$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
-		$res = $mysqli->query($sql);
-		
-		echo "<center><font color=red><b>Batiments</b></font></center>";
-		echo "<center>";
-		echo "	<table border=1 width=60%>";
-		echo "		<tr>";
-		echo "			<th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th>";
-		echo "		</tr>";
-		
-		while ($t = $res->fetch_assoc()) {
-			if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000 && $t['IDCible_cv'] < 200000) {
-				$count++;
-				echo "		<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
-				echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
-			}
-		}
-		echo "		<tr>";
-		echo "			<td align='center'><font color = red>total</font></td><td align='center'>$count</td>";
-		echo "		</tr>";
-		echo "	</table>";
-		echo "</center>";
-		
-		echo "<br />";
 	}
-	else {
-		// le perso n'existe pas
-		echo "<br /><center><b>Erreur :</b> Ce perso n'existe pas ou plus !</center>";
+	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
+	echo "</table></center><br />";
+	
+	// nombre de pnj tu"s
+	$count = 0;
+	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$res = $mysqli->query($sql);
+	
+	echo "<center><font color=red><b>PNJ</b></font></center>";
+	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center' >Évènement</th></tr>";
+	
+	while ($t = $res->fetch_assoc()) {
+		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
+			$count++;
+			echo "<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
+			echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
+		}
 	}
+	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
+	echo "</table></center><br />";
+	
+	// nombre de batiments détruits
+	$count = 0;
+	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$res = $mysqli->query($sql);
+	
+	echo "<center><font color=red><b>Batiments</b></font></center>";
+	echo "<center>";
+	echo "	<table border=1 width=60%>";
+	echo "		<tr>";
+	echo "			<th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th>";
+	echo "		</tr>";
+	
+	while ($t = $res->fetch_assoc()) {
+		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000 && $t['IDCible_cv'] < 200000) {
+			$count++;
+			echo "		<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
+			echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
+		}
+	}
+	echo "		<tr>";
+	echo "			<td align='center'><font color = red>total</font></td><td align='center'>$count</td>";
+	echo "		</tr>";
+	echo "	</table>";
+	echo "</center>";
+	
+	echo "<br />";
 }
 else {
 	// rien ^^

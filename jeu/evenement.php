@@ -128,23 +128,11 @@ if(@$_SESSION["id_perso"]){
 		}
 
 		if($nb_p == '1'){
-			
 			// l'entité existe bien
 			entete($mysqli, $id);
-		
 		}
 		else {
-			echo "<font color='red'><b>";
-			if($id < 50000){
-				echo "<center>Ce perso n'existe pas ou a été viré</center>";
-			}
-			else if ($id >= 200000) {
-				echo "<center>Ce pnj n'existe pas ou a été tué</center>";
-			}
-			else {
-				echo "<center>Ce bâtiment n'existe pas ou a été détruit</center>";
-			}
-			echo "</b></font>";
+			entete_mort($mysqli, $id);
 		}
 	
 		if(isset($verif_liste) && $verif_liste){
