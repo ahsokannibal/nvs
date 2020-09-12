@@ -21,7 +21,7 @@ function mail_gel_persos($nom_perso, $email_joueur, $titre, $message){
 //***************************************
 // Traitement des persos a mettre en gel
 //***************************************
-$sql = "SELECT id_perso, nom_perso, clan FROM perso WHERE a_gele='1' AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 3 DAY)";
+$sql = "SELECT id_perso, nom_perso, clan FROM perso WHERE a_gele='1' AND date_gele <= DATE_SUB(CURRENT_DATE, INTERVAL 3 DAY)";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
