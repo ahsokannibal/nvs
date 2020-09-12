@@ -12,17 +12,17 @@ $image_carte = imagecreatefrompng("carte410.png");
 $sql = "DELETE FROM carte2";
 $mysqli->query($sql);
 
-for ($x = 0; $x < $taille_x; $x++) {
-	for ($y = 0; $y < $taille_y; $y++) {
+for ($x_pixel = 0; $x_pixel < $taille_x; $x_pixel++) {
+	for ($y_pixel = 0; $y_pixel < $taille_y; $y_pixel++) {
 		
-		$pixelrgb = imagecolorat($image_carte, $x, $y);
+		$pixelrgb = imagecolorat($image_carte, $x_pixel, $y_pixel);
 		
 		$cols = imagecolorsforindex($image_carte, $pixelrgb);
 		$r = dechex($cols['red']);
 		$g = dechex($cols['green']);
 		$b = dechex($cols['blue']);
 		
-		echo "RGB en ".$x."/".$y." : ".$r." ".$g." ".$b."<br />";
+		//echo "RGB en ".$x_pixel."/".$y." : ".$r." ".$g." ".$b."<br />";
 		
 		if (est_couleur_colline($r, $g, $b)) {
 			$image_fond = '2.gif';
@@ -49,9 +49,14 @@ for ($x = 0; $x < $taille_x; $x++) {
 			$image_fond = '1.gif';
 		}
 		
+		$x = $x_pixel;
+		$y = 199 - $y_pixel;
+		
 		$sql = "INSERT INTO carte2 VALUES ($x, $y, '0', '$image_fond', NULL, NULL)";
 		$mysqli->query($sql);
 	}
 }
+
+echo "Fin creation carte";
 
 ?>
