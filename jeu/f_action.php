@@ -3666,6 +3666,41 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 					
 					if ($idPerso_carte < 50000) {
 						
+						$id_arme_non_equipee = id_arme_non_equipee($mysqli, $idPerso_carte);
+											
+						$test_perte = mt_rand(0,100);
+						
+						if ($id_arme_non_equipee > 0 && $test_perte <= 40) {
+														
+							// Suppression de l'arme de l'inventaire du perso
+							$sql = "DELETE FROM perso_as_arme WHERE id_perso='$idPerso_carte' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
+							$mysqli->query($sql);
+							
+							// On dépose la perte de l'arme par terre
+							// Verification si l'objet existe deja sur cette case
+							$sql = "SELECT nb_objet FROM objet_in_carte 
+									WHERE objet_in_carte.x_carte = $x_cible 
+									AND objet_in_carte.y_carte = $y_cible 
+									AND type_objet = '3' AND id_objet = '$id_arme_non_equipee'";
+							$res = $mysqli->query($sql);
+							$to = $res->fetch_assoc();
+							
+							$nb_o = $to["nb_objet"];
+							
+							if($nb_o){
+								// On met a jour le nombre
+								$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
+										WHERE type_objet='3' AND id_objet='$id_arme_non_equipee'
+										AND x_carte='$x_cible' AND y_carte='$y_cible'";
+								$mysqli->query($sql);
+							}
+							else {
+								// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+								$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('3','$id_arme_non_equipee','1','$x_cible','$y_cible')";
+								$mysqli->query($sql);
+							}
+						}
+						
 						// evenement perso capture
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font> ($nom_grade_cible)','',NOW(),'0')";
 						$mysqli->query($sql);

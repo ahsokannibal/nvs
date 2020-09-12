@@ -633,7 +633,24 @@ if ($verif_id_perso_session) {
 						
 											echo "<div class=\"infoi\">Vous avez capturé votre cible ! <font color=red>Félicitations.</font></div>";
 											
+											$id_arme_non_equipee = id_arme_non_equipee($mysqli, $id_cible);
+											
+											$test_perte = mt_rand(0,100);
+											
+											if ($id_arme_non_equipee > 0) {
+												
+												// 40% de chance de perdre une arme non équipée
+												if ($test_perte <= 40) {
+													
+													// Suppression de l'arme de l'inventaire du perso
+													$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_cible' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
+													$mysqli->query($sql);
+													
+												}
+											}
+											
 											if (!in_bat($mysqli, $id_cible)) {
+												
 												if ($perte_po > 0) {
 													// On dépose la perte de thune par terre
 													// Verification si l'objet existe deja sur cette case
@@ -656,6 +673,33 @@ if ($verif_id_perso_session) {
 													else {
 														// Insertion dans la table objet_in_carte : On cree le premier enregistrement
 														$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_cible','$y_cible')";
+														$mysqli->query($sql);
+													}
+												}
+												
+												if ($id_arme_non_equipee > 0 && $test_perte <= 40) {
+														
+													// On dépose la perte de l'arme par terre
+													// Verification si l'objet existe deja sur cette case
+													$sql = "SELECT nb_objet FROM objet_in_carte 
+															WHERE objet_in_carte.x_carte = $x_cible 
+															AND objet_in_carte.y_carte = $y_cible 
+															AND type_objet = '3' AND id_objet = '$id_arme_non_equipee'";
+													$res = $mysqli->query($sql);
+													$to = $res->fetch_assoc();
+													
+													$nb_o = $to["nb_objet"];
+													
+													if($nb_o){
+														// On met a jour le nombre
+														$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
+																WHERE type_objet='3' AND id_objet='$id_arme_non_equipee'
+																AND x_carte='$x_cible' AND y_carte='$y_cible'";
+														$mysqli->query($sql);
+													}
+													else {
+														// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+														$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('3','$id_arme_non_equipee','1','$x_cible','$y_cible')";
 														$mysqli->query($sql);
 													}
 												}
@@ -856,6 +900,45 @@ if ($verif_id_perso_session) {
 																// Insertion dans la table objet_in_carte : On cree le premier enregistrement
 																$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat_fin','$y_collat_fin')";
 																$mysqli->query($sql);
+															}
+														}
+														
+														$id_arme_non_equipee = id_arme_non_equipee($mysqli, $id_cible_collat);
+														
+														if ($id_arme_non_equipee > 0) {
+													
+															$test_perte = mt_rand(0,100);
+															
+															// 40% de chance de perdre une arme non équipée
+															if ($test_perte <= 40) {
+																
+																// Suppression de l'arme de l'inventaire du perso
+																$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_cible_collat' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
+																$mysqli->query($sql);
+																
+																// On dépose la perte de thune par terre
+																// Verification si l'objet existe deja sur cette case
+																$sql = "SELECT nb_objet FROM objet_in_carte 
+																		WHERE objet_in_carte.x_carte = $x_collat_fin 
+																		AND objet_in_carte.y_carte = $y_collat_fin 
+																		AND type_objet = '3' AND id_objet = '$id_arme_non_equipee'";
+																$res = $mysqli->query($sql);
+																$to = $res->fetch_assoc();
+																
+																$nb_o = $to["nb_objet"];
+																
+																if($nb_o){
+																	// On met a jour le nombre
+																	$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
+																			WHERE type_objet='3' AND id_objet='$id_arme_non_equipee'
+																			AND x_carte='$x_collat_fin' AND y_carte='$y_collat_fin'";
+																	$mysqli->query($sql);
+																}
+																else {
+																	// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+																	$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('3','$id_arme_non_equipee','1','$x_collat_fin','$y_collat_fin')";
+																	$mysqli->query($sql);
+																}
 															}
 														}
 									
@@ -1663,6 +1746,71 @@ if ($verif_id_perso_session) {
 												// MAJ perte xp/po/stat cible
 												$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
 												$mysqli->query($sql);
+												
+												if ($perte_po > 0) {
+													// On dépose la perte de PO par terre
+													// Verification si l'objet existe deja sur cette case
+													$sql = "SELECT nb_objet FROM objet_in_carte 
+															WHERE objet_in_carte.x_carte = $x_collat_fin 
+															AND objet_in_carte.y_carte = $y_collat_fin 
+															AND type_objet = '1' AND id_objet = '0'";
+													$res = $mysqli->query($sql);
+													$to = $res->fetch_assoc();
+													
+													$nb_o = $to["nb_objet"];
+													
+													if($nb_o){
+														// On met a jour le nombre
+														$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
+																WHERE type_objet='1' AND id_objet='0'
+																AND x_carte='$x_collat_fin' AND y_carte='$y_collat_fin'";
+														$mysqli->query($sql);
+													}
+													else {
+														// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+														$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat_fin','$y_collat_fin')";
+														$mysqli->query($sql);
+													}
+												}
+												
+												$id_arme_non_equipee = id_arme_non_equipee($mysqli, $id_cible_collat);
+														
+												if ($id_arme_non_equipee > 0) {
+											
+													$test_perte = mt_rand(0,100);
+													
+													// 40% de chance de perdre une arme non équipée
+													if ($test_perte <= 40) {
+														
+														// Suppression de l'arme de l'inventaire du perso
+														$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_cible_collat' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
+														$mysqli->query($sql);
+														
+														// On dépose la perte de l'arme par terre
+														// Verification si l'objet existe deja sur cette case
+														$sql = "SELECT nb_objet FROM objet_in_carte 
+																WHERE objet_in_carte.x_carte = $x_collat_fin 
+																AND objet_in_carte.y_carte = $y_collat_fin 
+																AND type_objet = '3' AND id_objet = '$id_arme_non_equipee'";
+														$res = $mysqli->query($sql);
+														$to = $res->fetch_assoc();
+														
+														$nb_o = $to["nb_objet"];
+														
+														if($nb_o){
+															// On met a jour le nombre
+															$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
+																	WHERE type_objet='3' AND id_objet='$id_arme_non_equipee'
+																	AND x_carte='$x_collat_fin' AND y_carte='$y_collat_fin'";
+															$mysqli->query($sql);
+														}
+														else {
+															// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+															$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('3','$id_arme_non_equipee','1','$x_collat_fin','$y_collat_fin')";
+															$mysqli->query($sql);
+														}
+													}
+												}
 							
 												echo "<div class=\"infoi\">Vous avez capturé <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat ! <font color=red>Félicitations.</font></div>";
 												

@@ -29,10 +29,10 @@ function is_deja_tue_pnj($mysqli, $id_perso, $id_pnj){
 }
 
 /**
-  * Fonction qui recupere la couleur associee au clan du perso
-  * @param $clan_perso	: L'identifiant du clan du perso
-  * @return String		: La couleur associee au clan du perso
-  */
+ * Fonction qui recupere la couleur associee au clan du perso
+ * @param $clan_perso	: L'identifiant du clan du perso
+ * @return String		: La couleur associee au clan du perso
+ */
 function couleur_clan($clan_perso){
 	if($clan_perso == '1'){
 		$couleur_clan_perso = 'blue';
@@ -50,10 +50,10 @@ function couleur_clan($clan_perso){
 }
 
 /**
-  * Fonction qui recupere l'identifiant de l'arme equipee sur la main principale perso
-  * @param $id_perso	: L'identifiant du perso
-  * @return int		: L'identifiant de l'arme equipee, 0 si pas d'arme equipee
-  */
+ * Fonction qui recupere l'identifiant de l'arme equipee sur la main principale perso
+ * @param $id_perso	: L'identifiant du perso
+ * @return int		: L'identifiant de l'arme equipee, 0 si pas d'arme equipee
+ */
 function id_arme_equipee($mysqli, $id_perso){
 
 	$sql_arme_equipee = "SELECT perso_as_arme.id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='1'";
@@ -67,6 +67,23 @@ function id_arme_equipee($mysqli, $id_perso){
 	
 	return 0;
 	
+}
+
+/**
+ * Fonction permettant de retourner l'identifiant d'une arme non équipée sur le perso
+ */
+function id_arme_non_equipee($mysqli, $id_perso) {
+	
+	$sql = "SELECT perso_as_arme.id_arme FROM perso_as_arme WHERE id_perso='$id_perso' AND est_portee='0'";
+	$res = $mysqli->query($sql);
+	$num = $res->num_rows;
+	
+	if($num){
+		$t = $res->fetch_assoc();
+		return $t["id_arme"];
+	}
+	
+	return 0;
 }
 
 /**
