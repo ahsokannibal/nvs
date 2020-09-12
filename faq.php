@@ -104,7 +104,7 @@ $mysqli = db_connexion();
 						<div class="card-body">
 							Vous avez 2 possibilités :
 							<ul>
-								<li>Mettre vos personnages en permission (Profil -> Gérer son compte -> Partir en permission). Vos personnages disparaitront du jeu jusqu'à ce que vous reveniez. Attention, un départ en permission n'est pas immédiat et vous ne pouvez revenir de permission que minimum 72h après le départ effectif.</li>
+								<li>Mettre vos personnages en permission (Profil -> Gérer son compte -> Partir en permission). Vos personnages disparaitront du jeu jusqu'à ce que vous reveniez. Attention, un départ en permission n'est pas immédiat, il faut attendre 3-4 jours (selon le moment de votre demande) afin que le départ soit effectif donc pensez à faire votre demande en avance (il vous sera possible de continuer à jouer jusqu'à votre départ) ! De plus, vous ne pouvez revenir de permission que minimum 5 jours après le départ effectif.</li>
 								<li>Mettre votre perso en babysitte par un autre joueur. L'autre joueur jouera votre perso à votre place pendant votre absence. Pour cela, ce joueur doit déclarer le Babysitte (Profil -> Gérer son compte -> Déclarer un babysitte). Le Babysitte ne peut se faire que par un joueur du même camp que vous et les interractions entre les persos des 2 joueurs sont interdits durant la période de babysitte. Le babysitte est à vos risques et périls, si vous perdez vos objets / thunes et que votre perso se fait capturer pendant cette période, ce sera de votre responsabilité.</li>
 							</ul>
 						</div>
