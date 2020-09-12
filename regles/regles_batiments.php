@@ -225,7 +225,7 @@
 						<li>Respawn aléatoire dans un bâtiment</li>
 					</ul>
 					
-					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelquesoit le bâtiment) ou s'il a été capturé à moins de 20 cases strictement (une capture à 20 cases pile du centre du bâtiment de rapatriement permet d'âtre rappatrié dans le bâtiment) de ce dernier (Hors hôpital).</p>
+					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelquesoit le bâtiment), si le bâtiment est plein (contenance max atteinte) ou s'il a été capturé à moins de 20 cases strictement (une capture à 20 cases pile du centre du bâtiment de rapatriement permet d'âtre rappatrié dans le bâtiment) de ce dernier (Hors hôpital).</p>
 					
 					<p>Pour définir vos choix de rapatriement, allez dans votre profil et cliquez sur le bouton "Choix des rapatriements".</p>
 					
