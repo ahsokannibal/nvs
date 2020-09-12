@@ -145,8 +145,8 @@ if(isset($_SESSION["ID_joueur"])){
 				$sql = "UPDATE perso SET est_gele='0', date_gele=NULL, a_gele='0' WHERE id_perso='$id_perso_degele'";
 				$mysqli->query($sql);
 				
-				// Récupération du batiment de rappatriement le plus proche du perso
-				$id_instance_bat = selection_bat_rapat($mysqli, $id_perso_degele, $x_perso_degele, $y_perso_degele, $clan);
+				// Récupération du batiment de retour de perm (Fort / Fortin ou Gare) le plus proche du perso
+				$id_instance_bat = selection_bat_retour_perm($mysqli, $id_perso_degele, $x_perso_degele, $y_perso_degele, $clan);
 				
 				if ($id_instance_bat != null && $id_instance_bat != 0) {
 				

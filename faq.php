@@ -104,7 +104,7 @@ $mysqli = db_connexion();
 						<div class="card-body">
 							Vous avez 2 possibilités :
 							<ul>
-								<li>Mettre vos personnages en permission (Profil -> Gérer son compte -> Partir en permission). Vos personnages disparaitront du jeu jusqu'à ce que vous reveniez. Attention, un départ en permission n'est pas immédiat, il faut attendre 3-4 jours (selon le moment de votre demande) afin que le départ soit effectif donc pensez à faire votre demande en avance (il vous sera possible de continuer à jouer jusqu'à votre départ) ! De plus, vous ne pouvez revenir de permission que minimum 5 jours après le départ effectif.</li>
+								<li>Mettre vos personnages en permission (Profil -> Gérer son compte -> Partir en permission). Vos personnages disparaitront du jeu jusqu'à ce que vous reveniez. Attention, un départ en permission n'est pas immédiat, il faut attendre 3 jours (prise en compte à minuit) afin que le départ soit effectif donc pensez à faire votre demande en avance (il vous sera possible de continuer à jouer jusqu'à votre départ) ! De plus, vous ne pouvez revenir de permission que minimum 5 jours après le départ effectif.</li>
 								<li>Mettre votre perso en babysitte par un autre joueur. L'autre joueur jouera votre perso à votre place pendant votre absence. Pour cela, ce joueur doit déclarer le Babysitte (Profil -> Gérer son compte -> Déclarer un babysitte). Le Babysitte ne peut se faire que par un joueur du même camp que vous et les interractions entre les persos des 2 joueurs sont interdits durant la période de babysitte. Le babysitte est à vos risques et périls, si vous perdez vos objets / thunes et que votre perso se fait capturer pendant cette période, ce sera de votre responsabilité.</li>
 							</ul>
 						</div>
@@ -128,6 +128,21 @@ $mysqli = db_connexion();
 							</ul>
 							Tout manquement à ces règles seront punies par les animateurs par des peines plus ou moins grande (qui peuvent aller de la simple amende à l'envoi au Pénitencier).
 							<b>Si un multi est détecté sans déclaration ou qu'un multi déclaré se trouve être joué par une seule personne, les persos risquent la suppression pure et simple.</b>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingSeven">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseSeven" aria-expanded="false" aria-controls="collapseSeven">
+								Comment se passe le retour de permission ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
+						<div class="card-body">
+							Vous n'avez la possibilité de revenir de permission que 5 jours après votre départ effectif de permission.
+							Pour votre retour de permission, votre personnage sera envoyé au bâtiment le plus proche, permettant de vous accueillir, de votre position de départ de permission. Les bâtiments permettant de vous accueillir d'un retour de permission sont les Forts, les Fortins et les Gares si ces derniers ne sont pas en état de siège et si leur contenance max n'est pas atteinte.
 						</div>
 					</div>
 				</div>
