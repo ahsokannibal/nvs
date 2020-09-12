@@ -30,32 +30,57 @@ while ($t = $res->fetch_assoc()){
 	$nom_perso	= $t["nom_perso"];
 	$clan_perso	= $t["clan"];
 	
-	echo "gel du perso $id_perso <br />";
+	$in_penitencier = false;
 	
-	// maj du statut du perso
-	$sql = "UPDATE perso SET est_gele='1', a_gele='0', date_gele=NOW() WHERE id_perso='$id_perso'";
-	$mysqli->query($sql);
+	$id_inst_bat = in_bat($mysqli, $id_perso);
 	
-	// maj de la carte => disparition du perso
-	if (in_bat($mysqli, $id_perso)) {		
-		$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
+	if ($id_inst_bat) {
+		
+		$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat = '$id_inst_bat'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$id_bat = $t['id_batiment'];
+		
+		if ($id_bat == 10) {
+			$in_penitencier = true;
+		}
 	}
-	else if (in_train($mysqli, $id_perso)) {
-		$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso'";
+	
+	if (!$in_penitencier) {
+		
+		echo "gel du perso $id_perso <br />";
+		
+		// maj du statut du perso
+		$sql = "UPDATE perso SET est_gele='1', a_gele='0', date_gele=NOW() WHERE id_perso='$id_perso'";
+		$mysqli->query($sql);
+		
+		// maj de la carte => disparition du perso
+		if (in_bat($mysqli, $id_perso)) {		
+			$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
+		else if (in_train($mysqli, $id_perso)) {
+			$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
+		else {
+			$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso'";
+			$mysqli->query($sql);
+		}
+		
+		// Récupération de la couleur associée au clan du perso
+		$couleur_clan_perso = couleur_clan($clan_perso);
+		
+		// Ajout événement
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' est parti en permission','','','',NOW(),'0')";
 		$mysqli->query($sql);
 	}
 	else {
-		$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso'";
+		// Perso dans pénitencier => ne peut pas être placé en gel
+		$sql = "UPDATE perso SET a_gele='0', date_gele=NULL WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 	}
-	
-	// Récupération de la couleur associée au clan du perso
-	$couleur_clan_perso = couleur_clan($clan_perso);
-	
-	// Ajout événement
-	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' est parti en permission','','','',NOW(),'0')";
-	$mysqli->query($sql);
 }
 
 //***********************************************
@@ -71,48 +96,67 @@ while ($t = $res_inactif->fetch_assoc()){
 	$nom_perso	= $t["nom_perso"];
 	$clan_perso	= $t["clan"];
 	
-	echo "gel du perso inactif $id_perso <br />";
+	$in_penitencier = false;
 	
-	// maj du statut du perso
-	$sql = "UPDATE perso SET est_gele='1', a_gele='0', date_gele=NOW() WHERE id_perso='$id_perso'";
-	$mysqli->query($sql);
+	$id_inst_bat = in_bat($mysqli, $id_perso);
 	
-	// maj de la carte => disparition du perso
-	if (in_bat($mysqli, $id_perso)) {		
-		$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
-	}
-	else if (in_train($mysqli, $id_perso)) {
-		$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
-	}
-	else {
-		$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso'";
-		$mysqli->query($sql);
+	if ($id_inst_bat) {
+		
+		$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat = '$id_inst_bat'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$id_bat = $t['id_batiment'];
+		
+		if ($id_bat == 10) {
+			$in_penitencier = true;
+		}
 	}
 	
-	// Récupération de la couleur associée au clan du perso
-	$couleur_clan_perso = couleur_clan($clan_perso);
-	
-	// Ajout événement
-	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a été placé en permission','','','',NOW(),'0')";
-	$mysqli->query($sql);
-	
-	$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE perso.id_perso='$id_perso' AND perso.idJoueur_perso = joueur.id_joueur";
-	$res = $mysqli->query($sql);
-	$t_perso = $res->fetch_assoc();
-	
-	$nom_perso 		= $t_perso["nom_perso"];
-	$email_joueur	= $t_perso["email_joueur"];
-	
-	// Titre du mail
-	$titre = 'Placement de votre perso en permission';
-	
-	// Contenu du mail
-	$message = "Votre perso ".$nom_perso." a été placé en permission pour inactivité.";
-	
-	// Envoi mail gel perso
-	mail_gel_persos($nom_perso, $email_joueur, $titre, $message);
+	if (!$in_penitencier) {
+		echo "gel du perso inactif $id_perso <br />";
+		
+		// maj du statut du perso
+		$sql = "UPDATE perso SET est_gele='1', a_gele='0', date_gele=NOW() WHERE id_perso='$id_perso'";
+		$mysqli->query($sql);
+		
+		// maj de la carte => disparition du perso
+		if (in_bat($mysqli, $id_perso)) {		
+			$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
+		else if (in_train($mysqli, $id_perso)) {
+			$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+		}
+		else {
+			$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso'";
+			$mysqli->query($sql);
+		}
+		
+		// Récupération de la couleur associée au clan du perso
+		$couleur_clan_perso = couleur_clan($clan_perso);
+		
+		// Ajout événement
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a été placé en permission','','','',NOW(),'0')";
+		$mysqli->query($sql);
+		
+		$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE perso.id_perso='$id_perso' AND perso.idJoueur_perso = joueur.id_joueur";
+		$res = $mysqli->query($sql);
+		$t_perso = $res->fetch_assoc();
+		
+		$nom_perso 		= $t_perso["nom_perso"];
+		$email_joueur	= $t_perso["email_joueur"];
+		
+		// Titre du mail
+		$titre = 'Placement de votre perso en permission';
+		
+		// Contenu du mail
+		$message = "Votre perso ".$nom_perso." a été placé en permission pour inactivité.";
+		
+		// Envoi mail gel perso
+		mail_gel_persos($nom_perso, $email_joueur, $titre, $message);
+	}
 }
 
 //***********************************************
