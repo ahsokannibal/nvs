@@ -406,7 +406,7 @@ if(isset($_SESSION["id_perso"])){
 		$_SESSION = array(); // On écrase le tableau de session
 		session_destroy(); // On détruit la session
 		
-		header("Location:../index.php");
+		header("Location:../index2.php");
 	}
 }
 else{
