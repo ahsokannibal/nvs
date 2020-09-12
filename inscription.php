@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("fonctions.php");
+require_once("jeu/f_carte.php");
 
 $mysqli = db_connexion();
 
@@ -62,9 +63,9 @@ if(config_dispo_jeu($mysqli)){
 							$mdp_joueur = md5($mdp_joueur);
 							
 							if($camp == 1){
-								$x_min_spawn 		= 150;
+								$x_min_spawn 		= 160;
 								$x_max_spawn 		= 200;
-								$y_min_spawn 		= 150;
+								$y_min_spawn 		= 160;
 								$y_max_spawn 		= 200;
 								$image_chef 		= "cavalerie_nord.gif";
 								$image_g 			= "infanterie_nord.gif";
@@ -76,9 +77,9 @@ if(config_dispo_jeu($mysqli)){
 							
 							if($camp == 2){
 								$x_min_spawn 		= 0;
-								$x_max_spawn 		= 50;
+								$x_max_spawn 		= 40;
 								$y_min_spawn 		= 0;
-								$y_max_spawn 		= 50;
+								$y_max_spawn 		= 40;
 								$image_chef 		= "cavalerie_sud.gif";
 								$image_g 			= "infanterie_sud.gif";
 								$group_id 			= 9;
@@ -145,13 +146,15 @@ if(config_dispo_jeu($mysqli)){
 									// calcul pourcentage pv bat 
 									$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
 									
+									$nb_ennemis_siege = nb_ennemis_siege_batiment($mysqli, $x, $y, $camp);
+									
 									// Récupération du nombre de perso dans ce batiment
 									$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
 									$res_n = $mysqli->query($sql_n);
 									$t_n = $res_n->fetch_assoc();
 									$nb_perso_bat = $t_n['nb_perso_bat'];
 									
-									if($contenance_bat > $nb_perso_bat + 1 && $pourcentage_pv_bat >= 90){
+									if($contenance_bat > $nb_perso_bat + 1 && $pourcentage_pv_bat >= 90 && $nb_ennemis_siege < 10){
 										// Le perso peut spawn dans le fort avec son grouillot
 										$bat_spawn_dispo = true;
 										
@@ -178,13 +181,15 @@ if(config_dispo_jeu($mysqli)){
 										// calcul pourcentage pv bat 
 										$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
 										
+										$nb_ennemis_siege = nb_ennemis_siege_batiment($mysqli, $x, $y, $camp);
+										
 										// Récupération du nombre de perso dans ce batiment
 										$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
 										$res_n = $mysqli->query($sql_n);
 										$t_n = $res_n->fetch_assoc();
 										$nb_perso_bat = $t_n['nb_perso_bat'];
 										
-										if($contenance_bat > $nb_perso_bat + 1 && $pourcentage_pv_bat >= 90){
+										if($contenance_bat > $nb_perso_bat + 1 && $pourcentage_pv_bat >= 90 && $nb_ennemis_siege < 10){
 											// Le perso peut spawn dans le fortin avec son grouillot
 											$bat_spawn_dispo = true;
 											
