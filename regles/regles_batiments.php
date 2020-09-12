@@ -86,6 +86,7 @@
 								<th style="text-align:center">Bonus d'attaque Dist</th>
 								<th style="text-align:center">Bonus de défense CàC</th>
 								<th style="text-align:center">Bonus de défense Dist</th>
+								<th style="text-align:center">Capacité</th>
 								<th style="text-align:center">Commentaire</th>
 							</tr>
 							<tr>
@@ -98,6 +99,7 @@
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>+25%</td>
+								<td align='center'>100</td>
 								<td>Le Fort est un bâtiment à défendre coute que coute. Il peut servir de lieu de rapatriement après capture. Il dispose de 6 canons de défense qui vont attaquer tout ennemi qui se rapproche de trop prés. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter armes et objets. Ces bâtiment permettent aussi aux chefs d'engager de nouvelles unités s'ils ont les PG (Points de Grouillot) nécessaire. Lorsqu'un Fort est construit, il possédera entre 5000 et 10000 PV.</td>
 							</tr>
 							<tr>
@@ -110,6 +112,7 @@
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>+25%</td>
+								<td align='center'>50</td>
 								<td>Le Fortin est le petit frère du Fort. Il est placé afin de défendre une partie de la carte. Il peut servir de lieu de rapatriement après capture. Il dispose de 4 canons de défense qui vont attaquer tout ennemi qui se rapproche de trop prés. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter armes et objets. Ces bâtiment permettent aussi aux chefs d'engager de nouvelles unités s'ils ont les PG (Points de Grouillot) nécessaire. Lorsqu'un Fortin est construit, il possédera entre 300 et 600 PV.</td>
 							</tr>
 							<tr>
@@ -122,6 +125,7 @@
 								<td align='center'>-25%</td>
 								<td align='center'>-</td>
 								<td align='center'>+25%</td>
+								<td align='center'>50</td>
 								<td>Une Gare permet de se rendre à une autre Gare en achetant un ticket et en prenant le Train. Cela permet de se rendre plus rapidement à différents endroits de la carte. Une gare devient inactive (les trains ne vont plus vers cette gare) si elle est en dessous de 50% de ses PV. Une gare ne peut être construite qu'à proximité de rails (le centre doit être à 2 cases d'un rail pour le bâtiment soit à proximité de rails). Lorsqu'un gare est construite, elle possédera entre 250 et 500 PV.</td>
 							</tr>
 							<tr>
@@ -134,6 +138,7 @@
 								<td align='center'>-30%</td>
 								<td align='center'>+25%</td>
 								<td align='center'>+25%</td>
+								<td align='center'>50</td>
 								<td>Les trains permettent de voyager d'une gare à une autre en se déplaçant de 10PM par heure. un Train ,lorsqu'il est livré, possède la totalité de ses PV. Si un Train est abimé en arrivant dans une Gare, il sera réparé.</td>
 							</tr>
 							<tr>
@@ -146,6 +151,7 @@
 								<td align='center'>-25%</td>
 								<td align='center'>-</td>
 								<td align='center'>+15%</td>
+								<td align='center'>50</td>
 								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin. lorsqu'un Hôpital est construit, il possédera entre 100 et 200 PV.</td>
 							</tr>
 							<tr>
@@ -158,6 +164,7 @@
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>+10%</td>
+								<td align='center'>1</td>
 								<td>Il s'agit d'une tour faiblement défendue, qui permet à la personne à l'intérieur d'augmenter sa perception. Elles ne peuvent être construites qu'en plaine, seulement par les troupes du Génie. Lorsqu'un Tour de guêt est construite, elle possédera entre 50 et 100 PV.</td>
 							</tr>
 							<tr>
@@ -165,6 +172,7 @@
 								<td align='center'>Barricade</td>
 								<td align='center'>1 case</td>
 								<td align='center'>250</td>
+								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
@@ -182,12 +190,14 @@
 								<td align='center'>-</td>
 								<td align='center'>-10%</td>
 								<td align='center'>-10%</td>
+								<td align='center'>-</td>
 								<td>Le pont peut être posé sur les case d'eau et d'eau profonde. Il permet aux persos de traverser l'eau pour le cout d'un PM au lieu de 4 ainsi que de traverser l'eau profonde qui est infranchissable sans pont. C'est donc un outil stratégique très important à ne pas négliger ! Les ponts peuvent être sabotés par les persos, il suffit de se trouver à côté d'un pont afin d'avoir la possibilité de le <a href='regles_action_spe.php'>saboter</a> comme de le <a href='regles_action_spe.php'>réparer</a>. On ne peut peut pour l'instant pas saboter un pont avec un perso dessus. lorsqu'un Pont est construit, il possédera entre 50 et 100 PV.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../fond_carte/rail.gif' alt='pont'></td>
 								<td align='center'>Rail</td>
 								<td align='center'>1 case</td>
+								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
