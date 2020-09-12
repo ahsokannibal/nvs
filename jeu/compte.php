@@ -72,7 +72,7 @@ if($dispo || $admin){
 			if (isset($_GET["gele"])){
 				
 				if ($_GET["gele"] == "ok") {
-				
+					
 					if ($a_g){
 						echo "<font color=red>Vous avez déjà demandé à partir en permission, la permission sera effective à minuit</font><br />";
 					}

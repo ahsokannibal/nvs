@@ -658,7 +658,7 @@ function nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $camp) {
 // fonction qui récupère le batiment de rapatriement le plus proche d'un perso
 function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	
-	// Verification si le perso a choisi un Hoptail de respawn
+	// Verification si le perso a choisi un Hopital de respawn
 	$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment 
 			WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 			AND id_perso='$id_perso' AND id_bat='7'
