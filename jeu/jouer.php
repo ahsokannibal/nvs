@@ -656,7 +656,7 @@ if($dispo || $admin){
 														$entre_bat_ok = 1;
 													
 														// recuperation des coordonnees et infos du batiment dans lequel le perso entre
-														$sql = "SELECT nom_instance, nom_instance, x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
+														$sql = "SELECT nom_instance, nom_instance, x_instance, y_instance, id_batiment, camp_instance FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
 														$res = $mysqli->query($sql);
 														$coordonnees_instance = $res->fetch_assoc();
 														
@@ -665,6 +665,7 @@ if($dispo || $admin){
 														$nom_bat 			= $coordonnees_instance["nom_instance"];
 														$nom_instance 		= $coordonnees_instance["nom_instance"];
 														$id_bat				= $coordonnees_instance["id_batiment"];
+														$camp_bat			= $coordonnees_instance["camp_instance"];
 														$id_inst_bat 		= $_GET["bat"];
 														
 														// Verification si le perso est de la même nation ou non que le batiment
@@ -693,8 +694,11 @@ if($dispo || $admin){
 																	if($camp == "1"){
 																		$couleur_c 		= "b";
 																	}
-																	if($camp == "2"){
+																	else if($camp == "2"){
 																		$couleur_c 		= "r";
+																	}
+																	else if ($camp == "3") {
+																		$couleur_c 		= "g";
 																	}
 																	
 																	// Mise à jour de l'icone centrale sur la carte
@@ -704,6 +708,23 @@ if($dispo || $admin){
 																	
 																	// mise a jour table evenement
 																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé','$id_inst_bat','le batiment $nom_bat','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
+																	$mysqli->query($sql);
+																	
+																	if ($camp_bat == '1') {
+																		$couleur_clan_bat = 'blue';
+																	}
+																	else if ($camp_bat == '2') {
+																		$couleur_clan_bat = 'red';
+																	}
+																	else if ($camp_bat == '2') {
+																		$couleur_clan_bat = 'green';
+																	}
+																	else {
+																		$couleur_clan_bat = 'black';
+																	}
+																	
+																	// maj CV
+																	$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>', '$nom_grade_perso', '$id_inst_bat','<font color=$couleur_clan_bat>Tour de Guêt $nom_bat</font>', NULL, NOW(), 8)";
 																	$mysqli->query($sql);
 																	
 																	echo "<font color = red>Felicitation, vous venez de capturer un bâtiment ennemi !</font><br>";
@@ -829,7 +850,7 @@ if($dispo || $admin){
 													$nb_perso_bat = $res->num_rows;
 											
 													// recuperation des coordonnees et des infos du batiment dans lequel le perso entre
-													$sql = "SELECT nom_batiment, id_instanceBat, nom_instance, x_instance, y_instance, contenance_instance, instance_batiment.id_batiment, taille_batiment 
+													$sql = "SELECT nom_batiment, id_instanceBat, nom_instance, x_instance, y_instance, contenance_instance, instance_batiment.id_batiment, taille_batiment, camp_instance 
 															FROM instance_batiment, batiment 
 															WHERE instance_batiment.id_batiment = batiment.id_batiment
 															AND id_instanceBat=".$_GET["bat"]."";
@@ -842,6 +863,7 @@ if($dispo || $admin){
 													$nom_batiment			= $coordonnees_instance["nom_batiment"];
 													$id_inst_bat 			= $coordonnees_instance["id_instanceBat"];
 													$contenance_inst_bat 	= $coordonnees_instance["contenance_instance"];
+													$camp_instance_bat		= $coordonnees_instance["camp_instance"];
 													$id_bat					= $coordonnees_instance["id_batiment"];
 													$taille_batiment		= $coordonnees_instance["taille_batiment"];
 													
@@ -881,7 +903,7 @@ if($dispo || $admin){
 																			$image_canon_g 	= 'canonG_nord.gif';
 																			$image_canon_d 	= 'canonD_nord.gif';
 																		}
-																		if($camp == "2"){
+																		else if($camp == "2"){
 																			$couleur_c 		= "r";
 																			$image_canon_g 	= 'canonG_sud.gif';
 																			$image_canon_d 	= 'canonD_sud.gif';
@@ -958,18 +980,22 @@ if($dispo || $admin){
 																		if ($id_bat == 9) {
 																			// FORT -> 400
 																			$gain_pvict = 400;
+																			$nom_b = "FORT";
 																		}
 																		else if ($id_bat == 8) {
 																			// FORTIN -> 100
 																			$gain_pvict = 100;
+																			$nom_b = "FORTIN";
 																		}
 																		else if ($id_bat == 11) {
 																			// GARE -> 75
 																			$gain_pvict = 75;
+																			$nom_b = "GARE";
 																		}
 																		else if ($id_bat == 7) {
 																			// HOPITAL -> 10
 																			$gain_pvict = 10;
+																			$nom_b = "HOPITAL";
 																		}
 																		else {
 																			$gain_pvict = 0;
@@ -991,6 +1017,23 @@ if($dispo || $admin){
 																			$mysqli->query($sql);
 																			
 																		}
+																		
+																		if ($camp_instance_bat == '1') {
+																			$couleur_clan_bat = 'blue';
+																		}
+																		else if ($camp_instance_bat == '2') {
+																			$couleur_clan_bat = 'red';
+																		}
+																		else if ($camp_instance_bat == '2') {
+																			$couleur_clan_bat = 'green';
+																		}
+																		else {
+																			$couleur_clan_bat = 'black';
+																		}
+																		
+																		// maj CV
+																		$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>', '$nom_grade_perso', '$id_inst_bat','<font color=$couleur_clan_bat>$nom_b $nom_bat</font>', NULL, NOW(), 8)";
+																		$mysqli->query($sql);
 																		
 																		echo "<font color = red>Félicitation, vous venez de capturer un bâtiment ennemi !</font><br>";
 																	} 

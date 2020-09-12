@@ -131,7 +131,7 @@ if(isset($id)){
 	// nombre de kills
 	$count_capture = 0;
 	$count_promotion = 0;
-	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '9') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '8' OR special = '9') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>Le bon...</b></font></center>";
@@ -159,6 +159,18 @@ if(isset($id)){
 			if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
 				echo " (".$grade_cible_cv.")";
 			}
+			echo "	</td>";
+			echo "</tr>";
+		}
+		else if ($id_acteur_cv == $id && $special == '8') {
+			
+			$nom_cible_cv		= $t['nomCible_cv'];
+			
+			$count_capture++;
+			
+			echo "<tr>";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé le bâtiment ";
+			echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			echo "	</td>";
 			echo "</tr>";
 		}

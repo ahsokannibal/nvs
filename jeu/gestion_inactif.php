@@ -21,7 +21,7 @@ function mail_gel_persos($nom_perso, $email_joueur, $titre, $message){
 //***************************************
 // Traitement des persos a mettre en gel
 //***************************************
-$sql = "SELECT id_perso, nom_perso, clan FROM perso WHERE a_gele='1'";
+$sql = "SELECT id_perso, nom_perso, clan FROM perso WHERE a_gele='1' AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 3 DAY)";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -62,7 +62,7 @@ while ($t = $res->fetch_assoc()){
 // Traitement des persos inactifs a placer en gel
 //***********************************************
 // On place en gel les persos avec une date de DLA ancienne de plus de 10 jours (5 tours)
-$sql = "SELECT id_perso, nom_perso, clan FROM `perso` WHERE DLA_perso < DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY) and est_gele='0'";
+$sql = "SELECT id_perso, nom_perso, clan FROM `perso` WHERE DLA_perso < DATE_SUB(CURRENT_DATE, INTERVAL 10 DAY) and est_gele='0' AND id_perso!='1' AND id_perso!='2'";
 $res_inactif = $mysqli->query($sql);
 
 while ($t = $res_inactif->fetch_assoc()){
@@ -141,7 +141,7 @@ while ($t = $res->fetch_assoc()){
 // Traitement suppression des inactifs
 //***********************************************
 // On supprime les persos et le compte du joueur dont les persos sont gelés depuis 30 jours
-$sql = "SELECT DISTINCT(joueur.id_joueur) FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND est_gele='1'";
+$sql = "SELECT DISTINCT(joueur.id_joueur) FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 30 DAY) AND est_gele='1' AND id_perso!='1' AND id_perso!='2'";
 $res_sup = $mysqli->query($sql);
 
 while ($t = $res_sup->fetch_assoc()){

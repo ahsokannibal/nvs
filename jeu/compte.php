@@ -386,12 +386,12 @@ if($dispo || $admin){
 				<?php
 				if ($a_g) {
 				?>
-					<a class='btn btn-danger' href="compte.php?gele=annuler" OnClick="return(confirm('êtes vous sûr de vouloir annuler votre départ en permission ? Le départ en permission sera effectif à minuit.'))">Annuler le départ en permission</a>	
+					<a class='btn btn-danger' href="compte.php?gele=annuler" OnClick="return(confirm('êtes vous sûr de vouloir annuler votre départ en permission ?'))">Annuler le départ en permission</a>	
 				<?php
 				}
 				else {
 				?>
-					<a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir partir en permission ? Le départ en permission sera effectif à minuit.'))">Partir en permission</a>
+					<a class='btn btn-danger' href="compte.php?gele=ok" OnClick="return(confirm('êtes vous sûr de vouloir partir en permission ? Le départ en permission sera effectif d'ici 3 jours à minuit.'))">Partir en permission</a>
 				<?php
 				}
 				if (!$demande_cc) {
