@@ -84,10 +84,11 @@ if(isset($_SESSION["id_perso"])){
 			<div class="row">
 				<div class="col-12">
 				<?php if ($dispo) { ?>
-					<a class='btn btn-success' href='admin_nvs.php?mode_maj=ok'>Passer le jeu en mode Mise à jour</a>
+					<a class='btn btn-danger' href='admin_nvs.php?mode_maj=ok'>Passer le jeu en mode Mise à jour</a>
 				<?php } else { ?>
 					<a class='btn btn-success' href='admin_nvs.php?mode_jeu=ok'>Ouvrir le jeu</a>
 				<?php } ?>
+					<a class='btn btn-danger' href='admin_changement_carte.php' target='_blank'>Changement de carte</a>
 				</div>
 			</div>
 			
