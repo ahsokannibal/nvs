@@ -96,6 +96,8 @@ $mysqli = db_connexion();
 					Donner une arme vous coûte 1 PA.<br />
 					L'achat et la vente d'une arme coûte 2 PA.</p>
 					
+					<p>Vous pouvez revendre des armes chez Momo et Momo vous infligera alors une décote de 50% ! Effectuez donc vos achats d'armes avec prudence.</p>
+					
 					<h2>Tableau des armes de Corps à corps</h2>
 					
 					<div id="table_armes_cac" class="table-responsive">
