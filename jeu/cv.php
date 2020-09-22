@@ -214,8 +214,8 @@ if(isset($id)){
 			if ($id_acteur_cv != 0) {
 				echo " a été capturé par ";
 				echo $nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
-				if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
-					echo " (".$grade_cible_cv.")";
+				if ($grade_acteur_cv	 != null && $grade_acteur_cv	 != "") {
+					echo " (".$grade_acteur_cv.")";
 				}
 			}
 			else {
