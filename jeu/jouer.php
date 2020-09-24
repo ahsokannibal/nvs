@@ -2168,6 +2168,7 @@ if($dispo || $admin){
 				echo "	<td>Prochain tour :  ".$n_dla."</td>";
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
+				echo "		<a class='btn btn-info' href=\"../faq.php\" target='_blank'><b>FAQ</b></a>";
 				echo "		<a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
 				if ($type_perso != 6) {
 					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Question animateur</b></a>";
