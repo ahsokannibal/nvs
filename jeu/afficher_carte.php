@@ -51,9 +51,13 @@ if (isset($_SESSION["id_perso"])) {
 			inputId.value = pos[valueToShow];
 		}
 		</script>
-	</body>
-</html>	
-	<?php
+		
+		<div class="row">
+			<div class="col-12" align='center'>
+				<a href='histo_carte.php' class='btn btn-primary'>Afficher l'historique de la carte</a>
+			</div>
+		</div>
+		<?php
 		
 	// Le perso appartient-il à une compagnie 
 	$sql = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
@@ -203,4 +207,6 @@ if (isset($_SESSION["id_perso"])) {
 else {
 	echo "Veuillez vous connecter";	
 }
-?>
+		?>
+	</body>
+</html>	
