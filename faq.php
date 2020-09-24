@@ -141,8 +141,112 @@ $mysqli = db_connexion();
 					</div>
 					<div id="collapseSeven" class="collapse" aria-labelledby="headingSeven" data-parent="#accordionExample">
 						<div class="card-body">
-							Vous n'avez la possibilité de revenir de permission que 5 jours après votre départ effectif de permission.
+							Vous n'avez la possibilité de revenir de permission que <b>5 jours après votre départ effectif de permission</b>.
 							Pour votre retour de permission, votre personnage sera envoyé au bâtiment le plus proche, permettant de vous accueillir, de votre position de départ de permission. Les bâtiments permettant de vous accueillir d'un retour de permission sont les Forts, les Fortins et les Gares si ces derniers ne sont pas en état de siège et si leur contenance max n'est pas atteinte.
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingEight">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseEight" aria-expanded="false" aria-controls="collapseEight">
+								Comment avoir un aperçu global/stratégique de la situation ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseEight" class="collapse" aria-labelledby="headingEight" data-parent="#accordionExample">
+						<div class="card-body">
+							Il existe une carte stratégique accessible depuis le menu nommé "CARTE". En cliquant dessus, vous ouvrirez la carte stratégique, vous permettant d'avoir une vision rapide de la situation actuelle du jeu.
+							La carte possède des zones découvertes (zones déjà explorées par un perso de votre camp) et des zones non découvertes. Il vous est impossible de voir les mouvements ennemis sur les zones non découvertes, à vous donc de faire en sorte de découvrir rapidement le plus de zones !
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingNine">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseNine" aria-expanded="false" aria-controls="collapseNine">
+								Je vois un ennemi en forêt à côté de moi mais il est invisible sur la carte stratégique, pourquoi ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseNine" class="collapse" aria-labelledby="headingNine" data-parent="#accordionExample">
+						<div class="card-body">
+							Les zones de forêt sont dites à couvert, elles permettent aux personnages de rester invisibles de la carte stratégique. Cela permet de favoriser les infiltrations, embuscades et donc de rajouter un peu plus de piquant au jeu.
+							A vous donc de prendre en compte les terrains de la carte afin d'identifier les zones à surveiller ou les zones à exploiter.
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingTen">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTen" aria-expanded="false" aria-controls="collapseTen">
+								En rentrant dans une forêt, j'ai perdu de la perception, pourquoi ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-parent="#accordionExample">
+						<div class="card-body">
+							Chaque type de terrain possède ses spécificités et vous accordent divers bonus et/ou malus. Reportez vous à la <a href='./regles/regles_carte.php'>page de règles dédié</a> pour tous les connaitre.
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingEleven">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseEleven" aria-expanded="false" aria-controls="collapseEleven">
+								Quelqu'un m'a envoyé une image sur la messagerie du jeu, comment faire pour améliorer mes messages dans le jeu ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseEleven" class="collapse" aria-labelledby="headingEleven" data-parent="#accordionExample">
+						<div class="card-body">
+							Vous pouvez utiliser certaines balises bbcode dans vos messages, en voici la liste :
+							<ul>
+								<li>[center]Mon texte centré[/center]</li>
+								<li>[img*]monUrl vers l'image[/img*]</li>
+								<li>[b]mon texte en gras[/b]</li>
+								<li>[u]mon texte souligné[/u]</li>
+								<li>[i]mon texte en italique[/i] </li>
+								<li>[color=maCouleur]mon texte dans la couleur maCouleur[color=maCouleur]</li>
+								<li>[table][tr*] et [td*] pour la Gestion des tableau</li>
+							</ul>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingTwelve">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseTwelve" aria-expanded="false" aria-controls="collapseTwelve">
+								Comment prendre le train ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseTwelve" class="collapse" aria-labelledby="headingTwelve" data-parent="#accordionExample">
+						<div class="card-body">
+							Le train sert à relier 2 gares. Il sert donc à se rendre d'une gare vers une autre.<br />
+							Pour prendre le train, vous devez entrer dans la gare et acheter un ticket de train vers la gare de destination (Coût 5 Thunes par tronçon).
+							Il ne vous reste plus qu'à attendre le train, qui une fois arrivé en gare, vous embarquera automatiquement et vous débarquera automatiquement dans la gare de destination.
+							Si le voyage demande de passer par plusieurs tronçons, vous serez débarqué dans chaque gare intermédiaire avant d'embarquer automatiquement dans le train suivant jusqu'à votre destination.<br />
+							<b>Attention : les tickets de train sont nominatifs et ne peuvent donc être cédés à un autre perso, ils ne fonctionneront pas !</b>
+						</div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header" id="headingThirteen">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseThirteen" aria-expanded="false" aria-controls="collapseThirteen">
+								Mon train semble ne plus avancer, que se passe t-il ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseThirteen" class="collapse" aria-labelledby="headingThirteen" data-parent="#accordionExample">
+						<div class="card-body">
+							Un train peut être bloqué pour plusieurs raisons :
+							<ul>
+								<li>La gare de destination du train n'existe plus / à été détruite</li>
+								<li>La gare de destination du train n'est plus en état de fonctionner (PV en dessous de 50%)</li>
+								<li>Une barricade a été placée sur la route du train (le train s'arretera alors devant la barricade)</li>
+							</ul>
 						</div>
 					</div>
 				</div>
