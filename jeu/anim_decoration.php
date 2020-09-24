@@ -41,6 +41,12 @@ if($dispo || $admin){
 				$nom_camp = 'Indien';
 			}
 			
+			if (isset($_POST['liste_perso_deco'])) {
+						
+				$id_perso_decoration = $_POST['liste_perso_deco'];
+				
+			}
+			
 			if (isset($_POST['hid_id_perso_deco']) && isset($_POST['hid_id_choix_deco']) && isset($_POST['raison_deco'])) {
 				
 				$id_perso_deco 	= $_POST['hid_id_perso_deco'];
@@ -94,9 +100,9 @@ if($dispo || $admin){
 						</div>
 						<div class="form-row">
 							<div class="form-group col-md-8">
-								<select class="form-control" name='liste_perso_deco' id="formSelectPerso">
+								<select class="form-control" name='liste_perso_deco' id="formSelectPerso" onchange="this.form.submit()">
 								<?php
-								// récuopération de tous les persos de son camp 
+								// récupération de tous les persos de son camp 
 								$sql = "SELECT id_perso, nom_perso FROM perso WHERE clan='$camp' ORDER BY id_perso ASC";
 								$res = $mysqli->query($sql);
 								
@@ -105,7 +111,11 @@ if($dispo || $admin){
 									$id_perso_list 	= $t["id_perso"];
 									$nom_perso_list	= $t["nom_perso"];
 									
-									echo "<option value='".$id_perso_list."'>".$nom_perso_list." [".$id_perso_list."]</option>";
+									echo "<option value='".$id_perso_list."' ";
+									if (isset($id_perso_decoration) && $id_perso_decoration == $id_perso_list) {
+										echo "selected";
+									}
+									echo ">".$nom_perso_list." [".$id_perso_list."]</option>";
 									
 								}
 								?>
