@@ -64,7 +64,7 @@ if (isset($_SESSION["id_perso"])) {
 			$taille_tab = count($tab_image);
 			?>
 			
-			<div id="demo" class="carousel slide carousel-fade" data-ride="carousel" data-wrap="false" data-interval="false">
+			<div id="histo" class="carousel slide carousel-fade" data-ride="carousel" data-wrap="false" data-interval="false">
 
 				<!-- Carrousel -->
 				<div class="carousel-inner">
@@ -95,7 +95,7 @@ if (isset($_SESSION["id_perso"])) {
 								}
 								echo "'>";
 								
-								echo "	<img src='".$nom_repertoire."".$nom_image."' alt='".$nom_image."' class='d-block w-100'>";
+								echo "	<img src='image_histo.php?imagename=".$nom_image."' alt='Carte vision du ".$camp_image." du".$date_jour_image."/".$date_mois_image."/".$date_annee_image."' class='d-block w-100'>";
 								echo "	<div class='carousel-caption d-none d-md-block'>";
 								echo "		<h5> Carte vision du ".$camp_image." du".$date_jour_image."/".$date_mois_image."/".$date_annee_image."</h5>";
 								echo "	</div>";
@@ -110,11 +110,11 @@ if (isset($_SESSION["id_perso"])) {
 				</div>
 				
 				<!-- Contrôles -->
-				<a class="carousel-control-prev" href="#demo" role="button" data-slide="prev">
+				<a class="carousel-control-prev" href="#histo" role="button" data-slide="prev">
 					<span class="carousel-control-prev-icon" aria-hidden="true"></span>
 					<span class="sr-only">Précédent</span>
 				</a>
-				<a class="carousel-control-next" href="#demo" role="button" data-slide="next">
+				<a class="carousel-control-next" href="#histo" role="button" data-slide="next">
 					<span class="carousel-control-next-icon" aria-hidden="true"></span>
 					<span class="sr-only">Suivant</span>
 				</a>
