@@ -105,6 +105,45 @@ if(isset($id)){
 		echo "</table></center><br />";
 	}
 	
+	// Décorations
+	$sql = "SELECT date_decoration, raison_decoration, image_decoration FROM perso_as_decoration, decorations 
+			WHERE perso_as_decoration.id_decoration = decorations.id_decoration
+			AND id_perso='$id'
+			ORDER BY date_decoration";
+	$res = $mysqli->query($sql);
+	$nb_event = $res->num_rows;
+	
+	if ($nb_event) {
+		
+		echo "<center><font color=red><b>Décorations</b></font></center>";
+		echo "<center>";
+		echo "<table border=1 width=80%>";
+		echo "	<tr>";
+		echo "		<th style='text-align:center' width=25%>date</th>";
+		echo "		<th style='text-align:center' width=25%>décoration</th>";
+		echo "		<th style='text-align:center'>Raison</th>";
+		echo "	</tr>";
+	
+		while ($t = $res->fetch_assoc()){
+			
+			$date_deco		= $t['date_decoration'];
+			$raison_deco	= htmlspecialchars($t['raison_decoration']);
+			$image_deco 	= $t['image_decoration'];
+			
+			echo "	<tr>";
+			echo "		<td align='center'>".$date_deco."</td>";
+			echo "		<td align='center'><img src='../images/medailles/".$image_deco."' width='20' height='40'/></td>";
+			if (trim($raison_deco) != "") {
+				echo "		<td align='center'>".$raison_deco."</td>";
+			}
+			else {
+				echo "		<td align='center'>Pour son engagement et son courage</td>";
+			}
+			echo "	</tr>";
+		}
+		echo "</table></center><br />";
+	}
+	
 	
 	// Missions
 	$count = 0;

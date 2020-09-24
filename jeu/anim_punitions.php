@@ -1,10 +1,12 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
+include ('../forum/config.php');
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
@@ -36,32 +38,7 @@ if($dispo || $admin){
 				$nom_camp = 'Indien';
 			}
 			
-			// Récupération des demandes sur la gestion des compagnies
-			$sql = "SELECT * FROM compagnie_demande_anim, compagnies 
-					WHERE compagnie_demande_anim.id_compagnie = compagnies.id_compagnie
-					AND compagnies.id_clan='$camp'";
-			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_compagnie = $res->num_rows;
-			
-			// Récupération des demandes sur la gestion des persos 
-			$sql = "(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
-					WHERE perso_demande_anim.id_perso = perso.id_perso
-					AND perso.clan = '$camp'
-					AND perso_demande_anim.type_demande = 1)
-					UNION ALL
-					(SELECT perso_demande_anim.* FROM perso_demande_anim, perso
-					WHERE perso_demande_anim.id_perso = perso.idJoueur_perso
-					AND perso.clan = '$camp'
-					AND perso.chef = '1'
-					AND perso_demande_anim.type_demande > 1)
-					";
-			$res = $mysqli->query($sql);
-			$nb_demandes_gestion_perso = $res->num_rows;
-			
-			// Récupération du nombre de questions / remontées anims en attente de réponse
-			$sql = "SELECT id FROM anim_question WHERE id_camp='$camp' AND status='0'";
-			$res = $mysqli->query($sql);
-			$nb_questions_anim = $res->num_rows;
+					
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -81,21 +58,47 @@ if($dispo || $admin){
 		
 			<div class="row">
 				<div class="col-12">
+
 					<div align="center">
-						<h2>Animation du camp <?php echo $nom_camp; ?></h2>
+						<h2>Animation - Gestion des punitions des persos</h2>
 					</div>
 				</div>
 			</div>
 			
-			<p align="center"><a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
+			<p align="center"><a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a></p>
 			
 			<div class="row">
 				<div class="col-12">
-					<a class='btn btn-info' href='anim_compagnie.php'>Gestion des compagnies <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_compagnie." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_compagnie > 0) { echo $nb_demandes_gestion_compagnie; }?></span></a>
-					<a class='btn btn-info' href='anim_perso.php'>Gestion des persos <span class="badge badge-danger" title='<?php echo $nb_demandes_gestion_perso." demandes en attente"; ?>'><?php if ($nb_demandes_gestion_perso > 0) { echo $nb_demandes_gestion_perso; }?></span></a>
-					<a class='btn btn-info' href='anim_batiment.php'>Gestion des bâtiments</a>
-					<a class='btn btn-info' href='anim_penitencier.php'>Gestion du pénitencier</a>
-					<a class='btn btn-info' href='anim_trains.php'>Gestion des trains</a>					
+					<form method='POST' action='anim_decoration.php'>
+						<div class="form-row">
+							<div class="form-group col-md-12">
+								<label for="formSelectPerso">Punir le perso : </label>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-8">
+								<select class="form-control" name='liste_perso_punition' id="formSelectPerso">
+								<?php
+								// récuopération de tous les persos de son camp 
+								$sql = "SELECT id_perso, nom_perso FROM perso WHERE clan='$camp' ORDER BY id_perso ASC";
+								$res = $mysqli->query($sql);
+								
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_perso_list 	= $t["id_perso"];
+									$nom_perso_list	= $t["nom_perso"];
+									
+									echo "<option value='".$id_perso_list."'>".$nom_perso_list." [".$id_perso_list."]</option>";
+									
+								}
+								?>
+								</select>
+							</div>
+							<div class="form-group col-md-4">
+								<button type="submit" class="btn btn-primary">Voir</button>
+							</div>
+						</div>
+					</form>
 				</div>
 			</div>
 			
@@ -103,19 +106,13 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<a class='btn btn-warning' href='anim_missions.php'>Gestion des missions</a>
-					<a class='btn btn-warning' href='anim_questions.php'>Les questions / remontées des joueurs <span class="badge badge-danger" title='<?php echo $nb_questions_anim." questions en attente"; ?>'><?php if ($nb_questions_anim > 0) { echo $nb_questions_anim; }?></span></a>
-					<a class='btn btn-warning' href='anim_decoration.php'>Décorer un perso</a>
-					<a class='btn btn-warning' href='anim_punitions.php'>Punir un perso</a>
-				</div>
-			</div>
-			
-			<br />
-			
-			<div class="row">
-				<div class="col-12">
-					<a class='btn btn-secondary' href='anim_multi.php'>Tableau des multis déclarés</a>
-					<a class='btn btn-secondary' href='anim_babysitte.php'>tableau des Babysittes déclarés</a>
+					<?php
+					if (isset($_POST['liste_perso_punition'])) {
+						
+						$id_perso_puni = $_POST['liste_perso_punition'];
+						
+					}
+					?>
 				</div>
 			</div>
 			
