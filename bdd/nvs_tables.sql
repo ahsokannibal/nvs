@@ -436,6 +436,20 @@ CREATE TABLE `declaration_multi` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `decorations`
+--
+
+CREATE TABLE `decorations` ( 
+	`id_decoration` INT NOT NULL AUTO_INCREMENT , 
+	`description_decoration` TEXT NULL , 
+	`camp_decoration` INT NOT NULL ,
+	`image_decoration` TEXT NOT NULL ,
+	PRIMARY KEY (`id_decoration`)
+) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `dernier_tombe`
 --
 
@@ -568,7 +582,22 @@ CREATE TABLE `histo_stats_camp_pv` (
 	`id_camp` INT NOT NULL , 
 	`gain_pvict` INT NOT NULL , 
 	`texte` TEXT NOT NULL
-) ENGINE=MyISAM; 
+) ENGINE=MyISAM;
+
+-- --------------------------------------------------------
+
+-- 
+-- Structure de la table `historique_punitions`
+-- 
+
+CREATE TABLE `historique_punitions` ( 
+	`id` INT NOT NULL AUTO_INCREMENT , 
+	`date_punition` DATETIME NOT NULL , 
+	`id_perso_puni` INT NOT NULL , 
+	`id_perso_anim` INT NOT NULL , 
+	`description_punition` TEXT NOT NULL , 
+	PRIMARY KEY (`id`)
+) ENGINE = MyISAM; 
 
 -- --------------------------------------------------------
 
@@ -912,6 +941,21 @@ CREATE TABLE `perso_as_contact` (
   `id_perso` int(11) NOT NULL DEFAULT '0',
   `id_contact` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `perso_as_decoration`
+--
+
+CREATE TABLE `perso_as_decoration` ( 
+	`id` INT NOT NULL AUTO_INCREMENT , 
+	`id_perso` INT NOT NULL , 
+	`id_decoration` INT NOT NULL , 
+	`date_decoration` DATETIME NOT NULL ,
+	`raison_decoration` TEXT NULL , 
+	PRIMARY KEY (`id`)
+) ENGINE = MyISAM; 
 
 -- --------------------------------------------------------
 
