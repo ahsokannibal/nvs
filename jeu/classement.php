@@ -403,13 +403,50 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		echo "				<td align=center>$nb_kill</td>";
 		echo "				<td align=center>$meutre</td>";
 		echo "				<td align=center>$autres</td>";
-		echo "				<td align='center'>".$pvict."</td>";
+		echo "				<td align='center'>".$pvict." <a href='classement.php?stats=ok&histo=".$id_camp."' class='btn btn-primary'>Consulter l'historique</a></td>";
 		echo "			</tr>";
 	}
 	
 	echo "		</tbody>";
 	echo "	</table>";
 	echo "</div>";
+	
+	if (isset($_GET['histo']) && trim($_GET['histo']) != "") {
+		
+		$id_camp_histo = $_GET['histo'];
+		
+		echo "<div class='table-responsive'>";
+		echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
+		echo "		<thead>";
+		echo "			<tr>";
+		echo "				<th style='text-align:center'><font color=darkred>Date</font></th>";
+		echo "				<th style='text-align:center'><font color=darkred>Détail</font></th>";
+		echo "				<th style='text-align:center'><font color=darkred>Gain PV</font></th>";
+		echo "			</tr>";
+		echo "		</thead>";
+		echo "		<tbody>";
+		
+		$sql = "SELECT date_pvict, gain_pvict, texte FROM histo_stats_camp_pv WHERE id_camp='$id_camp_histo' ORDER BY date_pvict ASC";
+		$res =  $mysqli->query($sql);
+		
+		while ($t = $res->fetch_assoc()){
+			
+			$date_pv = $t['date_pvict'];
+			$gain_pv = $t['gain_pvict'];
+			$text_pv = $t['texte'];
+			
+			echo "			<tr>";
+			echo "				<td align=center>".$date_pv."</td>";
+			echo "				<td align=center>".$text_pv."</td>";
+			echo "				<td align=center>".$gain_pv."</td>";
+			echo "			</tr>";
+			
+		}
+		
+		echo "		</tbody>";
+		echo "	</table>";
+		echo "</div>";		
+	}
 }
 
 if(isset($_GET['super']) && $_GET['super'] == 'ok'){
