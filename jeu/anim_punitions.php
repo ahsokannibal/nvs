@@ -69,7 +69,7 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<form method='POST' action='anim_decoration.php'>
+					<form method='POST' action='anim_punitions.php'>
 						<div class="form-row">
 							<div class="form-group col-md-12">
 								<label for="formSelectPerso">Punir le perso : </label>

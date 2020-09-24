@@ -134,7 +134,7 @@ if($dispo || $admin){
 						
 						echo "<b><u>Choix de la décoration : </u></b><br />";
 						
-						echo "<table>";
+						echo "<table><tr>";
 						
 						while ($t = $res->fetch_assoc()) {
 							
@@ -142,18 +142,24 @@ if($dispo || $admin){
 							$desc_decoration	= htmlspecialchars($t['description_decoration']);
 							$img_decoration		= $t['image_decoration'];
 							
+							echo "<td>";
+							
+							echo "<table style='height:400px;'>";
 							echo "	<tr>";
-							echo "		<td align='center'><a href='anim_decoration.php?id_perso=".$id_perso_deco."&id_deco=".$id_decoration."'><img src='../images/medailles/".$img_decoration."'/></a></td>";
+							echo "		<td align='center' style='height:300px;'><a href='anim_decoration.php?id_perso=".$id_perso_deco."&id_deco=".$id_decoration."'><img src='../images/medailles/".$img_decoration."'/></a></td>";
 							echo "	</tr>";
 							echo "	<tr>";
-							echo "		<td align='center'>".$desc_decoration."</td>";
+							echo "		<td align='center' style='height:50px;'>".$desc_decoration."</td>";
 							echo "	</tr>";
 							echo "	<tr>";
-							echo "		<td align='center'><a href='anim_decoration.php?id_perso=".$id_perso_deco."&id_deco=".$id_decoration."' class='btn btn-primary'>Attribuer</a></td>";
+							echo "		<td align='center' style='height:50px;'><a href='anim_decoration.php?id_perso=".$id_perso_deco."&id_deco=".$id_decoration."' class='btn btn-primary'>Attribuer</a></td>";
 							echo "	</tr>";
+							echo "</table>";
+							
+							echo "</td>";
 						}
 						
-						echo "</table>";
+						echo "</tr></table>";
 					}
 					
 					if (isset($_GET['id_perso']) && trim($_GET['id_perso']) != "" && isset($_GET['id_deco']) && trim($_GET['id_deco']) != "") {
