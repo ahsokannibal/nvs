@@ -56,32 +56,270 @@ if($dispo || $admin){
 				if ($verif_id_perso) {
 					
 					// On verifie si le perso puni est du même camp que l'anim
-					$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso_punition'";
+					$sql = "SELECT nom_perso, x_perso, y_perso, clan FROM perso WHERE id_perso='$id_perso_punition'";
 					$res = $mysqli->query($sql);
 					$t = $res->fetch_assoc();
 					
-					$camp_perso_punition = $t['clan'];
+					$camp_perso_punition 	= $t['clan'];
+					$nom_perso				= $t['nom_perso'];
+					$x_perso_origin 		= $t['x_perso'];
+					$y_perso_origin 		= $t['y_perso'];
 					
 					if ($camp_perso_punition == $camp) {
+						
+						if ($camp_perso_punition == 1) {
+							$couleur_clan_perso = 'blue';
+						}
+						else if ($camp_perso_punition == 2) {
+							$couleur_clan_perso = 'red';
+						}
+						else if ($camp_perso_punition == 3) {
+							$couleur_clan_perso = 'green';
+						}
 					
 						if (isset($_GET['bagne']) && trim($_GET['bagne']) != "") {
 							
-							$mess .= "";
+							// Vérification si présence ou non d'un pénitencier
+							$sql_peni = "SELECT id_instanceBat, x_instance, y_instance FROM instance_batiment WHERE id_batiment=10 AND camp_instance='$camp_perso_punition'";
+							$res_peni = $mysqli->query($sql_peni);
+							$verif_penitencier = $res_peni->num_rows;
+							
+							if ($verif_penitencier) {
+							
+								$t = $res_peni->fetch_assoc();
+							
+								$id_penitencier	= $t['id_instanceBat'];
+								$x_penitencier	= $t['x_instance'];
+								$y_penitencier	= $t['y_instance'];
+							
+								// perso déjà dans pénitencier ?
+								$sql = "SELECT * FROM perso_in_batiment WHERE id_perso='$id_perso_punition' AND id_instanceBat='$id_penitencier'";
+								$res = $mysqli->query($sql);
+								$verif_peni = $res->num_rows;
+								
+								if ($verif_peni == 0) {
+									
+									if (in_bat($mysqli, $id_perso_punition)) {
+										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_punition'";
+									}
+									else {
+										$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+									}
+									$mysqli->query($sql);
+									
+									// MAJ coordonnées perso
+									$sql = "UPDATE perso SET x_perso='$x_penitencier', y_perso='$y_penitencier' WHERE id_perso='$id_perso_punition'";
+									$mysqli->query($sql);
+									
+									// Ajout du perso dans le batiment
+									$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_punition','$id_penitencier')";
+									$mysqli->query($sql);
+									
+									// evenements perso
+									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','Pénitencier','',NOW())";
+									$mysqli->query($sql);
+									
+									$mess = "Le perso ".$nom_perso." [".$id_perso_punition."] a bien été envoyé dans le Pénitencier";
+								}
+								else {
+									$mess_err .= "Le perso est déjà dans un pénitencier";
+								}
+							}
+							else {
+								$mess_err .= "Impossible d'envoyer le perso au pénitencier, il n'existe pas de pénitencier pour ce camp";
+							}							
 						}
-					
+						
 						if (isset($_GET['amende']) && trim($_GET['amende']) != "") {
 							
-							$mess .= "";
+							$montant_amende = $_GET['amende'];
+							
+							if ($montant_amende == "all") {
+								
+								// On enlève toute sa thune au perso
+								$sql = "UPDATE perso SET or_perso=0 WHERE id_perso='$id_perso_punition'";
+								$mysqli->query($sql);
+								
+								// evenements perso
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de toutes ses économies !',NOW())";
+								$mysqli->query($sql);
+								
+								$mess .= "Le perso a perdu <b>toute</b> sa thune !";
+							}
+							else {
+								$verif_montant = preg_match("#^[0-9]*[0-9]$#i","$montant_amende");
+							
+								if ($verif_montant) {
+									
+									// Récupération thunes du perso
+									$sql = "SELECT or_perso FROM perso WHERE id_perso='$id_perso_punition'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$thune_perso_puni = $t['or_perso'];
+									
+									if ($thune_perso_puni < $montant_amende) {
+										// On enlève toute sa thune au perso
+										$sql = "UPDATE perso SET or_perso=0 WHERE id_perso='$id_perso_punition'";
+										$mysqli->query($sql);
+										
+										// evenements perso
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de toutes ses économies !',NOW())";
+										$mysqli->query($sql);
+										
+										$mess .= "Le perso a perdu <b>toute</b> sa thune !";
+									}
+									else {
+										// On enleve le montant
+										$sql = "UPDATE perso SET or_perso=or_perso - $montant_amende WHERE id_perso='$id_perso_punition'";
+										$mysqli->query($sql);
+										
+										// evenements perso
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de $montant_amende thunes !',NOW())";
+										$mysqli->query($sql);
+										
+										$mess .= "Le perso a payé une amende de <b>".$montant_amende."</b> thunes";
+									}
+								}
+								else {
+									// parametres incorrectes / modifiés
+									$text_triche = "Tentative modification parametre Animation punition Thunes";
+									
+									$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+									$mysqli->query($sql);
+									
+									header("Location:jouer.php");
+								}
+							}
 						}
 						
 						if (isset($_GET['pc']) && trim($_GET['pc']) != "") {
 							
-							$mess .= "";
+							$montant_pc = $_GET['pc'];
+							
+							if ($montant_pc == "all") {
+								
+								// On enlève tout ses PC
+								$sql = "UPDATE perso SET pc_perso=0 WHERE id_perso='$id_perso_punition'";
+								$mysqli->query($sql);
+								
+								// evenements perso
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de tout ses PC !',NOW())";
+								$mysqli->query($sql);
+								
+								$mess .= "Le perso a perdu <b>tout</b> ses Points de Commandement !";
+							}
+							else {
+								$verif_pc = preg_match("#^[0-9]*[0-9]$#i","$montant_pc");
+								
+								if ($verif_pc) {
+									
+									// Récupération pc du perso
+									$sql = "SELECT pc_perso FROM perso WHERE id_perso='$id_perso_punition'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$pc_perso_puni = $t['pc_perso'];
+									
+									if ($pc_perso_puni < $montant_pc) {
+										
+										// On enlève tout ses PC au perso
+										$sql = "UPDATE perso SET pc_perso=0 WHERE id_perso='$id_perso_punition'";
+										$mysqli->query($sql);
+										
+										// evenements perso
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de tout ses PC !',NOW())";
+										$mysqli->query($sql);
+										
+										$mess .= "Le perso a perdu <b>tout</b> ses Points de Commandement !";
+									}
+									else {
+										// On enleve le montant
+										$sql = "UPDATE perso SET pc_perso=pc_perso - $montant_pc WHERE id_perso='$id_perso_punition'";
+										$mysqli->query($sql);
+										
+										// evenements perso
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de $montant_pc PC !',NOW())";
+										$mysqli->query($sql);
+										
+										$mess .= "Le perso a perdu <b>".$montant_pc."</b> Points de Commandement";
+									}
+								}
+								else {
+									// parametres incorrectes / modifiés
+									$text_triche = "Tentative modification parametre Animation punition PC";
+									
+									$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+									$mysqli->query($sql);
+									
+									header("Location:jouer.php");
+								}
+							}
 						}
 						
 						if (isset($_GET['xp']) && trim($_GET['xp']) != "") {
 							
-							$mess .= "";
+							$montant_xp = $_GET['xp'];
+							
+							if ($montant_xp == "all") {
+								
+								// On enlève tout ses XP
+								$sql = "UPDATE perso SET xp_perso=0 WHERE id_perso='$id_perso_punition'";
+								$mysqli->query($sql);
+								
+								// evenements perso
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de tout ses XP !',NOW())";
+								$mysqli->query($sql);
+								
+								$mess .= "Le perso a perdu <b>tout</b> ses XP !";
+							}
+							else {
+							
+								$verif_xp = preg_match("#^[0-9]*[0-9]$#i","$montant_xp");
+								
+								if ($verif_xp) {
+									
+									// Récupération xp du perso
+									$sql = "SELECT xp_perso FROM perso WHERE id_perso='$id_perso_punition'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$xp_perso_puni = $t['xp_perso'];
+									
+									if ($xp_perso_puni < $montant_xp) {
+										
+										// On enlève tout ses XP au perso
+										$sql = "UPDATE perso SET xp_perso=0 WHERE id_perso='$id_perso_punition'";
+										$mysqli->query($sql);
+										
+										// evenements perso
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de tout ses XP !',NOW())";
+										$mysqli->query($sql);
+										
+										$mess .= "Le perso a perdu <b>tout</b> ses XP !";
+									}
+									else {
+										// On enleve le montant
+										$sql = "UPDATE perso SET xp_perso=xp_perso - $montant_xp WHERE id_perso='$id_perso_punition'";
+										$mysqli->query($sql);
+										
+										// evenements perso
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a reçu une amende</b>',NULL,NULL,' : Perte de $montant_xp XP !',NOW())";
+										$mysqli->query($sql);
+										
+										$mess .= "Le perso a perdu <b>".$montant_xp."</b> XP";
+									}
+								}
+								else {
+									// parametres incorrectes / modifiés
+									$text_triche = "Tentative modification parametre Animation punition XP";
+									
+									$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+									$mysqli->query($sql);
+									
+									header("Location:jouer.php");
+								}
+							}
 						}
 					}
 					else {
