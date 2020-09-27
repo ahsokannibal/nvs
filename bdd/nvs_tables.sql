@@ -1245,6 +1245,21 @@ CREATE TABLE `zones` (
   `yMax_zone` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `zone_respawn_camp`
+--
+
+CREATE TABLE IF NOT EXISTS `zone_respawn_camp` (
+  `id_zone` int(11) NOT NULL,
+  `id_camp` int(11) NOT NULL,
+  `x_min_zone` int(11) NOT NULL,
+  `x_max_zone` int(11) NOT NULL,
+  `y_min_camp` int(11) NOT NULL,
+  `y_max_camp` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
 --
 -- Index pour les tables exportées
 --
