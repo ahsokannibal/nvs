@@ -366,7 +366,7 @@ if($dispo || $admin){
 							echo "			<td>".$nom_p."[<a href='evenement.php?infoid=".$id_p."'>".$id_p."</a>]</td>";
 							echo "			<td align='center'>".$montant_perso_banque."</td>";
 							echo "			<td align='center'>".$fond_calcul."</td>";
-							echo "			<td align='center'><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok&detail=$id_p' class='btn btn-info'> Consulter détails </a> <a href='nouveau_message.php?pseudo=".$nom_p."' target='_blank'><img src='../images/messagerie.png' width='40' height='40'></a></td>";
+							echo "			<td align='center'><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok&detail=$id_p' class='btn btn-info'> Consulter détails </a> <a href='nouveau_message.php?pseudo=".$nom_p."' target='_blank'><img src='../images/messagerie.png' width='40' height='40' alt='contacter' title='contacter'></a></td>";
 							echo "		</tr>";
 						}
 						

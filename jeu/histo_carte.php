@@ -97,7 +97,7 @@ if (isset($_SESSION["id_perso"])) {
 								
 								echo "	<img src='image_histo.php?imagename=".$nom_image."' alt='Carte vision du ".$camp_image." du".$date_jour_image."/".$date_mois_image."/".$date_annee_image."' class='d-block w-100'>";
 								echo "	<div class='carousel-caption d-none d-md-block'>";
-								echo "		<h5> Carte vision du ".$camp_image." du".$date_jour_image."/".$date_mois_image."/".$date_annee_image."</h5>";
+								echo "		<h5> Carte vision du ".$camp_image." du ".$date_jour_image."/".$date_mois_image."/".$date_annee_image."</h5>";
 								echo "	</div>";
 								
 								echo "</div>";

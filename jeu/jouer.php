@@ -2154,7 +2154,12 @@ if($dispo || $admin){
 					$res = $mysqli->query($sql);
 					$nb_questions_anim = $res->num_rows;
 					
-					$nb_demande_a_traiter = $nb_demandes_gestion_compagnie + $nb_demandes_gestion_perso + $nb_questions_anim;
+					// Récupération du nombre de remontées de capture RP non traitées
+					$sql = "SELECT id FROM anim_capture WHERE statut='0'";
+					$res = $mysqli->query($sql);
+					$nb_captures_anim = $res->num_rows;
+					
+					$nb_demande_a_traiter = $nb_demandes_gestion_compagnie + $nb_demandes_gestion_perso + $nb_questions_anim + $nb_captures_anim;
 				}
 				
 				//affichage de l'heure serveur et de nouveau tour
@@ -2171,7 +2176,7 @@ if($dispo || $admin){
 				echo "		<a class='btn btn-info' href=\"../faq.php\" target='_blank'><b>FAQ</b></a>";
 				echo "		<a class='btn btn-primary' href=\"http://nordvssud-creation.forumactif.com/\" target='_blank'><b>Forum</b></a>";
 				if ($type_perso != 6) {
-					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Question animateur</b></a>";
+					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Captures / Questions Anim</b></a>";
 				}
 				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions</b></a>";
 				
