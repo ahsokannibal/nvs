@@ -125,8 +125,12 @@ Chaque type de chose donnée obéit à des règles spécifiques.<br />
 On peut donner une arme ou un objet directement à un personnage de son camp.
 <br /><br />
 					<h2>Capturer un personnage</h2>	
-Il est possible de capturer RP parlant en informant sa cible. Celle-ci doit accepter la capture.
-<br /><br />
+Il est possible de capturer un perso sans pour autant baisser ses PV à 0. Il existe 2 manières de le faire :<br />
+<ul>
+	<li><b>De façon purement RP</b> : un des persos négocie la réddition d'un annemi. Si durant les échanges, l'ennemi accepte la réddition, celui qui a négocié la capture doit alors avertir l'animation, preuves à l'appuie, afin que l'animation valide ou non cette capture. Dans ce cas, le perso capturé n'a aucune perte d'XP/PI, uniquement une perte classique de PC et une ligne spéciale apparaitra dans le CV pour signifier la capture RP. Pour celui ayant effectué la capture, il gagnera 4PC pour sa capture ainsi qu'une ligne spéciale dans son CV pour signifier la capture RP.</li>
+	<li><b>Par un encerclement pendant 12h</b> : c'est une capture "forcée", un des persos qui effectue l'encerclement doit penser à prendre un screen de l'encerclement au début (avec l'heure bien visible) ainsi qu'un screen <b>12h</b> après (toujours avec l'heure bien visible) et envoyer ça à l'animation pour validation de la capture par encerclement. Pour que la capure soit valide, il ne faut pas que celui qui se fait encerclé ait réussi à s'échapper durant ces 12h bien évidemment. Le capturé subit les malus d'une capture classique hors Thunes (en PI/PC) ainsi qu'un rappatriement classique et une ligne spéciale dans le CV pour signifier sa capture par encerclement. Ceux qui ont participés à la capture ne gagnent pas d'XP/PI/PC ni de ligne dans le CV mais ont pu conserver leurs PA pour d'autres actions.</li>
+</ul>
+<br />
 					<h2>Partir en permission</h2>	
 lorsque vous être amenés à ne plus pouvoir vous connecter au jeu pendant un certain temps, vous pouvez partir en permission. Vos personnages seront alors retirés de la carte à minuit le jour même de la demande et ne pourra plus faire l'objet d'attaques d'aucune sorte.<br />
 Il sera entièrement gelé et reviendra quand vous l'aurez décidé dans un Fort ou Fortin. La durée minimum de la permission est de 72h (3 jours).<br />
