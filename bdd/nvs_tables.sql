@@ -72,6 +72,23 @@ CREATE TABLE `action_as_batiment` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `anim_capture`
+--
+
+CREATE TABLE `anim_capture` ( 
+	`id` INT NOT NULL AUTO_INCREMENT , 
+	`id_perso` INT NOT NULL , 
+	`id_perso_capture` INT NOT NULL , 
+	`titre` VARCHAR(255) NOT NULL ,
+	`message` TEXT NOT NULL , 
+	`date_capture` DATETIME NOT NULL , 
+	`statut` INT NOT NULL DEFAULT '0' ,
+	PRIMARY KEY (`id`)
+) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `anim_question`
 --
 
