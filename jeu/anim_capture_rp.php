@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
@@ -55,33 +56,278 @@ if($dispo || $admin){
 					
 					if ($verif_capture) {
 						
-						if (isset($_GET['action']) && $_GET['action'] != "refuser") {
+						// récupération infos capture
+						$t = $res->fetch_assoc();
+						
+						$id_perso 			= $t['id_perso'];
+						$id_perso_capture	= $t['id_perso_capture'];
+						$date_capture		= $t['date_capture'];
+						$titre_capture		= $t['titre'];
+						$message			= $t['message'];
+						$statut_capture		= $t['statut'];
+						
+						$sql_p = "SELECT nom_perso, clan, perso_as_grade.id_grade, nom_grade FROM perso, perso_as_grade, grades
+								WHERE perso_as_grade.id_perso = perso.id_perso
+								AND perso_as_grade.id_grade = grades.id_grade 
+								AND perso.id_perso='$id_perso'";
+						$res_p = $mysqli->query($sql_p);
+						$t_p = $res_p->fetch_assoc();
+						
+						$nom_perso 			= $t_p['nom_perso'];
+						$camp_perso			= $t_p['clan'];
+						$id_grade_perso		= $t_p['id_grade'];
+						$nom_grade_perso	= $t_p['nom_grade'];
+						
+						if ($camp_perso == '1') {
+							$couleur_clan_perso = 'blue';
+						}
+						else if ($camp_perso == '2') {
+							$couleur_clan_perso = 'red';
+						}
+						else if ($camp_perso == '3') {
+							$couleur_clan_perso = 'green';
+						}
+						
+						$sql_p = "SELECT nom_perso, type_perso, pi_perso, pc_perso, x_perso, y_perso, clan, perso_as_grade.id_grade, nom_grade FROM perso, perso_as_grade, grades
+								WHERE perso_as_grade.id_perso = perso.id_perso
+								AND perso_as_grade.id_grade = grades.id_grade 
+								AND perso.id_perso='$id_perso_capture'";
+						$res_p = $mysqli->query($sql_p);
+						$t_p = $res_p->fetch_assoc();
+						
+						$nom_perso_capture 			= $t_p['nom_perso'];
+						$type_perso_capture			= $t_p['type_perso'];
+						$pi_perso_capture			= $t_p['pi_perso'];
+						$pc_perso_capture			= $t_p['pc_perso'];
+						$x_perso_capture			= $t_p['x_perso'];
+						$y_perso_capture			= $t_p['y_perso'];
+						$camp_perso_capture			= $t_p['clan'];
+						$id_grade_perso_capture		= $t_p['id_grade'];
+						$nom_grade_perso_capture	= $t_p['nom_grade'];
+						
+						if ($camp_perso_capture == '1') {
+							$couleur_clan_perso_capture = 'blue';
+						}
+						else if ($camp_perso_capture == '2') {
+							$couleur_clan_perso_capture = 'red';
+						}
+						else if ($camp_perso_capture == '3') {
+							$couleur_clan_perso_capture = 'green';
+						}
+						
+						if (isset($_GET['action']) && $_GET['action'] == "refuser") {
 							
 							// MAJ capture
 							$sql = "UPDATE anim_capture SET statut=3 WHERE id='$id_capture_rp'";
 							$mysqli->query($sql);
 							
-							// Envoi MP capture refusée au perso qui a fait la remontée
+							// Récupération nom perso anim pour MP
+							$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+						
+							$expediteur = $t['nom_perso'];
+							
+							//-------------------------
+							// Envoi MP au perso qui a effectué la remontée
+							$objet = "[Animation] Refus demande Capture";
+							$message = "Bonjour, l'animation a refusée votre demande de capture.";
+				
+							$lock = "LOCK TABLE (message) WRITE";
+							$mysqli->query($lock);
+							
+							// creation du message
+							$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
+									VALUES ('" . $id . "', '" . $expediteur . "', NOW(), '" . addslashes($message). "', '" . $objet. "')";
+							$mysqli->query($sql);
+							$id_message = $mysqli->insert_id;
+							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
+							
+							// assignation du message au perso
+							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso', '1', '0', '0', '0')";
+							$mysqli->query($sql);
 							
 							
 						}
-						else if (isset($_GET['action']) && $_GET['action'] != "valider") {
+						else if (isset($_GET['action']) && $_GET['action'] == "valider") {
 							
 							// MAJ capture
 							$sql = "UPDATE anim_capture SET statut=1 WHERE id='$id_capture_rp'";
 							$mysqli->query($sql);
 							
-							// Envoi MP capture validée aux 2 persos
+							// maj evenements
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+									VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a négocié la capture</b>','$id_perso_capture','<font color=$couleur_clan_perso_capture><b>$nom_perso_capture</b></font>','',NOW(),'0')";
+							$mysqli->query($sql);
 							
-							// 
+							// maj cv
+							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_perso_capture','<font color=$couleur_clan_perso_capture>$nom_perso_capture</font>', '$nom_grade_perso_capture', NOW(), 10)";
+							$mysqli->query($sql);
+							
+							// MAJ perso capturé
+							$sql = "UPDATE perso SET pv_perso=0, nb_mort=nb_mort+1 WHERE id_perso='$id_perso_capture'";
+							$mysqli->query($sql);
+							
+							if (in_bat($mysqli, $id_perso_capture)) {
+								// on le supprime du batiment
+								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_capture'";
+								$mysqli->query($sql);
+							}
+							else {
+								// on l'efface de la carte
+								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_capture' AND y_carte='$y_perso_capture'";
+								$mysqli->query($sql);
+							}
+							
+							// maj stats du perso
+							$sql = "UPDATE perso SET nb_kill=nb_kill+1 WHERE id_perso=$id_perso";
+							$mysqli->query($sql);
+							
+							// maj stats camp
+							if($camp_perso_capture != $camp_perso){
+								$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$camp_perso";
+								$mysqli->query($sql);
+							}
+							
+							// maj dernier tombé
+							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso_capture')";
+							$mysqli->query($sql);
+							
+							// Gain PC 
+							$sql = "UPDATE perso SET pc_perso=pc_perso+4 WHERE id_perso='$id_perso'";
+							$mysqli->query($sql);
+							
+							// Récupération nom perso anim pour MP
+							$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+						
+							$expediteur = $t['nom_perso'];
+							
+							//-------------------------
+							// Envoi MP au capturé
+							$objet = "[Animation] Capture de votre perso par RP";
+							$message = "Bonjour, l'animation a validé la capture de votre personnage par RP.";
+				
+							$lock = "LOCK TABLE (message) WRITE";
+							$mysqli->query($lock);
+							
+							// creation du message
+							$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
+									VALUES ('" . $id . "', '" . $expediteur . "', NOW(), '" . addslashes($message). "', '" . $objet. "')";
+							$mysqli->query($sql);
+							$id_message = $mysqli->insert_id;
+							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
+							
+							// assignation du message au perso
+							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso_capture', '1', '0', '0', '0')";
+							$mysqli->query($sql);
+							
+							//-------------------------
+							// Envoi MP au perso qui a effectué la capture
+							$objet = "[Animation] Capture par RP";
+							$message = "Bonjour, l'animation a validé votre capture RP.";
+				
+							$lock = "LOCK TABLE (message) WRITE";
+							$mysqli->query($lock);
+							
+							// creation du message
+							$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
+									VALUES ('" . $id . "', '" . $expediteur . "', NOW(), '" . addslashes($message). "', '" . $objet. "')";
+							$mysqli->query($sql);
+							$id_message = $mysqli->insert_id;
+							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
+							
+							// assignation du message au perso
+							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso', '1', '0', '0', '0')";
+							$mysqli->query($sql);
+							
 						}
-						else if (isset($_GET['action']) && $_GET['action'] != "valider_encerclement") {
+						else if (isset($_GET['action']) && $_GET['action'] == "valider_encerclement") {
 							
 							// MAJ capture
 							$sql = "UPDATE anim_capture SET statut=2 WHERE id='$id_capture_rp'";
 							$mysqli->query($sql);
 							
-							// Envoi MP capture validée aux 2 persos
+							// Chef
+							if ($type_perso_capture == 1) {
+								// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+								// Calcul PI
+								$pi_perdu 		= floor(($pi_perso_capture * 5) / 100);
+								$pi_perso_fin 	= $pi_perso_capture - $pi_perdu;
+								
+								// Calcul PC
+								$pc_perdu		= floor(($pc_perso_capture * 5) / 100);
+								$pc_perso_fin	= $pc_perso_capture - $pc_perdu;
+							}
+							else {
+								// Quand un grouillot meurt, il perd tout ses Pi
+								$pi_perso_fin = 0;
+								$pc_perso_fin = $pc_perso_capture;
+							}
+		
+							// MAJ perte xp/po/stat perso capturé
+							$sql = "UPDATE perso SET pv_perso=0, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_perso_capture'";
+							$mysqli->query($sql);
+							
+							if (in_bat($mysqli, $id_perso_capture)) {
+								// on le supprime du batiment
+								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_capture'";
+								$mysqli->query($sql);
+							}
+							else {
+								// on l'efface de la carte
+								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_capture' AND y_carte='$y_perso_capture'";
+								$mysqli->query($sql);
+							}
+							
+							// mise a jour des evenements
+							$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso_capture','<font color=$couleur_clan_perso_capture><b>$nom_perso_capture</b></font>','a été capturé de force par encerclement',NULL,'','',NOW(),'0')";
+							$mysqli->query($sql);
+							
+							// maj cv
+							$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso_capture,'<font color=$couleur_clan_perso_capture>$nom_perso_capture</font>', '$nom_grade_perso_capture', NULL,NULL,NULL, NOW(), 11)";
+							$mysqli->query($sql);
+							
+							// maj stats camp
+							if($camp_perso_capture != $camp_perso){
+								$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$camp_perso";
+								$mysqli->query($sql);
+							}
+							
+							// Récupération nom perso anim pour MP
+							$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id'";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+						
+							$expediteur = $t['nom_perso'];
+							
+							//-------------------------------
+							// Envoi MP au capturé
+							$objet = "[Animation] Capture de votre perso par encerclement";
+							$message = "Bonjour, l'animation a validé la capture forcée de votre personnage par encerclement de l'ennemi.";
+				
+							$lock = "LOCK TABLE (message) WRITE";
+							$mysqli->query($lock);
+							
+							// creation du message
+							$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
+									VALUES ('" . $id . "', '" . $expediteur . "', NOW(), '" . addslashes($message). "', '" . $objet. "')";
+							$mysqli->query($sql);
+							$id_message = $mysqli->insert_id;
+							
+							$unlock = "UNLOCK TABLES";
+							$mysqli->query($unlock);
+							
+							// assignation du message au perso
+							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso_capture', '1', '0', '0', '0')";
+							$mysqli->query($sql);							
 						}
 					}
 					else {
@@ -292,9 +538,9 @@ if($dispo || $admin){
 										echo "	<td align='center'>".$titre_capture."</td>";
 										echo "	<td align='center'>".$message."</td>";
 										echo "	<td align='center'>";
-										echo "		<a class='btn btn-success' href=\"anim_questions.php?id=".$id_capture."&action=valider\">Capture RP</a>";
-										echo "		<a class='btn btn-success' href=\"anim_questions.php?id=".$id_capture."&action=valider_encerclement\">Capture Encerclement</a>";
-										echo "		<a class='btn btn-danger' href=\"anim_questions.php?id=".$id_capture."&action=refuser\">Refuser</a>";
+										echo "		<a class='btn btn-success' href=\"anim_capture_rp.php?id=".$id_capture."&action=valider\">Capture RP</a>";
+										echo "		<a class='btn btn-success' href=\"anim_capture_rp.php?id=".$id_capture."&action=valider_encerclement\">Capture Encerclement</a>";
+										echo "		<a class='btn btn-danger' href=\"anim_capture_rp.php?id=".$id_capture."&action=refuser\">Refuser</a>";
 										echo "	</td>";
 										echo "</tr>";
 									}

@@ -46,8 +46,6 @@ if($dispo || $admin){
 				$id_perso_rep		= $_POST['hid_rep_id_perso'];
 				$id_question_rep	= $_POST['hid_rep_id_question'];
 				
-				$objet = "[Animation] Réponse à votre question / remontée";
-				
 				$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_rep'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
@@ -59,6 +57,8 @@ if($dispo || $admin){
 				$t = $res->fetch_assoc();
 			
 				$expediteur = $t['nom_perso'];
+				
+				$objet = "[Animation] Réponse à votre question / remontée";
 				
 				$lock = "LOCK TABLE (message) WRITE";
 				$mysqli->query($lock);

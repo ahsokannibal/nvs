@@ -170,7 +170,7 @@ if(isset($id)){
 	// nombre de kills
 	$count_capture = 0;
 	$count_promotion = 0;
-	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '8' OR special = '9') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '8' OR special = '9' OR special = '10') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>Le bon...</b></font></center>";
@@ -193,7 +193,13 @@ if(isset($id)){
 			$count_capture++;
 			
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé ";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
+			if ($special == '10') {
+				echo " a négocié la capture de ";
+			}
+			else {
+				echo " a capturé ";
+			}
 			echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			if ($grade_cible_cv	 != null && $grade_cible_cv	 != "") {
 				echo " (".$grade_cible_cv.")";
@@ -230,28 +236,38 @@ if(isset($id)){
 	
 	// nombre de morts
 	$count = 0;
-	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '10' OR special = '11') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
 	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 	
 	while ($t = $res->fetch_assoc()) {
-		if ($t['IDCible_cv'] == $id) {
-			
-			$id_acteur_cv 		= $t['IDActeur_cv'];
-			$nom_acteur_cv		= $t['nomActeur_cv'];
-			$grade_acteur_cv	= $t['gradeActeur_cv'];
-			
-			$id_cible_cv		= $t['IDCible_cv'];
-			$nom_cible_cv		= $t['nomCible_cv'];
-			$grade_cible_cv		= $t['gradeCible_cv'];
+		
+		$date_cv 			= $t['date_cv'];
+		
+		$id_acteur_cv 		= $t['IDActeur_cv'];
+		$nom_acteur_cv		= $t['nomActeur_cv'];
+		$grade_acteur_cv	= $t['gradeActeur_cv'];
+		
+		$id_cible_cv		= $t['IDCible_cv'];
+		$nom_cible_cv		= $t['nomCible_cv'];
+		$grade_cible_cv		= $t['gradeCible_cv'];
+		
+		$special			= $t['special'];
+		
+		if ($id_cible_cv == $id) {
 			
 			$count++;
 			echo "<tr>";
-			echo "	<td align='center'>".$t['date_cv']."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			if ($id_acteur_cv != 0) {
-				echo " a été capturé par ";
+				if ($special == '10') {
+				echo " a accepté de se rendre face à ";
+				}
+				else {
+					echo " a été capturé par ";
+				}
 				echo $nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
 				if ($grade_acteur_cv	 != null && $grade_acteur_cv	 != "") {
 					echo " (".$grade_acteur_cv.")";
@@ -264,6 +280,15 @@ if(isset($id)){
 			
 			echo "	</td>";
 			echo "</tr>";
+		}
+		else if ($id_acteur_cv == $id && $special == 11) {
+			
+			$count++;
+			echo "<tr>";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été capturé de force par encerclement !";			
+			echo "	</td>";
+			echo "</tr>";
+			
 		}
 	}
 	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
