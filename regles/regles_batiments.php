@@ -152,7 +152,7 @@
 								<td align='center'>-</td>
 								<td align='center'>+15%</td>
 								<td align='center'>50</td>
-								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin. lorsqu'un Hôpital est construit, il possédera entre 100 et 200 PV.</td>
+								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture uniquement pour les persos capturés à moins (ou égal) de 40 cases de ce dernier. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin. lorsqu'un Hôpital est construit, il possédera entre 100 et 200 PV.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b2b.png' alt='tour de guet'></td>
