@@ -292,6 +292,21 @@ if($dispo || $admin){
 						$mysqli->query($sql);
 					}
 					
+					// Coche bousculade deplacement
+					if (isset($_POST['bousculade_dep'])){
+						
+						$statut = $_POST['bousculade_dep'];
+						
+						if($statut == 'on'){
+							$sql = "UPDATE joueur SET bousculade_deplacement='1' WHERE id_joueur ='".$id_joueur."'";
+							$mysqli->query($sql);
+						}
+					} 
+					else {
+						$sql = "UPDATE joueur SET bousculade_deplacement='0' WHERE id_joueur ='".$id_joueur."'";
+						$mysqli->query($sql);
+					}
+					
 					// Dossier img
 					if (isset($_POST["select_dossier_img"])) {
 						
@@ -318,6 +333,7 @@ if($dispo || $admin){
 				$mail_mp_joueur			= $t["mail_mp"];
 				$valid_case_joueur		= $t["valid_case"];
 				$afficher_rosace_joueur	= $t["afficher_rosace"];
+				$bouculade_dep_joueur	= $t["bousculade_deplacement"];
 				$dossier_img_joueur 	= $t["dossier_img"];
 	?>
 <html>
@@ -546,26 +562,32 @@ if($dispo || $admin){
 				<br />
 				
 				<div class="row">
-					<div class="col-2">
+					<div class="col-12">
 						<input type='checkbox' name='mail_info' <?php if($mail_info_joueur) echo 'checked';?> /> Recevoir un mail si on m'attaque
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col-2">
+					<div class="col-12">
 						<input type='checkbox' name='mail_mp' <?php if($mail_mp_joueur) echo 'checked';?> /> Recevoir une copie des MP par mail
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col-2">
+					<div class="col-12">
 						<input type='checkbox' name='valid_case' <?php if($valid_case_joueur) echo 'checked';?> /> Validation du déplacement sur case
 					</div>
 				</div>
 				
 				<div class="row">
-					<div class="col-2">
+					<div class="col-12">
 						<input type='checkbox' name='afficher_rosace' <?php if($afficher_rosace_joueur) echo 'checked';?> /> Afficher la rosace de déplacement
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-12">
+						<input type='checkbox' name='bousculade_dep' <?php if($bouculade_dep_joueur) echo 'checked';?> /> Permettre les bousculades automatiques via les déplacements
 					</div>
 				</div>
 				
