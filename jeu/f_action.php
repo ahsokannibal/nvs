@@ -93,21 +93,26 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 	if ($id_bat == '9') {
 		// Fort => 16 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 16;
+		$nb_soigneur		= 0;
 	}
 	else if ($id_bat == '8') {
 		// Fortin => 10 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 10;
+		$nb_soigneur		= 0;
 	}
 	else if ($id_bat == '11') {
 		// Gare => 6 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 6;
+		$nb_soigneur		= 0;
 	}
 	else if ($id_bat == '7') {
 		// Hopital => 3 Génie civil présent à 10 cases autour du point de construction
 		$nb_genie_civil 	= 3;
+		$nb_soigneur		= 1;
 	}
 	else {
 		$nb_genie_civil 	= 0;
+		$nb_soigneur		= 0;
 	}
 	
 	// Verification nb genie civil
@@ -125,11 +130,27 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
-	
-	
 	$verif_nb_gc = $t['nb_gc'];	
 	
-	return $verif_nb_gc >= $nb_genie_civil;
+	// Verification nb soigneurs
+	$verif_nb_soigneurs = 0;
+	
+	if ($nb_soigneur > 0) {
+		$sql = "SELECT count(perso.id_perso) as nb_soigneur FROM perso
+								WHERE clan = '$camp_perso'
+								AND type_perso = 4
+								AND x_perso >= $x_bat - 10
+								AND x_perso <= $x_bat + 10
+								AND y_perso >= $y_bat - 10
+								AND y_perso <= $y_bat + 10
+								AND est_gele = 0";							
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$verif_nb_soigneurs = $t['nb_soigneur'];	
+	}
+	
+	return $verif_nb_gc >= $nb_genie_civil && $verif_nb_soigneurs >= $nb_soigneur;
 }
 
 /**
@@ -197,7 +218,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		// Hopital
 		$nb_cases_bat 	= 2;
 		$nb_cases_gare	= 20;
-		$nb_cases_rapat = 40;
+		$nb_cases_rapat = 20;
 		$nb_cases_tour	= 0;
 	}
 	else if ($id_bat == '8') {
@@ -279,6 +300,25 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		$t = $res->fetch_assoc();
 		
 		$verif_distance_tour = $t['nb_tour'];
+	}
+	
+	// Verification Hopital distance < 40 cases avec Fort / Fortin ou Gare
+	$verif_bat_pour_construction_hopital = 0;
+	$nb_cases_construction_hopital_bat = 40;
+	
+	if ($id_bat == '7') {
+		
+		$sql = "SELECT count(id_instanceBat) as nb_bat_pour_hopital FROM instance_batiment 
+			WHERE x_instance >= $x_bat - $nb_cases_construction_hopital_bat
+			AND x_instance <= $x_bat + $nb_cases_construction_hopital_bat
+			AND y_instance >= $y_bat - $nb_cases_construction_hopital_bat
+			AND y_instance <= $y_bat + $nb_cases_construction_hopital_bat
+			AND (id_batiment='8' OR id_batiment='9' OR id_batiment='11') AND camp_instance='$camp_perso' AND pv_instance > 0";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$verif_bat_pour_construction_hopital = $t['nb_bat_pour_hopital'];
+		
 	}
 	
 	$verif_berge_pont			= 1;
@@ -363,6 +403,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 	return $verif_nb_bats == 0 
 				&& $verif_nb_gares == 0 
 				&& $verif_nb_rapats == 0 
+				&& $verif_bat_pour_construction_hopital > 0
 				&& $verif_distance_tour == 0 
 				&& $verif_distance_pont == 0
 				&& $verif_distance_pont_bat == 0
