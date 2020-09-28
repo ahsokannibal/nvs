@@ -88,6 +88,7 @@ if(isset($_SESSION["id_perso"])){
 				<?php } else { ?>
 					<a class='btn btn-success' href='admin_nvs.php?mode_jeu=ok'>Ouvrir le jeu</a>
 				<?php } ?>
+					<a class='btn btn-danger' href='admin_zones_pnj.php' target='_blank'>Zones respawn PNJ</a>
 					<a class='btn btn-danger' href='admin_changement_carte.php' target='_blank'>Changement de carte</a>
 				</div>
 			</div>
