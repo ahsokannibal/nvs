@@ -1256,8 +1256,8 @@ CREATE TABLE IF NOT EXISTS `zone_respawn_camp` (
   `id_camp` int(11) NOT NULL,
   `x_min_zone` int(11) NOT NULL,
   `x_max_zone` int(11) NOT NULL,
-  `y_min_camp` int(11) NOT NULL,
-  `y_max_camp` int(11) NOT NULL
+  `y_min_zone` int(11) NOT NULL,
+  `y_max_zone` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
