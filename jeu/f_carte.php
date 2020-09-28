@@ -676,7 +676,9 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	// Verification si 10 persos ennemis à moins de 15 cases	
 	$nb_ennemis_siege7 = nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $clan);
 	
-	if ($nb_h > 0 && $nb_ennemis_siege7 < 10) {
+	if ($nb_h > 0 && $nb_ennemis_siege7 < 10 
+			&& $x_ibat <= $x_perso + 40 && $x_ibat >= $x_perso - 40
+			&& $y_ibat <= $y_perso + 40 && $y_ibat >= $y_perso - 40) {
 		
 		$min_id_bat = $id_ibat7;
 		
