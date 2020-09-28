@@ -16,19 +16,19 @@ while ($t_b = $res_b->fetch_assoc()) {
 	$nom_instance		= $t_b['nom_instance'];
 	
 	// Récupération des canons du batiment
-	$sql_c = "SELECT id_instance_canon, x_canon, y_canon, camp_canon, date_activation 
+	$sql_canon = "SELECT id_instance_canon, x_canon, y_canon, camp_canon, date_activation 
 				FROM instance_batiment_canon
 				WHERE id_instance_bat='$id_instance_bat'
 				AND (date_activation is NULL OR date_activation < NOW())";
-	$res_c = $mysqli->query($sql_c);
+	$res_canon = $mysqli->query($sql_canon);
 	
-	while ($t_c = $res_c->fetch_assoc()) {
+	while ($t_canon = $res_canon->fetch_assoc()) {
 		
-		$id_instance_canon 	= $t_c['id_instance_canon'];
-		$x_canon 			= $t_c['x_canon'];
-		$y_canon 			= $t_c['y_canon'];
-		$camp_canon 		= $t_c['camp_canon'];
-		$dla_canon			= $t_c['date_activation'];
+		$id_instance_canon 	= $t_canon['id_instance_canon'];
+		$x_canon 			= $t_canon['x_canon'];
+		$y_canon 			= $t_canon['y_canon'];
+		$camp_canon 		= $t_canon['camp_canon'];
+		$dla_canon			= $t_canon['date_activation'];
 		
 		// Calcul nouvelle date activation canon
 		$date = time();
