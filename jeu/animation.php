@@ -111,8 +111,7 @@ if($dispo || $admin){
 					<a class='btn btn-warning' href='anim_missions.php'>Gestion des missions</a>
 					<a class='btn btn-warning' href='anim_questions.php'>Les questions / remontées des joueurs <span class="badge badge-danger" title='<?php echo $nb_questions_anim." questions en attente"; ?>'><?php if ($nb_questions_anim > 0) { echo $nb_questions_anim; }?></span></a>
 					<a class='btn btn-warning' href='anim_capture_rp.php'>Les captures RP <span class="badge badge-danger" title='<?php echo $nb_captures_anim." captures en attente"; ?>'><?php if ($nb_captures_anim > 0) { echo $nb_captures_anim; }?></span></a>
-					<a class='btn btn-warning' href='anim_decoration.php'>Décorer un perso</a>
-					<a class='btn btn-warning' href='anim_punitions.php'>Punir un perso</a>
+					<a class='btn btn-warning' href='anim_zone_rapat.php'>Zone de respawn</a>
 				</div>
 			</div>
 			

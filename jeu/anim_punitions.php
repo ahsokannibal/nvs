@@ -371,7 +371,10 @@ if($dispo || $admin){
 				</div>
 			</div>
 			
-			<p align="center"><a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a></p>
+			<p align="center">
+				<a class='btn btn-info' href='anim_perso.php'>Retour gestion des persos</a>
+				<a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a>
+			</p>
 			
 			<div class="row">
 				<div class="col-12">

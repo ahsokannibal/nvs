@@ -72,7 +72,7 @@ if($dispo || $admin){
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
 				
-				$X_MAX = $t['x_max'];
+				$X_MAX 	= $t['x_max'];
 				$Y_MAX  = $t['y_max'];
 				
 				if ($verif_x && $verif_y && in_map($x_penitencier, $y_penitencier, $X_MAX, $Y_MAX)) {
