@@ -397,21 +397,46 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 				
 			} else {
 				
-				// Respawn aleatoire
-				if ($clan == 1){
-					// bleu
-					$x_min_respawn = 160;
-					$x_max_respawn = 200;
-					$y_min_respawn = 160;
-					$y_max_respawn = 200;
-				}
+				// Récupération des zones de respawn hors batiment
+				$sql = "SELECT * FROM zone_respawn_camp WHERE id_camp='$clan'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
 				
-				if ($clan == 2){
-					// rouge
-					$x_min_respawn = 0;
-					$x_max_respawn = 40;
-					$y_min_respawn = 0;
-					$y_max_respawn = 40;
+				$x_min_zone_def = $t['x_min_zone'];
+				$x_max_zone_def = $t['x_max_zone'];
+				$y_min_zone_def = $t['y_min_zone'];
+				$y_max_zone_def = $t['y_max_zone'];
+				
+				if (isset($x_min_zone_def)) {
+					$x_min_respawn = $x_min_zone_def;
+					$x_max_respawn = $x_max_zone_def;
+					$y_min_respawn = $y_min_zone_def;
+					$y_max_respawn = $y_max_zone_def;
+				}
+				else {
+					// Récupération coordonnées MAX de la carte
+					$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$X_MAX 	= $t['x_max'];
+					$Y_MAX  = $t['y_max'];
+					
+					if ($clan == 1){				
+						// bleu
+						$x_min_respawn = $X_MAX - 40;
+						$x_max_respawn = $X_MAX;
+						$y_min_respawn = $Y_MAX - 40;
+						$y_max_respawn = $Y_MAX;
+					}
+					
+					if ($clan == 2){
+						// rouge
+						$x_min_respawn = 0;
+						$x_max_respawn = 40;
+						$y_min_respawn = 0;
+						$y_max_respawn = 40;
+					}
 				}
 						
 				// on le replace aleatoirement sur la carte
@@ -565,21 +590,46 @@ function respawn_perso($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $imag
 		
 	} else {
 		
-		// Respawn aleatoire
-		if ($clan == 1){
-			// bleu
-			$x_min_respawn = 160;
-			$x_max_respawn = 200;
-			$y_min_respawn = 160;
-			$y_max_respawn = 200;
-		}
+		// Récupération des zones de respawn hors batiment
+		$sql = "SELECT * FROM zone_respawn_camp WHERE id_camp='$clan'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
 		
-		if ($clan == 2){
-			// rouge
-			$x_min_respawn = 0;
-			$x_max_respawn = 40;
-			$y_min_respawn = 0;
-			$y_max_respawn = 40;
+		$x_min_zone_def = $t['x_min_zone'];
+		$x_max_zone_def = $t['x_max_zone'];
+		$y_min_zone_def = $t['y_min_zone'];
+		$y_max_zone_def = $t['y_max_zone'];
+		
+		if (isset($x_min_zone_def)) {
+			$x_min_respawn = $x_min_zone_def;
+			$x_max_respawn = $x_max_zone_def;
+			$y_min_respawn = $y_min_zone_def;
+			$y_max_respawn = $y_max_zone_def;
+		}
+		else {
+			// Récupération coordonnées MAX de la carte
+			$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$X_MAX 	= $t['x_max'];
+			$Y_MAX  = $t['y_max'];
+			
+			if ($clan == 1){				
+				// bleu
+				$x_min_respawn = $X_MAX - 40;
+				$x_max_respawn = $X_MAX;
+				$y_min_respawn = $Y_MAX - 40;
+				$y_max_respawn = $Y_MAX;
+			}
+			
+			if ($clan == 2){
+				// rouge
+				$x_min_respawn = 0;
+				$x_max_respawn = 40;
+				$y_min_respawn = 0;
+				$y_max_respawn = 40;
+			}
 		}
 				
 		// on le replace aleatoirement sur la carte
