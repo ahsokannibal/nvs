@@ -49,7 +49,7 @@ if($dispo || $admin){
 			
 			if (isset($_GET['id_perso']) && trim($_GET['id_perso']) != "") {
 				
-				$id_perso_punition = $_GET['id_perso'];
+				$id_perso_puni = $id_perso_punition = $_GET['id_perso'];
 				
 				$verif_id_perso = preg_match("#^[0-9]*[0-9]$#i","$id_perso_punition");
 				
@@ -77,57 +77,76 @@ if($dispo || $admin){
 							$couleur_clan_perso = 'green';
 						}
 					
-						if (isset($_GET['bagne']) && trim($_GET['bagne']) != "") {
+						if (isset($_GET['bagne']) && trim($_GET['bagne']) == "ok" && isset($_GET['duree']) && trim($_GET['bagne']) != "") {
 							
-							// Vérification si présence ou non d'un pénitencier
-							$sql_peni = "SELECT id_instanceBat, x_instance, y_instance FROM instance_batiment WHERE id_batiment=10 AND camp_instance='$camp_perso_punition'";
-							$res_peni = $mysqli->query($sql_peni);
-							$verif_penitencier = $res_peni->num_rows;
+							$duree_bagne = $_GET['duree'];
+							$verif_duree = preg_match("#^[0-9]*[0-9]$#i","$duree_bagne");
 							
-							if ($verif_penitencier) {
+							if ($verif_duree) {
 							
-								$t = $res_peni->fetch_assoc();
-							
-								$id_penitencier	= $t['id_instanceBat'];
-								$x_penitencier	= $t['x_instance'];
-								$y_penitencier	= $t['y_instance'];
-							
-								// perso déjà dans pénitencier ?
-								$sql = "SELECT * FROM perso_in_batiment WHERE id_perso='$id_perso_punition' AND id_instanceBat='$id_penitencier'";
-								$res = $mysqli->query($sql);
-								$verif_peni = $res->num_rows;
+								// Vérification si présence ou non d'un pénitencier
+								$sql_peni = "SELECT id_instanceBat, x_instance, y_instance FROM instance_batiment WHERE id_batiment=10 AND camp_instance='$camp_perso_punition'";
+								$res_peni = $mysqli->query($sql_peni);
+								$verif_penitencier = $res_peni->num_rows;
 								
-								if ($verif_peni == 0) {
+								if ($verif_penitencier) {
+								
+									$t = $res_peni->fetch_assoc();
+								
+									$id_penitencier	= $t['id_instanceBat'];
+									$x_penitencier	= $t['x_instance'];
+									$y_penitencier	= $t['y_instance'];
+								
+									// perso déjà dans pénitencier ?
+									$sql = "SELECT * FROM perso_in_batiment WHERE id_perso='$id_perso_punition' AND id_instanceBat='$id_penitencier'";
+									$res = $mysqli->query($sql);
+									$verif_peni = $res->num_rows;
 									
-									if (in_bat($mysqli, $id_perso_punition)) {
-										$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_punition'";
+									if ($verif_peni == 0) {
+										
+										if (in_bat($mysqli, $id_perso_punition)) {
+											$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_punition'";
+										}
+										else {
+											$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+										}
+										$mysqli->query($sql);
+										
+										// MAJ coordonnées perso
+										$sql = "UPDATE perso SET x_perso='$x_penitencier', y_perso='$y_penitencier' WHERE id_perso='$id_perso_punition'";
+										$mysqli->query($sql);
+										
+										// Ajout du perso dans le batiment
+										$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_punition','$id_penitencier')";
+										$mysqli->query($sql);
+										
+										// Ajout durée bagne
+										$sql = "INSERT INTO perso_bagne (id_perso, date_debut, duree) VALUES ('$id_perso_punition', NOW(), '$duree_bagne')";
+										$mysqli->query($sql);
+										
+										// evenements perso
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','Pénitencier','',NOW())";
+										$mysqli->query($sql);
+										
+										$mess = "Le perso ".$nom_perso." [".$id_perso_punition."] a bien été envoyé dans le Pénitencier";
 									}
 									else {
-										$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+										$mess_err .= "Le perso est déjà dans un pénitencier";
 									}
-									$mysqli->query($sql);
-									
-									// MAJ coordonnées perso
-									$sql = "UPDATE perso SET x_perso='$x_penitencier', y_perso='$y_penitencier' WHERE id_perso='$id_perso_punition'";
-									$mysqli->query($sql);
-									
-									// Ajout du perso dans le batiment
-									$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_punition','$id_penitencier')";
-									$mysqli->query($sql);
-									
-									// evenements perso
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','Pénitencier','',NOW())";
-									$mysqli->query($sql);
-									
-									$mess = "Le perso ".$nom_perso." [".$id_perso_punition."] a bien été envoyé dans le Pénitencier";
 								}
 								else {
-									$mess_err .= "Le perso est déjà dans un pénitencier";
+									$mess_err .= "Impossible d'envoyer le perso au pénitencier, il n'existe pas de pénitencier pour ce camp";
 								}
 							}
 							else {
-								$mess_err .= "Impossible d'envoyer le perso au pénitencier, il n'existe pas de pénitencier pour ce camp";
-							}							
+								// parametres incorrectes / modifiés
+								$text_triche = "Tentative modification parametre Animation punition duree bagne";
+								
+								$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+								$mysqli->query($sql);
+								
+								header("Location:jouer.php");
+							}
 						}
 						
 						if (isset($_GET['amende']) && trim($_GET['amende']) != "") {
@@ -420,7 +439,17 @@ if($dispo || $admin){
 			<div class="row">
 				<div class="col-12">
 					<?php
-					if (isset($id_perso_puni)) {
+					if (isset($_GET['bagne']) && trim($_GET['bagne']) == "ok" && !isset($_GET['duree'])) {
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=1' class='btn btn-danger'>Envoyer au bagne pour 1 jour</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=2' class='btn btn-danger'>Envoyer au bagne pour 2 jour</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=3' class='btn btn-danger'>Envoyer au bagne pour 3 jour</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=4' class='btn btn-danger'>Envoyer au bagne pour 4 jour</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=5' class='btn btn-danger'>Envoyer au bagne pour 5 jour</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=6' class='btn btn-danger'>Envoyer au bagne pour 6 jour</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=7' class='btn btn-danger'>Envoyer au bagne pour 7 jour</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok&duree=8' class='btn btn-danger'>Envoyer au bagne pour 8 jour</a>";
+					}
+					else if (isset($id_perso_puni)) {
 						
 						$sql = "SELECT or_perso, pc_perso, xp_perso, chef FROM perso WHERE id_perso='$id_perso_puni'";
 						$res = $mysqli->query($sql);
@@ -432,7 +461,7 @@ if($dispo || $admin){
 						$chef_perso		= $t['chef'];
 						
 						echo "<center>";
-						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok' class='btn btn-danger'>Envoyer au bagne !</a>";
+						echo "	<a href='anim_punitions.php?id_perso=".$id_perso_puni."&bagne=ok' class='btn btn-danger'>Envoyer au bagne</a>";
 						echo "<br /><br />Ce perso possède <b>".$thune_perso."</b> thunes sur lui<br />";
 						
 						$perte_thune_all = false;

@@ -178,6 +178,10 @@ if($dispo || $admin){
 						$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_envoi_penitencier','$id_penitencier')";
 						$mysqli->query($sql);
 						
+						// Ajout durée bagne
+						$sql = "INSERT INTO perso_bagne (id_perso, date_debut, duree) VALUES ('$id_perso_punition', NOW(), '3')";
+						$mysqli->query($sql);
+						
 						// evenements perso
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_envoi_penitencier,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','Pénitencier','',NOW())";
 						$mysqli->query($sql);
@@ -186,6 +190,40 @@ if($dispo || $admin){
 					}
 					else {
 						$mess_erreur .= "Le perso est déjà dans le Pénitencier";
+					}
+				}
+				else {
+					$mess_erreur .= "Id perso incorrect";
+				}
+			}
+			
+			if (isset($_GET['relacher']) && trim($_GET['relacher']) != "") {
+				
+				$id_perso_relacher = $_GET['relacher'];
+				
+				$verif_id_perso = preg_match("#^[0-9]*[0-9]$#i","$id_perso_relacher");
+				
+				if ($verif_id_perso) {
+					
+					// Verification que le perso est bien dans le pénitencier
+					$sql = "SELECT * FROM perso_in_batiment WHERE id_perso='$id_perso_relacher' AND id_instanceBat='$id_penitencier'";
+					$res = $mysqli->query($sql);
+					$verif_peni = $res->num_rows;
+					
+					if ($verif_peni) {
+						
+						// le supprimer du pénitencier
+						$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_relacher' AND id_instanceBat='$id_penitencier'";
+						$mysqli->query($sql);
+						
+						// Passer ses PV à 0 pour permettre un respawn
+						$sql = "UPDATE perso SET pv_perso=0 WHERE id_perso='$id_perso_relacher'";
+						$mysqli->query($sql);
+						
+						$mess .= "Le perso matricule ".$id_perso_relacher." a été relaché du pénitencier";
+					}
+					else {
+						$mess_erreur .= "Le perso n'est pas dans le Pénitencier !";
 					}
 				}
 				else {
@@ -261,7 +299,7 @@ if($dispo || $admin){
 					<form method='POST' action='anim_penitencier.php'>
 						<div class="form-row">
 							<div class="form-group col-md-12">
-								<label for="formSelectPerso">Envoyer un perso dans le pénitencier : </label>
+								<label for="formSelectPerso">Envoyer un perso dans le pénitencier (durée 3 jours) : </label>
 							</div>
 						</div>
 						<div class="form-row">
@@ -341,7 +379,7 @@ if($dispo || $admin){
 								echo "<table class='table'>";
 								echo "	<thead>";
 								echo "		<tr>";
-								echo "			<th style='text-align:center'>Perso</th><th style='text-align:center'>Action</th>";
+								echo "			<th style='text-align:center'>Perso</th><th>Date d'incarcération</th><th>Peine</th><th style='text-align:center'>Action</th>";
 								echo "		</tr>";
 								echo "	</thead>";
 								echo "	<tbody>";
@@ -365,8 +403,22 @@ if($dispo || $admin){
 										$couleur_camp_perso_peni	= 'green';
 									}
 									
+									$sql_b = "SELECT date_debut, duree FROM perso_bagne WHERE id_perso='$id_perso_peni'";
+									$res_b = $mysqli->query($sql_b);
+									$t_b = $res_b->fetch_assoc();
+									
+									$date_debut_bagne 	= $t_b['date_debut'];
+									$duree_bagne 		= $t_b['duree'];
+									
 									echo "		<tr>";
 									echo "			<td><font color='".$couleur_camp_perso_peni."'><b>".$nom_perso_peni."</b> [<a href='evenement.php?infoid=".$id_perso_peni."'' target='_blank'>".$id_perso_peni."</a>]</font></td>";
+									echo "			<td>".$date_debut_bagne."</td>";
+									if (isset($duree_bagne)) {
+										echo "			<td>".$duree_bagne." jours</td>";
+									}
+									else {
+										echo "			<td>Non défini</td>";
+									}
 									echo "			<td align='center'><a class='btn btn-danger' href='anim_penitencier.php?relacher=".$id_perso_peni."'>Relacher</a></td>";
 									echo "		</tr>";
 								}
