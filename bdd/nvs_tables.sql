@@ -1048,6 +1048,19 @@ CREATE TABLE `perso_as_respawn` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `perso_bagne`
+--
+
+CREATE TABLE `perso_bagne` ( 
+	`id` INT NOT NULL AUTO_INCREMENT , 
+	`id_perso` INT NOT NULL , 
+	`date_debut` DATETIME NOT NULL , 
+	`duree` INT NULL , PRIMARY KEY (`id`)
+) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `perso_demande_anim`
 --
 
