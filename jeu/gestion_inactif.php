@@ -18,6 +18,38 @@ function mail_gel_persos($nom_perso, $email_joueur, $titre, $message){
 	mail($email_joueur, $titre, $message, $headers);
 }
 
+//************************************************
+// Traitement des persos a libérer du pénitencier
+//************************************************
+$sql = "SELECT perso_bagne.id_perso, perso.nom_perso, perso.clan FROM perso, perso_bagne 
+		WHERE perso.id_perso = perso_bagne.id_perso
+		AND perso_bagne.date_debut <= DATE_SUB(CURRENT_DATE, INTERVAL perso_bagne.duree DAY)";
+$res = $mysqli->query($sql);
+
+while ($t = $res->fetch_assoc()){
+	
+	$id_perso_relacher 	= $t['id_perso'];
+	$nom_perso			= $t['nom_perso'];
+	$camp_perso			= $t['clan'];
+	
+	// Récupération de la couleur associée au clan du perso
+	$couleur_clan_perso = couleur_clan($camp_perso);
+	
+	// le supprimer du pénitencier
+	$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_relacher'";
+	$mysqli->query($sql);
+	
+	// Passer ses PV à 0 pour permettre un respawn
+	$sql = "UPDATE perso SET pv_perso=0 WHERE id_perso='$id_perso_relacher'";
+	$mysqli->query($sql);
+	
+	// Ajout événement
+	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso_relacher,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a terminé de purger sa peine au pénitencier', NULL, NULL, '', NOW(), '0')";
+	$mysqli->query($sql);
+	
+}
+
+
 //***************************************
 // Traitement des persos a mettre en gel
 //***************************************
@@ -73,7 +105,7 @@ while ($t = $res->fetch_assoc()){
 		$couleur_clan_perso = couleur_clan($clan_perso);
 		
 		// Ajout événement
-		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' est parti en permission','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' est parti en permission', NULL, NULL,'',NOW(),'0')";
 		$mysqli->query($sql);
 	}
 	else {
@@ -138,7 +170,7 @@ while ($t = $res_inactif->fetch_assoc()){
 		$couleur_clan_perso = couleur_clan($clan_perso);
 		
 		// Ajout événement
-		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a été placé en permission','','','',NOW(),'0')";
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a été placé en permission', NULL, NULL,'',NOW(),'0')";
 		$mysqli->query($sql);
 		
 		$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE perso.id_perso='$id_perso' AND perso.idJoueur_perso = joueur.id_joueur";
