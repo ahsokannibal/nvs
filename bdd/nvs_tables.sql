@@ -317,7 +317,8 @@ CREATE TABLE `compagnies` (
   `resume_compagnie` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `description_compagnie` longtext CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `id_clan` tinyint(4) NOT NULL,
-  `genie_civil` tinyint(1) NOT NULL DEFAULT '0'
+  `genie_civil` tinyint(1) NOT NULL DEFAULT '0',
+  `id_parent` int(11) DEFAULT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
