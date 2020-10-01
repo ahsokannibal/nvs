@@ -22,7 +22,6 @@ if (@$_SESSION["id_perso"]) {
 		echo "<font color=red>Vous êtes mort...</font>";
 	}
 	else {
-		//$erreur = "<div class=\"erreur\">";
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -58,13 +57,14 @@ if(isset($_GET["id_compagnie"])) {
 		if($ok_chef == 1) {
 		
 			// Récupération infos de la compagnie
-			$sql = "SELECT nom_compagnie, image_compagnie, genie_civil FROM compagnies WHERE id_compagnie='$id_compagnie'";
+			$sql = "SELECT nom_compagnie, image_compagnie, genie_civil, id_parent FROM compagnies WHERE id_compagnie='$id_compagnie'";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
 			
 			$nom_compagnie 		= $t['nom_compagnie'];
 			$image_compagnie	= $t['image_compagnie'];
 			$genie_compagnie	= $t['genie_civil'];
+			$id_parent			= $t['id_parent'];
 			
 			// Vérification si il y a une demande de suppresion en attente
 			$sql = "SELECT * FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie' AND type_demande='2'";
@@ -207,6 +207,9 @@ if(isset($_GET["id_compagnie"])) {
 			echo " 	<a class='btn btn-info' href='resume_compagnie.php?id_compagnie=$id_compagnie'>changer le resume de la compagnie</a>";
 			echo " 	<a class='btn btn-info' href='description_compagnie.php?id_compagnie=$id_compagnie'>changer la description de la compagnie</a>";
 			echo " 	<a class='btn btn-warning' href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa compagnie</a>";
+			if (!isset($id_parent)) {
+				echo " 	<a class='btn btn-warning' href='section_compagnie.php?id_compagnie=$id_compagnie'>Gérer les sections</a>";
+			}
 			echo "</center>";
 			
 			if ($demande_suppression) {
