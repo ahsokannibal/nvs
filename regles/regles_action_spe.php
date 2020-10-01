@@ -132,9 +132,9 @@ Il est possible de capturer un perso sans pour autant baisser ses PV à 0. Il ex
 </ul>
 <br />
 					<h2>Partir en permission</h2>	
-lorsque vous être amenés à ne plus pouvoir vous connecter au jeu pendant un certain temps, vous pouvez partir en permission. Vos personnages seront alors retirés de la carte à minuit le jour même de la demande et ne pourra plus faire l'objet d'attaques d'aucune sorte.<br />
-Il sera entièrement gelé et reviendra quand vous l'aurez décidé dans un Fort ou Fortin. La durée minimum de la permission est de 72h (3 jours).<br />
-Les personnages en permission depuis plus de 30 jours sont définitivement effacés.<br />
+lorsque vous être amenés à ne plus pouvoir vous connecter au jeu pendant un certain temps, vous pouvez partir en permission. Vos personnages seront alors retirés de la carte à minuit 3 jours après votre demande et ne pourra plus faire l'objet d'attaques d'aucune sorte.<br />
+Il sera entièrement gelé et reviendra quand vous l'aurez décidé dans un Fort, Fortin ou Gare (conditions de rapatriement identiques à un rapatriement normal). La durée minimum de la permission est de 5 jours.<br />
+Les personnages en permission depuis plus de 30 jours sont définitivement effacés (vous devriez recevoir un mail plusieurs jours avant que cela n'arrive afin de vous avertir).<br />
 <i>Vous contrôlez normalement votre personnage avant son départ prévu en permission.</i>
 <br /><br />		
 				</div>
