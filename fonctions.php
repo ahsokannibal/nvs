@@ -363,12 +363,12 @@ function nouveau_tour($date, $dla) {
 
 // Fonction qui vérifie si le temps passé aprés l'activation du gel est essez grand pour accepter le degel
 function temp_degele($date, $date_gele){
-	return $date - $date_gele >= 5*60*60*24; // 3 jours
+	return $date - $date_gele >= 5*60*60*24; // 5 jours
 }
 
 // fonction qui retourne le temps restant avant le degele possible du perso
 function temp_restant($date, $date_gele){
-	$temp_gele_min = 3*60*60*24;
+	$temp_gele_min = 5*60*60*24;
 	return $temp_gele_min - ($date - $date_gele); 
 }
 
