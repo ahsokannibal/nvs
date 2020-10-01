@@ -230,6 +230,74 @@ if($dispo || $admin){
 					$mess_erreur .= "Id perso incorrect";
 				}
 			}
+			
+			if (isset($_GET['ajouter']) && trim($_GET['ajouter']) != "") {
+				
+				$id_perso = $_GET['ajouter'];
+				
+				$verif_id_perso = preg_match("#^[0-9]*[0-9]$#i","$id_perso");
+				
+				if ($verif_id_perso) {
+					
+					// Verification que le perso est bien dans le pénitencier
+					$sql = "SELECT * FROM perso_in_batiment WHERE id_perso='$id_perso' AND id_instanceBat='$id_penitencier'";
+					$res = $mysqli->query($sql);
+					$verif_peni = $res->num_rows;
+					
+					if ($verif_peni) {
+						
+						// Le perso a t-il déjà une durée de peine défini ?
+						$sql = "SELECT duree FROM perso_bagne WHERE id_perso='$id_perso'";
+						$res = $mysqli->query($sql);
+						$verif_peine = $res->num_rows;
+						
+						if ($verif_peine) {
+							$sql = "UPDATE perso_bagne SET duree = duree + 1 WHERE id_perso='$id_perso'";
+						}
+						else {
+							$sql = "INSERT INTO perso_bagne (id_perso, duree, date_debut) VALUES ('$id_perso', '1', NOW())";
+						}
+						$mysqli->query($sql);
+						
+						$mess .= "La peine du perso matricule ".$id_perso." a été renforcé de 1 jour";
+					}
+					else {
+						$mess_erreur .= "Le perso n'est pas dans le Pénitencier !";
+					}
+				}
+				else {
+					$mess_erreur .= "Id perso incorrect";
+				}
+			}
+			
+			if (isset($_GET['retirer']) && trim($_GET['retirer']) != "") {
+				
+				$id_perso = $_GET['retirer'];
+				
+				$verif_id_perso = preg_match("#^[0-9]*[0-9]$#i","$id_perso");
+				
+				if ($verif_id_perso) {
+					
+					// Verification que le perso est bien dans le pénitencier
+					$sql = "SELECT * FROM perso_in_batiment WHERE id_perso='$id_perso' AND id_instanceBat='$id_penitencier'";
+					$res = $mysqli->query($sql);
+					$verif_peni = $res->num_rows;
+					
+					if ($verif_peni) {
+						
+						$sql = "UPDATE perso_bagne SET duree = duree - 1 WHERE id_perso='$id_perso'";
+						$mysqli->query($sql);
+						
+						$mess .= "La peine du perso matricule ".$id_perso." a été réduite de 1 jour";
+					}
+					else {
+						$mess_erreur .= "Le perso n'est pas dans le Pénitencier !";
+					}
+				}
+				else {
+					$mess_erreur .= "Id perso incorrect";
+				}
+			}
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -419,7 +487,13 @@ if($dispo || $admin){
 									else {
 										echo "			<td>Non défini</td>";
 									}
-									echo "			<td align='center'><a class='btn btn-danger' href='anim_penitencier.php?relacher=".$id_perso_peni."'>Relacher</a></td>";
+									echo "			<td align='center'>";
+									echo "				<a class='btn btn-warning' href='anim_penitencier.php?ajouter=".$id_perso_peni."'>Ajouter 1 jour de peine</a>";
+									if (isset($duree_bagne) && $duree_bagne > 1) {
+										echo "				<a class='btn btn-warning' href='anim_penitencier.php?retirer=".$id_perso_peni."'>Retirer 1 jour de peine</a>";
+									}
+									echo "				<a class='btn btn-danger' href='anim_penitencier.php?relacher=".$id_perso_peni."'>Relacher</a>";
+									echo "			</td>";
 									echo "		</tr>";
 								}
 								
