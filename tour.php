@@ -229,7 +229,7 @@ if(isset($_SESSION["ID_joueur"])){
 				$sec = (((($tr%(3600*24))%3600)%60));
 				
 				echo "Vous devez attendre $jours jours, $heures heures, $min minutes et $sec secondes encore avant de pouvoir vous degeler<br /><br />";
-				echo "<a href=\"logout.php\">[ retour ]</a>";
+				echo "<a href=\"logout.php\" class='btn btn-primary'>retour</a>";
 			}
 			else {
 				
