@@ -112,17 +112,22 @@ if(isset($_SESSION["id_perso"])){
 			
 			while($row = $resultat->fetch_assoc()) {
 				
+				$id_message		= $row["id_message"];
+				$expediteur 	= $row["expediteur_message"];
+				$date_message	= $row["date_message"];
+				$objet_message	= $row["objet_message"];
+				
 				echo '<tr>';
-				echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$row["id_message"].'"></td>';
+				echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$id_message.'"></td>';
 				
 				if ($row["lu_message"]){
-					echo "	<td>" . $row["expediteur_message"] . "</td>";
-					echo "	<td align='center'>" . stripslashes($row["date_message"]) . "</td><td colspan=2><a href=message_lire.php?id=" . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a></td>";
+					echo "	<td>" . $expediteur . "</td>";
+					echo "	<td align='center'>" . stripslashes($date_message) . "</td><td colspan=2><a href=message_lire.php?id=" . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a></td>";
 				}
 				else {
-					echo '	<td><div>' . $row["expediteur_message"] . '</div></td>';
-					echo '	<td align="center"><div>' . stripslashes($row["date_message"]) . '</div></td>';
-					echo '	<td colspan=2><a href=message_lire.php?id=' . $row["id_message"] . "&methode=r>" . stripslashes($row["objet_message"]) . "</a><b> (non lu)</b></td>";
+					echo '	<td><div>' . $expediteur . '</div></td>';
+					echo '	<td align="center"><div>' . stripslashes($date_message) . '</div></td>';
+					echo '	<td colspan=2><a href=message_lire.php?id=' . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a><b> (non lu)</b></td>";
 				}
 				echo '</tr>';
 				$i++;

@@ -147,13 +147,52 @@ if(@$_SESSION["id_perso"]){
 					
 					if ($methode == "r"){
 						echo '<form method="post" action="traitement/t_lire.php">';
-						echo '<input type="hidden" name="id_message" value="' . $id_message . '">';
-						echo '<div align="center">';
-						if (!$annonce) {
-							echo '	<input type="submit" name="submit" value="Repondre"> &nbsp&nbsp'; 
-							echo '	<input type="submit" name="submit" value="Repondre à tous"> &nbsp&nbsp'; 
+						echo '	<input type="hidden" name="id_message" value="' . $id_message . '">';
+						
+						// Message suivant
+						$sql_suivant = "SELECT message.id_message
+								FROM message, message_perso 
+								WHERE id_perso='$id' 
+								AND message_perso.id_message = message.id_message
+								AND id_dossier='1'
+								AND supprime_message='0'
+								AND date_message > (SELECT date_message FROM message WHERE id_message='$id_message')
+								ORDER BY date_message ASC LIMIT 1";
+						$res_suivant = $mysqli->query($sql_suivant);
+						$t_suivant = $res_suivant->fetch_assoc();
+						
+						$id_message_suivant = $t_suivant['id_message'];
+						
+						// Message precedent
+						$sql_prec = "SELECT message.id_message
+								FROM message, message_perso 
+								WHERE id_perso='$id' 
+								AND message_perso.id_message = message.id_message
+								AND id_dossier='1'
+								AND supprime_message='0'
+								AND date_message < (SELECT date_message FROM message WHERE id_message='$id_message')
+								ORDER BY date_message DESC LIMIT 1";
+						$res_prec = $mysqli->query($sql_prec);
+						$t_prec = $res_prec->fetch_assoc();
+						
+						$id_message_prec = $t_prec['id_message'];
+						
+						echo '	<div align="center">';
+						if (isset($id_message_prec)) {
+							echo "		<a href='message_lire.php?id=".$id_message_prec."&methode=r' title='message précédent' class='btn btn-info'> << </a> &nbsp&nbsp"; 
 						}
-						echo '	<input type="submit" name="submit" value="Effacer"> </div>';
+						
+						if (!$annonce) {
+							echo '		<input type="submit" name="submit" value="Repondre" class="btn btn-primary"> &nbsp&nbsp'; 
+							echo '		<input type="submit" name="submit" value="Repondre à tous" class="btn btn-primary"> &nbsp&nbsp'; 
+						}
+						echo '		<input type="submit" name="submit" value="Effacer" class="btn btn-danger">&nbsp&nbsp';
+						
+						if (isset($id_message_suivant)) {
+							echo "		<a href='message_lire.php?id=".$id_message_suivant."&methode=r' title='message suivant' class='btn btn-info'> >> </a>"; 
+						}
+						
+						echo '	</div>';
 						echo "</form>";
 					}
 				}
