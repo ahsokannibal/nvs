@@ -53,14 +53,14 @@ while ($t = $res->fetch_assoc()){
 //***************************************
 // Traitement des persos a mettre en gel
 //***************************************
-$sql = "SELECT id_perso, nom_perso, clan FROM perso WHERE a_gele='1' AND date_gele <= DATE_SUB(CURRENT_DATE, INTERVAL 3 DAY)";
-$res = $mysqli->query($sql);
+$sql_gel = "SELECT id_perso, nom_perso, clan FROM perso WHERE a_gele='1' AND date_gele <= DATE_SUB(CURRENT_DATE, INTERVAL 3 DAY)";
+$res_gel = $mysqli->query($sql_gel);
 
-while ($t = $res->fetch_assoc()){
+while ($t_gel = $res_gel->fetch_assoc()){
 	
-	$id_perso 	= $t["id_perso"];
-	$nom_perso	= $t["nom_perso"];
-	$clan_perso	= $t["clan"];
+	$id_perso 	= $t_gel["id_perso"];
+	$nom_perso	= $t_gel["nom_perso"];
+	$clan_perso	= $t_gel["clan"];
 	
 	$in_penitencier = false;
 	

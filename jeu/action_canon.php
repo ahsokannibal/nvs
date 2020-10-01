@@ -357,11 +357,11 @@ while ($t_b = $res_b->fetch_assoc()) {
 				else {
 				
 					// gain xp esquive et ajout malus Cible
-					$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, bonus_perso=bonus_perso-1 WHERE id_perso='$id_cible'";
+					$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, bonus_perso=bonus_perso-1 WHERE id_perso='$id_perso_cible'";
 					$mysqli->query($sql);
 									
 					// maj evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_instance_bat','<font color=$couleur_clan_canon><b>Canon</b></font>','',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso_cible,'<font color=$couleur_clan_cible><b>$nom_cible</b></font>','a esquivé l\'attaque de','$id_instance_bat','<font color=$couleur_clan_canon><b>Canon</b></font>','',NOW(),'0')";
 					$mysqli->query($sql);
 					
 				}

@@ -633,7 +633,7 @@ function verif_bat_instance($mysqli, $id_bat, $id_instance){
 function calcul_nb_cases($x_depart, $y_depart, $x_arrivee, $y_arrivee){
 	$x = $x_depart - $x_arrivee;
 	$y = $y_depart - $y_arrivee;
-	return ceil(SQRT(POW($x, 2)+POW($y, 2)));
+	return max($x, $y);
 }
 
 /**
@@ -744,10 +744,10 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 				// Respawn choix par le système
 	
 				// init variables
-				$min_distance = 200;
+				$min_distance = 1000;
 				$min_id_bat = 0;
 
-				// récupération des batiments de rappatriement du camp du perso
+				// récupération des batiments de rappatriement du camp du perso 
 				// Fort : 9 - Fortin : 8
 				$sql_b = "SELECT * FROM instance_batiment WHERE camp_instance='$clan' AND (id_batiment='8' OR id_batiment='9')";
 				$res_b = $mysqli->query($sql_b);
