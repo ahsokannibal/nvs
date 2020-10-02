@@ -196,7 +196,7 @@ if(isset($_GET["id_compagnie"])) {
 							$mysqli->query($sql);
 						}
 						
-						$mess .= "Vous venez de virer $perso_a_virer [".$id_perso_a_virer."]de votre compagnie";
+						$mess .= "Vous venez de virer $perso_a_virer [".$id_perso_a_virer."] de votre compagnie";
 					}
 					else {
 						$mess_err .= "Ce perso n'existe pas ou ne fait pas parti de votre compagnie ou est un chef de la compagnie";
