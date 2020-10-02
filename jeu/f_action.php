@@ -303,7 +303,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 	}
 	
 	// Verification Hopital distance < 40 cases avec Fort / Fortin ou Gare
-	$verif_bat_pour_construction_hopital = 0;
+	$verif_bat_pour_construction_hopital = 1;
 	$nb_cases_construction_hopital_bat = 40;
 	
 	if ($id_bat == '7') {
