@@ -447,7 +447,7 @@ if($dispo || $admin){
 							
 							echo " <a class='btn btn-outline-primary' href='tresor_compagnie.php?id_compagnie=$id_compagnie'> Page tresorerie de la ".$titre_compagnie." ";
 							if ($nb > 0) {
-								echo "<span class='badge badge-pill badge-danger'>$nb</span>";
+								echo "<span class='badge badge-pill badge-warning'>$nb</span>";
 							}
 							echo "</a>";
 						}
