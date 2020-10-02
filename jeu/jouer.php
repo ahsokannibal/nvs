@@ -3104,7 +3104,18 @@ if($dispo || $admin){
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td align='center'><?php echo $precision_arme_dist . "%"; ?></td>
+									<td align='center'>
+										<?php 
+										echo $precision_arme_dist . "%";
+										
+										$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id_perso);
+										
+										if ($bonus_precision_objet != 0) {
+											echo " (+".$bonus_precision_objet."%)"; 
+										}
+										
+										?>
+									</td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
