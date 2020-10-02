@@ -171,12 +171,12 @@ if($dispo || $admin){
 					
 					echo "</select>";
 					echo "&nbsp;&nbsp;&nbsp;</td><td>";
-					echo "<input type=\"submit\" name=\"Submit\" value=\"grader\">";
+					echo "<input type=\"submit\" name=\"Submit\" class='btn btn-warning' value=\"grader\">";
 					echo "</td></tr></table>";
 					echo "</form><br><br>";
 					
 					echo "<b><u>Liste des membres actuel :</u></b>";
-					echo "<table border=1>";
+					echo "<table class='table' border=1>";
 					echo "	<tr>";
 					echo "		<th style='text-align:center'>Membre</th><th style='text-align:center'>Poste</th>";
 					echo "	</tr>";
@@ -195,7 +195,7 @@ if($dispo || $admin){
 						
 						echo "	<tr>";
 						echo "		<td>".$nom_membre." [".$id_membre."]</td>";
-						echo "		<td>";
+						echo "		<td align='center'>";
 							
 						// recuperation du nom de poste
 						$sql2 = "SELECT nom_poste FROM poste WHERE id_poste=$poste_compagnie";

@@ -12,11 +12,12 @@ if (@$_SESSION["id_perso"]) {
 	//recuperation des varaibles de sessions
 	$id = $_SESSION["id_perso"];
 	
-	$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id'";
+	$sql = "SELECT pv_perso, clan FROM perso WHERE id_perso='$id'";
 	$res = $mysqli->query($sql);
 	$tpv = $res->fetch_assoc();
 	
-	$testpv = $tpv['pv_perso'];
+	$testpv 	= $tpv['pv_perso'];
+	$id_camp 	= $tpv['clan'];
 	
 	if ($testpv <= 0) {
 		echo "<font color=red>Vous êtes mort...</font>";
@@ -31,45 +32,211 @@ if (@$_SESSION["id_perso"]) {
 			
 			if($verif1){
 			
-				// verification que le perso est bien le chef de la compagnie (anti-triche)
-				$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_perso=$id AND id_compagnie=$id_compagnie";
+				// verification genie civil
+				$sql = "SELECT genie_civil FROM compagnies WHERE id_compagnie='$id_compagnie'";
 				$res = $mysqli->query($sql);
-				$ch = $res->fetch_assoc();
+				$t = $res->fetch_assoc();
 				
-				$ok_chef = $ch["poste_compagnie"];
+				$genie_compagnie	= $t['genie_civil'];
 				
-				if($ok_chef == 1) {
-		
-					$mess_err 	= "";
-					$mess		= "";
+				if (!$genie_compagnie) {
+			
+					// verification que le perso est bien le chef de la compagnie (anti-triche)
+					$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_perso=$id AND id_compagnie=$id_compagnie";
+					$res = $mysqli->query($sql);
+					$ch = $res->fetch_assoc();
 					
-					if (isset($_POST['nomSection']) && trim($_POST['nomSection']) != "" 
-							&& isset($_POST['chefSection']) && trim($_POST['chefSection']) != "") {
-						
-						$nom_nouvelle_section 		= $_POST['nomSection'];
-						$id_chef_nouvelle_section	= $_POST['chefSection'];
-						
-						$verif_id = preg_match("#^[0-9]+$#i",$id_chef_nouvelle_section);
-						
-						if ($verif_id) {
-							
-							// On vérifie que l'id du chef de section correspond bien à un membre de la compagnie mère
-							
-							// Création de la section
-							
-							// Le perso passe de la compagnie mère à chef de la nouvelle section
-							
-						}
-						else {							
-							// Tentative de triche
-							$text_triche = "Tentative modification id chef section sur valeur non valide";
+					$ok_chef 			= $ch["poste_compagnie"];
 					
-							$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
-							$mysqli->query($sql);
+					if($ok_chef == 1) {
+			
+						$mess_err 	= "";
+						$mess		= "";
+						
+						if (isset($_POST['creation_section'])) {
+							if (isset($_POST['nomSection']) && trim($_POST['nomSection']) != "" 
+									&& isset($_POST['liste_perso_chef_section']) && trim($_POST['liste_perso_chef_section']) != "") {
+								
+								$nom_nouvelle_section 		= addslashes($_POST['nomSection']);
+								$id_chef_nouvelle_section	= $_POST['liste_perso_chef_section'];
+								
+								$verif_id = preg_match("#^[0-9]+$#i",$id_chef_nouvelle_section);
+								
+								if ($verif_id) {
+									
+									// On vérifie que l'id du chef de section correspond bien à un membre de la compagnie mère
+									$sql = "SELECT * FROM perso_in_compagnie WHERE id_perso='$id_chef_nouvelle_section' AND id_compagnie='$id_compagnie'";
+									$res = $mysqli->query($sql);
+									$verif_appartient_compagnie = $res->num_rows;
+									
+									if ($verif_appartient_compagnie) {
+									
+										$lock = "LOCK TABLE (compagnies) WRITE";
+										$mysqli->query($lock);
+									
+										// Création de la section
+										$sql = "INSERT INTO compagnies (nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, id_clan, genie_civil, id_parent) 
+												VALUES ('$nom_nouvelle_section', '', '', '', '$id_camp', '0', '$id_compagnie')";
+										$mysqli->query($sql);
+										
+										$id_new_comp = $mysqli->insert_id;
+						
+										$unlock = "UNLOCK TABLES";
+										$mysqli->query($unlock);
+										
+										// Insertion compagnie_as_contraintes
+										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '1')";
+										$mysqli->query($sql);
+										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '2')";
+										$mysqli->query($sql);
+										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '3')";
+										$mysqli->query($sql);
+										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '4')";
+										$mysqli->query($sql);
+										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '5')";
+										$mysqli->query($sql);
+										
+										// Le perso passe de la compagnie mère à chef de la nouvelle section
+										$sql = "UPDATE perso_in_compagnie SET id_compagnie='$id_new_comp', poste_compagnie='1' WHERE id_perso='$id_chef_nouvelle_section'";
+										$mysqli->query($sql);
+										
+										// récupération de la thune du perso dans la banque de la compagnie
+										$sql = "SELECT montant FROM banque_compagnie WHERE id_perso='$id_chef_nouvelle_section'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$montant_comp_chef_section = $t['montant'];
+										
+										// Creation de la banque de la section
+										$sql = "INSERT INTO banque_as_compagnie (id_compagnie, montant) VALUES ('$id_new_comp', '$montant_comp_chef_section')";
+										$mysqli->query($sql);
+										
+										// Mise à jour de la thune de la banque de la compagnie mère
+										$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
+										$mysqli->query($sql);
+										
+										// Insertion du perso dans la banque de la section avec transfert thunes
+										$sql = "INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES ('$id_chef_nouvelle_section', '$montant_comp_chef_section', '0', '0')";
+										$mysqli->query($sql);
+										
+										$mess .= "La section ".$nom_nouvelle_section." a été créée";
+									}
+									else {
+										// Tentative de triche
+										$text_triche = "Tentative modification id chef section sur id appartenant pas à la compagnie";
+								
+										$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+										$mysqli->query($sql);
+										
+										header("Location:jouer.php");
+									}
+								}
+								else {							
+									// Tentative de triche
+									$text_triche = "Tentative modification id chef section sur valeur non valide";
 							
-							header("Location:jouer.php");
+									$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+									$mysqli->query($sql);
+									
+									header("Location:jouer.php");
+								}
+							}
+							else {
+								$mess_err .= "Veuillez remplir tous les champs obligatoires";
+							}
 						}
-					}
+						
+						if (isset($_GET['supprimer_section']) && trim($_GET['supprimer_section']) != "") {
+							
+							$id_section_supression = $_GET['supprimer_section'];
+							
+							$verif_id = preg_match("#^[0-9]+$#i",$id_section_supression);
+							
+							if ($verif_id) {
+							
+								// Verification section appartient bien à la compagnie
+								$sql = "SELECT * FROM compagnies WHERE id_compagnie='$id_section_supression' AND id_parent='$id_compagnie'";
+								$res = $mysqli->query($sql);
+								$verif_apparient_comp = $res->num_rows;
+								
+								if ($verif_apparient_comp) {
+									
+									// nombre de persos dans la compagnie
+									$sql = "SELECT count(*) as nb_persos_compagnie FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+									$res = $mysqli->query($sql);
+									$tab = $res->fetch_assoc();
+									
+									$nb_persos_compagnie = $tab["nb_persos_compagnie"];
+									
+									// nombre de persos dans la section
+									$sql = "SELECT count(*) as nb_persos_section FROM perso_in_compagnie WHERE id_compagnie='$id_section_supression' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+									$res = $mysqli->query($sql);
+									$tab = $res->fetch_assoc();
+									
+									$nb_persos_section = $tab["nb_persos_section"];
+									
+									// verification qu'on peut rapatrier tout le monde dans la compagnie
+									if ($nb_persos_compagnie + $nb_persos_section <= 80) {
+										
+										$sql_pis = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_section_supression' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+										$res_pis = $mysqli->query($sql_pis);
+										
+										while ($t_pis = $res_pis->fetch_assoc()) {
+											
+											$id_perso_section = $t_pis['id_perso'];
+											
+											// récupération de la thune du perso dans la banque de la section
+											$sql = "SELECT montant FROM banque_compagnie WHERE id_perso='$id_perso_section'";
+											$res = $mysqli->query($sql);
+											$t = $res->fetch_assoc();
+											
+											$montant_perso_section = $t['montant'];
+											
+											// MAJ du montant de la banque de la compagnie mère
+											$sql = "UPDATE banque_as_compagnie montant = montant + $montant_perso_section WHERE id_compagnie='$id_compagnie'";
+											$mysqli->query($sql);
+											
+											// On transfert le perso de la section à la compagnie en simple membre
+											$sql = "UPDATE perso_in_compagnie SET id_compagnie='$id_compagnie', poste_compagnie='10' WHERE id_perso='$id_perso_section'";
+											$mysqli->query($sql);
+										}
+										
+										// Suppression de la section
+										$sql = "DELETE FROM compagnies WHERE id_compagnie = '$id_section_supression'";
+										$mysqli->query($sql);
+										
+										// Suppression de la banque de la section
+										$sql = "DELETE FROM banque_as_compagnie WHERE id_compagnie = '$id_section_supression'";
+										$mysqli->query($sql);
+										
+										// On supprime les persos restant dans la section (en attente de validation, autre ?)
+										$sql = "DELETE FROM perso_in_compagnie WHERE id_compagnie='$id_section_supression'";
+										$mysqli->query($sql);
+									}
+									else {
+										$mess_err .= "Impossible de supprimer la section car il sera impossible de rapatrier tous les membres dans la compagnie (la limite sera dépassée)";
+									}
+								}
+								else {
+									// Tentative de triche
+									$text_triche = "Tentative suppression section $id_section_supression qui appatient pas à la compagnie $id_compagnie";
+							
+									$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+									$mysqli->query($sql);
+									
+									header("Location:jouer.php");
+								}
+							}
+							else {
+								// Tentative de triche
+								$text_triche = "Tentative modification id section pour action supprimer_section sur valeur non valide";
+						
+								$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+								$mysqli->query($sql);
+								
+								header("Location:jouer.php");
+							}
+						}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -98,7 +265,17 @@ if (@$_SESSION["id_perso"]) {
 						
 						<a href='admin_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>' class='btn btn-primary'>Retour à l'administration de la compagnie</a>
 						<a href='compagnie.php' class='btn btn-primary'>Retour Compagnie</a>
+						<?php
+						if (isset($_GET['creer']) && $_GET['creer'] == "ok") {
+						?>
+						<a href='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>' class='btn btn-warning'>Liste des sections</a>
+						<?php
+						} else {
+						?>
 						<a href='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>&creer=ok' class='btn btn-warning'>Créer une nouvelle section</a>
+						<?php
+						}
+						?>
 					</div>
 				</div>
 			</div>
@@ -113,22 +290,59 @@ if (@$_SESSION["id_perso"]) {
 						?>
 						<h2>Création d'une nouvelle Section</h2>
 						
-						<form method='POST' action='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>'>
+						<form method='POST' action='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>&creer=ok'>
 							<div class="form-row">
 								<div class="form-group col-md-12">
-									<label for="nomSection">Nom de la section</label>
-									<input type="text" class="form-control" id="nomSection" name='nomSection' placeholder="Nom de la section">
+									<label for="nomSection">Nom de la section <font color='red'>*</font></label>
+									<input type="text" class="form-control" id="chefSection" name='nomSection' placeholder="Nom de la section">
 								</div>
-							</div>
+							</div>						
 							<div class="form-row">
 								<div class="form-group col-md-12">
-									<label for="chefSection">Chef de la section</label>
-									<input type="text" class="form-control" id="chefSection" name='chefSection' placeholder="Chef de la section">
+									<label for="formSelectPerso">Chef de la section <font color='red'>*</font></label>
+									<select class="form-control" name='liste_perso_chef_section' id="formSelectPerso">
+									<?php
+									$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_compagnie 
+											WHERE perso.id_perso = perso_in_compagnie.id_perso 
+											AND perso_in_compagnie.id_compagnie='$id_compagnie'
+											AND perso_in_compagnie.poste_compagnie != 1
+											AND attenteValidation_compagnie = 0";
+									$res = $mysqli->query($sql);
+									
+									while ($t = $res->fetch_assoc()) {
+										
+										$id_perso_section	= $t['id_perso'];
+										$nom_perso_section	= $t['nom_perso'];
+										
+										// on recalcule le du
+										// on verifie si le perso ne doit pas des sous a la compagnie
+										$sql_du = "SELECT SUM(montant) as devoir FROM histobanque_compagnie WHERE id_perso=$id_perso_section AND id_compagnie=$id_compagnie AND operation='2'";
+										$res_du = $mysqli->query($sql_du);
+										$t_du = $res_du->fetch_assoc();
+										
+										$du_t = -$t_du["devoir"];
+										
+										// on verifie si le perso a rembourser une partie de ses dettes
+										$sql_du = "SELECT SUM(montant) as remb FROM histobanque_compagnie WHERE id_perso=$id_perso_section AND id_compagnie=$id_compagnie AND operation='3'";
+										$res_du = $mysqli->query($sql_du);
+										$t_du = $res_du->fetch_assoc();
+										
+										$du_r = $t_du["remb"];
+										
+										$du = $du_t - $du_r;
+										
+										if ($du <= 0) {
+											echo "<option value='".$id_perso_section."'>".$nom_perso_section." [".$id_perso_section."]</option>";
+										}
+									}
+									?>
+									</select>
 								</div>
-							</div>
+							</div>							
 							<div class="form-row">
 								<div class="form-group col-md-12">
-									<input type="submit" class="btn btn-primary" value='Créer'>
+									<input type="submit" class="btn btn-primary" name='creation_section' value='Créer'>
+									<a href='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>' class='btn btn-danger'>Annuler</a>
 								</div>
 							</div>
 						</form>
@@ -181,7 +395,7 @@ if (@$_SESSION["id_perso"]) {
 										echo "	<td align='center'>".$nom_section."</td>";
 										echo "	<td align='center'>".$nom_perso_chef_sec." [".$id_perso_chef_sec."]</td>";
 										echo "	<td align='center'>".$nb_persos_sec."</td>";
-										echo "	<td align='center'></td>";
+										echo "	<td align='center'><a href='section_compagnie.php?id_compagnie=".$id_compagnie."&supprimer_section=".$id_section."' class='btn btn-danger'>Supprimer Section</a></td>";
 										echo "</tr>";
 									}
 								}
@@ -207,10 +421,20 @@ if (@$_SESSION["id_perso"]) {
 	</body>
 </html>
 <?php
+					}
+					else {
+						// Tentative d'accès à cette page sans être le chef de la compagnie			
+						$text_triche = "Tentative accés page section compagnie [$id_compagnie] sans y avoir les droits";
+						
+						$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+						$mysqli->query($sql);
+						
+						header("Location:jouer.php");
+					}
 				}
 				else {
-					// Tentative d'accès à cette page sans être le chef de la compagnie			
-					$text_triche = "Tentative accés page section compagnie [$id_compagnie] sans y avoir les droits";
+					// Tentative d'accès à cette page alors que compagnie du genie			
+					$text_triche = "Tentative accés page section compagnie [$id_compagnie] alors que compagnie du genie	";
 					
 					$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
 					$mysqli->query($sql);

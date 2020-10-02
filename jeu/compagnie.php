@@ -57,12 +57,13 @@ if($dispo || $admin){
 				$id_compagnie = $_SESSION["id_compagnie"] = $_GET["id_compagnie"];
 				
 				// vérification que la compagnie existe
-				$sql = "SELECT id_clan from compagnies where id_compagnie='$id_compagnie'";
+				$sql = "SELECT id_clan, id_parent from compagnies where id_compagnie='$id_compagnie'";
 				$res = $mysqli->query($sql);
 				$t_c = $res->fetch_assoc();
 				
 				$exist = $res->num_rows;
 				$clan_compagnie = $t_c["id_clan"];
+				$id_parent		= $t_c['id_parent'];
 				
 				// récupération du clan du perso
 				$sql = "SELECT clan, idJoueur_perso FROM perso WHERE id_perso='$id'";
@@ -77,7 +78,7 @@ if($dispo || $admin){
 					// vérification que le perso est bien du meme camp que la compagnie				
 					if($clan_perso == $clan_compagnie){
 						
-						if (isset($_GET["rejoindre"])) { 
+						if (isset($_GET["rejoindre"])) {
 						
 							// on souhaite rejoindre une compagnie
 							if($_GET["rejoindre"] == "ok") {
@@ -224,7 +225,7 @@ if($dispo || $admin){
 						else {
 							// on souhaite juste avoir des infos sur la compagnie
 							// recuperation des information sur la compagnie
-							$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
+							$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil, id_parent FROM compagnies WHERE id_compagnie=$id_compagnie";
 							$res = $mysqli->query($sql);
 							$sec = $res->fetch_assoc();
 							
@@ -234,6 +235,7 @@ if($dispo || $admin){
 							$resume_compagnie 		= $sec["resume_compagnie"];
 							$description_compagnie 	= $sec["description_compagnie"];
 							$genie_compagnie		= $sec["genie_civil"];
+							$id_parent				= $sec['id_parent'];
 							
 							if ($genie_compagnie) {
 								$nb_persos_compagnie_max = 60;
@@ -353,7 +355,7 @@ if($dispo || $admin){
 				echo "<center><a class='btn btn-outline-info' href='compagnie.php'>Retour</a></center><br/>";
 				
 				// recuperation des compagnies existantes
-				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan";
+				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, id_parent FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan";
 				$res = $mysqli->query($sql);
 				
 				echo "<table border=\"1\" width = 100%>";
@@ -365,6 +367,7 @@ if($dispo || $admin){
 					$image_compagnie 		= $sec["image_compagnie"];
 					$resume_compagnie 		= $sec["resume_compagnie"];
 					$description_compagnie 	= $sec["description_compagnie"];
+					$id_parent				= $sec["id_parent"];
 							
 					// creation des tableau avec les compagnies existantes
 					echo "	<tr>";
@@ -397,7 +400,27 @@ if($dispo || $admin){
 					$id_compagnie 		= $c[0];
 					$poste_compagnie	= $c[1];
 					
-					echo "<div align='center'><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Banque de la compagnie</a>";
+					// recuperation des information sur la compagnie
+					$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil, id_parent FROM compagnies WHERE id_compagnie=$id_compagnie";
+					$res = $mysqli->query($sql);
+					$sec = $res->fetch_assoc();
+					
+					$id_compagnie 			= $sec["id_compagnie"];
+					$nom_compagnie 			= $sec["nom_compagnie"];
+					$image_compagnie 		= $sec["image_compagnie"];
+					$resume_compagnie 		= $sec["resume_compagnie"];
+					$description_compagnie 	= $sec["description_compagnie"];
+					$genie_compagnie		= $sec["genie_civil"];
+					$id_parent				= $sec["id_parent"];
+					
+					if (isset($id_parent) && $id_parent != 0) {
+						$titre_compagnie = "section";
+					}
+					else {
+						$titre_compagnie = "compagnie";
+					}
+					
+					echo "<div align='center'><a class='btn btn-outline-info' href='banque_compagnie.php?id_compagnie=$id_compagnie'>Banque de la ".$titre_compagnie."</a>";
 					
 					// verification si le perso est le chef de la compagnie
 					$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_perso=$id";
@@ -410,7 +433,7 @@ if($dispo || $admin){
 					
 						// c'est le chef
 						if($poste_s == 1) { 
-							echo " <a class='btn btn-outline-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la compagnie</a>";
+							echo " <a class='btn btn-outline-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la ".$titre_compagnie."</a>";
 						}
 						
 						// c'est le tresorier
@@ -422,7 +445,7 @@ if($dispo || $admin){
 							
 							$nb = $res->num_rows;
 							
-							echo " <a class='btn btn-outline-primary' href='tresor_compagnie.php?id_compagnie=$id_compagnie'> Page tresorerie de la compagnie ";
+							echo " <a class='btn btn-outline-primary' href='tresor_compagnie.php?id_compagnie=$id_compagnie'> Page tresorerie de la ".$titre_compagnie." ";
 							if ($nb > 0) {
 								echo "<span class='badge badge-pill badge-danger'>$nb</span>";
 							}
@@ -450,7 +473,7 @@ if($dispo || $admin){
 							
 							$num_a = $num_e + $num_q;
 							
-							echo " <a class='btn btn-outline-primary' href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la compagnie ";
+							echo " <a class='btn btn-outline-primary' href='recrut_compagnie.php?id_compagnie=$id_compagnie'> Page de recrutement de la ".$titre_compagnie." ";
 							if ($num_e > 0) {
 								echo "<span class='badge badge-pill badge-success'>$num_e</span>";
 							}
@@ -462,23 +485,11 @@ if($dispo || $admin){
 						
 						// c'est le diplomate
 						if($poste_s == 5){ 
-							echo " <a href='diplo_compagnie.php?id_compagnie=$id_compagnie'> Page diplomatie de la compagnie</a>";
+							echo " <a href='diplo_compagnie.php?id_compagnie=$id_compagnie'> Page diplomatie de la ".$titre_compagnie."</a>";
 						}
 					}
 					
 					echo "</div>";
-					
-					// recuperation des information sur la compagnie
-					$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, genie_civil FROM compagnies WHERE id_compagnie=$id_compagnie";
-					$res = $mysqli->query($sql);
-					$sec = $res->fetch_assoc();
-					
-					$id_compagnie 			= $sec["id_compagnie"];
-					$nom_compagnie 			= $sec["nom_compagnie"];
-					$image_compagnie 		= $sec["image_compagnie"];
-					$resume_compagnie 		= $sec["resume_compagnie"];
-					$description_compagnie 	= $sec["description_compagnie"];
-					$genie_compagnie		= $sec["genie_civil"];
 					
 					if ($genie_compagnie) {
 						$nb_persos_compagnie_max = 60;
@@ -567,7 +578,7 @@ if($dispo || $admin){
 					echo "	</tr>";
 					echo "</table><br>";
 					
-					echo "<br/><center><a class='btn btn-danger' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b>Demander à quitter la compagnie</b></a></center>";
+					echo "<br/><center><a class='btn btn-danger' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b>Demander à quitter la ".$titre_compagnie."</b></a></center>";
 				}
 				else {
 				
@@ -611,7 +622,7 @@ if($dispo || $admin){
 								echo "<br/><center><b><u>Liste des compagnies déjà existants</u></b></center><br/>";
 								
 								// recuperation des compagnies existantes dans lesquels il peut postuler
-								$sql = "SELECT compagnies.id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie 
+								$sql = "SELECT compagnies.id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, compagnies.id_parent 
 										FROM compagnies, perso, compagnie_as_contraintes
 										WHERE id_perso = $id 
 										AND compagnies.id_compagnie = compagnie_as_contraintes.id_compagnie
@@ -628,6 +639,7 @@ if($dispo || $admin){
 									$image_compagnie 		= $sec["image_compagnie"];
 									$resume_compagnie 		= $sec["resume_compagnie"];
 									$description_compagnie 	= $sec["description_compagnie"];
+									$id_parent				= $sec["id_parent"];
 								
 									// creation des tableau avec les compagnies existantes
 									echo "	<tr>";

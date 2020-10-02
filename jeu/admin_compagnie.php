@@ -55,6 +55,9 @@ if(isset($_GET["id_compagnie"])) {
 		$ok_chef = $ch["poste_compagnie"];
 		
 		if($ok_chef == 1) {
+			
+			$mess_err 	= "";
+			$mess		= "";
 		
 			// Récupération infos de la compagnie
 			$sql = "SELECT nom_compagnie, image_compagnie, genie_civil, id_parent FROM compagnies WHERE id_compagnie='$id_compagnie'";
@@ -81,13 +84,25 @@ if(isset($_GET["id_compagnie"])) {
 					// Vérification qu'on demande bien à supprimer sa propre compagnie...
 					if ($id_compagnie_to_delete == $id_compagnie) {
 						
-						$sql = "INSERT INTO compagnie_demande_anim (id_compagnie, type_demande, info_demande) VALUES ('$id_compagnie', '2', '')";
-						$mysqli->query($sql);
+						// Verification que la compagnie ne possède pas de sections
+						$sql = "SELECT count(*) as nb_sections FROM compagnies WHERE id_parent='$id_compagnie_to_delete'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
 						
-						$demande_suppression = 1;
+						$nb_sections = $t['nb_sections'];
 						
-						echo "<center><font color='blue'>Demande envoyée avec succée</font></center>";
+						if ($nb_sections == 0) {
 						
+							$sql = "INSERT INTO compagnie_demande_anim (id_compagnie, type_demande, info_demande) VALUES ('$id_compagnie', '2', '')";
+							$mysqli->query($sql);
+							
+							$demande_suppression = 1;
+							
+							$mess .= "Demande envoyée avec succée";
+						}
+						else {
+							$mess_err .= "Vous ne pouvez pas demander la suppression de votre compagnie car elle possède une ou plusieurs sections";
+						}
 					}
 					else {
 						// Tentative de triche 
@@ -109,10 +124,10 @@ if(isset($_GET["id_compagnie"])) {
 					$sql = "UPDATE compagnies SET image_compagnie='$image' WHERE id_compagnie=$id_compagnie";
 					$mysqli->query($sql);
 					
-					echo "<font color = green>Changement de l'image effectué</font>";
+					$mess .= "Changement de l'image effectué";
 				}
 				else {
-					echo "<font color = red>Veuillez bien remplir le champ pour le changement d'image</font>";
+					$mess_err .= "Veuillez bien remplir le champ pour le changement d'image";
 				}
 			}
 			
@@ -181,33 +196,40 @@ if(isset($_GET["id_compagnie"])) {
 							$mysqli->query($sql);
 						}
 						
-						echo "<font color = blue>Vous venez de virer $perso_a_virer [".$id_perso_a_virer."]de votre compagnie</font>";
+						$mess .= "Vous venez de virer $perso_a_virer [".$id_perso_a_virer."]de votre compagnie";
 					}
 					else {
-						echo "<font color = red>Ce perso n'existe pas ou ne fait pas parti de votre compagnie ou est un chef de la compagnie</font>";
+						$mess_err .= "Ce perso n'existe pas ou ne fait pas parti de votre compagnie ou est un chef de la compagnie";
 					}
 				}
 				else {
-					echo "<font color = red>Veuillez bien remplir le champ pour virer un membre</font>";
+					$mess_err .= "Veuillez bien remplir le champ pour virer un membre";
 				}
 			}
 		
 			echo "<h3>";
-			echo "	<center>Page d'administration de la compagnie ".$nom_compagnie." ";
-			if (!$genie_compagnie) {
+			if (isset($id_parent)) {
+				$titre_compagnie = "section";
+			}
+			else {
+				$titre_compagnie = "compagnie";
+			}
+			
+			echo "	<center>Page d'administration de la ".$titre_compagnie." ".$nom_compagnie." ";
+			if (!$genie_compagnie && !isset($id_parent)) {
 				echo "	<a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a>";
 			}
-			if (!$demande_suppression && !$genie_compagnie) {
+			if (!$demande_suppression && !$genie_compagnie && !isset($id_parent)) {
 				echo "	<button type='button' class='btn btn-danger' data-toggle='modal' data-target=\"#modalConfirm\">Supprimer la compagnie</button>";
 			}
 			echo "	</center>";
 			echo "</h3>";
 			echo "<center>";
 			echo "	<a class='btn btn-danger' href='chef_compagnie.php?id_compagnie=$id_compagnie'>changer de chef</a>";
-			echo " 	<a class='btn btn-info' href='resume_compagnie.php?id_compagnie=$id_compagnie'>changer le resume de la compagnie</a>";
-			echo " 	<a class='btn btn-info' href='description_compagnie.php?id_compagnie=$id_compagnie'>changer la description de la compagnie</a>";
-			echo " 	<a class='btn btn-warning' href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa compagnie</a>";
-			if (!isset($id_parent)) {
+			echo " 	<a class='btn btn-info' href='resume_compagnie.php?id_compagnie=$id_compagnie'>changer le resume de la ".$titre_compagnie."</a>";
+			echo " 	<a class='btn btn-info' href='description_compagnie.php?id_compagnie=$id_compagnie'>changer la description de la ".$titre_compagnie."</a>";
+			echo " 	<a class='btn btn-warning' href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa ".$titre_compagnie."</a>";
+			if (!isset($id_parent) && !$genie_compagnie) {
 				echo " 	<a class='btn btn-warning' href='section_compagnie.php?id_compagnie=$id_compagnie'>Gérer les sections</a>";
 			}
 			echo "</center>";
@@ -217,6 +239,13 @@ if(isset($_GET["id_compagnie"])) {
 			}
 			
 			echo "<hr>";
+			
+			if (trim($mess) != "") {
+				echo "<center><font color='blue'><b>".$mess."</b></font></center><br />";
+			}
+			if (trim($mess_err) != "") {
+				echo "<center><font color='red'><b>".$mess_err."</b></font></center><br />";
+			}
 			
 			// Affichage de l'image de la compagnie
 			if (trim($image_compagnie) != "" && $image_compagnie != "0") {
@@ -254,7 +283,7 @@ if(isset($_GET["id_compagnie"])) {
 			echo "</div>";
 			echo "</form>";
 			
-			echo "<br /><center><a class='btn btn-primary' href='compagnie.php'>retour a la page compagnie</a></center>";
+			echo "<br /><center><a class='btn btn-primary' href='compagnie.php'>retour a la page ".$titre_compagnie."</a></center>";
 			?>
 			<!-- Modal -->
 			<form method="post" action="admin_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>">

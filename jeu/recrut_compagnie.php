@@ -143,32 +143,6 @@ if(isset($_SESSION["id_perso"])){
 						$sql = "INSERT INTO message_perso VALUES ('$id_message','$new_recrue','1','0','1','0')";
 						$res = $mysqli->query($sql);
 						
-						// -- FORUM
-						// Récupération de l'id de l'utilisateur sur le forum 
-						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE id_perso='$new_recrue'";
-						$res = $mysqli->query($sql);
-						$t = $res->fetch_assoc();
-						
-						$id_user_forum = $t['user_id'];
-						
-						// Récupération de l'id du group de la compagnie sur le forum
-						$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
-						$res = $mysqli->query($sql);
-						$t = $res->fetch_assoc();
-						
-						$id_group_forum = $t['group_id'];
-						
-						// Est ce qu'il est déjà dans le groupe ?
-						$sql = "SELECT * FROM ".$table_prefix."user_group WHERE group_id = '$id_group_forum' AND user_id='$id_user_forum'";
-						$res = $mysqli->query($sql);
-						$verif = $res->num_rows;
-						
-						if ($verif == 0) {
-							// Insertion de l'utilisateur dans le groupe
-							$sql = "INSERT INTO ".$table_prefix."user_group (group_id, user_id, user_pending, group_leader) VALUES ('$id_group_forum', '$id_user_forum', 0, 0)";
-							$mysqli->query($sql);
-						}
-						
 						echo "<center>".$nom_recrue."[".$new_recrue."] vient de rentrer dans la compagnie</center>";
 					}
 				}
@@ -271,34 +245,6 @@ if(isset($_SESSION["id_perso"])){
 								$mysqli->query($sql);
 							}
 							
-							// -- FORUM
-							// Récupération de l'id de l'utilisateur sur le forum 
-							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-										(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
-											(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue') AND chef='1')";
-							$res = $mysqli->query($sql);
-							$t = $res->fetch_assoc();
-							
-							$id_user_forum = $t['user_id'];
-							
-							// Récupération de l'id du group de la compagnie sur le forum
-							$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
-							$res = $mysqli->query($sql);
-							$t = $res->fetch_assoc();
-							
-							$id_group_forum = $t['group_id'];
-							
-							// Est ce qu'il a d'autres persos dans la compagnie en dehors de celui qui part
-							$sql = "SELECT * FROM perso_in_compagnie WHERE id_perso IN (SELECT id_perso FROM perso WHERE idJoueur_perso IN (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_recrue'))";
-							$res = $mysqli->query($sql);
-							$verif = $res->num_rows;
-							
-							if ($verif == 0) {
-								// Suppression de l'utilisateur du groupe
-								$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
-								$mysqli->query($sql);
-							}
-							
 							echo "<center><font color='red'>".$nom_recrue."[".$id_recrue."] a été viré de la compagnie</font></center>";
 						}
 						else {
@@ -381,7 +327,7 @@ if(isset($_SESSION["id_perso"])){
 						}
 						
 						echo "</select>";
-						echo "&nbsp;<input type=\"submit\" name=\"rec\" value=\"recruter\">&nbsp;<input type=\"submit\" name=\"ref\" value=\"refuser\">";
+						echo "&nbsp;<input type=\"submit\" name=\"rec\" class='btn btn-success' value=\"recruter\">&nbsp;<input type=\"submit\" class='btn btn-danger' name=\"ref\" value=\"refuser\">";
 						echo "</form></center>";
 					}
 					else {
@@ -410,7 +356,7 @@ if(isset($_SESSION["id_perso"])){
 						}
 						
 						echo "</select>";
-						echo "&nbsp;<input type=\"submit\" name=\"quit\" value=\"valider le départ\">&nbsp;<input type=\"submit\" name=\"ref_quit\" value=\"refuser\">";
+						echo "&nbsp;<input type=\"submit\" name=\"quit\" class='btn btn-success' value=\"valider le départ\">&nbsp;<input type=\"submit\" name=\"ref_quit\" class='btn btn-danger' value=\"refuser\">";
 						echo "</form></center>";
 					}
 					else {
