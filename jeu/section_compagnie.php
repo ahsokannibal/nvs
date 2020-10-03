@@ -70,56 +70,73 @@ if (@$_SESSION["id_perso"]) {
 									$verif_appartient_compagnie = $res->num_rows;
 									
 									if ($verif_appartient_compagnie) {
-									
-										$lock = "LOCK TABLE (compagnies) WRITE";
-										$mysqli->query($lock);
-									
-										// Création de la section
-										$sql = "INSERT INTO compagnies (nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, id_clan, genie_civil, id_parent) 
-												VALUES ('$nom_nouvelle_section', '', '', '', '$id_camp', '0', '$id_compagnie')";
-										$mysqli->query($sql);
 										
-										$id_new_comp = $mysqli->insert_id;
-						
-										$unlock = "UNLOCK TABLES";
-										$mysqli->query($unlock);
-										
-										// Insertion compagnie_as_contraintes
-										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '1')";
-										$mysqli->query($sql);
-										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '2')";
-										$mysqli->query($sql);
-										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '3')";
-										$mysqli->query($sql);
-										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '4')";
-										$mysqli->query($sql);
-										$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '5')";
-										$mysqli->query($sql);
-										
-										// Le perso passe de la compagnie mère à chef de la nouvelle section
-										$sql = "UPDATE perso_in_compagnie SET id_compagnie='$id_new_comp', poste_compagnie='1' WHERE id_perso='$id_chef_nouvelle_section'";
-										$mysqli->query($sql);
-										
-										// récupération de la thune du perso dans la banque de la compagnie
-										$sql = "SELECT montant FROM banque_compagnie WHERE id_perso='$id_chef_nouvelle_section'";
+										// On vérifie que le nom de la section n'est pas déjà utilisé
+										$sql = "SELECT * FROM compagnies WHERE nom_compagnie='$nom_nouvelle_section'";
 										$res = $mysqli->query($sql);
-										$t = $res->fetch_assoc();
+										$verif_nom_exist = $res->num_rows;
 										
-										$montant_comp_chef_section = $t['montant'];
-										
-										// Creation de la banque de la section
-										$sql = "INSERT INTO banque_as_compagnie (id_compagnie, montant) VALUES ('$id_new_comp', '$montant_comp_chef_section')";
-										$mysqli->query($sql);
-										
-										// Mise à jour de la thune de la banque de la compagnie mère
-										$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
-										$mysqli->query($sql);
-										
-										// Insertion du perso dans la banque de la section avec transfert thunes
-										$sql = "INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES ('$id_chef_nouvelle_section', '$montant_comp_chef_section', '0', '0')";
-										$mysqli->query($sql);
-										
-										$mess .= "La section ".$nom_nouvelle_section." a été créée";
+										if (!$verif_nom_exist) {
+											// verification taille nom + caractères spéciaux
+											if (strlen($nom_nouvelle_section) > 50 || ctype_digit($nom_nouvelle_section) || strpos($nom_nouvelle_section,'--') !== false) {
+												$mess_err .= "Le nom ".$nom_nouvelle_section." est incorrect, veuillez en choisir un autre";
+											}
+											else {
+									
+												$lock = "LOCK TABLE (compagnies) WRITE";
+												$mysqli->query($lock);
+											
+												// Création de la section
+												$sql = "INSERT INTO compagnies (nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, id_clan, genie_civil, id_parent) 
+														VALUES ('$nom_nouvelle_section', '', '', '', '$id_camp', '0', '$id_compagnie')";
+												$mysqli->query($sql);
+												
+												$id_new_comp = $mysqli->insert_id;
+								
+												$unlock = "UNLOCK TABLES";
+												$mysqli->query($unlock);
+												
+												// Insertion compagnie_as_contraintes
+												$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '1')";
+												$mysqli->query($sql);
+												$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '2')";
+												$mysqli->query($sql);
+												$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '3')";
+												$mysqli->query($sql);
+												$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '4')";
+												$mysqli->query($sql);
+												$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '5')";
+												$mysqli->query($sql);
+												
+												// Le perso passe de la compagnie mère à chef de la nouvelle section
+												$sql = "UPDATE perso_in_compagnie SET id_compagnie='$id_new_comp', poste_compagnie='1' WHERE id_perso='$id_chef_nouvelle_section'";
+												$mysqli->query($sql);
+												
+												// récupération de la thune du perso dans la banque de la compagnie
+												$sql = "SELECT montant FROM banque_compagnie WHERE id_perso='$id_chef_nouvelle_section'";
+												$res = $mysqli->query($sql);
+												$t = $res->fetch_assoc();
+												
+												$montant_comp_chef_section = $t['montant'];
+												
+												// Creation de la banque de la section
+												$sql = "INSERT INTO banque_as_compagnie (id_compagnie, montant) VALUES ('$id_new_comp', '$montant_comp_chef_section')";
+												$mysqli->query($sql);
+												
+												// Mise à jour de la thune de la banque de la compagnie mère
+												$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
+												$mysqli->query($sql);
+												
+												// Insertion du perso dans la banque de la section avec transfert thunes
+												$sql = "INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES ('$id_chef_nouvelle_section', '$montant_comp_chef_section', '0', '0')";
+												$mysqli->query($sql);
+												
+												$mess .= "La section ".$_POST['nomSection']." a été créée";
+											}
+										}
+										else {
+											$mess_err .= "Le nom ".$nom_nouvelle_section." est déjà utilisé, veuillez en choisir un autre";
+										}
 									}
 									else {
 										// Tentative de triche
@@ -294,7 +311,7 @@ if (@$_SESSION["id_perso"]) {
 							<div class="form-row">
 								<div class="form-group col-md-12">
 									<label for="nomSection">Nom de la section <font color='red'>*</font></label>
-									<input type="text" class="form-control" id="chefSection" name='nomSection' placeholder="Nom de la section">
+									<input type="text" class="form-control" id="chefSection" name='nomSection' placeholder="Nom de la section" maxlength='50'>
 								</div>
 							</div>						
 							<div class="form-row">

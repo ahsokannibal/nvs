@@ -63,20 +63,34 @@ if($dispo || $admin){
 				
 				if($ok_chef == 1) {
 					
-					echo "<h3><center>Donner des postes aux membres de sa compagnie</center></h3>";
+					$sql = "SELECT id_parent FROM compagnies WHERE id_compagnie='$id_compagnie'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
 					
-					echo "<center><a href='admin_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-info'>retour a la page d'administration de compagnie</a></center>";
+					$id_parent = $t['id_parent'];
+					
+					if (isset($id_parent) && $id_parent != 0) {
+						$titre_compagnie = "section";
+					}
+					else {
+						$titre_compagnie = "compagnie";
+					}
+					
+					echo "<h3><center>Donner des postes aux membres de sa ".$titre_compagnie."</center></h3>";
+					
+					echo "<center><a href='admin_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-info'>retour a la page d'administration de la ".$titre_compagnie."</a></center>";
 					
 					if (isset($_POST["poste"])) {
 						
 						$m = $_POST["membre"];
 						$p = $_POST["poste"];
-						$t_membre = explode(",",$m);
-						$t_poste = explode(",",$p);
-						$id_membre = $t_membre[0];
+						
+						$t_membre 	= explode(",",$m);
+						$t_poste 	= explode(",",$p);
+						$id_membre 	= $t_membre[0];
 						$nom_membre = $t_membre[1];
-						$id_poste = $t_poste[0];
-						$nom_poste = $t_poste[1];
+						$id_poste 	= $t_poste[0];
+						$nom_poste 	= $t_poste[1];
 						
 						//on regarde si il n'existe pas deja un membre qui a ce poste
 						$sql = "SELECT id_perso FROM perso_in_compagnie, poste WHERE poste_compagnie=id_poste AND id_compagnie=$id_compagnie AND id_poste='$id_poste' AND id_poste!='10'"; 
@@ -114,7 +128,7 @@ if($dispo || $admin){
 									echo "<center><font color='blue'>Vous venez de promouvoir $nom_membre au poste de $nom_poste</font></center><br>";
 								}
 								else {
-									echo "<center><font color='red'>Le membre selectionné n'appartient pas à cette compagnie</font></center>";
+									echo "<center><font color='red'>Le membre selectionné n'appartient pas à cette ".$titre_compagnie."</font></center>";
 								}
 							}
 						}
@@ -166,7 +180,13 @@ if($dispo || $admin){
 					$res = $mysqli->query($sql);
 					
 					while ($poste = $res->fetch_assoc()) {
-						echo "<OPTION value=".$poste["id_poste"].",".$poste["nom_poste"].">".$poste["nom_poste"]."</option>"; 
+						
+						$id_poste 	= $poste["id_poste"];
+						$nom_poste	= $poste["nom_poste"];
+						
+						if (($id_poste == 4 && !isset($id_parent)) || $id_poste != 4) {
+							echo "<OPTION value=".$id_poste.",".$nom_poste.">".$nom_poste."</option>"; 
+						}
 					}
 					
 					echo "</select>";
@@ -212,7 +232,7 @@ if($dispo || $admin){
 			
 					echo "</table>";
 					echo "</div>";
-					echo "<br /><center><a href='compagnie.php' class='btn btn-primary'>retour a la page compagnie</a></center>";
+					echo "<br /><center><a href='compagnie.php' class='btn btn-primary'>retour a la page ".$titre_compagnie."</a></center>";
 				}
 				else {
 					echo "<center><font color='red'>Vous n'avez pas le droit d'acceder à cette page !</font></center>";

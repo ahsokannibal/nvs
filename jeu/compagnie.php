@@ -239,7 +239,10 @@ if($dispo || $admin){
 							
 							if ($genie_compagnie) {
 								$nb_persos_compagnie_max = 60;
-							} else {
+							} else if (isset($id_parent)) { 
+								$nb_persos_compagnie_max = 40;
+							}							
+							else {
 								$nb_persos_compagnie_max = 80;
 							}
 							
@@ -355,7 +358,8 @@ if($dispo || $admin){
 				echo "<center><a class='btn btn-outline-info' href='compagnie.php'>Retour</a></center><br/>";
 				
 				// recuperation des compagnies existantes
-				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie, id_parent FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan";
+				$sql = "SELECT id_compagnie, nom_compagnie, image_compagnie, resume_compagnie, description_compagnie 
+						FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan AND id_parent is NULL";
 				$res = $mysqli->query($sql);
 				
 				echo "<table border=\"1\" width = 100%>";
@@ -367,7 +371,6 @@ if($dispo || $admin){
 					$image_compagnie 		= $sec["image_compagnie"];
 					$resume_compagnie 		= $sec["resume_compagnie"];
 					$description_compagnie 	= $sec["description_compagnie"];
-					$id_parent				= $sec["id_parent"];
 							
 					// creation des tableau avec les compagnies existantes
 					echo "	<tr>";
@@ -453,7 +456,7 @@ if($dispo || $admin){
 						}
 						
 						// c'est le recruteur
-						if($poste_s == 4 || $poste_s == 1){ 
+						if(!isset($id_parent) && ($poste_s == 4 || $poste_s == 1)){ 
 						
 							// on verifie si il y a des nouveau persos qui veulent integrer la compagnie
 							$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
@@ -495,6 +498,8 @@ if($dispo || $admin){
 						$nb_persos_compagnie_max = 60;
 						
 						echo "<center><a class='btn btn-outline-info' href='contraintes_construction.php' target='_blank'>Voir les contraintes des constructions</a></center>";
+					} else if(isset($id_parent)) {
+						$nb_persos_compagnie_max = 40;
 					} else {
 						$nb_persos_compagnie_max = 80;
 					}
@@ -507,7 +512,7 @@ if($dispo || $admin){
 					$nb_persos_compagnie = $tab["nb_persos_compagnie"];
 						
 					// affichage des information de la compagnie
-					echo "<center><b>$nom_compagnie</b></center>";
+					echo "<center><h2>$nom_compagnie</h2></center>";
 					echo "<table border=\"1\" width = 100%>";
 					echo "	<tr>";
 					echo "		<th width=40 height=40>";
@@ -577,6 +582,106 @@ if($dispo || $admin){
 					echo "		</td>";
 					echo "	</tr>";
 					echo "</table><br>";
+					
+					$sql_sec = "SELECT * FROM compagnies WHERE id_parent='$id_compagnie'";
+					$res_sec = $mysqli->query($sql_sec);
+					$nb_sec	= $res_sec->num_rows;
+					
+					if ($nb_sec && !isset($_GET['voir_section'])) {
+						echo "<center><a href='compagnie.php?voir_section=ok' class='btn btn-warning'>Voir les sections</a></center>";
+					}
+					else if (isset($_GET['voir_section'])) {
+						
+						echo "<center><a href='compagnie.php' class='btn btn-warning'>Cacher les sections</a></center>";
+						
+						while ($t_sec = $res_sec->fetch_assoc()) {
+							
+							$id_section		= $t_sec['id_compagnie'];
+							$nom_section	= $t_sec['nom_compagnie'];
+							$image_section	= $t_sec['image_compagnie'];
+							$resume_section	= $t_sec['resume_compagnie'];
+							$desc_section	= $t_sec['description_compagnie'];
+							
+							// Récupération nombre perso dans la section
+							$sql = "SELECT count(*) as nb_persos_section FROM perso_in_compagnie WHERE id_compagnie=$id_section AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+							$res = $mysqli->query($sql);
+							$tab = $res->fetch_assoc();
+							
+							$nb_persos_section = $tab["nb_persos_section"];
+								
+							// affichage des information de la section
+							echo "<center><h2>$nom_section</h2></center>";
+							echo "<table border=\"1\" width = 100%>";
+							echo "	<tr>";
+							echo "		<th width=40 height=40>";
+							if ($image_section != "0" && trim($image_section) != "") {
+								echo "<img src=\"".htmlspecialchars($image_section)."\" width=\"40\" height=\"40\">";
+							}
+							echo "		</th>";
+							echo "		<th style='text-align:center'>".bbcode(htmlentities(stripslashes($resume_section)))."</th>";
+							echo "		<th style='text-align:center' width=30%>Liste des membres  (". $nb_persos_section ."/40)";
+							if ($poste_compagnie == 1) {
+								echo "<span style='text-align:right; float:right;padding-right:5px;'>Position</span>";
+							}
+							echo "		</th>";
+							echo "	</tr>";
+							echo "	<tr>";
+							echo "		<td colspan='2'>".bbcode(htmlentities(stripslashes($desc_section)))."</td>";
+							echo "		<td>";
+								
+							// recuperation de la liste des membres de la compagnie
+							$sql = "SELECT perso.id_perso, nom_perso, poste_compagnie, perso_as_grade.id_grade, nom_grade, x_perso, y_perso FROM perso, perso_in_compagnie, perso_as_grade, grades
+									WHERE perso_in_compagnie.id_perso=perso.ID_perso 
+									AND perso_as_grade.id_perso = perso.id_perso
+									AND perso_as_grade.id_grade = grades.id_grade
+									AND id_compagnie=$id_section AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') 
+									ORDER BY poste_compagnie, perso.id_perso";
+							$res = $mysqli->query($sql);
+							
+							while ($membre = $res->fetch_assoc()) {
+								
+								$nom_membre 		= $membre["nom_perso"];
+								$poste_membre 		= $membre["poste_compagnie"];
+								$id_membre			= $membre["id_perso"];
+								$id_grade			= $membre["id_grade"];
+								$nom_grade			= $membre["nom_grade"];
+								$x_membre			= $membre["x_perso"];
+								$y_membre			= $membre["y_perso"];
+										
+								// cas particuliers grouillot
+								if ($id_grade == 101) {
+									$id_grade = "1.1";
+								}
+								if ($id_grade == 102) {
+									$id_grade = "1.2";
+								}
+								
+								echo "<img alt='".$nom_grade."' title='".$nom_grade."' src=\"../images/grades/" . $id_grade . ".gif\" width=25 height=25> ".$nom_membre." [<a href='evenement.php?infoid=".$id_membre."' target='_blank'>".$id_membre."</a>]";
+								
+								if($poste_membre != 10){
+									
+									// recuperation du nom de poste
+									$sql2 = "SELECT nom_poste FROM poste WHERE id_poste=$poste_membre";
+									$res2 = $mysqli->query($sql2);
+									$t_p = $res2->fetch_assoc();
+									
+									$nom_poste = $t_p["nom_poste"];
+									
+									echo " ($nom_poste)";
+								}
+								
+								if ($poste_compagnie == 1) {
+									echo "<span style='text-align:right; float:right;padding-right:5px;'> ".$x_membre."/".$y_membre."</span>";
+								}
+								
+								echo "<br />";
+							}
+							
+							echo "		</td>";
+							echo "	</tr>";
+							echo "</table><br>";
+						}
+					}
 					
 					echo "<br/><center><a class='btn btn-danger' href='compagnie.php?id_compagnie=$id_compagnie&rejoindre=off'"?> OnClick="return(confirm('êtes vous sûr de vouloir quitter la compagnie ?'))" <?php echo"><b>Demander à quitter la ".$titre_compagnie."</b></a></center>";
 				}

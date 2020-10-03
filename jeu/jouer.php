@@ -2057,79 +2057,9 @@ if($dispo || $admin){
 		
 		<link href="../style2.css" rel="stylesheet" type="text/css">
 		
-		<style>
-		.sidebar {
-		  height: 100%;
-		  width: 0;
-		  position: fixed;
-		  z-index: 1;
-		  top: 0;
-		  left: 0;
-		  background-color: #111;
-		  overflow-x: hidden;
-		  transition: 0.5s;
-		  padding-top: 60px;
-		}
-		
-		.sidebar a {
-		  padding: 8px 8px 8px 32px;
-		  text-decoration: none;
-		  font-size: 25px;
-		  color: #818181;
-		  display: block;
-		  transition: 0.3s;
-		}
-
-		.sidebar a:hover {
-		  color: #f1f1f1;
-		}
-		
-		.sidebar .closebtn {
-		  position: absolute;
-		  top: 0;
-		  right: 25px;
-		  font-size: 36px;
-		  margin-left: 50px;
-		}
-
-		.openbtn {
-		  font-size: 10px;
-		  background-color: #111;
-		  color: white;
-		  padding: 10px 15px;
-		  border: none;
-		  height: 100px;
-		}
-		
-		.openbtn:hover {
-		  background-color: #444;
-		}
-
-		#boutonChat {
-		  transition: margin-left .5s;
-		  position: fixed;
-		  left: 0;
-		  top: 50%;
-		}
-		
-		/* On smaller screens, where height is less than 450px, change the style of the sidenav (less padding and a smaller font size) */
-		@media screen and (max-height: 450px) {
-		  .sidebar {padding-top: 15px;}
-		  .sidebar a {font-size: 18px;}
-		}
-		</style>
-		
 	</head>
 
 	<body>
-		<!--<div id="mySidebar" class="sidebar">
-		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">×</a>
-		  <a href="#">Test</a>
-		</div>
-
-		<div id="boutonChat">
-		  <button class="openbtn" onclick="openNav()">Chat</button>  
-		</div>-->
 				<?php
 				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
 				
@@ -2362,9 +2292,22 @@ if($dispo || $admin){
 					$res_groupe2 = $mysqli->query($sql_groupe2);
 					$t_groupe2 = $res_groupe2->fetch_assoc();
 					
-					$nom_compagnie_perso 	= addslashes($t_groupe2['nom_compagnie']);
-					$image_compagnie_perso	= $t_groupe2['image_compagnie'];
-					$genie_compagnie_perso	= $t_groupe2['genie_civil'];
+					$nom_compagnie_perso 		= addslashes($t_groupe2['nom_compagnie']);
+					$image_compagnie_perso		= $t_groupe2['image_compagnie'];
+					$genie_compagnie_perso		= $t_groupe2['genie_civil'];
+					$id_parent_compagnie_perso	= $t_groupe2['id_parent'];
+					
+					if (isset($id_parent_compagnie_perso)) {
+						
+						$sql_p = "SELECT nom_compagnie FROM compagnies WHERE id_compagnie='$id_parent_compagnie_perso'";
+						$res_p = $mysqli->query($sql_p);
+						$t_p = $res_p->fetch_assoc();
+						
+						$nom_compagnie_mere = addslashes($t_p['nom_compagnie']);
+						
+						$nom_compagnie_perso = $nom_compagnie_mere." - ".$nom_compagnie_perso;
+						
+					}
 					
 					// Quel est le poste du perso dans la compagnie ?
 					$sql = "SELECT poste_compagnie FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie' AND id_perso='$id_perso'";
