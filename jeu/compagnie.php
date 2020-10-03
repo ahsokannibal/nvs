@@ -627,7 +627,8 @@ if($dispo || $admin){
 										WHERE id_perso = $id 
 										AND compagnies.id_compagnie = compagnie_as_contraintes.id_compagnie
 										AND compagnies.id_clan = perso.clan
-										AND compagnie_as_contraintes.contrainte_type_perso = perso.type_perso";
+										AND compagnie_as_contraintes.contrainte_type_perso = perso.type_perso
+										AND compagnies.id_parent is NULL";
 								$res = $mysqli->query($sql);
 								
 								echo "<table border=\"1\" width = 100%>";
