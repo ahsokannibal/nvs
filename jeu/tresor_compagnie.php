@@ -274,7 +274,7 @@ if($dispo || $admin){
 						echo "<b>".$nom_perso." [".$id_p."]</b><br /><br />";
 						
 						echo "<div id=\"table_tresor\" class=\"table-responsive\">";
-						echo "	<table border='1'>";
+						echo "	<table class='table' border='1'>";
 						echo "		<tr>";
 						echo "			<th style='text-align:center'>Date opération</th><th style='text-align:center'>Type d'opération</th><th style='text-align:center'>Montant</th>";
 						echo "		</tr>";
@@ -337,8 +337,8 @@ if($dispo || $admin){
 						
 						echo "<center>";
 						
-						echo "<div id=\"table_tresor_perso\" class=\"table-responsive\">";
-						echo "	<table border='1' width='100%'>";
+						echo "<div id='table_tresor_perso' class='table-responsive'>";
+						echo "	<table border='1' class='table' width='100%'>";
 						echo "		<tr>";
 						echo "			<th>Nom [matricule]</th><th style='text-align: center;'>Montant en banque</th><th style='text-align: center;'>Montant calculé des transactions</th><th style='text-align: center;'>Action</th>";
 						echo "		</tr>";
@@ -413,6 +413,83 @@ if($dispo || $admin){
 					echo "<br />";
 					echo "<center>";
 					echo "	<a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok' class='btn btn-primary'> Voir les soldes par perso </a><br>";
+					echo "</center>";
+				}
+				
+				if (isset($_GET['histo']) && $_GET['histo'] == "ok") {
+					
+					$fond_total_histo = 0;
+					
+					echo "<div id='table_histo' class='table-responsive'>";
+					echo "	<table class='table' border='1'>";
+					echo "		<tr>";
+					echo "			<th style='text-align:center'>Date opération</th>";
+					echo "			<th style='text-align:center'>Nom perso</th>";
+					echo "			<th style='text-align:center'>Matricule</th>";
+					echo "			<th style='text-align:center'>Type d'opération</th>";
+					echo "			<th style='text-align:center'>Montant</th>";
+					echo "		</tr>";
+					
+					$sql = "SELECT operation, montant, date_operation, perso.id_perso, perso.nom_perso FROM histobanque_compagnie, perso 
+								WHERE id_compagnie=$id_compagnie 
+								AND histobanque_compagnie.id_perso=perso.id_perso
+								ORDER BY id_histo DESC";
+					$res = $mysqli->query($sql);
+					
+					while ($t = $res->fetch_assoc()) {
+						
+						$id_perso_histo		= $t['id_perso'];
+						$nom_perso_histo	= $t['nom_perso'];
+						$op_histo 			= $t['operation'];
+						$montant_histo 		= $t['montant'];
+						$date_ope_histo		= $t['date_operation'];
+						
+						$fond_total_histo += $montant_histo;
+						
+						if ($op_histo == 0) {
+							$type_ope 		= "Dépot";
+							$color 			= "blue";
+						}
+						if ($op_histo == 1) {
+							$type_ope 		= "Retrait";
+							$montant_histo 	= substr($montant_histo, 1, strlen($montant_histo));
+							$color 			= "orange";
+						}
+						if ($op_histo == 2) {
+							$type_ope 		= "Emprunt";
+							$montant_histo 	= $montant_histo;
+							$color 			= "red";
+						}
+						if ($op_histo == 3) {
+							$type_ope 		= "Remboursement emprunt";
+							$color 			= "green";
+						}
+						if ($op_histo == 4) {
+							$type_ope 		= "Virement";
+							$color 			= "brown";
+						}
+						
+						echo "		<tr>";
+						echo "			<td>".$date_ope_histo."</td>";
+						echo "			<td>".$nom_perso_histo."</td>";
+						echo "			<td>".$id_perso_histo."</td>";
+						echo "			<td>".$type_ope."</td>";
+						echo "			<td align='center'><font color='".$color."'><b>".$montant_histo."</b></font></td>";
+						echo "		</tr>";
+						
+					}
+					
+					echo "		<tr>";
+					echo "			<td align='center' colspan='4'><b>TOTAL</b></td><td align='center'><b>".$fond_total_histo."</b></td>";
+					echo "		</tr>";
+					
+					echo "	</table>";
+					echo "</div>";
+				}
+				else {
+					echo "<br />";
+					echo "<center>";
+					echo "	<a href='tresor_compagnie.php?id_compagnie=$id_compagnie&histo=ok' class='btn btn-primary'> Voir l'historique complet de la trésorerie </a><br>";
 					echo "</center>";
 				}
 				
