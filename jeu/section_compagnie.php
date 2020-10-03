@@ -127,10 +127,6 @@ if (@$_SESSION["id_perso"]) {
 												$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
 												$mysqli->query($sql);
 												
-												// Insertion du perso dans la banque de la section avec transfert thunes
-												$sql = "INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES ('$id_chef_nouvelle_section', '$montant_comp_chef_section', '0', '0')";
-												$mysqli->query($sql);
-												
 												$mess .= "La section ".$_POST['nomSection']." a été créée";
 											}
 										}
@@ -160,6 +156,71 @@ if (@$_SESSION["id_perso"]) {
 							}
 							else {
 								$mess_err .= "Veuillez remplir tous les champs obligatoires";
+							}
+						}
+						
+						if (isset($_POST['hid_id_section']) && trim($_POST['hid_id_section']) != ""
+							&& isset($_POST['liste_perso_section']) && trim($_POST['liste_perso_section']) != "") {
+							
+							$id_section_ajout 	= $_POST['hid_id_section'];
+							$id_perso_ajout		= $_POST['liste_perso_section'];
+							
+							$verif_id_section = preg_match("#^[0-9]+$#i",$id_section_ajout);
+							$verif_id_perso = preg_match("#^[0-9]+$#i",$id_perso_ajout);
+							
+							if ($verif_id_section && $verif_id_perso) {
+								
+								// Vérification section appartient bien à la compagnie
+								$sql = "SELECT * FROM compagnies WHERE id_compagnie='$id_section_ajout' AND id_parent='$id_compagnie'";
+								$res = $mysqli->query($sql);
+								$verif_section = $res->num_rows;
+								
+								// Vérification perso apparient bien à la compagnie
+								$sql = "SELECT * FROM perso_in_compagnie WHERE id_perso='$id_perso_ajout' AND id_compagnie='$id_compagnie'";
+								$res = $mysqli->query($sql);
+								$verif_perso = $res->num_rows;
+								
+								if ($verif_section && $verif_perso) {
+									
+									// Le perso passe de la compagnie mère à membre de la nouvelle section
+									$sql = "UPDATE perso_in_compagnie SET id_compagnie='$id_section_ajout', poste_compagnie='10' WHERE id_perso='$id_perso_ajout'";
+									$mysqli->query($sql);
+									
+									// récupération de la thune du perso dans la banque de la compagnie
+									$sql = "SELECT montant FROM banque_compagnie WHERE id_perso='$id_perso_ajout'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$montant_comp_perso_section = $t['montant'];
+									
+									// MAJ montant de la banque de la section
+									$sql = "UPDATE banque_as_compagnie SET montant = montant + $montant_comp_perso_section WHERE id_compagnie='$id_section_ajout'";
+									$mysqli->query($sql);
+									
+									// Mise à jour de la thune de la banque de la compagnie mère
+									$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_perso_section WHERE id_compagnie='$id_compagnie'";
+									$mysqli->query($sql);
+									
+									$mess .= "Le perso matricule $id_perso_ajout a été ajouté dans une section de la compagnie";
+								}
+								else {
+									// Tentative de triche
+									$text_triche = "Tentative modification id section ou id perso sur ajout membre section - id section ($id_section_ajout) pas de la compagnie ou id perso ($id_perso_ajout) pas de la compagnie";
+							
+									$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+									$mysqli->query($sql);
+									
+									header("Location:jouer.php");
+								}
+							}
+							else {
+								// Tentative de triche
+								$text_triche = "Tentative modification id section ou id perso sur ajout membre section";
+						
+								$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+								$mysqli->query($sql);
+								
+								header("Location:jouer.php");
 							}
 						}
 						
@@ -412,7 +473,67 @@ if (@$_SESSION["id_perso"]) {
 										echo "	<td align='center'>".$nom_section."</td>";
 										echo "	<td align='center'>".$nom_perso_chef_sec." [".$id_perso_chef_sec."]</td>";
 										echo "	<td align='center'>".$nb_persos_sec."</td>";
-										echo "	<td align='center'><a href='section_compagnie.php?id_compagnie=".$id_compagnie."&supprimer_section=".$id_section."' class='btn btn-danger'>Supprimer Section</a></td>";
+										echo "	<td align='center'>";
+										if (isset($_GET['ajouter_membre']) && $_GET['ajouter_membre'] == $id_section) {
+											
+											echo "<form method='POST' action='section_compagnie.php?id_compagnie=".$id_compagnie."'>";
+											
+											echo "	<div class='form-row'>";
+											echo "		<div class='form-group col-md-12'>";
+											echo "			<input type='hidden' name='hid_id_section' value='".$id_section."'>";
+											echo "			<label for='formSelectPersoSection'>Ajouter ce perso</label>";
+											echo "			<select class='form-control' name='liste_perso_section' id='formSelectPersoSection'>";
+											
+											$sql_liste = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_compagnie 
+											WHERE perso.id_perso = perso_in_compagnie.id_perso 
+											AND perso_in_compagnie.id_compagnie='$id_compagnie'
+											AND perso_in_compagnie.poste_compagnie != 1
+											AND attenteValidation_compagnie = 0";
+											$res_liste = $mysqli->query($sql_liste);
+											
+											while ($t_liste = $res_liste->fetch_assoc()) {
+												
+												$id_perso_section	= $t_liste['id_perso'];
+												$nom_perso_section	= $t_liste['nom_perso'];
+												
+												// on recalcule le du
+												// on verifie si le perso ne doit pas des sous a la compagnie
+												$sql_du = "SELECT SUM(montant) as devoir FROM histobanque_compagnie WHERE id_perso=$id_perso_section AND id_compagnie=$id_compagnie AND operation='2'";
+												$res_du = $mysqli->query($sql_du);
+												$t_du = $res_du->fetch_assoc();
+												
+												$du_t = -$t_du["devoir"];
+												
+												// on verifie si le perso a rembourser une partie de ses dettes
+												$sql_du = "SELECT SUM(montant) as remb FROM histobanque_compagnie WHERE id_perso=$id_perso_section AND id_compagnie=$id_compagnie AND operation='3'";
+												$res_du = $mysqli->query($sql_du);
+												$t_du = $res_du->fetch_assoc();
+												
+												$du_r = $t_du["remb"];
+												
+												$du = $du_t - $du_r;
+												
+												if ($du <= 0) {
+													echo "<option value='".$id_perso_section."'>".$nom_perso_section." [".$id_perso_section."]</option>";
+												}
+											}
+											
+											echo "			</select>";
+											echo "		</div>";
+											echo "	</div>";
+											echo "	<div class='form-row'>";
+											echo "		<div class='form-group col-md-12'>";
+											echo "			<input type='submit' class='btn btn-success' name='ajouter_membre' value='Ajouter'>";
+											echo "			<a href='section_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-danger'>Annuler</a>";
+											echo "		</div>";
+											echo "	</div>";
+											echo "</form>";
+										}
+										else {
+											echo "		<a href='section_compagnie.php?id_compagnie=".$id_compagnie."&ajouter_membre=".$id_section."' class='btn btn-success'>Ajouter membre</a>";
+										}
+										echo "		<a href='section_compagnie.php?id_compagnie=".$id_compagnie."&supprimer_section=".$id_section."' class='btn btn-danger'>Supprimer Section</a>";
+										echo "	</td>";
 										echo "</tr>";
 									}
 								}

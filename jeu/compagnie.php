@@ -588,7 +588,9 @@ if($dispo || $admin){
 					$nb_sec	= $res_sec->num_rows;
 					
 					if ($nb_sec && !isset($_GET['voir_section'])) {
-						echo "<center><a href='compagnie.php?voir_section=ok' class='btn btn-warning'>Voir les sections</a></center>";
+						echo "<center><a href='compagnie.php?voir_section=ok' class='btn btn-warning'>Voir les sections ";
+						echo "<span class='badge badge-pill badge-success'>$nb_sec</span>";
+						echo "</a></center>";
 					}
 					else if (isset($_GET['voir_section'])) {
 						
