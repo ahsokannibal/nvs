@@ -62,7 +62,7 @@ if($dispo || $admin){
 		if($verif1){
 		
 			// verification que le perso appartient bien a la compagnie et en est le tresorier
-			$sql = "SELECT id_compagnie, poste_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND id_compagnie='$id_compagnie' AND poste_compagnie='3'";
+			$sql = "SELECT id_compagnie, poste_compagnie FROM perso_in_compagnie WHERE id_perso='$id' AND id_compagnie='$id_compagnie' AND (poste_compagnie='3' OR poste_compagnie='1')";
 			$res = $mysqli->query($sql);
 			$verif = $res->num_rows;
 				

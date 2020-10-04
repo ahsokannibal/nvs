@@ -440,7 +440,7 @@ if($dispo || $admin){
 						}
 						
 						// c'est le tresorier
-						if($poste_s == 3){ 
+						if($poste_s == 1 || $poste_s == 3){ 
 						
 							// verification si quelqu'un a demande un emprunt
 							$sql = "SELECT banque_compagnie.id_perso FROM banque_compagnie, perso_in_compagnie WHERE demande_emprunt='1' AND id_compagnie=$id_compagnie AND banque_compagnie.id_perso=perso_in_compagnie.id_perso";
