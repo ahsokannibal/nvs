@@ -120,11 +120,11 @@ if (@$_SESSION["id_perso"]) {
 												
 												$montant_comp_chef_section = $t['montant'];
 												
-												if ($montant_comp_chef_section > 0) {
-													// Creation de la banque de la section
-													$sql = "INSERT INTO banque_as_compagnie (id_compagnie, montant) VALUES ('$id_new_comp', '$montant_comp_chef_section')";
-													$mysqli->query($sql);
-													
+												// Creation de la banque de la section
+												$sql = "INSERT INTO banque_as_compagnie (id_compagnie, montant) VALUES ('$id_new_comp', '$montant_comp_chef_section')";
+												$mysqli->query($sql);
+												
+												if ($montant_comp_chef_section > 0) {	
 													// Mise à jour de la thune de la banque de la compagnie mère
 													$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
 													$mysqli->query($sql);
