@@ -48,7 +48,8 @@ if (@$_SESSION["id_perso"]) {
 					
 					$ok_chef 			= $ch["poste_compagnie"];
 					
-					if($ok_chef == 1) {
+					// Chef ou sous-chef
+					if($ok_chef == 1 || $ok_chef == 2) {
 			
 						$mess_err 	= "";
 						$mess		= "";
@@ -127,6 +128,8 @@ if (@$_SESSION["id_perso"]) {
 												$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
 												$mysqli->query($sql);
 												
+												// MAJ histo_banque compagnie + section
+												
 												$mess .= "La section ".$_POST['nomSection']." a été créée";
 											}
 										}
@@ -200,6 +203,8 @@ if (@$_SESSION["id_perso"]) {
 									// Mise à jour de la thune de la banque de la compagnie mère
 									$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_perso_section WHERE id_compagnie='$id_compagnie'";
 									$mysqli->query($sql);
+									
+									// MAJ histo_banque compagnie + section
 									
 									$mess .= "Le perso matricule $id_perso_ajout a été ajouté dans une section de la compagnie";
 								}
@@ -532,7 +537,28 @@ if (@$_SESSION["id_perso"]) {
 										else {
 											echo "		<a href='section_compagnie.php?id_compagnie=".$id_compagnie."&ajouter_membre=".$id_section."' class='btn btn-success'>Ajouter membre</a>";
 										}
-										echo "		<a href='section_compagnie.php?id_compagnie=".$id_compagnie."&supprimer_section=".$id_section."' class='btn btn-danger'>Supprimer Section</a>";
+										if (isset($_GET['ecrire']) && $_GET['ecrire'] == $id_section) {
+											echo "<form method='POST' action='section_compagnie.php?id_compagnie=".$id_compagnie."'>";
+											
+											echo "	<div class='form-row'>";
+											echo "		<div class='form-group col-md-12'>";
+											
+											echo "		</div>";
+											echo "	</div>";
+											echo "	<div class='form-row'>";
+											echo "		<div class='form-group col-md-12'>";
+											echo "			<input type='submit' class='btn btn-success' name='envoyer_message' value='Envoyer'>";
+											echo "			<a href='section_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-danger'>Annuler</a>";
+											echo "		</div>";
+											echo "	</div>";
+											echo "</form>";
+										}
+										else {
+											echo "		<a href='section_compagnie.php?id_compagnie=".$id_compagnie."&ecrire=".$id_section."' class='btn btn-success'>Envoyer un message</a>";
+										}
+										if ($ok_chef == 1) {
+											echo "		<a href='section_compagnie.php?id_compagnie=".$id_compagnie."&supprimer_section=".$id_section."' class='btn btn-danger'>Supprimer Section</a>";
+										}
 										echo "	</td>";
 										echo "</tr>";
 									}

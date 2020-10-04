@@ -54,7 +54,8 @@ if(isset($_GET["id_compagnie"])) {
 		
 		$ok_chef = $ch["poste_compagnie"];
 		
-		if($ok_chef == 1) {
+		// Chef ou sous-chef
+		if($ok_chef == 1 || $ok_chef == 2) {
 			
 			$mess_err 	= "";
 			$mess		= "";
@@ -216,16 +217,18 @@ if(isset($_GET["id_compagnie"])) {
 			}
 			
 			echo "	<center>Page d'administration de la ".$titre_compagnie." ".$nom_compagnie." ";
-			if (!$genie_compagnie && !isset($id_parent)) {
+			if (!$genie_compagnie && !isset($id_parent) && $ok_chef == 1) {
 				echo "	<a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a>";
 			}
-			if (!$demande_suppression && !$genie_compagnie && !isset($id_parent)) {
+			if (!$demande_suppression && !$genie_compagnie && !isset($id_parent) && $ok_chef == 1) {
 				echo "	<button type='button' class='btn btn-danger' data-toggle='modal' data-target=\"#modalConfirm\">Supprimer la compagnie</button>";
 			}
 			echo "	</center>";
 			echo "</h3>";
 			echo "<center>";
-			echo "	<a class='btn btn-danger' href='chef_compagnie.php?id_compagnie=$id_compagnie'>changer de chef</a>";
+			if ($ok_chef == 1) {
+				echo "	<a class='btn btn-danger' href='chef_compagnie.php?id_compagnie=$id_compagnie'>changer de chef</a>";
+			}
 			echo " 	<a class='btn btn-info' href='resume_compagnie.php?id_compagnie=$id_compagnie'>changer le resume de la ".$titre_compagnie."</a>";
 			echo " 	<a class='btn btn-info' href='description_compagnie.php?id_compagnie=$id_compagnie'>changer la description de la ".$titre_compagnie."</a>";
 			echo " 	<a class='btn btn-warning' href='grade_compagnie.php?id_compagnie=$id_compagnie'>donner des postes aux membres de sa ".$titre_compagnie."</a>";

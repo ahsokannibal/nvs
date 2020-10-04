@@ -255,7 +255,7 @@ if($dispo || $admin){
 							
 							// affichage des information de la compagnie
 							echo "<center><b>$nom_compagnie</b></center>";
-							echo "<table border=\"1\" width = 100%>";
+							echo "<table border='1' class='table' width = 100%>";
 							echo "	<tr>";
 							echo "		<td width=40 height=40>";
 							if ($image_compagnie != "0" && trim($image_compagnie) != "") {
@@ -362,7 +362,7 @@ if($dispo || $admin){
 						FROM compagnies, perso WHERE id_perso = $id AND compagnies.id_clan = perso.clan AND id_parent is NULL";
 				$res = $mysqli->query($sql);
 				
-				echo "<table border=\"1\" width = 100%>";
+				echo "<table border='1' class='table' width = 100%>";
 				
 				while ($sec = $res->fetch_assoc()) {
 					
@@ -434,8 +434,8 @@ if($dispo || $admin){
 					// le perso a un poste
 					if($poste_s != 10) {
 					
-						// c'est le chef
-						if($poste_s == 1) { 
+						// c'est le chef ou le sous-chef
+						if($poste_s == 1 || $poste_s == 2) { 
 							echo " <a class='btn btn-outline-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la ".$titre_compagnie."</a>";
 						}
 						
@@ -513,7 +513,7 @@ if($dispo || $admin){
 						
 					// affichage des information de la compagnie
 					echo "<center><h2>$nom_compagnie</h2></center>";
-					echo "<table border=\"1\" width = 100%>";
+					echo "<table border='1' class='table' width = 100%>";
 					echo "	<tr>";
 					echo "		<th width=40 height=40>";
 					if ($image_compagnie != "0" && trim($image_compagnie) != "") {
@@ -613,7 +613,7 @@ if($dispo || $admin){
 								
 							// affichage des information de la section
 							echo "<center><h2>$nom_section</h2></center>";
-							echo "<table border=\"1\" width = 100%>";
+							echo "<table border='1' class='table' width = 100%>";
 							echo "	<tr>";
 							echo "		<th width=40 height=40>";
 							if ($image_section != "0" && trim($image_section) != "") {
@@ -738,7 +738,7 @@ if($dispo || $admin){
 										AND compagnies.id_parent is NULL";
 								$res = $mysqli->query($sql);
 								
-								echo "<table border=\"1\" width = 100%>";
+								echo "<table border='1' class='table' width = 100%>";
 								
 								while ($sec = $res->fetch_assoc()) {
 									
