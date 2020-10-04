@@ -288,31 +288,33 @@ if($dispo || $admin){
 							$fond_total += $montant;
 							
 							if ($op == 0) {
-								$type_ope = "Dépot";
-								$color = "blue";
+								$type_ope 	= "Dépot";
+								$color 		= "blue";
 							}
 							if ($op == 1) {
-								$type_ope = "Retrait";
-								$montant = substr($montant, 1, strlen($montant));
-								$color = "orange";
+								$type_ope 	= "Retrait";
+								$montant 	= substr($montant, 1, strlen($montant));
+								$color 		= "orange";
 							}
 							if ($op == 2) {
-								$type_ope = "Emprunt";
-								$montant = -$montant;
-								$color = "red";
+								$type_ope 	= "Emprunt";
+								$montant 	= -$montant;
+								$color 		= "red";
 							}
 							if ($op == 3) {
-								$type_ope = "Remboursement emprunt";
-								$color = "green";
+								$type_ope 	= "Remboursement emprunt";
+								$color 		= "green";
 							}
 							if ($op == 4) {
-								$type_ope = "Virement";
-								$color = "brown";
+								$type_ope 	= "Virement";
+								$color 		= "brown";
 							}
 							
-							echo "		<tr>";
-							echo "			<td>".$date_ope."</td><td>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
-							echo "		</tr>";
+							if (isset($type_ope)) {
+								echo "		<tr>";
+								echo "			<td>".$date_ope."</td><td>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
+								echo "		</tr>";
+							}
 						}
 						
 						echo "			<tr>";
@@ -467,6 +469,14 @@ if($dispo || $admin){
 						if ($op_histo == 4) {
 							$type_ope 		= "Virement";
 							$color 			= "brown";
+						}
+						if ($op_histo == 5) {
+							$type_ope 		= "Virement Vers Section";
+							$color 			= "purple";
+						}
+						if ($op_histo == 6) {
+							$type_ope 		= "Retour de Section";
+							$color 			= "darkgoldrod";
 						}
 						
 						echo "		<tr>";

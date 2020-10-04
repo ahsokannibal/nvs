@@ -266,23 +266,25 @@ if(isset($_GET["id_compagnie"])) {
 			echo "</div>";
 			echo "</form>";
 			
-			echo "<br /><br />";
-			
-			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"virer\">";
-			echo "<div align=\"center\">";
-			echo "Virer un membre de sa compagnie (taper le pseudo) : ";
-			echo "<input name=\"virer\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-			echo "<input type=\"submit\" name=\"Submit\" value=\"virer!\">";
-			echo "</div>";
-			echo "</form>";
+			if (!isset($id_parent)) {
+				echo "<br /><br />";
+				
+				echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"virer\">";
+				echo "<div align=\"center\">";
+				echo "Virer un membre de sa compagnie (taper le pseudo) : ";
+				echo "<input name=\"virer\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
+				echo "<input type=\"submit\" name=\"Submit\" value=\"virer!\">";
+				echo "</div>";
+				echo "</form>";
+			}
 			
 			echo "<br /><br />";
 			
 			echo "<form action=\"nouveau_message.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"mail\">";
 			echo "<div align=\"center\"><br>";
-			echo "<center>envoyer un MP a tout les membres de sa compagnie :</center>";
+			echo "<center>envoyer un MP a tout les membres de sa ".$titre_compagnie." :</center>";
 			echo "<TEXTAREA cols=\"50\" rows=\"5\" name=\"contenu\">";
-			echo "</TEXTAREA><br><input type=\"submit\" name=\"envoi\" value=\"envoyer\">";
+			echo "</TEXTAREA><br><input type=\"submit\" name=\"envoi\" value=\"valider\" class='btn btn-success'>";
 			echo "</div>";
 			echo "</form>";
 			

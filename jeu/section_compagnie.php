@@ -120,15 +120,25 @@ if (@$_SESSION["id_perso"]) {
 												
 												$montant_comp_chef_section = $t['montant'];
 												
-												// Creation de la banque de la section
-												$sql = "INSERT INTO banque_as_compagnie (id_compagnie, montant) VALUES ('$id_new_comp', '$montant_comp_chef_section')";
-												$mysqli->query($sql);
-												
-												// Mise à jour de la thune de la banque de la compagnie mère
-												$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
-												$mysqli->query($sql);
-												
-												// MAJ histo_banque compagnie + section
+												if ($montant_comp_chef_section > 0) {
+													// Creation de la banque de la section
+													$sql = "INSERT INTO banque_as_compagnie (id_compagnie, montant) VALUES ('$id_new_comp', '$montant_comp_chef_section')";
+													$mysqli->query($sql);
+													
+													// Mise à jour de la thune de la banque de la compagnie mère
+													$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
+													$mysqli->query($sql);
+													
+													// MAJ histo_banque compagnie
+													$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) 
+															VALUES ('$id_compagnie', '$id_chef_nouvelle_section', '5', -$montant_comp_chef_section, NOW())";
+													$mysqli->query($sql);
+													
+													// MAJ histo_banque section
+													$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) 
+															VALUES ('$id_new_comp', '$id_chef_nouvelle_section', '6', $montant_comp_chef_section, NOW())";
+													$mysqli->query($sql);
+												}
 												
 												$mess .= "La section ".$_POST['nomSection']." a été créée";
 											}
@@ -196,15 +206,25 @@ if (@$_SESSION["id_perso"]) {
 									
 									$montant_comp_perso_section = $t['montant'];
 									
-									// MAJ montant de la banque de la section
-									$sql = "UPDATE banque_as_compagnie SET montant = montant + $montant_comp_perso_section WHERE id_compagnie='$id_section_ajout'";
-									$mysqli->query($sql);
-									
-									// Mise à jour de la thune de la banque de la compagnie mère
-									$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_perso_section WHERE id_compagnie='$id_compagnie'";
-									$mysqli->query($sql);
-									
-									// MAJ histo_banque compagnie + section
+									if ($montant_comp_perso_section > 0) {
+										// MAJ montant de la banque de la section
+										$sql = "UPDATE banque_as_compagnie SET montant = montant + $montant_comp_perso_section WHERE id_compagnie='$id_section_ajout'";
+										$mysqli->query($sql);
+										
+										// Mise à jour de la thune de la banque de la compagnie mère
+										$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_perso_section WHERE id_compagnie='$id_compagnie'";
+										$mysqli->query($sql);
+										
+										// MAJ histo_banque compagnie
+										$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) 
+												VALUES ('$id_compagnie', '$id_perso_ajout', '5', -$montant_comp_perso_section, NOW())";
+										$mysqli->query($sql);
+										
+										// MAJ histo_banque section
+										$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) 
+												VALUES ('$id_section_ajout', '$id_perso_ajout', '6', $montant_comp_perso_section, NOW())";
+										$mysqli->query($sql);
+									}
 									
 									$mess .= "Le perso matricule $id_perso_ajout a été ajouté dans une section de la compagnie";
 								}
@@ -320,6 +340,11 @@ if (@$_SESSION["id_perso"]) {
 								header("Location:jouer.php");
 							}
 						}
+						
+						// Récupération du nombre de section de la compagnie
+						$sql = "SELECT id_compagnie FROM compagnies WHERE id_parent='$id_compagnie'";
+						$res = $mysqli->query($sql);
+						$nb_sections = $res->num_rows;
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -353,7 +378,7 @@ if (@$_SESSION["id_perso"]) {
 						?>
 						<a href='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>' class='btn btn-warning'>Liste des sections</a>
 						<?php
-						} else {
+						} else if ($nb_sections < 4) {
 						?>
 						<a href='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>&creer=ok' class='btn btn-warning'>Créer une nouvelle section</a>
 						<?php
@@ -373,7 +398,7 @@ if (@$_SESSION["id_perso"]) {
 						?>
 						<h2>Création d'une nouvelle Section</h2>
 						
-						<form method='POST' action='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>&creer=ok'>
+						<form method='POST' action='section_compagnie.php?id_compagnie=<?php echo $id_compagnie; ?>'>
 							<div class="form-row">
 								<div class="form-group col-md-12">
 									<label for="nomSection">Nom de la section <font color='red'>*</font></label>
@@ -538,16 +563,20 @@ if (@$_SESSION["id_perso"]) {
 											echo "		<a href='section_compagnie.php?id_compagnie=".$id_compagnie."&ajouter_membre=".$id_section."' class='btn btn-success'>Ajouter membre</a>";
 										}
 										if (isset($_GET['ecrire']) && $_GET['ecrire'] == $id_section) {
-											echo "<form method='POST' action='section_compagnie.php?id_compagnie=".$id_compagnie."'>";
+											echo "<form method='POST' action='nouveau_message.php?id_compagnie=".$id_compagnie."' name='mail'>";
 											
 											echo "	<div class='form-row'>";
 											echo "		<div class='form-group col-md-12'>";
-											
+											echo "			<div align='center'><br>";
+											echo "				envoyer un MP :<br />";
+											echo "<TEXTAREA cols='50' rows='5' name='contenu'>";
+											echo "</TEXTAREA>";
+											echo "			</div>";
 											echo "		</div>";
 											echo "	</div>";
 											echo "	<div class='form-row'>";
 											echo "		<div class='form-group col-md-12'>";
-											echo "			<input type='submit' class='btn btn-success' name='envoyer_message' value='Envoyer'>";
+											echo "			<input type='submit' class='btn btn-success' name='envoi' value='valider'>";
 											echo "			<a href='section_compagnie.php?id_compagnie=".$id_compagnie."' class='btn btn-danger'>Annuler</a>";
 											echo "		</div>";
 											echo "	</div>";

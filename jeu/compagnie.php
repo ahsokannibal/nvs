@@ -433,11 +433,6 @@ if($dispo || $admin){
 					
 					// le perso a un poste
 					if($poste_s != 10) {
-					
-						// c'est le chef ou le sous-chef
-						if($poste_s == 1 || $poste_s == 2) { 
-							echo " <a class='btn btn-outline-primary' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la ".$titre_compagnie."</a>";
-						}
 						
 						// c'est le tresorier
 						if($poste_s == 1 || $poste_s == 3){ 
@@ -489,6 +484,11 @@ if($dispo || $admin){
 						// c'est le diplomate
 						if($poste_s == 5){ 
 							echo " <a href='diplo_compagnie.php?id_compagnie=$id_compagnie'> Page diplomatie de la ".$titre_compagnie."</a>";
+						}
+						
+						// c'est le chef ou le sous-chef
+						if($poste_s == 1 || $poste_s == 2) { 
+							echo " <a class='btn btn-outline-danger' href='admin_compagnie.php?id_compagnie=$id_compagnie'> Page d'administration de la ".$titre_compagnie."</a>";
 						}
 					}
 					

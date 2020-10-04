@@ -423,7 +423,7 @@ if(isset($_SESSION["id_perso"])){
 								</td>
 							</tr>
 						</table>
-						<div align="center"><INPUT TYPE="SUBMIT" name="envoyer" VALUE="envoyer"></div>
+						<div align="center"><INPUT TYPE="SUBMIT" name="envoyer" VALUE="envoyer" class='btn btn-success'></div>
 					</form>
 				</div>
 			</div>

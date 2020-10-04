@@ -139,9 +139,9 @@ if(isset($_SESSION["id_perso"])){
 					<br>
 					<table border=0 align="center">
 						<tr>
-							<td>Que voulez-vous faire des messages sélectionnés?&nbsp;</td>
-							<td><input type="submit" name="submit" value="Effacer">&nbsp;</td>
-							<td><input type="submit" name="submit" value="Archiver"></td>
+							<td>Que voulez-vous faire des messages sélectionnés ?&nbsp;</td>
+							<td><input type="submit" name="submit" value="Effacer" class='btn btn-danger'>&nbsp;</td>
+							<td><input type="submit" name="submit" value="Archiver" class='btn btn-warning'></td>
 						</tr>
 					</table>
 				</form>
