@@ -283,7 +283,11 @@ if($dispo || $admin){
 						echo "	<td align='center'><img src='../images_perso/".$image_grouillot."' alt='".$nom_unite_grouillot."'/><br />" . $nom_unite_grouillot . "</td>";
 						echo "	<td align='center'>" . $matricule_grouillot . "</td>";
 						echo "<form method=\"post\" action=\"gestion_grouillot.php\">";
-						echo "	<td align='center'><input type='text' maxlength='25' name='nom_grouillot' value='". $nom_grouillot ."'><input type='hidden' name='matricule_hidden' value='$matricule_grouillot'> <input type='submit' name='renommer' value='renommer'></td>";
+						echo "	<td align='center'>";
+						echo "		<input type='text' maxlength='25' name='nom_grouillot' value='". $nom_grouillot ."'>";
+						echo "		<input type='hidden' name='matricule_hidden' value='$matricule_grouillot'>";
+						echo "		<input type='submit' name='renommer' value='renommer' class='btn btn-warning'>";
+						echo "	</td>";
 						echo "</form>";
 						echo "<form method=\"post\" action=\"gestion_grouillot.php\">";					
 						echo "	<td align='center'><button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#modalConfirm$matricule_grouillot\">renvoyer</button></td>";

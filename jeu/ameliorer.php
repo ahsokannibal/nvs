@@ -208,7 +208,7 @@ if($dispo || $admin){
 						<td>Points de vie</td>
 						<td>
 							<input type="text" size="3" maxlength="3" value="<?php echo $pv; ?>" disabled>&nbsp;
-							<input type="submit" name="pv" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pv($mysqli, $pv, $type); ?>
+							<input type="submit" name="pv" class='btn btn-success' value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pv($mysqli, $pv, $type); ?>
 						</td>
 					</tr>
 					
@@ -222,7 +222,7 @@ if($dispo || $admin){
 							}
 							else {
 							?>
-							<input type="submit" name="pm" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pm($mysqli, $pm, $type); ?>
+							<input type="submit" name="pm" class='btn btn-success' value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pm($mysqli, $pm, $type); ?>
 							<?php 
 							}
 							?>
@@ -233,7 +233,7 @@ if($dispo || $admin){
 						<td>Points d'action</td>
 						<td>
 							<input type="text" size="3" maxlength="3" value="<?php echo $pa; ?>" disabled>&nbsp;
-							<input type="submit" name="pa" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pa($mysqli, $pa, $type); ?>
+							<input type="submit" name="pa" class='btn btn-success' value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_pa($mysqli, $pa, $type); ?>
 						</td>
 					</tr>
 					
@@ -241,7 +241,7 @@ if($dispo || $admin){
 						<td>Perception</td>
 						<td>
 							<input type="text" size="3" maxlength="3" value="<?php echo $per; ?>" disabled>&nbsp;
-							<input type="submit" name="per" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_perc($mysqli, $per, $type); ?>
+							<input type="submit" name="per" class='btn btn-success' value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_perc($mysqli, $per, $type); ?>
 						</td>
 					</tr>
 					
@@ -249,7 +249,7 @@ if($dispo || $admin){
 						<td>Recuperation</td>
 						<td>
 							<input type="text" size="3" maxlength="3" value="<?php echo $rec; ?>" disabled>&nbsp;
-							<input type="submit" name="rec" value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_recup($mysqli, $rec, $type); ?>
+							<input type="submit" name="rec" class='btn btn-success' value=">> monter">&nbsp;&nbsp;<?php echo "Cout : ".ameliore_recup($mysqli, $rec, $type); ?>
 						</td>
 					</tr>
 					

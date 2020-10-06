@@ -959,7 +959,7 @@ if($dispo || $admin){
 									
 									// Conditions si Possibilité de recruter
 									if ((($id_unite == 6 && $id_grade >= 6 && !$possede_chien) || $id_unite != 6) && $pa_perso >= 3 && $cout_pg_unite <= $pg_restant) {
-										echo "		<td align='center'><input type=\"submit\" name=\"".$id_unite."\" value=\">> Recruter !\"></td>";
+										echo "		<td align='center'><input type='submit' name=\"".$id_unite."\" class='btn btn-success' value=\">> Recruter !\"></td>";
 									}
 									else if ($id_unite == 6 && $id_grade < 6) {
 										echo "<td align='center'>Grade insufisant</td>";

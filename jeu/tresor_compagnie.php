@@ -539,7 +539,12 @@ if($dispo || $admin){
 									$color 			= "gold";
 								}
 								if ($op_histo == 5 || $op_histo == 6) {
-									$type_ope 		= "Virement Vers Section";
+									if ($montant_histo > 0) {
+										$type_ope 		= "Virement Section vers Compagnie";
+									}
+									else {
+										$type_ope 		= "Virement Vers Section";
+									}
 									$color 			= "purple";
 								}
 								if ($op_histo == 7 && $montant_histo < 0 && $nb_sections) {
