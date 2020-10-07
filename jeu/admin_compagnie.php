@@ -216,7 +216,7 @@ if(isset($_GET["id_compagnie"])) {
 				$titre_compagnie = "compagnie";
 			}
 			
-			echo "	<center>Page d'administration de la ".$titre_compagnie." ".$nom_compagnie." ";
+			echo "	<center>Page d'administration de la ".$titre_compagnie." <br />".$nom_compagnie." <br />";
 			if (!$genie_compagnie && !isset($id_parent) && $ok_chef == 1) {
 				echo "	<a class='btn btn-primary' title=\"Demander à l'animation à changer de nom de compagnie\" href='nom_compagnie_change.php?id_compagnie=$id_compagnie'>Changer le nom</a>";
 			}
