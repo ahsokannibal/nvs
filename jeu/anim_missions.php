@@ -404,44 +404,59 @@ if($dispo || $admin){
 				
 						if ($verif_id_mission ) {
 							
-							$sql = "SELECT nom_mission FROM missions WHERE id_mission='$id_mission' AND camp_mission='$camp'";
+							$sql = "SELECT nom_mission, nombre_participant FROM missions WHERE id_mission='$id_mission' AND camp_mission='$camp'";
 							$res = $mysqli->query($sql);
 							$t = $res->fetch_assoc();
 							$v = $res->num_rows;
 							
 							if ($v == 1) {
 							
-								$nom_mission = stripslashes($t['nom_mission']);
+								$nom_mission 		= stripslashes($t['nom_mission']);
+								$nb_participant_max	= $t['nombre_participant'];
+								
+								$sql = "SELECT * FROM perso_in_mission WHERE id_mission='$id_mission'";
+								$res = $mysqli->query($sql);
+								$nb_participant_mission = $res->num_rows;
 								
 								echo "<h4>Mission ".$nom_mission."</h4>";
 								
-								?>
-								<form method='POST' action='anim_missions.php'>
-									<div class="form-row">
-										<div class="form-group col-md-12">
-											<input type="hidden" class="form-control" id="hid_id_mission" name="hid_id_mission" value="<?php echo $id_mission; ?>">
-											<label for="select_perso"><b>Perso à ajouter à la mission :</b></label>
-											<select id='select_perso' name='select_perso'>
-											<?php
-											// récuopération de tous les persos de son camp 
-											$sql = "SELECT id_perso, nom_perso FROM perso WHERE clan='$camp' ORDER BY id_perso ASC";
-											$res = $mysqli->query($sql);
-											
-											while ($t = $res->fetch_assoc()) {
+								if ($nb_participant_mission < $nb_participant_max) {
+									?>
+									<form method='POST' action='anim_missions.php?id_mission=<?php echo $id_mission; ?>&affecter_perso=ok'>
+										<div class="form-row">
+											<div class="form-group col-md-12">
+												<input type="hidden" class="form-control" id="hid_id_mission" name="hid_id_mission" value="<?php echo $id_mission; ?>">
+												<label for="select_perso"><b>Perso à ajouter à la mission :</b></label>
+												<select id='select_perso' name='select_perso'>
+												<?php
+												// récuopération de tous les persos de son camp 
+												$sql = "SELECT perso.id_perso, perso.nom_perso FROM perso
+														WHERE perso.id_perso NOT IN (SELECT id_perso FROM perso_in_mission WHERE id_mission='$id_mission')
+														AND clan='$camp' 
+														ORDER BY perso.id_perso ASC";
+												$res = $mysqli->query($sql);
 												
-												$id_perso_list 	= $t["id_perso"];
-												$nom_perso_list	= $t["nom_perso"];
-												
-												echo "<option value='".$id_perso_list."'>".$nom_perso_list." [".$id_perso_list."]</option>";
-												
-											}
-											?>
-											</select>
+												while ($t = $res->fetch_assoc()) {
+													
+													$id_perso_list 	= $t["id_perso"];
+													$nom_perso_list	= $t["nom_perso"];
+													
+													echo "<option value='".$id_perso_list."'>".$nom_perso_list." [".$id_perso_list."]</option>";
+													
+												}
+												?>
+												</select>
+											</div>
 										</div>
-									</div>
-									<button type="submit" class="btn btn-primary">Affecter le perso à la mission</button>
-								</form>
-								<?php
+										<button type="submit" class="btn btn-primary">Affecter le perso à la mission</button>
+										<a href='anim_missions.php' class='btn btn-danger'>Annuler</a>
+									</form>
+									<?php
+								}
+								else {
+									echo "<font color='red'><b>Nombre max de participants atteint</b></font> ";
+									echo "<a href='anim_missions.php' class='btn btn-danger'>Annuler</a>";
+								}
 							}
 							else {
 								echo "<center><font color='red'><b>Mission invalide !</b></font></center>";
