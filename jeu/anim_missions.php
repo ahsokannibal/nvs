@@ -193,6 +193,11 @@ if($dispo || $admin){
 										VALUES ($id_perso,'<font color=$couleur_clan_perso>$nom_perso</font>','$id_mission','$nom_mission',NOW(),'2')";
 								$mysqli->query($sql);
 							}
+							
+							$mess .= "Mission ".$nom_mission." validée";
+						}
+						else {
+							$mess_erreur .= "Mission déjà validée";
 						}
 					}
 					else if (isset($_GET['echec']) && $_GET['echec'] == 'ok') {
@@ -489,6 +494,7 @@ if($dispo || $admin){
 						// Récupération de la liste des missions actives
 						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
 								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission >= CURDATE())
+								AND objectif_atteint IS NULL
 								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$nb_missions_actives = $res->num_rows;
@@ -667,7 +673,7 @@ if($dispo || $admin){
 						<?php
 						// Récupération de la liste des missions terminées
 						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, date_debut_mission, date_fin_mission, objectif_atteint 
-								FROM missions WHERE date_fin_mission IS NOT NULL AND date_fin_mission < CURDATE()
+								FROM missions WHERE (date_fin_mission IS NOT NULL AND date_fin_mission < CURDATE()) OR objectif_atteint IS NOT NULL
 								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$nb_missions_terminees = $res->num_rows;
