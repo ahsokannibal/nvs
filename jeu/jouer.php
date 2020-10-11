@@ -2170,6 +2170,11 @@ if($dispo || $admin){
 				$charge_perso			= $t_perso2["charge_perso"];
 				$chargeMax_perso		= $t_perso2["chargeMax_perso"];
 				
+				// Bonus recup batiment
+				$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso);
+				
+				$bonusRecup_perso += $bonus_recup_bat;
+				
 				// Si perso chien
 				if ($type_perso == 6) {
 					

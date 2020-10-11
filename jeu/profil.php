@@ -72,6 +72,9 @@ if($dispo || $admin){
 				$chef		= $t_i["chef"];
 				$genie		= $t_i["genie"];
 				
+				// Bonus recup batiment
+				$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id);
+				
 				// Si perso chien
 				if ($type_p == 6) {
 					
@@ -270,8 +273,11 @@ if($dispo || $admin){
 													echo " <font color='red'>(".$bpa_p.")</font>";
 												}
 											}
-											// Malus defense CaC
-											echo " - <u><b>Malus de défense CàC :</b></u> "; 
+											
+											// --------------
+											// Defense CaC
+											// --------------
+											echo " - <u><b>Défense CàC :</b></u> "; 
 											if($bonus_def_final_cac < 0) {
 												echo "<font color='red'>".$bonus_def_final_cac."</font>";
 											}
@@ -279,14 +285,57 @@ if($dispo || $admin){
 												echo $bonus_def_final_cac;
 											}
 											
-											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_cac;
+											// Defense de base
+											echo " ( base : ";
+											if ($b_p >= 0) {
+												echo "<font color='green'>";
+											}
+											else {
+												echo "<font color='red'>";
+											}
+											echo $b_p;
+											echo "</font>";
+											
+											// Defense Objets
+											echo " - objets : ";
+											if ($bonus_def_obj >= 0) {
+												echo "<font color='green'>";
+											}
+											else {
+												echo "<font color='red'>";
+											}
+											echo $bonus_def_obj;
+											echo "</font>";
+											
+											// Defense Terrain
+											echo " - terrain : ";
+											if ($bonus_def_terrain_cac >= 0) {
+												echo "<font color='green'>";
+											}
+											else {
+												echo "<font color='red'>";
+											}
+											echo $bonus_def_terrain_cac;
+											echo "</font>";
+											
+											// Defense Bat
 											if ($bonus_defense_bat != 0) {
-												echo " - batiment : ".$bonus_defense_bat;
+												echo " - batiment : ";
+												if ($bonus_defense_bat >= 0) {
+													echo "<font color='green'>";
+												}
+												else {
+													echo "<font color='red'>";
+												}
+												echo $bonus_defense_bat;
+												echo "</font>";
 											}
 											echo " )";
 											
-											// Malus defense Dist
-											echo " - <u><b>Malus de défense Dist :</b></u> "; 
+											// --------------
+											// Defense Dist
+											// --------------
+											echo " - <u><b>Défense Dist :</b></u> "; 
 											if($bonus_def_final_dist < 0) {
 												echo "<font color='red'>".$bonus_def_final_dist."</font>";
 											}
@@ -294,9 +343,50 @@ if($dispo || $admin){
 												echo $bonus_def_final_dist;
 											}
 											
-											echo " ( base : ".$b_p." - objets : ".$bonus_def_obj." - terrain : ".$bonus_def_terrain_dist;
+											// Defense base
+											echo " ( base : ";
+											if ($b_p >= 0) {
+												echo "<font color='green'>";
+											}
+											else {
+												echo "<font color='red'>";
+											}
+											echo $b_p;
+											echo "</font>";
+											
+											// Defense Objets
+											echo " - objets : ";
+											if ($bonus_def_obj >= 0) {
+												echo "<font color='green'>";
+											}
+											else {
+												echo "<font color='red'>";
+											}
+											echo $bonus_def_obj;
+											echo "</font>";
+																						
+											// Defense Terrain
+											echo " - terrain : ";
+											if ($bonus_def_terrain_dist >= 0) {
+												echo "<font color='green'>";
+											}
+											else {
+												echo "<font color='red'>";
+											}
+											echo $bonus_def_terrain_dist;
+											echo "</font>";
+											
+											// Defense Bat
 											if ($bonus_defense_bat != 0) {
-												echo " - batiment : ".$bonus_defense_bat;
+												echo " - batiment : ";
+												if ($bonus_defense_bat >= 0) {
+													echo "<font color='green'>";
+												}
+												else {
+													echo "<font color='red'>";
+												}
+												echo $bonus_defense_bat;
+												echo "</font>";
 											}
 											echo " )";
 											?></td>
@@ -307,6 +397,9 @@ if($dispo || $admin){
 											echo "<u><b>Récupération :</b></u> ".$rec_p; 
 											if($br_p) {
 												echo " <font color='green'>(+".$br_p.")</font>";
+											}
+											if ($bonus_recup_bat) {
+												echo " <font color='green'>(Batiment : +".$bonus_recup_bat.")</font>";
 											}
 											// Perception
 											echo " - <u><b>Perception :</b></u> ".$per_p; 
