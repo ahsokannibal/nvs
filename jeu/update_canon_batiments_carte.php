@@ -1,4 +1,5 @@
 <?php
+/*
 session_start();
 require_once("../fonctions.php");
 
@@ -87,5 +88,5 @@ while ($t = $res->fetch_assoc()) {
 	$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 2, $y_bat - 2, $camp_bat)";
 	$mysqli->query($sql);
 }
-
+*/
 ?>
