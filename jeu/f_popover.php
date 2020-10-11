@@ -179,28 +179,28 @@ function afficher_liens_prox_bat($mysqli, $id_perso, $x_perso, $y_perso, $type_p
  */
 function afficher_lien_bouculade($x, $x_perso, $y, $y_perso, $cout_pm) {
 	if($y == $y_perso+1 && $x == $x_perso+1){
-		echo "<div><a href='jouer.php?mouv=3'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";								
+		echo "<div><a href='jouer.php?mouv=3&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";								
 	}
 	else if($y == $y_perso-1 && $x == $x_perso+1){
-		echo "<div><a href='jouer.php?mouv=8'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
+		echo "<div><a href='jouer.php?mouv=8&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
 	}
 	else if($y == $y_perso && $x == $x_perso+1){
-		echo "<div><a href='jouer.php?mouv=5'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
+		echo "<div><a href='jouer.php?mouv=5&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
 	}
 	else if($y == $y_perso && $x == $x_perso-1) {
-		echo "<div><a href='jouer.php?mouv=4'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
+		echo "<div><a href='jouer.php?mouv=4&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
 	}
 	else if($y == $y_perso+1 && $x == $x_perso-1) {
-		echo "<div><a href='jouer.php?mouv=1'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
+		echo "<div><a href='jouer.php?mouv=1&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
 	}
 	else if($y == $y_perso-1 && $x == $x_perso-1) {
-		echo "<div><a href='jouer.php?mouv=6'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
+		echo "<div><a href='jouer.php?mouv=6&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
 	}
 	else if($y == $y_perso+1 && $x == $x_perso) {
-		echo "<div><a href='jouer.php?mouv=2'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
+		echo "<div><a href='jouer.php?mouv=2&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
 	}
 	else if($y == $y_perso-1 && $x == $x_perso) {
-		echo "<div><a href='jouer.php?mouv=7'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
+		echo "<div><a href='jouer.php?mouv=7&action_popup=ok'>Bousculer (".$cout_pm." PM et 3 PA)</a></div>";
 	}
 }
 

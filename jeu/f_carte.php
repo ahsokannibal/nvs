@@ -758,7 +758,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 					
 					$x_bat 			= $t_b['x_instance'];
 					$y_bat 			= $t_b['y_instance'];
-					$id_bat 		= $t_b['id_instanceBat'];
+					$id_ibat 		= $t_b['id_instanceBat'];
 					$pv_bat			= $t_b['pv_instance'];
 					$pvMax_bat		= $t_b['pvMax_instance'];
 					$contenance_bat = $t_b['contenance_instance'];
@@ -770,7 +770,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 					$nb_ennemis_siege = nb_ennemis_siege_batiment($mysqli, $x_bat, $y_bat, $clan);
 					
 					// Récupération du nombre de perso dans ce batiment
-					$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
+					$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_ibat'";
 					$res_n = $mysqli->query($sql_n);
 					$t_n = $res_n->fetch_assoc();
 					$nb_perso_bat = $t_n['nb_perso_bat'];
@@ -783,7 +783,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 						
 						// Si la distance est moindre mais qu'on est toujours à plus de 20 cases, on selectionne ce batiment
 						if ($distance < $min_distance && $distance > 20){
-							$min_id_bat = $id_bat;
+							$min_id_bat = $id_ibat;
 						}
 					}
 				}

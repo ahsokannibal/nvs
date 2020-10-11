@@ -1779,7 +1779,7 @@ if($dispo || $admin){
 											// PNJ
 											$erreur .= "Cette case est déjà occupée par un pnj !";
 										} else {
-											if ($bousculade_dep	) {
+											if ($bousculade_dep || isset($_GET['action_popup'])) {
 											
 												// Perso 
 												// Récupération des informations du perso
@@ -2882,7 +2882,7 @@ if($dispo || $admin){
 												?>&nbsp;</td>
 											</tr>
 											<tr>
-												<td nowrap="nowrap"><b>Malus Défense</b></td>
+												<td nowrap="nowrap"><b>Défense</b></td>
 												<td align='center' nowrap="nowrap"><?php 
 												
 												$texte_tooltip = "Base : ".$bonus_perso."";
