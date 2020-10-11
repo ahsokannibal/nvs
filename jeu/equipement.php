@@ -18,7 +18,7 @@ if($dispo || $admin){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
-		$sql = "SELECT pv_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele, chef, clan FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT pv_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele, chef, clan, type_perso FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$tpe = $res->fetch_assoc();
 		
@@ -28,6 +28,7 @@ if($dispo || $admin){
 		$est_gele 	= $tpe["est_gele"];
 		$chef 		= $tpe["chef"];
 		$camp		= $tpe["clan"];
+		$type_perso = $tpe["type_perso"];
 		
 		$config = '1';
 		
@@ -37,16 +38,21 @@ if($dispo || $admin){
 		}
 		else {
 			
-			$image_croquit = "croquit";
-			
-			if ($camp == "1") {
-				 $image_croquit .= "_nord";
+			if ($type_perso == 6) {
+				$image_croquit = "chien.png";
 			}
-			else if ($camp == "2") {
-				$image_croquit .= "_sud";
+			else {
+				$image_croquit = "croquit";
+				
+				if ($camp == "1") {
+					 $image_croquit .= "_nord";
+				}
+				else if ($camp == "2") {
+					$image_croquit .= "_sud";
+				}
+				
+				$image_croquit .= ".png";
 			}
-			
-			$image_croquit .= ".png";
 ?>
 <html>
 
@@ -157,7 +163,7 @@ if($dispo || $admin){
 				?>
 				<tr>
 					<td>
-						<table border='1' width='350' height='400' align='center' cellpadding='0' cellspacing='0' background='../images/<?php echo $image_croquit; ?>'>
+						<table border='1' width='350' height='400' align='center' cellpadding='0' cellspacing='0' background='../images/<?php echo $image_croquit; ?>' style='background-repeat: no-repeat;background-position:center;'>
 							
 							<tr width=350 height=50>
 								<td width=50 height=50 align='center'>&nbsp;</td>
