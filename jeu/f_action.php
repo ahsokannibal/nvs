@@ -3542,6 +3542,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		$nb_attaque 	= 0;
 		$cible_alive 	= true;
 		$gain_pc		= 0;
+		$gain_total_xp	= 0;
 		
 		$sql = "SELECT nom_grade FROM grades WHERE id_grade='$grade_perso'";
 		$res = $mysqli->query($sql);
@@ -3602,24 +3603,37 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 					$gain_pc = $gain_pc * 2;
 				}
 				
-				// calcul gain experience
-				if ($idPerso_carte >= 200000) {
-					$gain_experience = mt_rand(1, 6);
-				} else {
+				if ($gain_total_xp < 20) {
 				
-					$calcul_dif_xp = ceil(($xp_cible - $xp_perso) / 10);
-									
-					if ($calcul_dif_xp < 0) {
-						$valeur_des_xp = 0;
+					// calcul gain experience
+					if ($idPerso_carte >= 200000) {
+						$gain_experience = mt_rand(1, 6);
 					} else {
-						$valeur_des_xp = mt_rand(0, $calcul_dif_xp);
+					
+						$calcul_dif_xp = ceil(($xp_cible - $xp_perso) / 10);
+										
+						if ($calcul_dif_xp < 0) {
+							$valeur_des_xp = 0;
+						} else {
+							$valeur_des_xp = mt_rand(0, $calcul_dif_xp);
+						}
+						
+						$gain_experience = ceil(($degats / 20) + $valeur_des_xp);
+						
+						if ($gain_experience > 10) {
+							$gain_experience = 10;
+						}
 					}
 					
-					$gain_experience = ceil(($degats / 20) + $valeur_des_xp);
+					$old_gain_total_xp = $gain_total_xp;
+					$gain_total_xp += $gain_experience;
 					
-					if ($gain_experience > 10) {
-						$gain_experience = 10;
+					if ($gain_total_xp >= 20) {
+						$gain_experience = 20 - $old_gain_total_xp;
 					}
+				}
+				else {
+					$gain_experience = 0;
 				}
 				
 				// Maj cible malus et PV
