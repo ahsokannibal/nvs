@@ -106,7 +106,11 @@ if($dispo || $admin){
 				}
 				
 				// recuperation des anciennes données du perso
-				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, image_perso, pa_perso, perception_perso, recup_perso, bonusRecup_perso, bonusPM_perso, type_perso, paMax_perso, pv_perso, charge_perso, chargeMax_perso, DLA_perso, clan FROM perso WHERE id_perso='$id_perso'";
+				$sql = "SELECT idJoueur_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, image_perso, pa_perso, perception_perso, recup_perso, bonusRecup_perso, bonusPM_perso, type_perso, paMax_perso, pv_perso, charge_perso, chargeMax_perso, DLA_perso, clan, perso_as_grade.id_grade, nom_grade 
+						FROM perso, perso_as_grade, grades 
+						WHERE perso_as_grade.id_perso = perso.id_perso
+						AND perso_as_grade.id_grade = grades.id_grade
+						AND perso.id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
 				$t_perso1 = $res->fetch_assoc();
 				
@@ -125,6 +129,8 @@ if($dispo || $admin){
 				$perception_perso	= $t_perso1["perception_perso"];	
 				$charge_perso		= $t_perso1["charge_perso"];
 				$chargeMax_perso	= $t_perso1["chargeMax_perso"];
+				$grade_perso 		= $t_perso1["id_grade"];
+				$nom_grade_perso	= $t_perso1["nom_grade"];
 				
 				$sql = "SELECT DLA_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
 				$res = $mysqli->query($sql);
