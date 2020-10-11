@@ -88,8 +88,8 @@ $count_online = $res->fetch_array();
 							<a href="inscription.php" style="color: white;">S'inscrire</b></a>
 							<hr />
 							<form action="login.php" method="post" name="pseudo" id="pseudo">
-								<input name="pseudo" type="text" id="pseudo" value="pseudo" onClick="this.value=''" maxlength="30">
-								<input name="password" type="password" id="password" value="password" onClick="this.value=''" maxlength="20">
+								<input name="pseudo" type="text" id="pseudo" placeholder="pseudo" maxlength="30">
+								<input name="password" type="password" id="password" placeholder="password" maxlength="20">
 								<input type="submit" name="Submit" value="Se connecter">
 							</form>
 							
