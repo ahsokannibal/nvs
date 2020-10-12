@@ -88,7 +88,7 @@ if(isset($id)){
 	}
 		
 	// CV spéciaux
-	$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='1'";
+	$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='1' ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	$nb_event = $res->num_rows;
 	
@@ -147,7 +147,7 @@ if(isset($id)){
 	
 	// Missions
 	$count = 0;
-	$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='2'";
+	$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='2' ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	$nb_mission = $res->num_rows;
 	
