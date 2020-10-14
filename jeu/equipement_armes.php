@@ -21,7 +21,7 @@ if($dispo){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 	
-		$sql = "SELECT pv_perso, pm_perso, bonusPM_perso, or_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT pv_perso, pm_perso, bonusPM_perso, or_perso, type_perso, UNIX_TIMESTAMP(DLA_perso) as DLA, est_gele FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$tpv = $res->fetch_assoc();
 		
@@ -30,6 +30,7 @@ if($dispo){
 		$or 		= $tpv["or_perso"];
 		$dla 		= $tpv["DLA"];
 		$est_gele 	= $tpv["est_gele"];
+		$type_perso	= $tpv["type_perso"];
 		
 		$config = '1';
 		
@@ -70,148 +71,152 @@ if($dispo){
 			$mess_erreur = "";
 			
 			// On veut equiper ou desequiper une arme
-			if (isset($_POST["equiper"]) || isset($_POST["desequiper"])) {
-			
-				$sql = "SELECT pa_perso, type_perso FROM perso WHERE id_perso='$id_perso'";
-				$res = $mysqli->query($sql);
-				$tab = $res->fetch_assoc();
+			// Accessible uniquement pour les persos non soigneur et non chien
+			if ($type_perso != 4 && $type_perso != 6) {
 				
-				$pa_perso 		= $tab["pa_perso"];
-				$type_perso 	= $tab["type_perso"];
+				if (isset($_POST["equiper"]) || isset($_POST["desequiper"])) {
 				
-				if ($pa_perso > 0) {
-				
-					// equiper arme
-					if (isset($_POST["equiper"])&& isset($_POST["id_equip"])) {
+					$sql = "SELECT pa_perso, type_perso FROM perso WHERE id_perso='$id_perso'";
+					$res = $mysqli->query($sql);
+					$tab = $res->fetch_assoc();
 					
-						$id_arme = $_POST["id_equip"];
+					$pa_perso 		= $tab["pa_perso"];
+					$type_perso 	= $tab["type_perso"];
+					
+					if ($pa_perso > 0) {
+					
+						// equiper arme
+						if (isset($_POST["equiper"])&& isset($_POST["id_equip"])) {
 						
-						// verification si perso peut équiper cette arme 
-						$sql = "SELECT count(id_arme) as verif FROM arme_as_type_unite WHERE arme_as_type_unite.id_type_unite = '$type_perso' AND id_arme='$id_arme'";
-						$res = $mysqli->query ($sql);
-						$tab_v = $res->fetch_assoc();
-						
-						$verif = $tab_v['verif'];
-						
-						if ($verif) {
+							$id_arme = $_POST["id_equip"];
 							
-							$sql = "SELECT porteeMax_arme, nom_arme, bonusPM_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
+							// verification si perso peut équiper cette arme 
+							$sql = "SELECT count(id_arme) as verif FROM arme_as_type_unite WHERE arme_as_type_unite.id_type_unite = '$type_perso' AND id_arme='$id_arme'";
+							$res = $mysqli->query ($sql);
+							$tab_v = $res->fetch_assoc();
+							
+							$verif = $tab_v['verif'];
+							
+							if ($verif) {
+								
+								$sql = "SELECT porteeMax_arme, nom_arme, bonusPM_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
+								$res = $mysqli->query ($sql);
+								$tab1 = $res->fetch_assoc();
+								
+								$nom_arme 		= $tab1["nom_arme"];
+								$bonusPM_arme 	= $tab1["bonusPM_arme"];
+								$poids_arme		= $tab1["poids_arme"];
+								$porteeMax_arme	= $tab1["porteeMax_arme"];
+								
+								// CaC ?
+								if ($porteeMax_arme == 1) {
+									
+									// Verification si le perso est deja equipee d'une arme de CaC
+									$sql2 = "SELECT nom_arme, main 
+										FROM perso_as_arme, arme 
+										WHERE arme.id_arme=perso_as_arme.id_arme
+										AND porteeMax_arme = 1
+										AND est_portee='1' AND id_perso='$id_perso'";
+									
+									$res2 = $mysqli->query($sql2);
+									
+									// deja equipee
+									if ($res2->num_rows) {
+										$mess_erreur = "Vous êtes déjà equipé d'une arme au CàC, veuillez d'abord vous deséquipper de cette arme";
+									}
+									else {
+										// mise a jour des pa du perso
+										$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
+										$mysqli->query($sql);
+										
+										// mise a jour equipe perso
+										$sql = "UPDATE perso_as_arme SET est_portee='1' WHERE id_perso='$id_perso' AND id_arme='$id_arme' LIMIT 1";
+										$mysqli->query($sql);
+										
+										if($bonusPM_arme != 0){
+											$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso+$bonusPM_arme WHERE id_perso='$id_perso'";
+											$mysqli->query($sql_u);
+										}
+										
+										$mess = "Vous venez de vous equiper de : ".$nom_arme."";
+									}
+									
+								}
+								else {
+									
+									// Verification si le perso est deja equipee d'une arme de CaC
+									$sql2 = "SELECT nom_arme, main 
+										FROM perso_as_arme, arme 
+										WHERE arme.id_arme=perso_as_arme.id_arme
+										AND porteeMax_arme > 1
+										AND est_portee='1' AND id_perso='$id_perso'";
+									
+									$res2 = $mysqli->query($sql2);
+									
+									// deja equipee
+									if ($res2->num_rows) {
+										$mess_erreur = "Vous êtes déjà equipé d'une arme à distance, veuillez d'abord vous deséquipper de cette arme";
+									}
+									else {
+										// mise a jour des pa du perso
+										$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
+										$mysqli->query($sql);
+										
+										// mise a jour equipe perso
+										$sql = "UPDATE perso_as_arme SET est_portee='1' WHERE id_perso='$id_perso' AND id_arme='$id_arme' LIMIT 1";
+										$mysqli->query($sql);
+										
+										if($bonusPM_arme != 0){
+											$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso+$bonusPM_arme WHERE id_perso='$id_perso'";
+											$mysqli->query($sql_u);
+										}
+										
+										$mess = "Vous venez de vous equiper de : ".$nom_arme."";
+									}
+									
+								}
+							} else {
+								$mess_erreur = "Vous n'avez pas le droit de vous équiper de cette arme !";
+							}
+						}
+						
+						// desequiper arme
+						if (isset($_POST["desequiper"]) && isset($_POST["id_desequip"])) {
+						
+							$id_arme = $_POST["id_desequip"];
+							
+							$sql = "SELECT bonusPM_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
 							$res = $mysqli->query ($sql);
 							$tab1 = $res->fetch_assoc();
 							
-							$nom_arme 		= $tab1["nom_arme"];
 							$bonusPM_arme 	= $tab1["bonusPM_arme"];
 							$poids_arme		= $tab1["poids_arme"];
-							$porteeMax_arme	= $tab1["porteeMax_arme"];
 							
-							// CaC ?
-							if ($porteeMax_arme == 1) {
+							if($bonusPM_arme >= 0 && $bonusPM_arme <= $pm_perso) {
 								
-								// Verification si le perso est deja equipee d'une arme de CaC
-								$sql2 = "SELECT nom_arme, main 
-									FROM perso_as_arme, arme 
-									WHERE arme.id_arme=perso_as_arme.id_arme
-									AND porteeMax_arme = 1
-									AND est_portee='1' AND id_perso='$id_perso'";
+								// mise a jour pa perso
+								$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_perso'";
+								$mysqli->query($sql);
 								
-								$res2 = $mysqli->query($sql2);
+								// mise a jour equipe perso
+								$sql = "UPDATE perso_as_arme SET est_portee='0' WHERE id_arme='$id_arme' AND id_perso='$id_perso' AND est_portee='1' LIMIT 1";
+								$mysqli->query($sql);
 								
-								// deja equipee
-								if ($res2->num_rows) {
-									$mess_erreur = "Vous êtes déjà equipé d'une arme au CàC, veuillez d'abord vous deséquipper de cette arme";
+								$mess = "Vous venez de vous desequiper d'une arme.";
+								
+								if($bonusPM_arme != 0){
+									$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso-$bonusPM_arme WHERE id_perso='$id_perso'";
+									$mysqli->query($sql_u);
 								}
-								else {
-									// mise a jour des pa du perso
-									$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
-									$mysqli->query($sql);
-									
-									// mise a jour equipe perso
-									$sql = "UPDATE perso_as_arme SET est_portee='1' WHERE id_perso='$id_perso' AND id_arme='$id_arme' LIMIT 1";
-									$mysqli->query($sql);
-									
-									if($bonusPM_arme != 0){
-										$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso+$bonusPM_arme WHERE id_perso='$id_perso'";
-										$mysqli->query($sql_u);
-									}
-									
-									$mess = "Vous venez de vous equiper de : ".$nom_arme."";
-								}
-								
 							}
 							else {
-								
-								// Verification si le perso est deja equipee d'une arme de CaC
-								$sql2 = "SELECT nom_arme, main 
-									FROM perso_as_arme, arme 
-									WHERE arme.id_arme=perso_as_arme.id_arme
-									AND porteeMax_arme > 1
-									AND est_portee='1' AND id_perso='$id_perso'";
-								
-								$res2 = $mysqli->query($sql2);
-								
-								// deja equipee
-								if ($res2->num_rows) {
-									$mess_erreur = "Vous êtes déjà equipé d'une arme à distance, veuillez d'abord vous deséquipper de cette arme";
-								}
-								else {
-									// mise a jour des pa du perso
-									$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
-									$mysqli->query($sql);
-									
-									// mise a jour equipe perso
-									$sql = "UPDATE perso_as_arme SET est_portee='1' WHERE id_perso='$id_perso' AND id_arme='$id_arme' LIMIT 1";
-									$mysqli->query($sql);
-									
-									if($bonusPM_arme != 0){
-										$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso+$bonusPM_arme WHERE id_perso='$id_perso'";
-										$mysqli->query($sql_u);
-									}
-									
-									$mess = "Vous venez de vous equiper de : ".$nom_arme."";
-								}
-								
-							}
-						} else {
-							$mess_erreur = "Vous n'avez pas le droit de vous équiper de cette arme !";
-						}
-					}
-					
-					// desequiper arme
-					if (isset($_POST["desequiper"]) && isset($_POST["id_desequip"])) {
-					
-						$id_arme = $_POST["id_desequip"];
-						
-						$sql = "SELECT bonusPM_arme, poids_arme FROM arme WHERE id_arme='$id_arme'";
-						$res = $mysqli->query ($sql);
-						$tab1 = $res->fetch_assoc();
-						
-						$bonusPM_arme 	= $tab1["bonusPM_arme"];
-						$poids_arme		= $tab1["poids_arme"];
-						
-						if($bonusPM_arme >= 0 && $bonusPM_arme <= $pm_perso) {
-							
-							// mise a jour pa perso
-							$sql = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_perso'";
-							$mysqli->query($sql);
-							
-							// mise a jour equipe perso
-							$sql = "UPDATE perso_as_arme SET est_portee='0' WHERE id_arme='$id_arme' AND id_perso='$id_perso' AND est_portee='1' LIMIT 1";
-							$mysqli->query($sql);
-							
-							$mess = "Vous venez de vous desequiper d'une arme.";
-							
-							if($bonusPM_arme != 0){
-								$sql_u = "UPDATE perso SET bonusPM_perso=bonusPM_perso-$bonusPM_arme WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_u);
+								$mess_erreur = "Vous devez posseder au moins ".$bonusPM_arme." PM pour rengainer cette arme !";
 							}
 						}
-						else {
-							$mess_erreur = "Vous devez posseder au moins ".$bonusPM_arme." PM pour rengainer cette arme !";
-						}
 					}
-				}
-				else {
-					$mess_erreur = "Vous n'avez pas assez de pa pour effectuer cette action !";
+					else {
+						$mess_erreur = "Vous n'avez pas assez de pa pour effectuer cette action !";
+					}
 				}
 			}
 			
@@ -254,12 +259,12 @@ if($dispo){
 			<div align='center'><a href="equipement.php" class='btn btn-primary'>Page Equipement</a></div>
 			
 			<center><h3>Les armes que vous avez dans votre sac :</h3></center>
-			<table border='1' align='center'>
+			<table border='1' align='center' class='table'>
 			<?php 
 			$poids_final = 0.0;
 			$poids_total = 0.0;
 			
-			echo "<tr><th>nom</th><th>portee</th><th>cout en pa</th><th>degats</th><th>degats de zone ?</th><th>port</th><th>poids</th><th>description</th></tr>"; 
+			echo "<tr><th style='text-align:center'>nom</th><th style='text-align:center'>portee</th><th style='text-align:center'>cout en pa</th><th style='text-align:center'>degats</th><th style='text-align:center'>degats de zone ?</th><th style='text-align:center'>port</th><th style='text-align:center'>poids</th><th style='text-align:center'>description</th></tr>"; 
 			if ($j == 0){
 				echo "<tr><td colspan=8><i>Vous n'avez aucune arme dans votre sac.</i></td></tr>";
 			}
@@ -334,11 +339,11 @@ if($dispo){
 			</table>
 			
 			<center><h3>Les armes dont vous êtes equipé :</h3></center>
-			<table border='1' align='center'>
+			<table border='1' class='table' align='center'>
 			<?php
 			$poids_final += $poids_total;
 			$poids_total = 0.0;
-			echo "<tr><th>nom</th><th>portee</th><th>cout en pa</th><th>degats</th><th>degats de zone ?</th><th>poids</th><th>description</th></tr>"; 
+			echo "<tr><th style='text-align:center'>nom</th><th style='text-align:center'>portee</th><th style='text-align:center'>cout en pa</th><th style='text-align:center'>degats</th><th style='text-align:center'>degats de zone ?</th><th style='text-align:center'>poids</th><th style='text-align:center'>description</th></tr>"; 
 			if ($i == 0){
 				echo "<tr><td colspan=8><i>Vous n'étes pas equipé.</i></td></tr>";
 			}
@@ -406,19 +411,25 @@ if($dispo){
 			?>
 			</table>
 			<br />
-			<?php echo "<center>Votre charge totale est de : <b>$poids_final</b></center>"; ?>
+			<?php 
+			echo "<center>Votre charge totale est de : <b>$poids_final</b></center>";
+			
+			if ($type_perso != 4 && $type_perso != 6) {
+			?>
 			<center><h3>Changer votre equipement :</h3></center>
 			<table align='center'>
 				<form action="equipement_armes.php" method="post">
 				<tr>
-					<td>&nbsp;&nbsp;&nbsp;&nbsp; M'equiper de : <select name="id_equip"><?php for ($l = 0; $l < $j; $l++) echo "<option value=\"".$t_equip["id_arme"][$l]."\">".$t_equip["nom_arme"][$l]."</option>"; ?> </select>&nbsp;<input type="submit" name="equiper" value="ok">&nbsp;(1pa)</td>
+					<td>&nbsp;&nbsp;&nbsp;&nbsp; M'equiper de : <select name="id_equip"><?php for ($l = 0; $l < $j; $l++) echo "<option value=\"".$t_equip["id_arme"][$l]."\">".$t_equip["nom_arme"][$l]."</option>"; ?> </select>&nbsp;<input type="submit" class='btn btn-success' name="equiper" value="ok">&nbsp;(1pa)</td>
 				</tr>
 				<tr>
-					<td>Me desequiper de : <select name="id_desequip"><?php for ($l = 0; $l < $i; $l++) echo "<option value=\"".$t_porte["id_arme"][$l]."\">".$t_porte["nom_arme"][$l]."</option>"; ?> </select>&nbsp;<input type="submit" name="desequiper" value="ok">&nbsp;(1pa)</td>
+					<td>Me desequiper de : <select name="id_desequip"><?php for ($l = 0; $l < $i; $l++) echo "<option value=\"".$t_porte["id_arme"][$l]."\">".$t_porte["nom_arme"][$l]."</option>"; ?> </select>&nbsp;<input type="submit" name="desequiper" class='btn btn-warning' value="ok">&nbsp;(1pa)</td>
 				</tr>
 				</form>
 			</table>
-	
+			<?php
+			}
+			?>
 		</div>
 		
 		<!-- Optional JavaScript -->
