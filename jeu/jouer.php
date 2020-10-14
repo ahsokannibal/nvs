@@ -2224,13 +2224,7 @@ if($dispo || $admin){
 				}
 				
 				$pmMax_perso 	= $pmMax_perso_tmp + $bonusPM_perso;
-				
-				if ($pm_perso_tmp > $pmMax_perso) {
-					$pm_perso = $pmMax_perso;
-				}
-				else {
-					$pm_perso = $pm_perso_tmp + $malus_pm;
-				}
+				$pm_perso 		= $pm_perso_tmp + $malus_pm;
 				
 				$clan_perso = $t_perso2["clan"];				
 				
