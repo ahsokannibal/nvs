@@ -3731,6 +3731,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 							$sql = "DELETE FROM perso_as_arme WHERE id_perso='$idPerso_carte' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
 							$mysqli->query($sql);
 							
+							// Maj charge perso suite perte de l'arme
+							$sql = "UPDATE perso SET charge_perso = charge_perso - (SELECT poids_arme FROM arme WHERE id_arme='$id_arme_non_equipee') WHERE id_perso='$idPerso_carte'";
+							$mysqli->query($sql);
+							
 							// On dépose la perte de l'arme par terre
 							// Verification si l'objet existe deja sur cette case
 							$sql = "SELECT nb_objet FROM objet_in_carte 

@@ -646,6 +646,9 @@ if ($verif_id_perso_session) {
 													$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_cible' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
 													$mysqli->query($sql);
 													
+													// Maj charge perso suite perte de l'arme
+													$sql = "UPDATE perso SET charge_perso = charge_perso - (SELECT poids_arme FROM arme WHERE id_arme='$id_arme_non_equipee') WHERE id_perso='$id_cible'";
+													$mysqli->query($sql);
 												}
 											}
 											
@@ -914,6 +917,10 @@ if ($verif_id_perso_session) {
 																
 																// Suppression de l'arme de l'inventaire du perso
 																$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_cible_collat' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
+																$mysqli->query($sql);
+																
+																// Maj charge perso suite perte de l'arme
+																$sql = "UPDATE perso SET charge_perso = charge_perso - (SELECT poids_arme FROM arme WHERE id_arme='$id_arme_non_equipee') WHERE id_perso='$id_cible_collat'";
 																$mysqli->query($sql);
 																
 																// On dépose la perte de thune par terre
@@ -1784,6 +1791,10 @@ if ($verif_id_perso_session) {
 														
 														// Suppression de l'arme de l'inventaire du perso
 														$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_cible_collat' AND id_arme='$id_arme_non_equipee' AND est_portee='0' LIMIT 1";
+														$mysqli->query($sql);
+														
+														// Maj charge perso suite perte de l'arme
+														$sql = "UPDATE perso SET charge_perso = charge_perso - (SELECT poids_arme FROM arme WHERE id_arme='$id_arme_non_equipee') WHERE id_perso='$id_cible_collat'";
 														$mysqli->query($sql);
 														
 														// On dépose la perte de l'arme par terre
