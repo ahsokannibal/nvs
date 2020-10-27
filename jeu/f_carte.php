@@ -336,6 +336,7 @@ function get_persos_visu($mysqli, $x_perso, $y_perso, $perc, $id)
 			AND y_perso <= $y_perso + $perc 
 			AND id_perso!='$id'
 			AND perso.est_gele='0'
+			AND type_perso != 6
 			AND pv_perso > 0";
 	return $res = $mysqli->query($sql);
 }
@@ -354,6 +355,7 @@ function get_persos_visu_camp($mysqli, $x_perso, $y_perso, $perc, $id, $camp)
 			AND perso.id_perso!='$id'
 			AND perso.clan = $camp
 			AND perso.est_gele='0'
+			AND type_perso != 6
 			AND pv_perso > 0";
 	return $res = $mysqli->query($sql);
 }
