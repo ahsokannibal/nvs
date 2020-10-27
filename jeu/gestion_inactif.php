@@ -34,19 +34,27 @@ while ($t = $res->fetch_assoc()){
 	
 	// Récupération de la couleur associée au clan du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
+
+	// Verification que le perso est bien dans un pénitencier
+	$sql = "SELECT * FROM perso_in_batiment, instance_batiment WHERE perso_in_batiment.id_instanceBat = instance_batiment.id_instanceBat AND id_batiment=10 AND id_perso='$id_perso_relacher'";
+	$res = $mysqli->query($sql);
+	$verif_peni = $res->num_rows;
 	
-	// le supprimer du pénitencier
-	$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_relacher'";
-	$mysqli->query($sql);
-	
-	// Passer ses PV à 0 pour permettre un respawn
-	$sql = "UPDATE perso SET pv_perso=0 WHERE id_perso='$id_perso_relacher'";
-	$mysqli->query($sql);
-	
-	// Ajout événement
-	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso_relacher,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a terminé de purger sa peine au pénitencier', NULL, NULL, '', NOW(), '0')";
-	$mysqli->query($sql);
-	
+	if ($verif_peni == 1) {
+
+		// le supprimer du pénitencier
+		$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_relacher'";
+		$mysqli->query($sql);
+		
+		// Passer ses PV à 0 pour permettre un respawn
+		$sql = "UPDATE perso SET pv_perso=0 WHERE id_perso='$id_perso_relacher'";
+		$mysqli->query($sql);
+		
+		// Ajout événement
+		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso_relacher,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a terminé de purger sa peine au pénitencier', NULL, NULL, '', NOW(), '0')";
+		$mysqli->query($sql);
+
+	}
 }
 
 

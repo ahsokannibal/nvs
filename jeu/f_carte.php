@@ -633,8 +633,8 @@ function verif_bat_instance($mysqli, $id_bat, $id_instance){
 
 // fonction qui calcul le nombre de case entre 2 positions
 function calcul_nb_cases($x_depart, $y_depart, $x_arrivee, $y_arrivee){
-	$x = $x_depart - $x_arrivee;
-	$y = $y_depart - $y_arrivee;
+	$x = abs($x_depart - $x_arrivee);
+	$y = abs($y_depart - $y_arrivee);
 	return max($x, $y);
 }
 
