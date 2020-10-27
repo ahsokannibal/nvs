@@ -266,20 +266,32 @@ if($dispo || $admin) {
 		if (isset($_GET['saboter_rail']) && $_GET['saboter_rail'] == 'ok') {
 			
 			// Récupération infos perso 
-			$sql = "SELECT x_perso, y_perso, pa_perso FROM perso WHERE id_perso='$id_perso'";
+			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, clan FROM perso WHERE id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
 			
 			$x_perso 	= $t["x_perso"];
 			$y_perso 	= $t["y_perso"];
 			$pa_perso	= $t['pa_perso'];
+			$nom_perso	= $t['nom_perso'];
+			$camp_perso	= $t['clan'];
 			
 			if ($pa_perso >= 10) {
+				
+				// recuperation de la couleur du camp du perso
+				$couleur_clan_perso = couleur_clan($camp_perso);
 			
+				// Mise à jour des PA du perso
 				$sql = "UPDATE perso SET pa_perso = pa_perso - 10 WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 				
+				// Pose du rail
 				$sql = "UPDATE carte SET fond_carte='1.gif' WHERE x_carte='$x_perso' AND y_carte='$y_perso' AND fond_carte='rail.gif'";
+				$mysqli->query($sql);
+				
+				// Insertion ligne evenement du perso
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+						VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a détruit <b>rail</b>',NULL,'',' en $x_perso / $y_perso',NOW(),'0')";
 				$mysqli->query($sql);
 				
 				header("Location:jouer.php");
