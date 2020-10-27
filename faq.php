@@ -213,6 +213,19 @@ $mysqli = db_connexion();
 						</div>
 					</div>
 				</div>
+			</div>
+			
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<h2>FAQ Train / Rails</h2>
+					</div>
+				</div>
+			</div>
+			
+			<div class="accordion" id="accordionTrain">
+		
 				<div class="card">
 					<div class="card-header" id="headingTwelve">
 						<h2 class="mb-0">
@@ -221,7 +234,7 @@ $mysqli = db_connexion();
 							</button>
 						</h2>
 					</div>
-					<div id="collapseTwelve" class="collapse" aria-labelledby="headingTwelve" data-parent="#accordionExample">
+					<div id="collapseTwelve" class="collapse" aria-labelledby="headingTwelve" data-parent="#accordionTrain">
 						<div class="card-body">
 							Le train sert à relier 2 gares. Il sert donc à se rendre d'une gare vers une autre.<br />
 							Pour prendre le train, vous devez entrer dans la gare et acheter un ticket de train vers la gare de destination (Coût 5 Thunes par tronçon).
@@ -239,7 +252,7 @@ $mysqli = db_connexion();
 							</button>
 						</h2>
 					</div>
-					<div id="collapseThirteen" class="collapse" aria-labelledby="headingThirteen" data-parent="#accordionExample">
+					<div id="collapseThirteen" class="collapse" aria-labelledby="headingThirteen" data-parent="#accordionTrain">
 						<div class="card-body">
 							Un train peut être bloqué pour plusieurs raisons :
 							<ul>
@@ -250,7 +263,23 @@ $mysqli = db_connexion();
 						</div>
 					</div>
 				</div>
+				<div class="card">
+					<div class="card-header" id="headingForteen">
+						<h2 class="mb-0">
+							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseForteen" aria-expanded="false" aria-controls="collapseForteen">
+								Je souhaite détruire / saboter un rail, comment faire ?
+							</button>
+						</h2>
+					</div>
+					<div id="collapseForteen" class="collapse" aria-labelledby="headingForteen" data-parent="#accordionTrain">
+						<div class="card-body">
+							Un rail ne peut être détruit que par les unités du génie. Si vous faites partie du génie, il vous suffit de vous positionner sur le rail que vous souhaitez détruire et l'option apparaitra en dessous de la liste des actions et sur le popup du perso.
+							L'action coûte 10PA et est immédiate.
+						</div>
+					</div>
+				</div>
 			</div>
+			
 		</div>
 		
 		<!-- Optional JavaScript -->
