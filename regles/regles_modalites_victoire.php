@@ -72,15 +72,16 @@
 			
 			<div class="row">
 				<div class="col-12">
-<p>Pour remporter la victoire, il faut accumuler 1000 points de victoire pour son camp.</p>
+<p>Pour remporter la victoire, il faut accumuler <b>1000</b> points de victoire pour son camp.</p>
 <u>Voici les gains de points de victoire possible :</u>
 					<ul>
-						<li>La destruction d'un Fort rapporte 400 points de victoire</li>
-						<li>La destruction d'un Fortin rapporte 100 points de victoire</li>
-						<li>La destruction d'une Gare rapporte 75 points de victoire</li>
-						<li>La destruction d'un Hôpital rapporte 10 points de victoire</li>
+						<li>La destruction d'un Fort rapporte <b>400</b> points de victoire</li>
+						<li>La destruction d'un Fortin rapporte <b>100</b> points de victoire</li>
+						<li>La destruction d'une Gare rapporte <b>75</b> points de victoire</li>
+						<li>La destruction d'un Hôpital rapporte <b>10</b> points de victoire</li>
+						<li>La destruction des autres bâtiments / structures (barricades, tour de guêt, rails, ponts, etc..) rapportent <b>0</b> points de victoire</li>
 					</ul>
-<p>Certains bâtiments sont capturable (Fort, Fortin, Gare). La capture d'un bâtiment multiplie par 1.5 ces points.<br />
+<p>Certains bâtiments sont capturable (Fort, Fortin, Tour de guêt). <b>La capture d'un bâtiment multiplie par 1.5 ces points</b>.<br />
 Une fois la victoire acquise, un changement de carte sera opéré.</p>
 <p><a class='btn btn-primary' href='../jeu/classement.php?stats=ok'>Les points de victoire sont visibles ici</a></p>	
 				</div>
