@@ -4258,6 +4258,17 @@ if($dispo || $admin){
 												echo "<center><font color = blue>~~<a href=\"jouer.php?ramasser=voir\">Voir la liste des objets à terre</a>~~</font></center>";
 											}
 											
+											// recuperation des données de la carte
+											$sql = "SELECT fond_carte FROM $carte 
+													WHERE x_carte = $x_perso 
+													AND y_carte = $y_perso";
+											$res = $mysqli->query($sql);
+											$tab = $res->fetch_assoc();
+											
+											$fond_carte_perso = $tab['fond_carte'];
+											
+											afficher_liens_rail_genie($genie_compagnie_perso, $fond_carte_perso);
+											
 											?>
 										</td>
 									</tr>
