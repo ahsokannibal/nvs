@@ -1254,7 +1254,7 @@ CREATE TABLE `type_unite` (
 --
 
 CREATE TABLE `zones` (
-  `id_zone` int(11) NOT NULL DEFAULT '0',
+  `id_zone` int(11) NOT NULL,
   `xMin_zone` int(11) NOT NULL DEFAULT '0',
   `xMax_zone` int(11) NOT NULL DEFAULT '0',
   `yMin_zone` int(11) NOT NULL DEFAULT '0',
@@ -1628,6 +1628,12 @@ ALTER TABLE `perso`
 --
 ALTER TABLE `pnj`
   MODIFY `id_pnj` int(11) NOT NULL AUTO_INCREMENT;
+  
+  --
+-- AUTO_INCREMENT pour la table `zones`
+--
+ALTER TABLE `zones`
+  MODIFY `id_zone` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT pour la table `compagnies`
 --
