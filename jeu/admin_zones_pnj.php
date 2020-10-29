@@ -52,6 +52,37 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 			}
 		}
+		
+		if (isset($_POST['creation_zone_pnj'])) {
+			
+			if (isset($_POST['select_pnj']) && $_POST['select_pnj'] != ""
+				&& isset($_POST['inputXMin_zone']) && $_POST['inputXMin_zone'] != ""
+				&& isset($_POST['inputXMax_zone']) && $_POST['inputXMax_zone'] != ""
+				&& isset($_POST['inputYMin_zone']) && $_POST['inputYMin_zone'] != ""
+				&& isset($_POST['inputYMax_zone']) && $_POST['inputYMax_zone'] != "") {
+				
+				$xMin_creation_zone = $_POST['inputXMin_zone'];
+				$xMax_creation_zone	= $_POST['inputXMax_zone'];
+				$yMin_creation_zone	= $_POST['inputYMin_zone'];
+				$yMax_creation_zone	= $_POST['inputYMax_zone'];
+				
+				$id_pnj_zone = $_POST['select_pnj'];
+				
+				$lock = "LOCK TABLE (zones) WRITE";
+				$mysqli->query($lock);
+				
+				$sql = "INSERT INTO zones (xMin_zone, xMax_zone, yMin_zone, yMax_zone) VALUES ('$xMin_creation_zone', '$xMax_creation_zone', '$yMin_creation_zone', '$yMax_creation_zone')";
+				$mysqli->query($sql);
+				
+				$id_zone_nouvelle = $mysqli->insert_id;
+								
+				$unlock = "UNLOCK TABLES";
+				$mysqli->query($unlock);
+				
+				$sql = "INSERT INTO pnj_in_zone (id_pnj, id_zone) VALUES ('$id_pnj_zone', '$id_zone_nouvelle')";
+				$mysqli->query($sql);
+			}
+		}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -119,8 +150,55 @@ if(isset($_SESSION["id_perso"])){
 							
 						}
 						else {
+							
+							echo "<a href='admin_zones_pnj.php?creer_zone=ok' class='btn btn-success'>Créer une nouvelle Zone</a> ";
+							
+							if (isset($_GET['creer_affectation']) && $_GET['creer_affectation'] == "ok") {
+								
+								echo "<a href='admin_zones_pnj.php' class='btn btn-danger'>Annuler</a><br /><br />";
+								
+								$sql = "SELECT id_pnj, nom_pnj FROM pnj";
+								$res = $mysqli->query($sql);
+								
+								echo "<form method='POST' action='admin_zones_pnj.php'>";
+								echo "	<div class='form-group'>";
+								echo "		<label for='select_pnj'>PNJ</label>";
+								echo "		<select class='form-control' name='select_pnj' id='select_pnj'>";
+								while ($t = $res->fetch_assoc()) {
+									$id_pnj_zone	= $t['id_pnj'];
+									$nom_pnj_zone	= $t['nom_pnj'];
+									
+									echo "			<option value='".$id_pnj_zone."'>".$nom_pnj_zone."</option>";
+								}
+								echo "		</select>";
+								echo "	</div>";
+								echo "	<div class='form-group'>";
+								echo "		<label for='inputXMin'>X Min Zone</label>";
+								echo "		<input type='text' class='form-control' id='inputXMin_zone' name='inputXMin_zone' value=''>";
+								echo "	</div>";
+								echo "	<div class='form-group'>";
+								echo "		<label for='inputXMax'>X Max Zone</label>";
+								echo "		<input type='text' class='form-control' id='inputXMax_zone' name='inputXMax_zone' value=''>";
+								echo "	</div>";
+								echo "	<div class='form-group'>";
+								echo "		<label for='inputYMin'>Y Min Zone</label>";
+								echo "		<input type='text' class='form-control' id='inputYMin_zone' name='inputYMin_zone' value=''>";
+								echo "	</div>";
+								echo "	<div class='form-group'>";
+								echo "		<label for='inputYMax'>Y Max Zone</label>";
+								echo "		<input type='text' class='form-control' id='inputYMax_zone' name='inputYMax_zone' value=''>";
+								echo "	</div>";
+								echo "	<div class='form-group'>";
+								echo "		<input type='submit' class='btn btn-success' value='Créer' name='creation_zone_pnj'>";
+								echo "	</div>";
+								echo "</form>";
+								
+							}
+							else {
+								echo "<a href='admin_zones_pnj.php?creer_affectation=ok' class='btn btn-success'>Créer une nouvelle Affecation de zone</a>";
+							}
 						?>
-						<a href='admin_zones_pnj.php?creer_zone=ok' class='btn btn-success'>Créer une nouvelle Zone</a><br /><br />
+						<br /><br />
 						<div id="table_zones" class="table-responsive">	
 							<?php
 							$sql = "SELECT pnj.id_pnj, pnj.nom_pnj, pnj_in_zone.id_zone, zones.xMin_zone, zones.xMax_zone, zones.yMin_zone, zones.yMax_zone 
