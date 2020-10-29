@@ -19,7 +19,39 @@ if(isset($_SESSION["id_perso"])){
 		$mess_err 	= "";
 		$mess 		= "";
 		
+		if (isset($_POST['select_zone']) && $_POST['select_zone'] != "") {
+			
+			$id_zone_selected = $_POST['select_zone'];
+			
+			if (isset($_POST['hid_id_pnj']) && $_POST['hid_id_pnj'] != ""
+				&& isset($_POST['hid_old_zone']) && $_POST['hid_old_zone'] != "") {
+				
+				$id_pnj_maj_zone 	= $_POST['hid_id_pnj'];
+				$id_old_zone		= $_POST['hid_old_zone'];
+				
+				$sql = "UPDATE pnj_in_zone SET id_zone='$id_zone_selected' WHERE id_zone='$id_old_zone' AND id_pnj='$id_pnj_maj_zone'";
+				$mysqli->query($sql);
+				
+				$mess .= "Zone mise à jour pour le PNJ ".$id_pnj_maj_zone." - Ancienne zone : ".$id_old_zone." | Nouvelle zone : ".$id_zone_selected;
+			}
+		}
 		
+		if (isset($_POST['creation_zone'])) {
+			
+			if (isset($_POST['inputXMin']) && $_POST['inputXMin'] != ""
+				&& isset($_POST['inputXMax']) && $_POST['inputXMax'] != ""
+				&& isset($_POST['inputYMin']) && $_POST['inputYMin'] != ""
+				&& isset($_POST['inputYMax']) && $_POST['inputYMax'] != "") {
+				
+				$xMin_creation_zone = $_POST['inputXMin'];
+				$xMax_creation_zone	= $_POST['inputXMax'];
+				$yMin_creation_zone	= $_POST['inputYMin'];
+				$yMax_creation_zone	= $_POST['inputYMax'];
+				
+				$sql = "INSERT INTO zones (xMin_zone, xMax_zone, yMin_zone, yMax_zone) VALUES ('$xMin_creation_zone', '$xMax_creation_zone', '$yMin_creation_zone', '$yMax_creation_zone')";
+				$mysqli->query($sql);
+			}
+		}
 
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -62,10 +94,116 @@ if(isset($_SESSION["id_perso"])){
 			
 			<div class="row">
 				<div class="col-12">
-					<div align="center">					
-						<div id="table_batiments" class="table-responsive">	
-						
+					<div align="center">
+						<?php
+						if (isset($_GET['creer_zone']) && $_GET['creer_zone'] == "ok") {
+							
+							echo "<a href='admin_zones_pnj.php' class='btn btn-success'>Retour au tableau</a><br /><br />";
+							
+							
+							echo "<form method='POST' action='admin_zones_pnj.php'>";
+							echo "	<div class='form-group'>";
+							echo "		<label for='inputXMin'>X Min Zone</label>";
+							echo "		<input type='text' class='form-control' id='inputXMin' name='inputXMin' value=''>";
+							echo "		<label for='inputXMax'>X Max Zone</label>";
+							echo "		<input type='text' class='form-control' id='inputXMax' name='inputXMax' value=''>";
+							echo "		<label for='inputYMin'>Y Min Zone</label>";
+							echo "		<input type='text' class='form-control' id='inputYMin' name='inputYMin' value=''>";
+							echo "		<label for='inputYMax'>Y Max Zone</label>";
+							echo "		<input type='text' class='form-control' id='inputYMax' name='inputYMax' value=''>";
+							echo "	</div>";
+							echo "	<div class='form-group'>";
+							echo "		<input type='submit' class='btn btn-success' value='Créer' name='creation_zone'>";
+							echo "	</div>";
+							echo "</form>";
+							
+						}
+						else {
+						?>
+						<a href='admin_zones_pnj.php?creer_zone=ok' class='btn btn-success'>Créer une nouvelle Zone</a><br /><br />
+						<div id="table_zones" class="table-responsive">	
+							<?php
+							$sql = "SELECT pnj.id_pnj, pnj.nom_pnj, pnj_in_zone.id_zone, zones.xMin_zone, zones.xMax_zone, zones.yMin_zone, zones.yMax_zone 
+									FROM zones, pnj_in_zone, pnj
+									WHERE pnj_in_zone.id_zone = zones.id_zone
+									AND pnj_in_zone.id_pnj = pnj.id_pnj
+									ORDER BY pnj.id_pnj ASC, zones.id_zone ASC";
+							$res = $mysqli->query($sql);
+							
+							echo "<table class='table'>";
+							echo "	<thead>";
+							echo "		<tr>";
+							echo "			<th style='text-align:center'>PNJ</th>";
+							echo "			<th style='text-align:center'>Zone</th>";
+							echo "			<th style='text-align:center'>Actions</th>";
+							echo "		</tr>";
+							echo "	</thead>";
+							echo "	<tbody>";
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_pnj		= $t['id_pnj'];
+								$nom_pnj	= $t['nom_pnj'];
+								$id_zone	= $t['id_zone'];
+								$xMin_zone	= $t['xMin_zone'];
+								$xMax_zone	= $t['xMax_zone'];
+								$yMin_zone	= $t['yMin_zone'];
+								$yMax_zone	= $t['yMax_zone'];
+								
+								echo "		<tr>";
+								echo "			<td align='center'><b>".$nom_pnj."</b></td>";
+								echo "			<td align='center'>";
+								if (isset($_GET['modifier_zone']) && $id_zone == $_GET['modifier_zone'] 
+									&& isset($_GET['id_pnj']) && $id_pnj == $_GET['id_pnj']) {
+									
+									echo "<form method='POST' action='admin_zones_pnj.php'>";
+									echo "	<select name='select_zone'>";
+									
+									$sql_zone = "SELECT * FROM zones 
+													WHERE id_zone NOT IN (SELECT id_zone FROM pnj_in_zone WHERE id_pnj='$id_pnj')
+													OR id_zone='$id_zone'";
+									$res_zone = $mysqli->query($sql_zone);
+									
+									while ($tz = $res_zone->fetch_assoc()) {
+										
+										$id_zone_modif 		= $tz['id_zone'];
+										$xMin_zone_modif	= $tz['xMin_zone'];
+										$xMax_zone_modif	= $tz['xMax_zone'];
+										$yMin_zone_modif	= $tz['yMin_zone'];
+										$yMax_zone_modif	= $tz['yMax_zone'];
+										
+										$texte_zone = "Zone [".$id_zone_modif."] : <u>xMin</u> = ".$xMin_zone_modif." - <u>xMax</u> = ".$xMax_zone_modif." - <u>yMin</u> = ".$yMin_zone_modif." - <u>yMax</u> = ".$yMax_zone_modif;
+										
+										echo "		<option value='".$id_zone_modif."'";
+										if ($id_zone_modif == $id_zone) {
+											echo " selected";
+										}
+										echo ">".$texte_zone."</option>";
+									}
+									
+									echo "	</select>";
+									echo "	<input type='hidden' name='hid_old_zone' value='".$id_zone."'>";
+									echo "	<input type='hidden' name='hid_id_pnj' value='".$id_pnj."'>";
+									echo "	<input type='submit' value='Changer' class='btn btn-warning'>";
+									echo "</form>";
+								}
+								else {
+									echo "<b>Zone [".$id_zone."]</b> : <u>xMin</u> = ".$xMin_zone." - <u>xMax</u> = ".$xMax_zone." - <u>yMin</u> = ".$yMin_zone." - <u>yMax</u> = ".$yMax_zone;
+								}
+								echo "			</td>";
+								echo "			<td>";
+								echo "<a href='admin_zones_pnj.php?modifier_zone=".$id_zone."&id_pnj=".$id_pnj."' class='btn btn-warning'>Changer de zone</a>";
+								echo "			</td>";
+								echo "		</tr>";
+								
+							}
+							?>
 						</div>
+						
+						<?php 
+						}
+						?>
+						
 					</div>
 				</div>
 			</div>
