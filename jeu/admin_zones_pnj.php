@@ -50,6 +50,8 @@ if(isset($_SESSION["id_perso"])){
 				
 				$sql = "INSERT INTO zones (xMin_zone, xMax_zone, yMin_zone, yMax_zone) VALUES ('$xMin_creation_zone', '$xMax_creation_zone', '$yMin_creation_zone', '$yMax_creation_zone')";
 				$mysqli->query($sql);
+				
+				$mess .= "Création de la nouvelle zone XMin = ".$xMin_creation_zone." - XMax = ".$xMax_creation_zone." - YMin : ".$yMin_creation_zone." - YMax = ".$yMax_creation_zone;
 			}
 		}
 		
@@ -81,7 +83,21 @@ if(isset($_SESSION["id_perso"])){
 				
 				$sql = "INSERT INTO pnj_in_zone (id_pnj, id_zone) VALUES ('$id_pnj_zone', '$id_zone_nouvelle')";
 				$mysqli->query($sql);
+				
+				$mess .= "Création d'une liaison pour le pnj ".$id_pnj_zone;
 			}
+		}
+		
+		if (isset($_GET['supprimer']) && $_GET['supprimer'] != ""
+			&& isset($_GET['id_pnj']) && $_GET['id_pnj'] != "") {
+			
+			$id_zone_sup 	= $_GET['supprimer'];
+			$id_pnj_sup		= $_GET['id_pnj'];
+			
+			$sql = "DELETE FROM pnj_in_zone WHERE id_pnj = '$id_pnj_sup' AND id_zone = '$id_zone_sup'";
+			$mysqli->query($sql);
+			
+			$mess .= "Suppression de la liaison PNJ ".$id_pnj_sup." / Zone ".$id_zone_sup;
 		}
 
 ?>
@@ -269,8 +285,9 @@ if(isset($_SESSION["id_perso"])){
 									echo "<b>Zone [".$id_zone."]</b> : <u>xMin</u> = ".$xMin_zone." - <u>xMax</u> = ".$xMax_zone." - <u>yMin</u> = ".$yMin_zone." - <u>yMax</u> = ".$yMax_zone;
 								}
 								echo "			</td>";
-								echo "			<td>";
-								echo "<a href='admin_zones_pnj.php?modifier_zone=".$id_zone."&id_pnj=".$id_pnj."' class='btn btn-warning'>Changer de zone</a>";
+								echo "			<td align='center'>";
+								echo "<a href='admin_zones_pnj.php?modifier_zone=".$id_zone."&id_pnj=".$id_pnj."' class='btn btn-warning'>Changer de zone</a> ";
+								echo "<a href='admin_zones_pnj.php?supprimer=".$id_zone."&id_pnj=".$id_pnj."' class='btn btn-danger'>Supprimer la liaison</a> ";
 								echo "			</td>";
 								echo "		</tr>";
 								
