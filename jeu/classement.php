@@ -274,7 +274,17 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2'";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
-	
+
+	// Nombre de persos au Nord actifs
+	$sql_nbbact = "SELECT id_perso FROM perso WHERE clan='1' AND est_gele='0'";
+	$res_nbbact = $mysqli->query($sql_nbbact);
+	$nbbact = $res_nbbact->num_rows;
+
+	// Nombre de persos au Sud actifs
+	$sql_nbract = "SELECT id_perso FROM perso WHERE clan='2' AND est_gele='0'";
+	$res_nbract = $mysqli->query($sql_nbract);
+	$nbract = $res_nbract->num_rows;
+		
 	// Nombre de Point de victoire au Nord
 	$sql_pvictb = "SELECT points_victoire FROM stats_camp_pv WHERE id_camp='1'";
 	$res_pvictb = $mysqli->query($sql_pvictb);
@@ -363,6 +373,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "			<tr>";
 	echo "				<th style='text-align:center'><font color=darkred>Camp</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures ennemis</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures alliés</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé par un canon ou un pnj)</font></th>";
@@ -379,6 +390,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$couleur_camp 	= "blue";
 			$nom_camp 		= "Nord";
 			$nb 			= $nbb;
+			$nbact 			= $nbbact;
 			$pvict 			= $nbvictb;
 			$nb_kill		= $nb_ennemis_capt_nord;
 			$meutre 		= $nb_allies_capt_nord;
@@ -388,6 +400,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$couleur_camp 	= "red";
 			$nom_camp 		= "Sud";
 			$nb 			= $nbr;
+			$nbact 			= $nbract;
 			$pvict 			= $nbvictr;
 			$nb_kill		= $nb_ennemis_capt_sud;
 			$meutre 		= $nb_allies_capt_sud;
@@ -400,6 +413,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		echo "			<tr>";
 		echo "				<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font></td>";
 		echo "				<td align=center>$nb</td>";
+		echo "				<td align=center>$nbact</td>";
 		echo "				<td align=center>$nb_kill</td>";
 		echo "				<td align=center>$meutre</td>";
 		echo "				<td align=center>$autres</td>";
