@@ -6,6 +6,12 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+if(isset($_GET["envoi"]) && $_GET["envoi"] == 'ok'){
+	unset($_SESSION['destinataires']);
+	unset($_SESSION['objet']);
+	unset($_SESSION['message']);
+}
+
 if(isset($_SESSION["id_perso"])){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
