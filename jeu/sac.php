@@ -430,7 +430,7 @@ if($dispo || $admin){
 				$image_a		= $t_a["image_arme"];
 				
 				// recuperation du nombre d'armes de ce type que possede le perso
-				$sql2 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id' AND id_arme='$id_arme'";
+				$sql2 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id' AND id_arme='$id_arme' AND est_portee='0'";
 				$res2 = $mysqli->query($sql2);
 				$nb_a = $res2->num_rows;
 				
