@@ -110,6 +110,11 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 		$nb_genie_civil 	= 3;
 		$nb_soigneur		= 1;
 	}
+	else if ($id_bat == '2') {
+		// tour de guêt => 1 Génie civil
+		$nb_genie_civil 	= 1;
+		$nb_soigneur		= 0;
+	}
 	else {
 		$nb_genie_civil 	= 0;
 		$nb_soigneur		= 0;
