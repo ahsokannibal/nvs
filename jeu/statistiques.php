@@ -42,6 +42,9 @@ if (isset($_POST['choix_stat']) && trim($_POST['choix_stat']) != "") {
 	else if ($stat == "Attaque 15") {
 		$nom_stat = "Attaques au Magnum";
 	}
+	else if ($stat == "Attaque 17") {
+		$nom_stat = "Attaques au Canon double";
+	}
 	else {
 		$nom_stat = "Inconnu";
 	}
@@ -140,6 +143,7 @@ if ($stat == "Bousculade") {
 							<option value='Attaque 8' <?php if(isset($_POST["choix_stat"]) && $_POST["choix_stat"] == "Attaque 8") echo " selected"; ?>>Les attaques au fusil précision</option>
 							<option value='Attaque 9' <?php if(isset($_POST["choix_stat"]) && $_POST["choix_stat"] == "Attaque 9") echo " selected"; ?>>Les attaques aux canines (chien)</option>
 							<option value='Attaque 15' <?php if(isset($_POST["choix_stat"]) && $_POST["choix_stat"] == "Attaque 15") echo " selected"; ?>>Les attaques au magnum</option>
+							<option value='Attaque 17' <?php if(isset($_POST["choix_stat"]) && $_POST["choix_stat"] == "Attaque 17") echo " selected"; ?>>Les attaques au canon double</option>
 						</select>
 					</form>
 					
