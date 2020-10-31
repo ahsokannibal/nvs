@@ -37,9 +37,13 @@ function est_couleur_foret($r, $g, $b) {
 }
 
 function est_couleur_eau($r, $g, $b) {
-	return $r == "86" 
+	return ($r == "86" 
 			&& $g == "9b" 
-			&& $b == "be";
+			&& $b == "be")
+			|| 
+			($r == "5c" 
+			&& $g == "bf" 
+			&& $b == "cf");
 }
 
 function est_couleur_eau_profonde($r, $g, $b) {
