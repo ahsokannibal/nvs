@@ -214,6 +214,48 @@ if($dispo || $admin){
 				}
 			}
 			
+			if (isset($_GET['detruire_train']) && trim($_GET['detruire_train']) != "") {
+				
+				$id_train_detruire = $_GET['detruire_train'];
+				
+				$verif_id_train = preg_match("#^[0-9]*[0-9]$#i","$id_train_detruire");
+				
+				if ($verif_id_train) {
+					
+					// On vérifie que l'id correspond bien à un train existant de son camp
+					$sql = "SELECT * FROM instance_batiment WHERE id_batiment='12' AND id_instanceBat='$id_train_detruire' AND camp_instance='$camp'";
+					$res = $mysqli->query($sql);
+					
+					$verif_exist_train = $res->num_rows;
+					
+					if ($verif_exist_train) {
+						
+						$t = $res->fetch_assoc();
+						
+						$x_instance_train = $t['x_instance'];
+						$y_instance_train = $t['y_instance'];
+						
+						// MAJ carte
+						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_instance_train' AND y_carte='$y_instance_train'";
+						$mysqli->query($sql);
+						
+						$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_train_detruire'";
+						$mysqli->query($sql);
+						
+						$sql = "UPDATE liaisons_gare SET id_train=NULL WHERE id_train='$id_train_detruire'";
+						$mysqli->query($sql);
+						
+						$mess .= "Train [".$id_train_detruire."] en ".$x_instance_train."/".$y_instance_train." détruit !";
+					}
+					else {
+						$mess_erreur .= "Ce train n'existe pas ou ne fait pas parti de votre camp";
+					}					
+				}
+				else {
+					$mess_erreur .= "Id incorrect";
+				}
+			}
+			
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -400,7 +442,7 @@ if($dispo || $admin){
 									if ($gare_direction == $id_gare2 && $pv_gare2 == null) {
 										echo "<b>La gare de destination est détruire, le train ne circulera pas</b><br />";
 									}
-									if ($num_perso_train > 0) {
+									if (isset($num_perso_train) && $num_perso_train > 0) {
 										echo "<b>Il y a ".$num_perso_train." des persos dans le train</b><br />";
 									}
 									echo "	</td>";
@@ -411,6 +453,9 @@ if($dispo || $admin){
 									}
 									if ($obstacle_train) {
 										echo "<a href='anim_trains.php?detruire_obstacle=".$id_obstacle."' class='btn btn-warning'>Détruire l'obstacle</a>";
+									}
+									if (isset($num_perso_train) && $num_perso_train == 0) {
+										echo "<a href='anim_trains.php?detruire_train=".$id_train."' class='btn btn-danger'>Détruire le train</a>";
 									}
 									echo "	</td>";
 									
