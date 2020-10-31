@@ -139,6 +139,10 @@ while ($t_id = $res->fetch_assoc()) {
 						// maj cv
 						$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_cible','$nom_cible',NOW())";
 						$mysqli->query($sql);
+						
+						// maj dernier tombé
+						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+						$mysqli->query($sql);
 					}	
 				}
 				else { 
@@ -259,6 +263,10 @@ while ($t_id = $res->fetch_assoc()) {
 								// maj cv
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
 								$mysqli->query($sql);
+								
+								// maj dernier tombé
+								$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+								$mysqli->query($sql);
 							}	
 						}
 						else {
@@ -355,6 +363,10 @@ while ($t_id = $res->fetch_assoc()) {
 									
 									// maj cv
 									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
+									$mysqli->query($sql);
+									
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
 									$mysqli->query($sql);
 								}	
 							}
@@ -456,6 +468,10 @@ while ($t_id = $res->fetch_assoc()) {
 									
 									// maj cv
 									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
+									$mysqli->query($sql);
+									
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
 									$mysqli->query($sql);
 								}	
 							}
@@ -571,6 +587,10 @@ while ($t_id = $res->fetch_assoc()) {
 								// maj cv
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
 								$mysqli->query($sql);
+								
+								// maj dernier tombé
+								$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+								$mysqli->query($sql);
 							}	
 						}
 						else {
@@ -666,6 +686,10 @@ while ($t_id = $res->fetch_assoc()) {
 									
 									// maj cv
 									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$dernier_a_i','$nom_cible',NOW())";
+									$mysqli->query($sql);
+									
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
 									$mysqli->query($sql);
 								}	
 							}
@@ -775,6 +799,10 @@ while ($t_id = $res->fetch_assoc()) {
 									
 									// maj cv
 									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
+									$mysqli->query($sql);
+									
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
 									$mysqli->query($sql);
 								}	
 							}
@@ -892,6 +920,10 @@ while ($t_id = $res->fetch_assoc()) {
 										// maj cv
 										$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
 										$mysqli->query($sql);
+										
+										// maj dernier tombé
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$mysqli->query($sql);
 									}	
 								}
 								else {
@@ -1001,6 +1033,10 @@ while ($t_id = $res->fetch_assoc()) {
 								
 								// maj cv
 								$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
+								$mysqli->query($sql);
+								
+								// maj dernier tombé
+								$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
 								$mysqli->query($sql);
 							}	
 						}
@@ -1117,6 +1153,10 @@ while ($t_id = $res->fetch_assoc()) {
 									
 									// maj cv
 									$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id_i_pnj,'$nom_pnj','$id_pj','$nom_cible',NOW())";
+									$mysqli->query($sql);
+									
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
 									$mysqli->query($sql);
 								}	
 							}
