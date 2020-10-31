@@ -118,7 +118,7 @@ while ($t_id = $res->fetch_assoc()) {
 					$mysqli->query($sql);
 					
 					// verification si la cible est morte ou non
-					$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$id_cible'";
+					$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$id_cible'";
 					$res2 = $mysqli->query($sql);
 					$tab = $res2->fetch_assoc();
 					
@@ -126,9 +126,38 @@ while ($t_id = $res->fetch_assoc()) {
 					$x_cible 	= $tab["x_perso"];
 					$y_cible 	= $tab["y_perso"];
 					$xp_cible 	= $tab["xp_perso"];
+					$pi_cible	= $tab['pi_perso'];
+					$pc_cible	= $tab['pc_perso'];
+					$or_cible	= $tab['or_perso'];
+					$tp_perso	= $tab['chef'];
 				
 					if ($pv_cible <= 0) {
 					
+						// Calcul gains (po et xp)
+						$perte_po = gain_po_mort($or_cible);
+						
+						// Chef
+						if ($tp_perso == 1) {
+							// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+							// Calcul PI
+							$pi_perdu 		= floor(($pi_cible * 5) / 100);
+							$pi_perso_fin 	= $pi_cible - $pi_perdu;
+							
+							// Calcul PC
+							$pc_perdu		= floor(($pc_cible * 5) / 100);
+							$pc_perso_fin	= $pc_cible - $pc_perdu;
+						}
+						else {
+							// Quand un grouillot meurt, il perd tout ses Pi
+							$pi_perso_fin = 0;
+							$pc_perso_fin = $pc_cible;
+						}
+	
+						// MAJ perte xp/po/stat cible
+						$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+						$mysqli->query($sql);
+						
+						// maj carte
 						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 						$mysqli->query($sql);
 						
@@ -242,7 +271,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
-							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$dernier_a_i'";
+							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$dernier_a_i'";
 							$res2 = $mysqli->query($sql);
 							$tab = $res2->fetch_assoc();
 							
@@ -250,9 +279,38 @@ while ($t_id = $res->fetch_assoc()) {
 							$x_cible 	= $tab["x_perso"];
 							$y_cible 	= $tab["y_perso"];
 							$xp_cible 	= $tab["xp_perso"];
+							$pi_cible	= $tab['pi_perso'];
+							$pc_cible	= $tab['pc_perso'];
+							$or_cible	= $tab['or_perso'];
+							$tp_perso	= $tab['chef'];
 						
 							if ($pv_cible <= 0) {
 							
+								// Calcul gains (po et xp)
+								$perte_po = gain_po_mort($or_cible);
+								
+								// Chef
+								if ($tp_perso == 1) {
+									// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+									// Calcul PI
+									$pi_perdu 		= floor(($pi_cible * 5) / 100);
+									$pi_perso_fin 	= $pi_cible - $pi_perdu;
+									
+									// Calcul PC
+									$pc_perdu		= floor(($pc_cible * 5) / 100);
+									$pc_perso_fin	= $pc_cible - $pc_perdu;
+								}
+								else {
+									// Quand un grouillot meurt, il perd tout ses Pi
+									$pi_perso_fin = 0;
+									$pc_perso_fin = $pc_cible;
+								}
+			
+								// MAJ perte xp/po/stat cible
+								$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+								$mysqli->query($sql);
+								
+								// maj carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
@@ -343,7 +401,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
-								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$dernier_a_i'";
+								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$dernier_a_i'";
 								$res2 = $mysqli->query($sql);
 								$tab = $res2->fetch_assoc();
 								
@@ -351,9 +409,38 @@ while ($t_id = $res->fetch_assoc()) {
 								$x_cible 	= $tab["x_perso"];
 								$y_cible 	= $tab["y_perso"];
 								$xp_cible	= $tab["xp_perso"];
+								$pi_cible	= $tab['pi_perso'];
+								$pc_cible	= $tab['pc_perso'];
+								$or_cible	= $tab['or_perso'];
+								$tp_perso	= $tab['chef'];
 							
 								if ($pv_cible <= 0) {
 								
+									// Calcul gains (po et xp)
+									$perte_po = gain_po_mort($or_cible);
+									
+									// Chef
+									if ($tp_perso == 1) {
+										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_cible - $pi_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_cible * 5) / 100);
+										$pc_perso_fin	= $pc_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$pc_perso_fin = $pc_cible;
+									}
+				
+									// MAJ perte xp/po/stat cible
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$mysqli->query($sql);
+									
+									// maj carte
 									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 									$mysqli->query($sql);
 									
@@ -448,7 +535,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
-								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$id_pj'";
+								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$id_pj'";
 								$res2 = $mysqli->query($sql);
 								$tab = $res2->fetch_assoc();
 								
@@ -456,9 +543,38 @@ while ($t_id = $res->fetch_assoc()) {
 								$x_cible 	= $tab["x_perso"];
 								$y_cible 	= $tab["y_perso"];
 								$xp_cible 	= $tab["xp_perso"];
+								$pi_cible	= $tab['pi_perso'];
+								$pc_cible	= $tab['pc_perso'];
+								$or_cible	= $tab['or_perso'];
+								$tp_perso	= $tab['chef'];
 							
 								if ($pv_cible <= 0) {
 								
+									// Calcul gains (po et xp)
+									$perte_po = gain_po_mort($or_cible);
+									
+									// Chef
+									if ($tp_perso == 1) {
+										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_cible - $pi_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_cible * 5) / 100);
+										$pc_perso_fin	= $pc_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$pc_perso_fin = $pc_cible;
+									}
+				
+									// MAJ perte xp/po/stat cible
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$mysqli->query($sql);
+									
+									// maj carte
 									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 									$mysqli->query($sql);
 									
@@ -566,7 +682,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
-							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$dernier_a_i'";
+							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$dernier_a_i'";
 							$res2 = $mysqli->query($sql);
 							$tab = $res2->fetch_assoc();
 							
@@ -574,9 +690,38 @@ while ($t_id = $res->fetch_assoc()) {
 							$x_cible 	= $tab["x_perso"];
 							$y_cible 	= $tab["y_perso"];
 							$xp_cible 	= $tab["xp_perso"];
+							$pi_cible	= $tab['pi_perso'];
+							$pc_cible	= $tab['pc_perso'];
+							$or_cible	= $tab['or_perso'];
+							$tp_perso	= $tab['chef'];
 						
 							if ($pv_cible <= 0) {
 							
+								// Calcul gains (po et xp)
+								$perte_po = gain_po_mort($or_cible);
+								
+								// Chef
+								if ($tp_perso == 1) {
+									// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+									// Calcul PI
+									$pi_perdu 		= floor(($pi_cible * 5) / 100);
+									$pi_perso_fin 	= $pi_cible - $pi_perdu;
+									
+									// Calcul PC
+									$pc_perdu		= floor(($pc_cible * 5) / 100);
+									$pc_perso_fin	= $pc_cible - $pc_perdu;
+								}
+								else {
+									// Quand un grouillot meurt, il perd tout ses Pi
+									$pi_perso_fin = 0;
+									$pc_perso_fin = $pc_cible;
+								}
+			
+								// MAJ perte xp/po/stat cible
+								$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+								$mysqli->query($sql);
+								
+								// maj carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
@@ -666,7 +811,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
-								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$dernier_a_i'";
+								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$dernier_a_i'";
 								$res2 = $mysqli->query($sql);
 								$tab = $res2->fetch_assoc();
 								
@@ -674,9 +819,38 @@ while ($t_id = $res->fetch_assoc()) {
 								$x_cible 	= $tab["x_perso"];
 								$y_cible 	= $tab["y_perso"];
 								$xp_cible 	= $tab["xp_perso"];
+								$pi_cible	= $tab['pi_perso'];
+								$pc_cible	= $tab['pc_perso'];
+								$or_cible	= $tab['or_perso'];
+								$tp_perso	= $tab['chef'];
 							
 								if ($pv_cible <= 0) {
 								
+									// Calcul gains (po et xp)
+									$perte_po = gain_po_mort($or_cible);
+									
+									// Chef
+									if ($tp_perso == 1) {
+										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_cible - $pi_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_cible * 5) / 100);
+										$pc_perso_fin	= $pc_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$pc_perso_fin = $pc_cible;
+									}
+				
+									// MAJ perte xp/po/stat cible
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$mysqli->query($sql);
+									
+									// maj carte
 									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 									$mysqli->query($sql);
 									
@@ -778,7 +952,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
-								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$id_pj'";
+								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$id_pj'";
 								$res2 = $mysqli->query($sql);
 								$tab = $res2->fetch_assoc();
 								
@@ -786,10 +960,38 @@ while ($t_id = $res->fetch_assoc()) {
 								$x_cible 	= $tab["x_perso"];
 								$y_cible 	= $tab["y_perso"];
 								$xp_cible 	= $tab["xp_perso"];
+								$pi_cible	= $tab['pi_perso'];
+								$pc_cible	= $tab['pc_perso'];
+								$or_cible	= $tab['or_perso'];
+								$tp_perso	= $tab['chef'];
 							
 								if ($pv_cible <= 0) {
 								
-									//echo "le pnj $id_i_pnj a tue $nom_cible<br>";
+									// Calcul gains (po et xp)
+									$perte_po = gain_po_mort($or_cible);
+									
+									// Chef
+									if ($tp_perso == 1) {
+										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_cible - $pi_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_cible * 5) / 100);
+										$pc_perso_fin	= $pc_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$pc_perso_fin = $pc_cible;
+									}
+				
+									// MAJ perte xp/po/stat cible
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$mysqli->query($sql);
+									
+									// maj carte
 									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 									$mysqli->query($sql);
 									
@@ -898,7 +1100,7 @@ while ($t_id = $res->fetch_assoc()) {
 									$mysqli->query($sql);
 									
 									// verification si la cible est morte ou non
-									$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$id_pj'";
+									$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$id_pj'";
 									$res2 = $mysqli->query($sql);
 									$tab = $res2->fetch_assoc();
 									
@@ -906,10 +1108,38 @@ while ($t_id = $res->fetch_assoc()) {
 									$x_cible 	= $tab["x_perso"];
 									$y_cible 	= $tab["y_perso"];
 									$xp_cible 	= $tab["xp_perso"];
+									$pi_cible	= $tab['pi_perso'];
+									$pc_cible	= $tab['pc_perso'];
+									$or_cible	= $tab['or_perso'];
+									$tp_perso	= $tab['chef'];
 								
 									if ($pv_cible <= 0) {
 									
-										//echo "le pnj $id_i_pnj a tue $nom_cible<br>";
+										// Calcul gains (po et xp)
+										$perte_po = gain_po_mort($or_cible);
+										
+										// Chef
+										if ($tp_perso == 1) {
+											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+											// Calcul PI
+											$pi_perdu 		= floor(($pi_cible * 5) / 100);
+											$pi_perso_fin 	= $pi_cible - $pi_perdu;
+											
+											// Calcul PC
+											$pc_perdu		= floor(($pc_cible * 5) / 100);
+											$pc_perso_fin	= $pc_cible - $pc_perdu;
+										}
+										else {
+											// Quand un grouillot meurt, il perd tout ses Pi
+											$pi_perso_fin = 0;
+											$pc_perso_fin = $pc_cible;
+										}
+					
+										// MAJ perte xp/po/stat cible
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$mysqli->query($sql);
+										
+										// maj carte
 										$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 										$mysqli->query($sql);
 										
@@ -1013,7 +1243,7 @@ while ($t_id = $res->fetch_assoc()) {
 							$mysqli->query($sql);
 							
 							// verification si la cible est morte ou non
-							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$id_pj'";
+							$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$id_pj'";
 							$res2 = $mysqli->query($sql);
 							$tab = $res2->fetch_assoc();
 							
@@ -1021,9 +1251,38 @@ while ($t_id = $res->fetch_assoc()) {
 							$x_cible 	= $tab["x_perso"];
 							$y_cible 	= $tab["y_perso"];
 							$xp_cible 	= $tab["xp_perso"];
+							$pi_cible	= $tab['pi_perso'];
+							$pc_cible	= $tab['pc_perso'];
+							$or_cible	= $tab['or_perso'];
+							$tp_perso	= $tab['chef'];
 						
 							if ($pv_cible <= 0) {
 							
+								// Calcul gains (po et xp)
+								$perte_po = gain_po_mort($or_cible);
+								
+								// Chef
+								if ($tp_perso == 1) {
+									// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+									// Calcul PI
+									$pi_perdu 		= floor(($pi_cible * 5) / 100);
+									$pi_perso_fin 	= $pi_cible - $pi_perdu;
+									
+									// Calcul PC
+									$pc_perdu		= floor(($pc_cible * 5) / 100);
+									$pc_perso_fin	= $pc_cible - $pc_perdu;
+								}
+								else {
+									// Quand un grouillot meurt, il perd tout ses Pi
+									$pi_perso_fin = 0;
+									$pc_perso_fin = $pc_cible;
+								}
+			
+								// MAJ perte xp/po/stat cible
+								$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+								$mysqli->query($sql);
+								
+								// maj carte
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 								$mysqli->query($sql);
 								
@@ -1133,7 +1392,7 @@ while ($t_id = $res->fetch_assoc()) {
 								$mysqli->query($sql);
 								
 								// verification si la cible est morte ou non
-								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso FROM perso WHERE ID_perso='$id_pj'";
+								$sql = "SELECT pv_perso, x_perso, y_perso, xp_perso, pi_perso, pc_perso, or_perso, chef FROM perso WHERE ID_perso='$id_pj'";
 								$res2 = $mysqli->query($sql);
 								$tab = $res2->fetch_assoc();
 								
@@ -1141,9 +1400,38 @@ while ($t_id = $res->fetch_assoc()) {
 								$x_cible 	= $tab["x_perso"];
 								$y_cible 	= $tab["y_perso"];
 								$xp_cible 	= $tab["xp_perso"];
+								$pi_cible	= $tab['pi_perso'];
+								$pc_cible	= $tab['pc_perso'];
+								$or_cible	= $tab['or_perso'];
+								$tp_perso	= $tab['chef'];
 							
 								if ($pv_cible <= 0) {
 								
+									// Calcul gains (po et xp)
+									$perte_po = gain_po_mort($or_cible);
+									
+									// Chef
+									if ($tp_perso == 1) {
+										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
+										// Calcul PI
+										$pi_perdu 		= floor(($pi_cible * 5) / 100);
+										$pi_perso_fin 	= $pi_cible - $pi_perdu;
+										
+										// Calcul PC
+										$pc_perdu		= floor(($pc_cible * 5) / 100);
+										$pc_perso_fin	= $pc_cible - $pc_perdu;
+									}
+									else {
+										// Quand un grouillot meurt, il perd tout ses Pi
+										$pi_perso_fin = 0;
+										$pc_perso_fin = $pc_cible;
+									}
+				
+									// MAJ perte xp/po/stat cible
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$mysqli->query($sql);
+									
+									// maj carte
 									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 									$mysqli->query($sql);
 									
