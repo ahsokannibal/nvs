@@ -554,53 +554,62 @@ if($dispo || $admin){
 												
 												$xs 	= $t["x_carte"];
 												$ys 	= $t["y_carte"];
-												$fond = $t["fond_carte"];
+												$fond 	= $t["fond_carte"];
 												
-												// mise a jour des coordonnees du perso et de ses pm
-												$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
-												$mysqli->query($sql);
+												$cout_pm = cout_pm($fond);
 												
-												$x_persoN = $xs;
-												$y_persoN = $ys;
+												// verification des pm du perso
+												if($pm_perso + $malus_pm >= $cout_pm){
 												
-												// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
-												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
-												$mysqli->query($sql);
-												
-												// mise a jour de la table perso_in_batiment
-												$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-												$mysqli->query($sql);
-												
-												// mise a jour des evenements
-												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
-												$mysqli->query($sql);
-												
-												// mise a jour du bonus de perception
-												$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-												
-												if(bourre($mysqli, $id_perso)){
-													if(!endurance_alcool($mysqli, $id_perso)) {
-														$malus_bourre = bourre($mysqli, $id_perso) * 3;
-														$bonus_visu -= $malus_bourre;
+													// mise a jour des coordonnees du perso et de ses pm
+													$sql = "UPDATE perso SET x_perso = '$xs', y_perso = '$ys', pm_perso=pm_perso-$cout_pm WHERE id_perso = '$id_perso'";
+													$mysqli->query($sql);
+													
+													$x_persoN = $xs;
+													$y_persoN = $ys;
+													
+													// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+													$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$xs' AND y_carte = '$ys'";
+													$mysqli->query($sql);
+													
+													// mise a jour de la table perso_in_batiment
+													$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+													$mysqli->query($sql);
+													
+													// mise a jour des evenements
+													$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $xs/$ys',NOW(),'0')";
+													$mysqli->query($sql);
+													
+													// mise a jour du bonus de perception
+													$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+													
+													if(bourre($mysqli, $id_perso)){
+														if(!endurance_alcool($mysqli, $id_perso)) {
+															$malus_bourre = bourre($mysqli, $id_perso) * 3;
+															$bonus_visu -= $malus_bourre;
+														}
+													}
+													
+													$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+													$mysqli->query($sql);
+													
+													// maj carte brouillard de guerre
+													$perception_final = $perception_perso + $bonus_visu;
+													if ($clan_p == 1) {
+														$sql = "UPDATE $carte SET vue_nord='1' 
+																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+														$mysqli->query($sql);
+													}
+													else if ($clan_p == 2) {
+														$sql = "UPDATE $carte SET vue_sud='1' 
+																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+														$mysqli->query($sql);
 													}
 												}
-												
-												$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
-												$mysqli->query($sql);
-												
-												// maj carte brouillard de guerre
-												$perception_final = $perception_perso + $bonus_visu;
-												if ($clan_p == 1) {
-													$sql = "UPDATE $carte SET vue_nord='1' 
-															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-													$mysqli->query($sql);
-												}
-												else if ($clan_p == 2) {
-													$sql = "UPDATE $carte SET vue_sud='1' 
-															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-													$mysqli->query($sql);
+												else {
+													$erreur .= "Il faut posséder au moins ".$cout_pm." pm pour sortir de ce bâtiment dans cette direction";
 												}
 											}
 											else {											
@@ -1250,52 +1259,60 @@ if($dispo || $admin){
 												
 												// On vérifie que la case n'est pas déjà occupée
 												if (!$oc_c) {
-												
-													// mise a jour des coordonnees du perso et de ses pm
-													$sql = "UPDATE perso SET x_perso = '$x_sortie', y_perso = '$y_sortie', pm_perso=pm_perso-1 WHERE id_perso = '$id_perso'";
-													$mysqli->query($sql);
 													
-													$x_persoN = $x_sortie;
-													$y_persoN = $y_sortie;
+													$cout_pm = cout_pm($fond);
 													
-													// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
-													$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$x_sortie' AND y_carte = '$y_sortie'";
-													$mysqli->query($sql);
+													if ($pm_perso + $malus_pm >= $cout_pm) {
 													
-													// mise a jour de la table perso_in_batiment
-													$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
-													$mysqli->query($sql);
-													
-													// mise a jour des evenements
-													$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $x_sortie/$y_sortie',NOW(),'0')";
-													$mysqli->query($sql);
-													
-													// mise a jour du bonus de perception
-													$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
-													
-													if(bourre($mysqli, $id_perso)){
-														if(!endurance_alcool($mysqli, $id_perso)) {
-															$malus_bourre = bourre($mysqli, $id_perso) * 3;
-															$bonus_visu -= $malus_bourre;
+														// mise a jour des coordonnees du perso et de ses pm
+														$sql = "UPDATE perso SET x_perso = '$x_sortie', y_perso = '$y_sortie', pm_perso=pm_perso-$cout_pm WHERE id_perso = '$id_perso'";
+														$mysqli->query($sql);
+														
+														$x_persoN = $x_sortie;
+														$y_persoN = $y_sortie;
+														
+														// mise a jour des coordonnees du perso sur la carte et changement d'etat de la case
+														$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso' ,idPerso_carte='$id_perso' WHERE x_carte = '$x_sortie' AND y_carte = '$y_sortie'";
+														$mysqli->query($sql);
+														
+														// mise a jour de la table perso_in_batiment
+														$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso'";
+														$mysqli->query($sql);
+														
+														// mise a jour des evenements
+														$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est sorti du batiment',NULL,'','en $x_sortie/$y_sortie',NOW(),'0')";
+														$mysqli->query($sql);
+														
+														// mise a jour du bonus de perception
+														$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
+														
+														if(bourre($mysqli, $id_perso)){
+															if(!endurance_alcool($mysqli, $id_perso)) {
+																$malus_bourre = bourre($mysqli, $id_perso) * 3;
+																$bonus_visu -= $malus_bourre;
+															}
+														}
+														
+														$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
+														$mysqli->query($sql);
+														
+														// maj carte brouillard de guerre
+														$perception_final = $perception_perso + $bonus_visu;
+														if ($clan_p == 1) {
+															$sql = "UPDATE $carte SET vue_nord='1' 
+																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+															$mysqli->query($sql);
+														}
+														else if ($clan_p == 2) {
+															$sql = "UPDATE $carte SET vue_sud='1' 
+																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+															$mysqli->query($sql);
 														}
 													}
-													
-													$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'";
-													$mysqli->query($sql);
-													
-													// maj carte brouillard de guerre
-													$perception_final = $perception_perso + $bonus_visu;
-													if ($clan_p == 1) {
-														$sql = "UPDATE $carte SET vue_nord='1' 
-																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-														$mysqli->query($sql);
-													}
-													else if ($clan_p == 2) {
-														$sql = "UPDATE $carte SET vue_sud='1' 
-																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-														$mysqli->query($sql);
+													else {
+														$erreur .= "Vous n'avez pas assez de PM pour sortir du bâtiment sur cette case !";
 													}
 												}
 												else {
