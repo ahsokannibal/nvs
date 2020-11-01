@@ -64,22 +64,69 @@ function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 		$x_rail = $t_rail2[0];
 		$y_rail = $t_rail2[1];
 		
-		// mise a jour de la carte
-		$sql = "UPDATE $carte SET fond_carte='rail.gif' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
-		$mysqli->query($sql);
+		// verification possibilité construction rail
+		$verif_construction_rail = verification_construction_rail($mysqli, $x_rail, $y_rail);
 		
-		// maj pa perso 
-		$sql = "UPDATE perso SET pa_perso = pa_perso - 4 WHERE id_perso='$id_perso'";
-		$mysqli->query($sql);
-		
-		//mise a jour de la table evenement
-		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'','',NOW(),'0')";
-		$mysqli->query($sql);
-		
-		return 1;
+		if ($verif_construction_rail) {
+			// mise a jour de la carte
+			$sql = "UPDATE $carte SET fond_carte='rail.gif' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
+			$mysqli->query($sql);
+			
+			// maj pa perso 
+			$sql = "UPDATE perso SET pa_perso = pa_perso - 4 WHERE id_perso='$id_perso'";
+			$mysqli->query($sql);
+			
+			//mise a jour de la table evenement
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'','',NOW(),'0')";
+			$mysqli->query($sql);
+			
+			return 1;
+		}
+		else {
+			echo "<center>";
+			echo "<b><font color='red'>Un rail ne peut se poser qu'à proximité d'une gare ou d'un autre rail</font></b>";
+			echo "<br /><a href='jouer.php' class='btn btn-primary'>Retour</a>";
+			echo "</center>";
+		}
 	}
 	else {
-		return 1;
+		echo "<center>";
+		echo "<b><font color='red'>Vous devez posséder au moins 4 PA pour construire un rail</font></b>";
+		echo "<br /><a href='jouer.php' class='btn btn-primary'>Retour</a>";
+		echo "</center>";
+	}
+}
+
+/**
+ * Fonction permettant de vérifier si la construction du rail respecte les conditions de construction
+ * @return boolean : true si contraintes respectée, false sinon
+ */
+function verification_construction_rail($mysqli, $x_rail, $y_rail) {
+	
+	// Le rail est-il collé à un autre rail ?
+	$sql = "SELECT fond_carte FROM carte WHERE fond_carte='rail.gif'
+			AND x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 
+			AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1";
+	$res = $mysqli->query($sql);
+	
+	$nb_rails_prox = $res->num_rows;
+	
+	if ($nb_rails_prox > 0) {
+		return true;
+	}
+	else {
+		// Le rail est-il collé à une gare
+		$sql = "SELECT idPerso_carte FROM carte, instance_batiment
+				WHERE carte.idPerso_carte = instance_batiment.id_instanceBat
+				AND idPerso_carte >= 50000
+				AND instance_batiment.id_batiment = 11
+				AND x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 
+				AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1";
+		$res = $mysqli->query($sql);
+	
+		$nb_cases_gare_prox = $res->num_rows;
+		
+		return $nb_cases_gare_prox > 0;
 	}
 }
 
