@@ -65,7 +65,7 @@ include ('../nb_online.php');
 								<td>Ponts</td><td align='center'>0</td><td align='center'> - </td><td>plus de 3 cases d'un autre batiment. 30 cases d'un autre pont. La construction doit démarrer de la terre ferme (pas de pont flottant). Les ponts ne peuvent pas faire plus de 2 cases de largeur.</td>
 							</tr>
 							<tr>
-								<td>Rails</td><td align='center'>0</td><td align='center'> - </td><td>Il est possible pour le génie de construire des rails mais aussi de les détruire. <b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
+								<td>Rails</td><td align='center'>0</td><td align='center'> - </td><td>La construction d'une case de rail est soumise à quelques règles : construction uniquement à proximité immédiate d'une gare ou d'une autre case de rail. On évite les embranchements qui perturbent actuellement le train. Il est possible pour le génie de les détruire. <b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
 							</tr>
 						</table>
 					</div>
