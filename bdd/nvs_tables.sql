@@ -1359,6 +1359,12 @@ ALTER TABLE `dossier`
   ADD PRIMARY KEY (`id_dossier`);
 
 --
+-- Index pour la table `declaration_babysitte`
+--  
+ALTER TABLE `declaration_babysitte`
+  ADD PRIMARY KEY (`id_declaration`);
+
+--
 -- Index pour la table `em_creer_compagnie`
 --
 ALTER TABLE `em_creer_compagnie`
