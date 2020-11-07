@@ -354,9 +354,12 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		$verif_distance_tour = $t['nb_tour'];
 	}
 	
-	// Verification Hopital distance < 40 cases avec Fort / Fortin / Gare ou un autre Hôpital
+	// Verification Hopital distance < 40 cases avec Fort / Fortin ou Gare
+	// Verification Hopital distance >= 50 cases avec autre hopital
 	$verif_bat_pour_construction_hopital = 1;
+	$verif_hop_pour_construction_hopital = 0;
 	$nb_cases_construction_hopital_bat = 40;
+	$nb_cases_construction_hopital_hop = 50;
 	
 	if ($id_bat == '7') {
 		
@@ -365,11 +368,22 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			AND x_instance <= $x_bat + $nb_cases_construction_hopital_bat
 			AND y_instance >= $y_bat - $nb_cases_construction_hopital_bat
 			AND y_instance <= $y_bat + $nb_cases_construction_hopital_bat
-			AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9' OR id_batiment='11') AND camp_instance='$camp_perso' AND pv_instance > 0";
+			AND (id_batiment='8' OR id_batiment='9' OR id_batiment='11') AND camp_instance='$camp_perso' AND pv_instance > 0";
 		$res = $mysqli->query($sql);
 		$t = $res->fetch_assoc();
 		
 		$verif_bat_pour_construction_hopital = $t['nb_bat_pour_hopital'];
+		
+		$sql = "SELECT count(id_instanceBat) as nb_hopital FROM instance_batiment 
+			WHERE x_instance >= $x_bat - $nb_cases_construction_hopital_hop
+			AND x_instance <= $x_bat + $nb_cases_construction_hopital_hop
+			AND y_instance >= $y_bat - $nb_cases_construction_hopital_hop
+			AND y_instance <= $y_bat + $nb_cases_construction_hopital_hop
+			AND (id_batiment='7') AND camp_instance='$camp_perso' AND pv_instance > 0";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$verif_hop_pour_construction_hopital = $t['nb_hopital'];
 	}
 	
 	$verif_berge_pont			= 1;
@@ -455,6 +469,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 				&& $verif_nb_gares == 0 
 				&& $verif_nb_rapats == 0 
 				&& $verif_bat_pour_construction_hopital > 0
+				&& $verif_hop_pour_construction_hopital == 0
 				&& $verif_distance_tour == 0 
 				&& $verif_distance_pont == 0
 				&& $verif_distance_pont_bat == 0

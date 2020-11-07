@@ -53,7 +53,7 @@ include ('../nb_online.php');
 								<td>Gare</td><td align='center'>6</td><td align='center'>30</td><td>plus de 40 cases d'une autre gare. 20 cases d'un lieu de rapatriement. 2 cases d'un autre batiment.</td>
 							</tr>
 							<tr>
-								<td>Hôpital</td><td align='center'>3 + 1 soigneur</td><td align='center'>10</td><td>plus de 20 cases d'une gare ou d'un autre lieu de rapatriement. 2 cases d'un autre batiment. Moins de 40 cases d'une gare ou d'un autre lieu de rapatriement.</td>
+								<td>Hôpital</td><td align='center'>3 + 1 soigneur</td><td align='center'>10</td><td>plus de 20 cases d'une gare ou d'un autre lieu de rapatriement. 2 cases d'un autre batiment. Moins de 40 cases d'une gare ou d'un autre lieu de rapatriement. Plus de 50 cases d'un autre hôpital.</td>
 							</tr>
 							<tr>
 								<td>Tour de visu</td><td align='center'>1</td><td align='center'>5</td><td>plus de 2 cases d'un autre batiment. 7 cases d'une autre tour.</td>
