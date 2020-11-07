@@ -354,7 +354,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		$verif_distance_tour = $t['nb_tour'];
 	}
 	
-	// Verification Hopital distance < 40 cases avec Fort / Fortin ou Gare
+	// Verification Hopital distance < 40 cases avec Fort / Fortin / Gare ou un autre Hôpital
 	$verif_bat_pour_construction_hopital = 1;
 	$nb_cases_construction_hopital_bat = 40;
 	
@@ -365,12 +365,11 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			AND x_instance <= $x_bat + $nb_cases_construction_hopital_bat
 			AND y_instance >= $y_bat - $nb_cases_construction_hopital_bat
 			AND y_instance <= $y_bat + $nb_cases_construction_hopital_bat
-			AND (id_batiment='8' OR id_batiment='9' OR id_batiment='11') AND camp_instance='$camp_perso' AND pv_instance > 0";
+			AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9' OR id_batiment='11') AND camp_instance='$camp_perso' AND pv_instance > 0";
 		$res = $mysqli->query($sql);
 		$t = $res->fetch_assoc();
 		
 		$verif_bat_pour_construction_hopital = $t['nb_bat_pour_hopital'];
-		
 	}
 	
 	$verif_berge_pont			= 1;
