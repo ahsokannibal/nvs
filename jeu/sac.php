@@ -278,10 +278,10 @@ if($dispo || $admin){
 			
 			
 	?>
-		<table border=0 width=100%>
+		<table border=0 class='table'>
 			<tr>
 				<td>
-					<table border=1 width=100%>
+					<table border=1 class='table'>
 						<tr>
 							<td align=center width=25%><img src="../images/<?php echo $image_sac; ?>"><p align="center"><input type="button" value="Fermer mon sac" onclick="window.open('jouer.php', '_self', ''); window.close();"></p></td>
 							<td width=75%>
@@ -321,7 +321,7 @@ if($dispo || $admin){
 			
 			<tr>
 				<td>
-					<table border=1 width=100%>
+					<table border=1 class='table'>
 						<tr>
 							<th width='25%'><center>objet</center></th><th width='50%'><center>description</center></th><th width='25%'><center>nombre</center></th>
 						</tr>

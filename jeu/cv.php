@@ -95,7 +95,7 @@ if(isset($id)){
 	if ($nb_event) {
 		
 		echo "<center><font color=red><b>Évènements spéciaux</b></font></center>";
-		echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
+		echo "<center><table border=1 class='table'><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 	
 		while ($t = $res->fetch_assoc()){
 			echo "<tr>";
@@ -117,7 +117,7 @@ if(isset($id)){
 		
 		echo "<center><font color=red><b>Décorations</b></font></center>";
 		echo "<center>";
-		echo "<table border=1 width=80%>";
+		echo "<table border=1 class='table'>";
 		echo "	<tr>";
 		echo "		<th style='text-align:center' width=25%>date</th>";
 		echo "		<th style='text-align:center' width=25%>décoration</th>";
@@ -154,7 +154,7 @@ if(isset($id)){
 	if ($nb_mission) {
 		
 		echo "<center><font color=red><b>Missions</b></font></center>";
-		echo "<center><table border=1 width=80%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
+		echo "<center><table border=1 class='table'><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 		
 		while ($t = $res->fetch_assoc()){
 			$count++;
@@ -174,7 +174,7 @@ if(isset($id)){
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>Le bon...</b></font></center>";
-	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
+	echo "<center><table border=1 class='table'><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 	
 	while ($t = $res->fetch_assoc()) {
 		
@@ -240,7 +240,7 @@ if(isset($id)){
 	$res = $mysqli->query($sql);
 	
 	echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
-	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
+	echo "<center><table border=1 class='table'><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th></tr>";
 	
 	while ($t = $res->fetch_assoc()) {
 		
@@ -300,7 +300,7 @@ if(isset($id)){
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>PNJ</b></font></center>";
-	echo "<center><table border=1 width=60%><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center' >Évènement</th></tr>";
+	echo "<center><table border=1 class='table'><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center' >Évènement</th></tr>";
 	
 	while ($t = $res->fetch_assoc()) {
 		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
@@ -319,7 +319,7 @@ if(isset($id)){
 	
 	echo "<center><font color=red><b>Batiments</b></font></center>";
 	echo "<center>";
-	echo "	<table border=1 width=60%>";
+	echo "	<table border=1 class='table'>";
 	echo "		<tr>";
 	echo "			<th style='text-align:center' width=25%>date</th><th style='text-align:center'>Évènement</th>";
 	echo "		</tr>";

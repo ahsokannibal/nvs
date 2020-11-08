@@ -64,7 +64,7 @@ if(@$_SESSION["id_perso"]){
 		
 		<div class="row justify-content-center">
 				<div class="col-12">
-					<table border=1 align="center" cellpadding=2 cellspacing=1 width=550>
+					<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
 <?php
 		$id_message = $_GET["id"];
 		$verif = preg_match("#^[0-9]+$#i",$id_message);
@@ -131,6 +131,8 @@ if(@$_SESSION["id_perso"]){
 					
 					echo '	<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $tab["date_message"] . "</td></tr>";
 					echo '	<tr class="exp"><td colspan=2><b>Destinataires :</b> '.$destinataires.'</td></tr>';
+					echo "</table><br />";
+					echo "<table border=1 align='center' cellpadding=2 cellspacing=1 width=100%>";
 					echo '	<tr class="titrel"><td colspan=2><center><b>Objet :</b> ' . stripslashes($tab["objet_message"]) . "</center></td></tr>";
 					echo '	<tr class="messl"><td colspan=2>';
 					

@@ -156,8 +156,8 @@ if(isset($_SESSION["id_perso"])){
 						echo "<font color='red'> (".$a_lire_dossier." new)</font>";
 					}
 					
-					echo "<form name=\"chk\" method=\"post\" action=\"traitement/t_messagerie.php\">";
-					echo "<table border=1 align=\"center\" cellpadding=2 cellspacing=1 width=550>";
+					echo "<form name='chk' method='post' action='traitement/t_messagerie.php'>";
+					echo "<table border=1 align='center' cellpadding=2 cellspacing=1 width=100%>";
 					
 					$sql = "SELECT message.id_message, expediteur_message, date_message, objet_message, lu_message 
 							FROM message, message_perso 

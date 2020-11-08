@@ -141,7 +141,7 @@ if($dispo || $admin){
 					<div align="center">
 						<h2>Bâtiments importants</h2>
 						<div id="table_batiment" class="table-responsive">						
-							<table border="1">
+							<table border="1" class='table'>
 								<tr>
 									<th style='text-align:center'>Bâtiment [matricule]</th><th style='text-align:center'>Nom du bâtiment</th><th style='text-align:center'>PV</th><th style='text-align:center'>Position</th><th style='text-align:center'>État</th>
 								</tr>
@@ -240,7 +240,7 @@ if($dispo || $admin){
 					<div align="center">
 						<h2>Autres Bâtiments</h2>
 						<div id="table_batiment_autre" class="table-responsive">						
-							<table border="1">
+							<table border="1" class='table'>
 								<tr>
 									<th style='text-align:center'>Bâtiment [matricule]</th><th style='text-align:center'>PV</th><th style='text-align:center'>Position</th><th style='text-align:center'>Action</th>
 								</tr>
@@ -274,16 +274,11 @@ if($dispo || $admin){
 										$image_bat = "b".$id_batiment."r.png";
 									}
 									
-									
-									// La bâtiment est-il en état de siège ?
-									
 									echo "<tr>";
-									echo "<form method=\"post\" action=\"anim_batiment.php\">";
 									echo "	<td>";
 									echo "		<input type='hidden' name='hid_id_instance_rename' value='$id_instance'>";
-									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." <input type='text' name='nom_batiment' value='".$nom_instance."' > <input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'>[<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]";
+									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." [<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]";
 									echo "	</td>";
-									echo "</form>";
 									
 									// PV
 									echo "	<td>";

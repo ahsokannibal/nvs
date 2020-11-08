@@ -186,7 +186,7 @@ if(@$_SESSION["id_perso"]){
 		if ($id) {
 	
 			?> 
-		<table align="center" width="80%" border=1>
+		<table align="center" border=1 class='table'>
 			<tr>
 				<th style='text-align:center' width="25%">date</th>
 				<th style='text-align:center' width="75%">Évènement</th>

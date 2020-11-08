@@ -297,8 +297,8 @@ if($dispo || $admin){
 				<div class="col-12">
 					<div align="center">
 						<h2>Liaisons existantes</h2>
-						<div id="table_batiment" class="table-responsive">						
-							<table border="1">
+						<div id="table_trains" class="table-responsive">						
+							<table border="1" class='table'>
 								<tr>
 									<th style='text-align:center'>Train</th>
 									<th style='text-align:center'>Gare 1</th>
@@ -454,7 +454,7 @@ if($dispo || $admin){
 									if ($obstacle_train) {
 										echo "<a href='anim_trains.php?detruire_obstacle=".$id_obstacle."' class='btn btn-warning'>Détruire l'obstacle</a>";
 									}
-									if (isset($num_perso_train) && $num_perso_train == 0) {
+									if ($id_train != NULL && $id_train != 0 && isset($num_perso_train) && $num_perso_train == 0) {
 										echo "<a href='anim_trains.php?detruire_train=".$id_train."' class='btn btn-danger'>Détruire le train</a>";
 									}
 									echo "	</td>";

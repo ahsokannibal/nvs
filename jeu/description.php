@@ -84,7 +84,7 @@ if(@$_SESSION["id_perso"]){
 			entete($mysqli, $id); 
 			
 			if ($id < 50000) {
-				echo "<table align=\"center\" width=\"80%\" border=1><tr><th background='../forum2/img/Chronicles/background.jpg'>description</th></tr>";
+				echo "<table align=\"center\" class='table' border=1><tr><th background='../forum2/img/Chronicles/background.jpg'>description</th></tr>";
 				$sql = "SELECT description_perso FROM perso WHERE id_perso = $id";
 				$result = $mysqli->query($sql);
 				$tabAttr = $result->fetch_assoc();
