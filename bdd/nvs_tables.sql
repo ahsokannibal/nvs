@@ -693,7 +693,8 @@ CREATE TABLE `joueur` (
   `redacteur` INT NOT NULL DEFAULT '0',
   `mail_mp` INT NOT NULL DEFAULT '0',
   `valid_case` INT NOT NULL DEFAULT '0',
-  `afficher_rosace` INT NOT NULL DEFAULT '1'
+  `afficher_rosace` INT NOT NULL DEFAULT '1',
+  `bousculade_deplacement` INT NOT NULL DEFAULT '1'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -895,6 +896,7 @@ CREATE TABLE `perso` (
   `bonusPerception_perso` int(11) NOT NULL DEFAULT '0',
   `bonusRecup_perso` int(11) NOT NULL DEFAULT '0',
   `bonusPM_perso` int(11) NOT NULL DEFAULT '0',
+  `bonusPA_perso` int(11) NOT NULL DEFAULT '0',
   `bonus_perso` int(11) NOT NULL DEFAULT '0',
   `image_perso` varchar(200) NOT NULL DEFAULT '',
   `message_perso` text NOT NULL,
