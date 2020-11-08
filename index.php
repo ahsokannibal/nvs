@@ -87,7 +87,7 @@ $count_online = $res->fetch_array();
 						<div class="col-sm-4">
 							<a href="inscription.php" style="color: white;">S'inscrire</b></a>
 							<hr />
-							<form action="login.php" method="post" name="pseudo" id="pseudo">
+							<form action="login.php" method="post" name="login" id="login">
 								<input name="pseudo" type="text" id="pseudo" placeholder="pseudo" maxlength="30">
 								<input name="password" type="password" id="password" placeholder="password" maxlength="20">
 								<input type="submit" name="Submit" value="Se connecter">
