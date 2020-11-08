@@ -306,6 +306,7 @@ function get_color_pv ($pv, $pv_max){
 
 function affiche_jauge ($p, $p_max){ 
 	$pourc = $p * 100 / $p_max;
+	
 	if ($pourc < 25)
 		$color = "#FF0000"; //rouge
 	elseif ($pourc < 50)
@@ -314,16 +315,22 @@ function affiche_jauge ($p, $p_max){
 		$color = "#FFFF00"; //jaune
 	else 
 		$color = "#00FF00"; //vert
-	echo '<table border=1 width=202 height=8 cellpadding=1 cellspacing=0 bgcolor=0 bordercolor="black">';
-		echo '<tr><td>';
-				echo '<table align="center" width=100% height=6 border=0 cellpadding=0 cellspacing=0>';
-					if ($pourc > 0)
-						echo "<tr><td width=\"$pourc%\" height=6 bgcolor=\"$color\"><font size=1>&nbsp;</font></td>";
-						echo "<td width=\"100-$pourc%\"bgcolor='#ffffff' height=6></td>";
-					echo "</tr>";
-				echo "</table>";
-		echo "</td></tr>";
+	
+	echo '<table border=1 width=100% bgcolor=0 cellpadding=0 cellspacing=0>';
+	echo '	<tr>';
+	echo '		<td style="padding:0">';
+	echo '			<table align="center" width=100% border=0 cellpadding=0 cellspacing=0>';
+	echo "				<tr>";
+	if ($pourc > 0) {
+		echo "					<td width=\"$pourc%\" height=6 bgcolor=\"$color\" style='padding:0'><font size=1>&nbsp;</font></td>";
+	}
+	echo "					<td width=\"100-$pourc%\"bgcolor='#ffffff' height=6 style='padding:0'></td>";
+	echo "				</tr>";
+	echo "			</table>";
+	echo "		</td>";
+	echo "	</tr>";
 	echo "</table>";
+	
 	return $pourc;
 }
 
