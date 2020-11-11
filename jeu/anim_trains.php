@@ -256,6 +256,44 @@ if($dispo || $admin){
 				}
 			}
 			
+			if (isset($_POST['hid_gare1_liaison']) && trim($_POST['hid_gare1_liaison']) != ""
+				&& isset($_POST['select_liaison_gare']) && trim($_POST['select_liaison_gare']) != "") {
+				
+				$gare1_liaison = $_POST['hid_gare1_liaison'];
+				$gare2_liaison = $_POST['select_liaison_gare'];
+				
+				$verif_id_gare1 = preg_match("#^[0-9]*[0-9]$#i","$gare1_liaison");
+				$verif_id_gare2 = preg_match("#^[0-9]*[0-9]$#i","$gare2_liaison");
+				
+				if ($verif_id_gare1 && $verif_id_gare2) {
+					
+					// On vérifie que les 2 gares existent et sont du camp de l'animateur
+					$sql = "SELECT * FROM instance_batiment WHERE id_instanceBat='$gare1_liaison' AND camp_instance='$camp'";
+					$res = $mysqli->query($sql);
+					$verif_gare1 = $res->num_rows;
+					
+					$sql = "SELECT * FROM instance_batiment WHERE id_instanceBat='$gare2_liaison' AND camp_instance='$camp'";
+					$res = $mysqli->query($sql);
+					$verif_gare2 = $res->num_rows;
+					
+					if ($verif_gare1 && $verif_gare2) {
+						
+						// Création de la liaison
+						$sql = "INSERT INTO liaisons_gare (id_gare1, id_gare2, id_train, direction) VALUES ('$gare1_liaison', '$gare2_liaison', NULL, '$gare2_liaison')";
+						$mysqli->query($sql);
+						
+						$mess .= "Liaison entre la gare [".$gare1_liaison."] et la gare [".$gare2_liaison."] créée";
+						
+					}
+					else {
+						$mess_erreur .= "Ces gares n'existent pas ou ne sont pas de votre camp !";
+					}
+				}
+				else {
+					$mess_erreur .= "Données incorrectes";
+				}				
+			}
+			
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -314,6 +352,8 @@ if($dispo || $admin){
 								$res = $mysqli->query($sql);
 								
 								while ($t = $res->fetch_assoc()) {
+									
+									$num_perso_train = 0;
 									
 									$id_gare1 		= $t['id_gare1'];
 									$id_gare2 		= $t['id_gare2'];
@@ -514,11 +554,41 @@ if($dispo || $admin){
 						if (empty($diff_gares)) {
 							echo "<b>Toutes les gares du $nom_camp possèdent bien une liaison</b><br />";
 						}
-						else {
-							echo "<b>Les gares suivantes ne possèdent pas de liaison</b><br />";
-							
-							foreach ($diff_gares as $gare){
-								echo "Gare id : ".$gare."<br />";
+						else {							
+							if (isset($_GET['creer_liaison']) && trim($_GET['creer_liaison']) != "") {
+								
+								$id_gare_creer_liaison = $_GET['creer_liaison'];
+								
+								echo "<b>Création de la liaison pour la gare [<a href='evenement.php?infoid=".$id_gare_creer_liaison."' target='_blank'>".$id_gare_creer_liaison."</a>]</b><br />";
+								
+								$sql_gares = "SELECT id_instanceBat, nom_instance FROM instance_batiment 
+										WHERE camp_instance='$camp' AND id_batiment='11' AND id_instanceBat != '$id_gare_creer_liaison' 
+										ORDER BY id_instanceBat ASC";
+								$res_gares = $mysqli->query($sql_gares);
+								
+								echo "<form method='POST' action='anim_trains.php'>";
+								echo "	<select name='select_liaison_gare'>";
+								while ($t_gares = $res_gares->fetch_assoc()) {
+									
+									$id_gare_liaison 	= $t_gares['id_instanceBat'];
+									$nom_gare_liasion	= $t_gares['nom_instance'];
+									
+									echo "		<option value='".$id_gare_liaison."'>Gare ".$nom_gare_liasion." [".$id_gare_liaison."]</option>";
+									
+								}
+								echo "	</select>";
+								echo "	<input type='hidden' value='".$id_gare_creer_liaison."' name='hid_gare1_liaison' class='btn btn-success'>";
+								echo "	<input type='submit' value='Créer' class='btn btn-success'>";
+								echo "</form>";
+								
+								echo "<a href='anim_trains.php' class='btn btn-danger'>Annuler</a>";
+							}
+							else {
+								echo "<b>Les gares suivantes ne possèdent pas de liaison</b><br />";
+								
+								foreach ($diff_gares as $gare){								
+									echo "Gare [<a href='evenement.php?infoid=".$gare."' target='_blank'>".$gare."</a>] <a href='anim_trains.php?creer_liaison=".$gare."' class='btn btn-warning'>Créer la liaison</a><br />";
+								}
 							}
 						}
 						
