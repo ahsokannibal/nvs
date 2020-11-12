@@ -868,11 +868,11 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 																			while ($image_on_rail != 'b12b.png' && $image_on_rail != 'b12r.png' && $num_res > 0) {
 																				
 																				// On cherche un train sur le chemin des rails
-																				$sql = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
+																				$sql_r = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
 																						WHERE x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1
 																						AND coordonnees NOT IN ( '" . implode( "', '" , $tab_rail ) . "' )
 																						AND fond_carte='rail.gif'";
-																				$res_r = $mysqli->query($sql);
+																				$res_r = $mysqli->query($sql_r);
 																				$num_res = $res_r->num_rows;
 																				
 																				$t_r = $res_r->fetch_assoc();
@@ -935,17 +935,78 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 																	}
 																	
 																	if (!$trouve) {
-																		// On n'a pas trouvé de train sur les rails
-																		// Est ce qu'on trouve une gare liée par les rails à cette nouvelle gare ?
-																		// TODO
 																		
+																		// Est ce que la gare est connectée à des rails ?
+																		$sql = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
+																				WHERE x_carte >= $x_bat - 2 AND x_carte <= $x_bat + 2 AND y_carte >= $y_bat - 2 AND y_carte <= $y_bat + 2 
+																				AND fond_carte='rail.gif'";
+																		$res = $mysqli->query($sql);
+																		$nb_connections = $res->num_rows;
 																		
+																		if ($nb_connections > 0) {
+																			
+																			while ($t = $res->fetch_assoc()) {
+																		
+																				$x_rail 		= $t["x_carte"];
+																				$y_rail 		= $t["y_carte"];
+																		
+																				// On n'a pas trouvé de train sur les rails
+																				// Est ce qu'on trouve une gare liée par les rails à cette nouvelle gare ?																		
+																				$num_res = 1;
+																				
+																				$tab_rail2 = array();
+																				
+																				while ($image_on_rail != 'b.png' && $image_on_rail != 'r.png' && $num_res > 0) {
+																						
+																					// On cherche un train sur le chemin des rails
+																					$sql_r = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
+																							WHERE x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1
+																							AND coordonnees NOT IN ( '" . implode( "', '" , $tab_rail2 ) . "' )
+																							AND (fond_carte='rail.gif' OR image_carte='r.png' OR image_carte='b.png')
+																							AND (idPerso_carte != '$id_i_bat' OR idPerso_carte IS NULL)";
+																					$res_r = $mysqli->query($sql_r);
+																					$num_res = $res_r->num_rows;
+																					
+																					$t_r = $res_r->fetch_assoc();
+																				
+																					$x_rail 		= $t_r['x_carte'];
+																					$y_rail 		= $t_r['y_carte'];
+																					$occ_rail		= $t_r["occupee_carte"];
+																					$idPerso_rail	= $t_r["idPerso_carte"];
+																					$image_on_rail	= $t_r["image_carte"];
+																					
+																					// Ajout coordonnées dans tableau des coordonnées des rails
+																					$coord_rail = $x_rail.";".$y_rail;
+																					array_push($tab_rail2, $coord_rail);
+																				}
+																				
+																				if (($camp_perso == 1 && $image_on_rail == 'b.png') || ($camp_perso == 2 && $image_on_rail == 'r.png')) {
+																					
+																					// On a trouvé un batiment du même camp que la gare construite
+																					$trouve = true;
+																					
+																					// Récupération des infos du bâtiment rencontré
+																					$sql_b = "SELECT * FROM instance_batiment WHERE id_instanceBat='$idPerso_rail'";
+																					$res_b = $mysqli->query($sql_b);
+																					$t_b = $res_b->fetch_assoc();
+																					
+																					$id_bat_instance	= $t_b['id_batiment'];
+																					$camp_instance		= $t_b['camp_instance'];
+																					
+																					// La batiment rencontré est bien une gare du même camp que la gare construite
+																					if ($id_bat_instance == '11' && $camp_instance == $camp_perso) {
+																						
+																						// Création de la liaison
+																						$sql = "INSERT INTO liaisons_gare (id_gare1, id_gare2, id_train, direction) VALUES ('$id_i_bat', '$idPerso_rail', NULL, '$idPerso_rail')";
+																						$mysqli->query($sql);
+																						
+																					}
+																				}
+																			}
+																		}
 																	}
 																}
-																else {
-																	echo "<center>Vous ne pouvez pas construire de gare si elle n'est pas reliée à des rails<br />";
-																	echo "<a href='jouer.php class='btn btn-primary'>retour</a></center>";
-																	
+																else {																	
 																	return 0;
 																}
 															}
