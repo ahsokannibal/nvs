@@ -167,6 +167,18 @@ if($dispo || $admin){
 						$sql = "UPDATE liaisons_gare SET id_train='$id_new_train' WHERE id_gare1='$id_gare1_liaison' AND id_gare2='$id_gare2_liaison'";
 						$mysqli->query($sql);
 						
+						$image_train = 'b12';
+						if ($camp == '1') {
+							$image_train .= 'b.gif';
+						}
+						else {
+							$image_train .= 'r.gif';
+						}
+						
+						// update carte
+						$sql = "UPDATE carte SET idPerso_carte='$id_new_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_respawn_train' AND y_carte='$y_respawn_train'";
+						$mysqli->query($sql);
+						
 						$mess .= "Création du train en position ".$x_respawn_train."/".$y_respawn_train." entre les gare $id_gare1_liaison et $id_gare2_liaison terminé";
 					}
 					else {
