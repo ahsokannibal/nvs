@@ -182,8 +182,6 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
-	echo $sql;
-	
 	$verif_nb_gc = $t['nb_gc'];	
 	
 	// Verification nb soigneurs
