@@ -226,6 +226,18 @@ CREATE TABLE `banque_compagnie` (
 
 -- --------------------------------------------------------
 
+
+CREATE TABLE `banque_log` ( 
+	`id_log` INT NOT NULL AUTO_INCREMENT, 
+	`date_log` DATETIME NOT NULL , 
+	`id_compagnie` INT NOT NULL , 
+	`id_perso` INT NOT NULL , 
+	`montant_transfert` INT NOT NULL , 
+	`montant_final` INT NOT NULL,
+	PRIMARY KEY (`id_log`)
+) ENGINE = MyISAM;
+
+
 --
 -- Structure de la table `carte`
 --
