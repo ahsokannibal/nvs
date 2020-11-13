@@ -80,13 +80,6 @@ if($dispo || $admin){
 							
 							$nom_compagnie		= addslashes($sec["nom_compagnie"]);
 							
-							// Récupération de l'id du group de la compagnie sur le forum
-							$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
-							$res = $mysqli->query($sql);
-							$t = $res->fetch_assoc();
-							
-							$id_group_forum = $t['group_id'];
-							
 							// récupération des persos dans la compagnie 
 							$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie_maj'";
 							$res_perso_a_virer = $mysqli->query($sql);
@@ -111,6 +104,10 @@ if($dispo || $admin){
 							
 							// Suppression de la banque de la compagnie
 							$sql = "DELETE FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie_maj'";
+							$mysqli->query($sql);
+							
+							// Suppression du log de banque de la compagnie
+							$sql = "DELETE FROM banque_log WHERE id_compagnie='$id_compagnie_maj'";
 							$mysqli->query($sql);
 							
 							// Suppression l'historique de la banque de la compagnie

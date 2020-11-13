@@ -207,6 +207,18 @@ if(isset($_SESSION["id_perso"])){
 								$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
 										WHERE id_compagnie='$id_compagnie')";
 								$mysqli->query($sql);
+								
+								$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$montant_final_banque = $t['montant'];
+								
+								$date = time();
+								
+								// banque log
+								$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_recrue', '-$thune_en_banque', '$montant_final_banque')";
+								$mysqli->query($sql);
 							}
 						
 							// On delete le perso de la compagnie

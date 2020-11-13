@@ -41,6 +41,12 @@ if(isset($_SESSION["id_perso"])){
 				$sql = "UPDATE banque_as_compagnie SET montant='$thune_compagnie' WHERE id_compagnie='$id_compagnie_select'";
 				$mysqli->query($sql);
 				
+				$date = time();
+										
+				// banque log
+				$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie_select', '1', '0', '$thune_compagnie')";
+				$mysqli->query($sql);
+				
 				$mess = "La thune de la banque de la compagnie est passée à ".$thune_compagnie;
 			
 			}
@@ -86,25 +92,7 @@ if(isset($_SESSION["id_perso"])){
 				$sql = "DELETE FROM banque_compagnie WHERE id_perso='$id_perso_a_virer'";
 				$mysqli->query($sql);
 				
-				// -- FORUM
-				// Récupération de l'id de l'utilisateur sur le forum 
-				$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-							(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
-								(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_a_virer') AND chef='1')";
-				$res_forum = $mysqli->query($sql);
-				$t = $res_forum->fetch_assoc();
-				
-				$id_user_forum = $t['user_id'];
-				
-				// Suppression de l'utilisateur du groupe sur le forum
-				$sql = "DELETE FROM ".$table_prefix."user_group WHERE group_id='$id_group_forum' AND user_id='$id_user_forum'";
-				$mysqli->query($sql);
-				
 			}
-			
-			// Suppression du groupe sur le forum 
-			$sql = "DELETE FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
-			$mysqli->query($sql);
 			
 			// Suppression de la compagnie sur le jeu 
 			$sql = "DELETE FROM compagnies WHERE id_compagnie='$id_compagnie_to_delete'";
@@ -116,6 +104,10 @@ if(isset($_SESSION["id_perso"])){
 			
 			// Suppression l'historique de la banque de la compagnie
 			$sql = "DELETE FROM histobanque_compagnie WHERE id_compagnie='$id_compagnie_to_delete'";
+			$mysqli->query($sql);
+			
+			// Suppression des logs de banque de la compagnie
+			$sql = "DELETE FROM banque_log WHERE id_compagnie='$id_compagnie_to_delete'";
 			$mysqli->query($sql);
 			
 			// Suppression de toutes le demandes liées à cette compagnie
@@ -160,6 +152,18 @@ if(isset($_SESSION["id_perso"])){
 			if ($thune_en_banque > 0) {
 				$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
 						WHERE id_compagnie='$id_compagnie_select')";
+				$mysqli->query($sql);
+				
+				$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$montant_final_banque = $t['montant'];
+				
+				$date = time();
+				
+				// banque log
+				$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie_select', '$id_perso_a_virer', '-$thune_en_banque', '$montant_final_banque')";
 				$mysqli->query($sql);
 			}
 		

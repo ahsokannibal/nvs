@@ -308,8 +308,26 @@ while ($t = $res_sup->fetch_assoc()){
 				// Si le montant est < 0 => On rembourse la compagnie de l'emprunt perdu
 				// Si le montant est > 0 => la compagnie perd la thune déposée par ce perso
 				
+				$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$id_compagnie = $t['id_compagnie'];
+				
 				$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
-						WHERE id_compagnie= ( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso')";
+						WHERE id_compagnie='$id_compagnie'";
+				$mysqli->query($sql);
+				
+				$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$montant_final_banque = $t['montant'];
+				
+				$date = time();
+				
+				// banque log
+				$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_perso', '-$thune_en_banque', '$montant_final_banque')";
 				$mysqli->query($sql);
 			}
 			
@@ -321,8 +339,6 @@ while ($t = $res_sup->fetch_assoc()){
 
 			$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
-			
-			// FORUM - TODO = supprimer perso du groupe
 		}
 		
 		

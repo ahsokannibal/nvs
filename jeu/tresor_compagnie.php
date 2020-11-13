@@ -104,6 +104,18 @@ if($dispo || $admin){
 									$sql = "UPDATE banque_as_compagnie SET montant=montant-$montant_emp WHERE id_compagnie='$id_compagnie'";
 									$mysqli->query($sql);
 									
+									$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+									$res = $mysqli->query($sql);
+									$t = $res->fetch_assoc();
+									
+									$montant_final_banque_compagnie = $t['montant'];
+									
+									$date = time();
+									
+									// banque log
+									$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_emp', '-$montant_emp', '$montant_final_banque_compagnie')";
+									$mysqli->query($sql);
+									
 									// on met a jour histoBanque_compagnie
 									$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant) VALUES ('$id_compagnie','$id_emp','2','-$montant_emp')";
 									$mysqli->query($sql);
@@ -238,6 +250,27 @@ if($dispo || $admin){
 										$mysqli->query($sql);
 										
 										$sql = "UPDATE banque_as_compagnie SET montant = montant + $montant_virement WHERE id_compagnie = '$id_comp_thune_dest'";
+										$mysqli->query($sql);
+										
+										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_comp_thune_deduite'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$montant_final_banque_compagnie1 = $t['montant'];
+										
+										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_comp_thune_dest'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$montant_final_banque_compagnie2 = $t['montant'];
+										
+										$date = time();
+										
+										// banque log
+										$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_comp_thune_deduite', '0', '-$montant_virement', '$montant_final_banque_compagnie1')";
+										$mysqli->query($sql);
+										
+										$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_comp_thune_dest', '0', '$montant_virement', '$montant_final_banque_compagnie2')";
 										$mysqli->query($sql);
 										
 										// Historique

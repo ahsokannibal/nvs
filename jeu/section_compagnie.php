@@ -129,6 +129,22 @@ if (@$_SESSION["id_perso"]) {
 													$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_chef_section WHERE id_compagnie='$id_compagnie'";
 													$mysqli->query($sql);
 													
+													$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+													$res = $mysqli->query($sql);
+													$t = $res->fetch_assoc();
+													
+													$montant_final_banque = $t['montant'];
+													
+													$date = time();
+													
+													// banque log
+													$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_chef_nouvelle_section', '-$montant_comp_chef_section', '$montant_final_banque')";
+													$mysqli->query($sql);
+													
+													// banque log
+													$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_new_comp', '$id_chef_nouvelle_section', '$montant_comp_chef_section', '$montant_comp_chef_section')";
+													$mysqli->query($sql);
+													
 													// MAJ histo_banque compagnie
 													$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) 
 															VALUES ('$id_compagnie', '$id_chef_nouvelle_section', '5', -$montant_comp_chef_section, NOW())";
@@ -213,6 +229,28 @@ if (@$_SESSION["id_perso"]) {
 										
 										// Mise à jour de la thune de la banque de la compagnie mère
 										$sql = "UPDATE banque_as_compagnie montant = montant - $montant_comp_perso_section WHERE id_compagnie='$id_compagnie'";
+										$mysqli->query($sql);
+										
+										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$montant_final_banque_compagnie = $t['montant'];
+										
+										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_section_delete'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+										
+										$montant_final_banque_section = $t['montant'];
+										
+										$date = time();
+										
+										// banque log
+										$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_perso_ajout', '-$montant_comp_perso_section', '$montant_final_banque_compagnie')";
+										$mysqli->query($sql);
+										
+										// banque log
+										$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_section_ajout', '$id_perso_ajout', '$montant_comp_perso_section', '$montant_final_banque_section')";
 										$mysqli->query($sql);
 										
 										// MAJ histo_banque compagnie
@@ -300,6 +338,28 @@ if (@$_SESSION["id_perso"]) {
 											
 											// Mise à jour de la thune de la banque de la compagnie mère
 											$sql = "UPDATE banque_as_compagnie montant = montant + $montant_comp_perso_section WHERE id_compagnie='$id_compagnie'";
+											$mysqli->query($sql);
+											
+											$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+											$res = $mysqli->query($sql);
+											$t = $res->fetch_assoc();
+											
+											$montant_final_banque_compagnie = $t['montant'];
+											
+											$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_section_delete'";
+											$res = $mysqli->query($sql);
+											$t = $res->fetch_assoc();
+											
+											$montant_final_banque_section = $t['montant'];
+											
+											$date = time();
+											
+											// banque log
+											$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_perso_delete', '$montant_comp_perso_section', '$montant_final_banque_compagnie')";
+											$mysqli->query($sql);
+											
+											// banque log
+											$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_section_ajout', '$id_perso_delete', '-$montant_comp_perso_section', '$montant_final_banque_section')";
 											$mysqli->query($sql);
 											
 											// MAJ histo_banque compagnie
@@ -397,6 +457,18 @@ if (@$_SESSION["id_perso"]) {
 												
 												// MAJ du montant de la banque de la compagnie mère
 												$sql = "UPDATE banque_as_compagnie montant = montant + $montant_perso_section WHERE id_compagnie='$id_compagnie'";
+												$mysqli->query($sql);
+												
+												$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+												$res = $mysqli->query($sql);
+												$t = $res->fetch_assoc();
+												
+												$montant_final_banque_compagnie = $t['montant'];
+												
+												$date = time();
+												
+												// banque log
+												$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_perso_section', '$montant_perso_section', '$montant_final_banque_compagnie')";
 												$mysqli->query($sql);
 												
 												// On transfert le perso de la section à la compagnie en simple membre
