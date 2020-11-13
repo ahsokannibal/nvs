@@ -182,6 +182,8 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
+	echo $sql;
+	
 	$verif_nb_gc = $t['nb_gc'];	
 	
 	// Verification nb soigneurs
@@ -698,8 +700,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 													}
 													else {
 														// mise a jour de la table instance_bat
-														$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
-																VALUES ('$niveau_bat', '$id_bat', '$nom_instance', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$contenance_bat')";
+														$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, camp_origine_instance, contenance_instance) 
+																VALUES ('$niveau_bat', '$id_bat', '$nom_instance', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$camp_perso', '$contenance_bat')";
 														$mysqli->query($sql);
 														$id_i_bat = $mysqli->insert_id;
 														
