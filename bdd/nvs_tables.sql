@@ -635,6 +635,7 @@ CREATE TABLE `instance_batiment` (
   `x_instance` int(11) DEFAULT NULL,
   `y_instance` int(11) DEFAULT NULL,
   `camp_instance` int(11) DEFAULT '4',
+  `camp_origine_instance` int(11) DEFAULT NULL,
   `contenance_instance` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
