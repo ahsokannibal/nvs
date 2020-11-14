@@ -50,6 +50,10 @@ while ($t = $res->fetch_assoc()){
 		$sql = "UPDATE perso SET pv_perso=0 WHERE id_perso='$id_perso_relacher'";
 		$mysqli->query($sql);
 		
+		// Sécurité
+		$sql = "UPDATE carte SET idPerso_carte=NULL, image_carte=NULL, occupee_carte='0' WHERE idPerso_carte¨='$id_perso_relacher'";
+		$mysqli->query($sql);
+		
 		// Ajout événement
 		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso_relacher,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a terminé de purger sa peine au pénitencier', NULL, NULL, '', NOW(), '0')";
 		$mysqli->query($sql);
