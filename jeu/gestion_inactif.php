@@ -300,7 +300,7 @@ while ($t = $res_sup->fetch_assoc()){
 		if ($is_in_compagnie) {
 		
 			// On regarde si le perso n'a pas de dette dans une banque de compagnie
-			$sql = "SELECT COUNT(montant) as thune_en_banque FROM histobanque_compagnie 
+			$sql = "SELECT SUM(montant) as thune_en_banque FROM histobanque_compagnie 
 					WHERE id_perso='$id_perso' 
 					AND id_compagnie=( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso')";
 			$res_b = $mysqli->query($sql);
@@ -308,7 +308,7 @@ while ($t = $res_sup->fetch_assoc()){
 			
 			$thune_en_banque = $tab["thune_en_banque"];
 			
-			if ($thune_en_banque > 0 || $thune_en_banque < 0) {
+			if ($thune_en_banque != 0) {
 				// Si le montant est < 0 => On rembourse la compagnie de l'emprunt perdu
 				// Si le montant est > 0 => la compagnie perd la thune déposée par ce perso
 				
