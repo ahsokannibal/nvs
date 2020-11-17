@@ -208,7 +208,7 @@ while ($t = $res_inactif->fetch_assoc()){
 //***********************************************
 // On envoi un mail aux joueurs dont les persos sont gelés depuis 20 jours
 $sql = "SELECT DISTINCT(email_joueur) FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur
-		AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 20 DAY) AND est_gele='1'";
+		AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 20 DAY) AND est_gele='1' AND id_perso!='1' AND id_perso!='2'";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
