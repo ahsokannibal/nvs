@@ -509,6 +509,8 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 			$sql = "UPDATE perso SET pm_perso=$pm_nouveau, pa_perso=$pa_nouveau+bonusPA_perso, pv_perso=$pv_nouveau, or_perso=or_perso+$gain_or, pc_perso=pc_perso+$gain_pc, bonusRecup_perso=0, bonus_perso=$new_bonus_perso, bourre_perso=$bourre_perso, convalescence=0, est_gele=0, DLA_perso=FROM_UNIXTIME($new_dla) 
 					WHERE id_perso='$id_perso_nouveau_tour'";
 			$mysqli->query($sql);
+			
+			
 		}
 		
 		// On decremente le compteur genie si il est > 1
@@ -660,7 +662,7 @@ function respawn_perso($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $imag
 	$bonus_visu = get_malus_visu($fond) + getBonusObjet($mysqli, $id_perso);
 	
 	// MAJ perso rapat
-	$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=0, pa_perso=0, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=1, est_gele=0, 
+	$sql = "UPDATE perso SET x_perso='$x', y_perso='$y', pm_perso=0, pa_perso=0, pv_perso=pvMax_perso, bonusPerception_perso=$bonus_visu, bourre_perso=0, bonus_perso=0, convalescence=1, est_gele=0 
 			WHERE id_perso='$id_perso'";
 	$mysqli->query($sql);
 }
