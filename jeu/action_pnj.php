@@ -42,8 +42,10 @@ while ($t_id = $res->fetch_assoc()) {
 	
 	echo "$nb_deplacer | id pnj : $id_i_pnj";
 	
-	//recuperation des infos du pnj
-	$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pvMax_pnj, perception_pnj, recup_pnj, aggressivite_pnj, degatMin_pnj, degatMax_pnj, precision_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj=$id_i_pnj";
+	// Recuperation des infos du pnj
+	$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pvMax_pnj, perception_pnj, recup_pnj, aggressivite_pnj, degatMin_pnj, degatMax_pnj, precision_pnj 
+			FROM pnj, instance_pnj 
+			WHERE pnj.id_pnj=instance_pnj.id_pnj AND idInstance_pnj=$id_i_pnj";
 	$res3 = $mysqli->query($sql);
 	$info_pnj = $res3->fetch_assoc();
 	
@@ -114,7 +116,8 @@ while ($t_id = $res->fetch_assoc()) {
 					$mysqli->query($sql);		
 					
 					// maj evenement
-					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_i_pnj','<b>$nom_pnj</b>','a attaqué ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',': $degats degats',NOW(),'0')";
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+							VALUES ('$id_i_pnj','<b>$nom_pnj</b>','a attaqué ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',': $degats degats',NOW(),'0')";
 					$mysqli->query($sql);
 					
 					// verification si la cible est morte ou non
@@ -623,7 +626,7 @@ while ($t_id = $res->fetch_assoc()) {
 			}
 			else {
 				
-				echo "else cas 1<br>";
+				echo "il n'a pas été attaqué<br>";
 				
 				// il n'a pas été attaqué
 				// deplacement du pnj au hasard
