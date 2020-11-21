@@ -237,7 +237,7 @@ if (@$_SESSION["id_perso"]) {
 										
 										$montant_final_banque_compagnie = $t['montant'];
 										
-										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_section_delete'";
+										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_section_ajout'";
 										$res = $mysqli->query($sql);
 										$t = $res->fetch_assoc();
 										
@@ -359,7 +359,7 @@ if (@$_SESSION["id_perso"]) {
 											$mysqli->query($sql);
 											
 											// banque log
-											$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_section_ajout', '$id_perso_delete', '-$montant_comp_perso_section', '$montant_final_banque_section')";
+											$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_section_delete', '$id_perso_delete', '-$montant_comp_perso_section', '$montant_final_banque_section')";
 											$mysqli->query($sql);
 											
 											// MAJ histo_banque compagnie
@@ -416,7 +416,7 @@ if (@$_SESSION["id_perso"]) {
 								if ($verif_apparient_comp) {
 									
 									// Solde de la Section
-									$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie=$id_section_supression''";
+									$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_section_supression'";
 									$res = $mysqli->query($sql);
 									$t = $res->fetch_assoc();
 									
