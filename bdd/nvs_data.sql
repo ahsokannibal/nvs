@@ -382,8 +382,8 @@ INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_o
 --
 -- Contenu de la table `perso`
 --
-INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x_perso`, `y_perso`, `xp_perso`, `pi_perso`, `pc_perso`, `or_perso`, `pvMax_perso`, `pm_perso`, `pmMax_perso`, `pv_perso`, `perception_perso`, `recup_perso`, `pa_perso`, `paMax_perso`, `protec_perso`, `charge_perso`, `chargeMax_perso`, `bonusPerception_perso`, `bonusRecup_perso`, `bonusPM_perso`, `bonus_perso`, `image_perso`, `message_perso`, `bourre_perso`, `nb_kill`, `nb_mort`, `nb_pnj`, `dateCreation_perso`, `DLA_perso`, `description_perso`, `clan`, `a_gele`, `est_gele`, `date_gele`, `chef`, `bataillon`) VALUES ('1', '1', 'Abraham Lincoln', '1', '165', '173', '0', '0', '999999999', '0', '7500', '100', '100', '7500', '10', '100', '100', '100', '20', '0', '50', '0', '0', '0', '0', 'cavalerie_nord.gif', 'Général des armées du Nord', '0', '0', '0', '0', NOW(), NOW(), 'Général des armées du Nord', '1', '0', '0', NULL, '1', 'Général de l\'Union');
-INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x_perso`, `y_perso`, `xp_perso`, `pi_perso`, `pc_perso`, `or_perso`, `pvMax_perso`, `pm_perso`, `pmMax_perso`, `pv_perso`, `perception_perso`, `recup_perso`, `pa_perso`, `paMax_perso`, `protec_perso`, `charge_perso`, `chargeMax_perso`, `bonusPerception_perso`, `bonusRecup_perso`, `bonusPM_perso`, `bonus_perso`, `image_perso`, `message_perso`, `bourre_perso`, `nb_kill`, `nb_mort`, `nb_pnj`, `dateCreation_perso`, `DLA_perso`, `description_perso`, `clan`, `a_gele`, `est_gele`, `date_gele`, `chef`, `bataillon`) VALUES ('2', '2', 'Jefferson Davis', '1', '8', '7', '0', '0', '999999999', '0', '7500', '100', '100', '7500', '10', '100', '100', '100', '20', '0', '5', '0', '0', '0', '0', 'cavalerie_sud.gif', 'Général des armées du Sud', '0', '0', '0', '0', NOW(), NOW(), 'Général des armées du Sud', '2', '0', '0', NULL, '1', 'Général du Sud');
+INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x_perso`, `y_perso`, `xp_perso`, `pi_perso`, `pc_perso`, `or_perso`, `pvMax_perso`, `pm_perso`, `pmMax_perso`, `pv_perso`, `perception_perso`, `recup_perso`, `pa_perso`, `paMax_perso`, `protec_perso`, `charge_perso`, `chargeMax_perso`, `bonusPerception_perso`, `bonusRecup_perso`, `bonusPM_perso`, `bonus_perso`, `image_perso`, `message_perso`, `bourre_perso`, `nb_kill`, `nb_mort`, `nb_pnj`, `dateCreation_perso`, `DLA_perso`, `description_perso`, `clan`, `a_gele`, `est_gele`, `date_gele`, `chef`, `bataillon`, `genie`) VALUES ('1', '1', 'Abraham Lincoln', '1', '165', '173', '0', '0', '999999999', '0', '7500', '100', '100', '7500', '10', '100', '100', '100', '20', '0', '50', '0', '0', '0', '0', 'cavalerie_nord.gif', 'Général des armées du Nord', '0', '0', '0', '0', NOW(), NOW(), 'Général des armées du Nord', '1', '0', '0', NULL, '1', 'Général de l\'Union', '1');
+INSERT INTO `perso` (`id_perso`, `idJoueur_perso`, `nom_perso`, `type_perso`, `x_perso`, `y_perso`, `xp_perso`, `pi_perso`, `pc_perso`, `or_perso`, `pvMax_perso`, `pm_perso`, `pmMax_perso`, `pv_perso`, `perception_perso`, `recup_perso`, `pa_perso`, `paMax_perso`, `protec_perso`, `charge_perso`, `chargeMax_perso`, `bonusPerception_perso`, `bonusRecup_perso`, `bonusPM_perso`, `bonus_perso`, `image_perso`, `message_perso`, `bourre_perso`, `nb_kill`, `nb_mort`, `nb_pnj`, `dateCreation_perso`, `DLA_perso`, `description_perso`, `clan`, `a_gele`, `est_gele`, `date_gele`, `chef`, `bataillon`, `genie`) VALUES ('2', '2', 'Jefferson Davis', '1', '8', '7', '0', '0', '999999999', '0', '7500', '100', '100', '7500', '10', '100', '100', '100', '20', '0', '5', '0', '0', '0', '0', 'cavalerie_sud.gif', 'Général des armées du Sud', '0', '0', '0', '0', NOW(), NOW(), 'Général des armées du Sud', '2', '0', '0', NULL, '1', 'Général du Sud', '1');
 
 --
 -- Contenu de la table `perso_as_arme`
@@ -443,12 +443,6 @@ INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES
 ('1', '1'), 
 ('2', '2');
 
---
--- Contenu de la table `perso_in_batiment`
---
-INSERT INTO `perso_in_batiment` (`id_perso`,`id_instanceBat`) VALUES
-('1','50005'),
-('2','50004');
 
 -- --------------------------------------------------------
 -- FIN INSERTION DES 2 GENERAUX
