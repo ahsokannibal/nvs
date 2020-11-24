@@ -89,7 +89,9 @@ $count_online = $res->fetch_array();
 							<hr />
 							<form action="login.php" method="post" name="login" id="login">
 								<input name="pseudo" type="text" id="pseudo" placeholder="pseudo" maxlength="30">
-								<input name="password" type="password" id="password" placeholder="password" maxlength="20">
+								<input name="password" type="password" id="password" placeholder="password" maxlength="20"><br />
+								<input name="captcha" type="text" placeholder="Entrer le texte dans l'image">
+								<img src="captcha.php" style="vertical-align: middle;"/><br />
 								<input type="submit" name="Submit" value="Se connecter">
 							</form>
 							
