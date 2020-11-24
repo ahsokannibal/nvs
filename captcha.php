@@ -23,8 +23,7 @@ $image 		= imagecreatetruecolor($largeur, $hauteur);
 $background = array(
 		imagecolorallocate($image, 0x99, 0x00, 0x66),
 		imagecolorallocate($image, 0xCC, 0x00, 0x00),
-		imagecolorallocate($image, 0x00, 0x00, 0xCC),
-		imagecolorallocate($image, 0x00, 0x00, 0xCC),
+		imagecolorallocate($image, 0x44, 0x44, 0xCC),
 		imagecolorallocate($image, 0xBB, 0x88, 0x77));
 $blanc 		= imagecolorallocate($image, 255, 255, 255); 
 $noir 		= imagecolorallocate($image, 0, 0, 0);
