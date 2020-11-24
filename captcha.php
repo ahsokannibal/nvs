@@ -35,9 +35,12 @@ imagestring($image, 6, 6 , $milieuHauteur, $mot, $noir);
 imagerectangle($image, 1, 1, $largeur - 1, $hauteur - 1, $noir);
 imageconvolution($image, $matrix_blur,16,0);
 
-for($x = 5; $x < $largeur; $x+=6)
+$ecart_line = mt_rand(4,7);
+$fin_line	= mt_rand(-10,+10);
+
+for($x = 0; $x < $largeur + $ecart_line; $x+=$ecart_line)
 {
-	imageline($image, $x,2,$x-5,$hauteur,$noir);
+	imageline($image, $x, 2, $x + $fin_line, $hauteur, $noir);
 }
 
 header("Cache-Control: no-cache, must-revalidate");
