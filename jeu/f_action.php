@@ -1006,9 +1006,6 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 																		}
 																	}
 																}
-																else {																	
-																	return 0;
-																}
 															}
 														}
 													}

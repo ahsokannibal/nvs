@@ -315,6 +315,9 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "<b>a négocié la capture</b>") {
 						$phrase_evenement = "<b>a accepté de se rendre face à</b>";
 					}
+					else if ($phrase_evenement == "<b>a roulé sur </b>") {
+						$phrase_evenement = "<b>a été écrasé par </b>";
+					}
 					
 					echo stripslashes($phrase_evenement)." ";
 					

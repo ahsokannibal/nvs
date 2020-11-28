@@ -83,7 +83,8 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 			}
 			
 			// MAJ evenements perso
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_train,'<font color=$couleur_camp_train><b>Train $nom_train</b></font>','<b>a roulé sur </b>','$idPerso_carte','<font color=$couleur_camp_perso><b>$nom_perso</b></font>',' : pv = $pv_perso (pv/2) - case après expulsion : $x_libre / $y_libre',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+					VALUES ($id_instance_train,'<font color=$couleur_camp_train><b>Train $nom_train</b></font>','<b>a roulé sur </b>','$idPerso_carte','<font color=$couleur_camp_perso><b>$nom_perso</b></font>',' : pv = $pv_perso (pv/2) - case après expulsion : $x_libre / $y_libre',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 		else if ($idPerso_carte >= 50000 && $idPerso_carte < 200000) {
@@ -147,7 +148,8 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 			$mysqli->query($sql);
 			
 			// MAJ evenements pnj
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_instance_train,'<font color=$couleur_camp_train><b>Train $nom_train</b></font>','<b>a roulé sur </b>','$idPerso_carte','<b>$nom_pnj</b>',' : pv = $pv_pnj (pv/2) - case après expulsion : $x_libre / $y_libre',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+					VALUES ($id_instance_train,'<font color=$couleur_camp_train><b>Train $nom_train</b></font>','<b>a roulé sur </b>','$idPerso_carte','<b>$nom_pnj</b>',' : pv = $pv_pnj (pv/2) - case après expulsion : $x_libre / $y_libre',NOW(),'0')";
 			$mysqli->query($sql);
 		}
 	}
@@ -156,6 +158,10 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 	
 		$sql = "UPDATE carte SET idPerso_carte='$id_instance_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_train' AND y_carte='$y_train'";
 		$mysqli->query($sql);
+		
+		$sql_e = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+					VALUES ($id_instance_train,'Train','s\'est déplacé',NULL,'','en $x_train/$y_train',NOW(),'0')";
+		$mysqli->query($sql_e);
 			
 		// MAJ coordonnées persos dans le train
 		$sql = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso IN (SELECT id_perso FROM perso_in_train WHERE id_train='$id_instance_train')";
