@@ -1243,6 +1243,19 @@ CREATE TABLE `tentative_triche` (
 	PRIMARY KEY (`id_tentative`)
 ) ENGINE = MyISAM;
 
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `train_last_dep`
+--
+
+CREATE TABLE `train_last_dep` ( 
+	`id_train` INT NOT NULL , 
+	`x_last_dep` INT NOT NULL , 
+	`y_last_dep` INT NOT NULL 
+) ENGINE = MyISAM; 
+
+-- --------------------------------------------------------
 
 --
 -- Structure de la table `type_unite`
