@@ -63,7 +63,7 @@ if($dispo || $admin){
 			// Est ce que le chef est dans une compagnie ?
 			$sql = "SELECT perso_in_compagnie.id_perso FROM perso_in_compagnie, perso
 					WHERE perso_in_compagnie.id_perso = perso.id_perso 
-					AND perso.idJoueur_perso='2'
+					AND perso.idJoueur_perso='$idJoueur_p'
 					AND perso.chef='1'";
 			$res = $mysqli->query($sql);
 			$is_chef_in_compagnie = $res->num_rows;
