@@ -117,6 +117,16 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 			}
 			
+			if (isset($_POST['ch_perso']) && trim($_POST['ch_perso']) != '') {
+				
+				$new_ch_perso = $_POST['ch_perso'];
+				
+				$mess = "MAJ Charge perso matricule ".$id_perso_select." vers ".$new_ch_perso;
+				
+				$sql = "UPDATE perso SET charge_perso=$new_ch_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+			}
+			
 			if (isset($_POST['mdp_perso']) && trim($_POST['mdp_perso']) != "") {
 				
 				$new_password = $_POST['mdp_perso'];
