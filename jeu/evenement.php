@@ -207,9 +207,12 @@ if(@$_SESSION["id_perso"]){
 				$effet_evenement		= $t['effet_evenement'];
 				$special_evenement		= $t['special'];
 				
+				$date_evenement = new DateTime($date_evenement, new DateTimeZone('Europe/Paris'));
+				$date_evenement->add(new DateInterval('PT1H'));
+				
 				if ($id == $id_acteur_evenement) {
 					echo "<tr>";
-					echo "	<td align='center'>".$date_evenement."</td>";
+					echo "	<td align='center'>".$date_evenement->format('d-m-Y H:i:s')."</td>";
 					
 					echo "	<td>".$nom_acteur_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ";
 					
@@ -242,7 +245,7 @@ if(@$_SESSION["id_perso"]){
 				else if ($id == $id_cible_evenement && $special_evenement == 0) {
 					
 					echo "<tr>";
-					echo "	<td align='center'>".$date_evenement."</td>";
+					echo "	<td align='center'>".$date_evenement->format('d-m-Y H:i:s')."</td>";
 					
 					echo "	<td>".$nom_cible_evenement." [<a href=\"evenement.php?infoid=".$id_cible_evenement."\">".$id_cible_evenement."</a>] ";
 					

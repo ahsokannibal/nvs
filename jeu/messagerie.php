@@ -123,16 +123,19 @@ if(isset($_SESSION["id_perso"])){
 				$date_message	= $row["date_message"];
 				$objet_message	= $row["objet_message"];
 				
+				$date_message = new DateTime($date_message, new DateTimeZone('Europe/Paris'));
+				$date_message->add(new DateInterval('PT1H'));
+				
 				echo '<tr>';
 				echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$id_message.'"></td>';
 				
 				if ($row["lu_message"]){
 					echo "	<td>" . $expediteur . "</td>";
-					echo "	<td align='center'>" . stripslashes($date_message) . "</td><td colspan=2><a href=message_lire.php?id=" . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a></td>";
+					echo "	<td align='center'>" . stripslashes($date_message->format('d-m-Y H:i:s')) . "</td><td colspan=2><a href=message_lire.php?id=" . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a></td>";
 				}
 				else {
 					echo '	<td><div>' . $expediteur . '</div></td>';
-					echo '	<td align="center"><div>' . stripslashes($date_message) . '</div></td>';
+					echo '	<td align="center"><div>' . stripslashes($date_message->format('d-m-Y H:i:s')) . '</div></td>';
 					echo '	<td colspan=2><a href=message_lire.php?id=' . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a><b> (non lu)</b></td>";
 				}
 				echo '</tr>';

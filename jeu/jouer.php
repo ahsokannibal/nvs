@@ -2089,6 +2089,8 @@ if($dispo || $admin){
 	<body>
 				<?php
 				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
+				$date_dla = new DateTime($n_dla, new DateTimeZone('Europe/Paris'));
+				$date_dla->add(new DateInterval('PT1H'));
 				
 				if (anim_perso($mysqli, $id_perso)) {
 					// Récupération des demandes sur la gestion des compagnies
@@ -2134,7 +2136,7 @@ if($dispo || $admin){
 						<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
 					</tr>";
 				echo "<tr>";
-				echo "	<td>Prochain tour :  ".$n_dla."</td>";
+				echo "	<td>Prochain tour :  ".$date_dla->format('d-m-Y H:i:s')."</td>";
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
 				echo "		<a class='btn btn-info' href=\"../faq.php\" target='_blank'><b>FAQ</b></a>";

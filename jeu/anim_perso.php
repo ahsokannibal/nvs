@@ -8,6 +8,20 @@ $mysqli = db_connexion();
 include ('../nb_online.php');
 include ('../forum/config.php');
 
+function utf8_clean_string($text) {
+	
+	// Other control characters
+	$text = preg_replace('#(?:[\x00-\x1F\x7F]+|(?:\xC2[\x80-\x9F])+)#', '', $text);
+
+	// we need to reduce multiple spaces to a single one
+	$text = preg_replace('# {2,}#', ' ', $text);
+
+	// we can use trim here as all the other space characters should have been turned
+	// into normal ASCII spaces by now
+	return trim($text);
+	
+}
+
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
 $admin = admin_perso($mysqli, $_SESSION["id_perso"]);
@@ -127,8 +141,10 @@ if($dispo || $admin){
 								// Envoi d'un Mail
 								mail_changement_nom($nouveau_nom_perso, $email_joueur);
 								
+								$username_clean = utf8_clean_string($nouveau_nom_perso);
+								
 								// -- FORUM
-								$sql = "UPDATE ".$table_prefix."users SET username='$nouveau_nom_perso' WHERE user_email='$email_joueur'";
+								$sql = "UPDATE ".$table_prefix."users SET username='$nouveau_nom_perso', username_clean='$username_clean' WHERE user_email='$email_joueur'";
 								$mysqli->query($sql);
 								
 							}

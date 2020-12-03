@@ -129,7 +129,12 @@ if(@$_SESSION["id_perso"]){
 						$destinataires = " -- ";
 					}
 					
-					echo '	<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $tab["date_message"] . "</td></tr>";
+					$date_message = $tab["date_message"];
+					
+					$date_message = new DateTime($date_message, new DateTimeZone('Europe/Paris'));
+					$date_message->add(new DateInterval('PT1H'));
+					
+					echo '	<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $date_message->format('d-m-Y H:i:s') . "</td></tr>";
 					echo '	<tr class="exp"><td colspan=2><b>Destinataires :</b> '.$destinataires.'</td></tr>';
 					echo "</table><br />";
 					echo "<table border=1 align='center' cellpadding=2 cellspacing=1 width=100%>";

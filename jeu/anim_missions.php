@@ -530,6 +530,12 @@ if($dispo || $admin){
 								$date_debut		= $t['date_debut_mission'];
 								$date_fin		= $t['date_fin_mission'];
 								
+								$date_debut = new DateTime($date_debut, new DateTimeZone('Europe/Paris'));
+								$date_debut->add(new DateInterval('PT1H'));
+								
+								$date_fin = new DateTime($date_fin, new DateTimeZone('Europe/Paris'));
+								$date_fin->add(new DateInterval('PT1H'));
+								
 								$sql_p = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission
 										WHERE perso.id_perso = perso_in_mission.id_perso
 										AND id_mission='$id_mission'";
@@ -538,8 +544,8 @@ if($dispo || $admin){
 								
 								echo "				<tr>";
 								echo "					<td align='center'>".$nom_mission."</td>";
-								echo "					<td align='center'>".$date_debut."</td>";
-								echo "					<td align='center'>".$date_fin."</td>";
+								echo "					<td align='center'>".$date_debut->format('d-m-Y H:i:s')."</td>";
+								echo "					<td align='center'>".$date_fin->format('d-m-Y H:i:s')."</td>";
 								echo "					<td align='center'>".$rec_thune."</td>";
 								echo "					<td align='center'>".$rec_xp."</td>";
 								echo "					<td align='center'>".$rec_pc."</td>";
@@ -708,6 +714,12 @@ if($dispo || $admin){
 								$date_fin		= $t['date_fin_mission'];
 								$objectif		= $t['objectif_atteint'];
 								
+								$date_debut = new DateTime($date_debut, new DateTimeZone('Europe/Paris'));
+								$date_debut->add(new DateInterval('PT1H'));
+								
+								$date_fin = new DateTime($date_fin, new DateTimeZone('Europe/Paris'));
+								$date_fin->add(new DateInterval('PT1H'));
+								
 								$sql_p = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission
 										WHERE perso.id_perso = perso_in_mission.id_perso
 										AND id_mission='$id_mission'";
@@ -715,8 +727,8 @@ if($dispo || $admin){
 								
 								echo "				<tr>";
 								echo "					<td align='center'>".$nom_mission."</td>";
-								echo "					<td align='center'>".$date_debut."</td>";
-								echo "					<td align='center'>".$date_fin."</td>";
+								echo "					<td align='center'>".$date_debut->format('d-m-Y H:i:s')."</td>";
+								echo "					<td align='center'>".$date_fin->format('d-m-Y H:i:s')."</td>";
 								echo "					<td align='center'>".$rec_thune."</td>";
 								echo "					<td align='center'>".$rec_xp."</td>";
 								echo "					<td align='center'>".$rec_pc."</td>";

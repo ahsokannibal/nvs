@@ -516,13 +516,6 @@ function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
   * @return Bool		: Si oui ou non le batiment est constructible
   */
 function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
-	
-	if(isset($_POST['image_bat'])){
-		$t_bat = $_POST['image_bat'];
-	}
-	else {
-		$t_bat = $_POST['hid_image_bat'];
-	}
 
 	$t_bat2 = explode(',',$t_bat);
 	$x_bat = $t_bat2[0];

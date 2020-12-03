@@ -168,7 +168,12 @@ if($dispo || $admin){
 											echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'> retour </a></center>";
 										}
 										else {
-											echo "<center><font color='red'>Vous êtes déjà inscrit dans une compagnie</font></center>";
+											if ($est_deja) {
+												echo "<center><font color='red'>Vous êtes déjà inscrit dans une compagnie</font></center>";
+											}
+											else {
+												echo "<center><font color='red'>La compagnie est déjà pleine, impossible de postuler tant qu'une place ne s'est pas liberée</font></center>";
+											}
 										}
 									}
 									else {
@@ -483,7 +488,7 @@ if($dispo || $admin){
 						
 						// c'est le diplomate
 						if($poste_s == 5){ 
-							echo " <a href='diplo_compagnie.php?id_compagnie=$id_compagnie'> Page diplomatie de la ".$titre_compagnie."</a>";
+							echo " <a href='diplo_compagnie.php?id_compagnie=$id_compagnie' class='btn btn-outline-primary'> Page diplomatie de la ".$titre_compagnie."</a>";
 						}
 						
 						// c'est le chef ou le sous-chef

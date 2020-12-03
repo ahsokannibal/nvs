@@ -372,6 +372,9 @@ if($dispo || $admin){
 									$date_ope	= $t_solde['date_operation'];
 									$is_auteur	= $t_solde['is_auteur'];
 									
+									$date_ope = new DateTime($date_ope, new DateTimeZone('Europe/Paris'));
+									$date_ope->add(new DateInterval('PT1H'));
+									
 									$fond_total += $montant;
 									
 									if ($op == 0) {
@@ -403,7 +406,7 @@ if($dispo || $admin){
 									
 									if (isset($type_ope)) {
 										echo "		<tr>";
-										echo "			<td>".$date_ope."</td><td>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
+										echo "			<td>".$date_ope->format('d-m-Y H:i:s')."</td><td>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
 										echo "		</tr>";
 									}
 								}
@@ -537,6 +540,9 @@ if($dispo || $admin){
 								$is_auteur_histo	= $t['is_auteur'];
 								$id_dest_histo		= $t['id_dest'];
 								
+								$date_ope_histo = new DateTime($date_ope_histo, new DateTimeZone('Europe/Paris'));
+								$date_ope_histo->add(new DateInterval('PT1H'));
+								
 								$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_histo'";
 								$res_p = $mysqli->query($sql_p);
 								$t_p = $res_p->fetch_assoc();
@@ -632,7 +638,7 @@ if($dispo || $admin){
 								}
 								
 								echo "		<tr>";
-								echo "			<td>".$date_ope_histo."</td>";
+								echo "			<td>".$date_ope_histo->format('d-m-Y H:i:s')."</td>";
 								echo "			<td>".$nom_perso_histo."</td>";
 								echo "			<td>".$id_perso_histo."</td>";
 								echo "			<td>".$type_ope."</td>";

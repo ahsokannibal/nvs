@@ -449,8 +449,11 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$gain_pv = $t['gain_pvict'];
 			$text_pv = $t['texte'];
 			
+			$date_pv = new DateTime($date_pv, new DateTimeZone('Europe/Paris'));
+			$date_pv->add(new DateInterval('PT1H'));
+			
 			echo "			<tr>";
-			echo "				<td align=center>".$date_pv."</td>";
+			echo "				<td align=center>".$date_pv->format('d-m-Y H:i:s')."</td>";
 			echo "				<td align=center>".$text_pv."</td>";
 			echo "				<td align=center>".$gain_pv."</td>";
 			echo "			</tr>";
@@ -663,6 +666,9 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		$nom_perso_capt	= $t["nom_perso"];
 		$id_perso_capt	= $t["id_perso"];
 		
+		$date_capture = new DateTime($date_capture, new DateTimeZone('Europe/Paris'));
+		$date_capture->add(new DateInterval('PT1H'));
+		
 		if($id_camp_capt == "1"){
 			$couleur_camp = "blue";
 		}
@@ -671,7 +677,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		}
 		
 		echo "			<tr>";
-		echo "				<td align=center>$date_capture</td>";
+		echo "				<td align=center>".$date_capture->format('d-m-Y H:i:s')."</td>";
 		echo "				<td align=center><font color=$couleur_camp>".$nom_perso_capt."</font></td>";
 		echo "				<td align='center'><a href=\"evenement.php?infoid=".$id_perso_capt."\">" .$id_perso_capt. "</a></td>";
 		echo "			</tr>";

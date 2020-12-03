@@ -158,8 +158,14 @@ if(isset($id)){
 		
 		while ($t = $res->fetch_assoc()){
 			$count++;
+			
+			$date_cv = $t['date_cv'];
+			
+			$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
+			$date_cv->add(new DateInterval('PT1H'));
+			
 			echo "<tr>";
-			echo "<td align='center'>".$t['date_cv']."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
+			echo "<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
 			echo "</td></tr>";
 		}
 		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
@@ -185,6 +191,9 @@ if(isset($id)){
 		$grade_acteur_cv	= $t['gradeActeur_cv'];
 		$special			= $t['special'];
 		
+		$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
+		$date_cv->add(new DateInterval('PT1H'));
+		
 		if ($id_acteur_cv == $id && $id_cible_cv < 50000 && $id_cible_cv != NULL) {			
 			
 			$nom_cible_cv		= $t['nomCible_cv'];
@@ -193,7 +202,7 @@ if(isset($id)){
 			$count_capture++;
 			
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
+			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
 			if ($special == '10') {
 				echo " a négocié la capture de ";
 			}
@@ -214,7 +223,7 @@ if(isset($id)){
 			$count_capture++;
 			
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé le bâtiment ";
+			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé le bâtiment ";
 			echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			echo "	</td>";
 			echo "</tr>";
@@ -224,7 +233,7 @@ if(isset($id)){
 			$count_promotion++;
 			
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été promu <b>".$grade_acteur_cv."</b></td>";
+			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été promu <b>".$grade_acteur_cv."</b></td>";
 			echo "</tr>";
 		}
 	}
@@ -246,6 +255,9 @@ if(isset($id)){
 		
 		$date_cv 			= $t['date_cv'];
 		
+		$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
+		$date_cv->add(new DateInterval('PT1H'));
+		
 		$id_acteur_cv 		= $t['IDActeur_cv'];
 		$nom_acteur_cv		= $t['nomActeur_cv'];
 		$grade_acteur_cv	= $t['gradeActeur_cv'];
@@ -260,7 +272,7 @@ if(isset($id)){
 			
 			$count++;
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			if ($id_acteur_cv != 0) {
 				if ($special == '10') {
 				echo " a accepté de se rendre face à ";
@@ -285,7 +297,7 @@ if(isset($id)){
 			
 			$count++;
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été capturé de force par encerclement !";			
+			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été capturé de force par encerclement !";			
 			echo "	</td>";
 			echo "</tr>";
 			
@@ -305,7 +317,13 @@ if(isset($id)){
 	while ($t = $res->fetch_assoc()) {
 		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
 			$count++;
-			echo "<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
+			
+			$date_cv = $t['date_cv'];
+		
+			$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
+			$date_cv->add(new DateInterval('PT1H'));
+			
+			echo "<tr><td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
 			echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 		}
 	}
@@ -327,7 +345,13 @@ if(isset($id)){
 	while ($t = $res->fetch_assoc()) {
 		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000 && $t['IDCible_cv'] < 200000) {
 			$count++;
-			echo "		<tr><td align='center'>".$t['date_cv']."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
+			
+			$date_cv = $t['date_cv'];
+		
+			$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
+			$date_cv->add(new DateInterval('PT1H'));
+			
+			echo "		<tr><td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
 			echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
 		}
 	}

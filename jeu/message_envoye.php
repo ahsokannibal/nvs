@@ -89,6 +89,9 @@ if(isset($_SESSION["id_perso"])){
 				$date_message	= $row["date_message"];
 				$objet_message	= $row["objet_message"];
 				
+				$date_message = new DateTime($date_message, new DateTimeZone('Europe/Paris'));
+				$date_message->add(new DateInterval('PT1H'));
+				
 				// recupération des destinataires
 				$sql_dest = "SELECT nom_perso FROM perso, message_perso WHERE perso.id_perso = message_perso.id_perso AND id_message='$id_mes'";
 				$res_dest = $mysqli->query($sql_dest);
@@ -107,7 +110,7 @@ if(isset($_SESSION["id_perso"])){
 			
 				echo "<tr>";
 				echo "	<td>" . $destinataires . "</td>";
-				echo "	<td align='center'>" . $date_message . "</td>";
+				echo "	<td align='center'>" . $date_message->format('d-m-Y H:i:s') . "</td>";
 				echo "	<td colspan=2><a href=message_lire.php?id=" . $id_mes . "&methode=e>" . stripslashes($objet_message) . "</a></td>";
 				echo "</tr>";
 

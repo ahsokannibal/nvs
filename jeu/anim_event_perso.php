@@ -152,8 +152,11 @@ if($dispo || $admin){
 								$effet_event		= $t['effet_evenement'];
 								$date_event			= $t['date_evenement'];
 								
+								$date_event = new DateTime($date_event, new DateTimeZone('Europe/Paris'));
+								$date_event->add(new DateInterval('PT1H'));
+								
 								echo "			<tr>";
-								echo "				<td>".$date_event."</td>";
+								echo "				<td>".$date_event->format('d-m-Y H:i:s')."</td>";
 								echo "				<td>".$nom_acteur_event." [".$id_acteur_event."]</td>";
 								echo "				<td>".$phrase_event;
 								if (trim($effet_event) != "") {

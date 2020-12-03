@@ -313,72 +313,73 @@ if(isset($_SESSION["id_perso"])){
 				
 				$nb_persos_compagnie = $tab["nb_persos_compagnie"];
 				
-				if ($nb_persos_compagnie < $nb_persos_compagnie_max) {
-					
-					echo "<center>Votre compagnie possède ". $nb_persos_compagnie . " unités pour une capacité maximale de ". $nb_persos_compagnie_max . " unités</center><br />" ;
-					
-					// recuperation de tout les persos qui sont en attente de validation pour entrer dans la compagnie
-					$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
-							WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
-					$res = $mysqli->query($sql);
-					$num_a = $res->num_rows;
-					
-					// il y a des persos en attente de validation
-					if($num_a) { 
-					
-						echo "<center><form method=\"post\" action=\"recrut_compagnie.php?id_compagnie=$id_compagnie\">";
-						echo "liste des persos en attente :";
-						echo "<select name=\"recrut\">";
-						
-						while ($t_a = $res->fetch_assoc()){
-							
-							$id_p 	= $t_a["id_perso"];
-							$nom_p 	= $t_a["nom_perso"];
-							
-							echo "<center><option value=".$id_p.",".$nom_p.">".$nom_p."[".$id_p."]</option><br></center>";
-						}
-						
-						echo "</select>";
-						echo "&nbsp;<input type=\"submit\" name=\"rec\" class='btn btn-success' value=\"recruter\">&nbsp;<input type=\"submit\" class='btn btn-danger' name=\"ref\" value=\"refuser\">";
-						echo "</form></center>";
-					}
-					else {
-						echo "<center><font color = blue>Il n y a aucun perso en attente de validation pour rejoindre la compagnie</font></center>";
-					}
-					
-					// recuperation de tout les persos qui sont en attente de validation pour quitter la compagnie
-					$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
-							WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='2'";
-					$res = $mysqli->query($sql);
-					$num_q = $res->num_rows;
-					
-					// il y a des persos en attente de validation pour quitter la compagnie
-					if($num_q) { 
-					
-						echo "<center><form method=\"post\" action=\"recrut_compagnie.php?id_compagnie=$id_compagnie\">";
-						echo "liste des persos en attente :";
-						echo "<select name=\"quitter\">";
-						
-						while ($t_q = $res->fetch_assoc()){
-							
-							$id_p 	= $t_q["id_perso"];
-							$nom_p 	= $t_q["nom_perso"];
-							
-							echo "<center><option value=".$id_p.",".$nom_p.">".$nom_p."[".$id_p."]</option><br></center>";
-						}
-						
-						echo "</select>";
-						echo "&nbsp;<input type=\"submit\" name=\"quit\" class='btn btn-success' value=\"valider le départ\">&nbsp;<input type=\"submit\" name=\"ref_quit\" class='btn btn-danger' value=\"refuser\">";
-						echo "</form></center>";
-					}
-					else {
-						echo "<br /><center><font color = blue>Il n y a aucun perso en attente de validation pour quitter la compagnie</font></center>";
-					}
-					
-				} else {
-					echo "<center><font color = blue>Votre compagnie a déjà atteind le nombre maximum de membres</font></center>";
+				if ($nb_persos_compagnie >= $nb_persos_compagnie_max) {
+					echo "<center><font color = red>Votre compagnie a déjà atteint le nombre maximum de membres</font></center>";
 				}
-				echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a></center>";
+					
+				echo "<center>Votre compagnie possède ". $nb_persos_compagnie . " unités pour une capacité maximale de ". $nb_persos_compagnie_max . " unités</center><br />" ;
+				
+				// recuperation de tout les persos qui sont en attente de validation pour entrer dans la compagnie
+				$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
+						WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='1'";
+				$res = $mysqli->query($sql);
+				$num_a = $res->num_rows;
+				
+				// il y a des persos en attente de validation
+				if($num_a) { 
+				
+					echo "<center><form method=\"post\" action=\"recrut_compagnie.php?id_compagnie=$id_compagnie\">";
+					echo "liste des persos en attente :";
+					echo "<select name=\"recrut\">";
+					
+					while ($t_a = $res->fetch_assoc()){
+						
+						$id_p 	= $t_a["id_perso"];
+						$nom_p 	= $t_a["nom_perso"];
+						
+						echo "<center><option value=".$id_p.",".$nom_p.">".$nom_p."[".$id_p."]</option><br></center>";
+					}
+					
+					echo "</select>";
+					if ($nb_persos_compagnie < $nb_persos_compagnie_max) {
+						echo "&nbsp;<input type=\"submit\" name=\"rec\" class='btn btn-success' value=\"recruter\">";
+					}
+					echo "&nbsp;<input type=\"submit\" class='btn btn-danger' name=\"ref\" value=\"refuser\">";
+					echo "</form></center>";
+				}
+				else {
+					echo "<center><font color = blue>Il n y a aucun perso en attente de validation pour rejoindre la compagnie</font></center>";
+				}
+				
+				// recuperation de tout les persos qui sont en attente de validation pour quitter la compagnie
+				$sql = "SELECT nom_perso, perso_in_compagnie.id_perso FROM perso_in_compagnie, perso 
+						WHERE perso.ID_perso=perso_in_compagnie.id_perso AND id_compagnie=$id_compagnie AND attenteValidation_compagnie='2'";
+				$res = $mysqli->query($sql);
+				$num_q = $res->num_rows;
+				
+				// il y a des persos en attente de validation pour quitter la compagnie
+				if($num_q) { 
+				
+					echo "<center><form method=\"post\" action=\"recrut_compagnie.php?id_compagnie=$id_compagnie\">";
+					echo "liste des persos en attente :";
+					echo "<select name=\"quitter\">";
+					
+					while ($t_q = $res->fetch_assoc()){
+						
+						$id_p 	= $t_q["id_perso"];
+						$nom_p 	= $t_q["nom_perso"];
+						
+						echo "<center><option value=".$id_p.",".$nom_p.">".$nom_p."[".$id_p."]</option><br></center>";
+					}
+					
+					echo "</select>";
+					echo "&nbsp;<input type=\"submit\" name=\"quit\" class='btn btn-success' value=\"valider le départ\">&nbsp;<input type=\"submit\" name=\"ref_quit\" class='btn btn-danger' value=\"refuser\">";
+					echo "</form></center>";
+				}
+				else {
+					echo "<br /><center><font color = blue>Il n y a aucun perso en attente de validation pour quitter la compagnie</font></center>";
+				}
+				echo "<center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour à la page de compagnie</a></center>";
 			}
 			else {
 				echo "<center><font color='red'>Vous n'avez pas les habilitations pour accéder à cette page !</font></center>";
