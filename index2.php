@@ -88,7 +88,7 @@ $count_online = $res->fetch_array();
 							<hr />
 							<a href="regles/regles.php" style="color: white;">Règles</b></a>
 							<hr />
-							<a href="http://nordvssud-creation.forumactif.com/" style="color: white;">Le Forum</b></a>
+							<a href="./forum/" style="color: white;">Le Forum</b></a>
 							<hr />
 							<a href="jeu/classement.php" style="color: white;">Les classements</b></a>
 							<hr />
