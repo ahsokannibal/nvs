@@ -82,6 +82,7 @@ if (isset($_POST["submitPwdLost"]) && isset($_POST["inputEmail"]) && trim($_POST
 					<h1>Mot de passe perdu</h1>
 					<font color='red'><b><?php echo $error; ?></b></font>
 					<font color='blue'><b><?php echo $message; ?></b></font>
+					<p align="center"><a class="btn btn-primary" href="./index.php">Retour</a></p>
 				</div>
 			</div>
 			
