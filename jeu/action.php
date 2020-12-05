@@ -595,12 +595,14 @@ if($dispo || $admin) {
 			
 			if($verif_idPerso && $id_cible != "" && $id_cible != null){
 			
+				echo "<br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center><br />";
+			
 				echo "<table border='1' align='center' width='50%'>";
 				echo "	<tr>";
-				echo "		<th style='text-align:center' colspan='4'>Objets à donner</th>";
+				echo "		<th style='text-align:center' colspan='4'>Objets à donner<br /><font color='red'>Le don donnera un seul objet (sauf pour la thune où le nombre est à indiquer)</font></th>";
 				echo "	</tr>";
 				echo "	<tr>";
-				echo "		<th style='text-align:center'>image</td><th style='text-align:center'>poid unitaire</td><th style='text-align:center'>nombre</th><th style='text-align:center'>donner ?</th>";
+				echo "		<th style='text-align:center'>image</th><th style='text-align:center'>poid unitaire</th><th style='text-align:center'>nombre possédé</th><th style='text-align:center'>donner ?</th>";
 				echo "	</tr>";
 								
 				// Recuperation des objets / armes / armures que possede le perso
@@ -613,7 +615,7 @@ if($dispo || $admin) {
 				$or_perso = $t_o0['or_perso'];
 				
 				echo "<tr>";
-				echo "<td align='center'><dl><dd><a href='#'><img src='../images/or.png' alt='thune' height='30' width='30'/><span><b>thune</b></span></a></dd></dl></td>";
+				echo "<td><img src='../images/or.png' alt='thune' height='30' width='30'/><span><b>thune</b></span></td>";
 				echo "<td align='center'>0</td>";
 						
 				echo "<form method='post' action='action.php'>";		
@@ -624,7 +626,7 @@ if($dispo || $admin) {
 				}
 				echo "</select></td>";
 					
-				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='-1,1,$id_cible' /></td>";
+				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_don' value='-1,1,$id_cible' /></td>";
 				echo "</form>";
 				echo "</tr>";
 					
@@ -654,11 +656,11 @@ if($dispo || $admin) {
 						$nb_o = $res2_o->num_rows;
 												
 						echo "<tr>";
-						echo "	<td align='center'><dl><dd><a href='#'><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
+						echo "	<td><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></td>";
 						echo "	<td align='center'>$poids_o</td>";
 						echo "	<td align='center'>$nb_o</td>";
 						echo "	<form method='post' action='action.php'>";
-						echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
+						echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
 						echo "	</form>";
 						echo "</tr>";
 					}
@@ -687,11 +689,11 @@ if($dispo || $admin) {
 					$nb_a1 = $res2_a1->num_rows;
 										
 					echo "<tr>";
-					echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
+					echo "	<td><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></td>";
 					echo "	<td align='center'>$poids_a1</td>";
 					echo "	<td align='center'>$nb_a1</td>";
 					echo "	<form method='post' action='action.php'>";
-					echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_arme,3,$id_cible' /></td>";
+					echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_don' value='$id_arme,3,$id_cible' /></td>";
 					echo "	</form>";
 					echo "</tr>";
 				}
@@ -1718,8 +1720,16 @@ if($dispo || $admin) {
 										// lien retour
 										echo "<br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center><br />";
 									
-										echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Objets déposables</th></tr>";
-										echo "<tr><th>image</td><th>poid unitaire</td><th>nombre</th><th>déposer à terre ?</th></tr>";
+										echo "<table border='1' align='center' width='50%'>";
+										echo "	<tr>";
+										echo "		<th colspan='4' style='text-align:center'>Objets déposables<br /><font color='red'>le dépôt ne déposera qu'un objet</font></th>";
+										echo "	</tr>";
+										echo "	<tr>";
+										echo "		<th style='text-align:center'>image</th>";
+										echo "		<th style='text-align:center'>poid unitaire</th>";
+										echo "		<th style='text-align:center'>nombre possédé</th>";
+										echo "		<th style='text-align:center'>déposer 1 à terre ?</th>";
+										echo "	</tr>";
 										
 										// Recuperation des objets / armes / armures que possede le perso
 										// Objets (sauf ticket de train qui sont nomminatifs)
@@ -1743,11 +1753,11 @@ if($dispo || $admin) {
 											$nb_o = $res2_o->num_rows;
 											
 											echo "<tr>";
-											echo "	<td align='center'><dl><dd><a href='#'><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></a></dd></dl></td>";
+											echo "	<td><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></td>";
 											echo "	<td align='center'>$poids_o</td>";
 											echo "	<td align='center'>$nb_o</td>";
 											echo "<form method='post' action='action.php'>";
-											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_objet,2,0' /></td>";
+											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_depo' value='$id_objet,2,0' /></td>";
 											echo "</form>";
 											echo "</tr>";
 										}
@@ -1774,11 +1784,11 @@ if($dispo || $admin) {
 											$nb_a1 = $res2_a1->num_rows;
 											
 											echo "<tr>";
-											echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></a></dd></dl></td>";
+											echo "	<td><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></td>";
 											echo "	<td align='center'>$poids_a1</td>";
 											echo "	<td align='center'>$nb_a1</td>";
 											echo "<form method='post' action='action.php'>";
-											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_arme,3' /></td>";
+											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_depo' value='$id_arme,3' /></td>";
 											echo "</form>";
 											echo "</tr>";
 										}

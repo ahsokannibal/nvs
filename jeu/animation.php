@@ -119,6 +119,16 @@ if($dispo || $admin){
 			
 			<div class="row">
 				<div class="col-12">
+					<a class='btn btn-primary' href='anim_gestion_animaux_pnj.php'>Gestion des PNJ animaux</a>
+					<a class='btn btn-primary' href='anim_gestion_perso_pnj.php'>Gestion des PNJ perso</a>
+
+				</div>
+			</div>
+			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
 					<a class='btn btn-secondary' href='anim_multi.php'>Tableau des multis déclarés</a>
 					<a class='btn btn-secondary' href='anim_babysitte.php'>tableau des Babysittes déclarés</a>
 				</div>
