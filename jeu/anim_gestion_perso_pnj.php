@@ -34,7 +34,18 @@ if($dispo || $admin){
 		
 		$camp = $t['clan'];
 		
+		$mess 		= "";
+		$mess_err	= "";
+		
 		if (anim_perso($mysqli, $id)) {
+			
+			$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$X_MAX = $t['x_max'];
+			$Y_MAX  = $t['y_max'];
+			
 			
 			if (isset($_POST['pseudo']) && trim($_POST['pseudo']) != ""
 				&& isset($_POST['bataillon']) && trim($_POST['bataillon']) != ""
@@ -336,11 +347,11 @@ if($dispo || $admin){
 							$sql_c = "INSERT INTO perso_as_competence (id_perso, id_competence, nb_points) VALUES ('$id','4','1')";
 							$mysqli->query($sql_c);
 							
-							echo "<center><b>Perso PNJ ".$nom_perso." [".$matricule."] créé avec succès</b></center>";
+							$mess .= "<center><b>Perso PNJ ".$nom_perso." [".$matricule."] créé avec succès</b></center>";
 						}
 					}
 					else {
-						echo "<center>Erreur: Camp invalide !</center><br /><br />";
+						$mess_err .= "<center>Erreur: Camp invalide !</center><br /><br />";
 					}
 				}
 			}
@@ -378,7 +389,7 @@ if($dispo || $admin){
 						$sql = "UPDATE perso SET x_perso='1000', y_perso='1000' WHERE id_perso='$id_perso_pnj'";
 						$mysqli->query($sql);
 						
-						echo "<center><b>Perso PNJ ".$nom_perso." [".$id_perso_pnj."] téléporté hors carte avec succès</b></center>";
+						$mess .= "<center><b>Perso PNJ ".$nom_perso." [".$id_perso_pnj."] téléporté hors carte avec succès</b></center>";
 					}
 					
 				}
@@ -389,6 +400,104 @@ if($dispo || $admin){
 					$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
 					$mysqli->query($sql);
 				}
+			}
+			
+			if (isset($_POST['id_perso_teleport_hid']) 
+				&& isset($_POST['coord_x_teleport']) && trim($_POST['coord_x_teleport']) != ''
+				&& isset($_POST['coord_y_teleport']) && trim($_POST['coord_y_teleport']) != '') {
+			
+				$id_perso_teleport 	= $_POST['id_perso_teleport_hid'];
+				$x_teleport			= $_POST['coord_x_teleport'];
+				$y_teleport			= $_POST['coord_y_teleport'];
+				
+				if (in_map($x_teleport, $y_teleport, $X_MAX, $Y_MAX)) {
+				
+					// On verifie si les coordonnées sont dispo
+					$sql = "SELECT occupee_carte FROM carte WHERE x_carte='$x_teleport' AND y_carte='$y_teleport'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$occupee = $t['occupee_carte'];
+					
+					if (!$occupee) {
+					
+						$sql = "SELECT x_perso, y_perso, image_perso FROM perso WHERE id_perso='$id_perso_teleport'";
+						$res = $mysqli->query($sql);
+						$t = $res->fetch_assoc();
+						
+						$x_perso_origin = $t['x_perso'];
+						$y_perso_origin = $t['y_perso'];
+						$image_perso	= $t['image_perso'];
+						
+						if ($x_perso_origin != 1000) {
+							if (in_bat($mysqli, $id_perso_teleport)) {
+								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_teleport'";
+							}
+							else {
+								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+							}
+							$mysqli->query($sql);
+						}
+						
+						$sql = "UPDATE perso SET x_perso='$x_teleport', y_perso='$y_teleport' WHERE id_perso='$id_perso_teleport'";
+						$mysqli->query($sql);
+						
+						$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso_teleport', image_carte='$image_perso' WHERE x_carte='$x_teleport' AND y_carte='$y_teleport'";
+						$mysqli->query($sql);
+						
+						$mess .= "Le perso PNJ d'id $id_perso_teleport a bien été téléporté en $x_teleport / $y_teleport";
+					}
+					else {
+						$mess_err .= "La case cible est déjà occupée";
+					}
+				}
+				else {
+					$mess_err .= "Coordonnées invalides";
+				}
+			}
+			
+			if (isset($_POST['id_perso_teleport_bat_hid']) 
+				&& isset($_POST['select_bat_teleport']) && trim($_POST['select_bat_teleport']) != '') {
+			
+				$id_perso_teleport 	= $_POST['id_perso_teleport_bat_hid'];
+				$bat_teleport		= $_POST['select_bat_teleport'];
+				
+				// récupération nom et coordonnées batiment
+				$sql = "SELECT nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$bat_teleport'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$nom_instance_bat 	= $t['nom_instance'];
+				$x_instance_bat		= $t['x_instance'];
+				$y_instance_bat		= $t['y_instance'];
+				
+				$sql = "SELECT x_perso, y_perso, image_perso FROM perso WHERE id_perso='$id_perso_teleport'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$x_perso_origin = $t['x_perso'];
+				$y_perso_origin = $t['y_perso'];
+				$image_perso	= $t['image_perso'];
+				
+				if ($x_perso_origin != 1000) {
+					if (in_bat($mysqli, $id_perso_teleport)) {
+						$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_teleport'";
+					}
+					else {
+						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
+					}
+					$mysqli->query($sql);
+				}
+				
+				// MAJ coordonnées perso
+				$sql = "UPDATE perso SET x_perso='$x_instance_bat', y_perso='$y_instance_bat' WHERE id_perso='$id_perso_teleport'";
+				$mysqli->query($sql);
+				
+				// Ajout du perso dans le batiment
+				$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_teleport','$bat_teleport')";
+				$mysqli->query($sql);
+				
+				$mess .= "Le perso d'id $id_perso_teleport a bien été téléporté dans le bâtiment $nom_instance_bat [".$bat_teleport."]";
 			}
 ?>
 		
@@ -418,8 +527,18 @@ if($dispo || $admin){
 			
 			<p align="center">
 				<a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a>
-				
 			</p>
+			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<?php
+						echo "<font color='blue'>".$mess."</font><br />";
+						echo "<font color='red'><b>".$mess_err."</b></font><br />";
+						?>
+					</div>
+				</div>
+			</div>
 			
 			<div class="row">
 				<div class="col-12">
@@ -578,10 +697,63 @@ if($dispo || $admin){
 										echo "	<td align='center'>".$x_perso."/".$y_perso."</td>";
 									}
 									echo "	<td>";
-									echo "		<a href='#' class='btn btn-danger'>Supprimer</a>";
-									echo "		<a href='#' class='btn btn-warning'>Téléporter</a>";
-									if ($x_perso != 1000) {
-										echo "		<a href='anim_gestion_perso_pnj.php?id_perso_pnj=".$matricule_perso."&hors_carte=ok' class='btn btn-info'>Placer hors carte</a>";
+									if (isset($_GET['id_perso_pnj']) && $_GET['id_perso_pnj'] == $matricule_perso && isset($_GET['teleport']) && $_GET['teleport'] == 'ok') {
+										echo "<form method='POST' action='anim_gestion_perso_pnj.php'>";
+										echo "	<input type='hidden' value='".$matricule_perso."' name='id_perso_teleport_hid'>";
+										echo "	<div class='row'>";
+										echo "		<div class='col'>";
+										echo "			<input type='text' class='form-control' value='' placeholder='X' maxlength='3' name='coord_x_teleport'>";
+										echo "		</div>";
+										echo "		<div class='col'>";
+										echo "			<input type='text' class='form-control' value='' placeholder='Y' maxlength='3' name='coord_y_teleport'>";
+										echo "		</div>";
+										echo "		<div class='col'>";
+										echo "			<input type='submit' value='téléporter (Position)' class='btn btn-warning'>";
+										echo "		</div>";
+										echo "	</div>";
+										echo "</form>";
+										
+										echo "<hr>";
+										
+										echo "<form method='POST' action='anim_gestion_perso_pnj.php'>";
+										echo "	<input type='hidden' value='".$matricule_perso."' name='id_perso_teleport_bat_hid'>";
+										echo "	<div class='row'>";
+										echo "		<div class='col'>";
+										echo "			<select name='select_bat_teleport' class='form-control'>";
+										$sql_b = "SELECT id_instanceBat, x_instance, y_instance, nom_batiment FROM instance_batiment, batiment 
+													WHERE instance_batiment.id_batiment = batiment.id_batiment 
+													AND instance_batiment.contenance_instance > 0
+													AND camp_instance='$camp' ORDER BY id_instanceBat";
+										$res_b = $mysqli->query($sql_b);
+										while($t_b = $res_b->fetch_assoc()) {
+											$id_instance_bat_tel 	= $t_b['id_instanceBat'];
+											$nom_bat_tel 			= $t_b['nom_batiment'];
+											$x_instance_bat			= $t_b['x_instance'];
+											$y_instance_bat			= $t_b['y_instance'];
+											
+											echo "		<option value='".$id_instance_bat_tel."'>".$nom_bat_tel." [".$id_instance_bat_tel."] (".$x_instance_bat."/".$y_instance_bat.")</option>";
+										}
+										echo "			</select>";
+										echo "		</div>";
+										echo "		<div class='col'>";
+										echo "			<input type='submit' value='téléporter (Batiment)' class='btn btn-warning'>";
+										echo "		</div>";
+										echo "	</div>";
+										echo "</form>";
+										
+										echo "<hr>";
+										
+										echo "	<div align='center'>";
+										echo "		<a href='anim_gestion_perso_pnj.php' class='btn btn-danger'>Annuler</a>";
+										echo "	</div>";
+									}
+									else {
+										echo "		<a href='#' class='btn btn-danger'>Supprimer</a>";
+										echo "		<a href='anim_gestion_perso_pnj.php?id_perso_pnj=".$matricule_perso."&teleport=ok' class='btn btn-warning'>Téléporter</a>";
+										
+										if ($x_perso != 1000) {
+											echo "		<a href='anim_gestion_perso_pnj.php?id_perso_pnj=".$matricule_perso."&hors_carte=ok' class='btn btn-info'>Placer hors carte</a>";
+										}
 									}
 									echo "	</td>";
 									echo "</tr>";
