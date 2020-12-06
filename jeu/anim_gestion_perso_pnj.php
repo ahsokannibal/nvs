@@ -344,6 +344,52 @@ if($dispo || $admin){
 					}
 				}
 			}
+			
+			if (isset($_GET['id_perso_pnj']) && $_GET['id_perso_pnj'] != "" && $_GET['id_perso_pnj'] < 100) {
+				
+				$id_perso_pnj = $_GET['id_perso_pnj'];
+				
+				// Vérification qu'on traite bien un perso pnj de son camp
+				$sql = "SELECT nom_perso, clan, x_perso, y_perso FROM perso WHERE id_perso='$id_perso_pnj'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				
+				$camp_perso_pnj = $t['clan'];
+				$x_perso_pnj	= $t['x_perso'];
+				$y_perso_pnj	= $t['y_perso'];
+				$nom_perso		= $t["nom_perso"];
+				
+				if ($camp_perso_pnj == $camp) {
+					
+					// On souhaite téléporter le perso hors carte
+					if (isset($_GET['hors_carte']) && $_GET['hors_carte'] == 'ok') {
+						
+						if (in_bat($mysqli, $id_perso_pnj)) {
+							// On supprime le perso du batiment
+							$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_pnj'";
+						}
+						else {
+							// On supprime le perso de la carte
+							$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_pnj' AND y_carte='$y_perso_pnj'";
+						}
+						$mysqli->query($sql);
+						
+						// On téléporte le perso hors carte
+						$sql = "UPDATE perso SET x_perso='1000', y_perso='1000' WHERE id_perso='$id_perso_pnj'";
+						$mysqli->query($sql);
+						
+						echo "<center><b>Perso PNJ ".$nom_perso." [".$id_perso_pnj."] téléporté hors carte avec succès</b></center>";
+					}
+					
+				}
+				else {
+					// Tentative de triche de la part d'un anim !
+					$text_triche = "L animateur qui possède le perso $id a essayé de faire des modifications sur un perso PNJ qui n est pas de son camp !";
+			
+					$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+					$mysqli->query($sql);
+				}
+			}
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -525,10 +571,18 @@ if($dispo || $admin){
 									echo "	<td align='center'>".$matricule_perso."</td>";
 									echo "	<td>".$nom_perso."</td>";
 									echo "	<td data-value='".$id_grade."'>".$nom_grade."</td>";
-									echo "	<td align='center'>".$x_perso."/".$y_perso."</td>";
+									if ($x_perso == 1000) {
+										echo "	<td align='center'><i>Hors carte</i></td>";
+									}
+									else {
+										echo "	<td align='center'>".$x_perso."/".$y_perso."</td>";
+									}
 									echo "	<td>";
 									echo "		<a href='#' class='btn btn-danger'>Supprimer</a>";
 									echo "		<a href='#' class='btn btn-warning'>Téléporter</a>";
+									if ($x_perso != 1000) {
+										echo "		<a href='anim_gestion_perso_pnj.php?id_perso_pnj=".$matricule_perso."&hors_carte=ok' class='btn btn-info'>Placer hors carte</a>";
+									}
 									echo "	</td>";
 									echo "</tr>";
 								}
