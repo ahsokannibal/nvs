@@ -153,10 +153,16 @@ if($dispo || $admin){
 									
 									if (!$is_chef) {
 									
+										$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
+										$res = $mysqli->query($sql);
+										$tab = $res->fetch_assoc();
+										
+										$id_compagnie = $tab['id_compagnie'];
+									
 										// On regarde si le perso n'a pas de dette dans une banque de compagnie
 										$sql = "SELECT SUM(montant) as thune_en_banque FROM histobanque_compagnie 
 												WHERE id_perso='$matricule_grouillot_renvoi' 
-												AND id_compagnie=( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi')";
+												AND id_compagnie='$id_compagnie'";
 										$res = $mysqli->query($sql);
 										$tab = $res->fetch_assoc();
 										

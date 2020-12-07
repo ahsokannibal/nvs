@@ -433,6 +433,9 @@ if($dispo || $admin){
 							if (in_bat($mysqli, $id_perso_teleport)) {
 								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_teleport'";
 							}
+							else if (in_train($mysqli, $id_perso_teleport)) {
+								$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso_teleport'";
+							}
 							else {
 								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
 							}
@@ -463,13 +466,14 @@ if($dispo || $admin){
 				$bat_teleport		= $_POST['select_bat_teleport'];
 				
 				// récupération nom et coordonnées batiment
-				$sql = "SELECT nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$bat_teleport'";
+				$sql = "SELECT nom_instance, x_instance, y_instance, id_batiment FROM instance_batiment WHERE id_instanceBat='$bat_teleport'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
 				
 				$nom_instance_bat 	= $t['nom_instance'];
 				$x_instance_bat		= $t['x_instance'];
 				$y_instance_bat		= $t['y_instance'];
+				$id_bat				= $t['id_batiment'];
 				
 				$sql = "SELECT x_perso, y_perso, image_perso FROM perso WHERE id_perso='$id_perso_teleport'";
 				$res = $mysqli->query($sql);
@@ -483,6 +487,9 @@ if($dispo || $admin){
 					if (in_bat($mysqli, $id_perso_teleport)) {
 						$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_teleport'";
 					}
+					else if (in_train($mysqli, $id_perso_teleport)) {
+						$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso_teleport'";
+					}
 					else {
 						$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso_origin' AND y_carte='$y_perso_origin'";
 					}
@@ -493,11 +500,136 @@ if($dispo || $admin){
 				$sql = "UPDATE perso SET x_perso='$x_instance_bat', y_perso='$y_instance_bat' WHERE id_perso='$id_perso_teleport'";
 				$mysqli->query($sql);
 				
-				// Ajout du perso dans le batiment
-				$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_teleport','$bat_teleport')";
+				if ($id_bat == 12) {
+					// Ajout du perso dans le train
+					$sql = "INSERT INTO perso_in_train VALUES ('$bat_teleport', '$id_perso_teleport')";
+				}
+				else {
+					// Ajout du perso dans le batiment
+					$sql = "INSERT INTO perso_in_batiment VALUES ('$id_perso_teleport','$bat_teleport')";
+				}
 				$mysqli->query($sql);
 				
 				$mess .= "Le perso d'id $id_perso_teleport a bien été téléporté dans le bâtiment $nom_instance_bat [".$bat_teleport."]";
+			}
+			
+			if (isset($_POST["matricule_delete_hidden"])) {
+				
+				$matricule_delete = $_POST["matricule_delete_hidden"];
+						
+				// controle matricule perso
+				$verif_matricule = preg_match("#^[0-9]*[0-9]$#i","$matricule_delete");
+				
+				if ($verif_matricule) {
+
+					// On regarde si le perso n'est pas chef d'une compagnie 
+					$sql = "SELECT count(id_perso) as is_chef FROM perso_in_compagnie WHERE id_perso='$matricule_delete' AND poste_compagnie='1'";
+					$res = $mysqli->query($sql);
+					$tab = $res->fetch_assoc();
+				
+					$is_chef = $tab["is_chef"];
+					
+					if (!$is_chef) {
+						
+						$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi'";
+						$res = $mysqli->query($sql);
+						$tab = $res->fetch_assoc();
+						
+						$id_compagnie = $tab['id_compagnie'];
+					
+						// On regarde si le perso n'a pas de dette dans une banque de compagnie
+						$sql = "SELECT SUM(montant) as thune_en_banque FROM histobanque_compagnie 
+								WHERE id_perso='$matricule_grouillot_renvoi' 
+								AND id_compagnie='$id_compagnie'";
+						$res = $mysqli->query($sql);
+						$tab = $res->fetch_assoc();
+						
+						$thune_en_banque = $tab["thune_en_banque"];
+						
+						if ($thune_en_banque >= 0) {
+						
+							// Ok - suppression du perso						
+							$sql = "DELETE FROM perso WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_arme WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_armure WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_competence WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_contact WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_dossiers WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_grade WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_as_objet WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM histobanque_compagnie WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							$sql = "DELETE FROM banque_compagnie WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							if ($thune_en_banque > 0) {
+								$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
+										WHERE id_compagnie= ( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$matricule_delete')";
+								$mysqli->query($sql);
+								
+								$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$montant_final_banque = $t['montant'];
+								
+								$date = time();
+								
+								// banque log
+								$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$matricule_delete', '-$thune_en_banque', '$montant_final_banque')";
+								$mysqli->query($sql);
+							}
+							
+							$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$matricule_delete'";
+							$mysqli->query($sql);
+							
+							if (in_bat($mysqli, $matricule_delete)) {		
+								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$matricule_delete'";
+							}
+							else if (in_train($mysqli, $matricule_delete)) {
+								$sql = "DELETE FROM perso_in_train WHERE id_perso='$matricule_delete'";
+							}
+							else {
+								$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$matricule_delete'";
+							}
+							$mysqli->query($sql);
+							
+							$mess .= "Le perso PNJ avec la matricule $matricule_delete a bien été supprimé.";
+						}
+						else {
+							$mess_err .= "Impossible de supprimer un perso PNJ qui possède des dettes dans une compagnie, merci de rembourser vos dettes avant de virer ce PNJ.";
+						}
+					}
+					else {
+						$mess_err .= "Impossible de renvoyer un perso PNJ qui est chef d'une compagnie, merci de passer son rôle de chef à un autre avant de le supprimer.";
+					}
+				}				
 			}
 ?>
 		
@@ -748,7 +880,32 @@ if($dispo || $admin){
 										echo "	</div>";
 									}
 									else {
-										echo "		<a href='#' class='btn btn-danger'>Supprimer</a>";
+										echo "		<button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#modalConfirm$matricule_perso\">Supprimer</button>";
+										?>
+										<!-- Modal -->
+										<form method="post" action="anim_gestion_perso_pnj.php">
+											<div class="modal fade" id="modalConfirm<?php echo $matricule_perso; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+												<div class="modal-dialog modal-dialog-centered" role="document">
+													<div class="modal-content">
+														<div class="modal-header">
+															<h5 class="modal-title" id="exampleModalCenterTitle">Supprimer le Perso PNJ <?php echo $nom_perso." [".$matricule_perso."]"; ?> ?</h5>
+															<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+																<span aria-hidden="true">&times;</span>
+															</button>
+														</div>
+														<div class="modal-body">
+															Êtes-vous sûr de vouloir supprimer le Perso PNJ <?php echo $nom_perso." [".$matricule_perso."]"; ?> ?
+															<input type='hidden' name='matricule_delete_hidden' value='<?php echo $matricule_perso; ?>'>
+														</div>
+														<div class="modal-footer">
+															<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+															<button type="button" onclick="this.form.submit()" class="btn btn-danger">Supprimer</button>
+														</div>
+													</div>
+												</div>
+											</div>
+										</form>
+										<?php
 										echo "		<a href='anim_gestion_perso_pnj.php?id_perso_pnj=".$matricule_perso."&teleport=ok' class='btn btn-warning'>Téléporter</a>";
 										
 										if ($x_perso != 1000) {
