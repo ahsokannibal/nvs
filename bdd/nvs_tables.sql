@@ -460,6 +460,7 @@ CREATE TABLE `declaration_multi` (
 	`id_perso` INT NOT NULL , 
 	`id_multi` INT NOT NULL , 
 	`situation` TEXT NOT NULL , 
+	`date_declaration` DATETIME DEFAULT NULL ,
 	PRIMARY KEY (`id_declaration`)
 ) ENGINE = MyISAM; 
 
