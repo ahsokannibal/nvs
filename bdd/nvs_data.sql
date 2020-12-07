@@ -309,6 +309,26 @@ INSERT INTO `competence_as_action` (`id_competence`, `id_action`) VALUES
 INSERT INTO `config_jeu` (`disponible`) VALUES
 (0);
 
+
+INSERT INTO `decorations` (`id_decoration`, `description_decoration`, `camp_decoration`, `image_decoration`) VALUES
+(1, 'Médaille de l\'honneur', 1, 'US-MOH-1862.png'),
+(2, 'Croix de Guerre', 2, 'croix_guerre_sud.gif'),
+(3, 'Croix de guerre', 1, 'croix_guerre_nord.png'),
+(4, 'Croix de l\'honneur', 2, 'croix_honneur_sud.png'),
+(5, 'Croix de l\'honneur exceptionnel', 2, 'croix_honneur_exceptionnelle_sud.png'),
+(6, 'Étoile de la valeur argent', 2, 'etoile_valeur_argent_sud.png'),
+(7, 'Étoile de la valeur Or', 2, 'etoile_valeur_or_sud.png'),
+(8, 'Citation', 1, 'medaille_citation1_nord.png'),
+(9, 'Médaille du dévouement', 1, 'medaille_devouement_nord.png'),
+(10, 'médaille de la diplomatie', 1, 'medaille_diplomatie_nord.png'),
+(11, 'Médaille de la magistrature', 1, 'medaille_magistrature_nord.png'),
+(12, 'Médaille du mérite', 1, 'medaille_merite_nord.png'),
+(13, 'Médaille du sauvetage', 1, 'medaille_sauvetage_nord.png'),
+(14, 'Ordre du mérite', 2, 'ordre_merite_sud.png'),
+(15, 'Purple Heart', 1, 'purple_heart_nord.png'),
+(16, 'Médaille commémorative de Faifax Stone (Beta)', 1, 'beta.png')
+(17, 'Médaille commémorative de Faifax Stone (Beta)', 2, 'beta.png');
+
 -- 
 -- Contenu de la table `dossier`
 -- 
