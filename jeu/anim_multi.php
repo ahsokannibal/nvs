@@ -83,6 +83,7 @@ if(isset($_SESSION["id_perso"])){
 							echo "<table class='table'>";
 							echo "	<thead>";
 							echo "		<tr>";
+							echo "			<th style='text-align:center'>Date de déclaration</th>";
 							echo "			<th style='text-align:center'>Perso qui déclare</th>";
 							echo "			<th style='text-align:center'>Multi</th>";
 							echo "			<th style='text-align:center'>Action</th>";
@@ -95,6 +96,12 @@ if(isset($_SESSION["id_perso"])){
 								$id_decla	= $t['id_declaration'];
 								$id_perso	= $t['id_perso'];
 								$id_multi	= $t['id_multi'];
+								$date_decla	= $t['date_declaration'];
+								
+								if ($date_decla != null) {
+									$date_decla = new DateTime($date_decla, new DateTimeZone('Europe/Paris'));
+									$date_decla->add(new DateInterval('PT1H'));
+								}
 								
 								// récup infos perso qui babysitte
 								$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
@@ -113,8 +120,14 @@ if(isset($_SESSION["id_perso"])){
 								$camp_multi	= $t_m['clan'];
 								
 								echo "		<tr>";
-								echo "			<td align='center'>".$nom_perso." [".$id_perso."]</td>";
-								echo "			<td align='center'>".$nom_multi." [".$id_multi."]</td>";
+								if ($date_decla != null) {
+									echo "			<td align='center'>".$date_decla->format('d-m-Y H:i:s')."</td>";
+								}
+								else {
+									echo "			<td align='center'><i>Non défini (déclaré avant évolution)</i></td>";
+								}
+								echo "			<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+								echo "			<td align='center'>".$nom_multi." [<a href='evenement.php?infoid=".$id_multi."'>".$id_multi."</a>]</td>";
 								echo "			<td align='center'><a href='anim_multi.php?detail_id=".$id_decla."' class='btn btn-primary'>Consulter le détail</a></td>";
 								echo "		</tr>";
 							}

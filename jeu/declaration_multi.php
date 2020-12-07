@@ -61,7 +61,7 @@ if($dispo || $admin){
 							$verif = $res->num_rows;
 							
 							if ($verif == 0) {
-								$sql = "INSERT INTO declaration_multi (id_perso, id_multi, situation) VALUES ('$id_chef', '$id_multi', '$situation')";
+								$sql = "INSERT INTO declaration_multi (id_perso, id_multi, situation, date_declaration) VALUES ('$id_chef', '$id_multi', '$situation', NOW())";
 								$mysqli->query($sql);
 								
 								$mess .= "Déclaration de multi avec le perso ".$nom_multi."[".$id_multi."] bien enregistré";
