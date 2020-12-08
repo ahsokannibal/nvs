@@ -490,7 +490,7 @@ if($dispo || $admin){
 				else {
 					echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"deposer\">";
 					echo "	<div class=\"form-group\">";
-					echo "		<label for=\"depot\">Deposer de l'argent (25 minimum) : </label>";
+					echo "		<label for=\"depot\">Déposer de l'argent (25 minimum) : </label>";
 					echo "		<input name=\"deposer\" class=\"form-control\" id=\"depot\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
 					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
 					echo "	</div>";
@@ -506,7 +506,7 @@ if($dispo || $admin){
 					
 					echo "<form action=\"banque_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"emprunter\">";
 					echo "	<div class=\"form-group\">";
-					echo "		<label for=\"emprunt\">Emprunter de l'argent (necessite l'accord du tresorier) : </label>";
+					echo "		<label for=\"emprunt\">Emprunter de l'argent (nécessite l'accord du tresorier) : </label>";
 					echo "		<input name=\"emprunter\" class=\"form-control\" id=\"emprunt\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
 					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
 					echo "	</div>";
@@ -521,7 +521,7 @@ if($dispo || $admin){
 					echo "</form>";
 				}
 				
-				echo "<br /><br /><center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour a la page de compagnie</a></center>";
+				echo "<br /><br /><center><a href='compagnie.php' class='btn btn-outline-secondary'>Retour à la page de compagnie</a></center>";
 				
 				echo "	</div>";
 				echo "</div>";
