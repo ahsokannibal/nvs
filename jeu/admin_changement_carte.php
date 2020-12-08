@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_carte.php");
 
 $mysqli = db_connexion();
 
@@ -92,14 +93,14 @@ if(isset($_SESSION["id_perso"])){
 					$y_carte	= $t_carte['y_carte'];
 					$fond_carte	= $t_carte['fond_carte'];
 					
-					$sql = "INSERT INTO carte VALUES ($x_carte, $y_carte, '0', $fond_carte, NULL, NULL, NULL, 0, 0, NULL)";
+					$sql = "INSERT INTO carte VALUES ($x_carte, $y_carte, '0', '$fond_carte', NULL, NULL, NULL, 0, 0, NULL)";
 					$mysqli->query($sql);
 				}
 				
 				// Coordonnées carte
 				$sql = "UPDATE carte SET coordonnees = CONCAT (x_carte, ';', y_carte)";
 				$mysqli->query($sql);
-				
+
 				// Récupération caracs Fort
 				$sql = "SELECT pvMax_batiment, taille_batiment FROM batiment WHERE id_batiment='9'";
 				$res = $mysqli->query($sql);
@@ -140,7 +141,7 @@ if(isset($_SESSION["id_perso"])){
 						for ($y = $y_fort - $taille_search; $y <= $y_fort + $taille_search; $y++) {
 							
 							// mise a jour de la carte
-							$sql = "UPDATE $carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
+							$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat_sup' WHERE x_carte='$x' AND y_carte='$y'";
 							$mysqli->query($sql);
 							
 						}
@@ -209,7 +210,7 @@ if(isset($_SESSION["id_perso"])){
 				// Vider table em_position_infra_carte_suivante
 				$sql = "DELETE FROM em_position_infra_carte_suivante";
 				$mysqli->query($sql);
-				
+							
 				// passer jeu en mode disponible
 				$sql = "UPDATE config_jeu SET disponible='1'";
 				$mysqli->query($sql);
