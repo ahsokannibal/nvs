@@ -191,7 +191,7 @@
 								<td align='center'>-10%</td>
 								<td align='center'>-10%</td>
 								<td align='center'>-</td>
-								<td>Le pont peut être posé sur les case d'eau et d'eau profonde. Il permet aux persos de traverser l'eau pour le cout d'un PM au lieu de 4 ainsi que de traverser l'eau profonde qui est infranchissable sans pont. C'est donc un outil stratégique très important à ne pas négliger ! Les ponts peuvent être sabotés par les persos, il suffit de se trouver à côté d'un pont afin d'avoir la possibilité de le <a href='regles_action_spe.php'>saboter</a> comme de le <a href='regles_action_spe.php'>réparer</a>. On ne peut peut pour l'instant pas saboter un pont avec un perso dessus. lorsqu'un Pont est construit, il possédera entre 50 et 100 PV.</td>
+								<td>Le pont peut être posé sur les case d'eau et d'eau profonde. Il permet aux persos de traverser l'eau pour le cout d'un PM au lieu de 4 ainsi que de traverser l'eau profonde qui est infranchissable sans pont. C'est donc un outil stratégique très important à ne pas négliger ! Les ponts peuvent être sabotés par les persos, il suffit de se trouver à côté d'un pont afin d'avoir la possibilité de le <a href='regles_action_spe.php'>saboter</a> comme de le <a href='regles_action_spe.php'>réparer</a>. On ne peut pour l'instant pas saboter un pont avec un perso dessus. lorsqu'un Pont est construit, il possédera entre 50 et 100 PV.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../fond_carte/rail.gif' alt='pont'></td>
