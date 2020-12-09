@@ -86,6 +86,36 @@ function verif_position_libre($mysqli, $x, $y, $X_MAX, $Y_MAX) {
 	return $verif;
 }
 
+function verif_position_libre_pont($mysqli, $x, $y, $X_MAX, $Y_MAX) {
+	
+	$verif = true;
+	
+	if (in_map($x, $y, $X_MAX, $Y_MAX)) {
+		
+		$sql = "SELECT occupee_carte FROM carte WHERE x_carte='".$x."' AND y_carte='".$y."' AND (fond_carte = '8.gif' OR fond_carte = '9.gif')";
+		echo $sql;
+		$res = $mysqli->query($sql);
+		$num = $res->num_rows;
+		
+		if ($num == 0) {
+			$verif = false;
+		}
+		else {
+			$t = $res->fetch_assoc();
+			$occ = $t['occupee_carte'];
+			
+			if ($occ) {
+				$verif = false;
+			}
+		}
+	}
+	else {
+		$verif = false;
+	}
+	
+	return $verif;
+}
+
 function verif_coord_in_perception($x, $y, $x_perso, $y_perso, $perception) {
 	
 	$verif = true;

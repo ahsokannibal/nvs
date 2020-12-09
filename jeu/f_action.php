@@ -594,7 +594,14 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 					$X_MAX = $t['x_max'];
 					$Y_MAX  = $t['y_max'];
 					
-					$verif_occ_in_map = verif_position_libre($mysqli, $x_bat, $y_bat, $X_MAX, $Y_MAX);
+					$verif_occ_in_map = true;
+					
+					if ($id_bat == 5) {
+						$verif_occ_in_map = verif_position_libre_pont($mysqli, $x_bat, $y_bat, $X_MAX, $Y_MAX);
+					}
+					else {					
+						$verif_occ_in_map = verif_position_libre($mysqli, $x_bat, $y_bat, $X_MAX, $Y_MAX);
+					}
 					
 					if ($verif_occ_in_map) {
 						
