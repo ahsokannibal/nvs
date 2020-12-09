@@ -27,7 +27,7 @@ $couleur_sud 	= Imagecolorallocate($gare_carte, 254, 10, 10); // rouge bien voya
 $couleur_rail	= Imagecolorallocate($gare_carte, 200, 200, 200); // gris rails
 
 // je vais chercher les rails dans ma table
-$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif' AND y_carte >= 100";
+$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif' AND y_carte >= 100 AND vue_nord='1'";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -43,7 +43,8 @@ while ($t = $res->fetch_assoc()){
 $sql = "SELECT x_instance, y_instance, nom_instance, taille_batiment, camp_instance FROM instance_batiment, batiment 
 		WHERE batiment.id_batiment = instance_batiment.id_batiment 
 		AND pv_instance>0
-		AND instance_batiment.id_batiment='11'";
+		AND instance_batiment.id_batiment='11'
+		AND camp_instance = '1'";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
