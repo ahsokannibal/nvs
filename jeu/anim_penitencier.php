@@ -47,17 +47,6 @@ if($dispo || $admin){
 			$mess = "";
 			$mess_erreur = "";
 			
-			// Vérification si présence ou non d'un pénitencier
-			$sql_peni = "SELECT id_instanceBat, x_instance, y_instance FROM instance_batiment WHERE id_batiment=10 AND camp_instance='$camp'";
-			$res_peni = $mysqli->query($sql_peni);
-			$verif_penitencier = $res_peni->num_rows;
-			
-			$t = $res_peni->fetch_assoc();
-			
-			$id_penitencier	= $t['id_instanceBat'];
-			$x_penitencier 	= $t['x_instance'];
-			$y_penitencier 	= $t['y_instance'];
-			
 			// Creation pénitencier
 			if (isset($_POST['coord_x_penitencier']) && $_POST['coord_x_penitencier'] != ''
 					&& isset($_POST['coord_y_penitencier']) && $_POST['coord_y_penitencier'] != '') {
@@ -130,7 +119,18 @@ if($dispo || $admin){
 				else {
 					$mess_erreur .= "Coordonnées du pénitencier incorrectes";
 				}
-			}
+			}			
+			
+			// Vérification si présence ou non d'un pénitencier
+			$sql_peni = "SELECT id_instanceBat, x_instance, y_instance FROM instance_batiment WHERE id_batiment=10 AND camp_instance='$camp'";
+			$res_peni = $mysqli->query($sql_peni);
+			$verif_penitencier = $res_peni->num_rows;
+			
+			$t = $res_peni->fetch_assoc();
+			
+			$id_penitencier	= $t['id_instanceBat'];
+			$x_penitencier 	= $t['x_instance'];
+			$y_penitencier 	= $t['y_instance'];
 			
 			if (isset($_POST['liste_perso_contact_penitencier'])) {
 				
@@ -342,7 +342,7 @@ if($dispo || $admin){
 					<div align="center">
 						<?php
 						if (!$verif_penitencier) {
-							echo "<form method='POST' action='anim_batiment.php'>";
+							echo "<form method='POST' action='anim_penitencier.php'>";
 							echo "	<input type='text' value='' placeholder='coordonnée x' name='coord_x_penitencier'>";
 							echo "	<input type='text' value='' placeholder='coordonnée y' name='coord_y_penitencier'>";
 							echo "	<button type='submit' class='btn btn-danger'>Créer un pénitencier pour mon camp</button>";
