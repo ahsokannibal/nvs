@@ -147,7 +147,7 @@ if ($verif_id_perso_session) {
 				if(!in_bat($mysqli, $id) || (in_bat($mysqli, $id) && $porteeMax_arme_attaque > 1)){
 					
 					// recup des données du perso
-					$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, DLA_perso, perso_as_grade.id_grade, nom_grade
+					$sql = "SELECT nom_perso, idJoueur_perso, type_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, gain_xp_tour, DLA_perso, perso_as_grade.id_grade, nom_grade
 							FROM perso, perso_as_grade, grades
 							WHERE perso_as_grade.id_perso = perso.id_perso
 							AND perso_as_grade.id_grade = grades.id_grade
@@ -179,6 +179,14 @@ if ($verif_id_perso_session) {
 					$grade_perso 	= $t_perso["id_grade"];
 					$type_perso		= $t_perso["type_perso"];
 					$nom_grade_perso= $t_perso["nom_grade"];
+					$gain_xp_tour_perso	= $t_perso["gain_xp_tour"];
+					
+					if ($gain_xp_tour_perso >= 20) {
+						$max_xp_tour_atteint = true;
+					}
+					else {
+						$max_xp_tour_atteint = false;
+					}
 					
 					// Récupération de la couleur associée au clan du perso
 					$couleur_clan_perso = couleur_clan($clan_perso);
@@ -504,6 +512,11 @@ if ($verif_id_perso_session) {
 											$gain_xp = 10;
 										}
 										
+										if ($gain_xp_tour_perso + $gain_xp > 20) {
+											$gain_xp = 20 - $gain_xp_tour_perso;
+											$max_xp_tour_atteint = true;
+										}
+										
 										if ($id_arme_attaque == 10) {
 											
 											// Seringue
@@ -545,10 +558,14 @@ if ($verif_id_perso_session) {
 											echo "<br>Vous avez infligé $degats_final dégâts à la cible.<br>";
 										}
 										
-										echo "Vous avez gagné $gain_xp xp.<br>";
+										echo "Vous avez gagné $gain_xp xp.";
+										if ($max_xp_tour_atteint) {
+											echo " (maximum de gain d'xp par tour atteint)";
+										}
+										echo "<br />";
 										
 										// mise a jour des xp/pi
-										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id'"; 
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'"; 
 										$mysqli->query($sql);
 										
 										// Passage grade grouillot
@@ -779,7 +796,13 @@ if ($verif_id_perso_session) {
 													// Récupération de la couleur associée au clan de la cible
 													$couleur_clan_collat = couleur_clan($clan_collat);
 													
-													$gain_xp_collat_cumul += 1;
+													$gain_xp_collat = 1;
+													if ($gain_xp_tour_perso + $gain_xp_collat > 20) {
+														$gain_xp_collat = 0;
+														$max_xp_tour_atteint = true;
+													}
+													
+													$gain_xp_collat_cumul += $gain_xp_collat;
 													$gain_pc_collat_cumul += 1;
 													
 													$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
@@ -789,8 +812,6 @@ if ($verif_id_perso_session) {
 														$gain_pc_collat = 0;
 													}
 													
-													$gain_xp_collat = 1;
-													
 													// mise a jour des pv et des malus de la cible
 													$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_collat, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible_collat'";
 													$mysqli->query($sql);
@@ -798,28 +819,36 @@ if ($verif_id_perso_session) {
 													echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat.<br>";
 													
 													// Limite 3XP par attaque de Gatling
-													if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
+													if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
 														echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 													
 														// mise a jour des xp/pi
-														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 														$mysqli->query($sql);
 														
 														// Passage grade grouillot
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 													}
-													else if ($gain_xp_collat_cumul <= 4) {
+													else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
 														echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 													
 														// mise a jour des xp/pi
-														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 														$mysqli->query($sql);
 														
 														// Passage grade grouillot
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 														
 													} else {
-														echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
+														echo "Vous avez gagné 0 xp";
+														if ($max_xp_tour_atteint) {
+															echo " (maximum de gain d'xp par tour atteint)";
+														}
+														else {
+															echo " (maximum de gain d'xp par attaque atteint)";
+														}
+														
+														echo ".<br><br>";
 													}
 													
 													// recup id perso chef
@@ -995,7 +1024,12 @@ if ($verif_id_perso_session) {
 													$image_pnj_collat 		= "pnj".$t_cible["id_pnj"]."t.png";
 													
 													$gain_xp_collat = 1;
-													$gain_xp_collat_cumul += 1;
+													if ($gain_xp_tour_perso + $gain_xp_collat > 20) {
+														$gain_xp_collat = 0;
+														$max_xp_tour_atteint = true;
+													}
+													
+													$gain_xp_collat_cumul += $gain_xp_collat;
 													
 													// mise a jour des pv de la cible
 													$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
@@ -1004,28 +1038,36 @@ if ($verif_id_perso_session) {
 													echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
 													
 													// Limite 3XP par attaque de Gatling
-													if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
+													if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
 														echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 													
 														// mise a jour des xp/pi
-														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 														$mysqli->query($sql);
 														
 														// Passage grade grouillot
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 													}
-													else if ($gain_xp_collat_cumul <= 4) {
+													else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
 														echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 													
 														// mise a jour des xp/pi
-														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+														$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 														$mysqli->query($sql);
 														
 														// Passage grade grouillot
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 														
 													} else {
-														echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
+														echo "Vous avez gagné 0 xp";
+														if ($max_xp_tour_atteint) {
+															echo " (maximum de gain d'xp par tour atteint)";
+														}
+														else {
+															echo " (maximum de gain d'xp par attaque atteint)";
+														}
+														
+														echo ".<br><br>";
 													}
 													
 													// maj evenement
@@ -1107,8 +1149,8 @@ if ($verif_id_perso_session) {
 											$mysqli->query($sql);
 											
 											// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
-											if($clan_cible != $clan_perso){
-												$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1 WHERE id_perso='$id_cible'";
+											if($clan_cible != $clan_perso && !$max_xp_tour_atteint){
+												$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1, gain_xp_tour=gain_xp_tour + 1 WHERE id_perso='$id_cible'";
 												$mysqli->query($sql);
 											}
 										}
@@ -1268,7 +1310,7 @@ if ($verif_id_perso_session) {
 			if ($verif_arme) {
 			
 				// recup des données du perso
-				$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, perso_as_grade.id_grade, nom_grade
+				$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, gain_xp_tour, perso_as_grade.id_grade, nom_grade
 						FROM perso, perso_as_grade, grades
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso_as_grade.id_grade = grades.id_grade
@@ -1299,6 +1341,14 @@ if ($verif_id_perso_session) {
 				$grade_perso 	= $t_perso["id_grade"];
 				$type_perso		= $t_perso["type_perso"];
 				$nom_grade_perso= $t_perso["nom_grade"];
+				$gain_xp_tour_perso = $t_perso["gain_xp_tour"];
+				
+				if ($gain_xp_tour_perso >= 20) {
+					$max_xp_tour_atteint = true;
+				}
+				else {
+					$max_xp_tour_atteint = false;
+				}
 				
 				// Récupération de la couleur associée au clan du perso
 				$couleur_clan_perso = couleur_clan($clan_perso);
@@ -1502,6 +1552,11 @@ if ($verif_id_perso_session) {
 									$gain_xp = 3;
 								}
 								
+								if ($gain_xp_tour_perso + $gain_xp > 20) {
+									$gain_xp = 20 - $gain_xp_tour_perso;
+									$max_xp_tour_atteint = true;
+								}
+								
 								if ($id_arme_attaque == 10) {
 										
 									// Seringue
@@ -1532,7 +1587,7 @@ if ($verif_id_perso_session) {
 								echo "Vous avez gagné <b>$gain_xp</b> xp.";
 								
 								// maj gain xp / pi perso
-								$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id'";
+								$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'";
 								$mysqli->query($sql);
 								
 								// Passage grade grouillot
@@ -1655,8 +1710,12 @@ if ($verif_id_perso_session) {
 											$couleur_clan_collat = couleur_clan($clan_collat);
 											
 											$gain_xp_collat = 1;
+											if ($gain_xp_tour_perso + $gain_xp_collat > 20) {
+												$gain_xp_collat = 20 - $gain_xp_tour_perso;
+												$max_xp_tour_atteint = true;
+											}
 											
-											$gain_xp_collat_cumul += 1;
+											$gain_xp_collat_cumul += $gain_xp_collat;
 											$gain_pc_collat_cumul += 1;
 											
 											$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
@@ -1673,28 +1732,36 @@ if ($verif_id_perso_session) {
 											echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat.<br>";
 											
 											// Limite 3XP par attaque de Gatling
-											if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
+											if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
 												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 											
 												// mise a jour des xp/pi
-												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 												$mysqli->query($sql);
 												
 												// Passage grade grouillot
 												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 											}
-											else if ($gain_xp_collat_cumul <= 4) {
+											else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
 												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 											
 												// mise a jour des xp/pi
-												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 												$mysqli->query($sql);
 												
 												// Passage grade grouillot
 												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 												
 											} else {
-												echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
+												echo "Vous avez gagné 0 xp";
+												if ($max_xp_tour_atteint) {
+													echo " (maximum de gain d'xp par tour atteint)";
+												}
+												else {
+													echo " (maximum de gain d'xp par attaque atteint)";
+												}
+												
+												echo ".<br><br>";
 											}
 											
 											// recup id perso chef
@@ -1869,7 +1936,12 @@ if ($verif_id_perso_session) {
 											$image_pnj_collat 		= "pnj".$t_cible["id_pnj"]."t.png";
 											
 											$gain_xp_collat = 1;
-											$gain_xp_collat_cumul += 1;
+											if ($gain_xp_tour_perso + $gain_xp_collat > 20) {
+												$gain_xp_collat = 20 - $gain_xp_tour_perso;
+												$max_xp_tour_atteint = true;
+											}
+											
+											$gain_xp_collat_cumul += gain_xp_collat;
 											
 											// mise a jour des pv de la cible
 											$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
@@ -1878,28 +1950,36 @@ if ($verif_id_perso_session) {
 											echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
 											
 											// Limite 3XP par attaque de Gatling
-											if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3) {
+											if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
 												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 											
 												// mise a jour des xp/pi
-												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 												$mysqli->query($sql);
 												
 												// Passage grade grouillot
 												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 											}
-											else if ($gain_xp_collat_cumul <= 4) {
+											else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
 												echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 											
 												// mise a jour des xp/pi
-												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat WHERE id_perso='$id'"; 
+												$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
 												$mysqli->query($sql);
 												
 												// Passage grade grouillot
 												passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 												
 											} else {
-												echo "Vous avez gagné 0 xp (maximum par attaque atteint).<br><br>";
+												echo "Vous avez gagné 0 xp";
+												if ($max_xp_tour_atteint) {
+													echo " (maximum de gain d'xp par tour atteint)";
+												}
+												else {
+													echo " (maximum de gain d'xp par attaque atteint)";
+												}
+												
+												echo ".<br><br>";
 											}
 											
 											// maj evenement
@@ -2121,7 +2201,7 @@ if ($verif_id_perso_session) {
 			if ($verif_arme) {
 			
 				// recup des données du perso
-				$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, perso_as_grade.id_grade, nom_grade
+				$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, gain_xp_tour, perso_as_grade.id_grade, nom_grade
 						FROM perso, perso_as_grade, grades
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso_as_grade.id_grade = grades.id_grade
@@ -2151,6 +2231,14 @@ if ($verif_id_perso_session) {
 				$grade_perso 	= $t_perso["id_grade"];
 				$type_perso		= $t_perso["type_perso"];
 				$nom_grade_perso= $t_perso["nom_grade"];
+				$gain_xp_tour_perso	= $t_perso["gain_xp_tour"];
+				
+				if ($gain_xp_tour_perso >= 20) {
+					$max_xp_tour_atteint = true;
+				}
+				else {
+					$max_xp_tour_atteint = false;
+				}
 				
 				// Récupération de la couleur associée au clan du perso
 				$couleur_clan_perso = couleur_clan($clan_perso);
@@ -2301,6 +2389,11 @@ if ($verif_id_perso_session) {
 								echo "Vous avez lancé une attaque sur <b>$nom_batiment [$id_cible]</b>.<br>";
 								
 								$gain_xp = mt_rand(1,3);
+								
+								if ($gain_xp_tour_perso + $gain_xp > 20) {
+									$gain_xp = 20 - $gain_xp_tour_perso;
+									$max_xp_tour_atteint = true;
+								}
 					
 								// Calcul touche
 								$touche = mt_rand(0,100);
@@ -2376,14 +2469,20 @@ if ($verif_id_perso_session) {
 									$mysqli->query($sql);
 									
 									echo "<br>Vous avez infligé <b>$degats_final</b> degats à la cible.<br><br>";
-									echo "Vous avez gagné <b>$gain_xp</b> xp<br>";
-										
-									// maj gain xp, pi perso
-									$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id'";
-									$mysqli->query($sql);
+									echo "Vous avez gagné <b>$gain_xp</b> xp";
+									if ($max_xp_tour_atteint) {
+										echo " (maximum de gain d'xp par tour atteint)";
+									}
+									echo "<br />";
 									
-									// Passage grade grouillot
-									passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
+									if ($gain_xp > 0) {
+										// maj gain xp, pi perso
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'";
+										$mysqli->query($sql);
+										
+										// Passage grade grouillot
+										passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
+									}
 										
 									// maj evenement
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";

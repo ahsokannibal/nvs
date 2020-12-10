@@ -533,7 +533,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 		$taille_bat = $tb["taille_batiment"];
 		
 		// recuperation des donnees necessaires pour la construction du batiment
-		$sql = "SELECT clan, or_perso, pa_perso, x_perso, y_perso, genie, pvMin_action, pvMax_action, coutPa_action, coutOr_action, coutBois_action, coutfer_action, contenance, action.nb_points as niveau_bat
+		$sql = "SELECT clan, gain_xp_tour, or_perso, pa_perso, x_perso, y_perso, genie, pvMin_action, pvMax_action, coutPa_action, coutOr_action, coutBois_action, coutfer_action, contenance, action.nb_points as niveau_bat
 				FROM action, action_as_batiment, perso_as_competence, competence_as_action, perso
 				WHERE action.id_action = action_as_batiment.id_action
 				AND perso_as_competence.nb_points = action.nb_points
@@ -559,6 +559,14 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 		$genie_perso	= $t_b["genie"];
 		$niveau_bat 	= $t_b["niveau_bat"];
 		$contenance_bat = $t_b["contenance"];
+		$gain_xp_tour_perso = $t_b["gain_xp_tour"];
+		
+		if ($gain_xp_tour_perso >= 20) {
+			$max_xp_tour_atteint = true;
+		}
+		else {
+			$max_xp_tour_atteint = false;
+		}		
 		
 		if($camp_perso == '1'){
 			$bat_camp = "b";
@@ -640,6 +648,10 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 								if ($verif_fond_carte) {								
 								
 									$gain_xp = 1;
+									if ($gain_xp_tour_perso + $gain_xp > 20) {
+										$gain_xp = 0;
+										$max_xp_tour_atteint = true;
+									}
 									
 									// Autorisations de construction - vérification des contraintes
 									$autorisation_construction_gc 		= verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $y_bat);
@@ -678,12 +690,12 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 												
 													if($coutPa == -1){
 														// mise a jour des pa, or et charge du perso + xp/pi
-														$sql = "UPDATE perso SET pa_perso='0' , or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
+														$sql = "UPDATE perso SET pa_perso='0', or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id_perso'";
 														$mysqli->query($sql);
 													}
 													else {
 														// mise a jour des pa, or et charge du perso + xp/pi
-														$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp WHERE id_perso='$id_perso'";
+														$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id_perso'";
 														$mysqli->query($sql);
 													}
 													
@@ -1155,7 +1167,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$coutPa = $t_reparer["coutPa_action"];
 	
 	// recuperation des infos du perso
-	$sql = "SELECT nom_perso, pa_perso, type_perso, clan, genie FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, pa_perso, type_perso, clan, gain_xp_tour, genie FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_i_perso = $res->fetch_assoc();
 	
@@ -1164,6 +1176,14 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	$type_perso	= $t_i_perso['type_perso'];
 	$camp_perso = $t_i_perso['clan'];
 	$genie_perso= $t_i_perso['genie'];
+	$gain_xp_tour_perso	= $t_i_perso['gain_xp_tour'];
+	
+	if ($gain_xp_tour_perso >= 20) {
+		$max_xp_tour_atteint = true;
+	}
+	else {
+		$max_xp_tour_atteint = false;
+	}
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
@@ -1207,19 +1227,24 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			if($pv_instance_bat < $pv_max_bat){
 			
 				// calcul gain xp
-				$gain_xp = rand(2,5);
+				$gain_xp = rand(1,3);
 				
 				if($camp_bat != $camp_perso){
-					$gain_xp = floor($gain_xp / 2);
+					$gain_xp = 1;
+				}
+				
+				if ($gain_xp_tour_perso + $gain_xp > 20) {
+					$gain_xp = 20 - $gain_xp_tour_perso;
+					$max_xp_tour_atteint = true;
 				}
 			
 				if($pv_instance_bat + $pv_reparation < $pv_max_bat){
 					//MAJ pv cible
 					$sql = "UPDATE instance_batiment SET pv_instance=pv_instance+$pv_reparation WHERE id_instanceBat='$id_cible'";
 					$mysqli->query($sql);
-						
+					
 					//MAJ xp/pi perso et pa
-					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
 						
 					//MAJ evenments perso
@@ -1227,7 +1252,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 					$mysqli->query($sql);
 						
 					echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
-					echo "<center>Vous avez gagné $gain_xp XP</center>";
+					echo "<center>Vous avez gagné $gain_xp XP";
+					if ($max_xp_tour_atteint) {
+						echo " (maximum de gain d'xp par tour atteint).";
+					}
+					echo "</center>";
 				}
 				else {
 					// on met aux pvMax de la cible
@@ -1235,7 +1264,7 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 					$mysqli->query($sql);
 						
 					//MAJ xp/pi/pa perso
-					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
 						
 					//MAJ evenments perso
@@ -1244,15 +1273,24 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 						
 					echo "<center>Vous avez réparé <font color=$couleur_clan_cible>$nom_cible</font> de $pv_reparation PV</center><br />";
 					echo "<center>La cible est revenu à son max de vie</center><br />";
-					echo "<center>Vous avez gagné $gain_xp XP</center>";
+					echo "<center>Vous avez gagné $gain_xp XP";
+					if ($max_xp_tour_atteint) {
+						echo " (maximum de gain d'xp par tour atteint).";
+					}
+					echo "</center>";
 				}
 			}
 			else {
 				// cible deja au max
-				$gain_xp = '1';
+				$gain_xp = 1;
+				
+				if ($gain_xp_tour_perso + $gain_xp > 20) {
+					$gain_xp = 0;
+					$max_xp_tour_atteint = true;
+				}
 					
-					//MAJ xp/pi/pa perso
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+				//MAJ xp/pi/pa perso
+				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 					
 				//MAJ evenments perso
@@ -1260,7 +1298,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 				$mysqli->query($sql);
 					
 				echo "<center>La cible est était déjà à son max de vie</center><br />";
-				echo "<center>Vous avez gagné $gain_xp XP</center>";
+				echo "<center>Vous avez gagné $gain_xp XP";
+				if ($max_xp_tour_atteint) {
+					echo " (maximum de gain d'xp par tour atteint).";
+				}
+				echo "</center>";
 			}
 		}
 		else {
@@ -1298,12 +1340,16 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 	$recup_malus = calcul_recup_malus($id_action);
 	
 	//recuperation des infos sur le perso
-	$sql = "SELECT nom_perso, clan, pa_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, clan, pa_perso, gain_xp_tour FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
-	$nom_perso = $t_p["nom_perso"];
-	$pa_perso = $t_p["pa_perso"];
-	$camp = $t_p["clan"];
+	
+	$nom_perso 	= $t_p["nom_perso"];
+	$pa_perso 	= $t_p["pa_perso"];
+	$camp 		= $t_p["clan"];
+	$gain_xp_tour_perso	= $t_p["gain_xp_tour"];
+	
+	$max_xp_tour_atteint = false;
 	
 	// recupetion de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
@@ -1331,6 +1377,11 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 		// Si on soigne les malus d'un perso autre que soi meme
 		if($id_perso != $id_cible){
 			$gain_xp = $gain_xp * 2;
+		}
+		
+		if ($gain_xp_tour_perso + $gain_xp > 20) {
+			$gain_xp = 20 - $gain_xp_tour_perso;
+			$max_xp_tour_atteint = true;
 		}
 		
 		$bonus_recup_s = 0;
@@ -1382,6 +1433,11 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 			// cible n'ayant pas de malus
 			$gain_xp = 1;
 			
+			if ($gain_xp_tour_perso + $gain_xp > 20) {
+				$gain_xp = 0;
+				$max_xp_tour_atteint = true;
+			}
+			
 			echo "<center>La cible n'avait pas de malus...</center><br />";
 			
 			if($bonus_recup_s){
@@ -1402,10 +1458,14 @@ function action_soin_malus($mysqli, $id_perso, $id_cible, $id_action, $id_objet_
 		}
 		
 		//MAJ xp/pi perso et pa
-		$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+		$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 		$mysqli->query($sql);
 		
-		echo "<center>Vous avez gagné $gain_xp XP</center>";
+		echo "<center>Vous avez gagné $gain_xp XP";
+		if ($max_xp_tour_atteint) {
+			echo " (maximum de gain d'xp par tour atteint)";
+		}
+		echo "</center>";
 		
 	}
 	else {
@@ -1441,13 +1501,21 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 	$pourcent = calcul_pourcentage_action($id_action);
 	
 	//recuperation des infos sur le perso
-	$sql = "SELECT nom_perso, clan, pa_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, clan, pa_perso, gain_xp_tour FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	
-	$nom_perso = $t_p["nom_perso"];
-	$pa_perso = $t_p["pa_perso"];
-	$camp = $t_p["clan"];
+	$nom_perso 	= $t_p["nom_perso"];
+	$pa_perso 	= $t_p["pa_perso"];
+	$camp 		= $t_p["clan"];
+	$gain_xp_tour_perso = $t_p["gain_xp_tour"];
+	
+	if ($gain_xp_tour_perso >= 20) {
+		$max_xp_tour_atteint = true;
+	}
+	else {
+		$max_xp_tour_atteint = false;
+	}
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
@@ -1475,6 +1543,11 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 		// Si on soigne un perso autre que soi meme
 		if($id_perso != $id_cible){
 			$gain_xp = $gain_xp * 2;
+		}
+		
+		if ($gain_xp_tour_perso + $gain_xp > 20) {
+			$gain_xp = 20 - $gain_xp_tour_perso;
+			$max_xp_tour_atteint = true;
 		}
 		
 		$bonus_pv_s = 0;
@@ -1516,7 +1589,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 					}
 					
 					//MAJ xp/pi perso et pa
-					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
 					
 					//MAJ evenments perso
@@ -1532,7 +1605,11 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 							echo "<center>Vous avez augmenté la récupération de <font color=$couleur_clan_cible>$nom_cible</font> de $bonus_recup_s</center><br />";
 						}
 					}
-					echo "<center>Vous avez gagné $gain_xp XP</center>";
+					echo "<center>Vous avez gagné $gain_xp XP";
+					if ($max_xp_tour_atteint) {
+						echo " (maximum de gain d'xp par tour atteint)";
+					}
+					echo ".</center>";
 				}
 				else {
 					// on met aux pvMax de la cible
@@ -1540,7 +1617,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 					$mysqli->query($sql);
 					
 					//MAJ xp perso
-					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+					$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 					$mysqli->query($sql);
 					
 					//MAJ evenments perso
@@ -1549,7 +1626,11 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 					
 					echo "<center>Vous avez soigné <font color=$couleur_clan_cible>$nom_cible</font> de $pv_soin PV</center><br />";
 					echo "<center>La cible est revenu à son max de vie</center><br />";
-					echo "<center>Vous avez gagné $gain_xp XP</center>";
+					echo "<center>Vous avez gagné $gain_xp XP";
+					if ($max_xp_tour_atteint) {
+						echo " (maximum de gain d'xp par tour atteint)";
+					}
+					echo ".</center>";
 				}
 				
 				if($id_objet_soin > 0){
@@ -1560,10 +1641,15 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 			}
 			else {
 				// cible deja au max
-				$gain_xp = '1';
+				$gain_xp = 1;
+				
+				if ($gain_xp_tour_perso + $gain_xp > 20) {
+					$gain_xp = 0;
+					$max_xp_tour_atteint = true;
+				}
 				
 				//MAJ xp perso
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 				
 				if($bonus_recup_s){
@@ -1605,14 +1691,24 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 				}
 				
 				echo "<center>La cible est était déjà à son max de vie</center><br />";
-				echo "<center>Vous avez gagné $gain_xp XP</center>";
+				echo "<center>Vous avez gagné $gain_xp XP";
+				if ($max_xp_tour_atteint) {
+					echo " (maximum de gain d'xp par tour atteint)";
+				}
+				echo ".</center>";
 			}
 		}
 		else {
 			// Competence de soin pas assez developpee pour soigner le perso cible
-			$gain_xp = '1';
+			$gain_xp = 1;
+			
+			if ($gain_xp_tour_perso + $gain_xp > 20) {
+				$gain_xp = 0;
+				$max_xp_tour_atteint = true;
+			}
+			
 			//MAJ xp perso
-			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
 			//MAJ evenments perso
@@ -1620,7 +1716,11 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 			$mysqli->query($sql);
 			
 			echo "<center>Votre niveau dans cette compétence ne vous permet pas de soigner correctement la cible</center><br />";
-			echo "<center>Vous avez gagné $gain_xp XP</center>";
+			echo "<center>Vous avez gagné $gain_xp XP";
+			if ($max_xp_tour_atteint) {
+				echo " (maximum de gain d'xp par tour atteint)";
+			}
+			echo ".</center>";
 		}
 	}
 	else {
@@ -2294,7 +2394,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 		$couleur_bat = couleur_clan($c_bat);
 	   
 		// recuperation des infos du perso
-		$sql = "SELECT nom_perso, clan, x_perso, y_perso, pa_perso, genie FROM perso WHERE id_perso='$id_perso'";
+		$sql = "SELECT nom_perso, clan, x_perso, y_perso, pa_perso, gain_xp_tour, genie FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
 		$t_perso = $res->fetch_assoc();
 		
@@ -2302,6 +2402,14 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 		$camp_perso 	= $t_perso['clan'];
 		$pa_perso 		= $t_perso['pa_perso'];
 		$genie_perso	= $t_perso['genie'];
+		$gain_xp_tour_perso	= $t_perso['gain_xp_tour'];
+		
+		if ($gain_xp_tour_perso >= 20) {
+			$max_xp_tour_atteint = true;
+		}
+		else {
+			$max_xp_tour_atteint = false;
+		}
 		
 		// recuperation de la couleur du camp du perso
 		$couleur_clan_perso = couleur_clan($camp_perso);
@@ -2310,6 +2418,11 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 		
 			// gains xp
 			$gain_xp = rand(1,3);
+			
+			if ($gain_xp_tour_perso + $gain_xp > 20) {
+				$gain_xp = 20 - $gain_xp_tour_perso;
+				$max_xp_tour_atteint = true;
+			}
 			
 			// calcul pourcentage de reussite
 			$pourcentage_reussite = 60;
@@ -2376,6 +2489,11 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 			else {
 				$gain_xp = 1;
 				
+				if ($gain_xp_tour_perso + $gain_xp > 20) {
+					$gain_xp = 0;
+					$max_xp_tour_atteint = true;
+				}
+				
 				//mise a jour de la table evenement
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' a raté son sabotage ',NULL,'',' en $x_bat / $y_bat',NOW(),'0')";
 				$mysqli->query($sql);
@@ -2384,10 +2502,14 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 			}
 			
 			// MAJ xp/pi/pa perso
-			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
+			$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp, pa_perso=pa_perso-$coutPa WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
-			echo "<center>Vous avez gagné $gain_xp XP</center><br /><br />";
+			echo "<center>Vous avez gagné $gain_xp XP";
+			if ($max_xp_tour_atteint) {
+				echo " (maximum gain d'xp par tour atteint)";
+			}
+			echo "</center><br /><br />";
 		}
 		else {
 			echo "<center>Vous n'avez pas assez de PA</center><br />";
@@ -3572,6 +3694,18 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 	$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 	$mysqli->query($sql);
 	
+	$sql = "SELECT gain_xp_tour FROM perso WHERE id_perso='$id_perso'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$gain_xp_tour_perso = $t['gain_xp_tour'];
+	if ($gain_xp_tour_perso >= 20) {
+		$max_xp_tour_atteint = true;
+	}
+	else {
+		$max_xp_tour_atteint = false;
+	}
+	
 	// Mise à jour du perso
 	$sql = "UPDATE perso SET pm_perso = pm_perso - $nb_deplacements, x_perso = $x_perso_final, y_perso = $y_perso_final WHERE id_perso='$id_perso'";
 	$mysqli->query($sql);
@@ -3727,11 +3861,15 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 					$gain_pc = $gain_pc * 2;
 				}
 				
-				if ($gain_total_xp < 20) {
+				if ($gain_total_xp < 20 && !$max_xp_tour_atteint) {
 				
 					// calcul gain experience
 					if ($idPerso_carte >= 200000) {
-						$gain_experience = mt_rand(1, 6);
+						$gain_experience = mt_rand(1, 4);
+						if ($gain_xp_tour_perso + $gain_experience > 20) {
+							$gain_experience = 20 - $gain_xp_tour_perso;
+							$max_xp_tour_atteint = true;
+						}
 					} else {
 					
 						$calcul_dif_xp = ceil(($xp_cible - $xp_perso) / 10);
@@ -3746,6 +3884,11 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						
 						if ($gain_experience > 10) {
 							$gain_experience = 10;
+						}
+						
+						if ($gain_xp_tour_perso + $gain_experience > 20) {
+							$gain_experience = 20 - $gain_xp_tour_perso;
+							$max_xp_tour_atteint = true;
 						}
 					}
 					
@@ -3953,7 +4096,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				}
 				
 				// MAJ xp/pi
-				$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience WHERE id_perso='$id_perso'";
+				$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, gain_xp_tour = gain_xp_tour + $gain_experience WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 				
 				// recup id joueur perso
@@ -4002,8 +4145,8 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				$mysqli->query($sql);
 				
 				// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
-				if ($idPerso_carte < 50000 && $clan_cible != $clan) {
-					$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1 WHERE id_perso='$idPerso_carte'";
+				if ($idPerso_carte < 50000 && $clan_cible != $clan && !$max_xp_tour_atteint) {
+					$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1, gain_xp_tour = gain_xp_tour + 1 WHERE id_perso='$idPerso_carte'";
 					$mysqli->query($sql);
 				}
 				
