@@ -356,6 +356,43 @@ if($dispo || $admin){
 				}
 			}
 			
+			if (isset($_POST['pseudo_forum']) && trim($_POST['pseudo_forum']) != ""
+				&& isset($_POST['email_forum']) && trim($_POST['email_forum']) != ""
+				&& isset($_POST['mdp_forum']) && trim($_POST['mdp_forum']) != ""
+				&& isset($_POST['camp_forum']) && trim($_POST['camp_forum']) != "") {
+				
+				$nom_perso 		= $_POST['pseudo_forum'];
+				$email_joueur	= $_POST['email_forum'];
+				$old_mdp_joueur	= $_POST['mdp_forum'];
+				$choix_camp		= $_POST['camp_forum'];
+				
+				if ($choix_camp == '1') {
+					$group_id = 8;
+				}
+				else if ($choix_camp == '2') {
+					$group_id = 9;
+				}
+				
+				// Creation compte forum 
+				$user_row = array(
+					'username'				=> $nom_perso,
+					'user_password'			=> phpbb_hash($old_mdp_joueur),
+					'user_email'			=> $email_joueur,
+					'group_id'				=> $group_id,
+					'user_timezone'			=> 'Europe/Paris',
+					'user_lang'				=> 'fr',
+					'user_type'				=> USER_NORMAL,
+					'user_actkey'			=> '',
+					'user_ip'				=> realip(),
+					'user_regdate'			=> time(),
+					'user_inactive_reason'	=> 0,
+					'user_inactive_time'	=> 0,
+				);
+				user_add($user_row);
+				
+				$mess .= "<center><b>PNJ FORUM ".$nom_perso." créé avec succès</b></center>";
+			}
+			
 			if (isset($_GET['id_perso_pnj']) && $_GET['id_perso_pnj'] != "" && $_GET['id_perso_pnj'] < 100) {
 				
 				$id_perso_pnj = $_GET['id_perso_pnj'];
@@ -676,9 +713,10 @@ if($dispo || $admin){
 				<div class="col-12">
 					<div align="center">
 						<?php
-						if (!isset($_GET['creer'])) {
+						if (!isset($_GET['creer']) && !isset($_GET['creer_pnj_forum'])) {
 						?>
 						<a class="btn btn-success" href="anim_gestion_perso_pnj.php?creer=ok">Créer un perso</a>
+						<a class="btn btn-success" href="anim_gestion_perso_pnj.php?creer_pnj_forum=ok">Créer un PNJ Forum</a>
 						<?php
 						}
 						?>
@@ -767,6 +805,37 @@ if($dispo || $admin){
 							<div class="form-group">
 								<label for="mdp">Mot de passe</label>
 								<input type="password" class="form-control" name="mdp" id="mdp" placeholder="">
+							</div>
+							<div class="form-group">
+								<button type="submit" class="btn btn-primary">Créer</button>
+							</div>
+						</form>
+					<?php
+					}
+					else if (isset($_GET['creer_pnj_forum']) && $_GET['creer_pnj_forum'] == "ok") {
+					?>
+						<a class="btn btn-danger" href="anim_gestion_perso_pnj.php">Annuler</a><br />
+						<br />
+						<h2>Création du PNJ Forum</h2>
+						<form method='POST'>
+							<div class="form-group">
+								<label for="camp_forum">Camp affiché du PNJ</label>
+								<select name='camp_forum' id='camp_forum' class="form-control">
+									<option value='1'>Nord</option>
+									<option value='2'>Sud</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="pseudo_forum">Nom</label>
+								<input type="text" class="form-control" name="pseudo_forum" id="pseudo_forum" placeholder="">
+							</div>
+							<div class="form-group">
+								<label for="email_forum">Email</label>
+								<input type="email" class="form-control" name="email_forum" id="email_forum" placeholder="">
+							</div>
+							<div class="form-group">
+								<label for="mdp_forum">Mot de passe</label>
+								<input type="password" class="form-control" name="mdp_forum" id="mdp_forum" placeholder="">
 							</div>
 							<div class="form-group">
 								<button type="submit" class="btn btn-primary">Créer</button>
