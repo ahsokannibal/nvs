@@ -144,6 +144,37 @@ if(isset($id)){
 		echo "</table></center><br />";
 	}
 	
+	// Citations
+	$sql = "SELECT date_decoration, raison_decoration FROM perso_as_decoration
+			WHERE id_decoration is NULL
+			AND id_perso='$id'
+			ORDER BY date_decoration";
+	$res = $mysqli->query($sql);
+	$nb_event = $res->num_rows;
+	
+	if ($nb_event) {
+		
+		echo "<center><font color=red><b>Citations</b></font></center>";
+		echo "<center>";
+		echo "<table border=1 class='table'>";
+		echo "	<tr>";
+		echo "		<th style='text-align:center' width=25%>date</th>";
+		echo "		<th style='text-align:center'>Raison</th>";
+		echo "	</tr>";
+	
+		while ($t = $res->fetch_assoc()){
+			
+			$date_deco		= $t['date_decoration'];
+			$raison_deco	= htmlspecialchars($t['raison_decoration']);
+			
+			echo "	<tr>";
+			echo "		<td align='center'>".$date_deco."</td>";
+			echo "		<td align='center'>Citation : ".$raison_deco."</td>";
+			echo "	</tr>";
+		}
+		echo "</table></center><br />";
+	}
+	
 	
 	// Missions
 	$count = 0;
