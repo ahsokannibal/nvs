@@ -74,8 +74,8 @@ if(config_dispo_jeu($mysqli)){
 								if($camp == 1){
 									$x_min_spawn 		= $X_MAX - 40;
 									$x_max_spawn 		= $X_MAX;
-									$y_min_spawn 		= $X_MAX - 40;
-									$y_max_spawn 		= $X_MAX;
+									$y_min_spawn 		= $Y_MAX - 40;
+									$y_max_spawn 		= $Y_MAX;
 									$image_chef 		= "cavalerie_nord.gif";
 									$image_g 			= "infanterie_nord.gif";
 									$group_id 			= 8;
