@@ -477,6 +477,10 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 				&& $verif_berge_pont > 0;
 }
 
+/**
+ * Fonction permettant de récupérer les cases de pont connectées à celle qu'on essaye de placer
+ * afin de les exclure pour la recherche de pont à moins de 30 cases
+ */
 function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
 	
 	$sql = "SELECT x_carte, y_carte, save_info_carte FROM carte
@@ -486,13 +490,11 @@ function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
 				AND y_carte <= $y_pont + 1
 				AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
 				AND coordonnees NOT IN (SELECT coordonnees FROM carte WHERE x_carte=$x_pont AND y_carte=$y_pont)
-				AND save_info_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )
-				LIMIT 1";
+				AND save_info_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
 	$res = $mysqli->query($sql);
 	$nb_ponts = $res->num_rows;
 	
 	if ($nb_ponts > 0) {
-		
 		while ($t = $res->fetch_assoc()) {
 			
 			$x_pont 	= $t['x_carte'];
@@ -501,11 +503,11 @@ function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
 			
 			array_push($ban_id_pont, $id_pont);
 			
-			return get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont);
-		}		
+			$ban_id_pont = array_merge($ban_id_pont, get_cases_pont2($mysqli, $x_pont, $y_pont, $ban_id_pont));
+		}
 	}
 	
-	return $ban_id_pont;
+	return array_unique($ban_id_pont);
 }
 
 /**
