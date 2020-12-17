@@ -36,7 +36,6 @@ if(isset($_SESSION["id_perso"])){
 		
 			<div class="row">
 				<div class="col-12">
-
 					<div align="center">
 						<h2>Adminstration</h2>
 					</div>
@@ -45,6 +44,20 @@ if(isset($_SESSION["id_perso"])){
 			
 			<p align="center"><a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
 			
+			<div class="row">
+				<div class="col-12">
+					<div align="center">
+						<a href='admin_triche.php?affiche=all' class='btn btn-warning'>Tout afficher</a>
+						<a href='admin_triche.php?affiche=pwd' class='btn btn-warning'>Tableau mot de passe identifiques</a>
+						<a href='admin_triche.php?affiche=email' class='btn btn-warning'>Tableau emails proches</a>
+						<a href='admin_triche.php?affiche=ip' class='btn btn-warning'>Tableau connexions même IP</a>
+					</div>
+				</div>
+			</div>
+			
+			<?php
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "pwd")) {
+			?>
 			<div class="row">
 				<div class="col-12">
 				
@@ -116,6 +129,10 @@ if(isset($_SESSION["id_perso"])){
 			
 			<br />
 			
+			<?php
+			}
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "email")) {
+			?>
 			<div class="row">
 				<div class="col-12">
 				
@@ -128,9 +145,9 @@ if(isset($_SESSION["id_perso"])){
 							</tr>
 							<?php
 							
-							$sql = "SELECT j1.id_joueur as id_joueur1, j2.id_joueur as id_joueur2, j1.email_joueur as email_joueur1, j2.email_joueur as email_joueur2, distance_inference_basique(j1.email_joueur, j2.email_joueur) as ib FROM joueur j1, joueur j2
+							$sql = "SELECT j1.id_joueur as id_joueur1, j2.id_joueur as id_joueur2, j1.email_joueur as email_joueur1, j2.email_joueur as email_joueur2, distance_inference_basique(left(j1.email_joueur, length(j1.email_joueur)-INSTR(j1.email_joueur, '@')), left(j2.email_joueur, length(j2.email_joueur)-INSTR(j2.email_joueur, '@'))) as ib FROM joueur j1, joueur j2
 									WHERE j1.id_joueur != j2.id_joueur
-									AND distance_inference_basique(j1.email_joueur, j2.email_joueur) > 15
+									AND distance_inference_basique(left(j1.email_joueur, length(j1.email_joueur)-INSTR(j1.email_joueur, '@')), left(j2.email_joueur, length(j2.email_joueur)-INSTR(j2.email_joueur, '@'))) > 4
 									AND j1.id_joueur > 4 AND j2.id_joueur > 4
 									ORDER BY j1.id_joueur";
 							$res = $mysqli->query($sql);
@@ -163,6 +180,10 @@ if(isset($_SESSION["id_perso"])){
 			
 			<br />
 			
+			<?php
+			}
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "ip")) {
+			?>
 			<div class="row">
 				<div class="col-12">
 				
@@ -236,6 +257,9 @@ if(isset($_SESSION["id_perso"])){
 					</div>
 				</div>
 			</div>
+			<?php
+			}
+			?>
 			
 		</div>
 		
