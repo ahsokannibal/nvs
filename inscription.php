@@ -64,11 +64,18 @@ if(config_dispo_jeu($mysqli)){
 								$old_mdp_joueur = $mdp_joueur;
 								$mdp_joueur = md5($mdp_joueur);
 								
+								$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+								
+								$X_MAX = $t['x_max'];
+								$Y_MAX = $t['y_max'];
+								
 								if($camp == 1){
-									$x_min_spawn 		= 160;
-									$x_max_spawn 		= 200;
-									$y_min_spawn 		= 160;
-									$y_max_spawn 		= 200;
+									$x_min_spawn 		= $X_MAX - 40;
+									$x_max_spawn 		= $X_MAX;
+									$y_min_spawn 		= $X_MAX - 40;
+									$y_max_spawn 		= $X_MAX;
 									$image_chef 		= "cavalerie_nord.gif";
 									$image_g 			= "infanterie_nord.gif";
 									$group_id 			= 8;
