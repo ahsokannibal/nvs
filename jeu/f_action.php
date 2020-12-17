@@ -503,7 +503,7 @@ function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
 			
 			array_push($ban_id_pont, $id_pont);
 			
-			$ban_id_pont = array_merge($ban_id_pont, get_cases_pont2($mysqli, $x_pont, $y_pont, $ban_id_pont));
+			$ban_id_pont = array_merge($ban_id_pont, get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont));
 		}
 	}
 	
