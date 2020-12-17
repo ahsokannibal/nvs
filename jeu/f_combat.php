@@ -365,7 +365,7 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 		$date_derniere_attaque 		= $t_zerk['date_derniere_attaque'];
 		$date_nouveau_tour			= $t_zerk['date_nouveau_tour'];
 		
-		date_default_timezone_set('Europe/Paris');
+		//date_default_timezone_set('Europe/Paris');
 		$date_now = time();
 		
 		$diff_date = $date_now - strtotime($date_nouveau_tour);

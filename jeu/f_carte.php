@@ -93,7 +93,6 @@ function verif_position_libre_pont($mysqli, $x, $y, $X_MAX, $Y_MAX) {
 	if (in_map($x, $y, $X_MAX, $Y_MAX)) {
 		
 		$sql = "SELECT occupee_carte FROM carte WHERE x_carte='".$x."' AND y_carte='".$y."' AND (fond_carte = '8.gif' OR fond_carte = '9.gif')";
-		echo $sql;
 		$res = $mysqli->query($sql);
 		$num = $res->num_rows;
 		
