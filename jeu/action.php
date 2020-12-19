@@ -597,9 +597,10 @@ if($dispo || $admin) {
 			
 				echo "<br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center><br />";
 			
-				echo "<table border='1' align='center' width='50%'>";
+				echo "<div class='table-responsive'>";
+				echo "<table border='1' class='table table-bordered'>";
 				echo "	<tr>";
-				echo "		<th style='text-align:center' colspan='4'>Objets à donner<br /><font color='red'>Le don donnera un seul objet (sauf pour la thune où le nombre est à indiquer)</font></th>";
+				echo "		<th style='text-align:center' colspan='4'>Thunes / Objets / Armes à donner</th>";
 				echo "	</tr>";
 				echo "	<tr>";
 				echo "		<th style='text-align:center'>image</th><th style='text-align:center'>poid unitaire</th><th style='text-align:center'>nombre possédé</th><th style='text-align:center'>donner ?</th>";
@@ -615,16 +616,18 @@ if($dispo || $admin) {
 				$or_perso = $t_o0['or_perso'];
 				
 				echo "<tr>";
-				echo "<td><img src='../images/or.png' alt='thune' height='30' width='30'/><span><b>thune</b></span></td>";
+				echo "<td><img src='../images/or.png' alt='thune' height='40' width='40' /><span><b>Thune</b></span></td>";
 				echo "<td align='center'>0</td>";
 						
 				echo "<form method='post' action='action.php'>";		
-				echo "<td align='center'><select name=\"select_don_or\">";
-				while ( $compteur_or <= $or_perso){
+				echo "<td align='center'>";
+				echo "<select name=\"select_quantite\">";
+				while ($compteur_or <= $or_perso){
 					echo "<option value=\"$compteur_or\">$compteur_or</option>";
 					$compteur_or++;
 				}
-				echo "</select></td>";
+				echo "</select>";
+				echo "</td>";
 					
 				echo "<td align='center'><input type='submit' name='valid_objet_don' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_don' value='-1,1,$id_cible' /></td>";
 				echo "</form>";
@@ -649,17 +652,31 @@ if($dispo || $admin) {
 					$type_o		= $t1_o["type_objet"];
 					
 					if ($type_o != 'T') {
-											
+						
+						$compteur = 1;
+						
 						// recuperation du nombre d'objet de ce type que possede le perso
 						$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet'  AND equip_objet = '0'";
 						$res2_o = $mysqli->query($sql2_o);
 						$nb_o = $res2_o->num_rows;
 												
 						echo "<tr>";
-						echo "	<td><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></td>";
+						echo "	<td><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='40' width='40'/><span><b>".stripslashes($nom_o)."</b></span></td>";
 						echo "	<td align='center'>$poids_o</td>";
-						echo "	<td align='center'>$nb_o</td>";
 						echo "	<form method='post' action='action.php'>";
+						echo "	<td align='center'>";
+						if ($nb_o > 1) {
+							echo "<select name=\"select_quantite\">";
+							while ($compteur <= $nb_o){
+								echo "<option value=\"$compteur\">$compteur</option>";
+								$compteur++;
+							}
+							echo "</select>";
+						}
+						else {
+							echo "1";
+						}
+						echo "</td>";
 						echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_don' value='$id_objet,2,$id_cible' /></td>";
 						echo "	</form>";
 						echo "</tr>";
@@ -671,6 +688,8 @@ if($dispo || $admin) {
 				$res_a1 = $mysqli->query($sql_a1);
 				
 				while($t_a1 = $res_a1->fetch_assoc()){
+					
+					$compteur = 1;
 					
 					$id_arme = $t_a1["id_arme"];
 										
@@ -689,48 +708,29 @@ if($dispo || $admin) {
 					$nb_a1 = $res2_a1->num_rows;
 										
 					echo "<tr>";
-					echo "	<td><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></td>";
+					echo "	<td><img src='../images/armes/$image_arme' alt='$nom_a1' height='40' width='40'/><span><b>".stripslashes($nom_a1)."</b></span></td>";
 					echo "	<td align='center'>$poids_a1</td>";
-					echo "	<td align='center'>$nb_a1</td>";
 					echo "	<form method='post' action='action.php'>";
+					echo "	<td align='center'>";
+						if ($nb_a1 > 1) {
+							echo "<select name=\"select_quantite\">";
+							while ($compteur <= $nb_a1){
+								echo "<option value=\"$compteur\">$compteur</option>";
+								$compteur++;
+							}
+							echo "</select>";
+						}
+						else {
+							echo "1";
+						}
 					echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_don' value='$id_arme,3,$id_cible' /></td>";
 					echo "	</form>";
 					echo "</tr>";
 				}
-										
-				// Armures non portes
-				$sql_a2 = "SELECT DISTINCT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
-				$res_a2 = $mysqli->query($sql_a2);
-				
-				while($t_a2 = $res_a2->fetch_assoc()){
-					
-					$id_armure = $t_a2["id_armure"];
-										
-					// recuperation des carac de l'arme
-					$sql1_a2 = "SELECT nom_armure, poids_armure, image_armure FROM armure WHERE id_armure='$id_armure'";
-					$res1_a2 = $mysqli->query($sql1_a2);
-					$t1_a2 = $res1_a2->fetch_assoc();
-					
-					$nom_a2 		= $t1_a2["nom_armure"];
-					$poids_a2 		= $t1_a2["poids_armure"];
-					$image_armure 	= $t1_a2["image_armure"];
-										
-					// recuperation du nombre d'armes non equipes de ce type que possede le perso 
-					$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0' ";
-					$res2_a2 = $mysqli->query($sql2_a2);
-					$nb_a2 = $res2_a2->num_rows;
-										
-					echo "<tr>";
-					echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b><</span></a></dd></dl></td>";
-					echo "	<td align='center'>$poids_a2</td>";
-					echo "	<td align='center'>$nb_a2</td>";
-					echo "	<form method='post' action='action.php'>";
-					echo "	<td align='center'><input type='submit' name='valid_objet_don' value='oui' /><input type='hidden' name='id_objet_don' value='$id_armure,4,$id_cible' /></td>";
-					echo "	</form>";
-					echo "</tr>";
-				}
 									
-				echo "</table><br /><br />";
+				echo "</table>";
+				echo "</div>";
+				echo "<br /><br />";
 			}
 			else {
 				echo "<font color='red'>La cible n'est correcte.</font><br/>";
@@ -742,8 +742,8 @@ if($dispo || $admin) {
 		if(isset($_POST['valid_objet_don']) && isset($_POST['id_objet_don']) ){
 			
 			$quantite = 1;
-			if(isset($_POST['select_don_or'])){
-				$quantite = $_POST['select_don_or'];
+			if(isset($_POST['select_quantite'])){
+				$quantite = $_POST['select_quantite'];
 			}
 			$t_objet = $_POST['id_objet_don'];
 			$t2 = explode(',',$t_objet);
@@ -1188,9 +1188,6 @@ if($dispo || $admin) {
 									
 									if ($pa_perso >= 1) {
 										
-										echo "<table border='1' align='center' width='50%'><tr><th colspan='4'>Personnage à qui donner l'objet</th></tr>";
-										echo "<tr>";
-										
 										if (!in_bat($mysqli, $id_perso)) {
 										
 											// Recuperation des persos au CaC
@@ -1217,9 +1214,14 @@ if($dispo || $admin) {
 											
 										}
 										
-										echo "<form method='post' action='action.php'>";
-										echo "	<td align='center'>";
-										echo "		<select name=\"select_perso_don\">";
+										echo "<div class='row'>";
+										echo "	<div class='col-12'>";
+										echo "		<div align='center'>";
+										
+										echo "			<h1>Action de don à un perso</h1>";
+										
+										echo "			<form method='post' action='action.php'>";
+										echo "				<select name=\"select_perso_don\" style=\"color: #000000;\" onChange=\"this.style.color=this.options[this.selectedIndex].style.color\" class='form-control'>";
 										
 										while($t_c = $res_c->fetch_assoc()){
 											
@@ -1237,15 +1239,16 @@ if($dispo || $admin) {
 											$couleur_clan_cible = couleur_clan($camp_cible);
 											
 											
-											echo "			<option style=\"color:$couleur_clan_cible\" value=\"$id_cible\">$nom_cible [$id_cible]</option>";
+											echo "					<option style='color:".$couleur_clan_cible.";' value=\"$id_cible\">$nom_cible [$id_cible]</option>";
 											
 										}
 										
-										echo "		</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' /><input type='hidden' name='hid_valid_perso_don' value='valider' />";
-										echo "	</td>";
-										echo "</form>";
+										echo "				</select>&nbsp;<input type='submit' name='valid_perso_don' value='valider' class='btn btn-success'/><input type='hidden' name='hid_valid_perso_don' value='valider' />";
+										echo "			</form>";
 										
-										echo "</tr></table>";
+										echo "		</div>";
+										echo "	</div>";
+										echo "</div>";
 										
 									} else {
 									
@@ -1335,7 +1338,7 @@ if($dispo || $admin) {
 								}
 								
 								// lien annuler
-								echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
+								echo "<br /><br /><center><a class='btn btn-danger' href='jouer.php'><b>annuler</b></a></center>";
 							}
 						}
 					

@@ -3070,7 +3070,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : $quantite thunes',NOW(),'0')";
 								$mysqli->query($sql);
 									
-								echo "Vous avez donné <b>$quantite thunes</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "<center>Vous avez donné <b>$quantite thunes</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font></center>";
 							}
 							else {
 								echo "<font color='red'>Vous ne possédez pas assez d'or.</font>";
@@ -3091,7 +3091,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 							if($q_obj >= $quantite && $quantite > 0){
 									
 								// On supprime l'objet de l'inventaire du perso
-								$sql_d = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0' LIMIT 1";
+								$sql_d = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0' LIMIT $quantite";
 								$mysqli->query($sql_d);
 									
 								// Recuperation des infos de l'objet
@@ -3099,19 +3099,23 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$res = $mysqli->query($sql);
 								$t = $res->fetch_assoc();
 									
-								$poids_objet = $t['poids_objet'];
-								$nom_objet = $t['nom_objet'];
+								$poids_objet 	= $t['poids_objet'];
+								$nom_objet 		= $t['nom_objet'];
+								
+								$poids_total = $poids_objet * $quantite;
 																	
 								// On met a jour la charge du perso et ses PA
-								$sql_u = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_objet WHERE id_perso='$id_perso'";
+								$sql_u = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_total WHERE id_perso='$id_perso'";
 								$mysqli->query($sql_u);
-									
-								// On ajoute l'objet dans l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES('$id_cible','$id_objet')";
-								$mysqli->query($sql_i);
-									
+								
+								for ($i = 0; $i < $quantite; $i++) {
+									// On ajoute l'objet dans l'inventaire de la cible
+									$sql_i = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES('$id_cible','$id_objet')";
+									$mysqli->query($sql_i);
+								}
+								
 								// On met a jour le poids de la cible
-								$sql_u2 = "UPDATE perso SET charge_perso=charge_perso+$poids_objet WHERE id_perso='$id_cible'";
+								$sql_u2 = "UPDATE perso SET charge_perso=charge_perso+$poids_total WHERE id_perso='$id_cible'";
 								$mysqli->query($sql_u2);
 									
 								// Recuperation des informations de la cible
@@ -3124,10 +3128,10 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$couleur_clan_cible = couleur_clan($clan_cible);
 								
 								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : <b>$nom_objet</b>',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : $quantite <b>$nom_objet</b>',NOW(),'0')";
 								$mysqli->query($sql);
 									
-								echo "Vous avez donné <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "<center>Vous avez donné $quantite <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font></center>";
 							}
 							else {
 								echo "<font color='red'>Vous ne possédez pas l'objet que vous souhaitiez donner.</font>";
@@ -3147,7 +3151,7 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 							if($q_arme >= $quantite && $quantite > 0){
 									
 								// On supprime l'arme de l'inventaire du perso
-								$sql_d = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND est_portee='0' LIMIT 1";
+								$sql_d = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND est_portee='0' LIMIT $quantite";
 								$mysqli->query($sql_d);
 									
 								// recuperation des infos de l'arme
@@ -3155,19 +3159,23 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$res = $mysqli->query($sql);
 								$t = $res->fetch_assoc();
 									
-								$nom_arme = $t['nom_arme'];
-								$poids_arme = $t['poids_arme'];
+								$nom_arme 		= $t['nom_arme'];
+								$poids_arme 	= $t['poids_arme'];
+								
+								$poids_total = $poids_arme * $quantite;
 									
 								// On met a jour la charge du perso et ses PA
-								$sql_u = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_arme WHERE id_perso='$id_perso'";
+								$sql_u = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_total WHERE id_perso='$id_perso'";
 								$mysqli->query($sql_u);
-									
-								// On ajoute l'arme a l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES('$id_cible','$id_objet','0')";
-								$mysqli->query($sql_i);
+								
+								for ($i = 0; $i < $quantite; $i++) {
+									// On ajoute l'arme a l'inventaire de la cible
+									$sql_i = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES('$id_cible','$id_objet','0')";
+									$mysqli->query($sql_i);
+								}
 									
 								// On met a jour le poids de la cible
-								$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_arme WHERE id_perso='$id_cible'";
+								$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_total WHERE id_perso='$id_cible'";
 								$mysqli->query($sql_u);
 									
 								// Recuperation des informations de la cible
@@ -3180,70 +3188,13 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$couleur_clan_cible = couleur_clan($clan_cible);
 								
 								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : <b>$nom_arme</b>',NOW(),'0')";
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : $quantite <b>$nom_arme</b>',NOW(),'0')";
 								$mysqli->query($sql);
 								
-								echo "Vous avez donné <b>$nom_arme</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
+								echo "<center>Vous avez donné $quantite <b>$nom_arme</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font></center>";
 							}
 							else {
 								echo "<font color='red'>Vous ne possédez pas l'arme que vous souhaitiez donner.</font>";
-							}
-							echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
-						}
-								
-						// Armure
-						if($type_objet == 4){
-								
-							$sql_vo = "SELECT count(*) as q_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND est_portee='0'";
-							$res_vo = $mysqli->query($sql_vo);
-							$t_vo = $res_vo->fetch_assoc();
-								
-							$q_armure = $t_vo['q_armure'];
-								
-							if($q_armure >= $quantite && $quantite > 0){
-									
-								// On supprime l'armure de l'inventaire du perso
-								$sql_d = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND est_portee='0' LIMIT 1";
-								$mysqli->query($sql_d);
-									
-								// recuperation des infos de l'armure
-								$sql = "SELECT nom_armure, poids_armure, corps_armure FROM armure WHERE id_armure='$id_objet'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
-									
-								$nom_armure = $t['nom_armure'];
-								$poids_armure = $t['poids_armure'];
-								$corps_armure = $t['corps_armure'];
-									
-								// On met a jour la charge du perso et ses PA
-								$sql_u = "UPDATE perso SET pa_perso=pa_perso-1, charge_perso=charge_perso-$poids_armure WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_u);
-								
-								// On ajoute l'armure a l'inventaire de la cible
-								$sql_i = "INSERT INTO perso_as_armure (id_perso, id_armure, est_portee) VALUES('$id_cible','$id_objet','0')";
-								$mysqli->query($sql_i);
-									
-								// On met a jour le poids de la cible
-								$sql_u = "UPDATE perso SET charge_perso=charge_perso+$poids_armure WHERE id_perso='$id_cible'";
-								$mysqli->query($sql_u);
-									
-								// Recuperation des informations de la cible
-								$sql_c = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible'";
-								$res_c = $mysqli->query($sql_c);
-								$t_c = $res_c->fetch_assoc();
-									
-								$nom_cible = $t_c['nom_perso'];
-								$clan_cible = $t_c['clan'];
-								$couleur_clan_cible = couleur_clan($clan_cible);
-								
-								// mise a jour des evenements
-								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a fait un don à ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' : <b>$nom_armure</b>',NOW(),'0')";
-								$mysqli->query($sql);
-									
-								echo "Vous avez donné <b>$nom_armure</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font>";
-							}
-							else {
-								echo "<font color='red'>Vous ne possédez pas l'armure que vous souhaitiez donner.</font>";
 							}
 							echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 						}

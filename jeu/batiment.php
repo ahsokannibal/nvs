@@ -1474,11 +1474,18 @@ if($dispo || $admin){
 									$image_plan = "plan_gare_sud.png";
 									$image_plan_sans_terrain = "gare_sud.png";
 								}
-								
-								echo "<center><img src='../images/".$image_plan_sans_terrain."' class=\"img-fluid\" alt='blason gares' width='200' ></center><br />";
+								echo "<center>";
+								echo "<img src='../images/".$image_plan_sans_terrain."' class=\"img-fluid\" alt='blason gares' width='200' >";
+								echo "</center><br />";
 								
 								echo "<center>";
-								echo "<img src='image_gare.php?imagename=" . $image_plan . "' class=\"img-fluid\" alt='plan gares'/>";
+								if (isset($_GET['afficher_plan'])) {
+									echo "<img src='image_gare.php?imagename=" . $image_plan . "' class=\"img-fluid\" alt='plan gares'/><br />";
+									echo "<a href='batiment.php?bat=".$id_i_bat."' class='btn btn-info'>Cacher le plan du reseau ferré</a>";
+								}
+								else {
+									echo "<a href='batiment.php?bat=".$id_i_bat."&afficher_plan=ok' class='btn btn-info'>Afficher le plan du reseau ferré</a>";
+								}
 								echo "</center>";
 								
 								echo "<br />";
