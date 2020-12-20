@@ -72,12 +72,14 @@ function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 			$sql = "UPDATE $carte SET fond_carte='rail.gif' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
 			$mysqli->query($sql);
 			
+			$gain_xp = rand(1,3);
+			
 			// maj pa perso 
-			$sql = "UPDATE perso SET pa_perso = pa_perso - 4 WHERE id_perso='$id_perso'";
+			$sql = "UPDATE perso SET pa_perso = pa_perso - 4, xp_perso = xp_perso + $gain_xp, pi_perso = pi_perso + $gain_xp WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
 			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'','',NOW(),'0')";
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'',' - gain de $gain_xp XP/PI',NOW(),'0')";
 			$mysqli->query($sql);
 			
 			return 1;
