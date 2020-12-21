@@ -477,7 +477,7 @@ if ($verif_id_perso_session) {
 										}
 										
 										// Canon d'artillerie et cible autre artillerie
-										if ($id_arme_attaque == 13 && $type_perso_cible == 5) {
+										if (($id_arme_attaque == 13 || $id_arme_attaque == 22) && $type_perso_cible == 5) {
 											// Bonus dégats 13D10
 											$bonus_degats_canon = calcul_des_attaque(13, 10);
 											$degats_final = $degats_final + $bonus_degats_canon;
@@ -2458,7 +2458,7 @@ if ($verif_id_perso_session) {
 									}
 									
 									// Canon d'artillerie
-									if ($id_arme_attaque == 13) {
+									if ($id_arme_attaque == 13 || $id_arme_attaque == 22) {
 										// Bonus dégats 20D10
 										$bonus_degats_canon = calcul_des_attaque(20, 10);
 										$degats_final = $degats_final + $bonus_degats_canon;
