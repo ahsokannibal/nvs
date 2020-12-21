@@ -3233,9 +3233,10 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
   * @param $id_perso	: L'identifiant du personnage qui veut deposer un objet
   * @param $type_objet	: La nature de l'objet (1 => Or, 2 => Objet, 3 => Arme, 4 => Armure)
   * @param $id_objet	: L'identifiant de l'objet a deposer
+  * @param $quantite	: La quantité déposée
   * @return Void
   */
-function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
+function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quantite){
 
 	// Verification que le perso possede bien cet objet
 	// Objet
@@ -3262,18 +3263,6 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 		$poid_objet = $t["poids_arme"];
 	}
 	
-	// Armure
-	if($type_objet == 4){
-		$sql = "SELECT perso_as_armure.id_armure, poids_armure FROM perso_as_armure, armure WHERE id_perso='$id_perso' 
-				AND perso_as_armure.id_armure='$id_objet' AND est_portee='0'
-				AND perso_as_armure.id_armure = armure.id_armure";
-		$res = $mysqli->query($sql);
-		$nb = $res->num_row;
-		$t = $res->fetch_assoc();
-		
-		$poid_objet = $t["poids_armure"];
-	}
-	
 	if($nb){
 		
 		$coutPa = 1;
@@ -3290,29 +3279,24 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 		if($pa_perso >= $coutPa){
 			// On depose l'objet
 			
+			$poid_total = $poid_objet * $quantite;
+			
 			// Objet
 			if($type_objet == 2){
 				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0' LIMIT 1";
+				$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0' LIMIT $quantite";
 				$mysqli->query($sql);
 			}
 			
 			// Arme
 			if($type_objet == 3){
 				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND est_portee='0' LIMIT 1";
-				$mysqli->query($sql);
-			}
-			
-			// Armure
-			if($type_objet == 4){
-				// Suppression de l'inventaire du perso
-				$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_objet' AND est_portee='0' LIMIT 1";
+				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso' AND id_arme='$id_objet' AND est_portee='0' LIMIT $quantite";
 				$mysqli->query($sql);
 			}
 			
 			// On met a jour le poid et les pa du perso
-			$sql = "UPDATE perso SET charge_perso = charge_perso - $poid_objet, pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
+			$sql = "UPDATE perso SET charge_perso = charge_perso - $poid_total, pa_perso=pa_perso-1 WHERE id_perso='$id_perso'";
 			$mysqli->query($sql);
 			
 			
@@ -3327,14 +3311,14 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet){
 			
 			if($nb_o){
 				// On met a jour le nombre
-				$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
+				$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $quantite 
 						WHERE type_objet='$type_objet' AND id_objet='$id_objet'
 						AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				$mysqli->query($sql);
 			}
 			else {
 				// Insertion dans la table objet_in_carte : On cree le premier enregistrement
-				$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('$type_objet','$id_objet','1','$x_perso','$y_perso')";
+				$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('$type_objet','$id_objet','$quantite','$x_perso','$y_perso')";
 				$mysqli->query($sql);
 			}
 			

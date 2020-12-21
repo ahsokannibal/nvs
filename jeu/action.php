@@ -582,7 +582,12 @@ if($dispo || $admin) {
 			$id_objet 	= $t2[0];
 			$type_objet = $t2[1];
 			
-			action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet);
+			$quantite = 1;
+			if(isset($_POST['select_quantite_depot'])){
+				$quantite = $_POST['select_quantite_depot'];
+			}
+			
+			action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quantite);
 		}
 		
 		// Don objet apres choix perso
@@ -1723,15 +1728,15 @@ if($dispo || $admin) {
 										// lien retour
 										echo "<br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center><br />";
 									
-										echo "<table border='1' align='center' width='50%'>";
+										echo "<table border='1' class='table table-bordered'>";
 										echo "	<tr>";
-										echo "		<th colspan='4' style='text-align:center'>Objets déposables<br /><font color='red'>le dépôt ne déposera qu'un objet</font></th>";
+										echo "		<th colspan='4' style='text-align:center'>Objets déposables<br /></th>";
 										echo "	</tr>";
 										echo "	<tr>";
 										echo "		<th style='text-align:center'>image</th>";
 										echo "		<th style='text-align:center'>poid unitaire</th>";
-										echo "		<th style='text-align:center'>nombre possédé</th>";
-										echo "		<th style='text-align:center'>déposer 1 à terre ?</th>";
+										echo "		<th style='text-align:center'>nombre</th>";
+										echo "		<th style='text-align:center'>déposer à terre ?</th>";
 										echo "	</tr>";
 										
 										// Recuperation des objets / armes / armures que possede le perso
@@ -1740,6 +1745,8 @@ if($dispo || $admin) {
 										$res_o = $mysqli->query($sql_o);
 										
 										while($t_o = $res_o->fetch_assoc()){
+											
+											$compteur = 1;
 											
 											$id_objet = $t_o["id_objet"];
 											
@@ -1758,8 +1765,20 @@ if($dispo || $admin) {
 											echo "<tr>";
 											echo "	<td><img src='../images/objets/objet".$id_objet.".png' alt='$nom_o' height='50' width='50'/><span><b>".stripslashes($nom_o)."</b></span></td>";
 											echo "	<td align='center'>$poids_o</td>";
-											echo "	<td align='center'>$nb_o</td>";
 											echo "<form method='post' action='action.php'>";
+											echo "	<td align='center'>";
+											if ($nb_o > 1) {
+												echo "<select name=\"select_quantite_depot\" class='form-control' style='text-align: center;'>";
+												while ($compteur <= $nb_o){
+													echo "<option value=\"$compteur\">$compteur</option>";
+													$compteur++;
+												}
+												echo "</select>";
+											}
+											else {
+												echo "1";
+											}
+											echo "</td>";
 											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_depo' value='$id_objet,2,0' /></td>";
 											echo "</form>";
 											echo "</tr>";
@@ -1770,6 +1789,8 @@ if($dispo || $admin) {
 										$res_a1 = $mysqli->query($sql_a1);
 										
 										while($t_a1 = $res_a1->fetch_assoc()){
+											
+											$compteur  = 1;
 											
 											$id_arme = $t_a1["id_arme"];
 											
@@ -1789,39 +1810,21 @@ if($dispo || $admin) {
 											echo "<tr>";
 											echo "	<td><img src='../images/armes/$image_arme' alt='$nom_a1' height='50' width='50'/><span><b>".stripslashes($nom_a1)."</b></span></td>";
 											echo "	<td align='center'>$poids_a1</td>";
-											echo "	<td align='center'>$nb_a1</td>";
 											echo "<form method='post' action='action.php'>";
+											echo "	<td align='center'>";
+											if ($nb_o > 1) {
+												echo "<select name=\"select_quantite_depot\">";
+												while ($compteur <= $nb_a1){
+													echo "<option value=\"$compteur\">$compteur</option>";
+													$compteur++;
+												}
+												echo "</select>";
+											}
+											else {
+												echo "1";
+											}
+											echo "</td>";
 											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_depo' value='$id_arme,3' /></td>";
-											echo "</form>";
-											echo "</tr>";
-										}
-										
-										// Armures non portes
-										$sql_a2 = "SELECT DISTINCT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND est_portee='0' ORDER BY id_armure";
-										$res_a2 = $mysqli->query($sql_a2);
-										while($t_a2 = $res_a2->fetch_assoc()){
-											
-											$id_armure = $t_a2["id_armure"];
-											
-											// recuperation des carac de l'arme
-											$sql1_a2 = "SELECT nom_armure, poids_armure, image_armure FROM armure WHERE id_armure='$id_armure'";
-											$res1_a2 = $mysqli->query($sql1_a2);
-											$t1_a2 = $res1_a2->fetch_assoc();
-											$nom_a2 = $t1_a2["nom_armure"];
-											$poids_a2 = $t1_a2["poids_armure"];
-											$image_armure = $t1_a2["image_armure"];
-											
-											// recuperation du nombre d'armes non equipes de ce type que possede le perso 
-											$sql2_a2 = "SELECT id_armure FROM perso_as_armure WHERE id_perso='$id_perso' AND id_armure='$id_armure' AND est_portee='0'";
-											$res2_a2 = $mysqli->query($sql2_a2);
-											$nb_a2 = $res2_a2->num_rows;
-											
-											echo "<tr>";
-											echo "	<td align='center'><dl><dd><a href='#'><img src='../images/armures/$image_armure' alt='$nom_a2' height='50' width='50'/><span><b>".stripslashes($nom_a2)."</b></span></a></dd></dl></td>";
-											echo "	<td align='center'>$poids_a2</td>";
-											echo "	<td align='center'>$nb_a2</td>";
-											echo "<form method='post' action='action.php'>";
-											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' /><input type='hidden' name='id_objet_depo' value='$id_armure,4' /></td>";
 											echo "</form>";
 											echo "</tr>";
 										}
