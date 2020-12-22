@@ -930,7 +930,7 @@ function deplacement_vers_cible($mysqli, $x_d, $y_d, $x_cible, $y_cible, $id_i_p
 			$y_pnj = $t_coor["y_i"];
 				
 			// on regarde si la case a la diagonale bas-droite du pnj est libre
-			$sql = "SELECT occupee_carte FROM carte WHERE x_carte=$x_pnj+1 AND y_carte=$y_pnj";
+			$sql = "SELECT occupee_carte FROM carte WHERE x_carte=$x_pnj+1 AND y_carte=$y_pnj-1";
 			$res = $mysqli->query($sql);
 			$t_oc = $res->fetch_assoc();
 			
