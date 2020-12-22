@@ -220,7 +220,7 @@ if(isset($_SESSION["id_perso"])){
 												$mysqli->query($sql);
 												$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat - 1, $y_bat + 1, $camp_bat)";
 												$mysqli->query($sql);
-												$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 1, $y_bat - 1, $camp_perso)";
+												$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 1, $y_bat - 1, $camp_bat)";
 												$mysqli->query($sql);
 												$sql = "INSERT INTO instance_batiment_canon (id_instance_bat, x_canon, y_canon, camp_canon) VALUES ('$id_i_bat', $x_bat + 1, $y_bat + 1, $camp_bat)";
 												$mysqli->query($sql);
