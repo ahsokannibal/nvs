@@ -674,7 +674,7 @@ if($dispo || $admin){
 														$entre_bat_ok = 1;
 													
 														// recuperation des coordonnees et infos du batiment dans lequel le perso entre
-														$sql = "SELECT nom_instance, nom_instance, x_instance, y_instance, id_batiment, camp_instance FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
+														$sql = "SELECT nom_instance, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, id_batiment, camp_instance FROM instance_batiment WHERE id_instanceBat=".$_GET["bat"]."";
 														$res = $mysqli->query($sql);
 														$coordonnees_instance = $res->fetch_assoc();
 														
@@ -684,89 +684,101 @@ if($dispo || $admin){
 														$nom_instance 		= $coordonnees_instance["nom_instance"];
 														$id_bat				= $coordonnees_instance["id_batiment"];
 														$camp_bat			= $coordonnees_instance["camp_instance"];
+														$pv_batiment		= $coordonnees_instance["pv_instance"];
+														$pvMax_batiment		= $coordonnees_instance["pvMax_instance"];
 														$id_inst_bat 		= $_GET["bat"];
 														
 														// Verification si le perso est de la même nation ou non que le batiment
 														if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
-														
-															// Les chiens et soigneurs ne peuvent pas capturer de batiment
-															if ($type_perso != '6' && $type_perso != '4') {
-																
-																// Les hopitaux ne peuvent être capturés
-																if ($id_bat != '7') {
-														
-																	// Capture du batiment, il devient de la nation du perso
-																	$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
-																	$mysqli->query($sql);
+															
+															$pourc_pv_instance = ($pv_batiment / $pvMax_batiment) * 100;
+													
+															if ($pourc_pv_instance <= 80) {
+															
+																// Les chiens et soigneurs ne peuvent pas capturer de batiment
+																if ($type_perso != '6' && $type_perso != '4') {
 																	
-																	$sql = "select clan from perso where id_perso='$id_perso'";
-																	$res = $mysqli->query($sql);
-																	$t_c = $res->fetch_assoc();
-																	
-																	$camp = $t_c["clan"];
-																	
-																	// MAJ camp canons
-																	$sql = "UPDATE instance_batiment_canon SET camp_canon='$camp' WHERE id_instance_bat='$id_inst_bat'";
-																	$mysqli->query($sql);
-																	
-																	if($camp == "1"){
-																		$couleur_c 		= "b";
-																	}
-																	else if($camp == "2"){
-																		$couleur_c 		= "r";
-																	}
-																	else if ($camp == "3") {
-																		$couleur_c 		= "g";
-																	}
-																	
-																	// Mise à jour de l'icone centrale sur la carte
-																	$icone = "b".$id_bat."$couleur_c.png";
-																	$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
-																	$mysqli->query($sql);
-																	
-																	// mise a jour table evenement
-																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé','$id_inst_bat','le batiment $nom_bat','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
-																	$mysqli->query($sql);
-																	
-																	if ($camp_bat == '1') {
-																		$couleur_clan_bat = 'blue';
-																	}
-																	else if ($camp_bat == '2') {
-																		$couleur_clan_bat = 'red';
-																	}
-																	else if ($camp_bat == '2') {
-																		$couleur_clan_bat = 'green';
+																	// Les hopitaux ne peuvent être capturés
+																	if ($id_bat != '7') {
+															
+																		// Capture du batiment, il devient de la nation du perso
+																		$sql = "UPDATE instance_batiment, perso SET camp_instance=clan WHERE id_instanceBat='$id_inst_bat' AND id_perso='$id_perso'";
+																		$mysqli->query($sql);
+																		
+																		$sql = "select clan from perso where id_perso='$id_perso'";
+																		$res = $mysqli->query($sql);
+																		$t_c = $res->fetch_assoc();
+																		
+																		$camp = $t_c["clan"];
+																		
+																		// MAJ camp canons
+																		$sql = "UPDATE instance_batiment_canon SET camp_canon='$camp' WHERE id_instance_bat='$id_inst_bat'";
+																		$mysqli->query($sql);
+																		
+																		if($camp == "1"){
+																			$couleur_c 		= "b";
+																		}
+																		else if($camp == "2"){
+																			$couleur_c 		= "r";
+																		}
+																		else if ($camp == "3") {
+																			$couleur_c 		= "g";
+																		}
+																		
+																		// Mise à jour de l'icone centrale sur la carte
+																		$icone = "b".$id_bat."$couleur_c.png";
+																		$sql = "UPDATE $carte SET image_carte='$icone' WHERE x_carte=$x_bat and y_carte=$y_bat";
+																		$mysqli->query($sql);
+																		
+																		// mise a jour table evenement
+																		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a capturé','$id_inst_bat','le batiment $nom_bat','en $x_bat/$y_bat : Felicitation!',NOW(),'0')";
+																		$mysqli->query($sql);
+																		
+																		if ($camp_bat == '1') {
+																			$couleur_clan_bat = 'blue';
+																		}
+																		else if ($camp_bat == '2') {
+																			$couleur_clan_bat = 'red';
+																		}
+																		else if ($camp_bat == '2') {
+																			$couleur_clan_bat = 'green';
+																		}
+																		else {
+																			$couleur_clan_bat = 'black';
+																		}
+																		
+																		// maj CV
+																		$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>', '$nom_grade_perso', '$id_inst_bat','<font color=$couleur_clan_bat>Tour de Guêt $nom_bat</font>', NULL, NOW(), 8)";
+																		$mysqli->query($sql);
+																		
+																		echo "<font color = red>Felicitation, vous venez de capturer un bâtiment ennemi !</font><br>";
 																	}
 																	else {
-																		$couleur_clan_bat = 'black';
+																		// Tentative de triche
+																		$text_triche = "Tentative capture Hopital";
+						
+																		$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+																		$mysqli->query($sql);
+																		
+																		$erreur .= "Les hopitaux ne peuvent pas être capturés !";
 																	}
-																	
-																	// maj CV
-																	$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>', '$nom_grade_perso', '$id_inst_bat','<font color=$couleur_clan_bat>Tour de Guêt $nom_bat</font>', NULL, NOW(), 8)";
-																	$mysqli->query($sql);
-																	
-																	echo "<font color = red>Felicitation, vous venez de capturer un bâtiment ennemi !</font><br>";
 																}
 																else {
+																	$entre_bat_ok = 0;
+																	
 																	// Tentative de triche
-																	$text_triche = "Tentative capture Hopital";
+																	$text_triche = "Tentative capture batiment avec type perso non autorisé";
 					
 																	$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 																	$mysqli->query($sql);
 																	
-																	$erreur .= "Les hopitaux ne peuvent pas être capturés !";
+																	$erreur .= "Les chiens et les soigneurs ne peuvent pas capturer de bâtiments !";
 																}
 															}
 															else {
 																$entre_bat_ok = 0;
 																
-																// Tentative de triche
-																$text_triche = "Tentative capture batiment avec type perso non autorisé";
-				
-																$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
-																$mysqli->query($sql);
-																
-																$erreur .= "Les chiens et les soigneurs ne peuvent pas capturer de bâtiments !";
+																$erreur .= "Le bâtiment n'est pas encore capturable, il faut descendre ses PV";
 															}
 														}
 														
@@ -887,17 +899,17 @@ if($dispo || $admin){
 													$pv_batiment			= $coordonnees_instance["pv_instance"];
 													$pvMax_batiment			= $coordonnees_instance["pvMax_instance"];
 													
-													$pourc_pv_instance = ($pv_batiment / $pvMax_batiment) * 100;
-													
-													if ($pourc_pv_instance <= 80) {
-													
-														// verification contenance batiment
-														if($nb_perso_bat < $contenance_inst_bat){
-															
-															$entre_bat_ok = 1;
+													// verification contenance batiment
+													if($nb_perso_bat < $contenance_inst_bat){
 														
-															// verification si le perso est de la même nation que le batiment
-															if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
+														$entre_bat_ok = 1;
+														
+														// verification si le perso est de la même nation que le batiment
+														if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
+															
+															$pourc_pv_instance = ($pv_batiment / $pvMax_batiment) * 100;
+													
+															if ($pourc_pv_instance <= 80) {
 																
 																// les chiens et soigneurs ne peuvent pas capturer de batiment
 																if ($type_perso != '6' && $type_perso != '4') {
@@ -1091,89 +1103,91 @@ if($dispo || $admin){
 																	$erreur .= "Les chiens et les soigneurs ne peuvent pas capturer de bâtiment";
 																}
 															}
-														
-															if ($entre_bat_ok) {
-														
-																// mise a jour des coordonnées du perso sur la carte
-																$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
-																$res = $mysqli->query($sql);
+															else {
+																$entre_bat_ok = 0;
 																
-																// mise a jour des coordonnées du perso
-																$sql = "UPDATE perso SET x_perso='$x_bat', y_perso='$y_bat' WHERE id_perso='$id_perso'";
-																$res = $mysqli->query($sql);
-																
-																// insertion du perso dans la table perso_in_batiment
-																$sql = "INSERT INTO `perso_in_batiment` VALUES ('$id_perso','$id_inst_bat')";
-																$mysqli->query($sql);
-																
-																echo"<font color = blue>vous êtes entré(e) dans le bâtiment $nom_bat</font>";
-																
-																// mise a jour table evenement
-																$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est entré dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
-																$mysqli->query($sql);
-																
-																// Partie Passage de grade chef
-																if ($type_perso == 1 && ($id_bat == 8 || $id_bat == 9)) {
-																	
-																	// recup grade / pc chef
-																	$sql = "SELECT pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
-																	$res = $mysqli->query($sql);
-																	$t_chef = $res->fetch_assoc();
-																	
-																	$pc_perso_chef = $t_chef["pc_perso"];
-																	$id_grade_chef = $t_chef["id_grade"];
-																	
-																	// Verification passage de grade 
-																	$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
-																	$res = $mysqli->query($sql);
-																	$t_grade = $res->fetch_assoc();
-																	
-																	$id_grade_final 	= $t_grade["id_grade"];
-																	$nom_grade_final	= $t_grade["nom_grade"];
-																	
-																	if ($id_grade_chef < $id_grade_final) {
-																			
-																		// Passage de grade								
-																		$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
-																		$mysqli->query($sql);
-																		
-																		// mise a jour des evenements
-																		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
-																		$mysqli->query($sql);
-																		
-																		// maj CV
-																		$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>', '$nom_grade_final', NULL, NULL, NULL, NOW(), 9)";
-																		$mysqli->query($sql);
-																	}
-																}
-																
-																$bonus_perc = 0;
-																
-																// mise a jour du bonus de perception du perso
-																$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
-																
-																if(bourre($mysqli, $id_perso)){
-																	if(!endurance_alcool($mysqli, $id_perso)) {
-																		$malus_bourre = bourre($mysqli, $id_perso) * 3;
-																		$bonus_visu -= $malus_bourre;
-																	}
-																}
-																
-																// maj bonus perception et -1 pm pour l'entrée dans le batiment
-																$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu, pm_perso=pm_perso-1 WHERE id_perso='$id_perso'";
-																$mysqli->query($sql);
-																
-																// mise a jour des coordonnees du perso pour le test d'après
-																$x_persoN = $x_bat;
-																$y_persoN = $y_bat;
+																$erreur .= "Le bâtiment n'est pas encore capturable, il faut descendre ses PV";
 															}
 														}
-														else {
-															$erreur .= "Le bâtiment est déjà rempli au maximum de sa capacité";
+														
+														if ($entre_bat_ok) {
+													
+															// mise a jour des coordonnées du perso sur la carte
+															$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'";
+															$res = $mysqli->query($sql);
+															
+															// mise a jour des coordonnées du perso
+															$sql = "UPDATE perso SET x_perso='$x_bat', y_perso='$y_bat' WHERE id_perso='$id_perso'";
+															$res = $mysqli->query($sql);
+															
+															// insertion du perso dans la table perso_in_batiment
+															$sql = "INSERT INTO `perso_in_batiment` VALUES ('$id_perso','$id_inst_bat')";
+															$mysqli->query($sql);
+															
+															echo"<font color = blue>vous êtes entré(e) dans le bâtiment $nom_bat</font>";
+															
+															// mise a jour table evenement
+															$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','est entré dans le batiment $nom_bat $id_inst_bat',NULL,'','en $x_bat/$y_bat',NOW(),'0')";
+															$mysqli->query($sql);
+															
+															// Partie Passage de grade chef
+															if ($type_perso == 1 && ($id_bat == 8 || $id_bat == 9)) {
+																
+																// recup grade / pc chef
+																$sql = "SELECT pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+																$res = $mysqli->query($sql);
+																$t_chef = $res->fetch_assoc();
+																
+																$pc_perso_chef = $t_chef["pc_perso"];
+																$id_grade_chef = $t_chef["id_grade"];
+																
+																// Verification passage de grade 
+																$sql = "SELECT id_grade, nom_grade FROM grades WHERE pc_grade <= $pc_perso_chef AND pc_grade != 0 ORDER BY id_grade DESC LIMIT 1";
+																$res = $mysqli->query($sql);
+																$t_grade = $res->fetch_assoc();
+																
+																$id_grade_final 	= $t_grade["id_grade"];
+																$nom_grade_final	= $t_grade["nom_grade"];
+																
+																if ($id_grade_chef < $id_grade_final) {
+																		
+																	// Passage de grade								
+																	$sql = "UPDATE perso_as_grade SET id_grade='$id_grade_final' WHERE id_perso='$id_perso'";
+																	$mysqli->query($sql);
+																	
+																	// mise a jour des evenements
+																	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a été promu <b>$nom_grade_final</b> !',NULL,'','',NOW(),'0')";
+																	$mysqli->query($sql);
+																	
+																	// maj CV
+																	$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ($id_perso,'<font color=$couleur_clan_p>$nom_perso</font>', '$nom_grade_final', NULL, NULL, NULL, NOW(), 9)";
+																	$mysqli->query($sql);
+																}
+															}
+															
+															$bonus_perc = 0;
+															
+															// mise a jour du bonus de perception du perso
+															$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
+															
+															if(bourre($mysqli, $id_perso)){
+																if(!endurance_alcool($mysqli, $id_perso)) {
+																	$malus_bourre = bourre($mysqli, $id_perso) * 3;
+																	$bonus_visu -= $malus_bourre;
+																}
+															}
+															
+															// maj bonus perception et -1 pm pour l'entrée dans le batiment
+															$sql = "UPDATE perso SET bonusPerception_perso=$bonus_visu, pm_perso=pm_perso-1 WHERE id_perso='$id_perso'";
+															$mysqli->query($sql);
+															
+															// mise a jour des coordonnees du perso pour le test d'après
+															$x_persoN = $x_bat;
+															$y_persoN = $y_bat;
 														}
 													}
 													else {
-														$erreur .= "Le bâtiment n'est pas encore capturable, il faut descendre ses PV";
+														$erreur .= "Le bâtiment est déjà rempli au maximum de sa capacité";
 													}
 												}
 												else {
