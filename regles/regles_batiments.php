@@ -165,7 +165,7 @@
 								<td align='center'>-</td>
 								<td align='center'>+10%</td>
 								<td align='center'>1</td>
-								<td>Il s'agit d'une tour faiblement défendue, qui permet à la personne à l'intérieur d'augmenter sa perception. Elles ne peuvent être construites qu'en plaine, seulement par les troupes du Génie. Lorsqu'un Tour de guêt est construite, elle possédera entre 50 et 100 PV.</td>
+								<td>Il s'agit d'une tour faiblement défendue, qui permet à la personne à l'intérieur d'augmenter sa perception. Elles ne peuvent être construites qu'en plaine, seulement par les troupes du Génie. Lorsqu'une Tour de guêt est construite, elle possédera entre 50 et 100 PV. Seul les chiens, les soigneurs et les infanteries peuvent entrer dans ce bâtiment.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b1b.png' alt='barricade'></td>
@@ -229,29 +229,39 @@
 					
 					<p>Pour définir vos choix de rapatriement, allez dans votre profil et cliquez sur le bouton "Choix des rapatriements".</p>
 					
-					<p><b>Attention</b>, cette manipulation devra être faite par chaque personnage et grouillot.</p>
+					<p><font color='red'><b>Attention</b></font>, cette manipulation devra être faite par chaque personnage et grouillot.</p>
 					
 					<h4>Etat de siège d'un bâtiment</h4>
 					
-					<p>Un bâtiment est considéré en état de siège s'il descend en dessous de 90% de ses PV maximum ou qu'il y a 10 persos ennemi à moins de 15 cases (15eme case inclus).<br />
+					<p>Un bâtiment est considéré en état de siège s'il descend <b>en dessous de 90% de ses PV maximum</b> ou qu'il y a <b>10 persos ennemi à moins de 15 cases</b> (15eme case inclus).<br />
 					Cet état a pour effet de bloquer immédiatement les rapatriements, incorportations de nouveaux sur ce bâtiment.<br />
 					Le recrutement de grouillot se trouve aussi bloqué pour ce bâtiment.</p>
 					
 					<p>La réactivation du respawn, des incorporations et recrutements est immédiat lorsque les conditions de siège ne sont plus remplies.</p>
 					
-					<p><b>Attention</b>, de graves sanctions pourront être prises contre les joueurs qui attaqueront leur bâtiment pour abuser de cette règle.</p>
+					<p><font color='red'><b>Attention</b></font>, de graves sanctions pourront être prises contre les joueurs qui attaqueront leur bâtiment pour abuser de cette règle.</p>
 					
-					<p><b>Attention</b>, quand un bâtiment de votre camp (de type Fort, Fortin, Hôpital ou Gare) est encerclé par au moins 10 ennemis à 15 cases et qu'il posséde moins de 25% de PV restant, il ne vous est plus possible de l'attaquer et donc de le détruire avant l'arrivée des ennemis, c'est trop tard !</p>
+					<p><font color='red'><b>Attention</b></font>, quand un bâtiment de votre camp (de type Fort, Fortin, Hôpital ou Gare) est encerclé par <b>au moins 10 ennemis à 15 cases</b> et qu'il posséde <b>moins de 25% de PV restant</b>, il ne vous est plus possible de l'attaquer et donc de le détruire avant l'arrivée des ennemis, c'est trop tard !</p>
+					
+					<h4>Capturer un bâtiment</h4>
+					
+					<p>Certains bâtiments peuvent être capturés. Cependant, pour être capturé, un bâtiment doit perdre au moins 20% de ses points de vie (Donc doit posséder moins de <b>80% de ses PV</b>).<br />
+					Toute tentative de capture d'un bâtiment n'ayant pas perdu sufisamment de PV sera un echec.</p>
+					
+					<p>Les chiens et les soigneurs ne peuvent pas capturer de bâtiment.</p>
+					
+					<p>Comme seul les chiens, les soigneurs et les infanteries peuvent entrer dans une tour de guêt, cette dernière n'est capturable uniquement par une infanterie.</p>
 					
 					<br />
 					<h2>Les trains</h2>
 					
-					<p>Les trains se déplacent de 10 PM par heure et possède 2500PV.<br />
+					<p>Les trains se déplacent de <b>10 PM par heure</b> et possède 2500PV.<br />
 					Ils embarquent les personnages dans la gare qui disposent d'un ticket composté. Chaque train va d'une seule gare à une autre.<br />
 					Quand le train arrive en gare, il décharge aussitôt les passagers et est automatiquement réparé (regagne tout ses PV).<br />
 					Si la gare de destination posséde moins de 50% de ses PV maximum, le train s'arrête de circuler car la gare ne possède plus les infrastructures pour accueillir le train.<br />
 					Si la gare de destination n'est pas du même camp que le train, le train s'arrête de circuler.</p>
 					
+					<p>Un train peut être bloqué par une barricade</p>
 				</div>
 			</div>
 		
