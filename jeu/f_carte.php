@@ -631,7 +631,23 @@ function batiment_vide($mysqli, $id_bat){
 	$sql = "SELECT id_perso FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
 	$res = $mysqli->query($sql);
 	$num = $res->num_rows;
-	return $num==0;
+	
+	return $num == 0;
+}
+
+// fonction qui verifie si le batiment est vide ou non
+function batiment_pv_capturable($mysqli, $id_bat){
+	$sql = "SELECT pv_instance, pvMax_instance FROM instance_batiment WHERE id_instanceBat='$id_bat'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	
+	$pv_instance 	= $t['pv_instance'];
+	$pvMax_instance	= $t['pvMax_instance'];
+	
+	// Calcul pourcentage pv du batiment 
+	$pourc_pv_instance = ($pv_instance / $pvMax_instance) * 100;
+	
+	return $pourc_pv_instance <= 80;
 }
 
 // fonction qui verifie si l'instance du batiment existe
@@ -904,7 +920,7 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 				// + Le lien est utile pour les batiments autre que barricade et pont 
 				// + Le lien est utile que pour les unités autre que chien et soigneur
 				// + si batiment tour de guet, seul les infanterie peuvent capturer
-				if((batiment_vide($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') || (($bat == 2 && $type_perso == 3))){
+				if((batiment_vide($mysqli, $id_bat) && batiment_pv_capturable($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4') || (($bat == 2 && $type_perso == 3))){
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 			}
