@@ -188,6 +188,9 @@ while ($t = $res->fetch_assoc()) {
 		else {
 			
 			if ($x_tmp_dep!= '' && $y_tmp_dep != '') {
+				$sql_ld = "DELETE FROM train_last_dep WHERE id_train='$id_instance_train'";
+				$mysqli->query($sql_ld);
+				
 				// On enregistre la dernière case déplacée
 				$sql_ld = "INSERT INTO train_last_dep (id_train, x_last_dep, y_last_dep) VALUES ('$id_instance_train', '$x_tmp_dep', '$y_tmp_dep')";
 				$mysqli->query($sql_ld);
