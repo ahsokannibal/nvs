@@ -308,6 +308,7 @@ if(isset($_SESSION["id_perso"])){
 			}
 		}
 
+		// Nombre de messages non lus
 		$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id_perso."'";
 		$res_a_lire = $mysqli->query($sql_a_lire);
 		$a_lire = $res_a_lire->num_rows;
@@ -324,6 +325,7 @@ if(isset($_SESSION["id_perso"])){
 		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link href="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" rel="stylesheet"/>
 		
 	</head>
 	
@@ -364,7 +366,7 @@ if(isset($_SESSION["id_perso"])){
 						<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
 							<tr class="messl">
 								<td><div class="form-group"><label for="destinataireInput">Destinataire : </label></td> 
-								<td colspan=3><input type="text" class="form-control" id="destinataireInput" name="destinataire" size="30"
+								<td colspan=3><input type="text" class="form-control autocomplete" id="destinataireInput" name="destinataire" size="30"
 								<?php 
 								if(isset($_SESSION['destinataires'])){
 									echo 'value="'.$_SESSION['destinataires'].'"';
@@ -441,9 +443,52 @@ if(isset($_SESSION["id_perso"])){
 		
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+		<script src="//cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		
+		<script>		
+		$(function() {
+			
+			function split(val) {
+				return val.split(/;\s*/);
+			}
+			function extractLast(term) {
+				return split(term).pop();
+			}
+		  
+			$(".autocomplete").autocomplete({
+				source: function (request, response) {
+					$.getJSON("api/persos.php", {
+						term: extractLast(request.term)
+					}, response);
+				},
+				search: function () {
+					// custom minLength
+					var term = extractLast(this.value);
+					if (term.length < 1) {
+						return false;
+					}
+				},
+				focus: function () {
+					// prevent value inserted on focus
+					return false;
+				},
+				select: function (event, ui) {
+					var terms = split(this.value);
+					// remove the current input
+					terms.pop();
+					// add the selected item
+					terms.push(ui.item.label);
+					// add placeholder to get the comma-and-space at the end
+					terms.push("");
+					this.value = terms.join(";");
+					return false;
+				}
+			});
+		});
+		</script>
 	</body>
 </html>
 <?php
