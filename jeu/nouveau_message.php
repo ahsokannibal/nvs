@@ -451,6 +451,30 @@ if(isset($_SESSION["id_perso"])){
 		<script>		
 		$(function() {
 			
+			$.widget("custom.myAutocomplete", $.ui.autocomplete, { 
+				//since now is it copy of autocomplete widget just with different name
+				//lets override:
+				_renderItem: function (ul, item) {
+					let result = $("<li>")
+						.attr("data-value", item.value)
+						.append(item.label)
+						.append(" [")
+						.append(item.value)
+						.append("]")
+						.appendTo(ul);
+
+					//here comes the customization
+					if ("1" === item.camp) {
+						result.css('color', "blue");
+					}
+					else if ("2" === item.camp) {
+						result.css('color', "red");
+					}
+					return result;
+				}
+
+			});
+			
 			function split(val) {
 				return val.split(/;\s*/);
 			}
@@ -458,7 +482,7 @@ if(isset($_SESSION["id_perso"])){
 				return split(term).pop();
 			}
 		  
-			$(".autocomplete").autocomplete({
+			$(".autocomplete").myAutocomplete({
 				source: function (request, response) {
 					$.getJSON("api/persos.php", {
 						term: extractLast(request.term)
