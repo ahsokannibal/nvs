@@ -126,15 +126,46 @@ if(isset($_SESSION["id_perso"])){
 				$date_message = new DateTime($date_message, new DateTimeZone('Europe/Paris'));
 				$date_message->add(new DateInterval('PT1H'));
 				
+				$sql_camp = "SELECT id_perso, clan FROM perso WHERE nom_perso='$expediteur'";
+				$res_camp = $mysqli->query($sql_camp);
+				$t_camp = $res_camp->fetch_assoc();
+				
+				$camp_perso = $t_camp['clan'];
+				$mat_perso	= $t_camp['id_perso'];
+				
+				if ($camp_perso != null) {
+					if ($camp_perso == 1) {
+						$color_camp = 'blue';
+					}
+					else if ($camp_perso == 2) {
+						$color_camp = 'red';
+					}
+					else {
+						$color_camp = 'black';
+					}
+				}
+				else {
+					$color_camp = 'black';
+				}
+				
 				echo '<tr>';
 				echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$id_message.'"></td>';
 				
 				if ($row["lu_message"]){
-					echo "	<td>" . $expediteur . "</td>";
-					echo "	<td align='center'>" . stripslashes($date_message->format('d-m-Y H:i:s')) . "</td><td colspan=2><a href=message_lire.php?id=" . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a></td>";
+					echo "	<td><font color='".$color_camp."'>" . $expediteur;
+					if ($mat_perso != null && $mat_perso != 0) {
+						echo " [".$mat_perso."]";
+					}
+					echo "</font></td>";
+					echo "	<td align='center'>" . stripslashes($date_message->format('d-m-Y H:i:s')) . "</td>";
+					echo "	<td colspan=2><a href=message_lire.php?id=" . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a></td>";
 				}
 				else {
-					echo '	<td><div>' . $expediteur . '</div></td>';
+					echo "	<td><font color='".$color_camp."'>" . $expediteur;
+					if ($mat_perso != null && $mat_perso != 0) {
+						echo " [".$mat_perso."]";
+					}
+					echo "</font></td>";
 					echo '	<td align="center"><div>' . stripslashes($date_message->format('d-m-Y H:i:s')) . '</div></td>';
 					echo '	<td colspan=2><a href=message_lire.php?id=' . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a><b> (non lu)</b></td>";
 				}
