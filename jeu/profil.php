@@ -421,7 +421,7 @@ if($dispo || $admin){
 											$nb_tour_acces_bonus_genie = $genie - 1;
 										?>
 										<tr>
-											<td><?php echo "<b><u>Nombre de tours avant accés aux compétences et bonus du génie :</u></b> ".$nb_tour_acces_bonus_genie." tour(s) restant"; ?></td>
+											<td><?php echo "<b><u>Nombre de tours avant accès aux compétences et bonus du génie :</u></b> ".$nb_tour_acces_bonus_genie." tour(s) restant"; ?></td>
 										</tr>
 										<tr>
 											<td>&nbsp;</td>
