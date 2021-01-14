@@ -19,10 +19,15 @@ if(isset($_SESSION["id_perso"])){
 		$mess_err 	= "";
 		$mess 		= "";
 		
-		if(isset($_POST['select_compagnie']) && $_POST['select_compagnie'] != '') {
-			
+		$show_log_treso = false;
+		
+		if(isset($_POST['select_compagnie']) && $_POST['select_compagnie'] != '') {	
 			$id_compagnie_select = $_POST['select_compagnie'];
-			
+		}
+		
+		if (isset($_GET['log_compagnie']) && $_GET['log_compagnie'] != '') {
+			$id_compagnie_select = $_GET['log_compagnie'];
+			$show_log_treso = true;
 		}
 		
 		/***********************************************************/
@@ -361,7 +366,41 @@ if(isset($_SESSION["id_perso"])){
 						<div id="table_batiments" class="table-responsive">	
 					
 						<?php 
-						if (isset($id_compagnie_select)) {
+						if ($show_log_treso && isset($id_compagnie_select)) {
+							
+							echo "<br /><br /><h4>Log Trésorerie</h4>";
+							
+							echo "<table class='table'>";
+							echo "	<thead>";
+							echo "		<tr>";
+							echo "			<th style='text-align:center;'>Date</th><th style='text-align:center;'>Montant transféré</th><th style='text-align:center;'>Montant final</th>";
+							echo "		</tr>";
+							echo "	</thead>";
+							echo "	<tbody>";
+							
+							$sql = "SELECT * FROM banque_log WHERE id_compagnie='$id_compagnie_select' ORDER BY id_log DESC";
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$date_log 			= $t['date_log'];
+								$montant_tranfert	= $t['montant_transfert'];
+								$montant_final		= $t['montant_final'];
+								
+								$date_log = new DateTime($date_log, new DateTimeZone('Europe/Paris'));
+								$date_log->add(new DateInterval('PT1H'));
+								
+								echo "		<tr>";
+								echo "			<td>".$date_log->format('d-m-Y H:i:s')."</td>";
+								echo "			<td align='center'>".$montant_tranfert."</td>";
+								echo "			<td align='center'>".$montant_final."</td>";
+								echo "		</tr>";
+							}
+							
+							echo "	</tbody>";
+							echo "</table>";
+						}
+						else if (isset($id_compagnie_select)) {
 							
 							$sql = "SELECT nom_compagnie, id_clan, montant
 									FROM compagnies, banque_as_compagnie
@@ -383,6 +422,8 @@ if(isset($_SESSION["id_perso"])){
 							echo "	<input type='hidden' name='hid_id_compagnie' value='$id_compagnie_select'>";
 							echo "	<input type='submit' class='btn btn-warning' value='modifier'>";
 							echo "</form>";
+							
+							echo "<div align='center'><a href='admin_compagnies.php?log_compagnie=".$id_compagnie_select."' class='btn btn-success'>Consulter les logs de trésorerie</a></div>";
 
 							$sql = "SELECT nom_perso, perso_in_compagnie.id_perso, attenteValidation_compagnie, nom_poste 
 									FROM perso_in_compagnie, perso, poste
