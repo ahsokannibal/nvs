@@ -3725,7 +3725,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		// ou si grade perso >= grade cible - 1
 		if ((( $grade_perso <= $grade_cible + 1 && $grade_cible != 101 && $grade_cible != 102 )
 				|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
-				|| (($grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $grade_perso == 2)) && ($clan_cible != $clan_perso || $type_perso == 4)) {
+				|| (($grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $grade_perso == 2)) && ($clan_cible != $clan || $type_perso == 4)) {
 			
 			$gain_pc_cible = 1;
 		} else {
