@@ -22,6 +22,15 @@ SET time_zone = "+00:00";
 
 -- --------------------------------------------------------
 
+
+CREATE TABLE IF NOT EXISTS `acces_log` (
+  `id_acces` int(11) NOT NULL AUTO_INCREMENT,
+  `date_acces` datetime NOT NULL,
+  `id_perso` int(11) NOT NULL,
+  `page` varchar(255) NOT NULL,
+  PRIMARY KEY (`id_acces`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 --
 -- Structure de la table `action`
 --
