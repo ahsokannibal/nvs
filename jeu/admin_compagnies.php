@@ -378,14 +378,17 @@ if(isset($_SESSION["id_perso"])){
 							echo "	</thead>";
 							echo "	<tbody>";
 							
-							$sql = "SELECT * FROM banque_log WHERE id_compagnie='$id_compagnie_select' ORDER BY id_log DESC";
+							$sql = "SELECT * FROM banque_log WHERE id_compagnie='$id_compagnie_select' ORDER BY id_log ASC";
 							$res = $mysqli->query($sql);
+							
+							$montant_final_tmp = -1;
 							
 							while ($t = $res->fetch_assoc()) {
 								
 								$date_log 			= $t['date_log'];
 								$montant_tranfert	= $t['montant_transfert'];
 								$montant_final		= $t['montant_final'];
+								$id_perso_transfert	= $t['id_perso'];
 								
 								$date_log = new DateTime($date_log, new DateTimeZone('Europe/Paris'));
 								$date_log->add(new DateInterval('PT1H'));
@@ -393,8 +396,20 @@ if(isset($_SESSION["id_perso"])){
 								echo "		<tr>";
 								echo "			<td>".$date_log->format('d-m-Y H:i:s')."</td>";
 								echo "			<td align='center'>".$montant_tranfert."</td>";
-								echo "			<td align='center'>".$montant_final."</td>";
+								echo "			<td align='center'>";
+								
+								if ($montant_tranfert == 0 && $id_perso_transfert == 1) {
+									echo "<font color='blue'><b>".$montant_final." - Correction Admin</b></font>";
+								}else if ($montant_final == $montant_final_tmp) {
+									echo "<font color='red'><b>".$montant_final." - Bug départ</b></font>";
+								}
+								else {
+									echo $montant_final;
+								}
+								echo "</td>";
 								echo "		</tr>";
+								
+								$montant_final_tmp = $montant_final;
 							}
 							
 							echo "	</tbody>";
