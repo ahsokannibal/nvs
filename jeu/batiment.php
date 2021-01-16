@@ -1510,67 +1510,70 @@ if($dispo || $admin){
 									
 									if ($nb) {
 									
-										$t = $res->fetch_assoc();
+										while ($t = $res->fetch_assoc()) {
 										
-										$id_gare1 = $t['id_gare1'];
-										$id_gare2 = $t['id_gare2'];
+											$nb_liaisons = 1;
 										
-										if (in_array($id_gare1, $array_dest)) {
-											$liaison_trouve = false;
+											$id_gare1 = $t['id_gare1'];
+											$id_gare2 = $t['id_gare2'];
 											
-											break;
-										}
-										else {
-											$destination = $id_gare1;
-										}
-										
-										$base_dest = $destination;
-										array_push($array_dest, $base_dest);
-										
-										// Récupération infos destination
-										$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
-										$res_dest = $mysqli->query($sql_dest);
-										$nb_dest = $res_dest->num_rows;
-										$t_dest = $res_dest->fetch_assoc();
-										
-										if ($nb_dest) {
-										
-											$camp_dest 	= $t_dest['camp_instance'];
-											$nom_dest	= $t_dest['nom_instance'];
-											
-											$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
-											
-											$cout_thune = $nb_liaisons * 5;
-											
-											if (trim($value_dest) != "") {
-												$value_dest .= ",";
-											}
-											$value_dest .= $destination;
-											
-											
-											if ($camp_dest == $camp) {
-											
-												echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+											if (in_array($id_gare1, $array_dest)) {
+												$liaison_trouve = false;
 												
-												// Achat de tickets
-												echo "<tr>";
-												echo "	<td align='center'>$nom_destination</td>";
-												echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
-												echo "</tr>";
-												
-												echo "</form>";
+												break;
 											}
 											else {
-												echo "<tr>";
-												echo "	<td align='center'>$nom_destination</td>";
-												echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
-												echo "</tr>";
+												$destination = $id_gare1;
 											}
 											
-											$nb_liaisons++;
-										}
-										else {											
-											$liaison_trouve = false;
+											$base_dest = $destination;
+											array_push($array_dest, $base_dest);
+											
+											// Récupération infos destination
+											$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
+											$res_dest = $mysqli->query($sql_dest);
+											$nb_dest = $res_dest->num_rows;
+											$t_dest = $res_dest->fetch_assoc();
+											
+											if ($nb_dest) {
+											
+												$camp_dest 	= $t_dest['camp_instance'];
+												$nom_dest	= $t_dest['nom_instance'];
+												
+												$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
+												
+												$cout_thune = $nb_liaisons * 5;
+												
+												if (trim($value_dest) != "") {
+													$value_dest .= ",";
+												}
+												$value_dest .= $destination;
+												
+												
+												if ($camp_dest == $camp) {
+												
+													echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+													
+													// Achat de tickets
+													echo "<tr>";
+													echo "	<td align='center'>$nom_destination</td>";
+													echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
+													echo "</tr>";
+													
+													echo "</form>";
+												}
+												else {
+													echo "<tr>";
+													echo "	<td align='center'>$nom_destination</td>";
+													echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
+													echo "</tr>";
+												}
+												
+												$nb_liaisons++;
+											}
+											else {											
+												$liaison_trouve = false;
+											}
 										}
 									}
 									else {
@@ -1593,67 +1596,70 @@ if($dispo || $admin){
 									
 									if ($nb) {
 									
-										$t = $res->fetch_assoc();
-										
-										$id_gare1 = $t['id_gare1'];
-										$id_gare2 = $t['id_gare2'];
-										
-										if (in_array($id_gare2, $array_dest)) {
+										while ($t = $res->fetch_assoc()) {
 											
-											$liaison_trouve = false;
-											
-											break;
-										} else {
-											$destination = $id_gare2;
-										}
+											$nb_liaisons = 1;
 										
-										
-										$base_dest = $destination;
-										array_push($array_dest, $base_dest);
-										
-										// Récupération infos destination
-										$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
-										$res_dest = $mysqli->query($sql_dest);
-										$nb_dest = $res_dest->num_rows;
-										$t_dest = $res_dest->fetch_assoc();
-										
-										if ($nb_dest) {
-										
-											$camp_dest 	= $t_dest['camp_instance'];
-											$nom_dest	= $t_dest['nom_instance'];
+											$id_gare1 = $t['id_gare1'];
+											$id_gare2 = $t['id_gare2'];
 											
-											$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
-											
-											$cout_thune = $nb_liaisons * 5;
-											
-											if (trim($value_dest) != "") {
-												$value_dest .= ",";
-											}
-											$value_dest .= $destination;
-											
-											if ($camp_dest == $camp) {
-											
-												echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+											if (in_array($id_gare2, $array_dest)) {
 												
-												// Achat de tickets
-												echo "<tr>";
-												echo "	<td align='center'>$nom_destination</td>";
-												echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
-												echo "</tr>";
+												$liaison_trouve = false;
 												
-												echo "</form>";
-											}
-											else {
-												echo "<tr>";
-												echo "	<td align='center'>$nom_destination</td>";
-												echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
-												echo "</tr>";
+												break;
+											} else {
+												$destination = $id_gare2;
 											}
 											
-											$nb_liaisons++;
-										}
-										else {											
-											$liaison_trouve = false;
+											
+											$base_dest = $destination;
+											array_push($array_dest, $base_dest);
+											
+											// Récupération infos destination
+											$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
+											$res_dest = $mysqli->query($sql_dest);
+											$nb_dest = $res_dest->num_rows;
+											$t_dest = $res_dest->fetch_assoc();
+											
+											if ($nb_dest) {
+											
+												$camp_dest 	= $t_dest['camp_instance'];
+												$nom_dest	= $t_dest['nom_instance'];
+												
+												$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
+												
+												$cout_thune = $nb_liaisons * 5;
+												
+												if (trim($value_dest) != "") {
+													$value_dest .= ",";
+												}
+												$value_dest .= $destination;
+												
+												if ($camp_dest == $camp) {
+												
+													echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+													
+													// Achat de tickets
+													echo "<tr>";
+													echo "	<td align='center'>$nom_destination</td>";
+													echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
+													echo "</tr>";
+													
+													echo "</form>";
+												}
+												else {
+													echo "<tr>";
+													echo "	<td align='center'>$nom_destination</td>";
+													echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
+													echo "</tr>";
+												}
+												
+												$nb_liaisons++;
+											}
+											else {											
+												$liaison_trouve = false;
+											}
 										}
 									}
 									else {
