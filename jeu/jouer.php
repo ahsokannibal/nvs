@@ -64,6 +64,15 @@ if($dispo || $admin){
 		$id_perso = $_SESSION['id_perso'];
 		$date = time();
 		
+		$page_acces = 'jouer.php';
+		if ($_SERVER['QUERY_STRING'] != '') {
+			$page_acces .= '?'.$_SERVER['QUERY_STRING'];
+		}
+		
+		// acces_log
+		$sql = "INSERT INTO acces_log (date_acces, id_perso, page) VALUES (NOW(), '$id_perso', '$page_acces')";
+		$mysqli->query($sql);
+		
 		$sql_joueur = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
 		$res_joueur = $mysqli->query($sql_joueur);
 		$t_joueur = $res_joueur->fetch_assoc();

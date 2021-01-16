@@ -11,6 +11,15 @@ include ('../nb_online.php');
 if(@$_SESSION["id_perso"]){
 	
 	$id_perso = $_SESSION["id_perso"];
+	
+	$page_acces = 'evenement.php';
+	if ($_SERVER['QUERY_STRING'] != '') {
+		$page_acces .= '?'.$_SERVER['QUERY_STRING'];
+	}
+		
+	// acces_log
+	$sql = "INSERT INTO acces_log (date_acces, id_perso, page) VALUES (NOW(), '$id_perso', '$page_acces')";
+	$mysqli->query($sql);
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
