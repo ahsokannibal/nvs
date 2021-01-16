@@ -651,7 +651,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 								
 								if ($verif_fond_carte) {								
 								
-									$gain_xp = 1;
+									$gain_xp = $gain_xp = rand(min_gain_xp_construction($id_bat), max_gain_xp_construction($id_bat));
+									
 									if ($gain_xp_tour_perso + $gain_xp > 20) {
 										$gain_xp = 0;
 										$max_xp_tour_atteint = true;
@@ -1044,7 +1045,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 													}
 													else {
 														//mise a jour de la table evenement
-														$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit ','$id_i_bat','<font color=$couleur_clan_perso><b>$nom_bat</b></font>','',NOW(),'0')";
+														$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit ','$id_i_bat','<font color=$couleur_clan_perso><b>$nom_bat</b></font>',' (Gain xp : $gain_xp)',NOW(),'0')";
 														$mysqli->query($sql);
 													}
 													
