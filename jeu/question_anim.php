@@ -76,7 +76,7 @@ if($dispo || $admin){
 							$verif_capture_jour = $res->num_rows;
 							
 							if ($verif_capture_jour) {
-								$mess_erreur .= "Une capture a déjà été remontée sur ce perso dasn les dernières 24h";
+								$mess_erreur .= "Une capture a déjà été remontée sur ce perso dans les dernières 24h";
 							}
 							else {
 								$sql = "INSERT INTO anim_capture(date_capture, id_perso, id_perso_capture, titre, message) VALUES (NOW(), '$id', '$id_perso_capture', '$titre', '$preuves')";
