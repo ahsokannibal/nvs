@@ -1498,176 +1498,98 @@ if($dispo || $admin){
 								$liaison_trouve 		= true;
 								$base_dest				= $id_i_bat;
 								$array_dest				= array($base_dest);
+								$array_parcours			= array($base_dest);
+								$array_parcours_tmp		= array();
 								$nb_liaisons			= 1;
 								$value_dest 			= "";
 								
-								while ($liaison_trouve) {
+								$profondeur = 1;
+								
+								while (count($array_parcours) > 0) {
 									
-									// Récupération des liaisons depuis cette gare
-									$sql = "SELECT * FROM liaisons_gare WHERE id_gare2='$base_dest'";
-									$res = $mysqli->query($sql);
-									$nb = $res->num_rows;
+									$array_parcours_tmp = array();
 									
-									if ($nb) {
+									$taille_parcours = count($array_parcours);
 									
+									for ($i = 0; $i < $taille_parcours; $i++) {
+										
+										$base_dest = $array_parcours[$i];
+										
+										// Récupération des liaisons depuis cette gare
+										$sql = "SELECT * FROM liaisons_gare 
+												WHERE (id_gare2='$base_dest' AND id_gare1 NOT IN('" . implode( "', '" , $array_dest ) . "')) 
+													OR (id_gare1='$base_dest' AND id_gare2 NOT IN('" . implode( "', '" , $array_dest ) . "'))";
+										$res = $mysqli->query($sql);
+										
+										unset($array_parcours[array_search($base_dest, $array_parcours)]);
+										
 										while ($t = $res->fetch_assoc()) {
-										
-											$nb_liaisons = 1;
-										
+											
 											$id_gare1 = $t['id_gare1'];
 											$id_gare2 = $t['id_gare2'];
 											
-											if (in_array($id_gare1, $array_dest)) {
-												$liaison_trouve = false;
-												
-												break;
+											if ($id_gare1 == $base_dest) {
+												$destination = $id_gare2;
 											}
 											else {
 												$destination = $id_gare1;
 											}
 											
-											$base_dest = $destination;
-											array_push($array_dest, $base_dest);
-											
 											// Récupération infos destination
 											$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
 											$res_dest = $mysqli->query($sql_dest);
-											$nb_dest = $res_dest->num_rows;
 											$t_dest = $res_dest->fetch_assoc();
 											
-											if ($nb_dest) {
+											$camp_dest 	= $t_dest['camp_instance'];
+											$nom_dest	= $t_dest['nom_instance'];
 											
-												$camp_dest 	= $t_dest['camp_instance'];
-												$nom_dest	= $t_dest['nom_instance'];
-												
-												$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
-												
-												$cout_thune = $nb_liaisons * 5;
-												
-												if (trim($value_dest) != "") {
-													$value_dest .= ",";
-												}
+											$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
+											
+											$cout_thune = $profondeur * 5;
+											
+											if (trim($value_dest) != "") {
+												$value_dest .= ",";
+											}
+											if ($profondeur > 1) {
 												$value_dest .= $destination;
-												
-												
-												if ($camp_dest == $camp) {
-												
-													echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
-													
-													// Achat de tickets
-													echo "<tr>";
-													echo "	<td align='center'>$nom_destination</td>";
-													echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
-													echo "</tr>";
-													
-													echo "</form>";
-												}
-												else {
-													echo "<tr>";
-													echo "	<td align='center'>$nom_destination</td>";
-													echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
-													echo "</tr>";
-												}
-												
-												$nb_liaisons++;
 											}
-											else {											
-												$liaison_trouve = false;
-											}
-										}
-									}
-									else {
-										$liaison_trouve = false;
-									}
-								}
-								
-								// On parcours de l'autre côté les liaisons via id_gare1
-								$liaison_trouve 		= true;
-								$base_dest				= $id_i_bat;
-								$nb_liaisons			= 1;
-								$value_dest 			= "";
-								
-								while ($liaison_trouve) {
-									
-									// Récupération des liaisons depuis cette gare
-									$sql = "SELECT * FROM liaisons_gare WHERE id_gare1='$base_dest'";
-									$res = $mysqli->query($sql);
-									$nb = $res->num_rows;
-									
-									if ($nb) {
-									
-										while ($t = $res->fetch_assoc()) {
-											
-											$nb_liaisons = 1;
-										
-											$id_gare1 = $t['id_gare1'];
-											$id_gare2 = $t['id_gare2'];
-											
-											if (in_array($id_gare2, $array_dest)) {
-												
-												$liaison_trouve = false;
-												
-												break;
-											} else {
-												$destination = $id_gare2;
+											else {
+												$value_dest = $destination;
 											}
 											
+											if ($camp_dest == $camp) {
+												
+												echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
+												
+												// Achat de tickets
+												echo "<tr>";
+												echo "	<td align='center'>$nom_destination</td>";
+												echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
+												echo "</tr>";
+												
+												echo "</form>";
+											}
+											else {
+												echo "<tr>";
+												echo "	<td align='center'>$nom_destination</td>";
+												echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
+												echo "</tr>";
+											}
+											
+											array_push($array_dest, $destination);
+											array_push($array_parcours_tmp, $destination);					
 											
 											$base_dest = $destination;
-											array_push($array_dest, $base_dest);
-											
-											// Récupération infos destination
-											$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
-											$res_dest = $mysqli->query($sql_dest);
-											$nb_dest = $res_dest->num_rows;
-											$t_dest = $res_dest->fetch_assoc();
-											
-											if ($nb_dest) {
-											
-												$camp_dest 	= $t_dest['camp_instance'];
-												$nom_dest	= $t_dest['nom_instance'];
-												
-												$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
-												
-												$cout_thune = $nb_liaisons * 5;
-												
-												if (trim($value_dest) != "") {
-													$value_dest .= ",";
-												}
-												$value_dest .= $destination;
-												
-												if ($camp_dest == $camp) {
-												
-													echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
-													
-													// Achat de tickets
-													echo "<tr>";
-													echo "	<td align='center'>$nom_destination</td>";
-													echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
-													echo "</tr>";
-													
-													echo "</form>";
-												}
-												else {
-													echo "<tr>";
-													echo "	<td align='center'>$nom_destination</td>";
-													echo "	<td align='center'>Gare aux mains de l'ennemi, impossible d'acheter un ticket</td>";
-													echo "</tr>";
-												}
-												
-												$nb_liaisons++;
-											}
-											else {											
-												$liaison_trouve = false;
-											}
 										}
 									}
-									else {
-										$liaison_trouve = false;
-									}
+									
+									$array_parcours = $array_parcours_tmp;
+									
+									$profondeur++;
 								}
 								
 								echo "</table>";
+								
 							}
 						}
 					}
