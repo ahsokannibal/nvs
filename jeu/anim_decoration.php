@@ -42,9 +42,11 @@ if($dispo || $admin){
 			}
 			
 			if (isset($_POST['liste_perso_deco'])) {
-						
 				$id_perso_decoration = $_POST['liste_perso_deco'];
-				
+			}
+			
+			if (isset($_GET['id_perso'])) {
+				$id_perso_decoration = $_GET['id_perso'];
 			}
 			
 			if (isset($_POST['hid_id_perso_deco']) && isset($_POST['hid_id_choix_deco']) && isset($_POST['raison_deco'])) {
