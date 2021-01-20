@@ -109,6 +109,8 @@ if($dispo || $admin){
 								$sql = "SELECT id_perso, nom_perso FROM perso WHERE clan='$camp' ORDER BY id_perso ASC";
 								$res = $mysqli->query($sql);
 								
+								echo "<option value=''>-- Selectionnez un perso --</option>";
+								
 								while ($t = $res->fetch_assoc()) {
 									
 									$id_perso_list 	= $t["id_perso"];
@@ -137,10 +139,51 @@ if($dispo || $admin){
 			<div class="row">
 				<div class="col-12">
 					<?php
-					if (isset($_POST['liste_perso_deco'])) {
+					if (isset($_POST['liste_perso_deco']) && $_POST['liste_perso_deco'] != "") {
 						
 						$id_perso_deco = $_POST['liste_perso_deco'];
-					
+						
+						// récupération des décorations reçues par le perso
+						$sql = "SELECT date_decoration, raison_decoration, image_decoration FROM perso_as_decoration, decorations 
+								WHERE perso_as_decoration.id_decoration = decorations.id_decoration
+								AND id_perso='$id_perso_deco'
+								ORDER BY date_decoration";
+						$res = $mysqli->query($sql);
+						$nb_event = $res->num_rows;
+						
+						if ($nb_event) {
+							echo "<center><font color=red><b>Décorations déjà reçues</b></font></center>";
+							echo "<center>";
+							echo "<table border=1 class='table'>";
+							echo "	<tr>";
+							echo "		<th style='text-align:center' width=25%>date</th>";
+							echo "		<th style='text-align:center' width=25%>décoration</th>";
+							echo "		<th style='text-align:center'>Raison</th>";
+							echo "	</tr>";
+						
+							while ($t = $res->fetch_assoc()){
+								
+								$date_deco		= $t['date_decoration'];
+								$raison_deco	= htmlspecialchars($t['raison_decoration']);
+								$image_deco 	= $t['image_decoration'];
+								
+								echo "	<tr>";
+								echo "		<td align='center'>".$date_deco."</td>";
+								echo "		<td align='center'><img src='../images/medailles/".$image_deco."' width='20' height='40'/></td>";
+								if (trim($raison_deco) != "") {
+									echo "		<td align='center'>".$raison_deco."</td>";
+								}
+								else {
+									echo "		<td align='center'>Pour son engagement et son courage</td>";
+								}
+								echo "	</tr>";
+							}
+							echo "</table></center><br />";
+						}
+						else {
+							echo "<center><i>Aucune décoration reçues</i></center>";
+						}
+						
 						// Récupération et affichage de la liste des décorations
 						$sql = "SELECT id_decoration, description_decoration, image_decoration FROM decorations WHERE camp_decoration='$camp'";
 						$res = $mysqli->query($sql);
