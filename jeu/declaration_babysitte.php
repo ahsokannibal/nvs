@@ -75,7 +75,7 @@ if($dispo || $admin){
 										// On vérifie s'il n'est pas déjà déclaré pour cette période
 										$sql = "SELECT * FROM declaration_babysitte 
 												WHERE id_perso='$id_chef' AND id_baby='$idBaby' AND date_debut = STR_TO_DATE(\"$dateDebutBaby\", '%d/%m/%Y') AND date_fin=STR_TO_DATE(\"$dateFinBaby\", '%d/%m/%Y')";
-										$res =$mysqli->query($sql);
+										$res = $mysqli->query($sql);
 										$verif = $res->num_rows;
 										
 										if ($verif == 0) {
@@ -115,10 +115,73 @@ if($dispo || $admin){
 			}
 		}
 		
-		// Récupération des babysittes déclarés
-		$sql_baby_courant = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef' AND date_debut <= CURDATE() AND date_fin >= CURDATE()";
+		if (isset($_GET['fin_babysitte']) && $_GET['fin_babysitte'] != "") {
+			
+			$id_declaration_fin = $_GET['fin_babysitte'];
+			
+			$verifId = preg_match("#^[0-9]*[0-9]$#i","$id_declaration_fin");
+			
+			if ($verifId) {
+				
+				// récupération des infos de la déclaration pour verif
+				$sql = "SELECT id_perso, id_baby FROM declaration_babysitte WHERE id_declaration='$id_declaration_fin'";
+				$res = $mysqli->query($sql);
+				$nb = $res->num_rows;
+				
+				if ($nb) {
+					$t = $res->fetch_assoc();
+				
+					$id_perso_decla = $t['id_perso'];
+					
+					if ($id_perso_decla == $id_chef) {
+						
+						$id_baby = $t['id_baby'];
+						
+						$sql = "UPDATE declaration_babysitte SET date_fin=NOW() WHERE id_declaration='$id_declaration_fin'";
+						$mysqli->query($sql);
+						
+						$mess .= "Déclaration de babysitting pour le perso matricule $id_baby a bien pris fin";
+					}
+					else {
+						$mess_erreur .= "Vous n'avez pas le droit de modifier cette déclaration !";
+						
+						// Tentative de triche !
+						$text_triche = "Tentative de mettre fin au babysitte id $id_declaration_fin qui ne lui appartient pas";
+						
+						$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_chef', '$text_triche')";
+						$mysqli->query($sql);
+					}
+				}
+				else {
+					$mess_erreur .= "L'id de declaration de babysitte n'existe pas";
+					
+					// Tentative de triche !
+					$text_triche = "Tentative accès déclaration babysitte qui n'existe pas : id $id_declaration_fin";
+					
+					$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_chef', '$text_triche')";
+					$mysqli->query($sql);
+				}
+			}
+			else {
+				$mess_erreur .= "L'id de declaration de babysitte n'est pas conforme";
+				
+				// Tentative de triche !
+				$text_triche = "Tentative changement paramètre fin_babysitte avec valeur incorrecte";
+				
+				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_chef', '$text_triche')";
+				$mysqli->query($sql);
+			}
+		}
+		
+		// Récupération des babysittes actifs
+		$sql_baby_courant = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef' AND date_debut <= CURTIME() AND date_fin >= CURTIME()";
 		$res_baby_courant = $mysqli->query($sql_baby_courant);
 		$nb_baby_courant = $res_baby_courant->num_rows;
+		
+		// Récupération des babysittes passés
+		$sql_baby_passe = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef' AND date_fin < CURTIME()";
+		$res_baby_passe = $mysqli->query($sql_baby_passe);
+		$nb_baby_passe = $res_baby_passe->num_rows;
 		
 		?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -161,81 +224,131 @@ if($dispo || $admin){
 				<div class="col-12">
 					<div align="center">
 						<?php
-						if ($nb_baby_courant) {
+						if (isset($_GET['voir']) && $_GET['voir'] == 'ok') {
 							
-							echo "<font color='blue'>Vous babysittez actuellement les persos suivant : </font><br />";
-							
-							while ($t_baby_courant = $res_baby_courant->fetch_assoc()) {
-								
-								$id_baby_courant = $t_baby_courant['id_baby'];
-								
-								$sql = "SELECT nom_perso FROM perso WHERE id_perso='$id_baby_courant'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
-								
-								$nom_perso_baby_courant = $t['nom_perso'];
-								
-								echo $nom_perso_baby_courant." [".$id_baby_courant."]<br />";
+							echo "<a href='declaration_babysitte.php?voir_archive=ok' class='btn btn-success'>Voir mes babysittings passés ";
+							if ($nb_baby_passe) {
+								echo "<span class='badge badge-pill badge-danger'>".$nb_baby_passe."</span>";
 							}
+							echo "</a><br /><br />";
+							echo "<a href='declaration_babysitte.php' class='btn btn-danger'>Fermer le tableau</a>";
 							
-							echo "<br />";
+							echo "<div id='table_baby' class='table-responsive'>";
+							echo "	<table class='table' width='80%'>";
+							echo "		<thead>";
+							echo "			<tr>";
+							echo "				<th>Perso babysitté</th><th>Date de début de babysitte</th><th>Date de fin</th><th>Action</th>";
+							echo "			</tr>";
+							echo "		</thead>";
+							echo "		<tbody>";
 						
-							if (isset($_GET['voir']) && $_GET['voir'] == 'ok') {
-						?>
-						<a href='declaration_babysitte.php' class='btn btn-success'>Fermer le tableau des déclarations de babysitte</a>
-						<?php
-								echo "<div id='table_baby' class='table-responsive'>";
-								echo "	<table class='table' width='80%'>";
-								echo "		<thead>";
-								echo "			<tr>";
-								echo "				<th>Perso babysitté</th><th>Date de début de babysitte</th><th>Date de fin</th>";
-								echo "			</tr>";
-								echo "		</thead>";
-								echo "		<tbody>";
+							$sql = "SELECT * FROM declaration_babysitte WHERE date_debut >= CURTIME() OR date_fin >= CURTIME() AND id_perso='$id_chef' ORDER BY date_debut";	
+							$res = $mysqli->query($sql);
 							
-								$sql = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef' ORDER BY date_debut";	
-								$res = $mysqli->query($sql);
+							while ($t = $res->fetch_assoc()) {
 								
-								while ($t = $res->fetch_assoc()) {
-									
-									$id_baby 			= $t['id_baby'];
-									$date_debut_baby 	= $t['date_debut'];
-									$date_fin_baby 		= $t['date_fin'];
-									
-									$tab_dateDebut 	= explode(" ",$date_debut_baby);
-									$tab_dateFin 	= explode(" ",$date_fin_baby);
-									
-									$date_debut_baby 	= $tab_dateDebut[0];
-									$date_fin_baby		= $tab_dateFin[0];
-									
-									$tab_dateDebut 	= explode("-", $date_debut_baby);
-									$tab_dateFin 	= explode("-",$date_fin_baby);
-									
-									$date_debut_baby 	= $tab_dateDebut[2]."/".$tab_dateDebut[1]."/".$tab_dateDebut[0];
-									$date_fin_baby 		= $tab_dateFin[2]."/".$tab_dateFin[1]."/".$tab_dateFin[0];
-									
-									$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_baby'";
-									$res_p = $mysqli->query($sql_p);
-									$t_p = $res_p->fetch_assoc();
-									
-									$nom_perso_baby = $t_p['nom_perso'];
-									
-									echo "			<tr>";
-									echo "				<td>".$nom_perso_baby." [".$id_baby."]</td>";
-									echo "				<td>".$date_debut_baby."</td>";
-									echo "				<td>".$date_fin_baby."</td>";
-									echo "			</tr>";
-								}
+								$id_decla_baby		= $t['id_declaration'];
+								$id_baby 			= $t['id_baby'];
+								$date_debut_baby 	= $t['date_debut'];
+								$date_fin_baby 		= $t['date_fin'];
 								
-								echo "		</tbody>";
-								echo "	</table>";
-								echo "</div>";
+								$tab_dateDebut 	= explode(" ",$date_debut_baby);
+								$tab_dateFin 	= explode(" ",$date_fin_baby);
+								
+								$date_debut_baby 	= $tab_dateDebut[0];
+								$date_fin_baby		= $tab_dateFin[0];
+								
+								$tab_dateDebut 	= explode("-", $date_debut_baby);
+								$tab_dateFin 	= explode("-",$date_fin_baby);
+								
+								$date_debut_baby 	= $tab_dateDebut[2]."/".$tab_dateDebut[1]."/".$tab_dateDebut[0];
+								$date_fin_baby 		= $tab_dateFin[2]."/".$tab_dateFin[1]."/".$tab_dateFin[0];
+								
+								$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_baby'";
+								$res_p = $mysqli->query($sql_p);
+								$t_p = $res_p->fetch_assoc();
+								
+								$nom_perso_baby = $t_p['nom_perso'];
+								
+								echo "			<tr>";
+								echo "				<td>".$nom_perso_baby." [".$id_baby."]</td>";
+								echo "				<td>".$date_debut_baby."</td>";
+								echo "				<td>".$date_fin_baby."</td>";
+								echo "				<td><a href='declaration_babysitte.php?fin_babysitte=".$id_decla_baby."' class='btn btn-danger'>Fin du babysitte</a></td>";
+								echo "			</tr>";
 							}
-							else {
-						?>
-						<a href='declaration_babysitte.php?voir=ok' class='btn btn-success'>Voir mes déclarations de babysitte</a>
-						<?php
+							
+							echo "		</tbody>";
+							echo "	</table>";
+							echo "</div>";
+						}
+						else if (isset($_GET['voir_archive']) && $_GET['voir_archive'] == 'ok') {
+							
+							echo "<a href='declaration_babysitte.php?voir=ok' class='btn btn-success'>Voir mes babysittings actifs ";
+							if ($nb_baby_courant) {
+								echo "<span class='badge badge-pill badge-danger'>".$nb_baby_courant."</span>";
 							}
+							echo "</a><br /><br />";
+							echo "<a href='declaration_babysitte.php' class='btn btn-danger'>Fermer le tableau</a>";
+							
+							echo "<div id='table_baby' class='table-responsive'>";
+							echo "	<table class='table' width='80%'>";
+							echo "		<thead>";
+							echo "			<tr>";
+							echo "				<th>Perso babysitté</th><th>Date de début de babysitte</th><th>Date de fin</th>";
+							echo "			</tr>";
+							echo "		</thead>";
+							echo "		<tbody>";
+						
+							$sql = "SELECT * FROM declaration_babysitte WHERE date_fin < CURTIME() AND id_perso='$id_chef' ORDER BY date_debut";	
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_baby 			= $t['id_baby'];
+								$date_debut_baby 	= $t['date_debut'];
+								$date_fin_baby 		= $t['date_fin'];
+								
+								$tab_dateDebut 	= explode(" ",$date_debut_baby);
+								$tab_dateFin 	= explode(" ",$date_fin_baby);
+								
+								$date_debut_baby 	= $tab_dateDebut[0];
+								$date_fin_baby		= $tab_dateFin[0];
+								
+								$tab_dateDebut 	= explode("-", $date_debut_baby);
+								$tab_dateFin 	= explode("-",$date_fin_baby);
+								
+								$date_debut_baby 	= $tab_dateDebut[2]."/".$tab_dateDebut[1]."/".$tab_dateDebut[0];
+								$date_fin_baby 		= $tab_dateFin[2]."/".$tab_dateFin[1]."/".$tab_dateFin[0];
+								
+								$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_baby'";
+								$res_p = $mysqli->query($sql_p);
+								$t_p = $res_p->fetch_assoc();
+								
+								$nom_perso_baby = $t_p['nom_perso'];
+								
+								echo "			<tr>";
+								echo "				<td>".$nom_perso_baby." [".$id_baby."]</td>";
+								echo "				<td>".$date_debut_baby."</td>";
+								echo "				<td>".$date_fin_baby."</td>";
+								echo "			</tr>";
+							}
+							
+							echo "		</tbody>";
+							echo "	</table>";
+							echo "</div>";
+						}
+						else {
+							echo "<a href='declaration_babysitte.php?voir=ok' class='btn btn-success'>Voir mes babysittings actifs ";
+							if ($nb_baby_courant) {
+								echo "<span class='badge badge-pill badge-danger'>".$nb_baby_courant."</span>";
+							}
+							echo "</a> ";
+							echo "<a href='declaration_babysitte.php?voir_archive=ok' class='btn btn-success'>Voir mes babysittings passés ";
+							if ($nb_baby_passe) {
+								echo "<span class='badge badge-pill badge-danger'>".$nb_baby_passe."</span>";
+							}
+							echo "</a>";
 						}
 						?>
 					</div>
@@ -247,6 +360,8 @@ if($dispo || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
+						<hr>
+						<h1>Déclaration d'un nouveau Babysitte</h1>
 						<form method='post' action='declaration_babysitte.php'>
 							<div class="form-group col-md-6">
 								<label for="nomBaby">Nom du chef du compte babysitté <font color='red'>*</font></label>
