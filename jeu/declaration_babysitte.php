@@ -174,7 +174,7 @@ if($dispo || $admin){
 		}
 		
 		// Récupération des babysittes actifs
-		$sql_baby_courant = "SELECT * FROM declaration_babysitte WHERE id_perso='$id_chef' AND date_debut <= CURTIME() AND date_fin >= CURTIME()";
+		$sql_baby_courant = "SELECT * FROM declaration_babysitte WHERE (date_debut >= CURTIME() OR date_fin >= CURTIME()) AND id_perso='$id_chef'";
 		$res_baby_courant = $mysqli->query($sql_baby_courant);
 		$nb_baby_courant = $res_baby_courant->num_rows;
 		
@@ -242,7 +242,7 @@ if($dispo || $admin){
 							echo "		</thead>";
 							echo "		<tbody>";
 						
-							$sql = "SELECT * FROM declaration_babysitte WHERE date_debut >= CURTIME() OR date_fin >= CURTIME() AND id_perso='$id_chef' ORDER BY date_debut";	
+							$sql = "SELECT * FROM declaration_babysitte WHERE (date_debut >= CURTIME() OR date_fin >= CURTIME()) AND id_perso='$id_chef' ORDER BY date_debut";	
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()) {
