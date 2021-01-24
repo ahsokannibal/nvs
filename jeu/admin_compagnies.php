@@ -373,7 +373,7 @@ if(isset($_SESSION["id_perso"])){
 							echo "<table class='table'>";
 							echo "	<thead>";
 							echo "		<tr>";
-							echo "			<th style='text-align:center;'>Date</th><th style='text-align:center;'>Montant transféré</th><th style='text-align:center;'>Montant final</th>";
+							echo "			<th style='text-align:center;'>Date</th><th style='text-align:center'>id perso transfert</th><th style='text-align:center;'>Montant transféré</th><th style='text-align:center;'>Montant final</th>";
 							echo "		</tr>";
 							echo "	</thead>";
 							echo "	<tbody>";
@@ -395,6 +395,7 @@ if(isset($_SESSION["id_perso"])){
 								
 								echo "		<tr>";
 								echo "			<td>".$date_log->format('d-m-Y H:i:s')."</td>";
+								echo "			<td>".$id_perso_transfert."</td>";
 								echo "			<td align='center'>".$montant_tranfert."</td>";
 								echo "			<td align='center'>";
 								
