@@ -106,7 +106,8 @@ if($dispo || $admin){
 				header("Location:../tour.php");
 			}
 			else {
-				$erreur = "<font color=red>";
+				$erreur = "";
+				$mess = "";
 				$mess_bat ="";
 	
 				if(isset($_SESSION["nv_tour"]) && $_SESSION["nv_tour"] == 1){
@@ -185,7 +186,14 @@ if($dispo || $admin){
 					if ($_GET['erreur'] == 'pm') {
 						$erreur .= "Vous n'avez plus de pm !";
 					}
-				}			
+				}
+				
+				if (isset($_GET['message'])) {
+					$message = $_GET['message'];
+					if ($message == 'gainPM') {
+						$mess .= "Vous êtes en forme aujourd'hui, vous gagnez 1PM !";
+					}
+				}
 				
 				// calcul malus pm
 				$malus_pm_charge = getMalusCharge($charge_perso, $chargeMax_perso);
@@ -1769,45 +1777,63 @@ if($dispo || $admin){
 									
 									if (!$case_occupee){
 										
-										if($pm_perso  + $malus_pm >= $cout_pm){	
-										
-											// maj perso : mise à jour des pm et du bonus de perception
-											$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pm, bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'"; 
-											$mysqli->query($sql);
+										if($pm_perso  + $malus_pm >= $cout_pm){
 											
-											//mise à jour des coordonnées du perso 
-											$dep = "UPDATE perso SET x_perso=$x_persoN, y_perso=$y_persoN WHERE id_perso ='$id_perso'"; 
-											$mysqli->query($dep);
+											$chance = rand(1,100);
 											
-											// maj carte perso
-											$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
-											$mysqli->query($sql);
-											
-											$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'"; 
-											$mysqli->query($sql);
-											
-											// maj carte brouillard de guerre
-											$perception_final = $perception_perso + $bonus_visu;
-											if ($id_perso >= 100) {
-												if ($clan_p == 1) {
-													$sql = "UPDATE $carte SET vue_nord='1' 
-															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-													$mysqli->query($sql);
+											if ($chance == 1) {
+												// échec critique, le perso trébuche, perd 1PM et reste sur place
+												$erreur .= "<b>Vous avez trébuché, vous perdez 1PM !</b>";
+											}
+											else {
+												
+												// maj perso : mise à jour des pm et du bonus de perception
+												$sql = "UPDATE perso SET pm_perso =$pm_perso-$cout_pm, bonusPerception_perso=$bonus_visu WHERE id_perso='$id_perso'"; 
+												$mysqli->query($sql);
+												
+												//mise à jour des coordonnées du perso 
+												$dep = "UPDATE perso SET x_perso=$x_persoN, y_perso=$y_persoN WHERE id_perso ='$id_perso'"; 
+												$mysqli->query($dep);
+												
+												// maj carte perso
+												$sql = "UPDATE $carte SET occupee_carte='0', image_carte=NULL, idPerso_carte=save_info_carte WHERE x_carte='$x_persoE' AND y_carte='$y_persoE'";
+												$mysqli->query($sql);
+												
+												$sql = "UPDATE $carte SET occupee_carte='1', image_carte='$image_perso', idPerso_carte='$id_perso' WHERE x_carte='$x_persoN' AND y_carte='$y_persoN'"; 
+												$mysqli->query($sql);
+												
+												// maj carte brouillard de guerre
+												$perception_final = $perception_perso + $bonus_visu;
+												if ($id_perso >= 100) {
+													if ($clan_p == 1) {
+														$sql = "UPDATE $carte SET vue_nord='1' 
+																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+														$mysqli->query($sql);
+													}
+													else if ($clan_p == 2) {
+														$sql = "UPDATE $carte SET vue_sud='1' 
+																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
+																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+														$mysqli->query($sql);
+													}
 												}
-												else if ($clan_p == 2) {
-													$sql = "UPDATE $carte SET vue_sud='1' 
-															WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-															AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
+												
+												// maj evenement
+												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','s\'est deplacé',NULL,'','en $x_persoN/$y_persoN',NOW(),'0')";
+												$mysqli->query($sql);
+												
+												if ($chance == 100) {
+													// réussite critique : gain de 1PM
+													$sql = "UPDATE perso SET pm_perso=pm_perso+1 WHERE id_perso='$id_perso'"; 
 													$mysqli->query($sql);
+													
+													header("location:jouer.php?message=gainPM");
+												}
+												else {
+													header("location:jouer.php");
 												}
 											}
-											
-											// maj evenement
-											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','s\'est deplacé',NULL,'','en $x_persoN/$y_persoN',NOW(),'0')";
-											$mysqli->query($sql);
-											
-											header("location:jouer.php");
 										}
 										else{
 										
@@ -2591,8 +2617,11 @@ if($dispo || $admin){
 				</center>
 				
 				<?php
-				$erreur .= "</font>";
-				echo "<center>".$erreur."</div></center><br>";
+				echo "<center><font color='red'>".$erreur."</font></center>";
+				if (isset($mess) && trim($mess) != "") {
+					echo "<center><font color='green'><b>".$mess."</b></font></center>";
+				}
+				echo "</div><br>";
 				
 				// Traitement voir objets à terre
 				if(isset($_GET['ramasser']) && $_GET['ramasser'] == "voir"){
