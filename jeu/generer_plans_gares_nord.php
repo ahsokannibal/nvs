@@ -26,6 +26,13 @@ $couleur_nord 	= Imagecolorallocate($gare_carte, 10, 10, 254); // bleu bien voya
 $couleur_sud 	= Imagecolorallocate($gare_carte, 254, 10, 10); // rouge bien voyant
 $couleur_rail	= Imagecolorallocate($gare_carte, 200, 200, 200); // gris rails
 
+$couleur_brouillard_plaine		= Imagecolorallocate($gare_carte, 208, 192, 122); // Chamois
+$couleur_brouillard_eau			= Imagecolorallocate($gare_carte, 187, 174, 152); // Grège
+$couleur_brouillard_montagne	= Imagecolorallocate($gare_carte, 47, 27, 12); // Cachou
+$couleur_brouillard_colinne		= Imagecolorallocate($gare_carte, 133, 109, 77); // Bistre
+$couleur_brouillard_desert		= Imagecolorallocate($gare_carte, 225, 206, 154); // Vanille
+$couleur_brouillard_foret		= Imagecolorallocate($gare_carte, 97, 77, 26); // 
+
 // je vais chercher les rails dans ma table
 $sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif' AND vue_nord='1'";
 $res = $mysqli->query($sql);
@@ -37,6 +44,44 @@ while ($t = $res->fetch_assoc()){
 	
 	imagefilledrectangle ($gare_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_rail);
 	
+}
+
+$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
+$res = $mysqli->query($sql);
+	
+while ($t = $res->fetch_assoc()){
+	
+	$x 			= $t["x_carte"];
+	$y 			= $t["y_carte"];
+	$fond		= $t["fond_carte"];
+	
+	if ($fond == '3.gif') {
+		// Montagne
+		$couleur_brouillard = $couleur_brouillard_montagne;
+	}
+	else if ($fond == '2.gif') {
+		// Colinne
+		$couleur_brouillard = $couleur_brouillard_colinne;
+	}
+	else if ($fond == '4.gif') {
+		// Desert
+		$couleur_brouillard = $couleur_brouillard_desert;
+	}
+	else if ($fond == '7.gif') {
+		// Foret
+		$couleur_brouillard = $couleur_brouillard_foret;
+	}
+	else if ($fond == '8.gif' || $fond == '9.gif' || $fond == '6.gif' 
+			|| $fond == 'b5b.png' || $fond == 'b5r.png') {
+		// eau ou ponts
+		$couleur_brouillard = $couleur_brouillard_eau;
+	}
+	else {
+		// plaine et autres
+		$couleur_brouillard = $couleur_brouillard_plaine;
+	}
+	
+	imagefilledrectangle ($gare_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
 }
 
 // je vais chercher les gares dans ma table
