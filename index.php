@@ -101,7 +101,7 @@ $count_online = $res->fetch_array();
 							<hr />
 							<a href="faq.php" style="color: white;">FAQ</b></a>
 							<hr />
-							<a href="http://nordvssud-creation.forumactif.com/" style="color: white;">Le Forum</b></a>
+							<a href="/forum" style="color: white;">Le Forum</b></a>
 							<hr />
 							<a href="jeu/classement.php" style="color: white;">Les classements</b></a>
 							<hr />
@@ -125,10 +125,10 @@ $count_online = $res->fetch_array();
 										<th bgcolor="#FFFACD" style="text-align: center;">Quelques informations</th>
 									</tr>
 									<tr>
-										<td><b>Nombre de joueurs inscrit : <?php echo $nb_inscrit; ?> <br />Nombre de joueurs connectés : <?php echo $count_online[0];?><br />Dernier inscrit : <?php echo couleur_nation($clan_last_inscrit, $pseudo_last_inscrit); ?></b></td>
+										<td style='padding:1em;'><b>Nombre de joueurs inscrit : <?php echo $nb_inscrit; ?> <br />Nombre de joueurs connectés : <?php echo $count_online[0];?><br />Dernier inscrit : <?php echo couleur_nation($clan_last_inscrit, $pseudo_last_inscrit); ?></b></td>
 									</tr>
 									<tr>
-										<td><b>Persos actifs : <?php echo $nb_persos_actifs; ?> -- <font color='blue'>nordistes : <?php echo $nb_persos_nord_actifs; ?></font> / <font color='red'>sudistes : <?php echo $nb_persos_sud_actifs; ?></font></b></td>
+										<td style='padding:1em;'><b>Persos actifs : <?php echo $nb_persos_actifs; ?> -- <font color='blue'>nordistes : <?php echo $nb_persos_nord_actifs; ?></font> / <font color='red'>sudistes : <?php echo $nb_persos_sud_actifs; ?></font></b></td>
 									</tr>
 								</table>
 							</div>
@@ -146,7 +146,7 @@ $count_online = $res->fetch_array();
 										<th bgcolor="#FFFACD" style="text-align: center;">L'encre est encore fraiche</th>
 									</tr>
 									<tr>
-										<td>
+										<td style='padding:1em;'>
 											<marquee onMouseOver=this.stop() onMouseOut=this.start() scrollAmount='2'  direction='up'>
 											<?php
 											while ($t_news = $res_news->fetch_assoc()){
@@ -176,16 +176,31 @@ $count_online = $res->fetch_array();
 										<th bgcolor="#FFFACD" style="text-align: center;">Présentation de Nord VS Sud</th>
 									</tr>
 									<tr>
-										<td>
+										<td style='padding:1em;'>
 											<b>
 											Bienvenue dans la lutte qui oppose le <font color='blue'>Nord</font> et le <font color='red'>Sud</font>.<br />
 											Nous sommes à la fin du 19ème siècle et depuis des années, ces 2 armées se battent sous le commandement de leurs généraux respectifs : <font color='blue'>Abraham Lincoln</font> et <font color='red'>Jefferson Davis</font>.<br />
 											Venez rejoindre l'un de ces camps pour soutenir ses efforts.<br />
 											Vous commencerez en tant que Caporal et vous aurez sous vos ordres votre 1er grouillot.<br /><br />
-											Au fur et à mesure de vos actions, votre reconnaissance et votre capacité à commander se révéleront. Votre montée en grade vous permettra d'avoir encore plus de grouillots sous vos ordres (4 types de grouillots : fantassin, cavalier, artilleur et soigneur).<br />
+											Au fur et à mesure de vos actions, votre reconnaissance et votre capacité à commander se révéleront. Votre montée en grade vous permettra d'avoir encore plus de grouillots sous vos ordres.<br />
 											Mais pour cela, il vous faudra utiliser tous les moyens disponibles : Relief du terrain, protection des bâtiments, achats d'armes et d'objets ainsi que le train à vapeur pour survivre au milieu du camp adverse et des bêtes sauvages.<br /><br />
 											Alors, quel camp allez-vous faire gagner ?
 											</b>
+											<hr>
+											<b>Nord vs Sud</b> est un jeu sur Internet largement multi-joueurs.<br />
+											Chaque joueur commande un bataillon de quelques unités : <b>cavaliers, infanteries, soigneurs, artillerie, chiens militaires</b>.<br />
+											<b>Deux camps</b> s'affrontent depuis la nuit des temps pour des motifs qui ont fini par être oubliés, <font color='blue'>les bleus (Nord)</font> et <font color='red'>les rouges (Sud)</font>.<br />
+											Ceux-ci, pour être plus efficaces, ont procédé au regroupement des bataillons en <b>compagnies</b> pouvant aller jusqu'à 80 unités.<br />
+											Le Nord a une organisation plutôt hiérarchique avec un Comité Stratégique qui définit les ordres de mission, tandis que le Sud procède avec une plus grande autonomie des compagnies.<br />
+											Certains joueurs restent indépendants, ne veulent pas profiter des avantages tactiques et économiques (achat d'équipements) qu'apportent l'enrôlement dans une compagnie, afin de conserver une liberté d'action.<br />
+											Car un autre des avantages des compagnies est de réaliser des actions coordonnées, que leurs unités agissent avec simultanéité, pour attaquer les adversaires. Il faut en effet plusieurs attaques avant de réussir à « capturer » une unité.<br />
+											Cette « capture » consiste à renvoyer l'unité remontée à bloc dans l'un des bâtiments de son camp.<br />
+											Il lui faudra donc ensuite du temps pour rejoindre le front et retrouver le reste de son bataillon.<br />
+											L'objectif du jeu est donc de repousser les adversaires en « capturant » leurs unités et de détruire leurs bâtiments, ce qui apporte des points de victoire au camp.<br />
+											Dans certains cas il est également possible de capturer un bâtiment ennemi pour l'inclure dans son camp.<br />
+											La bataille se termine lorsque un camp est parvenu à <b>1000 points de victoire</b>. Une autre bataille sera donc lancée sur la carte suivante décidée par l'état major du camp vainqueur.<br />
+											La surface de jeu (carte) est assez vaste et chaque camp n'en connaît que les zones qu'il a pu visiter.
+											
 										</td>
 									</tr>
 								</table>
