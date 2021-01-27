@@ -6,7 +6,7 @@ header("Content-type: image/png");//on va commencer par declarer que l'on veut c
 //ensuite on defini la taille de l'image
 $gare_carte = imagecreate(603,603)  or die ("Cannot Initialize new GD image stream");
 $image_carte = imagecreatefrompng("carte/carte.png");
-$image_p = imagecreatetruecolor(603, 300);
+$image_p = imagecreatetruecolor(603, 603);
 imagecopyresampled($image_p, $image_carte, 0, 0, 0, 0, 603, 603, 603, 603);
 
 //maintenant on donne une couleur a notre image (ici un fond noir)
@@ -27,7 +27,7 @@ $couleur_sud 	= Imagecolorallocate($gare_carte, 254, 10, 10); // rouge bien voya
 $couleur_rail	= Imagecolorallocate($gare_carte, 200, 200, 200); // gris rails
 
 // je vais chercher les rails dans ma table
-$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif' AND y_carte >= 100 AND vue_nord='1'";
+$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif' AND vue_nord='1'";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -71,7 +71,7 @@ while ($t = $res->fetch_assoc()){
 
 imagepng($gare_carte, "carte/gare_nord.png");
 
-imagecopymerge($image_p, $gare_carte, 0, 0, 0, 0, 603, 300, 100);
+imagecopymerge($image_p, $gare_carte, 0, 0, 0, 0, 603, 603, 100);
 
 // on affiche l'image
 imagepng($image_p, "carte/plan_gare_nord.png");
