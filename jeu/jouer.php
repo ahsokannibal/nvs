@@ -1782,6 +1782,10 @@ if($dispo || $admin){
 											$chance = rand(1,100);
 											
 											if ($chance == 1) {
+												
+												$sql = "UPDATE perso SET pm_perso=pm_perso-1 WHERE id_perso='$id_perso'"; 
+												$mysqli->query($sql);
+												
 												// échec critique, le perso trébuche, perd 1PM et reste sur place
 												$erreur .= "<b>Vous avez trébuché, vous perdez 1PM !</b>";
 											}
