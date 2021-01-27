@@ -97,6 +97,8 @@ $count_online = $res->fetch_array();
 							
 							<a href="mdp_perdu.php" style="color: white;">Mot de passe perdu ?</b></a>
 							<hr />
+							<a href="presentation.php" style="color: white;">Présentation du jeu</b></a>
+							<hr />
 							<a href="regles/regles.php" style="color: white;">Règles</b></a>
 							<hr />
 							<a href="faq.php" style="color: white;">FAQ</b></a>
@@ -187,7 +189,7 @@ $count_online = $res->fetch_array();
 											Alors, quel camp allez-vous faire gagner ?
 											</b>
 											<hr>
-											<b>Nord vs Sud</b> est un jeu sur Internet largement multi-joueurs.<br />
+											<b>Nord vs Sud</b> est un jeu de stratégie sur Internet largement multi-joueurs.<br />
 											Chaque joueur commande un bataillon de quelques unités : <b>cavaliers, infanteries, soigneurs, artillerie, chiens militaires</b>.<br />
 											<b>Deux camps</b> s'affrontent depuis la nuit des temps pour des motifs qui ont fini par être oubliés, <font color='blue'>les bleus (Nord)</font> et <font color='red'>les rouges (Sud)</font>.<br />
 											Ceux-ci, pour être plus efficaces, ont procédé au regroupement des bataillons en <b>compagnies</b> pouvant aller jusqu'à 80 unités.<br />
