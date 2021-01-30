@@ -499,6 +499,13 @@ if($dispo == '1' || $admin){
 					
 					echo "</div>";
 					
+					// Ordre compagnie
+					$sql = "SELECT ordre FROM compagnie_ordre WHERE id_compagnie='$id_compagnie'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$ordre_compagnie = stripslashes($t['ordre']);
+					
 					if ($genie_compagnie) {
 						$nb_persos_compagnie_max = 60;
 						
@@ -518,6 +525,14 @@ if($dispo == '1' || $admin){
 						
 					// affichage des information de la compagnie
 					echo "<center><h2>$nom_compagnie</h2></center>";
+					
+					if (isset($ordre_compagnie) && $ordre_compagnie != null && trim($ordre_compagnie) != "") {
+						echo "<div align='center' style='border: 1px dashed #CCC'>";
+						echo "<h5>Ordres du jour</h5>";
+						echo $ordre_compagnie;
+						echo "</div>";
+					}
+					
 					echo "<table border='1' class='table' width = 100%>";
 					echo "	<tr>";
 					echo "		<th width=40 height=40>";

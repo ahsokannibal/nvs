@@ -70,6 +70,13 @@ if(isset($_GET["id_compagnie"])) {
 			$genie_compagnie	= $t['genie_civil'];
 			$id_parent			= $t['id_parent'];
 			
+			$sql = "SELECT ordre FROM compagnie_ordre WHERE id_compagnie='$id_compagnie'";
+			$res = $mysqli->query($sql);
+			$nb_ordre = $res->num_rows;
+			$t_ordre = $res->fetch_assoc();
+			
+			$ordres_jour = $t_ordre['ordre'];
+			
 			// Vérification si il y a une demande de suppresion en attente
 			$sql = "SELECT * FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie' AND type_demande='2'";
 			$res = $mysqli->query($sql);
@@ -207,6 +214,24 @@ if(isset($_GET["id_compagnie"])) {
 					$mess_err .= "Veuillez bien remplir le champ pour virer un membre";
 				}
 			}
+			
+			// ordre compagnie
+			if (isset($_POST['envoi_ordre']) && isset($_POST['ordre_jour'])) {
+				$ordres_jour = $_POST['ordre_jour'];
+				$ordres_bdd = addslashes($ordres_jour);
+				
+				if ($nb_ordre) {
+					// update
+					$sql = "UPDATE compagnie_ordre SET ordre = '$ordres_bdd' WHERE id_compagnie='$id_compagnie'";
+				}
+				else {
+					// insert
+					$sql = "INSERT INTO compagnie_ordre(id_compagnie, ordre) VALUES ('$id_compagnie', '$ordres_bdd')";
+				}
+				$mysqli->query($sql);
+				
+				$mess .= "Ordres du jour mis à jour";
+			}
 		
 			echo "<h3>";
 			if (isset($id_parent)) {
@@ -285,6 +310,16 @@ if(isset($_GET["id_compagnie"])) {
 			echo "<center>envoyer un MP a tout les membres de sa ".$titre_compagnie." :</center>";
 			echo "<TEXTAREA cols=\"50\" rows=\"5\" name=\"contenu\">";
 			echo "</TEXTAREA><br><input type=\"submit\" name=\"envoi\" value=\"valider\" class='btn btn-success'>";
+			echo "</div>";
+			echo "</form>";
+			
+			echo "<br />";
+			
+			echo "<form action=\"admin_compagnie.php?id_compagnie=$id_compagnie\" method=\"post\" name=\"ordre\">";
+			echo "<div align=\"center\"><br>";
+			echo "<center>Ordres du jour :</center>";
+			echo "<TEXTAREA cols=\"50\" rows=\"5\" name=\"ordre_jour\">".$ordres_jour;
+			echo "</TEXTAREA><br><input type=\"submit\" name=\"envoi_ordre\" value=\"valider\" class='btn btn-success'>";
 			echo "</div>";
 			echo "</form>";
 			
