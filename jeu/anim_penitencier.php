@@ -111,6 +111,12 @@ if($dispo == '1' || $admin){
 						// mise a jour de la carte image centrale
 						$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_i_bat', image_carte='$img_bat' WHERE x_carte='$x_penitencier' AND y_carte='$y_penitencier'";
 						$mysqli->query($sql);
+						
+						$texte = "";
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_penitencier.php', 'Création pénitencier', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "Impossible de construire sur ces coordonnées, les cases ne dont pas libre ou ne sont pas des plaines";
@@ -187,6 +193,13 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess = "Le perso ".$nom_perso." [".$id_perso_envoi_penitencier."] a bien été envoyé dans le Pénitencier";
+						
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_penitencier.php', 'Envoi perso en contact dans pénitencier', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "Le perso est déjà dans le Pénitencier";
@@ -221,6 +234,12 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess .= "Le perso matricule ".$id_perso_relacher." a été relaché du pénitencier";
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_penitencier.php', 'Relache perso pénitencier', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "Le perso n'est pas dans le Pénitencier !";
@@ -260,6 +279,12 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess .= "La peine du perso matricule ".$id_perso." a été renforcé de 1 jour";
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_penitencier.php', 'Ajout peine pénitencier', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "Le perso n'est pas dans le Pénitencier !";
@@ -289,6 +314,12 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess .= "La peine du perso matricule ".$id_perso." a été réduite de 1 jour";
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_penitencier.php', 'Retrait peine pénitencier', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "Le perso n'est pas dans le Pénitencier !";

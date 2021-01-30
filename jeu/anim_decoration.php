@@ -60,6 +60,12 @@ if($dispo == '1' || $admin){
 				$mysqli->query($sql);
 				
 				$mess .= "Décoration attribuée";
+				
+				$texte = "Décoration $id_choix_deco attribuée au perso matricule $id_perso_deco";
+									
+				// log_action_animation
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_decoration.php', 'attribution décoration', '$texte')";
+				$mysqli->query($sql);
 			}
 ?>
 		

@@ -179,7 +179,13 @@ if($dispo == '1' || $admin){
 						$sql = "UPDATE carte SET idPerso_carte='$id_new_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_respawn_train' AND y_carte='$y_respawn_train'";
 						$mysqli->query($sql);
 						
-						$mess .= "Création du train en position ".$x_respawn_train."/".$y_respawn_train." entre les gare $id_gare1_liaison et $id_gare2_liaison terminé";
+						$mess .= "Création du train ".$id_new_train." en position ".$x_respawn_train."/".$y_respawn_train." entre les gare $id_gare1_liaison et $id_gare2_liaison terminé";
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_train.php', 'Création train', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "Impossible de rajouter un train pour ces liaisons";
@@ -215,7 +221,13 @@ if($dispo == '1' || $admin){
 						$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_batiment'";
 						$mysqli->query($sql);
 						
-						$mess .= "Obstacle en ".$x_obstacle."/".$y_obstacle." détruit !";
+						$mess .= "Obstacle ".$id_batiment." en ".$x_obstacle."/".$y_obstacle." détruit !";
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_train.php', 'Destruction obstacle', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "L'obstacle ne semble pas être une barricade, destruction impossible";
@@ -258,6 +270,12 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess .= "Train [".$id_train_detruire."] en ".$x_instance_train."/".$y_instance_train." détruit !";
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_train.php', 'Destruction train', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_erreur .= "Ce train n'existe pas ou ne fait pas parti de votre camp";
@@ -295,6 +313,12 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess .= "Liaison entre la gare [".$gare1_liaison."] et la gare [".$gare2_liaison."] créée";
+						
+						$texte = addslashes($mess);
+									
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_train.php', 'Création liaison', '$texte')";
+						$mysqli->query($sql);
 						
 					}
 					else {

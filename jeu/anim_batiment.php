@@ -54,6 +54,11 @@ if($dispo == '1' || $admin){
 				
 				$mess .= "le batiment ".$id_instance_bat_rename." a été renommé avec succès en ".$nouveau_nom_bat;
 				
+				$texte = addslashes($mess);
+				
+				// log_action_animation
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_batiment.php', 'renommer batiment', '$texte')";
+				$mysqli->query($sql);
 			}
 			
 			if (isset($_POST['id_instance_bat_destruction']) && $_POST['id_instance_bat_destruction'] != "") {
@@ -92,6 +97,12 @@ if($dispo == '1' || $admin){
 					$mysqli->query($sql);
 					
 					$mess .= "le batiment ".$id_instance_bat_destruction." a été détruit avec succès";
+					
+					$texte = addslashes($mess);
+				
+					// log_action_animation
+					$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_batiment.php', 'destruction batiment', '$texte')";
+					$mysqli->query($sql);
 				}
 				else {
 					$mess_err .= "Des persos se trouvent encore dans le batiment, batiment impossible à détruire";

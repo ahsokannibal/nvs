@@ -149,6 +149,12 @@ if($dispo == '1' || $admin){
 								$sql = "UPDATE ".$table_prefix."users SET username='$nouveau_nom_perso', username_clean='$username_clean' WHERE user_email='$email_joueur'";
 								$mysqli->query($sql);
 								
+								$texte = addslashes("Demande de changement de nom perso en ".$nouveau_nom_perso." pour le matricule $id_perso_maj validé");
+								
+								// log_action_animation
+								$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_perso.php', 'Validation demande de changement de nom perso', '$texte')";
+								$mysqli->query($sql);
+								
 							}
 							else {
 								echo "<center><font color='red'><b>Impossible de valider ce changement de nom car le nom est déjà pris</b></font></center>";
@@ -169,6 +175,12 @@ if($dispo == '1' || $admin){
 							
 							// Suppression de la demande 
 							$sql = "DELETE FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='$type_demande_maj'";
+							$mysqli->query($sql);
+							
+							$texte = addslashes("Demande de changement de nom bataillon en ".$nouveau_nom_bataillon." par le perso matricule $id_perso_maj validé");
+								
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_perso.php', 'Validation demande de changement de nom bataillon', '$texte')";
 							$mysqli->query($sql);
 						}
 						else if ($type_demande_maj == 4) {
@@ -311,6 +323,12 @@ if($dispo == '1' || $admin){
 							// MAJ du groupe de l'utilisateur
 							$sql = "UPDATE ".$table_prefix."user_group SET group_id='$id_group_forum' WHERE user_id='$id_user_forum'";
 							$mysqli->query($sql);
+							
+							$texte = addslashes("Demande de changement de camp par le perso matricule $id_perso_maj validé");
+								
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_perso.php', 'Validation demande de changement de camp', '$texte')";
+							$mysqli->query($sql);
 						}
 					}
 					else {
@@ -320,6 +338,12 @@ if($dispo == '1' || $admin){
 						
 						// TODO - envoi MP
 						
+						
+						$texte = "";
+								
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_perso.php', 'Refus demande perso', '$texte')";
+						$mysqli->query($sql);
 					}
 				}
 			}			

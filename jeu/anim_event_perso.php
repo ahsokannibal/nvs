@@ -175,6 +175,12 @@ if($dispo == '1' || $admin){
 							echo "		</tbody>";
 							echo "	</table>";
 							echo "</div>";
+							
+							$texte = addslashes("Consultation evenements détaillées du perso $nom_perso_event [$id_perso_event]");
+									
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_event_perso.php', 'Consultation évenements perso', '$texte')";
+							$mysqli->query($sql);
 						}
 					}
 					else {

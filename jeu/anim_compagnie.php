@@ -69,6 +69,13 @@ if($dispo == '1' || $admin){
 							$mysqli->query($sql);
 							
 							// TODO - Envoi d'un MP
+							
+							
+							$texte = addslashes("La demande de changement de nom de la compagnie en $nouveau_nom_compagnie est validée");
+				
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_compagnie.php', 'validation changement nom compagnie', '$texte')";
+							$mysqli->query($sql);
 						}
 						else if ($type_demande_maj == 2) {
 							// Demande de suppression de la compagnie
@@ -117,6 +124,12 @@ if($dispo == '1' || $admin){
 							// Suppression de toutes le demandes liées à cette compagnie
 							$sql = "DELETE FROM compagnie_demande_anim WHERE id_compagnie='$id_compagnie_maj'";
 							$mysqli->query($sql);
+							
+							$texte = "La demande de suppression de la compagnie $nom_compagnie (id : $id_compagnie_maj) est validée";
+				
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_compagnie.php', 'validation suppression compagnie', '$texte')";
+							$mysqli->query($sql);
 						}						
 						
 						header("Location:anim_compagnie.php");
@@ -129,6 +142,11 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						// TODO MP
+						
+						
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_compagnie.php', 'refus demande compagnie', '')";
+						$mysqli->query($sql);
 						
 						header("Location:anim_compagnie.php");
 					}

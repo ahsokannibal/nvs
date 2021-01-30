@@ -129,6 +129,12 @@ if($dispo == '1' || $admin){
 										$mysqli->query($sql);
 										
 										$mess = "Le perso ".$nom_perso." [".$id_perso_punition."] a bien été envoyé dans le Pénitencier";
+										
+										$texte = addslashes($mess);
+									
+										// log_action_animation
+										$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_punition.php', 'Envoi perso dans pénitencier', '$texte')";
+										$mysqli->query($sql);
 									}
 									else {
 										$mess_err .= "Le perso est déjà dans un pénitencier";
@@ -164,6 +170,12 @@ if($dispo == '1' || $admin){
 								$mysqli->query($sql);
 								
 								$mess .= "Le perso a perdu <b>toute</b> sa thune !";
+								
+								$texte = addslashes($mess);
+									
+								// log_action_animation
+								$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_punition.php', 'Punition thune all', '$texte')";
+								$mysqli->query($sql);
 							}
 							else {
 								$verif_montant = preg_match("#^[0-9]*[0-9]$#i","$montant_amende");
@@ -199,6 +211,12 @@ if($dispo == '1' || $admin){
 										
 										$mess .= "Le perso a payé une amende de <b>".$montant_amende."</b> thunes";
 									}
+									
+									$texte = addslashes($mess);
+									
+									// log_action_animation
+									$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_punition.php', 'Punition thune', '$texte')";
+									$mysqli->query($sql);
 								}
 								else {
 									// parametres incorrectes / modifiés
@@ -227,6 +245,12 @@ if($dispo == '1' || $admin){
 								$mysqli->query($sql);
 								
 								$mess .= "Le perso a perdu <b>tout</b> ses Points de Commandement !";
+								
+								$texte = addslashes($mess);
+									
+								// log_action_animation
+								$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_punition.php', 'Punition PC All', '$texte')";
+								$mysqli->query($sql);
 							}
 							else {
 								$verif_pc = preg_match("#^[0-9]*[0-9]$#i","$montant_pc");
@@ -263,6 +287,12 @@ if($dispo == '1' || $admin){
 										
 										$mess .= "Le perso a perdu <b>".$montant_pc."</b> Points de Commandement";
 									}
+									
+									$texte = addslashes($mess);
+									
+									// log_action_animation
+									$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_punition.php', 'Punition PC', '$texte')";
+									$mysqli->query($sql);
 								}
 								else {
 									// parametres incorrectes / modifiés
@@ -291,6 +321,12 @@ if($dispo == '1' || $admin){
 								$mysqli->query($sql);
 								
 								$mess .= "Le perso a perdu <b>tout</b> ses XP !";
+								
+								$texte = addslashes($mess);
+									
+								// log_action_animation
+								$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_punition.php', 'Punition XP All', '$texte')";
+								$mysqli->query($sql);
 							}
 							else {
 							
@@ -328,6 +364,12 @@ if($dispo == '1' || $admin){
 										
 										$mess .= "Le perso a perdu <b>".$montant_xp."</b> XP";
 									}
+									
+									$texte = addslashes($mess);
+									
+									// log_action_animation
+									$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_punition.php', 'Punition XP', '$texte')";
+									$mysqli->query($sql);
 								}
 								else {
 									// parametres incorrectes / modifiés

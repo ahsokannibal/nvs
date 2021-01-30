@@ -495,6 +495,12 @@ if(isset($_SESSION["id_perso"])){
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
 											VALUES ($id_i_bat,'<font color=$couleur_clan_bat><b>$nom_bat</b></font>','a été construit par un animateur',NULL,'','',NOW(),'0')";
 									$mysqli->query($sql);
+									
+									$texte = "Construction du batiment $nom_bat [$id_i_bat] - verification contraintes : $verif";
+									
+									// log_action_animation
+									$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_creer_batiment.php', 'creation batiment', '$texte')";
+									$mysqli->query($sql);
 								}
 								else {
 									echo "<center>Vous ne pouvez pas construire ce bâtiment car la carte est occupée ou le terrain n'est pas que de la plaine<br />";

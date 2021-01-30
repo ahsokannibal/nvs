@@ -148,7 +148,12 @@ if($dispo == '1' || $admin){
 							// assignation du message au perso
 							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso', '1', '0', '0', '0')";
 							$mysqli->query($sql);
-							
+				
+							$texte = addslashes("La capture du perso $nom_perso_capture [$id_perso_capture] par le perso matricule $id_perso a été refusé");
+				
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_capture_rp.php', 'refus capture', '$texte')";
+							$mysqli->query($sql);
 							
 						}
 						else if (isset($_GET['action']) && $_GET['action'] == "valider") {
@@ -248,6 +253,12 @@ if($dispo == '1' || $admin){
 							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso', '1', '0', '0', '0')";
 							$mysqli->query($sql);
 							
+							$texte = addslashes("La capture RP du perso $nom_perso_capture [$id_perso_capture] par le perso matricule $id_perso a été validé");
+				
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_capture_rp.php', 'validation capture RP', '$texte')";
+							$mysqli->query($sql);
+							
 						}
 						else if (isset($_GET['action']) && $_GET['action'] == "valider_encerclement") {
 							
@@ -327,7 +338,13 @@ if($dispo == '1' || $admin){
 							
 							// assignation du message au perso
 							$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_perso_capture', '1', '0', '0', '0')";
-							$mysqli->query($sql);							
+							$mysqli->query($sql);
+
+							$texte = addslashes("La capture par encerclement du perso $nom_perso_capture [$id_perso_capture] par le perso matricule $id_perso a été validé");
+				
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_capture_rp.php', 'validation capture par encerclement', '$texte')";
+							$mysqli->query($sql);
 						}
 					}
 					else {

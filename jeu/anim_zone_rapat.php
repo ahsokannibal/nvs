@@ -86,6 +86,12 @@ if(isset($_SESSION["id_perso"])){
 					$y_max_zone_def = $y_zone_max;
 					
 					$mess .= "Zone de respawn du ".$nom_camp." mise à jour";
+					
+					$texte = addslashes($mess);
+									
+					// log_action_animation
+					$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_zone_rapat.php', 'Modification zone de rapatriement', '$texte')";
+					$mysqli->query($sql);
 				}
 				else {
 					$mess_err .= "Coordonnées incorrectes : hors carte !";
