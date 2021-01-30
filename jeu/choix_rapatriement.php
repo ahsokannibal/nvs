@@ -14,7 +14,7 @@ if(isset($_SESSION["id_perso"])){
 	$dispo = config_dispo_jeu($mysqli);
 	$admin = admin_perso($mysqli, $id_perso);
 	
-	if($dispo || $admin){
+	if($dispo == '1' || $admin){
 		
 		// Récupération du camp du perso 
 		$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso'";

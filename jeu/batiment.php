@@ -12,7 +12,7 @@ include ('../nb_online.php');
 $dispo = config_dispo_jeu($mysqli);
 $admin = admin_perso($mysqli, $_SESSION["id_perso"]);
 
-if($dispo || $admin){
+if($dispo == '1' || $admin){
 	
 	if(isset($_SESSION["id_perso"])){
 		

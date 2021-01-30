@@ -14,7 +14,7 @@ if (isset($_SESSION["id_perso"])) {
 	header("Location:../index.php");
 }
 
-if($dispo || $admin){
+if($dispo == '1' || $admin){
 
 	if (isset($_SESSION["id_perso"])) {
 		

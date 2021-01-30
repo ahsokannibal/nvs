@@ -6,6 +6,13 @@ require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
+// Récupération de la clef secrete
+$sql = "SELECT valeur_config FROM config_jeu WHERE code_config='clef_secrete'";
+$res = $mysqli->query($sql);
+$t = $res->fetch_assoc();
+
+$clef_secrete = $t['valeur_config'];
+
 // Récupération de la liste des Forts et Fortins
 $sql_b = "SELECT id_instanceBat, nom_instance FROM instance_batiment WHERE id_batiment='8' OR id_batiment='9' ORDER BY id_instanceBat";
 $res_b = $mysqli->query($sql_b);

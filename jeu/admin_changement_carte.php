@@ -32,7 +32,7 @@ if(isset($_SESSION["id_perso"])){
 			if ($verif_forts == 2) {
 				
 				// passer jeu en mode mise à jour
-				$sql = "UPDATE config_jeu SET disponible='0'";
+				$sql = "UPDATE config_jeu SET valeur_config='0' WHERE code_config='disponible'";
 				$mysqli->query($sql);
 				
 				// Vider table instance_batiment
@@ -212,7 +212,7 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 							
 				// passer jeu en mode disponible
-				$sql = "UPDATE config_jeu SET disponible='1'";
+				$sql = "UPDATE config_jeu SET valeur_config='1' WHERE code_config='disponible'";
 				$mysqli->query($sql);
 			}
 			else {

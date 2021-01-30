@@ -16,12 +16,12 @@ if(isset($_SESSION["id_perso"])){
 	if($admin){
 		
 		if (isset($_GET['mode_maj'])) {
-			$sql = "UPDATE config_jeu SET disponible='0'";
+			$sql = "UPDATE config_jeu SET valeur_config='0' WHERE code_config='disponible'";
 			$mysqli->query($sql);
 		}
 		
 		if (isset($_GET['mode_jeu'])) {
-			$sql = "UPDATE config_jeu SET disponible='1'";
+			$sql = "UPDATE config_jeu SET valeur_config='1' WHERE code_config='disponible'";
 			$mysqli->query($sql);
 		}
 		
@@ -84,7 +84,7 @@ if(isset($_SESSION["id_perso"])){
 			
 			<div class="row">
 				<div class="col-12">
-				<?php if ($dispo) { ?>
+				<?php if ($dispo == '1') { ?>
 					<a class='btn btn-danger' href='admin_nvs.php?mode_maj=ok'>Passer le jeu en mode Mise à jour</a>
 				<?php } else { ?>
 					<a class='btn btn-success' href='admin_nvs.php?mode_jeu=ok'>Ouvrir le jeu</a>

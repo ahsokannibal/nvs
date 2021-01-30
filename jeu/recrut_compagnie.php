@@ -14,7 +14,7 @@ if(isset($_SESSION["id_perso"])){
 
 	$admin = admin_perso($mysqli, $_SESSION["id_perso"]);
 
-	if($dispo || $admin){
+	if($dispo == '1' || $admin){
 		
 		//recuperation des varaibles de sessions
 		$id = $_SESSION["id_perso"];

@@ -16,7 +16,7 @@ require_once($phpbb_root_path ."includes/functions_user.php");
 
 $request->enable_super_globals();
 
-if(config_dispo_jeu($mysqli)){
+if(config_dispo_jeu($mysqli) == '1'){
 
 	if(isset($_POST['creer'])) {
 		

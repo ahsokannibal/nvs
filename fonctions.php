@@ -446,7 +446,7 @@ function redac_perso($mysqli, $id_perso) {
   * @return Bool	: Si oui ou non le jeu est disponible
   */
 function config_dispo_jeu($mysqli){
-	$sql = "SELECT disponible FROM config_jeu";
+	$sql = "SELECT valeur_config FROM config_jeu WHERE code_config='disponible'";
 	$res = $mysqli->query($sql);
 	$t_dispo = $res->fetch_assoc();
 	

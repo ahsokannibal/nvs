@@ -116,13 +116,19 @@ CREATE TABLE `anim_question` (
 -- --------------------------------------------------------
 
 --
--- Structure de la table `anti_zerk`
+-- Structure de la tables `anti_zerk`
 --
 
 CREATE TABLE `anti_zerk` ( 
 	`id_perso` INT NOT NULL, 
 	`date_derniere_attaque` DATETIME NOT NULL,
 	`date_nouveau_tour` DATETIME NOT NULL
+) ENGINE = MyISAM;
+
+CREATE TABLE `anti_zerk_bousculade` (
+	`id_perso` INT NOT NULL, 
+	`date_derniere_bousculade` DATETIME NOT NULL, 
+	`date_nouveau_tour` DATETIME NOT NULL 
 ) ENGINE = MyISAM; 
 
 -- --------------------------------------------------------

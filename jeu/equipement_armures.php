@@ -9,13 +9,13 @@ $mysqli = db_connexion();
 include ('../nb_online.php');
 
 // recuperation config jeu
-$sql = "SELECT disponible FROM config_jeu";
+$sql = "SELECT valeur_config FROM config_jeu WHERE code_config='disponible'";
 $res = $mysqli->query($sql);
 $t_dispo = $res->fetch_assoc();
 
-$dispo = $t_dispo["disponible"];
+$dispo = $t_dispo["valeur_config"];
 
-if($dispo){
+if($dispo == '1'){
 	if(isset($_SESSION["id_perso"])){
 		
 		$id_perso = $_SESSION['id_perso'];
