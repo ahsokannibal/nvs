@@ -450,7 +450,7 @@ function config_dispo_jeu($mysqli){
 	$res = $mysqli->query($sql);
 	$t_dispo = $res->fetch_assoc();
 	
-	return $t_dispo["disponible"];
+	return $t_dispo["valeur_config"];
 }
 
 /**
