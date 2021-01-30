@@ -1779,7 +1779,7 @@ if($dispo == '1' || $admin){
 										
 										if($pm_perso  + $malus_pm >= $cout_pm){
 											
-											$chance = rand(1,100);
+											$chance = rand(1,1000);
 											
 											if ($chance == 1) {
 												
@@ -1827,7 +1827,7 @@ if($dispo == '1' || $admin){
 												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','s\'est deplacé',NULL,'','en $x_persoN/$y_persoN',NOW(),'0')";
 												$mysqli->query($sql);
 												
-												if ($chance == 100) {
+												if ($chance == 1000) {
 													// réussite critique : gain de 1PM
 													$sql = "UPDATE perso SET pm_perso=pm_perso+1 WHERE id_perso='$id_perso'"; 
 													$mysqli->query($sql);
