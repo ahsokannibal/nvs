@@ -11,13 +11,17 @@ if(isset($_SESSION["id_perso"])){
 	
 	$id_perso = $_SESSION['id_perso'];
 	
-	// recupération config jeu
-	$admin = admin_perso($mysqli, $id_perso);
-	
-	if($admin) {
+	if(anim_perso($mysqli, $id_perso)){
 		
 		$mess_err 	= "";
 		$mess 		= "";
+		
+		// Récupération du camp de l'animateur 
+		$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$camp = $t['clan'];
 		
 		if(isset($_POST['select_perso']) && $_POST['select_perso'] != '') {
 			$id_perso_select = $_POST['select_perso'];
@@ -54,15 +58,15 @@ if(isset($_SESSION["id_perso"])){
 				</div>
 			</div>
 		
-			<p align="center"><a class="btn btn-primary" href="admin_nvs.php">Retour à l'administration</a> <a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
+			<p align="center"><a class="btn btn-primary" href="animation.php">Retour à l'animation</a> <a class="btn btn-primary" href="jouer.php">Retour au jeu</a></p>
 			
 			
 			<div class="row">
 				<div class="col-12">
-					<form method='POST' action='admin_log_access.php'>
+					<form method='POST' action='anim_log_access.php'>
 						<select name="select_perso" onchange="this.form.submit()">
 							<?php
-							$sql = "SELECT id_perso, nom_perso FROM perso ORDER BY id_perso ASC";
+							$sql = "SELECT id_perso, nom_perso FROM perso WHERE clan='$camp' ORDER BY id_perso ASC";
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()) {
@@ -95,10 +99,10 @@ if(isset($_SESSION["id_perso"])){
 					<div align="center">	
 						<?php
 						if (isset($_GET['stat_jour'])) {
-							echo "<a href='admin_log_access.php?id_perso=".$id_perso_select."' class='btn btn-warning'>Détail des logs</a>";
+							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."' class='btn btn-warning'>Détail des logs</a>";
 						}
 						else {
-							echo "<a href='admin_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-warning'>Statistiques par jour</a>";
+							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-warning'>Statistiques par jour</a>";
 						}
 						echo "<br /><br />";
 						?>

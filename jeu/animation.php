@@ -132,6 +132,7 @@ if($dispo == '1' || $admin){
 				<div class="col-12">
 					<a class='btn btn-secondary' href='anim_multi.php'>Tableau des multis déclarés</a>
 					<a class='btn btn-secondary' href='anim_babysitte.php'>tableau des Babysittes déclarés</a>
+					<a class='btn btn-secondary' href='anim_log_access.php'>LOGS accès</a>
 				</div>
 			</div>
 			

@@ -74,6 +74,7 @@ if(isset($_SESSION["id_perso"])){
 				<div class="col-12">
 					<a class='btn btn-warning' href='admin_tentative_triche.php' target='_blank'>LOGS Tentatives de triche</a>
 					<a class='btn btn-warning' href='admin_log_access.php' target='_blank'>LOGS accès</a>
+					<a class='btn btn-warning' href='admin_triche.php' target='_blank'>Vérifications triche</a>
 					<a class='btn btn-warning' href='admin_multi.php' target='_blank'>Tableau des multis déclarés</a>
 					<a class='btn btn-warning' href='admin_babysitte.php' target='_blank'>Tableau des babysittes déclarés</a>
 					<a class='btn btn-warning' href='../creation_carte/utils_carte.php' target='_blank'>Editeur de carte</a>
