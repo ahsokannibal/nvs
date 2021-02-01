@@ -1502,8 +1502,10 @@ if($dispo == '1' || $admin){
 								$array_parcours_tmp		= array();
 								$nb_liaisons			= 1;
 								$value_dest 			= "";
+								$value_dest_tmp			= "";
 								
 								$profondeur = 1;
+								$prof_tmp	= 1;
 								
 								while (count($array_parcours) > 0) {
 									
@@ -1550,11 +1552,21 @@ if($dispo == '1' || $admin){
 											if (trim($value_dest) != "") {
 												$value_dest .= ",";
 											}
-											if ($profondeur > 1) {
-												$value_dest .= $destination;
+											
+											if ($profondeur == 1) {
+												$value_dest = $destination;
 											}
 											else {
-												$value_dest = $destination;
+												if ($profondeur == $prof_tmp) {
+													$taille_chaine = ($profondeur - 1) * 6;
+													// On retire la dernière gare ajoutée vu qu'on est sur la même profondeur
+													$value_dest = substr($value_dest, 0, $taille_chaine);													
+													$value_dest .= $destination;
+												}
+												else {
+													$prof_tmp = $profondeur;
+													$value_dest .= $destination;
+												}
 											}
 											
 											if ($camp_dest == $camp) {
@@ -1577,7 +1589,7 @@ if($dispo == '1' || $admin){
 											}
 											
 											array_push($array_dest, $destination);
-											array_push($array_parcours_tmp, $destination);					
+											array_push($array_parcours_tmp, $destination);				
 											
 											$base_dest = $destination;
 										}
