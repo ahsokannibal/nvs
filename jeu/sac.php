@@ -36,6 +36,26 @@ if($dispo == '1' || $admin){
 			$mess = "";
 			$mess_err = "";
 			
+			// on souhaite supprimer un tcket
+			if(isset($_POST['delete_ticket_hidden']) && $_POST['delete_ticket_hidden'] != "") {
+				
+				$dest_ticket_to_delete = $_POST['delete_ticket_hidden'];
+				
+				$verif = preg_match("#^[0-9]*[0-9]$#i","$dest_ticket_to_delete");
+				
+				if ($verif) {
+					
+					$sql = "DELETE FROM perso_as_objet WHERE id_objet='1' AND id_perso='$id' AND capacite_objet='$dest_ticket_to_delete' LIMIT 1";
+					$mysqli->query($sql);
+					
+					$mess .= "Le ticket à destination de ".$dest_ticket_to_delete." a bien été supprimé de votre inventaire";
+				}
+				else {
+					// triche
+					$mess_err .= "Données envoyées incorrectes...";
+				}
+			}
+			
 			// on souhaite utiliser un objet
 			if(isset($_GET["id_obj"]) && $_GET["id_obj"] != ""){
 				
@@ -234,6 +254,7 @@ if($dispo == '1' || $admin){
 		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	</head>
 	
 	<body>
@@ -367,7 +388,7 @@ if($dispo == '1' || $admin){
 				// Tickets de train
 				if ($type_o == 'T') {
 					
-					echo "<br /><b>Destinations : </b>";
+					echo "<br /><b>Destinations : </b><br />";
 					
 					while ($t_o = $res2->fetch_assoc()) {
 						
@@ -377,7 +398,33 @@ if($dispo == '1' || $admin){
 							echo "- Ticket non valide - "; 
 						}
 						else {
-							echo "<a class='btn btn-primary' href='evenement.php?infoid=".$destination."'>".$destination."</a> ";
+							echo "<a class='btn btn-primary' style='height:38px;' href='evenement.php?infoid=".$destination."'>".$destination."</a>";
+							echo "<button class='btn btn-danger' style='height:38px;' type='button' data-toggle='modal' data-target=\"#modalConfirm$destination\"><i class='fa fa-trash'></i></button><br />";
+							?>
+							<!-- Modal -->
+							<form method="post" action="sac.php">
+								<div class="modal fade" id="modalConfirm<?php echo $destination; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+									<div class="modal-dialog modal-dialog-centered" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title" id="exampleModalCenterTitle">Supprimer le ticket à destination de <?php echo $destination; ?> ?</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+													<span aria-hidden="true">&times;</span>
+												</button>
+											</div>
+											<div class="modal-body">
+												Êtes-vous sûr de vouloir supprimer le ticket à destination de <?php echo $destination; ?> ?
+												<input type='hidden' name='delete_ticket_hidden' value='<?php echo $destination; ?>'>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+												<button type="button" onclick="this.form.submit()" class="btn btn-danger">Supprimer</button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+							<?php
 						}
 					}
 				}
@@ -474,6 +521,11 @@ if($dispo == '1' || $admin){
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+		<script>
+		$(function () {
+			$('[data-toggle="tooltip"]').tooltip();
+		});
+		</script>
 	
 	</body>
 </html>
