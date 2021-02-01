@@ -1502,7 +1502,6 @@ if($dispo == '1' || $admin){
 								$array_parcours_tmp		= array();
 								$nb_liaisons			= 1;
 								$value_dest 			= "";
-								$value_dest_tmp			= "";
 								
 								$profondeur = 1;
 								$prof_tmp	= 1;
