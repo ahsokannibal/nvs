@@ -83,6 +83,9 @@ if(isset($_SESSION["id_perso"])){
 							echo "		<tr>";
 							echo "			<th style='text-align:center'>Classement</th>";
 							echo "			<th style='text-align:center'>Perso</th>";
+							if (!isset($_GET['top_all'])) {
+								echo "			<th style='text-align:center'>Date</th>";
+							}
 							echo "			<th style='text-align:center'>Nb Logs</th>";
 							echo "			<th style='text-align:center'>Action</th>";
 							echo "		</tr>";
@@ -108,7 +111,10 @@ if(isset($_SESSION["id_perso"])){
 										ORDER BY nb_logs DESC LIMIT 100";
 							}
 							elseif (isset($_GET['top_all'])) {
-								
+								$sql = "SELECT id_perso, COUNT(*) as nb_logs 
+										FROM acces_log 
+										GROUP BY id_perso
+										ORDER BY nb_logs DESC LIMIT 100";
 							}
 							
 							$res = $mysqli->query($sql);
@@ -123,16 +129,44 @@ if(isset($_SESSION["id_perso"])){
 								if (isset($_GET['top_jour'])) {
 									$jour_log	= $t['jour'];
 								}
-								if (isset($_GET['top_mois'])) {
+								if (isset($_GET['top_jour']) || isset($_GET['top_mois'])) {
 									$mois_log	= $t['mois'];
 								}
-								$annee_log	= $t['annee'];								
+								if (isset($_GET['top_jour']) || isset($_GET['top_mois']) || isset($_GET['top_annee'])) {
+									$annee_log	= $t['annee'];
+								}								
 								
 								echo "<tr>";
 								echo "	<td align='center'>".$ordre."</td>";
 								echo "	<td align='center'>".$id_perso."</td>";
+								if (!isset($_GET['top_all'])) {
+									echo "	<td align='center'>";
+									if (isset($_GET['top_jour'])) {
+										echo sprintf('%02d', $jour_log)."/";
+									}
+									if (isset($_GET['top_jour']) || isset($_GET['top_mois'])) {
+										echo sprintf('%02d', $mois_log)."/";
+									}
+									if (isset($_GET['top_jour']) || isset($_GET['top_mois']) || isset($_GET['top_annee'])) {
+										echo $annee_log;
+									}
+									echo "</td>";
+								}
 								echo "	<td align='center'>".$nb_logs."</td>";
-								echo "	<td></td>";
+								echo "	<td align='center'>";
+								if (isset($_GET['top_all'])) {
+									echo "		<a href='admin_log_access.php?id_perso=".$id_perso."&detail_complet=ok' class='btn btn-primary'>Détail logs</a> ";
+								}
+								if (isset($_GET['top_jour'])) {
+									echo "		<a href='admin_log_access.php?id_perso=".$id_perso."&stat_jour=ok&jour=".$jour_log."&mois=".$mois_log."&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
+								}
+								if (isset($_GET['top_mois'])) {
+									echo "		<a href='admin_log_access.php?id_perso=".$id_perso."&stat_mois=ok&mois=".$mois_log."&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
+								}
+								if (isset($_GET['top_annee'])) {
+									echo "		<a href='admin_log_access.php?id_perso=".$id_perso."&stat_annee=ok&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
+								}
+								echo "	</td>";
 								echo "</tr>";
 								
 								$ordre++;
