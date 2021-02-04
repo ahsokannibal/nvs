@@ -94,6 +94,13 @@ Ne confondez pas "Rôle Play" et "Hors Rôle Play". Les forums dits Rôle Play s
 Les animateurs de NvS se réservent le droit de modérer, censurer ou fermer toute discussion dérivante ou manifestement déplacée, et se réservent le droit de modifier les noms de vos personnages s'ils estiment qu'ils sont eux aussi déplacés ou choquants.<br /><br />
 Les animateurs se réservent aussi le droit de sanctionner un comportement non conforme aux règles de conduite. Ceci peut aller d'un simple avertissement à la suppression pure et simple du compte de jeu avec incorporation sur la blacklist.<br /><br />
 
+					<h2>Règle, esprit de la règle et abus de regle</h2>
+Nord VS Sud n’est pas un état de droit. Ce n’est pas parce que le code ou une zone d’ombre des règles permettent des actions qu’elles seront tolérées.<br />
+La frontière est parfois mince entre la règle et l’abus de la règle. Afin de déterminer si votre action est « légitime », si « l’esprit de la règle est respecté », demandez vous si elle va à l’encontre de la mécanique du jeu et du plaisir ludique. Les possibilités offertes par le jeu le sont dans certains dessein et tout écart sera proscrit. Dans la mesure du possible, vous devez privilégier l’action au blocage de l’action de l’ennemi.<br /><br/>
+Les animateurs restent maitre dans l'appréciation d'une action tolérable ou non.<br />
+En cas de doute, vous pouvez contacter l’animation directement au moyen du formulaire prévu à cette effet dans le jeu.<br />
+<font color='red'><b>Les abus seront sanctionnés.</b></font><br /><br/>
+
 					<h2>Utilisation du forum</h2>
 					<h4>Utlisation de la FAQ</h4>
 La FAQ est un lieu où vous pourrez poser toutes vos questions à propos du jeu.<br />
