@@ -87,6 +87,11 @@ $count_online = $res->fetch_array();
 						<div class="col-sm-4">
 							<a href="inscription.php" style="color: white;">S'inscrire</b></a>
 							<hr />
+							<?php
+							if (isset($_GET['nouveau_tour']) && $_GET['nouveau_tour'] == 'ok') {
+								echo "<font color='red'><b>Nouveau tour</b></font>";
+							}
+							?>
 							<form action="login.php" method="post" name="login" id="login">
 								<input name="pseudo" type="text" id="pseudo" placeholder="pseudo" maxlength="30">
 								<input name="password" type="password" id="password" placeholder="password" maxlength="20"><br />
@@ -120,7 +125,7 @@ $count_online = $res->fetch_array();
 						</div>
 						
 						<div class="col-8">
-						
+							
 							<div class='d-none d-md-block d-lg-block d-xl-block'>
 								<table border='1' width='100%'>
 									<tr>
@@ -131,41 +136,6 @@ $count_online = $res->fetch_array();
 									</tr>
 									<tr>
 										<td style='padding:1em;'><b>Persos actifs : <?php echo $nb_persos_actifs; ?> -- <font color='blue'>nordistes : <?php echo $nb_persos_nord_actifs; ?></font> / <font color='red'>sudistes : <?php echo $nb_persos_sud_actifs; ?></font></b></td>
-									</tr>
-								</table>
-							</div>
-							
-							<br />
-							<?php
-							// récupération des news
-							$sql_news = "SELECT date, contenu FROM news ORDER BY date DESC LIMIT 10";
-							$res_news = $mysqli->query($sql_news);
-							?>
-							
-							<div class='d-none d-md-block d-lg-block d-xl-block'>
-								<table border='1' width='100%'>
-									<tr>
-										<th bgcolor="#FFFACD" style="text-align: center;">L'encre est encore fraiche</th>
-									</tr>
-									<tr>
-										<td style='padding:1em;'>
-											<marquee onMouseOver=this.stop() onMouseOut=this.start() scrollAmount='2'  direction='up'>
-											<?php
-											while ($t_news = $res_news->fetch_assoc()){
-								
-												$date_news 		= $t_news["date"];
-												$contenu_news 	= br2nl4(stripslashes($t_news["contenu"]));
-												
-												$date_news = new DateTime($date_news);
-												
-												echo "<br />";
-												echo "<b>- <u>" . $date_news->format('d-m-Y') . "</u> : </b><br />";
-												echo "<b>".nl2br($contenu_news)."</b>";
-												echo "<br />";
-											}
-											?>
-											</marquee>
-										</td>
 									</tr>
 								</table>
 							</div>
@@ -203,6 +173,42 @@ $count_online = $res->fetch_array();
 											La bataille se termine lorsque un camp est parvenu à <b>1000 points de victoire</b>. Une autre bataille sera donc lancée sur la carte suivante décidée par l'état major du camp vainqueur.<br />
 											La surface de jeu (carte) est assez vaste et chaque camp n'en connaît que les zones qu'il a pu visiter.
 											
+										</td>
+									</tr>
+								</table>
+							</div>
+							
+							<br />
+							
+							<?php
+							// récupération des news
+							$sql_news = "SELECT date, contenu FROM news ORDER BY date DESC LIMIT 10";
+							$res_news = $mysqli->query($sql_news);
+							?>
+							
+							<div class='d-none d-md-block d-lg-block d-xl-block'>
+								<table border='1' width='100%'>
+									<tr>
+										<th bgcolor="#FFFACD" style="text-align: center;">L'encre est encore fraiche</th>
+									</tr>
+									<tr>
+										<td style='padding:1em;'>
+											<marquee onMouseOver=this.stop() onMouseOut=this.start() scrollAmount='2'  direction='up'>
+											<?php
+											while ($t_news = $res_news->fetch_assoc()){
+								
+												$date_news 		= $t_news["date"];
+												$contenu_news 	= br2nl4(stripslashes($t_news["contenu"]));
+												
+												$date_news = new DateTime($date_news);
+												
+												echo "<br />";
+												echo "<b>- <u>" . $date_news->format('d-m-Y') . "</u> : </b><br />";
+												echo "<b>".nl2br($contenu_news)."</b>";
+												echo "<br />";
+											}
+											?>
+											</marquee>
 										</td>
 									</tr>
 								</table>

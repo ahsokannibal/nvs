@@ -61,7 +61,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 						$mysqli->query($sql);
 					}
 					
-					header("location:jeu/jouer.php");
+					header("location:jeu/jouer.php?login=ok");
 				}
 				else {
 					echo "<center><font color='red'>mot de passe incorrect<br />";

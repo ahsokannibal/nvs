@@ -77,8 +77,11 @@ if(isset($_SESSION["ID_joueur"])){
 					
 					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan_p);
 					
-					//redirection
-					header("location:jeu/jouer.php");
+					// deconnexion
+					$_SESSION = array();
+					session_destroy();
+					
+					header("Location:./index.php?nouveau_tour=ok");
 					
 				} else {
 					
@@ -241,8 +244,17 @@ if(isset($_SESSION["ID_joueur"])){
 					
 					nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan_p);
 					
-					//redirection
-					header("location:jeu/jouer.php");
+					if (isset($_GET['login']) && $_GET['login'] == 'ok') {
+						//redirection
+						header("location:jeu/jouer.php"); 
+					}
+					else {
+						// deconnexion
+						$_SESSION = array();
+						session_destroy();
+						
+						header("Location:./index.php?nouveau_tour=ok");
+					}
 				}
 				else {
 					
