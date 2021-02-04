@@ -96,6 +96,12 @@ Toute demande non motivée se doit d'être refusée.</p>
 <p>Un animateur se doit de rester neutre, il ne doit en <b>AUCUN CAS</b>, de par ses actions d'animateur, hors proposition de missions / récompenses RP, participer à faire gagner son camp.</p>
 <p>Si cela devait arriver, l'animateur serait renvoyé, ses persos pourraient être supprimés et un malus de point de victoire pourrait être appliqué à son camp selon (selon le jugement)</p>
 <p>De même, toute information découverte grâce à la console Anim ne doit en aucun cas être utilisée dans le jeu.<br />Par exemple, si l'animateur découvre qu'un bâtiment important de son camp se trouve en état de siège alors que ses PV sont au dessus de 90% (et donc que c'est qu'il y a des ennemis proches), il ne doit pas avertir les persos/EM de son camp que c'est le cas ou prendre des mesures pour contrer l'infiltration / l'attaque ennemie !</p>
+					<h2>Limites du rôle d'animateur</h2>
+<p>Le rôle de l'animateur se limite dans les structures offertes par le jeu. Ainsi, un animateur <b>doit être respecté dans le jeu ET sur le forum du jeu</b> (quand il s'exprime en tant qu'animateur).<br />
+Si un animateur n'est pas respecté au sein de ces structures, des sanctions peuvent être appliquées.<br />
+En dehors de ces structures, il n'a aucun pouvoir.</p>
+<p>Des exceptions peuvent être faite dans certains cas, par exemple des channels Discord dédiés pour les réponses anim de chaque camp et où, il est donc explicitement demandé à la personne de répondre en tant qu'animateur.</p>
+<p>Un animateur se doit aussi d'être diplomate. Il ne sera pas toléré qu'un animateur insulte ou envenime une situation (son rôle pourrait lui être retiré pour ces raisons). Il se doit d'essayer de calmer toute situation qui peut déborder, apaiser les conflits et communiquer au mieux avec les joueurs pour les faire patienter.</p>
 				</div>
 			</div>
 		
