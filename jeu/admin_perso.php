@@ -43,6 +43,133 @@ if(isset($_SESSION["id_perso"])){
 			
 		}
 		
+		if (isset($_GET['voir_inventaire'])) {
+			
+			$id_perso_select = $_GET['voir_inventaire'];
+			
+			if (isset($_GET['id_obj'])) {
+				
+				$id_o = $_GET['id_obj'];
+				
+				// On verifie que l'identifiant soit bien un nombre positif
+				$verif = preg_match("#^[0-9]*[0-9]$#i","$id_o");
+				
+					if($verif && $id_o > 0) {
+					
+					if (isset($_GET['desequip'])) {
+						// On desequip l'objet
+					}
+					elseif (isset($_GET['equip'])) {
+						// On equip l'objet
+					}
+					elseif (isset($_GET['use'])) {
+						// On utilise l'objet
+						
+						if($id_o != 1){
+							
+							// recuperation des effets de l'objet
+							$sql = "SELECT * FROM objet WHERE id_objet='$id_o'";
+							$res = $mysqli->query($sql);
+							$bonus_o = $res->fetch_assoc();
+							
+							$nom_ob 			= $bonus_o["nom_objet"];
+							$bonusPerception 	= $bonus_o["bonusPerception_objet"];
+							$bonusRecup 		= $bonus_o["bonusRecup_objet"];
+							$bonusPv 			= $bonus_o["bonusPv_objet"];
+							$bonusPm 			= $bonus_o["bonusPm_objet"];
+							$bonusPa			= $bonus_o["bonusPA_objet"];
+							$coutPa 			= $bonus_o["coutPa_objet"];
+							$poids 				= $bonus_o["poids_objet"];
+							$type_o 			= $bonus_o["type_objet"];
+							
+							if ($type_o == 'N') {
+								
+								// on supprime l'objet de l'inventaire
+								$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso_select' AND id_objet='$id_o' LIMIT 1";
+								$mysqli->query($sql);
+										
+								// on recupere les pv et autres donnees du perso
+								$sql = "SELECT pv_perso, pvMax_perso, recup_perso, bonusRecup_perso FROM perso WHERE id_perso='$id_perso_select'";
+								$res = $mysqli->query($sql);
+								$t_p = $res->fetch_assoc();
+								
+								$pv_p 	= $t_p["pv_perso"];
+								$pvM_p 	= $t_p["pvMax_perso"];
+								$rec_p 	= $t_p["recup_perso"];
+								$br_p 	= $t_p["bonusRecup_perso"];
+									
+								// si l'objet donne des bonus
+								if($bonusRecup) {
+										
+									// on applique les effets de l'objet sur le perso
+									$sql = "UPDATE perso 
+											SET bonusRecup_perso=bonusRecup_perso+$bonusRecup
+											WHERE id_perso='$id_perso_select'";
+									$mysqli->query($sql);
+										
+									// Affichage 
+									$mess .= "Vous avez utilisé ".$nom_ob." sur le perso<br>";
+									
+									$recup_actuel = $rec_p + $br_p;
+									
+									if ($bonusRecup) {
+										$mess .= "Sa recuperation passe de ".$recup_actuel." à ";
+										$mess .= $rec_p+$br_p+$bonusRecup."<br />";
+									}										
+								}
+								
+								if ($bonusPerception < 0) {
+									// le perso est bourre
+									$sql = "UPDATE perso SET bourre_perso=bourre_perso+1 WHERE id_perso='$id_perso_select'";
+									$mysqli->query($sql);
+									
+									$mess .= "La perception du perso en prend un coup temporairement : Perception ".$bonusPerception;
+								}
+								
+								// MAJ perso
+								$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1, charge_perso=charge_perso-$poids WHERE id_perso='$id_perso_select'";
+								$mysqli->query($sql_c);
+							}
+						}						
+					}
+					elseif (isset($_GET['delete'])) {
+						// On supprime l'objet
+					}
+				}
+			}
+			elseif (isset($_GET['dest'])) {
+				// Ticket de train
+				$dest_ticket_to_delete = $_GET['dest'];
+				
+				if (isset($_GET['delete'])) {
+					// On supprime le ticket
+					
+					$verif = preg_match("#^[0-9]*[0-9]$#i","$dest_ticket_to_delete");
+				
+					if ($verif) {
+						
+						$sql = "DELETE FROM perso_as_objet WHERE id_objet='1' AND id_perso='$id_perso_select' AND capacite_objet='$dest_ticket_to_delete' LIMIT 1";
+						$mysqli->query($sql);
+						
+						$mess .= "Le ticket à destination de ".$dest_ticket_to_delete." a bien été supprimé de son inventaire";
+					}
+					else {
+						// triche
+						$mess_err .= "Données envoyées incorrectes...";
+					}
+					
+				}
+			}
+			elseif (isset($_GET['id_arme'])) {
+				
+				$id_arme = $_GET['id_arme'];
+				
+				if (isset($_GET['delete'])) {
+					// On supprime l'arme
+				}
+			}
+		}
+		
 		if (isset($_POST['id_perso_select']) && $_POST['id_perso_select'] != '') {
 			
 			$id_perso_select = $_POST['id_perso_select'];
@@ -152,7 +279,7 @@ if(isset($_SESSION["id_perso"])){
 		
 		<!-- Bootstrap CSS -->
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
+		<link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
 	</head>
 	
 	<body>
@@ -228,6 +355,8 @@ if(isset($_SESSION["id_perso"])){
 						$pa_perso	= $t['pa_perso'];
 						$or_perso 	= $t['or_perso'];
 						$ch_perso	= $t['charge_perso'];
+						$type_p 	= $t['type_perso'];
+						$test_b 	= $t['bourre_perso'];
 						$camp_perso	= $t['clan'];
 						
 						if ($camp_perso == 1) {
@@ -343,7 +472,170 @@ if(isset($_SESSION["id_perso"])){
 							
 						}
 						else {
-							echo " <a href='admin_perso.php?verifier_charge=".$id_perso_select."' class='btn btn-primary'>vérifier la charge du perso</a>";
+							echo " <a href='admin_perso.php?verifier_charge=".$id_perso_select."' class='btn btn-primary'>vérifier la charge du perso</a> ";
+						}
+						
+						if (isset($_GET['voir_inventaire'])) {
+							
+							if (isset($_GET['ajout_objet'])) {
+								
+							}
+							else {
+								echo "<a href='admin_perso.php?voir_inventaire=".$id_perso_select."&ajout_objet=ok' class='btn btn-warning'>Ajouter un objet</a>";
+							}
+							
+							echo "<br /><br />";
+							
+							echo "<table border=1 class='table'>";
+							echo "	<tr>";
+							echo "		<th width='25%'><center>objet</center></th><th width='25%'><center>nombre</center></th><th width='25%'><center>action</center></th>";
+							echo "	</tr>";
+							
+							// recuperation du nombre de type d'objets que possede le perso
+							$sql = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso_select' ORDER BY id_objet";
+							$res = $mysqli->query($sql);
+							$nb_obj = $res->num_rows;
+							
+							while ($t_obj = $res->fetch_assoc()){
+							
+								// id de l'objet
+								$id_obj = $t_obj["id_objet"];
+								
+								// recuperation des carac de l'objet
+								$sql1 = "SELECT nom_objet, poids_objet, type_objet FROM objet WHERE id_objet='$id_obj'";
+								$res1 = $mysqli->query($sql1);
+								$t_o = $res1->fetch_assoc();
+								
+								$nom_o 			= $t_o["nom_objet"];
+								$poids_o 		= $t_o["poids_objet"];
+								$type_o			= $t_o["type_objet"];
+								
+								// recuperation du nombre d'objet de ce type que possede le perso
+								$sql2 = "SELECT id_objet, capacite_objet FROM perso_as_objet WHERE id_perso='$id_perso_select' AND id_objet='$id_obj'";
+								$res2 = $mysqli->query($sql2);
+								$nb_o = $res2->num_rows;
+								
+								// calcul poids
+								$poids_total_o = $poids_o * $nb_o;
+								
+								// affichage
+								echo "<tr>";
+								echo "	<td align='center'><img class='img-fluid' src=\"../images/objets/objet".$id_obj.".png\"><br/><font color=green><b>".$nom_o."</b></font></td>";
+								echo "	<td align='center'>Ce perso possède <b>".$nb_o."</b> ".$nom_o."";
+								if($nb_o > 1){ 
+									echo "s";
+								}
+								
+								// Est ce que le perso est déjà équipé de cet objet ?
+								$sql3 = "SELECT * FROM perso_as_objet WHERE id_perso='$id_perso_select' AND id_objet='$id_obj' AND equip_objet='1'";
+								$res3 = $mysqli->query($sql3);
+								$is_equipe = $res3->num_rows;
+								
+								
+								echo "<br /><u>Poids total :</u> <b>$poids_total_o</b></td>";
+								echo "		<td align='center'>";
+								if($type_o == 'N'){
+									if ($test_b >= 2 && $id_obj == 3) {
+										echo "<br /><font color='red'>Le perso ne peux plus consommer de Whisky ce tour-ci</font><br />";
+									}
+									else {
+										echo "			<a class='btn btn-outline-success' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&use=ok\">utiliser</a>";
+									}
+								}
+								
+								if($type_o == 'E' && !$is_equipe && $type_p != 6){
+									echo "			<a class='btn btn-outline-primary' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&equip=ok\">équiper</a>";
+								}
+								if ($is_equipe) {
+									echo "			<a class='btn btn-outline-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&desequip=ok\">Déséquipper</a>";
+								}
+								
+								// Tickets de train
+								if ($type_o == 'T') {
+									
+									echo "<br /><b>Destinations : </b><br />";
+									
+									while ($t_o = $res2->fetch_assoc()) {
+										
+										$destination = $t_o['capacite_objet'];
+										
+										if (trim($destination) == "") {
+											echo "- Ticket non valide - "; 
+										}
+										else {
+											echo "<a class='btn btn-primary' style='height:38px;' href='evenement.php?infoid=".$destination."'>".$destination."</a>";
+											echo "<a class='btn btn-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&dest=".$destination."&delete=ok\"><i class='fa fa-trash'></i></a><br />";
+										}
+									}
+								}
+								else {
+									echo "			<a class='btn btn-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&delete=ok\">Supprimer</a>";
+								}
+								echo "		</td>";
+								echo "	</tr>";
+							}
+							
+							// Récupération des armes non équipées
+							$sql = "SELECT DISTINCT id_arme FROM perso_as_arme WHERE id_perso='$id_perso_select' AND est_portee='0' ORDER BY id_arme";
+							$res = $mysqli->query($sql);
+							$nb_arme = $res->num_rows;
+							
+							while ($t_arme = $res->fetch_assoc()){
+								
+								// id de l'arme
+								$id_arme = $t_arme["id_arme"];
+								
+								// recuperation des carac de l'objet
+								$sql1 = "SELECT nom_arme, poids_arme, description_arme, image_arme FROM arme WHERE id_arme='$id_arme'";
+								$res1 = $mysqli->query($sql1);
+								$t_a = $res1->fetch_assoc();
+								
+								$nom_a 			= $t_a["nom_arme"];
+								$poids_a 		= $t_a["poids_arme"];
+								$description_a 	= $t_a["description_arme"];
+								$image_a		= $t_a["image_arme"];
+								
+								// recuperation du nombre d'armes de ce type que possede le perso
+								$sql2 = "SELECT id_arme FROM perso_as_arme WHERE id_perso='$id_perso_select' AND id_arme='$id_arme' AND est_portee='0'";
+								$res2 = $mysqli->query($sql2);
+								$nb_a = $res2->num_rows;
+								
+								// calcul poids
+								$poids_total_a = $poids_a * $nb_a;
+								
+								$sql_u = "SELECT nom_unite FROM type_unite, arme_as_type_unite
+											WHERE type_unite.id_unite = arme_as_type_unite.id_type_unite
+											AND arme_as_type_unite.id_arme = '$id_arme'";
+								$res_u = $mysqli->query($sql_u);
+								$liste_unite = "";
+								while ($t_u = $res_u->fetch_assoc()) {
+									$nom_unite = $t_u["nom_unite"];
+									
+									if ($liste_unite != "") {
+										$liste_unite .= " / ";
+									}
+									$liste_unite .= $nom_unite;
+								}
+								
+								// affichage
+								echo "<tr>";
+								echo "	<td align='center'><img class='img-fluid' src=\"../images/armes/".$image_a."\"><br /><font color=green><b>".$nom_a."</b></font></td>";
+								echo "	<td align='center'>Vous possédez <b>".$nb_a."</b> ".$nom_a."";
+								if($nb_a > 1){ 
+									echo "s";
+								}
+								
+								echo "<br /><u>Poids total :</u> <b>$poids_total_a</b><br/>Arme utilisable pour les unités suivante : <b>".$liste_unite."</b><br /></td>";
+								echo "		<td align='center'>";
+								echo "			<a class='btn btn-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_arme=".$id_arme."&delete=ok\">Supprimer</a>";
+								echo "		</td>";
+								echo "	</tr>";
+							}
+							
+							echo "</table>";
+						}
+						else {
+							echo "<a href='admin_perso.php?voir_inventaire=".$id_perso_select."' class='btn btn-primary'>Voir son inventaire</a>";
 						}
 						
 						echo "<br /><br />";
@@ -357,7 +649,7 @@ if(isset($_SESSION["id_perso"])){
 						}
 						else {
 							echo "<a href='admin_perso.php?modifier_mdp=".$id_perso_select."' class='btn btn-danger'>Modifier Mot de passe</a>";
-						}						
+						}
 					}
 					?>
 				</div>

@@ -44,7 +44,6 @@ if (isset($_POST["liste_perso"]) && $_POST["liste_perso"] != "") {
 		}
 	
 	} else {
-		
 		header("Location:../index.php"); 
 	}
 }
@@ -103,7 +102,12 @@ if($dispo == '1' || $admin){
 			// le perso est vivant
 			// verification si nouveau tour ou gele
 			if(nouveau_tour($date, $dla) || $est_gele) {
-				header("Location:../tour.php");
+				if (isset($_GET['login']) && $_GET['login'] == 'ok') {
+					header("Location:../tour.php?login=ok");
+				}
+				else {
+					header("Location:../tour.php");
+				}
 			}
 			else {
 				$erreur = "";

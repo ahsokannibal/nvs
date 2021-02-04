@@ -36,7 +36,7 @@ if($dispo == '1' || $admin){
 			$mess = "";
 			$mess_err = "";
 			
-			// on souhaite supprimer un tcket
+			// on souhaite supprimer un ticket
 			if(isset($_POST['delete_ticket_hidden']) && $_POST['delete_ticket_hidden'] != "") {
 				
 				$dest_ticket_to_delete = $_POST['delete_ticket_hidden'];
