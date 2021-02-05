@@ -43,6 +43,12 @@ if(isset($_SESSION["id_perso"])){
 			
 		}
 		
+		if (isset($_GET['voir_respawn'])) {
+			
+			$id_perso_select = $_GET['voir_respawn'];
+			
+		}
+		
 		if (isset($_GET['voir_inventaire'])) {
 			
 			$id_perso_select = $_GET['voir_inventaire'];
@@ -473,6 +479,50 @@ if(isset($_SESSION["id_perso"])){
 						}
 						else {
 							echo " <a href='admin_perso.php?verifier_charge=".$id_perso_select."' class='btn btn-primary'>vérifier la charge du perso</a> ";
+						}
+						
+						if (isset($_GET['voir_respawn'])) {
+							
+							$sql = "SELECT * FROM perso_as_respawn WHERE id_perso='$id_perso_select' ORDER BY id_bat ASC";
+							$res = $mysqli->query($sql);
+							
+							echo "<table class='table'>";
+							echo "	<thead>";
+							echo "		<tr>";
+							echo "			<th>Batiment</th><th>Etat</th><th>Position</th>";
+							echo "		</tr>";
+							echo "	</thead>";
+							echo "	<tbody>";
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$id_i_bat_respawn = $t['id_instance_bat'];
+								
+								$sql_b = "SELECT nom_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, contenance_instance FROM instance_batiment, batiment 
+											WHERE instance_batiment.id_batiment = batiment.id_batiment AND id_instanceBat='$id_i_bat_respawn'";
+								$res_b = $mysqli->query($sql_b);
+								$t_b = $res_b->fetch_assoc();
+								
+								$nom_bat	= $t_b['nom_batiment'];
+								$nom_i_bat	= $t_b['nom_instance'];
+								$pv_i_bat	= $t_b['pv_instance'];
+								$pvM_i_bat	= $t_b['pvMax_instance'];
+								$x_i_bat	= $t_b['x_instance'];
+								$y_i_bat	= $t_b['y_instance'];
+								$cont_i_bat	= $t_b['contenance_instance'];
+								
+								echo "		<tr>";
+								echo "			<td>".$nom_bat." ".$nom_i_bat." [".$id_i_bat_respawn."]</td>";
+								echo "			<td>".$pv_i_bat."/".$pvM_i_bat."</td>";
+								echo "			<td>".$x_i_bat."/".$y_i_bat."</td>";
+								echo "		</tr>";
+								
+							}
+							echo "	</tbody>";
+							echo "</table>";
+						}
+						else {
+							echo " <a href='admin_perso.php?voir_respawn=".$id_perso_select."' class='btn btn-primary'>Voir ses respawns</a> ";
 						}
 						
 						if (isset($_GET['voir_inventaire'])) {

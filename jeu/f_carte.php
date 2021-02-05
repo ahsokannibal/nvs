@@ -707,6 +707,8 @@ function nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $camp) {
 // fonction qui récupère le batiment de rapatriement le plus proche d'un perso
 function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	
+	$txt_log_respawn = "";
+	
 	// Verification si le perso a choisi un Hopital de respawn
 	$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment 
 			WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
@@ -725,14 +727,26 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	// Verification si 10 persos ennemis à moins de 15 cases	
 	$nb_ennemis_siege7 = nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $clan);
 	
+	if ($nb_h == 0) {
+		$txt_log_respawn .= "Pas d\'hopital choisi en point de respawn ou PV Hôpital en état de siège.";
+	}
+	elseif ($nb_ennemis_siege7 >= 10) {
+		$txt_log_respawn .= "Hopital ".$id_ibat7." en état de siège - 10 ennemis ou plus à moins de 15 cases.";
+	}
+	
 	if ($nb_h > 0 && $nb_ennemis_siege7 < 10 
 			&& $x_ibat <= $x_perso + 40 && $x_ibat >= $x_perso - 40
 			&& $y_ibat <= $y_perso + 40 && $y_ibat >= $y_perso - 40) {
 		
 		$min_id_bat = $id_ibat7;
 		
+		$txt_log_respawn .= "Hopital ".$id_ibat7." choisi pour le respawn.";
 	}
 	else {
+		
+		if ($nb_h > 0 && $nb_ennemis_siege7 < 10) {
+			$txt_log_respawn .= "Hopital ".$id_ibat7." (".$x_ibat."/".$y_ibat.") trop proche de la position de capture : ".$x_perso."/".$y_perso.".";
+		}
 		
 		// Verification si le perso a choisi un Fortin de respawn
 		$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment, perso 
@@ -755,15 +769,23 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 		// Verification si 10 persos ennemis à moins de 15 cases		
 		$nb_ennemis_siege8 = nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $clan);
 		
+		if ($nb_f == 0) {
+			$txt_log_respawn .= "Pas de Fortin choisi en point de respawn ou PV Fortin en état de siège ou Fortin trop proche du perso lors de sa capture.";
+		}
+		elseif ($nb_ennemis_siege8 >= 10) {
+			$txt_log_respawn .= "Fortin ".$id_ibat8." en état de siège - 10 ennemis ou plus à moins de 15 cases.";
+		}
+		
 		if ($nb_f > 0 && $nb_ennemis_siege8 < 10) {
 			
 			$min_id_bat = $id_ibat8;
 			
+			$txt_log_respawn .= "Fortin ".$id_ibat8." choisi pour le respawn.";
 		}
 		else {
 			
 			// Verification si le perso a choisi un Fort de respawn
-			$sql = "SELECT id_instance_bat FROM perso_as_respawn, instance_batiment, perso 
+			$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment, perso 
 					WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 					AND perso.id_perso = perso_as_respawn.id_perso
 					AND perso_as_respawn.id_perso='$id_perso' AND id_bat='9'
@@ -783,13 +805,23 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 			// Verification si 10 persos ennemis à moins de 15 cases
 			$nb_ennemis_siege9 = nb_ennemis_siege_batiment($mysqli, $x_ibat, $y_ibat, $clan);
 			
+			if ($nb_fort == 0) {
+				$txt_log_respawn .= "Pas de Fort choisi en point de respawn ou PV Fort en état de siège ou Fort trop proche du perso lors de sa capture.";
+			}
+			elseif ($nb_ennemis_siege9 >= 10) {
+				$txt_log_respawn .= "Fort ".$id_ibat9." en état de siège - 10 ennemis ou plus à moins de 15 cases.";
+			}
+			
 			if ($nb_fort > 0 && $nb_ennemis_siege9 < 10) {
 				
 				$min_id_bat = $id_ibat9;
 				
+				$txt_log_respawn .= "Fort ".$id_ibat9." choisi pour le respawn.";
 			}
 			else {
-	
+				
+				$txt_log_respawn .= "Choix du respawn par le système.";
+				
 				// Respawn choix par le système
 	
 				// init variables
@@ -837,6 +869,9 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 			}
 		}
 	}
+	
+	$sql = "INSERT INTO log_respawn (id_perso, date_respawn, texte_respawn) VALUES ('$id_perso', NOW(), '$txt_log_respawn')";
+	$mysqli->query($sql);
 	
 	return $min_id_bat;
 }
