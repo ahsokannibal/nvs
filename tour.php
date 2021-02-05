@@ -556,6 +556,10 @@ function respawn_perso($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $imag
 		$y 		= $t_b['y_instance'];
 		$id_bat	= $t_b['id_batiment'];
 		
+		// On supprime le perso de la carte s'il y est toujours
+		$sql = "UPDATE carte SET occupee_carte = '0', image_carte=NULL, idPerso_carte=NULL, save_info_carte=NULL WHERE idPerso_carte='$id_perso'";
+		$mysqli->query($sql);
+		
 		// On met le perso dans le batiment
 		$sql = "INSERT INTO perso_in_batiment VALUES('$id_perso','$id_instance_bat')";
 		$mysqli->query($sql);
