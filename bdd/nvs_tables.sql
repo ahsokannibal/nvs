@@ -784,6 +784,14 @@ CREATE TABLE `log` (
 	PRIMARY KEY (`id_log`)
 ) ENGINE = MyISAM; 
 
+CREATE TABLE `log_respawn` ( 
+	`id_log_respawn` INT NOT NULL AUTO_INCREMENT , 
+	`id_perso` INT NOT NULL , 
+	`date_respawn` DATETIME NOT NULL , 
+	`texte_respawn` TEXT NOT NULL , 
+	PRIMARY KEY (`id_log_respawn`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 --
 -- Structure de la table `message`
 --
