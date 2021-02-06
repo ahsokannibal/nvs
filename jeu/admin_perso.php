@@ -364,6 +364,7 @@ if(isset($_SESSION["id_perso"])){
 						$type_p 	= $t['type_perso'];
 						$test_b 	= $t['bourre_perso'];
 						$camp_perso	= $t['clan'];
+						$bat_perso	= $t['bataillon'];
 						
 						if ($camp_perso == 1) {
 							$nom_camp_perso 	= "Nord";
@@ -383,11 +384,12 @@ if(isset($_SESSION["id_perso"])){
 						}
 						
 						$im_camp_perso = $nom_camp_perso.".gif";
+						$im_type_perso = get_image_type_perso($type_p, $camp_perso);
 						
 						echo "<b>Email joueur :</b> ".$email_joueur."<br />";
 						echo "<table border='1' width='100%'>";
 						echo "	<tr>";
-						echo "		<td align='center'><img src='../images/".$im_camp_perso."'></td>";
+						echo "		<td align='center'><img src='../images_perso/".$im_type_perso."'></td>";
 						echo "		<td align='center'><b>Nom : </b>".$nom_perso."</td>";
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>XP : </b><input type='text' name='xp_perso' value='".$xp_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
@@ -403,7 +405,8 @@ if(isset($_SESSION["id_perso"])){
 						echo "</form>";
 						echo "	</tr>";
 						echo "	<tr>";
-						echo "		<td></td><td></td>";
+						echo "		<td></td>";
+						echo "		<td><b>Bataillon : </b>".$bat_perso."</td>";
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>PV : </b><input type='text' name='pv_perso' value='".$pv_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
 						echo "</form>";
@@ -420,32 +423,7 @@ if(isset($_SESSION["id_perso"])){
 						echo "</table>";
 						
 						if (isset($_GET['consulter_mp'])) {
-							
-							echo "<br />";
-							echo "<table border='1' width='100%'>";
-							echo "	<tr>";
-							echo "		<th style='text-align:center'>Date</th><th style='text-align:center'>Objet</th><th style='text-align:center'>Contenu</th>";
-							echo "	</tr>";
-							
-							$sql_mp = "SELECT * FROM message WHERE expediteur_message='".$nom_perso."' ORDER BY id_message DESC";
-							$res_mp = $mysqli->query($sql_mp);
-							while ($t_mp = $res_mp->fetch_assoc()) {
-								
-								$date_mp 	= $t_mp['date_message'];
-								$contenu_mp = $t_mp['contenu_message'];
-								$objet_mp 	= $t_mp['objet_message'];
-								$id_mp		= $t_mp['id_message'];
-								
-								echo "	<tr>";
-								echo "		<td>".$date_mp."</td>";
-								echo "		<td>".$objet_mp."</td>";
-								echo "		<td>".$contenu_mp."</td>";
-								echo "	</tr>";
-							}
-							
-							echo "	</tr>";
-							echo "</table>";
-							
+							echo "<br /><a href='admin_perso.php?consulter_mp=".$id_perso_select."' class='btn btn-secondary'>Consulter les MP du perso</a>";
 						}
 						else {
 							echo "<br /><a href='admin_perso.php?consulter_mp=".$id_perso_select."' class='btn btn-primary'>Consulter les MP du perso</a>";
@@ -703,6 +681,72 @@ if(isset($_SESSION["id_perso"])){
 					}
 					?>
 				</div>
+			</div>
+			
+			<div class='row'>
+				<?php
+				if (isset($_GET['consulter_mp'])) {
+					
+					$sql_mp = "SELECT * FROM message WHERE id_expediteur='".$id_perso_select."' ORDER BY id_message DESC";
+					$res_mp = $mysqli->query($sql_mp);
+					$nb_mp_e = $res_mp->num_rows;
+					
+					echo "	<div class='col-6'>";
+					echo "		<h2>MP envoyés par le perso (".$nb_mp_e.")</h2>";
+					echo "		<table class='table'>";
+					echo "			<tr>";
+					echo "				<th style='text-align:center'>Date</th><th style='text-align:center'>Objet</th>";
+					echo "			</tr>";
+					
+					while ($t_mp = $res_mp->fetch_assoc()) {
+						
+						$date_mp 	= $t_mp['date_message'];
+						$contenu_mp = $t_mp['contenu_message'];
+						$objet_mp 	= $t_mp['objet_message'];
+						$id_mp		= $t_mp['id_message'];
+						
+						echo "			<tr>";
+						echo "				<td align='center'>".$date_mp."</td>";
+						echo "				<td>".$objet_mp."</td>";
+						echo "			</tr>";
+					}
+					
+					echo "			</tr>";
+					echo "		</table>";
+					echo "	</div>";
+					
+					$sql_mp = "SELECT date_message, objet_message, contenu_message, message.id_message FROM message, message_perso 
+								WHERE message.id_message = message_perso.id_message
+								AND message_perso.id_perso='".$id_perso_select."' ORDER BY message.id_message DESC";
+					$res_mp = $mysqli->query($sql_mp);
+					$nb_mp_r = $res_mp->num_rows;
+					
+					echo "	<div class='col-6'>";
+					echo "		<h2>MP reçues par le perso (".$nb_mp_r.")</h2>";
+					echo "		<table class='table'>";
+					echo "			<tr>";
+					echo "				<th style='text-align:center'>Date</th><th style='text-align:center'>Objet</th>";
+					echo "			</tr>";
+					
+					
+					while ($t_mp = $res_mp->fetch_assoc()) {
+						
+						$date_mp 	= $t_mp['date_message'];
+						$contenu_mp = $t_mp['contenu_message'];
+						$objet_mp 	= $t_mp['objet_message'];
+						$id_mp		= $t_mp['id_message'];
+						
+						echo "			<tr>";
+						echo "				<td align='center'>".$date_mp."</td>";
+						echo "				<td>".$objet_mp."</td>";
+						echo "			</tr>";
+					}
+					
+					echo "			</tr>";
+					echo "		</table>";
+					echo "	</div>";
+				}
+				?>
 			</div>
 			
 		</div>

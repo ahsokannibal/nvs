@@ -67,9 +67,14 @@ if($dispo == '1' || $admin){
 			<div class="row">
 				<div class="col-12">
 					<?php
-					if (isset($_POST['liste_perso_event'])) {
+					if (isset($_POST['liste_perso_event']) || (isset($_GET['id_perso_event']) && trim($_GET['id_perso_event']) != "")) {
 				
-						$id_perso_event = $_POST['liste_perso_event'];
+						if (isset($_POST['liste_perso_event'])) {
+							$id_perso_event = $_POST['liste_perso_event'];
+						}
+						else {
+							$id_perso_event = $_GET['id_perso_event'];
+						}
 						
 						// Récupération des infos du perso 
 						$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_event'";
@@ -102,7 +107,17 @@ if($dispo == '1' || $admin){
 								$nom_perso_baby 	= $t_p['nom_perso'];
 								$camp_perso_baby	= $t_p['clan'];
 								
-								echo "<div align='center'><b>Ce perso est actuellement babysitté par ".$nom_perso_baby." [".$id_perso_baby."]</b></div>";
+								if ($camp_perso_baby == 1) {
+									$couleur_baby = 'blue';
+								}
+								elseif ($camp_perso_baby == 2) {
+									$couleur_baby = 'red';
+								}
+								else {
+									$couleur_baby = 'black';
+								}
+								
+								echo "<div align='center'><b>Ce perso est actuellement babysitté par <font color='".$couleur_baby."'>".$nom_perso_baby."</font> [<a href='anim_event_perso.php?id_perso_event=".$id_perso_baby."'>".$id_perso_baby."</a>]</b></div>";
 							}
 							
 							$sql_b 	= "SELECT * FROM declaration_babysitte WHERE id_perso='$id_perso_event' AND date_debut <= CURDATE() AND date_fin >= CURDATE()";
@@ -123,7 +138,17 @@ if($dispo == '1' || $admin){
 									$nom_perso_baby 	= $t_p['nom_perso'];
 									$camp_perso_baby	= $t_p['clan'];
 									
-									echo "<div align='center'><b>Ce perso est actuellement en train de babysitter le perso ".$nom_perso_baby." [".$id_perso_baby."]</b></div>";
+									if ($camp_perso_baby == 1) {
+										$couleur_baby = 'blue';
+									}
+									elseif ($camp_perso_baby == 2) {
+										$couleur_baby = 'red';
+									}
+									else {
+										$couleur_baby = 'black';
+									}
+									
+									echo "<div align='center'><b>Ce perso est actuellement en train de babysitter le perso <font color='".$couleur_baby."'>".$nom_perso_baby."</font> [<a href='anim_event_perso.php?id_perso_event=".$id_perso_baby."'>".$id_perso_baby."</a>]</b></div>";
 								}
 							}
 							

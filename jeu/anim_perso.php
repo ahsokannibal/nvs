@@ -374,6 +374,7 @@ if($dispo == '1' || $admin){
 			</div>
 			
 			<p align="center">
+				<a class='btn btn-warning' href='anim_infos_perso.php'>Autres informations sur le perso</a>
 				<a class='btn btn-warning' href='anim_decoration.php'>Décorer un perso</a>
 				<a class='btn btn-warning' href='anim_punitions.php'>Punir un perso</a>
 				<a class="btn btn-primary" href="animation.php">Retour page principale d'animation</a>
@@ -382,11 +383,6 @@ if($dispo == '1' || $admin){
 			<div class="row">
 				<div class="col-12">
 					<form method='POST' action='anim_event_perso.php'>
-						<div class="form-row">
-							<div class="form-group col-md-12">
-								<label for="formSelectPerso">Voir les événements détaillées du perso : </label>
-							</div>
-						</div>
 						<div class="form-row">
 							<div class="form-group col-md-8">
 								<select class="form-control" name='liste_perso_event' id="formSelectPerso">
@@ -407,7 +403,7 @@ if($dispo == '1' || $admin){
 								</select>
 							</div>
 							<div class="form-group col-md-4">
-								<button type="submit" class="btn btn-primary">Voir</button>
+								<button type="submit" class="btn btn-primary">Voir ses événements détaillés</button>
 							</div>
 						</div>
 					</form>

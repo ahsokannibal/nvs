@@ -437,26 +437,6 @@ function prox_coffre($mysqli, $x, $y, $x_perso, $y_perso){
 	}
 }
 
-function prox_coffre_arene($mysqli, $x, $y){
-	
-	$nb = 0;
-	
-	// on regarde autour du perso
-	$sql = "SELECT occupee_carte, image_carte FROM arene WHERE x_carte >= $x - 1 AND x_carte <= $x + 1 AND y_carte >= $y - 1 AND y_carte <= $y + 1";
-	$res = $mysqli->query($sql);
-	
-	while ($t = $res->fetch_assoc()){
-		$oc = $t["occupee_carte"];
-		if ($oc){ // si occupee
-			$im_c = $t["image_carte"];
-			if($im_c == "coffre1t.png"){ // si c'est un coffre
-				$nb++;
-			}
-		}
-	}
-	return $nb;
-}
-
 // fonction qui retourne l'id de l'objet obtenu dans le coffre
 function contenu_coffre($mysqli){
 	
@@ -1226,5 +1206,47 @@ function max_gain_xp_construction($id_bat) {
 		case(11): return 7; break;
 		default: return 0;
 	}
+}
+
+/**
+ * Fonction qui permet de récupérer l'image du type de perso en fonction de l'id du type et de l'id du camp
+ */
+function get_image_type_perso($type_p, $camp_perso) {
+	
+	if ($camp_perso == 1) {
+		$nom_camp_perso = "nord";
+	}
+	elseif($camp_perso == 2) {
+		$nom_camp_perso = "sud";
+	}
+	elseif($camp_perso == 2) {
+		$nom_camp_perso = "indien";
+	}
+	else {
+		$nom_camp_perso = "outlaw";
+	}
+	
+	$im_type_perso = "";
+	
+	if ($type_p == 1) {
+		$im_type_perso = "cavalerie_".$nom_camp_perso.".gif";
+	}
+	elseif ($type_p == 2) {
+		$im_type_perso = "cavalerie_".$nom_camp_perso.".gif";
+	}
+	elseif ($type_p == 3) {
+		$im_type_perso = "infanterie_".$nom_camp_perso.".gif";
+	}
+	elseif ($type_p == 4) {
+		$im_type_perso = "soigneur_".$nom_camp_perso.".gif";
+	}
+	elseif ($type_p == 5) {
+		$im_type_perso = "artillerie_".$nom_camp_perso.".gif";
+	}
+	elseif ($type_p == 6) {
+		$im_type_perso = "toutou_".$nom_camp_perso.".gif";
+	}
+	
+	return $im_type_perso;
 }
 ?>
