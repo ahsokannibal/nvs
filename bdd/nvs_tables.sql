@@ -792,6 +792,15 @@ CREATE TABLE `log_respawn` (
 	PRIMARY KEY (`id_log_respawn`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
+CREATE TABLE IF NOT EXISTS `log_pendaison` (
+  `id_pendaison` int(11) NOT NULL AUTO_INCREMENT,
+  `date_pendaison` datetime NOT NULL,
+  `nom_perso` varchar(255) NOT NULL,
+  `id_perso` int(11) NOT NULL,
+  `raison_pendaison` text NOT NULL,
+  PRIMARY KEY (`id_pendaison`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
 --
 -- Structure de la table `message`
 --
