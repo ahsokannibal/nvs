@@ -19,6 +19,142 @@ if(isset($_SESSION["id_perso"])){
 		$mess_err 	= "";
 		$mess 		= "";
 		
+		if (isset($_POST['matricule_pendre_hidden'])) {
+			
+			$id_perso_pendre = $_POST['matricule_pendre_hidden'];
+			
+			// Récupération de tous les persos
+			$sql = "SELECT id_perso, nom_perso, type_perso FROM perso WHERE perso.idJoueur_perso = (SELECT perso.idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
+			$res = $mysqli->query($sql);
+			
+			while ($t = $res->fetch_assoc()) {
+				
+				$id_perso_a_pendre 		= $t['id_perso'];
+				$nom_perso_a_pendre		= $t['nom_perso'];
+				$type_perso_a_pendre	= $t['type_perso'];
+				
+				if ($type_perso_a_pendre == 1) {
+					
+					$raison_pendaison = "";
+					
+					if (isset($_POST['raison_pendaison'])) {
+						$raison_pendaison = addslashes($_POST['raison_pendaison']);
+					}
+					
+					// Insertion log pendaison
+					$sql_log = "INSERT INTO log_pendaison (date_pendaison, id_perso, nom_perso, raison_pendaison) VALUES (NOW(), '$id_perso_a_pendre', '$nom_perso_a_pendre', '$raison_pendaison')";
+					$mysqli->query($sql_log);
+				}
+				
+				$sql_c = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso_a_pendre'";
+				$res_c = $mysqli->query($sql_c);
+				$t_c = $res_c->fetch_assoc();
+				
+				$id_compagnie = $t_c['id_compagnie'];
+				
+				if ($id_compagnie != null && $id_compagnie > 0) {
+				
+					// On regarde si le perso n'a pas de dette dans une banque de compagnie
+					$sql_b = "SELECT SUM(montant) as thune_en_banque FROM histobanque_compagnie 
+							WHERE id_perso='$id_perso_a_pendre' 
+							AND id_compagnie='$id_compagnie'";
+					$res_b = $mysqli->query($sql_b);
+					$tab = $res_b->fetch_assoc();
+					
+					$thune_en_banque = $tab["thune_en_banque"];
+				}
+				else {
+					$thune_en_banque = 0;
+				}
+				
+				// Ok - renvoi du perso						
+				$sql = "DELETE FROM perso WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_contact WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_dossiers WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_decoration WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_grade WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_bagne WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM histobanque_compagnie WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM banque_compagnie WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				if ($thune_en_banque > 0) {
+					$sql = "UPDATE banque_as_compagnie SET montant = montant - $thune_en_banque 
+							WHERE id_compagnie= ( SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso_a_pendre')";
+					$mysqli->query($sql);
+					
+					$sql_b = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+					$res_b = $mysqli->query($sql_b);
+					$t_b = $res_b->fetch_assoc();
+					
+					$montant_final_banque = $t_b['montant'];
+					
+					$date = time();
+					
+					// banque log
+					$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id_perso_a_pendre', '-$thune_en_banque', '$montant_final_banque')";
+					$mysqli->query($sql);
+				}
+				
+				$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				if (in_bat($mysqli, $id_perso_a_pendre)) {		
+					$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_perso_a_pendre'";
+				}
+				else if (in_train($mysqli, $id_perso_a_pendre)) {
+					$sql = "DELETE FROM perso_in_train WHERE id_perso='$id_perso_a_pendre'";
+				}
+				else {
+					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso_a_pendre'";
+				}
+				$mysqli->query($sql);
+				
+				$sql = "DELETE FROM perso_in_mission WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
+				
+				echo "<center><font color='blue'>Le perso $nom_perso_a_pendre avec la matricule $id_perso_a_pendre a bien été pendu.</font></center><br/>";
+			}
+		}
+		
 		if(isset($_POST['select_perso']) && $_POST['select_perso'] != '') {
 			
 			$id_perso_select = $_POST['select_perso'];
@@ -669,15 +805,39 @@ if(isset($_SESSION["id_perso"])){
 						echo "<br /><br />";
 						
 						if (isset($_GET['modifier_mdp'])) {
-							echo "<form method='POST' action='admin_perso.php'>";
-							echo "	<label for='mdp_perso'>Nouveau Mot de passe : </label>";
-							echo "	<input type='text' id='mdp_perso' name='mdp_perso' value='' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'>";
-							echo "	<button type='submit' class='btn btn-primary'>Modifier</button>";
-							echo "</form>";
+							echo "<a href='admin_perso.php?modifier_mdp=".$id_perso_select."' class='btn btn-secondary'>Modifier Mot de passe</a> ";
 						}
 						else {
-							echo "<a href='admin_perso.php?modifier_mdp=".$id_perso_select."' class='btn btn-danger'>Modifier Mot de passe</a>";
+							echo "<a href='admin_perso.php?modifier_mdp=".$id_perso_select."' class='btn btn-danger'>Modifier Mot de passe</a> ";
 						}
+						
+						echo "<button type=\"button\" class=\"btn btn-danger\" data-toggle=\"modal\" data-target=\"#modalConfirm$id_perso_select\">Pendre</button>";
+						?>
+						<!-- Modal -->
+						<form method="post" action="admin_perso.php">
+							<div class="modal fade" id="modalConfirm<?php echo $id_perso_select; ?>" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+								<div class="modal-dialog modal-dialog-centered" role="document">
+									<div class="modal-content">
+										<div class="modal-header">
+											<h5 class="modal-title" id="exampleModalCenterTitle">Pendre le perso <?php echo $nom_perso." [".$id_perso_select."]"; ?> ?</h5>
+											<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+										<div class="modal-body">
+											Êtes-vous sûr de vouloir pendre le perso <?php echo $nom_perso." [".$id_perso_select."]"; ?> ?
+											<input type='text' name='raison_pendaison' value="" placeholder="Raison pendaison">
+											<input type='hidden' name='matricule_pendre_hidden' value='<?php echo $id_perso_select; ?>'>
+										</div>
+										<div class="modal-footer">
+											<button type="button" class="btn btn-secondary" data-dismiss="modal">Fermer</button>
+											<button type="button" onclick="this.form.submit()" class="btn btn-danger">Pendre</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</form>
+						<?php
 					}
 					?>
 				</div>
@@ -685,6 +845,16 @@ if(isset($_SESSION["id_perso"])){
 			
 			<div class='row'>
 				<?php
+				if (isset($_GET['modifier_mdp'])) {
+					echo "	<div class='col-12>";
+					echo "	<form method='POST' action='admin_perso.php'>";
+					echo "		<label for='mdp_perso'>Nouveau Mot de passe : </label>";
+					echo "		<input type='text' id='mdp_perso' name='mdp_perso' value='' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'>";
+					echo "		<button type='submit' class='btn btn-primary'>Modifier</button>";
+					echo "	</form>";
+					echo "	</div>";
+				}
+				
 				if (isset($_GET['consulter_mp'])) {
 					
 					$sql_mp = "SELECT * FROM message WHERE id_expediteur='".$id_perso_select."' ORDER BY id_message DESC";
