@@ -12,9 +12,10 @@ if(isset($_SESSION["id_perso"])){
 	$id_perso = $_SESSION['id_perso'];
 	
 	// recupération config jeu
-	$admin = admin_perso($mysqli, $id_perso);
+	$admin 	= admin_perso($mysqli, $id_perso);
+	$anim 	= anim_perso($mysqli, $id_perso);
 	
-	if($admin) {
+	if($admin || $anim) {
 		
 		$mess_err 	= "";
 		$mess 		= "";

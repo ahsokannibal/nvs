@@ -134,6 +134,7 @@ if($dispo == '1' || $admin){
 					<a class='btn btn-secondary' href='anim_babysitte.php'>Tableau des Babysittes déclarés</a>
 					<a class='btn btn-secondary' href='anim_log_pendaisons.php'>Tableau des Pendus</a>
 					<a class='btn btn-secondary' href='anim_log_access.php'>LOGS accès</a>
+					<a class='btn btn-secondary' href='anim_top_logs_acces.php'>TOP Logs accès</a>
 				</div>
 			</div>
 			

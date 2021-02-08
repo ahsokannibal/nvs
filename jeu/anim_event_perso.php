@@ -67,13 +67,13 @@ if($dispo == '1' || $admin){
 			<div class="row">
 				<div class="col-12">
 					<?php
-					if (isset($_POST['liste_perso_event']) || (isset($_GET['id_perso_event']) && trim($_GET['id_perso_event']) != "")) {
+					if (isset($_POST['liste_perso_event']) || (isset($_GET['id_perso']) && trim($_GET['id_perso']) != "")) {
 				
 						if (isset($_POST['liste_perso_event'])) {
 							$id_perso_event = $_POST['liste_perso_event'];
 						}
 						else {
-							$id_perso_event = $_GET['id_perso_event'];
+							$id_perso_event = $_GET['id_perso'];
 						}
 						
 						// Récupération des infos du perso 
