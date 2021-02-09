@@ -152,7 +152,27 @@ if($dispo == '1' || $admin){
 								}
 							}
 							
-							echo "<div align='center'><h3>Les 100 derniers événements de ".$nom_perso_event." [".$id_perso_event."]</h3></div>";
+							if (isset($_GET['jour']) && isset($_GET['mois']) && isset($_GET['annee'])) {
+								$jour 	= $_GET['jour'];
+								$mois	= $_GET['mois'];
+								$annee	= $_GET['annee'];
+								
+								$date_debut = date("Y-m-d H:i:s" ,mktime(0, 0, 0, $mois, $jour, $annee));
+								$date_fin = date("Y-m-d H:i:s" ,mktime(23, 59, 59, $mois, $jour, $annee));
+								
+								echo "<div align='center'><h3>Les événements de ".$nom_perso_event." [".$id_perso_event."] au ".sprintf('%02d', $jour)."/".sprintf('%02d', $mois)."/".$annee."</h3></div>";
+								
+								$sql = "SELECT * FROM evenement WHERE (IDActeur_evenement='$id_perso_event' OR IDCible_evenement='$id_perso_event') 
+										AND date_evenement >= '$date_debut' AND date_evenement <= '$date_fin'
+										ORDER BY ID_evenement DESC";
+							}
+							else {
+								echo "<div align='center'><h3>Les 100 derniers événements de ".$nom_perso_event." [".$id_perso_event."]</h3></div>";
+								
+								$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id_perso_event' OR IDCible_evenement='$id_perso_event' ORDER BY ID_evenement DESC LIMIT 100";
+							}
+							$res = $mysqli->query($sql);
+							$nb_event = $res->num_rows;
 							
 							echo "<div class='table-responsive'>";
 							echo "	<table class='table table-striped table-dark'>";
@@ -164,37 +184,41 @@ if($dispo == '1' || $admin){
 							echo "		</thead>";
 							echo "		<tbody>";
 							
-							$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id_perso_event' OR IDCible_evenement='$id_perso_event' ORDER BY ID_evenement DESC LIMIT 100";
-							$res = $mysqli->query($sql);
-							
-							while ($t = $res->fetch_assoc()) {
+							if ($nb_event > 0) {
+								while ($t = $res->fetch_assoc()) {
 								
-								$id_acteur_event	= $t['IDActeur_evenement'];
-								$nom_acteur_event	= $t['nomActeur_evenement'];
-								$phrase_event		= $t['phrase_evenement'];
-								$id_cible_event		= $t['IDCible_evenement'];
-								$nom_cible_event	= $t['nomCible_evenement'];
-								$effet_event		= $t['effet_evenement'];
-								$date_event			= $t['date_evenement'];
-								
-								$date_event = new DateTime($date_event, new DateTimeZone('Europe/Paris'));
-								$date_event->add(new DateInterval('PT1H'));
-								
+									$id_acteur_event	= $t['IDActeur_evenement'];
+									$nom_acteur_event	= $t['nomActeur_evenement'];
+									$phrase_event		= $t['phrase_evenement'];
+									$id_cible_event		= $t['IDCible_evenement'];
+									$nom_cible_event	= $t['nomCible_evenement'];
+									$effet_event		= $t['effet_evenement'];
+									$date_event			= $t['date_evenement'];
+									
+									$date_event = new DateTime($date_event, new DateTimeZone('Europe/Paris'));
+									$date_event->add(new DateInterval('PT1H'));
+									
+									echo "			<tr>";
+									echo "				<td>".$date_event->format('d-m-Y H:i:s')."</td>";
+									echo "				<td>".$nom_acteur_event." [".$id_acteur_event."]</td>";
+									echo "				<td>".$phrase_event;
+									if (trim($effet_event) != "") {
+										echo " ".$effet_event;
+									}
+									echo "				</td>";
+									echo "				<td>";
+									if ($id_cible_event != "") {
+										echo $nom_cible_event." [".$id_cible_event."]";
+									}
+									echo "				</td>";
+									echo "			</tr>";
+									
+								}
+							}
+							else {
 								echo "			<tr>";
-								echo "				<td>".$date_event->format('d-m-Y H:i:s')."</td>";
-								echo "				<td>".$nom_acteur_event." [".$id_acteur_event."]</td>";
-								echo "				<td>".$phrase_event;
-								if (trim($effet_event) != "") {
-									echo " ".$effet_event;
-								}
-								echo "				</td>";
-								echo "				<td>";
-								if ($id_cible_event != "") {
-									echo $nom_cible_event." [".$id_cible_event."]";
-								}
-								echo "				</td>";
+								echo "				<td align='center' colspan='4'><i>Aucun événement à cette date</i></td>";
 								echo "			</tr>";
-								
 							}
 							
 							echo "		</tbody>";

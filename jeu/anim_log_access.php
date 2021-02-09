@@ -35,12 +35,15 @@ if(isset($_SESSION["id_perso"])){
 			$id_perso_select = $_GET['id_perso'];
 		}
 		
-		// Récupération du camp du perso selectionné
-		$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso_select'";
-		$res = $mysqli->query($sql);
-		$t = $res->fetch_assoc();
+		if (isset($id_perso_select)) {
 		
-		$camp_perso_select = $t['clan'];
+			// Récupération du camp du perso selectionné
+			$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso_select'";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$camp_perso_select = $t['clan'];
+		}
 		
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -267,7 +270,7 @@ if(isset($_SESSION["id_perso"])){
 										echo "			<td align='center'>";
 										echo "				<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok&jour=".$jour."&mois=".$mois."&annee=".$annee."' class='btn btn-primary'>Détail logs</a>";
 										echo "				<a href='anim_log_access.php?id_perso=".$id_perso_select."&graph_jour=ok&jour=".$jour."&mois=".$mois."&annee=".$annee."' class='btn btn-primary'>Graphique</a>";
-										if ($camp_anim == $camp_perso_select) {
+										if (isset($camp_perso_select) && $camp_anim == $camp_perso_select) {
 											echo "				<a href='anim_event_perso.php?id_perso=".$id_perso_select."&jour=".$jour."&mois=".$mois."&annee=".$annee."' target='_blank' class='btn btn-secondary'>Événements détaillés</a>";
 										}
 										echo "			</td>";
