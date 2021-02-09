@@ -35,42 +35,49 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 				$t_user = $res->fetch_assoc();
 				$mdp_j = $t_user["mdp_joueur"];
 				
-				if($mdp == $mdp_j){
-					
-					$id_joueur = $_SESSION["ID_joueur"] = $t_user["id_joueur"];
-					
-					$_SESSION["id_perso"] = $t_user["id_perso"];
-					
-					$date = time();
-					
-					// recuperation de l'ip du joueur
-					$ip_joueur = realip();
-					
-					// Est ce que ce joueur est déjà présent avec cette IP
-					$sql = "SELECT * FROM joueur_as_ip WHERE ip_joueur = '$ip_joueur' AND id_joueur='$id_joueur'";
-					$res = $mysqli->query($sql);
-					$nb_ip = $res->num_rows;
-					
-					if ($nb_ip > 0) {
-						// Maj date dernier releve sur enregistrement existant
-						$sql = "UPDATE joueur_as_ip SET date_dernier_releve = FROM_UNIXTIME($date) WHERE id_joueur = '$id_joueur' AND ip_joueur = '$ip_joueur'";
-						$mysqli->query($sql);
-					} else {
-						// nouvel enregistrement
-						$sql = "INSERT INTO joueur_as_ip VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),FROM_UNIXTIME($date))";
-						$mysqli->query($sql);
+				if ($mdp_j != null && $mdp_j != "") {
+				
+					if($mdp == $mdp_j){
+						
+						$id_joueur = $_SESSION["ID_joueur"] = $t_user["id_joueur"];
+						
+						$_SESSION["id_perso"] = $t_user["id_perso"];
+						
+						$date = time();
+						
+						// recuperation de l'ip du joueur
+						$ip_joueur = realip();
+						
+						// Est ce que ce joueur est déjà présent avec cette IP
+						$sql = "SELECT * FROM joueur_as_ip WHERE ip_joueur = '$ip_joueur' AND id_joueur='$id_joueur'";
+						$res = $mysqli->query($sql);
+						$nb_ip = $res->num_rows;
+						
+						if ($nb_ip > 0) {
+							// Maj date dernier releve sur enregistrement existant
+							$sql = "UPDATE joueur_as_ip SET date_dernier_releve = FROM_UNIXTIME($date) WHERE id_joueur = '$id_joueur' AND ip_joueur = '$ip_joueur'";
+							$mysqli->query($sql);
+						} else {
+							// nouvel enregistrement
+							$sql = "INSERT INTO joueur_as_ip VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),FROM_UNIXTIME($date))";
+							$mysqli->query($sql);
+						}
+						
+						header("location:jeu/jouer.php?login=ok");
 					}
-					
-					header("location:jeu/jouer.php?login=ok");
+					else {
+						echo "<center><font color='red'>mot de passe incorrect<br />";
+						echo "<a href=\"index.php\" class='btn btn-primary'>[ retour ]</a></center>";
+					}
 				}
 				else {
-					echo "<center><font color='red'>mot de passe incorrect<br />";
-					echo "<a href=\"index.php\" class='btn btn-primary'>retour</a></center>";
+					echo "<center><h1><font color='red'>Votre perso n'existe plus, vous avez sans doute été pendu !</font></h1><br />";
+					echo "<a href=\"index.php\">[ retour ]</a></center>";
 				}
 			}
 			else {
-				echo "<center><p style='color:#FFFFFF; font-size:20px'><span style='background-color:#FF0000;'>Le code captcha entré ne correspond pas! Veuillez réessayer.</span></p>";
-				echo "<a href=\"index.php\" class='btn btn-primary'>retour</a></center>";
+				echo "<center><h1><font color='red'>Le code captcha entré ne correspond pas! Veuillez réessayer.</font></h1></p>";
+				echo "<a href=\"index.php\">[ retour ]</a></center>";
 			}
 		}
 	}
