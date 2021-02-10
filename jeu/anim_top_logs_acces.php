@@ -158,16 +158,16 @@ if(isset($_SESSION["id_perso"])){
 									echo "	<td align='center'>".$nb_logs."</td>";
 									echo "	<td align='center'>";
 									if (isset($_GET['top_all'])) {
-										echo "		<a href='anim_top_logs_acces.php?id_perso=".$id_perso."&detail_complet=ok' class='btn btn-primary'>Détail logs</a> ";
+										echo "		<a href='anim_log_access.php?id_perso=".$id_perso."&detail_complet=ok' class='btn btn-primary'>Détail logs</a> ";
 									}
 									if (isset($_GET['top_jour'])) {
-										echo "		<a href='anim_top_logs_acces.php?id_perso=".$id_perso."&stat_jour=ok&jour=".$jour_log."&mois=".$mois_log."&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
+										echo "		<a href='anim_log_access.php?id_perso=".$id_perso."&stat_jour=ok&jour=".$jour_log."&mois=".$mois_log."&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
 									}
 									if (isset($_GET['top_mois'])) {
-										echo "		<a href='anim_top_logs_acces.php?id_perso=".$id_perso."&stat_mois=ok&mois=".$mois_log."&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
+										echo "		<a href='anim_log_access.php?id_perso=".$id_perso."&stat_mois=ok&mois=".$mois_log."&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
 									}
 									if (isset($_GET['top_annee'])) {
-										echo "		<a href='anim_top_logs_acces.php?id_perso=".$id_perso."&stat_annee=ok&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
+										echo "		<a href='anim_log_access.php?id_perso=".$id_perso."&stat_annee=ok&annee=".$annee_log."' class='btn btn-primary'>Détail logs</a>";
 									}
 									echo "	</td>";
 									echo "</tr>";

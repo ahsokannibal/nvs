@@ -113,53 +113,73 @@ if(isset($_SESSION["id_perso"])){
 					<div align="center">	
 						<?php
 						if (!isset($_GET['detail_complet'])) {
+							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&detail_complet=ok' class='btn btn-outline-secondary'>Détail Complet des logs</a> ";
+						}
+						else {
 							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&detail_complet=ok' class='btn btn-secondary'>Détail Complet des logs</a> ";
 						}
 						
 						if (isset($_GET['jour']) || isset($_GET['mois']) || isset($_GET['annee'])) {
-							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-warning'>Statistiques par jour</a> ";
-							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-warning'>Statistiques par mois</a> ";
-							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-warning'>Statistiques par année</a> ";
+							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-outline-warning'>Statistiques par jour</a> ";
+							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-outline-warning'>Statistiques par mois</a> ";
+							echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-outline-warning'>Statistiques par année</a> ";
 							
 							if (isset($_GET['jour']) && isset($_GET['mois']) && isset($_GET['annee']) && !isset($_GET['graph_jour'])) {
 								$jour	= $_GET['jour'];
 								$mois	= $_GET['mois'];
 								$annee	= $_GET['annee'];
 								
+								$affichage_date = sprintf('%02d', $jour)."/".sprintf('%02d', $mois)."/".$annee;
+								
 								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&graph_jour=ok&jour=".$jour."&mois=".$mois."&annee=".$annee."' class='btn btn-primary'>Graphique</a>";
+								
+								echo "<br /><br /><h2>Détail logs du jour $affichage_date</h2>";
 							}
 							elseif (isset($_GET['mois']) && isset($_GET['annee']) && !isset($_GET['graph_mois'])) {
 								$mois	= $_GET['mois'];
 								$annee	= $_GET['annee'];
 								
+								$affichage_date = sprintf('%02d', $mois)."/".$annee;
+								
 								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&graph_mois=ok&mois=".$mois."&annee=".$annee."' class='btn btn-primary'>Graphique</a>";
+								
+								echo "<br /><br /><h2>Détail logs du mois $affichage_date</h2>";
 							}
 							elseif (isset($_GET['annee']) && !isset($_GET['graph_annee'])) {
 								$annee	= $_GET['annee'];
 								
 								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&graph_annee=ok&annee=".$annee."' class='btn btn-primary'>Graphique</a>";
+								
+								echo "<br /><br /><h2>Détail logs de l'année $annee</h2>";
 							}
 						}
 						else {
 							if (isset($_GET['stat_jour'])) {
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-warning'>Statistiques par mois</a> ";
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-warning'>Statistiques par année</a>";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-warning'>Statistiques par jour</a> ";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-outline-warning'>Statistiques par mois</a> ";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-outline-warning'>Statistiques par année</a>";
+								echo "<br />";
 							}
 							elseif (isset($_GET['stat_mois'])) {
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-warning'>Statistiques par jour</a> ";
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-warning'>Statistiques par année</a>";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-outline-warning'>Statistiques par jour</a> ";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-warning'>Statistiques par mois</a> ";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-outline-warning'>Statistiques par année</a>";
+								echo "<br />";
 							}
 							elseif (isset($_GET['stat_annee'])) {
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-warning'>Statistiques par jour</a> ";
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-warning'>Statistiques par mois</a>";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-outline-warning'>Statistiques par jour</a> ";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-outline-warning'>Statistiques par mois</a>";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-warning'>Statistiques par année</a>";
+								echo "<br />";
 							}
 							else {
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-warning'>Statistiques par jour</a> ";
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-warning'>Statistiques par mois</a> ";
-								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-warning'>Statistiques par année</a>";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_jour=ok' class='btn btn-outline-warning'>Statistiques par jour</a> ";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_mois=ok' class='btn btn-outline-warning'>Statistiques par mois</a> ";
+								echo "<a href='anim_log_access.php?id_perso=".$id_perso_select."&stat_annee=ok' class='btn btn-outline-warning'>Statistiques par année</a>";
+								echo "<br />";
 							}
-						}
-						echo "<br /><br />";
+						}						
+						echo "<br />";
 						?>
 						<div id="table_logs_acces" class="table-responsive">
 							<?php
@@ -198,19 +218,22 @@ if(isset($_SESSION["id_perso"])){
 									$sql = "SELECT DAY(date_acces) as jour, MONTH(date_acces) as mois, YEAR(date_acces) as annee, COUNT(*) as nb_logs
 										FROM acces_log
 										WHERE id_perso='$id_perso_select'
-										GROUP BY YEAR(date_acces), MONTH(date_acces), DAY(date_acces)";
+										GROUP BY YEAR(date_acces), MONTH(date_acces), DAY(date_acces)
+										ORDER BY YEAR(date_acces) DESC, MONTH(date_acces) DESC, DAY(date_acces) DESC";
 								}
 								elseif (isset($_GET['stat_mois'])) {
 									$sql = "SELECT MONTH(date_acces) as mois, YEAR(date_acces) as annee, COUNT(*) as nb_logs
 										FROM acces_log
 										WHERE id_perso='$id_perso_select'
-										GROUP BY YEAR(date_acces), MONTH(date_acces)";
+										GROUP BY YEAR(date_acces), MONTH(date_acces)
+										ORDER BY YEAR(date_acces) DESC, MONTH(date_acces) DESC";
 								}
 								elseif (isset($_GET['stat_annee'])) {
 									$sql = "SELECT YEAR(date_acces) as annee, COUNT(*) as nb_logs
 										FROM acces_log
 										WHERE id_perso='$id_perso_select'
-										GROUP BY YEAR(date_acces)";
+										GROUP BY YEAR(date_acces)
+										ORDER BY YEAR(date_acces) DESC";
 								}
 								elseif (isset($_GET['detail_complet'])) {
 									$sql = "SELECT * FROM acces_log WHERE id_perso='$id_perso_select' ORDER BY id_acces DESC";
@@ -228,17 +251,17 @@ if(isset($_SESSION["id_perso"])){
 							else {
 								if (isset($_GET['stat_jour'])) {
 									echo "			<th style='text-align:center'>Jour</th>";
-									echo "			<th style='text-align:center'>Nb logs</th>";
+									echo "			<th style='text-align:center'>Nb logs Perso</th>";
 									echo "			<th style='text-align:center'>Action</th>";
 								}
 								elseif (isset($_GET['stat_mois'])) {
-									echo "			<th style='text-align:center'>Jour</th>";
-									echo "			<th style='text-align:center'>Nb logs</th>";
+									echo "			<th style='text-align:center'>Mois</th>";
+									echo "			<th style='text-align:center'>Nb logs Perso</th>";
 									echo "			<th style='text-align:center'>Action</th>";
 								}
 								elseif (isset($_GET['stat_annee'])) {
-									echo "			<th style='text-align:center'>Jour</th>";
-									echo "			<th style='text-align:center'>Nb logs</th>";
+									echo "			<th style='text-align:center'>Année</th>";
+									echo "			<th style='text-align:center'>Nb logs Perso</th>";
 									echo "			<th style='text-align:center'>Action</th>";
 								}
 							}
@@ -263,6 +286,15 @@ if(isset($_SESSION["id_perso"])){
 										$mois		= $t['mois'];
 										$annee		= $t['annee'];
 										$nb_logs	= $t['nb_logs'];
+										
+										/*
+										$sql_logs_bataillon = "SELECT *
+																FROM acces_log
+																WHERE id_perso IN (SELECT id_perso FROM perso WHERE idJoueur_perso = (SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_select'))
+																AND YEAR(date_acces) = $annee AND MONTH(date_acces) = $mois AND DAY(date_acces) = $jour";
+										$res_logs_bataillon = $mysqli->query($sql_logs_bataillon);
+										$nb_logs_bataillon	= $res_logs_bataillon->num_rows;
+										*/
 										
 										echo "		<tr>";
 										echo "			<td align='center'>".sprintf('%02d', $jour)."/".sprintf('%02d', $mois)."/".$annee."</td>";
