@@ -2439,8 +2439,8 @@ if($dispo == '1' || $admin){
 						$nb_demandes_depart_compagnie = $res->num_rows;
 					}
 					
-					// Trésorier
-					if ($poste_perso_compagnie == 3) {
+					// Chef ou Trésorier
+					if ($poste_perso_compagnie == 1 || $poste_perso_compagnie == 3) {
 						
 						// Vérifier nouvelles demandes d'emprunt
 						$sql = "SELECT banque_compagnie.id_perso FROM banque_compagnie, perso, perso_in_compagnie 
