@@ -118,6 +118,8 @@ if($dispo == '1' || $admin){
 						
 									if (trim($nouveau_nom_grouillot) != "" && filtre($nouveau_nom_grouillot,1,25) && !ctype_digit($nouveau_nom_grouillot) && strpos($nouveau_nom_grouillot,'--') === false) {
 										
+										$nouveau_nom_grouillot = $mysqli->real_escape_string($nouveau_nom_grouillot);
+										
 										// On vérifie si ce nom est déjà utilisé
 										$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nouveau_nom_grouillot'";
 										$res = $mysqli->query($sql);
