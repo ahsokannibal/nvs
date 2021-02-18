@@ -100,26 +100,57 @@ if($dispo == '1' || $admin){
 						$nouveau_nom_grouillot 	= $_POST["nom_grouillot"];
 						$matricule_grouillot 	= $_POST["matricule_hidden"];
 						
-						if (trim($nouveau_nom_grouillot) != "" && filtre($nouveau_nom_grouillot,1,25) && !ctype_digit($nouveau_nom_grouillot) && strpos($nouveau_nom_grouillot,'--') === false) {
+						// controle matricule perso
+						$verif_matricule = preg_match("#^[0-9]*[0-9]$#i","$matricule_grouillot");
+						
+						if ($verif_matricule) {
 							
-							// On vérifie si ce nom est déjà utilisé
-							$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nouveau_nom_grouillot'";
-							$res = $mysqli->query($sql);
-							$verif = $res->num_rows;
+							// On vérifie que le grouillot lui appartient bien
+							$sql = "SELECT count(id_perso) as nb_perso FROM perso WHERE id_perso='$matricule_grouillot' AND idJoueur_perso='$id_joueur'";
 							
-							if (!$verif) {
-							
-								$sql = "UPDATE perso SET nom_perso = '$nouveau_nom_grouillot' WHERE id_perso = '$matricule_grouillot'";
-								$mysqli->query($sql);
+							if($res = $mysqli->query($sql)) {
 								
-								echo "<center><font color='blue'>Vous avez renommé un de vos grouillots en $nouveau_nom_grouillot</font></center>";
+								$tab = $res->fetch_assoc();
+								
+								$nb = $tab["nb_perso"];
+								
+								if ($nb == 1) {
+						
+									if (trim($nouveau_nom_grouillot) != "" && filtre($nouveau_nom_grouillot,1,25) && !ctype_digit($nouveau_nom_grouillot) && strpos($nouveau_nom_grouillot,'--') === false) {
+										
+										// On vérifie si ce nom est déjà utilisé
+										$sql = "SELECT id_perso FROM perso WHERE nom_perso='$nouveau_nom_grouillot'";
+										$res = $mysqli->query($sql);
+										$verif = $res->num_rows;
+										
+										if (!$verif) {
+										
+											$sql = "UPDATE perso SET nom_perso = '$nouveau_nom_grouillot' WHERE id_perso = '$matricule_grouillot'";
+											$mysqli->query($sql);
+											
+											echo "<center><font color='blue'>Vous avez renommé un de vos grouillots en $nouveau_nom_grouillot</font></center>";
+										}
+										else {
+											echo "<center><b><font color='red'>Ce nom est déjà utilisé, veuillez en choisir un autre</font></b></center>";
+										}
+										
+									} else {
+										echo "<center><b><font color='red'>Veuillez rentrer une valeur correcte sans caractères spéciaux comprise entre 1 et 25 caractères pour le nom de votre grouillot</font></b></center>";
+									}
+								}
+								else {
+									// Tentative de triche ?!
+									echo "<center><font color='red'>Le perso n'a pas pu être renommé, si le problème persiste, veuillez contacter l'administrateur.</font></center><br/>";
+								}
 							}
 							else {
-								echo "<center><b><font color='red'>Ce nom est déjà utilisé, veuillez en choisir un autre</font></b></center>";
+								// Tentative de triche ?!
+								echo "<center><font color='red'>Le perso n'a pas pu être renommé, si le problème persiste, veuillez contacter l'administrateur.</font></center><br/>";
 							}
-							
-						} else {
-							echo "<center><b><font color='red'>Veuillez rentrer une valeur correcte sans caractères spéciaux comprise entre 1 et 25 caractères pour le nom de votre grouillot</font></b></center>";
+						}
+						else {
+							// Tentative de triche ?!
+							echo "<center><font color='red'>Le matricule du perso à renommer est mal renseigné, si le problème persiste, veuillez contacter l'administrateur.</font></center><br/>";
 						}
 					}
 					
@@ -248,35 +279,33 @@ if($dispo == '1' || $admin){
 											echo "<center><font color='blue'>Le grouillot avec la matricule $matricule_grouillot_renvoi a bien été renvoyé de votre bataillon.</font></center><br/>";
 										}
 										else {
-											echo "<font color='red'>Impossible de renvoyer un grouillot qui possède des dettes dans une compagnie, merci de rembourser vos dettes avant de virer votre grouillot.</font><br/>";
-											echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+											echo "<center><font color='red'>Impossible de renvoyer un grouillot qui possède des dettes dans une compagnie, merci de rembourser vos dettes avant de virer votre grouillot.</font></center><br/>";
 										}
 									}
 									else {
-										echo "<font color='red'>Impossible de renvoyer un grouillot qui est chef d'une compagnie, merci de passer son rôle de chef à un autre avant de le virer.</font><br/>";
-										echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+										echo "<center><font color='red'>Impossible de renvoyer un grouillot qui est chef d'une compagnie, merci de passer son rôle de chef à un autre avant de le virer.</font></center><br/>";
 									}
 								} else {
 									// Tentative de triche ?!
-									echo "<font color='red'>Le perso n'a pas pu être renvoyé, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
-									echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+									echo "<center><font color='red'>Le perso n'a pas pu être renvoyé, si le problème persiste, veuillez contacter l'administrateur.</font></center><br/>";
 								}
 							} else {
 								// Tentative de triche ?!
-								echo "<font color='red'>Le perso n'a pas pu être renvoyé, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
-								echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+								echo "<center><font color='red'>Le perso n'a pas pu être renvoyé, si le problème persiste, veuillez contacter l'administrateur.</font></center><br/>";
 							}
 						} else {
 							// Tentative de triche ?!
-							echo "<font color='red'>Le matricule du perso à renvoyer est mal renseigné, si le problème persiste, veuillez contacter l'administrateur.</font><br/>";
-							echo "<center><a href='jouer.php'>[ retour ]</a></center>";
+							echo "<center><font color='red'>Le matricule du perso à renvoyer est mal renseigné, si le problème persiste, veuillez contacter l'administrateur.</font></center><br/>";
 						}
 					}
 				
-					echo "<table align='center' border='1' width='70%'>";
-					echo "	<tr>";
-					echo "		<th>Type de grouillot</th><th>Matricule</th><th>Nom</th><th>Action</th>";
-					echo "	</tr>";
+					echo "<table class='table'>";
+					echo "	<thead>";
+					echo "		<tr>";
+					echo "			<th style='text-align:center'>Type de grouillot</th><th style='text-align:center'>Matricule</th><th style='text-align:center'>Nom</th><th style='text-align:center'>Action</th>";
+					echo "		</tr>";
+					echo "	</thead>";
+					echo "	<tbody>";
 				
 					// Affichage des grouillots
 					echo "";
@@ -299,7 +328,7 @@ if($dispo == '1' || $admin){
 						
 						echo "<tr>";
 						echo "	<td align='center'><img src='../images_perso/".$image_grouillot."' alt='".$nom_unite_grouillot."'/><br />" . $nom_unite_grouillot . "</td>";
-						echo "	<td align='center'>" . $matricule_grouillot . "</td>";
+						echo "	<td align='center'><a href='evenement.php?infoid=".$matricule_grouillot."'>" . $matricule_grouillot . "</a></td>";
 						echo "<form method=\"post\" action=\"gestion_grouillot.php\">";
 						echo "	<td align='center'>";
 						echo "		<input type='text' maxlength='25' name='nom_grouillot' value='". $nom_grouillot ."'>";
@@ -337,6 +366,8 @@ if($dispo == '1' || $admin){
 						</form>
 						<?php
 					}
+					echo "	</tbody>";
+					echo "</table>";
 				}
 				else {
 					echo "<font color=red>Seul le chef de bataillon peut accéder à cette page.</font>";
