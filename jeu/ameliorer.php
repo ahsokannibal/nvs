@@ -93,109 +93,110 @@ if($dispo == '1' || $admin){
 				
 			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
 			<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
-		<?php
-		if (isset($_POST["pv"])) {
 			
-			// calcul du nombre de pi necessaire
-			$nbpi_pv = ameliore_pv($mysqli, $pv, $type);
-			
-			// verification que le perso a assez de pi
-			if ($pi >= $nbpi_pv){
+			<?php
+			if (isset($_POST["pv"])) {
 				
-				$sql2 = "UPDATE perso SET pvMax_perso=pvMax_perso+1, pi_perso=pi_perso-$nbpi_pv WHERE id_perso ='$id'";
-				$mysqli->query($sql2);
+				// calcul du nombre de pi necessaire
+				$nbpi_pv = ameliore_pv($mysqli, $pv, $type);
 				
-				$pv = $pv + 1;
-				$pi = $pi - $nbpi_pv;
-			}
-			else {
-				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-			}
-		}
-		
-		if (isset($_POST["pm"])) {
-			
-			// calcul du nombre de pi necessaire
-			$nbpi_pm = ameliore_pm($mysqli, $pm, $type);
-			
-			if ($type == 5 && $pm >= 6) {
-				echo "<center><font color=red>Il est impossible d'améliorer plus les PM des unités d'artillerie</font></center>";
-			}
-			else {
-		
 				// verification que le perso a assez de pi
-				if($pi >= $nbpi_pm) {
+				if ($pi >= $nbpi_pv){
 					
-					$sql2 = "UPDATE perso SET pmMax_perso=pmMax_perso+1, pi_perso=pi_perso-$nbpi_pm WHERE id_perso ='$id'";
+					$sql2 = "UPDATE perso SET pvMax_perso=pvMax_perso+1, pi_perso=pi_perso-$nbpi_pv WHERE id_perso ='$id'";
 					$mysqli->query($sql2);
 					
-					$pm = $pm + 1;
-					$pi = $pi - $nbpi_pm;
+					$pv = $pv + 1;
+					$pi = $pi - $nbpi_pv;
 				}
 				else {
 					echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
 				}
 			}
-		}
-		
-		if (isset($_POST["pa"])) {
 			
-			// calcul du nombre de pi necessaire
-			$nbpi_pa = ameliore_pa($mysqli, $pa, $type);
-		
-			// verification que le perso a assez de pi	
-			if($pi >= $nbpi_pa) {
+			if (isset($_POST["pm"])) {
 				
-				$sql2 = "UPDATE perso SET paMax_perso=paMax_perso+1, pi_perso=pi_perso-$nbpi_pa WHERE id_perso ='$id'";
-				$mysqli->query($sql2);
+				// calcul du nombre de pi necessaire
+				$nbpi_pm = ameliore_pm($mysqli, $pm, $type);
 				
-				$pa = $pa + 1;
-				$pi = $pi - $nbpi_pa;
-			}
-			else {
-				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-			}
-		}
-		
-		if (isset($_POST["per"])) {
+				if ($type == 5 && $pm >= 6) {
+					echo "<center><font color=red>Il est impossible d'améliorer plus les PM des unités d'artillerie</font></center>";
+				}
+				else {
 			
-			// calcul du nombre de pi necessaire
-			$nbpi_perc = ameliore_perc($mysqli, $per, $type);
-		
-			// verification que le perso a assez de pi	
-			if($pi >= $nbpi_perc) {
-				
-				$sql2 = "UPDATE perso SET perception_perso=perception_perso+1, pi_perso=pi_perso-$nbpi_perc WHERE id_perso ='$id'";
-				$mysqli->query($sql2);
-				
-				$per = $per + 1;
-				$pi = $pi - $nbpi_perc;
+					// verification que le perso a assez de pi
+					if($pi >= $nbpi_pm) {
+						
+						$sql2 = "UPDATE perso SET pmMax_perso=pmMax_perso+1, pi_perso=pi_perso-$nbpi_pm WHERE id_perso ='$id'";
+						$mysqli->query($sql2);
+						
+						$pm = $pm + 1;
+						$pi = $pi - $nbpi_pm;
+					}
+					else {
+						echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+					}
+				}
 			}
-			else {
-				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
-			}
-		}
-		
-		if (isset($_POST["rec"])) {
 			
-			// calcul du nombre de pi necessaire
-			$nbpi_recup = ameliore_recup($mysqli, $rec, $type);
-		
-			// verification que le perso a assez de pi
-			if($pi >= $nbpi_recup) {
+			if (isset($_POST["pa"])) {
 				
-				$sql2 = "UPDATE perso SET recup_perso=recup_perso+1, pi_perso=pi_perso-$nbpi_recup WHERE id_perso ='$id'";
-				$mysqli->query($sql2);
+				// calcul du nombre de pi necessaire
+				$nbpi_pa = ameliore_pa($mysqli, $pa, $type);
+			
+				// verification que le perso a assez de pi	
+				if($pi >= $nbpi_pa) {
+					
+					$sql2 = "UPDATE perso SET paMax_perso=paMax_perso+1, pi_perso=pi_perso-$nbpi_pa WHERE id_perso ='$id'";
+					$mysqli->query($sql2);
+					
+					$pa = $pa + 1;
+					$pi = $pi - $nbpi_pa;
+				}
+				else {
+					echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+				}
+			}
+			
+			if (isset($_POST["per"])) {
 				
-				$rec = $rec + 1;
-				$pi = $pi - $nbpi_recup;
+				// calcul du nombre de pi necessaire
+				$nbpi_perc = ameliore_perc($mysqli, $per, $type);
+			
+				// verification que le perso a assez de pi	
+				if($pi >= $nbpi_perc) {
+					
+					$sql2 = "UPDATE perso SET perception_perso=perception_perso+1, pi_perso=pi_perso-$nbpi_perc WHERE id_perso ='$id'";
+					$mysqli->query($sql2);
+					
+					$per = $per + 1;
+					$pi = $pi - $nbpi_perc;
+				}
+				else {
+					echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+				}
 			}
-			else {
-				echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+			
+			if (isset($_POST["rec"])) {
+				
+				// calcul du nombre de pi necessaire
+				$nbpi_recup = ameliore_recup($mysqli, $rec, $type);
+			
+				// verification que le perso a assez de pi
+				if($pi >= $nbpi_recup) {
+					
+					$sql2 = "UPDATE perso SET recup_perso=recup_perso+1, pi_perso=pi_perso-$nbpi_recup WHERE id_perso ='$id'";
+					$mysqli->query($sql2);
+					
+					$rec = $rec + 1;
+					$pi = $pi - $nbpi_recup;
+				}
+				else {
+					echo "<center><font color=red>Vous n'avez pas assez de pi</font></center>";
+				}
 			}
-		}
-		
-		?>
+			
+			?>
 			<form method="post" action="ameliorer.php">
 				<br>
 				<center>

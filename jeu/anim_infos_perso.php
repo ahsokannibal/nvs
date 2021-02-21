@@ -55,6 +55,10 @@ if($dispo == '1' || $admin){
 				$id_perso_info = $_GET['voir_respawn'];
 			}
 			
+			if (isset($_GET['logs_respawn'])) {
+				$id_perso_info = $_GET['logs_respawn'];
+			}
+			
 			if (isset($_GET['verifier_charge'])) {
 				$id_perso_info = $_GET['verifier_charge'];
 			}
@@ -198,6 +202,13 @@ if($dispo == '1' || $admin){
 							echo "<a href='anim_infos_perso.php?voir_respawn=".$id_perso_info."' class='btn btn-warning'>Voir ses respawns</a> ";
 						}
 						
+						if (isset($_GET['logs_respawn'])) {
+							echo "<a href='anim_infos_perso.php?logs_respawn=".$id_perso_info."' class='btn btn-secondary'>Logs respawns</a> ";
+						}
+						else {
+							echo "<a href='anim_infos_perso.php?logs_respawn=".$id_perso_info."' class='btn btn-warning'>Logs respawns</a> ";
+						}
+						
 						if (isset($_GET['verifier_charge'])) {
 							echo "<a href='anim_infos_perso.php?verifier_charge=".$id_perso_info."' class='btn btn-secondary'>Vérifier la charge du perso</a> ";
 						}
@@ -307,6 +318,38 @@ if($dispo == '1' || $admin){
 						echo "			<td>".$nom_bat." ".$nom_i_bat." [".$id_i_bat_respawn."]</td>";
 						echo "			<td>".$pv_i_bat."/".$pvM_i_bat."</td>";
 						echo "			<td>".$x_i_bat."/".$y_i_bat."</td>";
+						echo "		</tr>";
+						
+					}
+					echo "	</tbody>";
+					echo "</table>";
+					
+					echo "</div>";
+				}
+				
+				if (isset($_GET['logs_respawn'])) {
+					
+					echo "	<div class='col-12'>";
+					
+					$sql = "SELECT * FROM log_respawn WHERE id_perso='$id_perso_info'";
+					$res = $mysqli->query($sql);
+					
+					echo "<table class='table'>";
+					echo "	<thead>";
+					echo "		<tr>";
+					echo "			<th>Date respawn</th><th>Infos respawn</th>";
+					echo "		</tr>";
+					echo "	</thead>";
+					echo "	<tbody>";
+					
+					while ($t = $res->fetch_assoc()) {
+						
+						$date_respawn = $t['date_respawn'];
+						$info_respawn = $t['texte_respawn'];
+						
+						echo "		<tr>";
+						echo "			<td>".$date_respawn."</td>";
+						echo "			<td>".$info_respawn."</td>";
 						echo "		</tr>";
 						
 					}
