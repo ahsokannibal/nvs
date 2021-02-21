@@ -81,6 +81,21 @@ CREATE TABLE `action_as_batiment` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `alerte_anim`
+--
+
+CREATE TABLE `alerte_anim` ( 
+	`id_alerte` INT NOT NULL AUTO_INCREMENT , 
+	`type_alerte` INT NOT NULL , 
+	`id_perso` INT NOT NULL , 
+	`raison_alerte` TEXT NOT NULL ,
+	`date_alerte` DATETIME NOT NULL , 
+	PRIMARY KEY (`id_alerte`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci; 
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `anim_capture`
 --
 
