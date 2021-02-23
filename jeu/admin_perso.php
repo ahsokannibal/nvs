@@ -861,11 +861,11 @@ if(isset($_SESSION["id_perso"])){
 					$res_mp = $mysqli->query($sql_mp);
 					$nb_mp_e = $res_mp->num_rows;
 					
-					echo "	<div class='col-6'>";
+					echo "	<div class='col-12'>";
 					echo "		<h2>MP envoyés par le perso (".$nb_mp_e.")</h2>";
 					echo "		<table class='table'>";
 					echo "			<tr>";
-					echo "				<th style='text-align:center'>Date</th><th style='text-align:center'>Objet</th>";
+					echo "				<th style='text-align:center'>Date</th><th style='text-align:center'>Objet</th><th style='text-align:center'>Contenu</th>";
 					echo "			</tr>";
 					
 					while ($t_mp = $res_mp->fetch_assoc()) {
@@ -878,6 +878,7 @@ if(isset($_SESSION["id_perso"])){
 						echo "			<tr>";
 						echo "				<td align='center'>".$date_mp."</td>";
 						echo "				<td>".$objet_mp."</td>";
+						echo "				<td>".$contenu_mp."</td>";
 						echo "			</tr>";
 					}
 					
@@ -891,7 +892,7 @@ if(isset($_SESSION["id_perso"])){
 					$res_mp = $mysqli->query($sql_mp);
 					$nb_mp_r = $res_mp->num_rows;
 					
-					echo "	<div class='col-6'>";
+					echo "	<div class='col-12'>";
 					echo "		<h2>MP reçues par le perso (".$nb_mp_r.")</h2>";
 					echo "		<table class='table'>";
 					echo "			<tr>";
@@ -909,6 +910,7 @@ if(isset($_SESSION["id_perso"])){
 						echo "			<tr>";
 						echo "				<td align='center'>".$date_mp."</td>";
 						echo "				<td>".$objet_mp."</td>";
+						echo "				<td>".$contenu_mp."</td>";
 						echo "			</tr>";
 					}
 					

@@ -348,6 +348,12 @@ if($dispo == '1' || $admin){
 							$mysqli->query($sql_c);
 							
 							$mess .= "<center><b>Perso PNJ ".$nom_perso." [".$matricule."] créé avec succès</b></center>";
+							
+							$texte = addslashes("Création du perso PNJ ".$nom_perso." [".$matricule."]");
+				
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_gestion_perso_pnj.php', 'Creation perso PNJ', '$texte')";
+							$mysqli->query($sql);
 						}
 					}
 					else {
@@ -391,6 +397,12 @@ if($dispo == '1' || $admin){
 				user_add($user_row);
 				
 				$mess .= "<center><b>PNJ FORUM ".$nom_perso." créé avec succès</b></center>";
+				
+				$texte = addslashes("Création du PNJ Forum ".$nom_perso."");
+				
+				// log_action_animation
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_gestion_perso_pnj.php', 'Creation PNJ Forum', '$texte')";
+				$mysqli->query($sql);
 			}
 			
 			if (isset($_GET['id_perso_pnj']) && $_GET['id_perso_pnj'] != "" && $_GET['id_perso_pnj'] < 100) {
@@ -427,6 +439,12 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess .= "<center><b>Perso PNJ ".$nom_perso." [".$id_perso_pnj."] téléporté hors carte avec succès</b></center>";
+						
+						$texte = addslashes("Téléportation Hors carte du Perso PNJ ".$nom_perso." [".$id_perso_pnj."]");
+				
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_gestion_perso_pnj.php', 'Téléportation Hors carte Perso PNJ', '$texte')";
+						$mysqli->query($sql);
 					}
 					
 				}
@@ -486,6 +504,12 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 						
 						$mess .= "Le perso PNJ d'id $id_perso_teleport a bien été téléporté en $x_teleport / $y_teleport";
+						
+						$texte = addslashes("Téléportation du Perso PNJ matricule ".$id_perso_teleport." en ".$x_teleport." / ".$y_teleport."");
+				
+						// log_action_animation
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_gestion_perso_pnj.php', 'Téléportation Perso PNJ', '$texte')";
+						$mysqli->query($sql);
 					}
 					else {
 						$mess_err .= "La case cible est déjà occupée";
@@ -548,6 +572,12 @@ if($dispo == '1' || $admin){
 				$mysqli->query($sql);
 				
 				$mess .= "Le perso d'id $id_perso_teleport a bien été téléporté dans le bâtiment $nom_instance_bat [".$bat_teleport."]";
+				
+				$texte = addslashes("Téléportation Batiment du Perso PNJ matricule ".$id_perso_teleport." dans ".$nom_instance_bat." [".$bat_teleport."]");
+				
+				// log_action_animation
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_gestion_perso_pnj.php', 'Téléportation Batiment Perso PNJ', '$texte')";
+				$mysqli->query($sql);
 			}
 			
 			if (isset($_POST["matricule_delete_hidden"])) {
@@ -658,6 +688,12 @@ if($dispo == '1' || $admin){
 							$mysqli->query($sql);
 							
 							$mess .= "Le perso PNJ avec la matricule $matricule_delete a bien été supprimé.";
+							
+							$texte = addslashes("Suppression du Perso PNJ matricule ".$matricule_delete."");
+				
+							// log_action_animation
+							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_gestion_perso_pnj.php', 'Suppression Perso PNJ', '$texte')";
+							$mysqli->query($sql);
 						}
 						else {
 							$mess_err .= "Impossible de supprimer un perso PNJ qui possède des dettes dans une compagnie, merci de rembourser vos dettes avant de virer ce PNJ.";
