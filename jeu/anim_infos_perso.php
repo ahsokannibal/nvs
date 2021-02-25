@@ -421,5 +421,5 @@ else {
 	
 	header("Location:../index2.php");
 }
-?>		
+?>
 	

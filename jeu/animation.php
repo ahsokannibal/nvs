@@ -138,6 +138,14 @@ if($dispo == '1' || $admin){
 				</div>
 			</div>
 			
+			<br />
+			
+			<div class="row">
+				<div class="col-12">
+					<a class='btn btn-danger' href='anim_alertes.php'>Alertes</a>
+				</div>
+			</div>
+			
 		</div>
 	
 		<!-- Optional JavaScript -->
