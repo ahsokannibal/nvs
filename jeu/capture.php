@@ -28,31 +28,51 @@ if($dispo == '1' || $admin){
 			$mess = "";
 			$mess_err = "";
 			
-			if (isset($_POST['titreQuestion']) && trim($_POST['titreQuestion']) != "") {
-				
-				if (isset($_POST['question']) && trim($_POST['question']) != "") {
+			
+			if (isset($_POST['titreCapture']) && trim($_POST['titreCapture']) != "") {
 					
-					$titre 		= addslashes($_POST['titreQuestion']);
-					$question 	= addslashes($_POST['question']);
+				if (isset($_POST['preuves']) && trim($_POST['preuves']) != "" && isset($_POST['idPersoCapture']) && trim($_POST['idPersoCapture']) != "") {
 					
-					$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
-					$res = $mysqli->query($sql);
-					$t = $res->fetch_assoc();
+					$titre 				= addslashes($_POST['titreCapture']);
+					$preuves 			= addslashes($_POST['preuves']);
+					$id_perso_capture	= $_POST['idPersoCapture'];
 					
-					$id_camp = $t['clan'];
+					// verification id_perso_capture
+					$verif_id_perso = preg_match("#^[0-9]*[0-9]$#i","$id_perso_capture");
 					
-					$sql = "INSERT INTO anim_question(date_question, id_perso, titre, question, id_camp) VALUES (NOW(), '$id', '$titre', '$question', '$id_camp')";
-					$mysqli->query($sql);
-					
-					$mess = "Question envoyée avec succès, la réponse sera envoyée sur votre messagerie.";
-					
+					if ($verif_id_perso) {
+						
+						// On vérifie si une remontée de capture a déjà été effectuée aujourd'hui contre ce perso
+						$sql = "SELECT * FROM anim_capture WHERE id_perso_capture='$id_perso_capture' AND date_capture >= CURDATE() - INTERVAL 1 DAY";
+						$res = $mysqli->query($sql);
+						$verif_capture_jour = $res->num_rows;
+						
+						if ($verif_capture_jour) {
+							$mess_err .= "Une capture a déjà été remontée sur ce perso dans les dernières 24h";
+						}
+						else {
+							$sql = "INSERT INTO anim_capture(date_capture, id_perso, id_perso_capture, titre, message) VALUES (NOW(), '$id', '$id_perso_capture', '$titre', '$preuves')";
+							$mysqli->query($sql);
+							
+							$mess = "Capture remontée avec succès. Les animateurs peuvent éventuellement vous contacter par MP pour obtenir plus de précision si necessaire.";
+						}
+					}
+					else {
+						// parametres incorrectes / modifiés
+						$text_triche = "Champ matricule perso page capture RP incorrect";
+						
+						$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+						$mysqli->query($sql);
+						
+						header("Location:jouer.php");
+					}
 				}
 				else {
-					$mess_err .= "La question /remontée est obligatoire";
+					$mess_err .= "Les preuves et le matricule du perso capturé sont obligatoires";
 				}
 			}
 			else {
-				$mess_err .= "Les champs titre et question/remontée sont obligatoire, pensez à les remplir avant envoi";
+				$mess_err .= "Les champs titre, matricule du perso et preuves sont obligatoire, pensez à les remplir avant envoi";
 			}
 		
 		?>
@@ -74,7 +94,7 @@ if($dispo == '1' || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
-						<h2>Questions / remontées pour l'animation</h2>
+						<h2>Remonter une capture par encerclement</h2>
 						
 						<font color='red'><?php echo $mess_err; ?></font>
 						<font color='blue'><?php echo $mess; ?></font>
@@ -89,14 +109,18 @@ if($dispo == '1' || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
-						<form method='post' action='question_anim.php'>
+						<form method='post' action='capture.php'>
 							<div class="form-group col-md-6">
-								<label for="titreQuestion">Titre <font color='red'>*</font></label>
-								<input type="text" class="form-control" id="titreQuestion" name="titreQuestion" maxlength="40">
+								<label for="titreCapture">Titre <font color='red'>*</font></label>
+								<input type="text" class="form-control" id="titreCapture" name="titreCapture" maxlength="40">
+							</div>
+							<div class="form-group col-md-6">
+								<label for="idPersoCapture">Matricule du perso capturé <font color='red'>*</font></label>
+								<input type="text" class="form-control" id="idPersoCapture" name="idPersoCapture" maxlength="5">
 							</div>
 							<div class="form-group col-md-8">
-								<label for="question">Votre question / remontée <font color='red'>*</font></label>
-								<textarea  class="form-control" cols="100" rows="20" id="question" name="question"></textarea >
+								<label for="preuves">Vos preuves de capture (ajouter les liens vers les images) <font color='red'>*</font></label>
+								<textarea  class="form-control" cols="100" rows="20" id="preuves" name="preuves"></textarea >
 							</div>
 							<div class="form-group col-md-6">
 								<input type="submit" name="envoyer" value="envoyer" class='btn btn-primary'>
