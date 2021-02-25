@@ -2205,6 +2205,13 @@ if($dispo == '1' || $admin){
 					$nb_demande_a_traiter = $nb_demandes_gestion_compagnie + $nb_demandes_gestion_perso + $nb_questions_anim + $nb_captures_anim;
 				}
 				
+				// Récupération du nombre de missions actives
+				$sql_ma = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
+						FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission >= CURDATE())
+						AND camp_mission='$clan_p'";
+				$res_ma = $mysqli->query($sql_ma);
+				$nb_missions_actives = $res_ma->num_rows;
+				
 				//affichage de l'heure serveur et de nouveau tour
 				echo "<table width=100% bgcolor='white' border=0>";
 				echo "<tr>
@@ -2222,7 +2229,7 @@ if($dispo == '1' || $admin){
 					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Questions Anim</b></a>";
 					echo "		<a class='btn btn-primary' href=\"capture.php\" target='_blank'><b>Déclarer une capture</b></a>";
 				}
-				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions</b></a>";
+				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions <span class='badge badge-success'>".$nb_missions_actives."</span></b></a>";
 				
 				// Redacteur
 				if(redac_perso($mysqli, $id_perso)) { 
