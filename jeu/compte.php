@@ -307,6 +307,21 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 					}
 					
+					// Coche cadrillage
+					if (isset($_POST['cadrillage'])){
+						
+						$statut = $_POST['cadrillage'];
+						
+						if($statut == 'on'){
+							$sql = "UPDATE joueur SET cadrillage='1' WHERE id_joueur ='".$id_joueur."'";
+							$mysqli->query($sql);
+						}
+					} 
+					else {
+						$sql = "UPDATE joueur SET cadrillage='0' WHERE id_joueur ='".$id_joueur."'";
+						$mysqli->query($sql);
+					}
+					
 					// Dossier img
 					if (isset($_POST["select_dossier_img"])) {
 						
@@ -334,6 +349,7 @@ if($dispo == '1' || $admin){
 				$valid_case_joueur		= $t["valid_case"];
 				$afficher_rosace_joueur	= $t["afficher_rosace"];
 				$bouculade_dep_joueur	= $t["bousculade_deplacement"];
+				$cadrillage_joueur		= $t["cadrillage"];
 				$dossier_img_joueur 	= $t["dossier_img"];
 	?>
 <html>
@@ -591,6 +607,12 @@ if($dispo == '1' || $admin){
 					</div>
 				</div>
 				
+				<div class="row">
+					<div class="col-12">
+						<input type='checkbox' name='cadrillage' <?php if($cadrillage_joueur) echo 'checked';?> /> Afficher un quadrillage sur la carte de jeu
+					</div>
+				</div>
+				
 				<br />
 				
 				<table>
@@ -635,7 +657,7 @@ if($dispo == '1' || $admin){
 				}
 				?>
 				
-				<input type="submit" name="eval_compte" value="Enregistrer">
+				<input type="submit" name="eval_compte" class="btn btn-success" value="Enregistrer">
 			</form>
 		</div>
 	<?php		

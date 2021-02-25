@@ -158,12 +158,13 @@ if($dispo == '1' || $admin){
 				$dossier_img_joueur = get_dossier_image_joueur($mysqli, $id_joueur_perso);
 				
 				// affichage rosace et bousculades
-				$sql = "SELECT afficher_rosace, bousculade_deplacement FROM joueur WHERE id_joueur='$id_joueur_perso'";
+				$sql = "SELECT afficher_rosace, bousculade_deplacement, cadrillage FROM joueur WHERE id_joueur='$id_joueur_perso'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
 				
 				$afficher_rosace 	= $t['afficher_rosace'];
 				$bousculade_dep		= $t['bousculade_deplacement'];
+				$cadrillage			= $t['cadrillage'];
 				
 				$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
 				$res = $mysqli->query($sql);
@@ -3647,7 +3648,7 @@ if($dispo == '1' || $admin){
 				$taille_table = ($perception_perso + $bonusPerception_perso) * 2 + 2;
 				$taille_table = $taille_table * 40;
 				
-				echo "<table border=0 width=\"$taille_table\" height=\"$taille_table\" align=\"center\" cellspacing=\"0\" cellpadding=\"0\" style=\"text-align: center;\" style:no-padding>";
+				echo "<table border='".$cadrillage."' width='".$taille_table."' height='".$taille_table."' align='center' cellspacing='0' cellpadding='0' style='text-align: center;' >";
 				
 				//affichage des abscisses
 				echo "	<tr>
@@ -3655,9 +3656,9 @@ if($dispo == '1' || $admin){
 				
 				for ($i = $x_perso - $perc_carte; $i <= $x_perso + $perc_carte; $i++) {
 					if ($i == $x_perso)
-						echo "<th width=40 height=40 background=\"../images/background3.jpg\">$i</th>";
+						echo "<th style='min-width:40px;' height='40' background=\"../images/background3.jpg\">$i</th>";
 					else
-						echo "<th width=40 height=40 background=\"../images/background.jpg\">$i</th>";
+						echo "<th style='min-width:40px;' height='40' background=\"../images/background.jpg\">$i</th>";
 				}
 				
 				echo "	</tr>";
@@ -3667,10 +3668,10 @@ if($dispo == '1' || $admin){
 					echo "<tr align=\"center\" >";
 					
 					if ($y == $y_perso) {
-						echo "<th width=40 height=40 background=\"../images/background3.jpg\">$y</th>";
+						echo "<th style='min-width:40px;' height='40' background=\"../images/background3.jpg\">$y</th>";
 					}
 					else {
-						echo "<th width=40 height=40 background=\"../images/background.jpg\">$y</th>";
+						echo "<th style='min-width:40px;' height='40' background=\"../images/background.jpg\">$y</th>";
 					}
 					
 					for ($x = $x_perso - $perc_carte; $x <= $x_perso + $perc_carte; $x++) {
