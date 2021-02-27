@@ -140,11 +140,18 @@ CREATE TABLE `anti_zerk` (
 	`date_nouveau_tour` DATETIME NOT NULL
 ) ENGINE = MyISAM;
 
+CREATE TABLE IF NOT EXISTS `anti_zerk_banque_compagnie` (
+  `id_anti_zerk` int(11) NOT NULL AUTO_INCREMENT,
+  `id_perso` int(11) NOT NULL,
+  `date_dernier_retrait` datetime NOT NULL,
+  PRIMARY KEY (`id_anti_zerk`)
+) ENGINE=MyISAM;
+
 CREATE TABLE `anti_zerk_bousculade` (
 	`id_perso` INT NOT NULL, 
 	`date_derniere_bousculade` DATETIME NOT NULL, 
 	`date_nouveau_tour` DATETIME NOT NULL 
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
