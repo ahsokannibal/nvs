@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_banque.php");
 
 $mysqli = db_connexion();
 
@@ -54,6 +55,7 @@ if($dispo == '1' || $admin){
 				<div class="col-12">
 	
 					<div align="center"><h2>Banque de la compagnie</h2></div>
+					<div align="center"><a href="../regles/regles_banque_compagnie.php" class='btn btn-outline-primary' target='_blank'>Règles banque de la compagnie</a></div>
 					
 				</div>
 			</div>
@@ -109,105 +111,119 @@ if($dispo == '1' || $admin){
 						
 						if($verif) {
 							
-							// Il faut déposer au moins 25 thunes
-							if ($montant >= 25) {
+							// Loi anti-zerk retrait -> depot => il faut 8h entre le dernier retrait et un nouveau dépot
+							// -------------
+							// - ANTI ZERK -
+							// -------------
+							$verif_anti_zerk = gestion_anti_zerk_depot($mysqli, $id);
 							
-								// verification qu'il possede bien les sous qu'il souhaite deposer ^^
-								// recuperation des sous que le perso a sur lui
-								$sql = "SELECT or_perso FROM perso WHERE id_perso='$id'";
-								$res = $mysqli->query($sql);
-								$t_bourse = $res->fetch_assoc();
+							if ($verif_anti_zerk < 0) {
+							
+								// Il faut déposer au moins 25 thunes
+								if ($montant >= 25) {
 								
-								$bourse = $t_bourse["or_perso"];
-								
-								// il possede les sous
-								if($bourse >= $montant) {
-								
-									// il doit des sous a la banque
-									if($du) {
-										
-										// maj bourse perso
-										$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso='$id'";
-										$mysqli->query($sql);
-										
-										// maj banque_as_compagnie
-										$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie='$id_compagnie'";
-										$mysqli->query($sql);
-										
-										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
-										$res = $mysqli->query($sql);
-										$t = $res->fetch_assoc();
-										
-										$montant_final_banque = $t['montant'];
-										
-										$date = time();
-										
-										// banque log
-										$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id', '$montant', '$montant_final_banque')";
-										$mysqli->query($sql);
-										
-										if($montant > $du) {
-											// maj histoBanque_compagnie : remboursement dette (3)
-											$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','3','$du', FROM_UNIXTIME($date))";						
+									// verification qu'il possede bien les sous qu'il souhaite deposer ^^
+									// recuperation des sous que le perso a sur lui
+									$sql = "SELECT or_perso FROM perso WHERE id_perso='$id'";
+									$res = $mysqli->query($sql);
+									$t_bourse = $res->fetch_assoc();
+									
+									$bourse = $t_bourse["or_perso"];
+									
+									// il possede les sous
+									if($bourse >= $montant) {
+									
+										// il doit des sous a la banque
+										if($du) {
+											
+											// maj bourse perso
+											$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso='$id'";
 											$mysqli->query($sql);
 											
-											$depot = $montant - $du;
-											
-											// maj histoBanque_compagnie : depot
-											$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','0','$depot', FROM_UNIXTIME($date))";						
+											// maj banque_as_compagnie
+											$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie='$id_compagnie'";
 											$mysqli->query($sql);
 											
-											// on met la difference sur le compte du perso
-											$montant_f = $montant-$du;
+											$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+											$res = $mysqli->query($sql);
+											$t = $res->fetch_assoc();
+											
+											$montant_final_banque = $t['montant'];
+											
+											$date = time();
+											
+											// banque log
+											$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id', '$montant', '$montant_final_banque')";
+											$mysqli->query($sql);
+											
+											if($montant > $du) {
+												// maj histoBanque_compagnie : remboursement dette (3)
+												$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','3','$du', FROM_UNIXTIME($date))";						
+												$mysqli->query($sql);
+												
+												$depot = $montant - $du;
+												
+												// maj histoBanque_compagnie : depot
+												$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','0','$depot', FROM_UNIXTIME($date))";						
+												$mysqli->query($sql);
+												
+												// on met la difference sur le compte du perso
+												$montant_f = $montant-$du;
+												
+												// maj banque_compagnie
+												$sql = "UPDATE banque_compagnie SET montant=montant+$montant_f WHERE id_perso=$id";
+												$mysqli->query($sql);	
+											} else {
+												// maj histoBanque_compagnie : remboursement dette (3)
+												$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','3','$montant', FROM_UNIXTIME($date))";						
+												$mysqli->query($sql);
+											}
+										}
+										else {
 											
 											// maj banque_compagnie
-											$sql = "UPDATE banque_compagnie SET montant=montant+$montant_f WHERE id_perso=$id";
-											$mysqli->query($sql);	
-										} else {
-											// maj histoBanque_compagnie : remboursement dette (3)
-											$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','3','$montant', FROM_UNIXTIME($date))";						
+											$sql = "UPDATE banque_compagnie SET montant=montant+$montant WHERE id_perso=$id";
 											$mysqli->query($sql);
+											
+											// maj banque_as_compagnie
+											$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie=$id_compagnie";
+											$mysqli->query($sql);
+											
+											$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
+											$res = $mysqli->query($sql);
+											$t = $res->fetch_assoc();
+											
+											$montant_final_banque = $t['montant'];
+											
+											$date = time();
+											
+											// banque log
+											$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id', '$montant', '$montant_final_banque')";
+											$mysqli->query($sql);
+											
+											// maj histoBanque_compagnie
+											$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','0','$montant', FROM_UNIXTIME($date))";
+											$mysqli->query($sql);
+											
+											// maj bourse perso
+											$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso=$id";
+											$mysqli->query($sql);
+											
+											echo "<center>Vous venez de deposer <b>$montant</b> thune(s) en banque</center>";
 										}
 									}
 									else {
-										
-										// maj banque_compagnie
-										$sql = "UPDATE banque_compagnie SET montant=montant+$montant WHERE id_perso=$id";
-										$mysqli->query($sql);
-										
-										// maj banque_as_compagnie
-										$sql = "UPDATE banque_as_compagnie SET montant=montant+$montant WHERE id_compagnie=$id_compagnie";
-										$mysqli->query($sql);
-										
-										$sql = "SELECT montant FROM banque_as_compagnie WHERE id_compagnie='$id_compagnie'";
-										$res = $mysqli->query($sql);
-										$t = $res->fetch_assoc();
-										
-										$montant_final_banque = $t['montant'];
-										
-										$date = time();
-										
-										// banque log
-										$sql = "INSERT INTO banque_log (date_log, id_compagnie, id_perso, montant_transfert, montant_final) VALUES (FROM_UNIXTIME($date), '$id_compagnie', '$id', '$montant', '$montant_final_banque')";
-										$mysqli->query($sql);
-										
-										// maj histoBanque_compagnie
-										$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant, date_operation) VALUES ('$id_compagnie','$id','0','$montant', FROM_UNIXTIME($date))";
-										$mysqli->query($sql);
-										
-										// maj bourse perso
-										$sql = "UPDATE perso SET or_perso=or_perso-$montant WHERE id_perso=$id";
-										$mysqli->query($sql);
-										
-										echo "Vous venez de deposer $montant thune(s) en banque";
+										echo "<center><font color='red'>Vous ne disposez pas de la somme que vous souhaitez deposer en banque...</font></center>";
 									}
 								}
 								else {
-									echo "<center><font color='red'>Vous ne disposez pas de la somme que vous souhaitez deposer en banque...</font></center>";
+									echo "<center><font color='red'>Vous devez déposer au moins 25 thunes</font></center>";
 								}
 							}
 							else {
-								echo "<center><font color='red'>Vous devez déposer au moins 25 thunes</font></center>";
+								echo "<center><font color='red'>Vous devez respecter un temps de 8h entre votre dernier retrait et un nouveau dépot";
+								$temps_restant = round($verif_anti_zerk / 3600, 1);
+								echo "<br />Temps restant = environ ".$temps_restant."h</font></center>";
 							}
 						}
 						else {
@@ -272,7 +288,20 @@ if($dispo == '1' || $admin){
 								$sql = "UPDATE perso SET or_perso=or_perso+$montant WHERE id_perso=$id";
 								$mysqli->query($sql);
 								
-								echo "Vous venez de retirer $montant de la banque";
+								// MAJ date_dernier_retrait
+								$sql = "SELECT * FROM anti_zerk_banque_compagnie WHERE id_perso='$id'";
+								$res = $mysqli->query($sql);
+								$nb = $res->num_rows;
+								
+								if ($nb > 0) {
+									$sql = "UPDATE anti_zerk_banque_compagnie SET date_dernier_retrait=NOW() WHERE id_perso='$id'";
+								}
+								else {
+									$sql = "INSERT INTO anti_zerk_banque_compagnie (id_perso, date_dernier_retrait) VALUES ('$id', NOW())";
+								}
+								$mysqli->query($sql);
+								
+								echo "<center>Vous venez de retirer <b>$montant</b> thune(s) de la banque</center>";
 							}
 							else {
 								echo "<font color = red>Vous ne possedez pas assez en banque pour retirer $montant thune(s)</font>";
@@ -467,7 +496,7 @@ if($dispo == '1' || $admin){
 								echo "";
 								echo "		</select>";
 								echo "		<input type=\"hidden\" name=\"hid_montant_virement\" value=\"".$montant_virement."\">";
-								echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+								echo "		<input type=\"submit\" name=\"Submit\" class='btn btn-warning' value=\"valider\">";
 								echo "	</div>";
 								echo "</form>";
 							}
@@ -492,7 +521,7 @@ if($dispo == '1' || $admin){
 					echo "	<div class=\"form-group\">";
 					echo "		<label for=\"depot\">Déposer de l'argent (25 minimum) : </label>";
 					echo "		<input name=\"deposer\" class=\"form-control\" id=\"depot\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "		<input type=\"submit\" name=\"Submit\" class='btn btn-warning' value=\"valider\">";
 					echo "	</div>";
 					echo "</form>";
 					
@@ -500,7 +529,7 @@ if($dispo == '1' || $admin){
 					echo "	<div class=\"form-group\">";
 					echo "		<label for=\"retrait\">Retirer de l'argent : </label>";
 					echo "		<input name=\"retirer\" class=\"form-control\" id=\"retrait\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "		<input type=\"submit\" name=\"Submit\" class='btn btn-warning' value=\"valider\">";
 					echo "	</div>";
 					echo "</form>";
 					
@@ -508,7 +537,7 @@ if($dispo == '1' || $admin){
 					echo "	<div class=\"form-group\">";
 					echo "		<label for=\"emprunt\">Emprunter de l'argent (nécessite l'accord du tresorier) : </label>";
 					echo "		<input name=\"emprunter\" class=\"form-control\" id=\"emprunt\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "		<input type=\"submit\" name=\"Submit\" class='btn btn-warning' value=\"valider\">";
 					echo "	</div>";
 					echo "</form>";
 					
@@ -516,7 +545,7 @@ if($dispo == '1' || $admin){
 					echo "	<div class=\"form-group\">";
 					echo "		<label for=\"virement\">Virer de l'argent sur le compte d'un autre membre de la compagnie : </label>";
 					echo "		<input name=\"virer\" class=\"form-control\" id=\"virement\" type=\"text\" value=\"\" onFocus=\"this.value=''\" maxlength=\"100\">";
-					echo "		<input type=\"submit\" name=\"Submit\" value=\"valider\">";
+					echo "		<input type=\"submit\" name=\"Submit\" class='btn btn-warning' value=\"valider\">";
 					echo "	</div>";
 					echo "</form>";
 				}

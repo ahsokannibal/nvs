@@ -458,7 +458,7 @@ if ($verif_id_perso_session) {
 									echo " -- Defense cible : ".$bonus_cible." -- Bonus Defense objets cible : ".$bonus_defense_objet." -- Defense terrain cible : ".$bonus_defense_terrain.")<br>";
 									
 									// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
-									if ($touche <= $precision_final) {
+									if ($touche <= $precision_final && $touche < 98) {
 										
 										$degats_tmp = calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
 										
@@ -1134,6 +1134,9 @@ if ($verif_id_perso_session) {
 									}
 									else { // la cible a esquivé l'attaque
 						
+										if ($touche >= 98) {
+											echo "<b>Echec critique !</b>";
+										}
 										echo "<br>Vous avez raté votre cible.<br><br>";
 										
 										if ($id_arme_attaque != 11 && $id_arme_attaque != 10) {
@@ -1523,7 +1526,7 @@ if ($verif_id_perso_session) {
 							echo " -- Defense cible : ".$bonus_cible." -- Defense terrain : ".$bonus_defense_terrain." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
 							
 							// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
-							if ($touche <= $precision_final) {
+							if ($touche <= $precision_final && $touche < 98) {
 				
 								// calcul degats arme
 								$degats_tmp 	= calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
@@ -2437,7 +2440,7 @@ if ($verif_id_perso_session) {
 								echo ")<br>";
 								
 								// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
-								if ($touche <= $precision_final) {
+								if ($touche <= $precision_final && $touche < 98) {
 					
 									// calcul degats arme
 									$degats_final = calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);

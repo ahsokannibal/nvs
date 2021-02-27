@@ -714,9 +714,16 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 														$mysqli->query($sql);							
 													}
 													else {
+														// Récupération du terrain
+														$sql = "SELECT fond_carte FROM $carte WHERE x_carte=$x_bat AND y_carte=$y_bat";
+														$res = $mysqli->query($sql);
+														$t = $res->fetch_assoc();
+														
+														$fond_carte_construction = $t['fond_carte'];
+														
 														// mise a jour de la table instance_bat
-														$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, camp_origine_instance, contenance_instance) 
-																VALUES ('$niveau_bat', '$id_bat', '$nom_instance', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$camp_perso', '$contenance_bat')";
+														$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, camp_origine_instance, contenance_instance, terrain_instance) 
+																VALUES ('$niveau_bat', '$id_bat', '$nom_instance', '$pv_bat', '$pvMax', '$x_bat', '$y_bat', '$camp_perso', '$camp_perso', '$contenance_bat', '$fond_carte_construction')";
 														$mysqli->query($sql);
 														$id_i_bat = $mysqli->insert_id;
 														
@@ -2463,9 +2470,16 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 				$pv_final_bat = $pv_bat - $degats_sabotage;
 				
 				if ($pv_final_bat <= 0) {
-				
+					
+					// On récupère le terrain sur lequel il était construit pour le rétablir
+					$sql = "SELECT terrain_instance FROM instance_batiment WHERE id_instanceBat = '$id_bat'";
+					$res = $mysqli->query($sql);
+					$t = $res->fetch_assoc();
+					
+					$terrain_instance = $t['terrain_instance'];
+					
 					// MAJ carte
-					$sql = "UPDATE carte SET fond_carte='8.gif', idPerso_carte=NULL, save_info_carte=NULL WHERE x_carte=$x_bat AND y_carte=$y_bat";
+					$sql = "UPDATE carte SET fond_carte='$terrain_instance', idPerso_carte=NULL, save_info_carte=NULL WHERE x_carte=$x_bat AND y_carte=$y_bat";
 					$mysqli->query($sql);
 					
 					// Suppression instance bat 
@@ -3779,7 +3793,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			
 			$precision_final += $bonus_precision_objet;
 			
-			if ($touche <= $precision_final) {
+			if ($touche <= $precision_final && $touche < 98) {
 				// Le perso touche sa cible
 				
 				// calcul des dégats

@@ -2230,7 +2230,11 @@ if($dispo == '1' || $admin){
 					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Questions Anim</b></a>";
 					echo "		<a class='btn btn-primary' href=\"capture.php\" target='_blank'><b>Déclarer une capture</b></a>";
 				}
-				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions <span class='badge badge-success'>".$nb_missions_actives."</span></b></a>";
+				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions ";
+				if ($nb_missions_actives > 0) {
+					echo "<span class='badge badge-success'>".$nb_missions_actives."</span>";
+				}
+				echo "</b></a>";
 				
 				// Redacteur
 				if(redac_perso($mysqli, $id_perso)) { 
