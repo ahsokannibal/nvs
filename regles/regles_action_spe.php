@@ -72,6 +72,7 @@
 			
 			<div class="row">
 				<div class="col-12">
+					<div id="bousculade">
 					<h2>La bousculade</h2>
 La bousculade utilise 3 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculez (2 PM si celui que vous bousculez se trouvait dans une forêt, 4 PM si dans la montagne, etc..).<br />
 Le bousculé recevra un malus de déplacement correspondant à la valeur du terrain sur laquel il est bousculé. S'il est à 0 PM, le malus se reportera quand même sur le tour suivant <i>(ceci ne s'applique pas pour les bousculades entre personnages du même camp)</i>.<br />
@@ -86,6 +87,8 @@ Le bousculé recevra un malus de déplacement correspondant à la valeur du terr
 <b>Les bousculades sur les unités alliés leur coûtent 1 PA à chaque fois mais ne provoque pas de malus en PM.</b><br />
 Pour bousculer une unité, il vous suffit de vous déplacer sur elle (avec les flèches seulement pour l'instant) et si les conditions sont réuni, alors la bousculade se fera automatiquement.
 <br /><br />
+					</div>
+					<div id="charge">
 					<h2>Charger</h2>
 La charge est une option de combat disponible uniquement pour les cavaleries. Celles ci s'élancent dans la plaine et vont enfoncer les lignes adverses infligeant par la même occasion de terribles dégâts.<br />
 <b>Pour charger, il faut avoir tous ses PA et au moins 4 PM.</b><br />
@@ -95,35 +98,49 @@ A la fin de la charge, les PA non utilisés pour les attaques ne sont pas suppri
 Une cavalerie qui charge un bâtiment perd 40 PV et ne fait aucun dégât.<br />
 Une cavalerie ne peut charger qu'en plaine ou dans les steppes, et AUCUN obstacle (les routes et rails ne sont pas considéré comme un obstacle) ne doit se trouver sur sa route, la cible doit aussi se trouver en plaine ou sur une steppe.					
 <br /><br />
+					</div>
+					<div id="sieste">
 					<h2>La sieste</h2>
 Un personnage blessé peut décider d'aller se reposer. Cette action n'est disponible que lorsque vous avez tous vos PA et tous vos PM. En échange de toutes ces caractéristiques, votre personnage gagne immédiatement un nombre de PV égal au double de votre récupération.<br />
 <b>Attention, la sieste prend en compte votre récupération, et donc ne prend pas en compte les effets des objets de soins.</b>
 <br /><br />
+					</div>
+					<div id="barricader">
 					<h2>Barricader</h2>
 Les unités d'infanterie peuvent mettre en place des barricades qui sont des structures défensives puissantes et capables d'empêcher les cavaleries de charger.<br />
 Pour ce faire, elles doivent disposer de tous leurs PA, car la construction d'une barricade coûte 10 PA et ne peut être effectuée que sur une case "plaine".<br />
 Les barricades apparaissent sur la carte avec 25pv/250. Il est possible de les réparer pour 5PA. 
 <br /><br />
+					</div>
+					<div id="saboter">
 					<h2>Saboter</h2>
 Lorsqu'on se trouve à proximité d'une case de pont, une action "Saboter" apparait (accéssible pour toutes les unités).<br />
 Pour 10PA, cette action, ayant 60% de chance de réussite, sabotera le pont pour entre 50 et 200PV.<br />
 Les unités du génie étant plus efficaces pour saboter un pont, elles feront le double de dégâts ! 
 <br /><br />
+					</div>
+					<div id="reparer">
 					<h2>Réparer</h2>
 Lorsqu'on se trouve à proximité d'un bâtiment ou d'un pont, une action "Réparer" apparait (accéssible pour toutes les unités).<br />
 Pour 5PA, cette action, ayant 100% de chance de réussite, réparera le bâtiment ou le pont pour entre 20 et 120PV.<br />
 Les unités du génie étant plus efficaces pour réparer un bâtiment ou un pont, les points de réparation seront doublés ! 
 <br /><br />
+					</div>
+					<div id="marche">
 					<h2>La marche forcée</h2>
 Les infanteries, guerriers et guerriers du feu peuvent à chaque tour effectuer une marche forcée, leur permettant au prix d'un certain effort de parcourir une plus grande distance.<br />
 Cette action coûte 4 PA et 10 PV, et vous rajoute 1 PM.<br /><br />
 <b>Il n'est pas possible de faire des marches forcées dans les bâtiments (ou grottes, ou stèles).</b>				
 <br /><br />
+					</div>
+					<div id="don">
 					<h2>Donner</h2>
 Dans Nord versus Sud, il est possible de donner un objet, une arme ou des thunes a un autre personnage.<br />
 Chaque type de chose donnée obéit à des règles spécifiques.<br />
 On peut donner une arme ou un objet directement à un personnage de son camp.
 <br /><br />
+					</div>
+					<div id="capture">
 					<h2>Capturer un personnage</h2>	
 Il est possible de capturer un perso sans pour autant baisser ses PV à 0. Il existe 2 manières de le faire :<br />
 <ul>
@@ -132,12 +149,15 @@ Il est possible de capturer un perso sans pour autant baisser ses PV à 0. Il ex
 </ul>
 <p>Les demandes de capture (RP ou par encerclement) doivent obligatoirement passer par l'outil prévu à cet effet, sans quoi les animateurs ne pourront pas valider ces captures.</p>
 <br />
+					</div>
+					<div id="perm">
 					<h2>Partir en permission</h2>	
 lorsque vous êtes amenés à ne plus pouvoir vous connecter au jeu pendant un certain temps, vous pouvez partir en permission. Vos personnages seront alors retirés de la carte à minuit 3 jours après votre demande et ne pourront plus faire l'objet d'attaques d'aucune sorte.<br />
 Ils seront entièrement gelés et reviendront quand vous l'aurez décidé dans un Fort, Fortin ou Gare (conditions de rapatriement identiques à un rapatriement normal). La durée minimum de la permission est de 5 jours.<br />
 Les personnages en permission depuis plus de 30 jours sont définitivement effacés (vous recevrez un mail 10 jours avant que cela n'arrive afin de vous avertir).<br />
 <i>Vous contrôlez normalement votre personnage avant son départ prévu en permission.</i>
-<br /><br />		
+<br /><br />
+					</div>
 				</div>
 			</div>
 		
