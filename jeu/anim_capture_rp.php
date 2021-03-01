@@ -427,146 +427,160 @@ if($dispo == '1' || $admin){
 			if (isset($_GET['histo']) && $_GET['histo'] == "ok") {
 					
 				// Récupération des questions anims répondues
-				$sql = "SELECT anim_capture.id, anim_capture.id_perso, anim_capture.id_perso_capture, date_capture, titre, message, statut FROM anim_capture 
+				$sql = "SELECT anim_capture.id, anim_capture.id_perso, anim_capture.id_perso_capture, date_capture, titre, message, statut, extension_img1, extension_img2 FROM anim_capture 
 						WHERE statut != '0'
 						ORDER BY anim_capture.id ASC";
 				$res = $mysqli->query($sql);
 			?>
-				<div class="row">
-					<div class="col-12">
-						<div class="table-responsive">
-							<table class="table">
-								<thead>
-									<tr>
-										<th style='text-align:center'>Date de remontée</th>
-										<th style='text-align:center'>Perso</th>
-										<th style='text-align:center'>Perso Capturé</th>
-										<th style='text-align:center'>Titre</th>
-										<th style='text-align:center'>Preuves</th>
-										<th style='text-align:center'>Statut de la capture</th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php
-									while ($t = $res->fetch_assoc()) {
-										
-										$id_capture			= $t['id'];
-										$id_perso 			= $t['id_perso'];
-										$id_perso_capture	= $t['id_perso_capture'];
-										$date_capture		= $t['date_capture'];
-										$titre_capture		= $t['titre'];
-										$message			= $t['message'];
-										$statut_capture		= $t['statut'];
-										
-										$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso '";
-										$res_p = $mysqli->query($sql_p);
-										$t_p = $res_p->fetch_assoc();
-										
-										$nom_perso 	= $t_p['nom_perso'];
-										$camp_perso	= $t_p['clan'];
-										
-										$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_capture '";
-										$res_p = $mysqli->query($sql_p);
-										$t_p = $res_p->fetch_assoc();
-										
-										$nom_perso_capture 	= $t_p['nom_perso'];
-										$camp_perso_capture	= $t_p['clan'];
-										
-										echo "<tr>";
-										echo "	<td align='center'>".$date_capture."</td>";
-										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
-										echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."'>".$id_perso_capture."</a>]</td>";
-										echo "	<td align='center'>".$titre_capture."</td>";
-										echo "	<td align='center'>".$message."</td>";
-										echo "	<td align='center'>";
-										if ($statut_capture == 1) {
-											echo "<font color='green'><b>Validée - Capture par RP</b></font>";
-										}
-										else if ($statut_capture == 2) {
-											echo "<font color='green'><b>Validée - Capture par Encerclement</b></font>";
-										}
-										else {
-											echo "<font color='red'><b>Refusée</b></font>";
-										}
-										echo "	</td>";
-										echo "</tr>";
+			<div class="row">
+				<div class="col-12">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th style='text-align:center'>Date de remontée</th>
+									<th style='text-align:center'>Perso</th>
+									<th style='text-align:center'>Perso Capturé</th>
+									<th style='text-align:center'>Titre</th>
+									<th style='text-align:center'>Description</th>
+									<th style='text-align:center'>Statut de la capture</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_capture			= $t['id'];
+									$id_perso 			= $t['id_perso'];
+									$id_perso_capture	= $t['id_perso_capture'];
+									$date_capture		= $t['date_capture'];
+									$titre_capture		= $t['titre'];
+									$message			= $t['message'];
+									$statut_capture		= $t['statut'];
+									$extension_deb		= $t['extension_img1'];
+									$extension_fin		= $t['extension_img2'];
+									
+									$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso '";
+									$res_p = $mysqli->query($sql_p);
+									$t_p = $res_p->fetch_assoc();
+									
+									$nom_perso 	= $t_p['nom_perso'];
+									$camp_perso	= $t_p['clan'];
+									
+									$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_capture '";
+									$res_p = $mysqli->query($sql_p);
+									$t_p = $res_p->fetch_assoc();
+									
+									$nom_perso_capture 	= $t_p['nom_perso'];
+									$camp_perso_capture	= $t_p['clan'];
+									
+									echo "<tr>";
+									echo "	<td align='center'>".$date_capture."</td>";
+									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+									echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."'>".$id_perso_capture."</a>]</td>";
+									echo "	<td align='center'>".$titre_capture."</td>";
+									echo "	<td align='center'>".$message."</td>";
+									echo "	<td align='center'>";
+									if ($statut_capture == 1) {
+										echo "<font color='green'><b>Validée - Capture par RP</b></font>";
 									}
-									?>
-								</tbody>
-							</table>
-						</div>			
-					</div>
+									else if ($statut_capture == 2) {
+										echo "<font color='green'><b>Validée - Capture par Encerclement</b></font>";
+									}
+									else {
+										echo "<font color='red'><b>Refusée</b></font>";
+									}
+									echo "	</td>";
+									echo "</tr>";
+								}
+								?>
+							</tbody>
+						</table>
+					</div>			
 				</div>
+			</div>
 			<?php
 			}
 			else {
 				
 				// Récupération des capture en attente de traitement
-				$sql = "SELECT anim_capture.id, anim_capture.id_perso, anim_capture.id_perso_capture, date_capture, titre, message, statut FROM anim_capture 
+				$sql = "SELECT anim_capture.id, anim_capture.id_perso, anim_capture.id_perso_capture, date_capture, titre, message, statut, type_capture, extension_img1, extension_img2 FROM anim_capture 
 						WHERE statut = '0'
 						ORDER BY anim_capture.id ASC";
 				$res = $mysqli->query($sql);
 			?>
 			
-				<div class="row">
-					<div class="col-12">
-						<div class="table-responsive">
-							<table class="table">
-								<thead>
-									<tr>
-										<th style='text-align:center'>Date de remontée</th>
-										<th style='text-align:center'>Perso</th>
-										<th style='text-align:center'>Perso Capturé</th>
-										<th style='text-align:center'>Titre</th>
-										<th style='text-align:center'>Preuves</th>
-										<th style='text-align:center'>Action</th>
-									</tr>
-								</thead>
-								<tbody>
-									<?php
-									while ($t = $res->fetch_assoc()) {
-										
-										$id_capture			= $t['id'];
-										$id_perso 			= $t['id_perso'];
-										$id_perso_capture	= $t['id_perso_capture'];
-										$date_capture		= $t['date_capture'];
-										$titre_capture		= $t['titre'];
-										$message			= $t['message'];
-										$statut_capture		= $t['statut'];
-										
-										$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso '";
-										$res_p = $mysqli->query($sql_p);
-										$t_p = $res_p->fetch_assoc();
-										
-										$nom_perso 	= $t_p['nom_perso'];
-										$camp_perso	= $t_p['clan'];
-										
-										$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_capture '";
-										$res_p = $mysqli->query($sql_p);
-										$t_p = $res_p->fetch_assoc();
-										
-										$nom_perso_capture 	= $t_p['nom_perso'];
-										$camp_perso_capture	= $t_p['clan'];
-										
-										echo "<tr>";
-										echo "	<td align='center'>".$date_capture."</td>";
-										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
-										echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."'>".$id_perso_capture."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso_capture."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
-										echo "	<td align='center'>".$titre_capture."</td>";
-										echo "	<td align='center'>".$message."</td>";
-										echo "	<td align='center'>";
-										echo "		<a class='btn btn-success' href=\"anim_capture_rp.php?id=".$id_capture."&action=valider\">Capture RP</a>";
-										echo "		<a class='btn btn-success' href=\"anim_capture_rp.php?id=".$id_capture."&action=valider_encerclement\">Capture Encerclement</a>";
-										echo "		<a class='btn btn-danger' href=\"anim_capture_rp.php?id=".$id_capture."&action=refuser\">Refuser</a>";
-										echo "	</td>";
-										echo "</tr>";
+			<div class="row">
+				<div class="col-12">
+					<div class="table-responsive">
+						<table class="table">
+							<thead>
+								<tr>
+									<th style='text-align:center'>Date de remontée</th>
+									<th style='text-align:center'>Perso</th>
+									<th style='text-align:center'>Perso Capturé</th>
+									<th style='text-align:center'>Titre</th>
+									<th style='text-align:center'>Description</th>
+									<th style='text-align:center'>Preuves</th>
+									<th style='text-align:center'>Action</th>
+								</tr>
+							</thead>
+							<tbody>
+								<?php
+								while ($t = $res->fetch_assoc()) {
+									
+									$id_capture			= $t['id'];
+									$id_perso 			= $t['id_perso'];
+									$id_perso_capture	= $t['id_perso_capture'];
+									$date_capture		= $t['date_capture'];
+									$titre_capture		= $t['titre'];
+									$message			= $t['message'];
+									$statut_capture		= $t['statut'];
+									$type_capture		= $t['type_capture'];
+									$extension_deb		= $t['extension_img1'];
+									$extension_fin		= $t['extension_img2'];
+									
+									$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso '";
+									$res_p = $mysqli->query($sql_p);
+									$t_p = $res_p->fetch_assoc();
+									
+									$nom_perso 	= $t_p['nom_perso'];
+									$camp_perso	= $t_p['clan'];
+									
+									$sql_p = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_perso_capture '";
+									$res_p = $mysqli->query($sql_p);
+									$t_p = $res_p->fetch_assoc();
+									
+									$nom_perso_capture 	= $t_p['nom_perso'];
+									$camp_perso_capture	= $t_p['clan'];
+									
+									$lien_image_debut 	= "upload/capture_debut_".$id_capture.".".$extension_deb;
+									$lien_image_fin 	= "upload/capture_fin_".$id_capture.".".$extension_fin;
+									
+									echo "<tr>";
+									echo "	<td align='center'>".$date_capture."</td>";
+									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
+									echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."'>".$id_perso_capture."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso_capture."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
+									echo "	<td align='center'>".$titre_capture."</td>";
+									echo "	<td align='center'>".$message."</td>";
+									echo "	<td align='center'><a href='".$lien_image_debut."' target='_blank'>Image 1</a><br/><a href='".$lien_image_fin."' target='_blank'>Image 2</a></td>";
+									echo "	<td align='center'>";
+									if ($type_capture == 2) {
+										echo "		<a class='btn btn-success' href=\"anim_capture_rp.php?id=".$id_capture."&action=valider\">Valider Capture RP</a>";
 									}
-									?>
-								</tbody>
-							</table>
-						</div>			
-					</div>
+									if ($type_capture == 1) {
+										echo "		<a class='btn btn-success' href=\"anim_capture_rp.php?id=".$id_capture."&action=valider_encerclement\">Valider Capture Encerclement</a>";
+									}
+									echo "		<a class='btn btn-danger' href=\"anim_capture_rp.php?id=".$id_capture."&action=refuser\">Refuser</a>";
+									echo "	</td>";
+									echo "</tr>";
+								}
+								?>
+							</tbody>
+						</table>
+					</div>			
 				</div>
+			</div>
 			<?php
 			}
 			?>
