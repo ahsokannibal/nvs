@@ -3645,6 +3645,8 @@ function charge_cible_terrain_impraticable($mysqli, $id_perso, $nom_perso, $imag
  */
 function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte) {
 	
+	$gain_bonus_pc = true;
+	
 	$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 	$mysqli->query($sql);
 	
@@ -3681,6 +3683,21 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 	$valeur_des_arme	= $t_arme['valeur_des_arme'];
 	$precision_arme 	= $t_arme['precision_arme'];
 	$coutPa_arme		= $t_arme['coutPa_arme'];
+	
+	// recup id joueur perso
+	$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+	$res = $mysqli->query($sql);
+	$t_j = $res->fetch_assoc();
+	
+	$id_j_perso = $t_j["idJoueur_perso"];
+	
+	$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+	$res = $mysqli->query($sql);
+	$t_chef = $res->fetch_assoc();
+	
+	$id_perso_chef = $t_chef["id_perso"];
+	$pc_perso_chef = $t_chef["pc_perso"];
+	$id_grade_chef = $t_chef["id_grade"];
 	
 	if ($idPerso_carte >= 200000) {
 		// PNJ
@@ -4053,27 +4070,13 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				$sql = "UPDATE perso SET xp_perso = xp_perso + $gain_experience, pi_perso = pi_perso + $gain_experience, gain_xp_tour = gain_xp_tour + $gain_experience WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 				
-				// recup id joueur perso
-				$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
-				$res = $mysqli->query($sql);
-				$t_j = $res->fetch_assoc();
-				
-				$id_j_perso = $t_j["idJoueur_perso"];
-				
 				// mise à jour des PC du chef
-				$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
-				$res = $mysqli->query($sql);
-				$t_chef = $res->fetch_assoc();
-				
-				$id_perso_chef = $t_chef["id_perso"];
-				$pc_perso_chef = $t_chef["pc_perso"];
-				$id_grade_chef = $t_chef["id_grade"];
-				
 				$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
 				$mysqli->query($sql);
 				
 			} else {
 				// Le perso rate sa cible
+				$gain_bonus_pc = false;
 				
 				if ($touche >= 98) {
 					// Echec critique !
@@ -4112,6 +4115,16 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			if ($nb_attaque < 3) {
 				$nb_attaque++;
 			}
+		}
+		
+		if ($gain_bonus_pc) {
+			// Toutes les attaques de charge sont passée => gain +1PC bonus
+			$sql = "UPDATE perso SET pc_perso=pc_perso+1 WHERE id_perso='$id_perso_chef'";
+			$mysqli->query($sql);
+			
+			// evenement gain bonus PC
+			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a réussi toutes ses charges ', NULL, NULL,'Bonus Gain PC : 1',NOW(),'0')";
+			$mysqli->query($sql);
 		}
 	}
 	else {

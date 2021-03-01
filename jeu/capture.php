@@ -161,6 +161,7 @@ if($dispo == '1' || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
+						<a href="../regles/regles_action_spe.php#capture" target="_blank" class='btn btn-secondary'>Rappel règles captures</a>
 						<form method='post' enctype= "multipart/form-data" action='capture.php'>
 							<div class="form-group col-md-6">
 								<label for="typeCapture">Type de capture <font color='red'>*</font></label>
