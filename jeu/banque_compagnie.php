@@ -359,7 +359,7 @@ if($dispo == '1' || $admin){
 									$sql = "UPDATE banque_compagnie SET demande_emprunt='1', montant_emprunt='$montant' WHERE id_perso='$id'";
 									$mysqli->query($sql);
 									
-									echo "Vous avez demander un emprunt de $montant thune(s)<br>";
+									echo "Vous avez demandé un emprunt de $montant thune(s)<br>";
 								}
 								else {
 									echo "Votre compagnie ne possede pas l'argent necessaire pour satisfaire votre demande.";
