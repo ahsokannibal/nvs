@@ -4117,8 +4117,8 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			}
 		}
 		
-		if ($gain_bonus_pc) {
-			// Toutes les attaques de charge sont passée => gain +1PC bonus
+		if ($gain_bonus_pc && $nb_attaque >= 2 && $id_perso_chef != $id_perso) {
+			// Toutes les attaques de charge sont passée - minimum 2 attaques - pas le chef => gain +1PC bonus
 			$sql = "UPDATE perso SET pc_perso=pc_perso+1 WHERE id_perso='$id_perso_chef'";
 			$mysqli->query($sql);
 			
