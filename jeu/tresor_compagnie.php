@@ -540,8 +540,10 @@ if($dispo == '1' || $admin){
 								$is_auteur_histo	= $t['is_auteur'];
 								$id_dest_histo		= $t['id_dest'];
 								
-								$date_ope_histo = new DateTime($date_ope_histo, new DateTimeZone('Europe/Paris'));
-								$date_ope_histo->add(new DateInterval('PT1H'));
+								if ($date_ope_histo != null) {
+									$date_ope_histo = new DateTime($date_ope_histo, new DateTimeZone('Europe/Paris'));
+									$date_ope_histo->add(new DateInterval('PT1H'));
+								}
 								
 								$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_histo'";
 								$res_p = $mysqli->query($sql_p);
@@ -638,7 +640,11 @@ if($dispo == '1' || $admin){
 								}
 								
 								echo "		<tr>";
-								echo "			<td>".$date_ope_histo->format('d-m-Y H:i:s')."</td>";
+								echo "			<td>";
+								if ($date_ope_histo != null) {
+									echo $date_ope_histo->format('d-m-Y H:i:s');
+								}
+								echo "			</td>";
 								echo "			<td>".$nom_perso_histo."</td>";
 								echo "			<td>".$id_perso_histo."</td>";
 								echo "			<td>".$type_ope."</td>";
