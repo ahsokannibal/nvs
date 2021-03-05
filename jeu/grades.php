@@ -82,12 +82,12 @@ include ('../nb_online.php');
 	
 	echo "		<center>";
 	echo "			<div id=\"table_grade_chef\" class=\"table-responsive\">";
-	echo "				<table border='1'>";
+	echo "				<table class='table' border='1'>";
 	
 	if ($chef_perso) {
 	
 		echo "					<tr>";
-		echo "						<th>Image grade</th><th>Nom grade</th><th>PC requis</th><th>Points de grouillot</th>";
+		echo "						<th colspan='2' style='text-align:center'>Grade</th><th style='text-align:center'>PC requis</th><th style='text-align:center'>Points de grouillot</th>";
 		echo "					</tr>";
 		
 		$affichage_pc_grade = "???";
