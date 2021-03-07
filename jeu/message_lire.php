@@ -190,8 +190,9 @@ if(@$_SESSION["id_perso"]){
 						}
 						
 						if (!$annonce) {
-							echo '		<input type="submit" name="submit" value="Repondre" class="btn btn-primary"> &nbsp&nbsp'; 
-							echo '		<input type="submit" name="submit" value="Repondre à tous" class="btn btn-primary"> &nbsp&nbsp'; 
+							echo '		<input type="submit" name="submit" value="Répondre" class="btn btn-primary"> &nbsp&nbsp'; 
+							echo '		<input type="submit" name="submit" value="Répondre à tous" class="btn btn-primary"> &nbsp&nbsp';
+							echo '		<input type="submit" name="submit" value="Transférer" class="btn btn-primary"> &nbsp&nbsp'; 
 						}
 						echo '		<input type="submit" name="submit" value="Effacer" class="btn btn-danger">&nbsp&nbsp';
 						

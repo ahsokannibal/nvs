@@ -25,7 +25,10 @@ if (isset($_POST["submit"])) {
 		
 		header("Location:../messagerie.php");
 	}
-	else if ($action == "Repondre") {
+	else if ($action == "Transférer") {
+		header("Location:../nouveau_message.php?id=$id_message&transfert=1");
+	}
+	else if ($action == "Répondre") {
 		header("Location:../nouveau_message.php?id=$id_message");
 	}
 	else {

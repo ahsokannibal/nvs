@@ -157,13 +157,15 @@ if(isset($_SESSION["id_perso"])){
 					unset($message);
 					unset($_SESSION['destinataires']);
 					unset($destinataires);
-					
 			
 					$sql_message = "SELECT * FROM message WHERE id_message ='" . $_GET["id"] . "'";
 					$res_message = $mysqli->query($sql_message);
 					$tabMess = $res_message->fetch_assoc();
 					
-					if(isset($_GET["rep"]) && $_GET["rep"] == '1'){
+					if (isset($_GET['transfert']) && $_GET['transfert'] == 1) {
+						
+					}
+					else if(isset($_GET["rep"]) && $_GET["rep"] == '1'){
 					
 						// recupération des destinataires en s'excluant
 						$sql_dest = "SELECT id_perso FROM message_perso WHERE id_message='" . $_GET["id"] . "' AND id_perso!='$id_perso'";
@@ -375,7 +377,10 @@ if(isset($_SESSION["id_perso"])){
 									echo 'value="'.$_GET["pseudo"].'"';
 								}
 								if(isset($_GET["id"])){
-									if(isset($_GET["rep"]) && $_GET["rep"] == '1'){
+									if(isset($_GET["transfert"]) && $_GET["transfert"] == '1'){
+										echo 'value=""';
+									}
+									else if(isset($_GET["rep"]) && $_GET["rep"] == '1'){
 										echo 'value="'.$destinataires.'"';
 									}
 									else {	
@@ -399,8 +404,13 @@ if(isset($_SESSION["id_perso"])){
 								if(isset($_SESSION['objet'])){
 									echo 'value="'.$_SESSION['objet'].'"';
 								} 
-								if(isset($_GET["id"])){ 
-									echo 'value="Re: '.stripslashes($tabMess["objet_message"]).'"';
+								if(isset($_GET["id"])){
+									if(isset($_GET["transfert"]) && $_GET["transfert"] == '1'){
+										echo 'value="Tr: '.stripslashes($tabMess["objet_message"]).'"';
+									}
+									else {
+										echo 'value="Re: '.stripslashes($tabMess["objet_message"]).'"';
+									}
 								}
 								if(isset($_GET["id_compagnie"])){
 									echo 'value="message du chef de la compagnie"';
