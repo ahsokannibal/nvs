@@ -9,6 +9,12 @@ if (isset($_SESSION["id_perso"])) {
 	
 	$mysqli = db_connexion();
 	
+	$page_acces = 'afficher_carte.php';
+		
+	// acces_log
+	$sql = "INSERT INTO acces_log (date_acces, id_perso, page) VALUES (NOW(), '$id', '$page_acces')";
+	$mysqli->query($sql);
+	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>

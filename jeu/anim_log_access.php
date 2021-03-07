@@ -359,6 +359,7 @@ if(isset($_SESSION["id_perso"])){
 					<?php
 					$data_log_jouer 	= array();
 					$data_log_evenement = array();
+					$data_log_carte 	= array();
 					
 					if (isset($_GET['graph_jour']) && isset($_GET['jour']) && isset($_GET['mois']) && isset($_GET['annee'])) {
 						
@@ -390,7 +391,9 @@ if(isset($_SESSION["id_perso"])){
 						
 						$heure_jouer_tmp 		= 0;
 						$heure_evenement_tmp	= 0;
+						$heure_carte_tmp		= 0;
 						
+						// Page jouer.php
 						$sql = "SELECT COUNT(*) as nb_logs_jouer, HOUR(date_acces) as heure
 									FROM acces_log
 									WHERE id_perso='$id_perso_select'
@@ -423,6 +426,8 @@ if(isset($_SESSION["id_perso"])){
 							array_push($data_log_jouer, $nb_logs_jouer);
 						}
 						
+						
+						// Page evenement.php
 						$sql = "SELECT COUNT(*) as nb_logs_evenement, HOUR(date_acces) as heure
 									FROM acces_log
 									WHERE id_perso='$id_perso_select'
@@ -453,6 +458,40 @@ if(isset($_SESSION["id_perso"])){
 							}
 							
 							array_push($data_log_evenement, $nb_logs_evenement);
+						}
+						
+						
+						// page afficher_carte.php
+						$sql = "SELECT COUNT(*) as nb_logs_carte, HOUR(date_acces) as heure
+									FROM acces_log
+									WHERE id_perso='$id_perso_select'
+									AND page LIKE 'afficher_carte.php%'
+									AND YEAR(date_acces) = '$annee'
+									AND MONTH(date_acces) = '$mois'
+									AND DAY(date_acces) = '$jour'
+									GROUP BY HOUR(date_acces)";
+						$res = $mysqli->query($sql);
+						
+						while ($t = $res->fetch_assoc()) {
+							$nb_logs_carte 	= $t['nb_logs_carte'];
+							$heure_carte	= $t['heure'];
+							
+							if ($heure_carte_tmp == 0) {
+								for ($i = 0; $i < $heure_carte; $i++) {
+									array_push($data_log_carte, 0);
+								}
+								
+								$heure_carte_tmp = $heure_carte;
+							}
+							else {
+								for ($i = $heure_carte_tmp + 1; $i < $heure_carte; $i++) {
+									array_push($data_log_carte, 0);
+								}
+								
+								$heure_carte_tmp = $heure_carte;
+							}
+							
+							array_push($data_log_carte, $nb_logs_carte);
 						}
 						
 						echo "<canvas id='chBarJour'></canvas>";
@@ -486,6 +525,7 @@ if(isset($_SESSION["id_perso"])){
 						
 						$jour_jouer_tmp 	= 0;
 						$jour_evenement_tmp	= 0;
+						$jour_carte_tmp		= 0;
 						
 						$data_jours_mois = array();
 						$nombre_jour_mois = cal_days_in_month(CAL_GREGORIAN, $mois, $annee);
@@ -494,6 +534,7 @@ if(isset($_SESSION["id_perso"])){
 							array_push($data_jours_mois, $i);
 						}
 						
+						// page jouer.php
 						$sql = "SELECT COUNT(*) as nb_logs_jouer, DAY(date_acces) as jour
 									FROM acces_log
 									WHERE id_perso='$id_perso_select'
@@ -525,6 +566,7 @@ if(isset($_SESSION["id_perso"])){
 							array_push($data_log_jouer, $nb_logs_jouer);
 						}
 						
+						// page evenement.php
 						$sql = "SELECT COUNT(*) as nb_logs_evenement, DAY(date_acces) as jour
 									FROM acces_log
 									WHERE id_perso='$id_perso_select'
@@ -556,6 +598,38 @@ if(isset($_SESSION["id_perso"])){
 							array_push($data_log_evenement, $nb_logs_evenement);
 						}
 						
+						// page afficher_carte.php
+						$sql = "SELECT COUNT(*) as nb_logs_carte, DAY(date_acces) as jour
+									FROM acces_log
+									WHERE id_perso='$id_perso_select'
+									AND page LIKE 'afficher_carte.php%'
+									AND YEAR(date_acces) = '$annee'
+									AND MONTH(date_acces) = '$mois'
+									GROUP BY DAY(date_acces)";
+						$res = $mysqli->query($sql);
+						
+						while ($t = $res->fetch_assoc()) {
+							$nb_logs_carte 	= $t['nb_logs_carte'];
+							$jour_carte		= $t['jour'];
+							
+							if ($jour_carte_tmp == 0) {
+								for ($i = 1; $i < $jour_carte; $i++) {
+									array_push($data_log_carte, 0);
+								}
+								
+								$jour_carte_tmp = $jour_carte;
+							}
+							else {								
+								for ($i = $jour_carte_tmp + 1; $i < $jour_carte; $i++) {
+									array_push($data_log_carte, 0);
+								}
+								
+								$jour_carte_tmp = $jour_carte;
+							}
+							
+							array_push($data_log_carte, $nb_logs_carte);
+						}
+						
 						echo "<canvas id='chBarMois'></canvas>";
 					}
 					elseif (isset($_GET['graph_annee']) && isset($_GET['annee'])) {
@@ -584,7 +658,9 @@ if(isset($_SESSION["id_perso"])){
 						
 						$mois_jouer_tmp 	= 0;
 						$mois_evenement_tmp	= 0;
+						$mois_carte_tmp		= 0;
 						
+						// page jouer.php
 						$sql = "SELECT COUNT(*) as nb_logs_jouer, MONTH(date_acces) as mois
 									FROM acces_log
 									WHERE id_perso='$id_perso_select'
@@ -615,6 +691,7 @@ if(isset($_SESSION["id_perso"])){
 							array_push($data_log_jouer, $nb_logs_jouer);
 						}
 						
+						// page evenement.php
 						$sql = "SELECT COUNT(*) as nb_logs_evenement, MONTH(date_acces) as mois
 									FROM acces_log
 									WHERE id_perso='$id_perso_select'
@@ -643,6 +720,37 @@ if(isset($_SESSION["id_perso"])){
 							}
 							
 							array_push($data_log_evenement, $nb_logs_evenement);
+						}
+						
+						// page afficher_carte.php
+						$sql = "SELECT COUNT(*) as nb_logs_carte, MONTH(date_acces) as mois
+									FROM acces_log
+									WHERE id_perso='$id_perso_select'
+									AND page LIKE 'evenement.php%'
+									AND YEAR(date_acces) = '$annee'
+									GROUP BY MONTH(date_acces)";
+						$res = $mysqli->query($sql);
+						
+						while ($t = $res->fetch_assoc()) {
+							$nb_logs_carte 	= $t['nb_logs_carte'];
+							$mois_carte		= $t['mois'];
+							
+							if ($mois_carte_tmp == 0) {
+								for ($i = 1; $i < $mois_carte; $i++) {
+									array_push($data_log_carte, 0);
+								}
+								
+								$mois_carte_tmp = $mois_carte;
+							}
+							else {
+								for ($i = $mois_carte_tmp + 1; $i < $mois_carte; $i++) {
+									array_push($data_log_carte, 0);
+								}
+								
+								$mois_carte_tmp = $mois_carte;
+							}
+							
+							array_push($data_log_carte, $nb_logs_carte);
 						}
 						
 						echo "<canvas id='chBarAnnee'></canvas>";
@@ -682,6 +790,11 @@ if(isset($_SESSION["id_perso"])){
 						label: 'evenement.php',
 						data: <?php echo json_encode($data_log_evenement); ?>,
 						backgroundColor: colors[1]
+					},
+					{
+						label: 'afficher_carte.php',
+						data: <?php echo json_encode($data_log_carte); ?>,
+						backgroundColor: colors[2]
 					}]
 				},
 				options: {
@@ -716,6 +829,11 @@ if(isset($_SESSION["id_perso"])){
 						label: 'evenement.php',
 						data: <?php echo json_encode($data_log_evenement); ?>,
 						backgroundColor: colors[1]
+					},
+					{
+						label: 'afficher_carte.php',
+						data: <?php echo json_encode($data_log_carte); ?>,
+						backgroundColor: colors[2]
 					}]
 				},
 				options: {
@@ -740,7 +858,7 @@ if(isset($_SESSION["id_perso"])){
 			new Chart(chBarAnnee, {
 				type: 'bar',
 				data: {
-					labels: ["01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12"],
+					labels: ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Aout", "Septembre", "Octobre", "Novembre", "Décembre"],
 					datasets: [{
 						label: 'jouer.php',
 						data: <?php echo json_encode($data_log_jouer); ?>,
@@ -750,6 +868,11 @@ if(isset($_SESSION["id_perso"])){
 						label: 'evenement.php',
 						data: <?php echo json_encode($data_log_evenement); ?>,
 						backgroundColor: colors[1]
+					},
+					{
+						label: 'afficher_carte.php',
+						data: <?php echo json_encode($data_log_carte); ?>,
+						backgroundColor: colors[2]
 					}]
 				},
 				options: {

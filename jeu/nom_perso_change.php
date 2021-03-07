@@ -88,8 +88,20 @@ if ($chef) {
 
 	$nom_perso = $t['nom_perso'];
 
-	echo "<h3><center>Perso ".$nom_perso." - Demande de changement de nom à l'animation</h3>";
-
+	echo "	<div class='row'>";
+	echo "		<div class='col-12'>";
+	echo "			<div align='center'>";
+	echo "				<h3><center>Perso ".$nom_perso." - Demande de changement de nom à l'animation</h3>";
+	echo "			</div>";
+	echo "		</div>";
+	echo "	</div>";
+	
+	echo "<hr>";
+	
+	echo "	<div class='row'>";
+	echo "		<div class='col-12'>";
+	echo "			<div align='center'>";
+	
 	// Existe t-il déjà une demande de changement de nom ?
 	$sql = "SELECT * FROM perso_demande_anim WHERE id_perso='$id' AND type_demande='1'";
 	$res = $mysqli->query($sql);
@@ -108,6 +120,10 @@ if ($chef) {
 	else {
 		echo "<center><font color='red'>Une demande de changement de nom pour ce perso a déjà été effectuée, veuillez patienter</font></center>";
 	}
+	
+	echo "			</div>";
+	echo "		</div>";
+	echo "	</div>";
 }
 else {
 	echo "<center><font color='red'>La demande changement de nom ne peut se faire que pour votre chef</font></center>";

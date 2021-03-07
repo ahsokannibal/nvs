@@ -384,7 +384,7 @@ if(isset($_SESSION["id_perso"])){
 							?>
 							</select>
 						</div>
-						<input type='submit' value='Enregistrer'>
+						<input type='submit' value='Enregistrer' class='btn btn-success'>
 					</form>
 					
 				</div>

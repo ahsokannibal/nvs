@@ -212,6 +212,7 @@ if($dispo == '1' || $admin){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
+						<a href='compte.php' class='btn btn-primary'>Retour à la page Compte</a>
 						<?php
 						echo "<font color='blue'>".$mess."</font><br />";
 						echo "<font color='red'><b>".$mess_erreur."</b></font><br />";

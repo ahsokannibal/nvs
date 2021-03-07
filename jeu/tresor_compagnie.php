@@ -120,6 +120,19 @@ if($dispo == '1' || $admin){
 									$sql = "INSERT INTO histobanque_compagnie (id_compagnie, id_perso, operation, montant) VALUES ('$id_compagnie','$id_emp','2','-$montant_emp')";
 									$mysqli->query($sql);
 									
+									// MAJ date_dernier_retrait
+									$sql = "SELECT * FROM anti_zerk_banque_compagnie WHERE id_perso='$id_emp'";
+									$res = $mysqli->query($sql);
+									$nb = $res->num_rows;
+									
+									if ($nb > 0) {
+										$sql = "UPDATE anti_zerk_banque_compagnie SET date_dernier_retrait=NOW() WHERE id_perso='$id_emp'";
+									}
+									else {
+										$sql = "INSERT INTO anti_zerk_banque_compagnie (id_perso, date_dernier_retrait) VALUES ('$id_emp', NOW())";
+									}
+									$mysqli->query($sql);
+									
 									echo "<center><font color='blue'>Vous avez validé l'emprunt de $montant_emp po pour $nom_emp</font></center>";
 								}
 								else { 
