@@ -93,25 +93,25 @@ Il y a plusieurs types de terrains différents, ayant tous : un coût de déplac
 								<th style="text-align:center">case</th><th style="text-align:center">nom</th><th style="text-align:center">coût PM</th><th style="text-align:center">Défense à distance (1)</th><th style="text-align:center">Défense au CàC</th><th style="text-align:center">Perception</th><th style="text-align:center">Récupération</th>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/1.gif' /></td><td align='center'>Plaine</td><td align='center'>1</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/1.gif' /></td><td align='center'>Plaine</td><td align='center'>1</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/2.gif' /></td><td align='center'>Coline</td><td align='center'>2</td><td align='center'>-10%</td><td align='center'> - </td><td align='center'>+1</td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/2.gif' /></td><td align='center'>Coline</td><td align='center'>2</td><td align='center'>-10%</td><td align='center'> - </td><td align='center'>+1</td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/3.gif' /></td><td align='center'>Montagne</td><td align='center'>4</td><td align='center'>+10%</td><td align='center'> - </td><td align='center'>+2</td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/3.gif' /></td><td align='center'>Montagne</td><td align='center'>4</td><td align='center'>+10%</td><td align='center'> - </td><td align='center'>+2</td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/4.gif' /></td><td align='center'>Desert</td><td align='center'>4</td><td align='center'>-10%</td><td align='center'>-10%</td><td align='center'> - </td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/4.gif' /></td><td align='center'>Desert</td><td align='center'>4</td><td align='center'>-10%</td><td align='center'>-10%</td><td align='center'> - </td><td align='center'>-10</td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/6.gif' /></td><td align='center'>Marécage</td><td align='center'>2</td><td align='center'> - </td><td align='center'>-10%</td><td align='center'> - </td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/6.gif' /></td><td align='center'>Marécage</td><td align='center'>2</td><td align='center'> - </td><td align='center'>-10%</td><td align='center'> - </td><td align='center'>-5</td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/7.gif' /></td><td align='center'>Forêt</td><td align='center'>2</td><td align='center'>+20%</td><td align='center'> - </td><td align='center'>-2</td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/7.gif' /></td><td align='center'>Forêt</td><td align='center'>2</td><td align='center'>+20%</td><td align='center'> - </td><td align='center'>-2</td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/8.gif' /></td><td align='center'>Eau / Rivière</td><td align='center'>4</td><td align='center'>+10%</td><td align='center'>+10%</td><td align='center'> - </td><td align='center'></td>
+								<td align='center'><img src='../fond_carte/8.gif' /></td><td align='center'>Eau / Rivière</td><td align='center'>4</td><td align='center'>+10%</td><td align='center'>+10%</td><td align='center'> - </td><td align='center'> - </td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../fond_carte/9.gif' /></td><td align='center'>Eau profonde</td><td align='center'>Infranchissable</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td>
