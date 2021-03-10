@@ -73,7 +73,8 @@ if($dispo == '1' || $admin){
 				$genie		= $t_i["genie"];
 				
 				// Bonus recup batiment
-				$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id);
+				$bonus_recup_bat 		= get_bonus_recup_bat_perso($mysqli, $id);
+				$bonus_recup_terrain 	= get_bonus_recup_terrain_perso($mysqli, $x_p, $y_p);
 				
 				// Si perso chien
 				if ($type_p == 6) {
@@ -400,6 +401,9 @@ if($dispo == '1' || $admin){
 											}
 											if ($bonus_recup_bat) {
 												echo " <font color='green'>(Batiment : +".$bonus_recup_bat.")</font>";
+											}
+											if ($bonus_recup_terrain) {
+												echo " <font color='red'>(Terrain : ".$bonus_recup_terrain.")</font>";
 											}
 											// Perception
 											echo " - <u><b>Perception :</b></u> ".$per_p; 

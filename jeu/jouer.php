@@ -2290,9 +2290,11 @@ if($dispo == '1' || $admin){
 				$chargeMax_perso		= $t_perso2["chargeMax_perso"];
 				
 				// Bonus recup batiment
-				$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso);
+				$bonus_recup_bat 		= get_bonus_recup_bat_perso($mysqli, $id_perso);
+				$bonus_recup_terrain 	= get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso);
 				
 				$bonusRecup_perso += $bonus_recup_bat;
+				$bonusRecup_perso += $bonus_recup_terrain;
 				
 				// Si perso chien
 				if ($type_perso == 6) {

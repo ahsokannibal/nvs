@@ -156,6 +156,16 @@ function get_malus_visu($fond)
 	}
 }
 
+// Donne les malus en recup suivant le terrain
+function get_malus_recup($fond) 
+{
+	switch($fond) {
+		case(I_MARECAGE): return -5; break; 
+		case(I_DESERT): return 10; break;
+		default: return 0;
+	}
+}
+
 // Donne le nom du terrain
 function get_nom_terrain($fond) {
 	switch($fond) {
@@ -266,6 +276,21 @@ function get_bonus_recup_bat_perso($mysqli, $id_perso) {
 	}
 	
 	return $bonus_recup_bat;	
+}
+
+function get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso) {
+	
+	$bonus_recup_terrain = 0;
+		
+	$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x_perso AND y_carte=$y_perso";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+		
+	$fond = $t['fond_carte'];
+		
+	$bonus_recup_terrain = get_malus_recup($fond);
+	
+	return $bonus_recup_terrain;
 }
 
 function get_bonus_recup_bat($id_bat) {
