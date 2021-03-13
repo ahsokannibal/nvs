@@ -101,7 +101,7 @@ function afficher_liens_objet($nb_o, $x, $y) {
  */
 function afficher_liens_rail_genie($genie_compagnie_perso, $fond_im) {
 	
-	if ($genie_compagnie_perso && $fond_im == 'rail.gif') {
+	if ($genie_compagnie_perso && ($fond_im == 'rail.gif' || $fond_im == 'rail_1.gif' || $fond_im == 'rail_2.gif' || $fond_im == 'rail_3.gif' || $fond_im == 'rail_4.gif' || $fond_im == 'rail_5.gif' || $fond_im == 'railP.gif')) {
 		echo "		<div><a href='action.php?saboter_rail=ok' >Détruire le rail (10 PA)</a></div> ";
 	}
 	

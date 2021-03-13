@@ -34,7 +34,9 @@ $couleur_brouillard_desert		= Imagecolorallocate($gare_carte, 225, 206, 154); //
 $couleur_brouillard_foret		= Imagecolorallocate($gare_carte, 97, 77, 26); // 
 
 // je vais chercher les rails dans ma table
-$sql = "SELECT x_carte, y_carte FROM carte WHERE fond_carte='rail.gif' AND vue_nord='1'";
+$sql = "SELECT x_carte, y_carte FROM carte 
+		WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')
+		AND vue_nord='1'";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){

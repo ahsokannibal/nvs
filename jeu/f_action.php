@@ -37,7 +37,7 @@ function image_action($id_action){
 	}
 }
 
-function construire_rail($mysqli, $t_bat, $id_perso, $carte){
+function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 	
 	$sql = "SELECT pa_perso, nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
@@ -51,25 +51,25 @@ function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 		
 		// recuperation de la couleur du camp du perso
 		$couleur_clan_perso = couleur_clan($camp);
-	
-		// Récupération coordonnées rail
-		if(isset($_POST['pose_rail'])){
-			$t_rail = $_POST['pose_rail'];
-		}
-		else {
-			$t_rail = $_POST['hid_pose_rail'];
-		}
 
 		$t_rail2 = explode(',',$t_rail);
 		$x_rail = $t_rail2[0];
 		$y_rail = $t_rail2[1];
+		$fond_rail = $t_rail2[2];
 		
 		// verification possibilité construction rail
 		$verif_construction_rail = verification_construction_rail($mysqli, $x_rail, $y_rail);
 		
 		if ($verif_construction_rail) {
+			
+			// mettre la bonne image de rail
+			$t_rail3 = explode('.', $fond_rail);
+			$num_rail = $t_rail3[0];
+			
+			$image_rail = "rail_".$num_rail.".gif";
+			
 			// mise a jour de la carte
-			$sql = "UPDATE $carte SET fond_carte='rail.gif' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
+			$sql = "UPDATE $carte SET fond_carte='$image_rail' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
 			$mysqli->query($sql);
 			
 			$gain_xp = rand(1,3);
@@ -106,7 +106,8 @@ function construire_rail($mysqli, $t_bat, $id_perso, $carte){
 function verification_construction_rail($mysqli, $x_rail, $y_rail) {
 	
 	// Le rail est-il collé à un autre rail ?
-	$sql = "SELECT fond_carte FROM carte WHERE fond_carte='rail.gif'
+	$sql = "SELECT fond_carte FROM carte 
+			WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')
 			AND x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 
 			AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1";
 	$res = $mysqli->query($sql);
@@ -633,7 +634,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 								
 								if ($id_bat == 1) {
 									// Barricade peut être construite sur rail
-									if ($fond_carte != 'rail.gif' && $fond_carte != '1.gif') {
+									if ($fond_carte != 'rail.gif' && $fond_carte != 'rail_1.gif' && $fond_carte != 'rail_2.gif' && $fond_carte != 'rail_3.gif' && $fond_carte != 'rail_4.gif' && $fond_carte != 'rail_5.gif' && $fond_carte != 'railP.gif' 
+										&& $fond_carte != '1.gif') {
 										$verif_fond_carte = false;
 									}
 								}
@@ -820,7 +822,9 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 																// Gare 
 																
 																// Est ce que la gare est connectée à des rails ?
-																$sql = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte WHERE x_carte >= $x_bat -2 AND x_carte <= $x_bat + 2 AND y_carte >= $y_bat - 2 AND y_carte <= $y_bat + 2 AND fond_carte='rail.gif'";
+																$sql = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte 
+																		FROM carte WHERE x_carte >= $x_bat -2 AND x_carte <= $x_bat + 2 AND y_carte >= $y_bat - 2 AND y_carte <= $y_bat + 2 
+																		AND (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')";
 																$res = $mysqli->query($sql);
 																$nb_connections = $res->num_rows;
 																
@@ -895,7 +899,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 																				$sql_r = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
 																						WHERE x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1
 																						AND coordonnees NOT IN ( '" . implode( "', '" , $tab_rail ) . "' )
-																						AND fond_carte='rail.gif'";
+																						AND (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')";
 																				$res_r = $mysqli->query($sql_r);
 																				$num_res = $res_r->num_rows;
 																				
@@ -963,7 +967,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 																		// Est ce que la gare est connectée à des rails ?
 																		$sql = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
 																				WHERE x_carte >= $x_bat - 2 AND x_carte <= $x_bat + 2 AND y_carte >= $y_bat - 2 AND y_carte <= $y_bat + 2 
-																				AND fond_carte='rail.gif'";
+																				AND (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')";
 																		$res = $mysqli->query($sql);
 																		$nb_connections = $res->num_rows;
 																		
@@ -986,7 +990,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 																					$sql_r = "SELECT x_carte, y_carte, occupee_carte, idPerso_carte, image_carte FROM carte 
 																							WHERE x_carte >= $x_rail - 1 AND x_carte <= $x_rail + 1 AND y_carte >= $y_rail - 1 AND y_carte <= $y_rail + 1
 																							AND coordonnees NOT IN ( '" . implode( "', '" , $tab_rail2 ) . "' )
-																							AND (fond_carte='rail.gif' OR image_carte='r.png' OR image_carte='b.png')
+																							AND (fond_carte='rail.gif'  OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif' OR image_carte='r.png' OR image_carte='b.png')
 																							AND (idPerso_carte != '$id_i_bat' OR idPerso_carte IS NULL)";
 																					$res_r = $mysqli->query($sql_r);
 																					$num_res = $res_r->num_rows;

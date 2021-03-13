@@ -280,21 +280,57 @@ if($dispo == '1' || $admin) {
 				
 				// recuperation de la couleur du camp du perso
 				$couleur_clan_perso = couleur_clan($camp_perso);
-			
-				// Mise à jour des PA du perso
-				$sql = "UPDATE perso SET pa_perso = pa_perso - 10 WHERE id_perso='$id_perso'";
-				$mysqli->query($sql);
 				
-				// Pose du rail
-				$sql = "UPDATE carte SET fond_carte='1.gif' WHERE x_carte='$x_perso' AND y_carte='$y_perso' AND fond_carte='rail.gif'";
-				$mysqli->query($sql);
+				// récupération du rail à détruire
+				$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
 				
-				// Insertion ligne evenement du perso
-				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
-						VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a détruit <b>rail</b>',NULL,'',' en $x_perso / $y_perso',NOW(),'0')";
-				$mysqli->query($sql);
+				$fond_carte_rail = $t['fond_carte'];
 				
-				header("Location:jouer.php");
+				$t_rail = explode('.', $fond_carte_rail);
+				$t_rail2 = explode('_', $t_rail[0]);
+				
+				if (isset($t_rail2[0]) && ($t_rail2[0] == 'rail' || $t_rail2[0] == 'railP')) {
+				
+					if (count($t_rail2) == 2 || (count($t_rail2) == 1 && $t_rail2[0] == 'rail')) {
+						
+						if (count($t_rail2) == 2) {
+							$numero_fond = $t_rail2[1];
+						}
+						else {
+							$numero_fond = '1';
+						}
+						
+						$fond_carte = $numero_fond.".gif";
+						
+						// Mise à jour des PA du perso
+						$sql = "UPDATE perso SET pa_perso = pa_perso - 10 WHERE id_perso='$id_perso'";
+						$mysqli->query($sql);
+						
+						// MAJ carte destruction rail
+						$sql = "UPDATE carte SET fond_carte='$fond_carte' WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+						$mysqli->query($sql);
+						
+						// Insertion ligne evenement du perso
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
+								VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a détruit <b>rail</b>',NULL,'',' en $x_perso / $y_perso',NOW(),'0')";
+						$mysqli->query($sql);
+						
+						header("Location:jouer.php");
+					}
+					else if (count($t_rail2) == 1 && $t_rail2[0] == 'railP') {
+						
+					}
+					else {
+						echo "<center><font color='red'>Case non reconnue comme un rail valide</font>";
+						echo "<br /><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
+					}
+				}
+				else {
+					echo "<center><font color='red'>Case non reconnue comme un rail</font>";
+					echo "<br /><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
+				}
 			}
 			else {
 				echo "<center><font color='red'>Pas assez de PA</font>";
@@ -1535,7 +1571,7 @@ if($dispo == '1' || $admin) {
 										
 										// lien annuler
 										echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
-									} 
+									}
 									else if ($nom_action == 'Construire - Rail') {
 										
 										$image_bat = "rail.gif";
@@ -1585,13 +1621,13 @@ if($dispo == '1' || $admin) {
 															//positionnement du fond
 															$fond_carte = $tab["fond_carte"];
 															
-															if($fond_carte == '1.gif'){
+															if($fond_carte == '1.gif' || $fond_carte == '2.gif' || $fond_carte == '3.gif' || $fond_carte == '4.gif' || $fond_carte == '5.gif'){
 																echo "
 																	<td width=40 height=40> 
 																		<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
 																			onMouseOver=\"this.src='../fond_carte/$image_bat';\" 
 																			onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
-																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y\" >
+																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
 																	</td>";
 															}
 															else {

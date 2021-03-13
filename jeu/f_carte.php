@@ -20,6 +20,12 @@ define("I_PONT_R","b5r.png");
 define("I_ROUTE_B","b4b.png");
 define("I_ROUTE_R","b4r.png");
 define("I_RAIL","rail.gif");
+define("I_RAIL1","rail_1.gif");
+define("I_RAIL2","rail_2.gif");
+define("I_RAIL3","rail_3.gif");
+define("I_RAIL4","rail_4.gif");
+define("I_RAIL5","rail_5.gif");
+define("I_RAILP","railP.gif");
 
 //vérifie si les coordonnées passées en argument sont bien sur la carte
 function in_map($x, $y, $X_MAX, $Y_MAX)
@@ -183,6 +189,12 @@ function get_nom_terrain($fond) {
 		case(I_PONT_B): return "Pont"; break;
 		case(I_PONT_R): return "Pont"; break;
 		case(I_RAIL): return "Rail"; break;
+		case(I_RAIL1): return "Rail"; break;
+		case(I_RAIL2): return "Rail"; break;
+		case(I_RAIL3): return "Rail"; break;
+		case(I_RAIL4): return "Rail"; break;
+		case(I_RAIL5): return "Rail"; break;
+		case(I_RAILP): return "Rail"; break;
 		default: return "Inconnu";
 	}
 }

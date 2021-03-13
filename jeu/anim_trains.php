@@ -99,7 +99,7 @@ if($dispo == '1' || $admin){
 					
 						// On cherches les rails autours de la gare 1
 						$sql = "SELECT x_carte, y_carte FROM carte 
-								WHERE fond_carte='rail.gif'
+								WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')
 								AND x_carte >= $x_gare_respaw_train - 2 AND x_carte <= $x_gare_respaw_train +2 AND y_carte >= $y_gare_respaw_train - 2 AND y_carte <= $y_gare_respaw_train + 2";
 						$res = $mysqli->query($sql);
 						
@@ -410,7 +410,8 @@ if($dispo == '1' || $admin){
 									
 									if ($id_train != NULL && $id_train != 0) {
 										// Est ce que le train a un obstacle devant lui l'empéchant d'avancer ?
-										$sql_o = "SELECT x_carte, y_carte, idPerso_carte FROM carte WHERE fond_carte='rail.gif'
+										$sql_o = "SELECT x_carte, y_carte, idPerso_carte FROM carte 
+													WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')
 													AND x_carte >= $x_train - 1 AND x_carte <= $x_train + 1
 													AND y_carte >= $y_train - 1 AND y_carte <= $y_train + 1
 													AND occupee_carte = '1'
