@@ -39,13 +39,14 @@ function image_action($id_action){
 
 function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 	
-	$sql = "SELECT pa_perso, nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT pa_perso, pv_perso, nom_perso, clan FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
 	$camp		= $t['clan'];
 	$nom_perso	= $t['nom_perso'];
 	$pa_perso 	= $t['pa_perso'];
+	$pv_perso	= $t['pv_perso'];
 	
 	if ($pa_perso >= 4) {
 		
@@ -68,33 +69,73 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 			
 			$image_rail = "rail_".$num_rail.".gif";
 			
-			// mise a jour de la carte
-			$sql = "UPDATE $carte SET fond_carte='$image_rail' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
-			$mysqli->query($sql);
+			if ($num_rail == '2') {
+				// Coline
+				$cout_pa = 6;
+				$cout_pv = 0;
+			}
+			else if ($num_rail == '3') {
+				// Montagne
+				$cout_pa = 8;
+				$cout_pv = 0;
+			}
+			else if ($num_rail == '4') {
+				// desert
+				$cout_pa = 4;
+				$cout_pv = 50;
+			}
+			else if ($num_rail == '5') {
+				// plaine enneigée
+				$cout_pa = 5;
+				$cout_pv = 0;
+			}
+			else {
+				// plaine
+				$cout_pa = 4;
+				$cout_pv = 0;
+			}
 			
-			$gain_xp = rand(1,3);
+			if ($pa_perso >= $cout_pa && $pv_perso >= $cout_pv) {
 			
-			// maj pa perso 
-			$sql = "UPDATE perso SET pa_perso = pa_perso - 4, xp_perso = xp_perso + $gain_xp, pi_perso = pi_perso + $gain_xp WHERE id_perso='$id_perso'";
-			$mysqli->query($sql);
-			
-			//mise a jour de la table evenement
-			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'',' - gain de $gain_xp XP/PI',NOW(),'0')";
-			$mysqli->query($sql);
-			
-			return 1;
+				// mise a jour de la carte
+				$sql = "UPDATE $carte SET fond_carte='$image_rail' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
+				$mysqli->query($sql);
+				
+				$gain_xp = rand(1,3);
+				
+				// maj pa perso 
+				$sql = "UPDATE perso SET pa_perso = pa_perso - $cout_pa, pv_perso = pv_perso - $cout_pv, xp_perso = xp_perso + $gain_xp, pi_perso = pi_perso + $gain_xp WHERE id_perso='$id_perso'";
+				$mysqli->query($sql);
+				
+				//mise a jour de la table evenement
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'',' - gain de $gain_xp XP/PI',NOW(),'0')";
+				$mysqli->query($sql);
+				
+				return 1;
+			}
+			else {
+				echo "<center>";
+				echo "<b><font color='red'>Vous devez disposer de $cout_pa PA (vous possédez $pa_perso PA) ";
+				if ($cout_pv > 0) {
+					echo "et de $cout_pv PV (vous possédez $pv_perso PV) ";
+				}
+				echo "pour construire un rail sur ce terrain</font></b>";
+				
+				echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>Retour</a>";
+				echo "</center>";
+			}
 		}
 		else {
 			echo "<center>";
 			echo "<b><font color='red'>Un rail ne peut se poser qu'à proximité d'une gare ou d'un autre rail</font></b>";
-			echo "<br /><a href='jouer.php' class='btn btn-primary'>Retour</a>";
+			echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>Retour</a>";
 			echo "</center>";
 		}
 	}
 	else {
 		echo "<center>";
-		echo "<b><font color='red'>Vous devez posséder au moins 4 PA pour construire un rail</font></b>";
-		echo "<br /><a href='jouer.php' class='btn btn-primary'>Retour</a>";
+		echo "<b><font color='red'>Vous devez posséder au minimum 4 PA pour construire un rail</font></b>";
+		echo "<br /><br /><a href='jouer.php' class='btn btn-primary'>Retour</a>";
 		echo "</center>";
 	}
 }

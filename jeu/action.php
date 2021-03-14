@@ -1586,9 +1586,11 @@ if($dispo == '1' || $admin) {
 										$y_perso 	= $t_coord['y_perso'];
 										$pa_perso	= $t_coord['pa_perso'];
 										
-										// Il faut 4 PA pour construire un rail
+										// Il faut minimum 4 PA pour construire un rail
 										if ($pa_perso >= 4) {
-										
+											
+											echo "<div align='center' id='infoCoutPA'>&nbsp;</div>";
+											
 											// recuperation des donnees de la carte
 											$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
 													FROM $carte WHERE x_carte >= $x_perso - $taille_batiment AND x_carte <= $x_perso + $taille_batiment AND y_carte <= $y_perso + $taille_batiment AND y_carte >= $y_perso - $taille_batiment 
@@ -1621,12 +1623,48 @@ if($dispo == '1' || $admin) {
 															//positionnement du fond
 															$fond_carte = $tab["fond_carte"];
 															
-															if($fond_carte == '1.gif' || $fond_carte == '2.gif' || $fond_carte == '3.gif' || $fond_carte == '4.gif' || $fond_carte == '5.gif'){
+															if($fond_carte == '1.gif') {
 																echo "
 																	<td width=40 height=40> 
 																		<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
-																			onMouseOver=\"this.src='../fond_carte/$image_bat';\" 
-																			onMouseOut=\"this.src='../fond_carte/$fond_carte';\" >
+																			onMouseOver=\"this.src='../fond_carte/$image_bat'; document.getElementById('infoCoutPA').innerHTML = '<b><u>cout PA :</u> 4</b>'; \" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte'; document.getElementById('infoCoutPA').innerHTML = '&nbsp;'; \" >
+																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
+																	</td>";
+															}
+															else if ($fond_carte == '2.gif') {
+																echo "
+																	<td width=40 height=40> 
+																		<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																			onMouseOver=\"this.src='../fond_carte/$image_bat'; document.getElementById('infoCoutPA').innerHTML = '<b><u>cout PA :</u> 6</b>'; \" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte'; document.getElementById('infoCoutPA').innerHTML = '&nbsp;'; \" >
+																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
+																	</td>";
+															}
+															else if ($fond_carte == '3.gif') {
+																echo "
+																	<td width=40 height=40> 
+																		<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																			onMouseOver=\"this.src='../fond_carte/$image_bat'; document.getElementById('infoCoutPA').innerHTML = '<b><u>cout PA :</u> 8</b>'; \" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte'; document.getElementById('infoCoutPA').innerHTML = '&nbsp;'; \" >
+																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
+																	</td>";
+															}
+															else if ($fond_carte == '4.gif') {
+																echo "
+																	<td width=40 height=40> 
+																		<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																			onMouseOver=\"this.src='../fond_carte/$image_bat'; document.getElementById('infoCoutPA').innerHTML = '<b><u>cout PA :</u> 4</b> -- <b><u>cout PV :</u> 50</b>'; \" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte'; document.getElementById('infoCoutPA').innerHTML = '&nbsp;'; \" >
+																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
+																	</td>";
+															}
+															else if ($fond_carte == '5.gif') {
+																echo "
+																	<td width=40 height=40> 
+																		<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																			onMouseOver=\"this.src='../fond_carte/$image_bat'; document.getElementById('infoCoutPA').innerHTML = '<b><u>cout PA :</u> 5</b>'; \" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte'; document.getElementById('infoCoutPA').innerHTML = '&nbsp;'; \" >
 																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
 																	</td>";
 															}
@@ -1649,7 +1687,7 @@ if($dispo == '1' || $admin) {
 											echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 										}
 										else {
-											echo "<center>Il vous faut 4 PA pour construire un rail</center>";
+											echo "<center>Il vous faut minimum 4 PA pour construire un rail</center>";
 											
 											// lien retour
 											echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center>";

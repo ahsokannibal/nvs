@@ -147,6 +147,13 @@ function cout_pm($fond)
 		case(I_ROUTE_R): return 1; break; 	// route rouge
 		case(I_PONT_B): return 1; break; 	// pont bleu
 		case(I_PONT_R): return 1; break; 	// pont rouge
+		case(I_RAIL): return 1; break; 		// ancien rail sur plaine
+		case(I_RAIL1): return 1; break; 	// nouveau rail sur plaine
+		case(I_RAIL2): return 1; break; 	// rail sur coline
+		case(I_RAIL3): return 2; break; 	// rail sur montagne
+		case(I_RAIL4): return 2; break; 	// rail sur desert
+		case(I_RAIL5): return 1; break; 	// rail sur plaine enneigée
+		case(I_RAILP): return 1; break; 	// rail sur pont
 		default: return 1;
 	}
 }
@@ -189,13 +196,26 @@ function get_nom_terrain($fond) {
 		case(I_PONT_B): return "Pont"; break;
 		case(I_PONT_R): return "Pont"; break;
 		case(I_RAIL): return "Rail"; break;
-		case(I_RAIL1): return "Rail"; break;
-		case(I_RAIL2): return "Rail"; break;
-		case(I_RAIL3): return "Rail"; break;
-		case(I_RAIL4): return "Rail"; break;
-		case(I_RAIL5): return "Rail"; break;
-		case(I_RAILP): return "Rail"; break;
+		case(I_RAIL1): return "Rail sur plaine"; break;
+		case(I_RAIL2): return "Rail sur colline"; break;
+		case(I_RAIL3): return "Rail sur montagne"; break;
+		case(I_RAIL4): return "Rail sur desert"; break;
+		case(I_RAIL5): return "Rail sur plaine enneigée"; break;
+		case(I_RAILP): return "Rail sur pont"; break;
 		default: return "Inconnu";
+	}
+}
+
+function is_case_pont($fond) {
+	switch($fond) {
+		case(I_RAIL): return true; break;
+		case(I_RAIL1): return true; break;
+		case(I_RAIL2): return true; break;
+		case(I_RAIL3): return true; break;
+		case(I_RAIL4): return true; break;
+		case(I_RAIL5): return true; break;
+		case(I_RAILP): return true; break;
+		default: return false;
 	}
 }
 
