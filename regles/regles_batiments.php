@@ -204,7 +204,7 @@
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
-								<td>Il est possible pour le génie de construire des rails mais aussi de les détruire. <b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
+								<td>Il est possible pour le génie de construire des rails mais aussi de les détruire. Le coût de construction d'un rail dépend du terrain sur lequel on souhaite le poser (4PA sur une plaine, 8PA sur une montagne) et demande parfois un cout supplémentaire en PV (50 PV en desert).<br /><b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
 							</tr>
 						</table>
 					</div>
