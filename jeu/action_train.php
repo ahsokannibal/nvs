@@ -103,7 +103,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					
 				// Récupération des rails autours du train
 				$sql_r = "SELECT x_carte, y_carte, fond_carte FROM carte 
-							WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')
+							WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif')
 							AND x_carte >= $x_train-1 AND x_carte <= $x_train+1
 							AND y_carte >= $y_train-1 AND y_carte <= $y_train+1
 							AND coordonnees NOT IN ( '" . implode( "', '" , $tab_dep_train ) . "' )";

@@ -25,6 +25,7 @@ define("I_RAIL2","rail_2.gif");
 define("I_RAIL3","rail_3.gif");
 define("I_RAIL4","rail_4.gif");
 define("I_RAIL5","rail_5.gif");
+define("I_RAIL7","rail_7.gif");
 define("I_RAILP","railP.gif");
 
 //vérifie si les coordonnées passées en argument sont bien sur la carte
@@ -153,6 +154,7 @@ function cout_pm($fond)
 		case(I_RAIL3): return 2; break; 	// rail sur montagne
 		case(I_RAIL4): return 2; break; 	// rail sur desert
 		case(I_RAIL5): return 1; break; 	// rail sur plaine enneigée
+		case(I_RAIL7): return 1; break; 	// rail sur forêt
 		case(I_RAILP): return 1; break; 	// rail sur pont
 		default: return 1;
 	}
@@ -201,12 +203,13 @@ function get_nom_terrain($fond) {
 		case(I_RAIL3): return "Rail sur montagne"; break;
 		case(I_RAIL4): return "Rail sur desert"; break;
 		case(I_RAIL5): return "Rail sur plaine enneigée"; break;
+		case(I_RAIL7): return "Rail dans forêt"; break;
 		case(I_RAILP): return "Rail sur pont"; break;
 		default: return "Inconnu";
 	}
 }
 
-function is_case_pont($fond) {
+function is_case_rail($fond) {
 	switch($fond) {
 		case(I_RAIL): return true; break;
 		case(I_RAIL1): return true; break;
@@ -214,6 +217,7 @@ function is_case_pont($fond) {
 		case(I_RAIL3): return true; break;
 		case(I_RAIL4): return true; break;
 		case(I_RAIL5): return true; break;
+		case(I_RAIL7): return true; break;
 		case(I_RAILP): return true; break;
 		default: return false;
 	}
@@ -412,37 +416,39 @@ function get_cibles_pnj($mysqli, $x_perso, $y_perso, $perc, $portee) {
 /**
  * Fonction qui donne les persos dans sa visu
  */
-function get_persos_visu($mysqli, $x_perso, $y_perso, $perc, $id)
+function get_persos_visu($mysqli, $x_perso, $y_perso, $perc, $id, $id_joueur_p)
 {
-	$sql = "SELECT DISTINCT perso.nom_perso, perso.id_perso
+	$sql = "SELECT DISTINCT perso.nom_perso, perso.id_perso, perso.idJoueur_perso, perso.chef
 			FROM perso 
 			WHERE x_perso >= $x_perso - $perc 
 			AND x_perso <= $x_perso + $perc 
 			AND y_perso >= $y_perso - $perc 
 			AND y_perso <= $y_perso + $perc 
-			AND id_perso!='$id'
+			AND idJoueur_perso!='$id_joueur_p'
 			AND perso.est_gele='0'
 			AND type_perso != 6
-			AND pv_perso > 0";
+			AND pv_perso > 0
+			ORDER BY perso.id_perso ASC";
 	return $res = $mysqli->query($sql);
 }
 
 /**
  * Fonction qui donne les persos de son camp dans sa visu
  */
-function get_persos_visu_camp($mysqli, $x_perso, $y_perso, $perc, $id, $camp)
+function get_persos_visu_camp($mysqli, $x_perso, $y_perso, $perc, $id, $camp, $id_joueur_p)
 {
-	$sql = "SELECT DISTINCT perso.nom_perso, perso.id_perso
+	$sql = "SELECT DISTINCT perso.nom_perso, perso.id_perso, perso.idJoueur_perso, perso.chef
 			FROM perso 
 			WHERE x_perso >= $x_perso - $perc 
 			AND x_perso <= $x_perso + $perc 
 			AND y_perso >= $y_perso - $perc 
 			AND y_perso <= $y_perso + $perc 
-			AND perso.id_perso!='$id'
+			AND perso.idJoueur_perso!='$id_joueur_p'
 			AND perso.clan = $camp
 			AND perso.est_gele='0'
 			AND type_perso != 6
-			AND pv_perso > 0";
+			AND pv_perso > 0
+			ORDER BY perso.id_perso ASC";
 	return $res = $mysqli->query($sql);
 }
 

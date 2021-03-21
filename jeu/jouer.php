@@ -4118,7 +4118,7 @@ if($dispo == '1' || $admin){
 													}
 													else {	
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div>\" >";
@@ -4139,7 +4139,7 @@ if($dispo == '1' || $admin){
 													}
 													else {
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div>\" >";
@@ -4158,7 +4158,7 @@ if($dispo == '1' || $admin){
 													}
 													else {	
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div>\" >";
@@ -4177,7 +4177,7 @@ if($dispo == '1' || $admin){
 													}
 													else {	
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div>\" >";
@@ -4196,7 +4196,7 @@ if($dispo == '1' || $admin){
 													}
 													else {	
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div>\" >";
@@ -4215,7 +4215,7 @@ if($dispo == '1' || $admin){
 													}
 													else {	
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div>\" >";
@@ -4234,7 +4234,7 @@ if($dispo == '1' || $admin){
 													}
 													else {	
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div>\" >";
@@ -4253,7 +4253,7 @@ if($dispo == '1' || $admin){
 													}
 													else {	
 														echo "<td width=40 height=40>";
-														if ($valid_case || is_case_pont($fond_im)) {
+														if ($valid_case || is_case_rail($fond_im)) {
 															echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 															echo "			title=\"<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." - ".$cout_pm_terrain." PM</div>\" ";
 															echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div>\" >";

@@ -1668,6 +1668,15 @@ if($dispo == '1' || $admin) {
 																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
 																	</td>";
 															}
+															else if ($fond_carte == '7.gif') {
+																echo "
+																	<td width=40 height=40> 
+																		<input type=\"image\" name=\"pose_rail\" value=\"$x,$y\" border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 
+																			onMouseOver=\"this.src='../fond_carte/$image_bat'; document.getElementById('infoCoutPA').innerHTML = '<b><u>cout PA :</u> 6</b>'; \" 
+																			onMouseOut=\"this.src='../fond_carte/$fond_carte'; document.getElementById('infoCoutPA').innerHTML = '&nbsp;'; \" >
+																		<input type=\"hidden\" name=\"hid_pose_rail\" value=\"$x,$y,$fond_carte\" >
+																	</td>";
+															}
 															else {
 																echo "<td width=40 height=40> <img border=0 src=\"../fond_carte/$fond_carte\" width=40 height=40 ></td>";
 															}

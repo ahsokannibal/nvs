@@ -58,7 +58,7 @@ if($dispo == '1' || $admin){
 					
 					if ($cible == "camp") {
 						// Récupération de tous les persos de mon camp
-						$sql_m = "SELECT id_perso FROM perso WHERE clan='$camp'";
+						$sql_m = "SELECT id_perso FROM perso WHERE clan='$camp' AND chef='1'";
 						$res_m = $mysqli->query($sql_m);						
 					}
 					else if ($cible == "compagnie") {
@@ -71,7 +71,7 @@ if($dispo == '1' || $admin){
 					}
 					else if ($cible == "all") {
 						// Récupération de tous les persos
-						$sql_m = "SELECT id_perso FROM perso";
+						$sql_m = "SELECT id_perso FROM perso AND chef='1'";
 						$res_m = $mysqli->query($sql_m);
 					}
 					else {

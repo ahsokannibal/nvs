@@ -345,9 +345,15 @@ if($dispo == '1' || $admin){
 						$res = $mysqli->query($sql);
 						$t_sum = $res->fetch_assoc();
 						
-						$sum = $t_sum["montant"];
+						$total_fond_dispo = $t_sum["montant"];
 						
 						if(isset($_GET['solde']) && $_GET['solde'] == "ok") {
+							
+							echo "<br />";
+							
+							echo "<div align='center'>";
+							echo "	<h2>Solde par perso</h2>";
+							echo "</div>";
 							
 							if(isset($_GET['detail'])) {
 								
@@ -370,13 +376,16 @@ if($dispo == '1' || $admin){
 								
 								echo "<center>";
 								
-								echo "<b>".$nom_perso." [".$id_p."]</b><br /><br />";
+								echo "<b>".$nom_perso." [<a href='evenement.php?infoid=".$id_p."'>".$id_p."</a>]</b><br /><br />";
 								
 								echo "<div id=\"table_tresor\" class=\"table-responsive\">";
-								echo "	<table class='table' border='1'>";
-								echo "		<tr>";
-								echo "			<th style='text-align:center'>Date opération</th><th style='text-align:center'>Type d'opération</th><th style='text-align:center'>Montant</th>";
-								echo "		</tr>";
+								echo "	<table class='table'>";
+								echo "		<thead>";
+								echo "			<tr>";
+								echo "				<th style='text-align:center'>Date opération</th><th style='text-align:center'>Type d'opération</th><th style='text-align:center'>Montant</th>";
+								echo "			</tr>";
+								echo "		</thead>";
+								echo "		<tbody>";
 								
 								while ($t_solde = $res->fetch_assoc()) {
 									
@@ -418,9 +427,9 @@ if($dispo == '1' || $admin){
 									}
 									
 									if (isset($type_ope)) {
-										echo "		<tr>";
-										echo "			<td>".$date_ope->format('d-m-Y H:i:s')."</td><td>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
-										echo "		</tr>";
+										echo "			<tr>";
+										echo "				<td align='center'>".$date_ope->format('d-m-Y H:i:s')."</td><td align='center'>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
+										echo "			</tr>";
 									}
 								}
 								
@@ -428,6 +437,7 @@ if($dispo == '1' || $admin){
 								echo "				<td align='center'><b>TOTAL</b></td><td></td><td align='center'><b>".$fond_total."</b></td>";
 								echo "			</tr>";
 								
+								echo "		</tbody>";
 								echo "	</table>";
 								echo "</div>";
 								
@@ -447,10 +457,13 @@ if($dispo == '1' || $admin){
 								echo "<center>";
 								
 								echo "<div id='table_tresor_perso' class='table-responsive'>";
-								echo "	<table border='1' class='table' width='100%'>";
-								echo "		<tr>";
-								echo "			<th>Nom [matricule]</th><th style='text-align: center;'>Montant en banque</th><th style='text-align: center;'>Montant calculé des transactions</th><th style='text-align: center;'>Action</th>";
-								echo "		</tr>";
+								echo "	<table class='table'>";
+								echo "		<thead>";
+								echo "			<tr>";
+								echo "				<th>Nom [matricule]</th><th style='text-align: center;'>Montant en banque</th><th style='text-align: center;'>Montant calculé des transactions</th><th style='text-align: center;'>Action</th>";
+								echo "			</tr>";
+								echo "		</thead>";
+								echo "		<tbody>";
 								
 								$fond_total = 0;
 								$total_banque = 0;
@@ -471,27 +484,17 @@ if($dispo == '1' || $admin){
 									
 									$total_banque += $montant_perso_banque;
 									
-									echo "		<tr>";
-									echo "			<td>".$nom_p."[<a href='evenement.php?infoid=".$id_p."'>".$id_p."</a>]</td>";
-									echo "			<td align='center'>".$montant_perso_banque."</td>";
-									echo "			<td align='center'>".$fond_calcul."</td>";
-									echo "			<td align='center'><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok&detail=$id_p' class='btn btn-info'> Consulter détails </a> <a href='nouveau_message.php?pseudo=".$nom_p."' target='_blank'><img src='../images/messagerie.png' width='40' height='40' alt='contacter' title='contacter'></a></td>";
-									echo "		</tr>";
+									echo "			<tr>";
+									echo "				<td>".$nom_p."[<a href='evenement.php?infoid=".$id_p."'>".$id_p."</a>]</td>";
+									echo "				<td align='center'>".$montant_perso_banque."</td>";
+									echo "				<td align='center'>".$fond_calcul."</td>";
+									echo "				<td align='center'><a href='tresor_compagnie.php?id_compagnie=$id_compagnie&solde=ok&detail=$id_p' class='btn btn-info'> Consulter détails </a> <a href='nouveau_message.php?pseudo=".$nom_p."' target='_blank'><img src='../images/messagerie.png' width='40' height='40' alt='contacter' title='contacter'></a></td>";
+									echo "			</tr>";
 								}
 								
-								echo "		<tr>";
-								echo "			<td align='center'><b>TOTAL</b></td>";
-								echo "			<td align='center'>";
-								if ($fond_total < 0) {
-									echo "<font color='red'>";
-								}
-								else {
-									echo "<font color='green'>";
-								}
-								echo "<b>".$fond_total."</b></font>";
-								echo "			</td>";
-								
-								echo "			<td align='center'>";
+								echo "			<tr>";
+								echo "				<td align='center'><b>TOTAL</b></td>";
+								echo "				<td align='center'>";
 								if ($total_banque < 0) {
 									echo "<font color='red'>";
 								}
@@ -499,19 +502,30 @@ if($dispo == '1' || $admin){
 									echo "<font color='green'>";
 								}
 								echo "<b>".$total_banque."</b></font>";
-								echo "			</td>";
+								echo "				</td>";
 								
-								if ($sum > $fond_total) {
-									echo "<td align='center'>Des persos ont quittés la compagnie en laissant de la thune en banque</td>";
+								echo "				<td align='center'>";
+								if ($fond_total < 0) {
+									echo "<font color='red'>";
 								}
-								else if ($sum < $fond_total) {
+								else {
+									echo "<font color='green'>";
+								}
+								echo "<b>".$fond_total."</b></font>";
+								echo "				</td>";
+								
+								if ($total_fond_dispo > $fond_total) {
+									echo "<td align='center'></td>";
+								}
+								else if ($total_fond_dispo < $fond_total) {
 									echo "<td>Votre chef a viré des persos de la compagnie qui possédaient une dette envers la banque, cet argent est perdu à jamais</td>";
 								}
 								else {
 									echo "<td></td>";
 								}
-								echo "		</tr>";
+								echo "			</tr>";
 								
+								echo "		</tbody>";
 								echo "	</table>";
 								echo "</div>";						
 							}
@@ -529,15 +543,24 @@ if($dispo == '1' || $admin){
 							
 							$fond_total_histo = 0;
 							
+							echo "<br />";
+							
+							echo "<div align='center'>";
+							echo "	<h2>Historique des opérations de la trésorerie</h2>";
+							echo "</div>";
+							
 							echo "<div id='table_histo' class='table-responsive'>";
 							echo "	<table class='table' border='1'>";
-							echo "		<tr>";
-							echo "			<th style='text-align:center'>Date opération</th>";
-							echo "			<th style='text-align:center'>Nom perso</th>";
-							echo "			<th style='text-align:center'>Matricule</th>";
-							echo "			<th style='text-align:center'>Type d'opération</th>";
-							echo "			<th style='text-align:center'>Montant</th>";
-							echo "		</tr>";
+							echo "		<thead>";
+							echo "			<tr>";
+							echo "				<th style='text-align:center'>Date opération</th>";
+							echo "				<th style='text-align:center'>Nom perso</th>";
+							echo "				<th style='text-align:center'>Matricule</th>";
+							echo "				<th style='text-align:center'>Type d'opération</th>";
+							echo "				<th style='text-align:center'>Montant</th>";
+							echo "			</tr>";
+							echo "		</thead>";
+							echo "		<tbody>";
 							
 							$sql = "SELECT operation, montant, date_operation, is_auteur, id_perso, id_dest FROM histobanque_compagnie
 										WHERE id_compagnie=$id_compagnie
@@ -652,24 +675,25 @@ if($dispo == '1' || $admin){
 									}
 								}
 								
-								echo "		<tr>";
-								echo "			<td>";
+								echo "			<tr>";
+								echo "				<td align='center'>";
 								if ($date_ope_histo != null) {
 									echo $date_ope_histo->format('d-m-Y H:i:s');
 								}
-								echo "			</td>";
-								echo "			<td>".$nom_perso_histo."</td>";
-								echo "			<td>".$id_perso_histo."</td>";
-								echo "			<td>".$type_ope."</td>";
-								echo "			<td align='center'><font color='".$color."'><b>".$montant_histo."</b></font></td>";
-								echo "		</tr>";
+								echo "				</td>";
+								echo "				<td align='center'>".$nom_perso_histo."</td>";
+								echo "				<td align='center'><a href='evenement.php?infoid=".$id_perso_histo."'>".$id_perso_histo."</a></td>";
+								echo "				<td align='center'>".$type_ope."</td>";
+								echo "				<td align='center'><font color='".$color."'><b>".$montant_histo."</b></font></td>";
+								echo "			</tr>";
 								
 							}
 							
-							echo "		<tr>";
-							echo "			<td align='center' colspan='4'><b>TOTAL</b></td><td align='center'><b>".$fond_total_histo."</b></td>";
-							echo "		</tr>";
+							echo "			<tr>";
+							echo "				<td align='center' colspan='4'><b>TOTAL</b></td><td align='center'><b>".$fond_total_histo."</b></td>";
+							echo "			</tr>";
 							
+							echo "		</tbody>";
 							echo "	</table>";
 							echo "</div>";
 						}
@@ -677,6 +701,76 @@ if($dispo == '1' || $admin){
 							echo "<br />";
 							echo "<center>";
 							echo "	<a href='tresor_compagnie.php?id_compagnie=$id_compagnie&histo=ok' class='btn btn-primary'> Voir l'historique complet de la trésorerie </a><br>";
+							echo "</center>";
+						}
+						
+						if (isset($_GET['log']) && $_GET['log'] == "ok") {
+							
+							echo "<br />";
+							
+							echo "<div align='center'>";
+							echo "	<h2>Logs évolution thunes dans la banque de la compagnie</h2>";
+							echo "</div>";
+							
+							echo "<div id='table_log' class='table-responsive'>";
+							echo "	<table class='table'>";
+							echo "		<thead>";
+							echo "			<tr>";
+							echo "				<th style='text-align:center'>Date log</th>";
+							echo "				<th style='text-align:center'>Nom perso [matricule]</th>";
+							echo "				<th style='text-align:center'>Montant transfert</th>";
+							echo "				<th style='text-align:center'>Montant final</th>";
+							echo "			</tr>";
+							echo "		</thead>";
+							echo "		<tbody>";
+							
+							$sql = "SELECT date_log, id_perso, montant_transfert, montant_final FROM banque_log WHERE id_compagnie='$id_compagnie' ORDER BY id_log DESC";
+							$res = $mysqli->query($sql);
+							
+							while ($t = $res->fetch_assoc()) {
+								
+								$date_log 		= $t['date_log'];
+								$id_perso_log	= $t['id_perso'];
+								$montant_t_log	= $t['montant_transfert'];
+								$montant_f_log	= $t['montant_final'];
+								
+								if ($montant_t_log >= 0) {
+									$couleur_montant = "green";
+								}
+								else {
+									$couleur_montant = "red";
+								}
+								
+								$date_log = new DateTime($date_log, new DateTimeZone('Europe/Paris'));
+								$date_log->add(new DateInterval('PT1H'));
+								
+								$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_log'";
+								$res_p = $mysqli->query($sql_p);
+								$t_p = $res_p->fetch_assoc();
+								
+								$nom_perso_log = $t_p['nom_perso'];
+								
+								echo "			<tr>";
+								echo "				<td align='center'>".$date_log->format('d-m-Y H:i:s')."</td>";
+								if ($nom_perso_log == null || $nom_perso_log == "") {
+									echo "				<td align='center'><i>Perso supprimé - matricule : </i>".$id_perso_log."</td>";
+								}
+								else {
+									echo "				<td align='center'>".$nom_perso_log." [<a href='evenement.php?infoid=".$id_perso_log."'>".$id_perso_log."</a>]</td>";
+								}
+								echo "				<td align='center'><b><font color='".$couleur_montant."'>".$montant_t_log."</font></b></td>";
+								echo "				<td align='center'><b>".$montant_f_log."</b></td>";
+								echo "			</tr>";
+							}
+							
+							echo "		</tbody>";
+							echo "	</table>";
+							echo "</div>";
+						}
+						else {
+							echo "<br />";
+							echo "<center>";
+							echo "	<a href='tresor_compagnie.php?id_compagnie=$id_compagnie&log=ok' class='btn btn-primary'> Voir les logs de l'évolution des fonds de la banque </a><br>";
 							echo "</center>";
 						}
 						
@@ -800,7 +894,7 @@ if($dispo == '1' || $admin){
 							}
 						}
 						
-						echo "<br><center><font color=green>Votre compagnie possède <b>$sum</b> thune(s)</font></center><br>";
+						echo "<br><center><font color=green>Votre compagnie possède <b>$total_fond_dispo</b> thune(s)</font></center><br>";
 						
 						echo "<br />";
 						echo "<center>";

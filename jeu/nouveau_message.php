@@ -12,12 +12,13 @@ if(isset($_SESSION["id_perso"])){
 	$id_perso = $_SESSION["id_perso"];
 
 	// recuperation du nom du perso
-	$sql = "SELECT nom_perso, type_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, type_perso, idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
-	$pseudo = $t["nom_perso"];
-	$type_p = $t["type_perso"];
+	$pseudo 		= $t["nom_perso"];
+	$type_p 		= $t["type_perso"];
+	$id_joueur_p	= $t["idJoueur_perso"];
 	
 	if ($type_p != 6) {
 
@@ -208,6 +209,8 @@ if(isset($_SESSION["id_perso"])){
 
 		if(isset($_GET["visu"]) && $_GET["visu"] == "ok"){
 			
+			$visu = "";
+			
 			$sql = "SELECT x_perso, y_perso, perception_perso FROM perso WHERE id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
 			$t = $res->fetch_assoc();
@@ -247,42 +250,113 @@ if(isset($_SESSION["id_perso"])){
 				
 				$camp = $_GET["camp"];
 				
-				$res_visu = get_persos_visu_camp($mysqli, $x, $y, $perc_finale, $id_perso, $camp);
-				$tv =  $res_visu->fetch_assoc();
-				$visu = $tv["nom_perso"];
+				$res_visu = get_persos_visu_camp($mysqli, $x, $y, $perc_finale, $id_perso, $camp, $id_joueur_p);
 			}
 			else {
-				$res_visu = get_persos_visu($mysqli, $x, $y, $perc_finale, $id_perso);
-				$tv =  $res_visu->fetch_assoc();
-				$visu = $tv["nom_perso"];
+				$res_visu = get_persos_visu($mysqli, $x, $y, $perc_finale, $id_perso, $id_joueur_p);
 			}
 			
+			$tab_chef_visu = array();
+			
 			while ($tv = $res_visu->fetch_assoc()){
-				$visu .=";".$tv["nom_perso"];
+				
+				$idJoueur_p_v	= $tv["idJoueur_perso"];
+				$chef_v			= $tv["chef"];
+				$nom_perso_v	= $tv["nom_perso"];
+				
+				if (!in_array($idJoueur_p_v, $tab_chef_visu)) {
+					if (trim($visu) == "") {
+						$visu .= $nom_perso_v;
+					}
+					else {
+						$visu .=";".$nom_perso_v;
+					}
+				}
+				
+				if ($chef_v) {
+					array_push($tab_chef_visu, $idJoueur_p_v);
+				}
 			}
 		}
 
 		if(isset($_GET["id_compagnie"])) {
-			$id_compagnie = $_GET["id_compagnie"];
-			//-- TODO -- //
-			// Sécurité : verif $id_compagnie correct
-			//            verif identité joueur qui veut envoyer le message => fait-il bien partie de la compagnie ?
-			// -- TODO -- //
 			
-			if(isset($_POST["contenu"])) {
-				$contenu = $_POST["contenu"];
+			$id_compagnie = $_GET["id_compagnie"];
+			
+			$verif_id_compagnie = preg_match("#^[0-9]+$#i", $id_compagnie);
+			
+			if ($verif_id_compagnie) {
+				
+				// Recupération compagnie du perso
+				$sql = "SELECT id_compagnie FROM perso_in_compagnie WHERE id_perso='$id_perso'";
+				$res = $mysqli->query($sql);
+				$t_c = $res->fetch_assoc();
+				
+				$id_compagnie_p = $t_c['id_compagnie'];
+				
+				if ($id_compagnie_p == $id_compagnie) {
+			
+					if(isset($_POST["contenu"])) {
+						$contenu = $_POST["contenu"];
+					}
+					else {
+						$contenu = "";
+					}
+					
+					// recuperation des persos de la compagnie
+					$sql = "SELECT perso.nom_perso, perso.chef, perso.idJoueur_perso FROM perso, perso_in_compagnie 
+							WHERE perso.id_perso=perso_in_compagnie.id_perso 
+							AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') AND id_compagnie='$id_compagnie'
+							ORDER BY perso.id_perso ASC";
+					$res = $mysqli->query($sql);
+					
+					$tab_chef_compagnie = array();
+					
+					$dest = "";
+					while ($nom = $res->fetch_assoc()) {
+						
+						$nom_perso_c 	= $nom["nom_perso"];
+						$chef_c			= $nom["chef"];
+						$idJoueur_p_c	= $nom["idJoueur_perso"];
+						
+						if (!in_array($idJoueur_p_c, $tab_chef_compagnie)) {
+							if (trim($dest) == "") {
+								$dest .= $nom_perso_c;
+							}
+							else {
+								$dest .=";".$nom_perso_c;
+							}
+						}
+						
+						if ($chef_c) {
+							array_push($tab_chef_compagnie, $idJoueur_p_c);
+						}
+					}
+				}
+				else {
+					// Tentative de triche
+					echo "<br /><center><font color='red'><b>Pas bien d'essayer de tricher !</b></font></center>";
+					
+					$text_triche = "Tentative triche envoi message compagnie pas la sienne !";
+					
+					$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+					$mysqli->query($sql);
+					
+					$dest 		= "";
+					$contenu 	= "";
+				}
 			}
 			else {
-				$contenu = "";
-			}
-			
-			// recuperation des persos de la compagnie
-			$sql = "SELECT nom_perso FROM perso, perso_in_compagnie WHERE perso.id_perso=perso_in_compagnie.id_perso AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2') AND id_compagnie='$id_compagnie'";
-			$res = $mysqli->query($sql);
-			
-			$dest = "";
-			while ($nom = $res->fetch_assoc()) {
-				$dest .= $nom["nom_perso"].";";
+				// Tentative de triche
+				echo "<br /><center><font color='red'><b>Pas bien d'essayer de tricher !</b></font></center>";
+				
+				$text_triche = "Tentative triche envoi message id compagnie incorrect";
+				
+				$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
+				$mysqli->query($sql);
+				
+				$dest 		= "";
+				$contenu 	= "";
 			}
 		}
 

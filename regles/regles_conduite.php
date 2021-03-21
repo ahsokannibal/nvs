@@ -85,7 +85,7 @@ Si vous n'êtes pas d'accord avec ceci, il ne vous reste plus qu'à quitter le j
 				<div class="col-12">
 					<h2>Etiquette de jeu</h2>
 Vous êtes totalement libre de jouer de la manière dont vous le souhaitez, mais au risque d'en subir les conséquences ! En temps de guerre, les mutins, les espions ou les déserteurs ne sont pas forcément les mieux vus. <b>Cependant, vous ne POUVEZ PAS jouer dans plusieurs camps, ni jouer plusieurs chefs. La reprise d'un ancien personnage, suite au départ de son joueur, par une autre personne est interdite elle aussi. Cette règle est sans appel et ce n'est pas la peine d'invoquer une quelconque justification car ça ne servira à rien. Vous voilà prévenu !</b><br /><br />
-Si vous êtes absent pour quelques jours, vous avez la possibilité de faire babysitter votre personnage. Cependant, il faudra respecter les règles sur le babysitting qui se trouve ici.<br /><br />
+Si vous êtes absent pour quelques jours, vous avez la possibilité de faire babysitter votre personnage. Cependant, il faudra respecter les règles sur le babysitting qui se trouve <a href='https://nord-vs-sud.com/forum/viewtopic.php?p=190#p190'>ici</a>.<br /><br />
 Les créateurs de Nord versus Sud et leurs animateurs tiennent à rappeler que vous êtes sur un jeu. Nous vous demandons donc de respecter un minimum de fair play, et surtout un minimum de politesse et de courtoisie notamment sur les forums de jeu. Ces derniers ne constituent ni un défouloir à frustration, ni un champ de tir, ni un nid de sarcasmes, mais un lieu de partage, d'échange et de convivialité. Evitez d'y porter des jugements hâtifs et écrivez-y toujours à tête reposée pour éviter des coups de sang inutiles et intempestifs.<br />
 Le mieux à faire est de tourner sept fois vos doigts sur votre clavier avant d'écrire.<br />
 Si vous avez des questions à poser, n'hésitez jamais à les poser aux animateurs, ils sont là pour ça.<br /><br />
@@ -100,6 +100,11 @@ La frontière est parfois mince entre la règle et l’abus de la règle. Afin d
 Les animateurs restent maitre dans l'appréciation d'une action tolérable ou non.<br />
 En cas de doute, vous pouvez contacter l’animation directement au moyen du formulaire prévu à cette effet dans le jeu.<br />
 <font color='red'><b>Les abus seront sanctionnés.</b></font><br /><br/>
+
+					<h2>L'utilisation d'outils externes au jeu</h2>
+<font color='red'><b>Les outils du style mainteneur de session, surveillance de visu/événements/mouvements, bots sont prohibés et punissables par la pendaison des persos du joueur ayant triché.</b></font><br />
+Toute utilisation d'outils ayant un impact potentiel sur le jeu (comme les outils de visu utilisés au Nord et au Sud) doivent être déclarés à l'animation afin de statuer s'ils sont acceptés ou refusés. Toute utilisation sans demande préalable sera punie.
+<br /><br/>
 
 					<h2>Utilisation du forum</h2>
 					<h4>Utlisation de la FAQ</h4>

@@ -119,7 +119,7 @@ if(isset($_SESSION["id_perso"])){
 			while($row = $resultat->fetch_assoc()) {
 				
 				$id_message		= $row["id_message"];
-				$expediteur 	= $row["expediteur_message"];
+				$expediteur 	= addslashes($row["expediteur_message"]);
 				$date_message	= $row["date_message"];
 				$objet_message	= $row["objet_message"];
 				
@@ -152,7 +152,7 @@ if(isset($_SESSION["id_perso"])){
 				echo '	<td><input type="checkbox" id='."'check".$i."'". 'name="id_message[]" value="'.$id_message.'"></td>';
 				
 				if ($row["lu_message"]){
-					echo "	<td><font color='".$color_camp."'>" . $expediteur;
+					echo "	<td><font color='".$color_camp."'>" . stripslashes($expediteur);
 					if ($mat_perso != null && $mat_perso != 0) {
 						echo " [".$mat_perso."]";
 					}
@@ -161,7 +161,7 @@ if(isset($_SESSION["id_perso"])){
 					echo "	<td colspan=2><a href=message_lire.php?id=" . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a></td>";
 				}
 				else {
-					echo "	<td><font color='".$color_camp."'>" . $expediteur;
+					echo "	<td><font color='".$color_camp."'>" . stripslashes($expediteur);
 					if ($mat_perso != null && $mat_perso != 0) {
 						echo " [".$mat_perso."]";
 					}

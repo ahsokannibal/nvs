@@ -54,7 +54,7 @@ if (@$_SESSION["id_perso"]) {
 	
 	// je vais chercher les rails dans ma table
 	$sql = "SELECT x_carte, y_carte FROM carte 
-			WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='railP.gif')";
+			WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif')";
 	$res = $mysqli->query($sql);
 	
 	while ($t = $res->fetch_assoc()){
