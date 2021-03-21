@@ -52,8 +52,8 @@ if($dispo == '1' || $admin){
 			// Envoi message
 			if(isset($_POST["envoyer"])) {
 				
-				if (isset($_GET['cible'])) {
-					$cible = $_GET['cible'];
+				if (isset($cible) && trim($cible) != "") {
+					
 					$error = false;
 					
 					if ($cible == "camp") {
@@ -71,7 +71,7 @@ if($dispo == '1' || $admin){
 					}
 					else if ($cible == "all") {
 						// Récupération de tous les persos
-						$sql_m = "SELECT id_perso FROM perso AND chef='1'";
+						$sql_m = "SELECT id_perso FROM perso WHERE chef='1'";
 						$res_m = $mysqli->query($sql_m);
 					}
 					else {
