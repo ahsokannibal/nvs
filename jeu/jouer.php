@@ -3985,7 +3985,20 @@ if($dispo == '1' || $admin){
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}
-													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+													echo " ".stripslashes($nom_compagnie)."</a></div>";
+													if ($nom_terrain == "Pont") {
+														
+														$sql_p = "SELECT id_instanceBat FROM instance_batiment WHERE x_instance='$x' AND y_instance='$y'";
+														$res_p = $mysqli->query($sql_p);
+														$t_p = $res_p->fetch_assoc();
+														
+														$idIBat = $t_p['id_instanceBat'];
+														
+														echo "<div><a href='evenement.php?infoid=".$idIBat."'><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." [".$idIBat."]</a></div>";
+													}
+													else {
+														echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+													}
 													echo "<div><u>Message du jour</u> :<br />".$message_e."</div>\" ";
 													// data content popover
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>";
@@ -4001,7 +4014,20 @@ if($dispo == '1' || $admin){
 													if (trim($image_compagnie) != "" && $image_compagnie != "0") {
 														echo "<img src='".$image_compagnie."' width='20' height='20'>";
 													}				
-													echo " ".stripslashes($nom_compagnie)."</a></div><div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+													echo " ".stripslashes($nom_compagnie)."</a></div>";
+													if ($nom_terrain == "Pont") {
+														
+														$sql_p = "SELECT id_instanceBat FROM instance_batiment WHERE x_instance='$x' AND y_instance='$y'";
+														$res_p = $mysqli->query($sql_p);
+														$t_p = $res_p->fetch_assoc();
+														
+														$idIBat = $t_p['id_instanceBat'];
+														
+														echo "<div><a href='evenement.php?infoid=".$idIBat."'><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain." [".$idIBat."]</a></div>";
+													}
+													else {
+														echo "<div><img src='../fond_carte/".$fond_im."' width='20' height='20'> ".$nom_terrain."</div>";
+													}
 													echo "<div><u>Message du jour</u> :<br />".$message_e."</div>\" ";
 													// Data content popover
 													echo "			data-content=\"<div><a href='nouveau_message.php?pseudo=".$nom_ennemi."' target='_blank'>Envoyer un message</a></div>";
