@@ -72,6 +72,52 @@ if($dispo == '1' || $admin){
 		$sql = "INSERT INTO acces_log (date_acces, id_perso, page) VALUES (NOW(), '$id_perso', '$page_acces')";
 		$mysqli->query($sql);
 		
+		// Alerte si 10 refresh ou plus en 10 sec (déco ?)
+		$sql = "SELECT COUNT(*) as count_log_10sec FROM acces_log WHERE id_perso='$id_perso' AND page = 'jouer.php' AND date_acces > (NOW() - INTERVAL 10 SECOND)";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$count_log_10sec = $t['count_log_10sec'];
+		
+		if ($count_log_10sec >= 10) {
+			// Est-ce qu'il y a déjà eu une alerte de ce type pour ce perso dans les 30 dernières secondes ?
+			$sql = "SELECT COUNT(*) as nb_alerte_10sec FROM alerte_anim WHERE type_alerte='2' AND id_perso='$id_perso' AND date_alerte > (NOW() - INTERVAL 30 SECOND)";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$nb_alerte_10sec = $t['nb_alerte_10sec'];
+			
+			if ($nb_alerte_10sec == 0) {
+				$sql = "INSERT INTO alerte_anim (type_alerte, id_perso, raison_alerte, date_alerte) VALUES ('2', '$id_perso', 'Page de jeu - plus de 10 refresh en moins de 10 secondes : $count_log_10sec', NOW())";
+				$mysqli->query($sql);
+			}
+		}
+		
+		// Alerte si 30 refresh ou plus en moins d'une minute
+		$sql = "SELECT COUNT(*) as count_log_1min FROM acces_log WHERE id_perso='$id_perso' AND page = 'jouer.php' AND date_acces > (NOW() - INTERVAL 60 SECOND)";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		
+		$count_log_1min = $t['count_log_1min'];
+		
+		if ($count_log_1min >= 30) {
+			
+			// Est-ce qu'il y a déjà eu une alerte de ce type pour ce perso dans les 3 dernière minutes ?
+			$sql = "SELECT COUNT(*) as nb_alerte_1min FROM alerte_anim WHERE type_alerte='3' AND id_perso='$id_perso' AND date_alerte > (NOW() - INTERVAL 180 SECOND)";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			
+			$nb_alerte_1min = $t['nb_alerte_1min'];
+			
+			if ($nb_alerte_1min == 0) {
+				$sql = "INSERT INTO alerte_anim (type_alerte, id_perso, raison_alerte, date_alerte) VALUES ('3', '$id_perso', 'Page de jeu - plus de 30 refresh en moins de 1 minute : $count_log_1min', NOW())";
+				$mysqli->query($sql);
+			}
+		}
+		
+		// TODO - Vérification 10 derniers logs d'accès, sont-il sur le même delta de temps ?
+		
+		
 		$sql_joueur = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
 		$res_joueur = $mysqli->query($sql_joueur);
 		$t_joueur = $res_joueur->fetch_assoc();

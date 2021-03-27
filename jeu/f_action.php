@@ -1109,7 +1109,7 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 													
 													return 0;
 												}
-											}
+											}	
 											else {
 												echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte sur la distance avec un autre batiment n'a pas été respecté<br />";
 												echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
@@ -4162,7 +4162,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			}
 		}
 		
-		if ($gain_bonus_pc && $nb_attaque >= 2 && $id_perso_chef != $id_perso) {
+		if ($gain_bonus_pc && $nb_attaque >= 2 && $id_perso_chef != $id_perso && $clan_cible != $clan) {
 			// Toutes les attaques de charge sont passée - minimum 2 attaques - pas le chef => gain +1PC bonus
 			$sql = "UPDATE perso SET pc_perso=pc_perso+1 WHERE id_perso='$id_perso_chef'";
 			$mysqli->query($sql);
