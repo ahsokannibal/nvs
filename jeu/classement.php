@@ -669,7 +669,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	echo "</center>";
 	echo "<br/>";
 	
-	$sql = "SELECT nom_perso, clan, perso.id_perso, UNIX_TIMESTAMP(date_capture) FROM perso, dernier_tombe
+	$sql = "SELECT nom_perso, clan, perso.id_perso, UNIX_TIMESTAMP(date_capture) as date_capture FROM perso, dernier_tombe
 			WHERE perso.id_perso = dernier_tombe.id_perso_capture
 			ORDER BY date_capture DESC LIMIT 10";
 	$res = $mysqli->query($sql);
