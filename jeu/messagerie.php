@@ -6,6 +6,8 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+date_default_timezone_set('Europe/Paris');
+
 if(isset($_GET["envoi"]) && $_GET["envoi"] == 'ok'){
 	unset($_SESSION['destinataires']);
 	unset($_SESSION['objet']);
@@ -95,7 +97,7 @@ if(isset($_SESSION["id_perso"])){
 					<form name= "chk" method="post" action="traitement/t_messagerie.php">
 						<table border=1 align="center" cellpadding=2 cellspacing=1 width=100%>
 <?php
-		$sql = "SELECT message.id_message, expediteur_message, date_message, objet_message, lu_message 
+		$sql = "SELECT message.id_message, expediteur_message, UNIX_TIMESTAMP(date_message) as date_message, objet_message, lu_message 
 				FROM message, message_perso 
 				WHERE id_perso='".$id."' 
 				AND message_perso.id_message = message.id_message
@@ -123,8 +125,7 @@ if(isset($_SESSION["id_perso"])){
 				$date_message	= $row["date_message"];
 				$objet_message	= $row["objet_message"];
 				
-				$date_message = new DateTime($date_message, new DateTimeZone('Europe/Paris'));
-				$date_message->add(new DateInterval('PT1H'));
+				$date_message = date('Y-m-d H:i:s', $date_message);
 				
 				$sql_camp = "SELECT id_perso, clan FROM perso WHERE nom_perso='$expediteur'";
 				$res_camp = $mysqli->query($sql_camp);
@@ -157,7 +158,7 @@ if(isset($_SESSION["id_perso"])){
 						echo " [".$mat_perso."]";
 					}
 					echo "</font></td>";
-					echo "	<td align='center'>" . stripslashes($date_message->format('d-m-Y H:i:s')) . "</td>";
+					echo "	<td align='center'>" . stripslashes($date_message) . "</td>";
 					echo "	<td colspan=2><a href=message_lire.php?id=" . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a></td>";
 				}
 				else {
@@ -166,7 +167,7 @@ if(isset($_SESSION["id_perso"])){
 						echo " [".$mat_perso."]";
 					}
 					echo "</font></td>";
-					echo '	<td align="center"><div>' . stripslashes($date_message->format('d-m-Y H:i:s')) . '</div></td>';
+					echo '	<td align="center"><div>' . stripslashes($date_message) . '</div></td>';
 					echo '	<td colspan=2><a href=message_lire.php?id=' . $id_message . "&methode=r>" . stripslashes($objet_message) . "</a><b> (non lu)</b></td>";
 				}
 				echo '</tr>';

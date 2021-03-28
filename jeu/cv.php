@@ -7,6 +7,8 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+date_default_timezone_set('Europe/Paris');
+
 if(@$_SESSION["id_perso"]){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -106,7 +108,7 @@ if(isset($id)){
 	}
 	
 	// Décorations
-	$sql = "SELECT date_decoration, raison_decoration, image_decoration FROM perso_as_decoration, decorations 
+	$sql = "SELECT UNIX_TIMESTAMP(date_decoration) as date_decoration, raison_decoration, image_decoration FROM perso_as_decoration, decorations 
 			WHERE perso_as_decoration.id_decoration = decorations.id_decoration
 			AND id_perso='$id'
 			ORDER BY date_decoration";
@@ -127,6 +129,7 @@ if(isset($id)){
 		while ($t = $res->fetch_assoc()){
 			
 			$date_deco		= $t['date_decoration'];
+			$date_deco 		= date('Y-m-d H:i:s', $date_deco);
 			$raison_deco	= htmlspecialchars($t['raison_decoration']);
 			$image_deco 	= $t['image_decoration'];
 			
@@ -178,7 +181,7 @@ if(isset($id)){
 	
 	// Missions
 	$count = 0;
-	$sql = "SELECT * FROM cv WHERE IDActeur_cv='$id' AND special='2' ORDER BY date_cv DESC";
+	$sql = "SELECT UNIX_TIMESTAMP(date_cv) as date_cv, nomActeur_cv, nomCible_cv FROM cv WHERE IDActeur_cv='$id' AND special='2' ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	$nb_mission = $res->num_rows;
 	
@@ -191,12 +194,10 @@ if(isset($id)){
 			$count++;
 			
 			$date_cv = $t['date_cv'];
-			
-			$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
-			$date_cv->add(new DateInterval('PT1H'));
+			$date_cv = date('Y-m-d H:i:s', $date_cv);
 			
 			echo "<tr>";
-			echo "<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
+			echo "<td align='center'>".$date_cv."</td><td align='center'>".$t['nomActeur_cv']." a réussi la mission ".$t['nomCible_cv'];
 			echo "</td></tr>";
 		}
 		echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
@@ -207,7 +208,8 @@ if(isset($id)){
 	// nombre de kills
 	$count_capture = 0;
 	$count_promotion = 0;
-	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '8' OR special = '9' OR special = '10') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$sql = "SELECT UNIX_TIMESTAMP(date_cv) as date_cv, nomActeur_cv, IDActeur_cv, IDCible_cv, nomCible_cv, gradeActeur_cv, gradeCible_cv, special 
+			FROM cv WHERE (special IS NULL OR special = '8' OR special = '9' OR special = '10') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>Le bon...</b></font></center>";
@@ -222,8 +224,7 @@ if(isset($id)){
 		$grade_acteur_cv	= $t['gradeActeur_cv'];
 		$special			= $t['special'];
 		
-		$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
-		$date_cv->add(new DateInterval('PT1H'));
+		$date_cv = date('Y-m-d H:i:s', $date_cv);
 		
 		if ($id_acteur_cv == $id && $id_cible_cv < 50000 && $id_cible_cv != NULL) {			
 			
@@ -233,7 +234,7 @@ if(isset($id)){
 			$count_capture++;
 			
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>]";
 			if ($special == '10') {
 				echo " a négocié la capture de ";
 			}
@@ -276,7 +277,8 @@ if(isset($id)){
 	
 	// nombre de morts
 	$count = 0;
-	$sql = "SELECT * FROM cv WHERE (special IS NULL OR special = '10' OR special = '11') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$sql = "SELECT UNIX_TIMESTAMP(date_cv) as date_cv, nomActeur_cv, IDActeur_cv, IDCible_cv, nomCible_cv, gradeActeur_cv, gradeCible_cv, special 
+			FROM cv WHERE (special IS NULL OR special = '10' OR special = '11') AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "</table></center><br><center><font color=red><b>... et le moins bon</b></font></center>";
@@ -285,9 +287,7 @@ if(isset($id)){
 	while ($t = $res->fetch_assoc()) {
 		
 		$date_cv 			= $t['date_cv'];
-		
-		$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
-		$date_cv->add(new DateInterval('PT1H'));
+		$date_cv 			= date('Y-m-d H:i:s', $date_cv);
 		
 		$id_acteur_cv 		= $t['IDActeur_cv'];
 		$nom_acteur_cv		= $t['nomActeur_cv'];
@@ -303,7 +303,7 @@ if(isset($id)){
 			
 			$count++;
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			if ($id_acteur_cv != 0) {
 				if ($special == '10') {
 				echo " a accepté de se rendre face à ";
@@ -337,25 +337,29 @@ if(isset($id)){
 	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
 	echo "</table></center><br />";
 	
-	// nombre de pnj tu"s
+	// nombre de pnj tués
 	$count = 0;
-	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$sql = "SELECT UNIX_TIMESTAMP(date_cv) as date_cv, nomActeur_cv, IDActeur_cv, IDCible_cv, nomCible_cv FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>PNJ</b></font></center>";
 	echo "<center><table border=1 class='table'><tr><th style='text-align:center' width=25%>date</th><th style='text-align:center' >Évènement</th></tr>";
 	
 	while ($t = $res->fetch_assoc()) {
-		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 200000) {
+		
+		$nomActeur_cv 	= $t['nomActeur_cv'];
+		$idActeur_cv	= $t['IDActeur_cv'];
+		$nomCible_cv	= $t['nomCible_cv'];
+		$idCible_cv		= $t['IDCible_cv'];
+		
+		$date_cv = $t['date_cv'];
+		$date_cv = date('Y-m-d H:i:s', $date_cv);
+		
+		if ($idActeur_cv == $id && $idCible_cv >= 200000) {
 			$count++;
 			
-			$date_cv = $t['date_cv'];
-		
-			$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
-			$date_cv->add(new DateInterval('PT1H'));
-			
-			echo "<tr><td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a tué ";
-			echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
+			echo "<tr><td align='center'>".$date_cv."</td><td>".$nomActeur_cv." [<a href=\"evenement.php?infoid=".$idActeur_cv."\">".$idActeur_cv."</a>] a tué ";
+			echo $nomCible_cv." [<a href=\"evenement.php?infoid=".$idCible_cv."\">".$idCible_cv."</a>]</td>";
 		}
 	}
 	echo "<tr><td align='center'><font color = red>total</font></td><td align='center'>$count</td></tr>";
@@ -363,7 +367,7 @@ if(isset($id)){
 	
 	// nombre de batiments détruits
 	$count = 0;
-	$sql = "SELECT * FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
+	$sql = "SELECT UNIX_TIMESTAMP(date_cv) as date_cv, nomActeur_cv, IDActeur_cv, IDCible_cv, nomCible_cv FROM cv WHERE special IS NULL AND (IDActeur_cv='$id' OR IDCible_cv='$id') ORDER BY date_cv DESC";
 	$res = $mysqli->query($sql);
 	
 	echo "<center><font color=red><b>Batiments</b></font></center>";
@@ -374,16 +378,20 @@ if(isset($id)){
 	echo "		</tr>";
 	
 	while ($t = $res->fetch_assoc()) {
-		if ($t['IDActeur_cv'] == $id && $t['IDCible_cv'] >= 50000 && $t['IDCible_cv'] < 200000) {
+		
+		$date_cv = $t['date_cv'];
+		$date_cv = date('Y-m-d H:i:s', $date_cv);
+		
+		$nomActeur_cv 	= $t['nomActeur_cv'];
+		$idActeur_cv	= $t['IDActeur_cv'];
+		$nomCible_cv	= $t['nomCible_cv'];
+		$idCible_cv		= $t['IDCible_cv'];
+		
+		if ($idActeur_cv == $id && $idCible_cv >= 50000 && $idCible_cv < 200000) {
 			$count++;
 			
-			$date_cv = $t['date_cv'];
-		
-			$date_cv = new DateTime($date_cv, new DateTimeZone('Europe/Paris'));
-			$date_cv->add(new DateInterval('PT1H'));
-			
-			echo "		<tr><td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$t['nomActeur_cv']." [<a href=\"evenement.php?infoid=".$t['IDActeur_cv']."\">".$t['IDActeur_cv']."</a>] a détruit ";
-			echo $t['nomCible_cv']." [<a href=\"evenement.php?infoid=".$t['IDCible_cv']."\">".$t['IDCible_cv']."</a>]</td>";
+			echo "		<tr><td align='center'>".$date_cv."</td><td>".$nomActeur_cv." [<a href=\"evenement.php?infoid=".$idActeur_cv."\">".$tidActeur_cv."</a>] a détruit ";
+			echo $nomCible_cv." [<a href=\"evenement.php?infoid=".$idCible_cv."\">".$idCible_cv."</a>]</td>";
 		}
 	}
 	echo "		<tr>";

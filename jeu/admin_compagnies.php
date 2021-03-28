@@ -16,6 +16,8 @@ if(isset($_SESSION["id_perso"])){
 	
 	if($admin){
 		
+		date_default_timezone_set('Europe/Paris');
+		
 		$mess_err 	= "";
 		$mess 		= "";
 		
@@ -378,7 +380,7 @@ if(isset($_SESSION["id_perso"])){
 							echo "	</thead>";
 							echo "	<tbody>";
 							
-							$sql = "SELECT * FROM banque_log WHERE id_compagnie='$id_compagnie_select' ORDER BY id_log ASC";
+							$sql = "SELECT UNIX_TIMESTAMP(date_log) as date_log, montant_transfert, montant_final, id_perso FROM banque_log WHERE id_compagnie='$id_compagnie_select' ORDER BY id_log ASC";
 							$res = $mysqli->query($sql);
 							
 							$montant_final_tmp = -1;
@@ -390,11 +392,10 @@ if(isset($_SESSION["id_perso"])){
 								$montant_final		= $t['montant_final'];
 								$id_perso_transfert	= $t['id_perso'];
 								
-								$date_log = new DateTime($date_log, new DateTimeZone('Europe/Paris'));
-								$date_log->add(new DateInterval('PT1H'));
+								$date_log = date('Y-m-d H:i:s', $date_log);
 								
 								echo "		<tr>";
-								echo "			<td>".$date_log->format('d-m-Y H:i:s')."</td>";
+								echo "			<td>".$date_log."</td>";
 								echo "			<td>".$id_perso_transfert."</td>";
 								echo "			<td align='center'>".$montant_tranfert."</td>";
 								echo "			<td align='center'>";

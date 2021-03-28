@@ -10,6 +10,8 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+date_default_timezone_set('Europe/Paris');
+
 // Traitement selection perso
 if (isset($_POST["liste_perso"]) && $_POST["liste_perso"] != "") {
 	
@@ -192,7 +194,7 @@ if($dispo == '1' || $admin){
 				$grade_perso 		= $t_perso1["id_grade"];
 				$nom_grade_perso	= $t_perso1["nom_grade"];
 				
-				$sql = "SELECT DLA_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
+				$sql = "SELECT UNIX_TIMESTAMP(DLA_perso) as DLA_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
 				$res = $mysqli->query($sql);
 				$t_c = $res->fetch_assoc();
 				
@@ -2213,8 +2215,8 @@ if($dispo == '1' || $admin){
 	<body>
 				<?php
 				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
-				$date_dla = new DateTime($n_dla, new DateTimeZone('Europe/Paris'));
-				$date_dla->add(new DateInterval('PT1H'));
+				
+				$date_dla = date('Y-m-d H:i:s', $n_dla);
 				
 				if (anim_perso($mysqli, $id_perso)) {
 					// Récupération des demandes sur la gestion des compagnies
@@ -2267,7 +2269,7 @@ if($dispo == '1' || $admin){
 						<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
 					</tr>";
 				echo "<tr>";
-				echo "	<td>Prochain tour :  ".$date_dla->format('d-m-Y H:i:s')."</td>";
+				echo "	<td>Prochain tour :  ".$date_dla."</td>";
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
 				echo "		<a class='btn btn-info' href=\"../faq.php\" target='_blank'><b>FAQ</b></a>";

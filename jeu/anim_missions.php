@@ -20,6 +20,8 @@ if($dispo == '1' || $admin){
 		
 		if (anim_perso($mysqli, $id)) {
 			
+			date_default_timezone_set('Europe/Paris');
+			
 			// Récupération du camp de l'animateur 
 			$sql = "SELECT clan FROM perso WHERE id_perso='$id'";
 			$res = $mysqli->query($sql);
@@ -492,7 +494,7 @@ if($dispo == '1' || $admin){
 						<h2>Liste des missions actives</h2>
 						<?php
 						// Récupération de la liste des missions actives
-						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
+						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, UNIX_TIMESTAMP(date_debut_mission) as date_debut_mission, UNIX_TIMESTAMP(date_fin_mission) as date_fin_mission
 								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission >= CURDATE())
 								AND objectif_atteint IS NULL
 								AND camp_mission='$camp'";
@@ -530,11 +532,8 @@ if($dispo == '1' || $admin){
 								$date_debut		= $t['date_debut_mission'];
 								$date_fin		= $t['date_fin_mission'];
 								
-								$date_debut = new DateTime($date_debut, new DateTimeZone('Europe/Paris'));
-								$date_debut->add(new DateInterval('PT1H'));
-								
-								$date_fin = new DateTime($date_fin, new DateTimeZone('Europe/Paris'));
-								$date_fin->add(new DateInterval('PT1H'));
+								$date_debut = date('Y-m-d H:i:s', $date_debut);
+								$date_fin 	= date('Y-m-d H:i:s', $date_fin);
 								
 								$sql_p = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission
 										WHERE perso.id_perso = perso_in_mission.id_perso
@@ -544,8 +543,8 @@ if($dispo == '1' || $admin){
 								
 								echo "				<tr>";
 								echo "					<td align='center'>".$nom_mission."</td>";
-								echo "					<td align='center'>".$date_debut->format('d-m-Y H:i:s')."</td>";
-								echo "					<td align='center'>".$date_fin->format('d-m-Y H:i:s')."</td>";
+								echo "					<td align='center'>".$date_debut."</td>";
+								echo "					<td align='center'>".$date_fin."</td>";
 								echo "					<td align='center'>".$rec_thune."</td>";
 								echo "					<td align='center'>".$rec_xp."</td>";
 								echo "					<td align='center'>".$rec_pc."</td>";
@@ -678,7 +677,7 @@ if($dispo == '1' || $admin){
 						<h2>Liste des missions terminées</h2>
 						<?php
 						// Récupération de la liste des missions terminées
-						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, date_debut_mission, date_fin_mission, objectif_atteint 
+						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, UNIX_TIMESTAMP(date_debut_mission) as date_debut_mission, UNIX_TIMESTAMP(date_fin_mission) as date_fin_mission, objectif_atteint 
 								FROM missions WHERE (date_fin_mission IS NOT NULL AND date_fin_mission < CURDATE()) OR objectif_atteint IS NOT NULL
 								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
@@ -714,11 +713,8 @@ if($dispo == '1' || $admin){
 								$date_fin		= $t['date_fin_mission'];
 								$objectif		= $t['objectif_atteint'];
 								
-								$date_debut = new DateTime($date_debut, new DateTimeZone('Europe/Paris'));
-								$date_debut->add(new DateInterval('PT1H'));
-								
-								$date_fin = new DateTime($date_fin, new DateTimeZone('Europe/Paris'));
-								$date_fin->add(new DateInterval('PT1H'));
+								$date_debut = date('Y-m-d H:i:s', $date_debut);
+								$date_fin 	= date('Y-m-d H:i:s', $date_fin);
 								
 								$sql_p = "SELECT perso.id_perso, perso.nom_perso FROM perso, perso_in_mission
 										WHERE perso.id_perso = perso_in_mission.id_perso
@@ -727,8 +723,8 @@ if($dispo == '1' || $admin){
 								
 								echo "				<tr>";
 								echo "					<td align='center'>".$nom_mission."</td>";
-								echo "					<td align='center'>".$date_debut->format('d-m-Y H:i:s')."</td>";
-								echo "					<td align='center'>".$date_fin->format('d-m-Y H:i:s')."</td>";
+								echo "					<td align='center'>".$date_debut."</td>";
+								echo "					<td align='center'>".$date_fin."</td>";
 								echo "					<td align='center'>".$rec_thune."</td>";
 								echo "					<td align='center'>".$rec_xp."</td>";
 								echo "					<td align='center'>".$rec_pc."</td>";

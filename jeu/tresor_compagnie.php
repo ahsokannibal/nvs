@@ -12,6 +12,8 @@ $admin = admin_perso($mysqli, $_SESSION["id_perso"]);
 
 if($dispo == '1' || $admin){
 	
+	date_default_timezone_set('Europe/Paris');
+	
 	if(isset($_SESSION["id_perso"])){
 		
 		//recuperation des varaibles de sessions
@@ -367,7 +369,7 @@ if($dispo == '1' || $admin){
 								
 								$fond_total = 0;
 								
-								$sql = "SELECT operation, montant, date_operation, is_auteur FROM histobanque_compagnie, perso 
+								$sql = "SELECT operation, montant, UNIX_TIMESTAMP(date_operation) as date_operation, is_auteur FROM histobanque_compagnie, perso 
 										WHERE id_compagnie=$id_compagnie 
 										AND histobanque_compagnie.id_perso=perso.ID_perso 
 										AND histobanque_compagnie.id_perso=$id_p 
@@ -394,8 +396,7 @@ if($dispo == '1' || $admin){
 									$date_ope	= $t_solde['date_operation'];
 									$is_auteur	= $t_solde['is_auteur'];
 									
-									$date_ope = new DateTime($date_ope, new DateTimeZone('Europe/Paris'));
-									$date_ope->add(new DateInterval('PT1H'));
+									$date_ope = date('Y-m-d H:i:s', $date_ope);
 									
 									$fond_total += $montant;
 									
@@ -428,7 +429,7 @@ if($dispo == '1' || $admin){
 									
 									if (isset($type_ope)) {
 										echo "			<tr>";
-										echo "				<td align='center'>".$date_ope->format('d-m-Y H:i:s')."</td><td align='center'>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
+										echo "				<td align='center'>".$date_ope."</td><td align='center'>".$type_ope."</td><td align='center'><font color='".$color."'><b>".$montant."</b></font></td>";
 										echo "			</tr>";
 									}
 								}
@@ -562,7 +563,7 @@ if($dispo == '1' || $admin){
 							echo "		</thead>";
 							echo "		<tbody>";
 							
-							$sql = "SELECT operation, montant, date_operation, is_auteur, id_perso, id_dest FROM histobanque_compagnie
+							$sql = "SELECT operation, montant, UNIX_TIMESTAMP(date_operation) as date_operation, is_auteur, id_perso, id_dest FROM histobanque_compagnie
 										WHERE id_compagnie=$id_compagnie
 										ORDER BY id_histo DESC";
 							$res = $mysqli->query($sql);
@@ -576,9 +577,8 @@ if($dispo == '1' || $admin){
 								$is_auteur_histo	= $t['is_auteur'];
 								$id_dest_histo		= $t['id_dest'];
 								
-								if ($date_ope_histo != null) {
-									$date_ope_histo = new DateTime($date_ope_histo, new DateTimeZone('Europe/Paris'));
-									$date_ope_histo->add(new DateInterval('PT1H'));
+								if ($date_ope_histo != null) {									
+									$date_ope_histo = date('Y-m-d H:i:s', $date_ope_histo);
 								}
 								
 								$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_histo'";
@@ -678,7 +678,7 @@ if($dispo == '1' || $admin){
 								echo "			<tr>";
 								echo "				<td align='center'>";
 								if ($date_ope_histo != null) {
-									echo $date_ope_histo->format('d-m-Y H:i:s');
+									echo $date_ope_histo;
 								}
 								echo "				</td>";
 								echo "				<td align='center'>".$nom_perso_histo."</td>";
@@ -724,7 +724,7 @@ if($dispo == '1' || $admin){
 							echo "		</thead>";
 							echo "		<tbody>";
 							
-							$sql = "SELECT date_log, id_perso, montant_transfert, montant_final FROM banque_log WHERE id_compagnie='$id_compagnie' ORDER BY id_log DESC";
+							$sql = "SELECT UNIX_TIMESTAMP(date_log) as date_log, id_perso, montant_transfert, montant_final FROM banque_log WHERE id_compagnie='$id_compagnie' ORDER BY id_log DESC";
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()) {
@@ -741,8 +741,7 @@ if($dispo == '1' || $admin){
 									$couleur_montant = "red";
 								}
 								
-								$date_log = new DateTime($date_log, new DateTimeZone('Europe/Paris'));
-								$date_log->add(new DateInterval('PT1H'));
+								$date_log = date('Y-m-d H:i:s', $date_log);
 								
 								$sql_p = "SELECT nom_perso FROM perso WHERE id_perso='$id_perso_log'";
 								$res_p = $mysqli->query($sql_p);
@@ -751,7 +750,7 @@ if($dispo == '1' || $admin){
 								$nom_perso_log = $t_p['nom_perso'];
 								
 								echo "			<tr>";
-								echo "				<td align='center'>".$date_log->format('d-m-Y H:i:s')."</td>";
+								echo "				<td align='center'>".$date_log."</td>";
 								if ($nom_perso_log == null || $nom_perso_log == "") {
 									echo "				<td align='center'><i>Perso supprimé - matricule : </i>".$id_perso_log."</td>";
 								}

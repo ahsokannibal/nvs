@@ -6,6 +6,8 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+date_default_timezone_set('Europe/Paris');
+
 if(@$_SESSION["id_perso"]){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -93,7 +95,7 @@ if(@$_SESSION["id_perso"]){
 					}
 					
 					// recupération des données du message
-					$sql = "SELECT expediteur_message, date_message, objet_message, contenu_message, annonce FROM message, message_perso 
+					$sql = "SELECT expediteur_message, UNIX_TIMESTAMP(date_message) as date_message, objet_message, contenu_message, annonce FROM message, message_perso 
 							WHERE message.id_message = message_perso.id_message
 							AND message.id_message='" . $id_message . "' 
 							AND (id_perso='".$id."' OR expediteur_message='".$pseudo."')";
@@ -131,10 +133,9 @@ if(@$_SESSION["id_perso"]){
 					
 					$date_message = $tab["date_message"];
 					
-					$date_message = new DateTime($date_message, new DateTimeZone('Europe/Paris'));
-					$date_message->add(new DateInterval('PT1H'));
+					$date_message = date('Y-m-d H:i:s', $date_message);
 					
-					echo '	<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $date_message->format('d-m-Y H:i:s') . "</td></tr>";
+					echo '	<tr class="exp"><td><b>Expediteur :</b> ' . $tab["expediteur_message"] . "</td><td><b>Date de l'envoi :</b> " . $date_message . "</td></tr>";
 					echo '	<tr class="exp"><td colspan=2><b>Destinataires :</b> '.$destinataires.'</td></tr>';
 					echo "</table><br />";
 					echo "<table border=1 align='center' cellpadding=2 cellspacing=1 width=100%>";

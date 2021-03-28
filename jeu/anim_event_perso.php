@@ -36,6 +36,8 @@ if($dispo == '1' || $admin){
 			else if ($camp == '3') {
 				$nom_camp = 'Indien';
 			}
+			
+			date_default_timezone_set('Europe/Paris');
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -162,14 +164,16 @@ if($dispo == '1' || $admin){
 								
 								echo "<div align='center'><h3>Les événements de ".$nom_perso_event." [".$id_perso_event."] au ".sprintf('%02d', $jour)."/".sprintf('%02d', $mois)."/".$annee."</h3></div>";
 								
-								$sql = "SELECT * FROM evenement WHERE (IDActeur_evenement='$id_perso_event' OR IDCible_evenement='$id_perso_event') 
+								$sql = "SELECT IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, UNIX_TIMESTAMP(date_evenement) as date_evenement
+										FROM evenement WHERE (IDActeur_evenement='$id_perso_event' OR IDCible_evenement='$id_perso_event') 
 										AND date_evenement >= '$date_debut' AND date_evenement <= '$date_fin'
 										ORDER BY ID_evenement DESC";
 							}
 							else {
 								echo "<div align='center'><h3>Les 100 derniers événements de ".$nom_perso_event." [".$id_perso_event."]</h3></div>";
 								
-								$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id_perso_event' OR IDCible_evenement='$id_perso_event' ORDER BY ID_evenement DESC LIMIT 100";
+								$sql = "SELECT IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, UNIX_TIMESTAMP(date_evenement) as date_evenement
+										FROM evenement WHERE IDActeur_evenement='$id_perso_event' OR IDCible_evenement='$id_perso_event' ORDER BY ID_evenement DESC LIMIT 100";
 							}
 							$res = $mysqli->query($sql);
 							$nb_event = $res->num_rows;
@@ -195,11 +199,10 @@ if($dispo == '1' || $admin){
 									$effet_event		= $t['effet_evenement'];
 									$date_event			= $t['date_evenement'];
 									
-									$date_event = new DateTime($date_event, new DateTimeZone('Europe/Paris'));
-									$date_event->add(new DateInterval('PT1H'));
+									$date_event = date('Y-m-d H:i:s T', $date_event);
 									
 									echo "			<tr>";
-									echo "				<td>".$date_event->format('d-m-Y H:i:s')."</td>";
+									echo "				<td>".$date_event."</td>";
 									echo "				<td>".$nom_acteur_event." [".$id_acteur_event."]</td>";
 									echo "				<td>".$phrase_event;
 									if (trim($effet_event) != "") {

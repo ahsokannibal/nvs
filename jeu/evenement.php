@@ -10,6 +10,8 @@ include ('../nb_online.php');
 
 if(@$_SESSION["id_perso"]){
 	
+	date_default_timezone_set('Europe/Paris');
+	
 	$id_perso = $_SESSION["id_perso"];
 	
 	$page_acces = 'evenement.php';
@@ -245,7 +247,8 @@ if(@$_SESSION["id_perso"]){
 			</tr>
 			<?php
 			
-			$sql = "SELECT * FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
+			$sql = "SELECT UNIX_TIMESTAMP(date_evenement) as date_evenement, nomActeur_evenement, IDActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, special 
+					FROM evenement WHERE IDActeur_evenement='$id' OR IDCible_evenement='$id' ORDER BY ID_evenement DESC, date_evenement DESC LIMIT 100";
 			$res = $mysqli->query($sql);
 			
 			while ($t = $res->fetch_assoc()) {
@@ -259,12 +262,11 @@ if(@$_SESSION["id_perso"]){
 				$effet_evenement		= $t['effet_evenement'];
 				$special_evenement		= $t['special'];
 				
-				$date_evenement = new DateTime($date_evenement, new DateTimeZone('Europe/Paris'));
-				$date_evenement->add(new DateInterval('PT1H'));
+				$date_evenement = date('Y-m-d H:i:s', $date_evenement);
 				
 				if ($id == $id_acteur_evenement) {
 					echo "<tr>";
-					echo "	<td align='center'>".$date_evenement->format('d-m-Y H:i:s')."</td>";
+					echo "	<td align='center'>".$date_evenement."</td>";
 					
 					echo "	<td>".$nom_acteur_evenement." [<a href=\"evenement.php?infoid=".$id_acteur_evenement."\">".$id_acteur_evenement."</a>] ";
 					
@@ -297,7 +299,7 @@ if(@$_SESSION["id_perso"]){
 				else if ($id == $id_cible_evenement && $special_evenement == 0) {
 					
 					echo "<tr>";
-					echo "	<td align='center'>".$date_evenement->format('d-m-Y H:i:s')."</td>";
+					echo "	<td align='center'>".$date_evenement."</td>";
 					
 					echo "	<td>".$nom_cible_evenement." [<a href=\"evenement.php?infoid=".$id_cible_evenement."\">".$id_cible_evenement."</a>] ";
 					

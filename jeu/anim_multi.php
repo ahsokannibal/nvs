@@ -16,6 +16,8 @@ if(isset($_SESSION["id_perso"])){
 		$mess_err 	= "";
 		$mess 		= "";
 		
+		date_default_timezone_set('Europe/Paris');
+		
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -77,7 +79,7 @@ if(isset($_SESSION["id_perso"])){
 						<div id="table_batiments" class="table-responsive">	
 					
 							<?php
-							$sql = "SELECT * FROM declaration_multi ORDER BY id_perso ASC";
+							$sql = "SELECT id_declaration, id_perso, id_multi, UNIX_TIMESTAMP(date_declaration) as date_declaration FROM declaration_multi ORDER BY id_perso ASC";
 							$res = $mysqli->query($sql);
 							
 							echo "<table class='table'>";
@@ -99,8 +101,7 @@ if(isset($_SESSION["id_perso"])){
 								$date_decla	= $t['date_declaration'];
 								
 								if ($date_decla != null) {
-									$date_decla = new DateTime($date_decla, new DateTimeZone('Europe/Paris'));
-									$date_decla->add(new DateInterval('PT1H'));
+									$date_decla = date('Y-m-d H:i:s', $date_decla);
 								}
 								
 								// récup infos perso qui babysitte
@@ -121,7 +122,7 @@ if(isset($_SESSION["id_perso"])){
 								
 								echo "		<tr>";
 								if ($date_decla != null) {
-									echo "			<td align='center'>".$date_decla->format('d-m-Y H:i:s')."</td>";
+									echo "			<td align='center'>".$date_decla."</td>";
 								}
 								else {
 									echo "			<td align='center'><i>Non défini (déclaré avant évolution)</i></td>";

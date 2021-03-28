@@ -6,6 +6,8 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+date_default_timezone_set('Europe/Paris');
+
 if(isset($_SESSION["id_perso"])){
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -65,7 +67,7 @@ if(isset($_SESSION["id_perso"])){
 
 <?php
 		// recupération des infos sur le message
-		$sql = "SELECT DISTINCT(message.id_message) as id_mes, expediteur_message, date_message, objet_message
+		$sql = "SELECT DISTINCT(message.id_message) as id_mes, expediteur_message, UNIX_TIMESTAMP(date_message) as date_message, objet_message
 				FROM message, message_perso 
 				WHERE id_expediteur='".$id."'
 				AND message_perso.id_message = message.id_message
@@ -89,8 +91,7 @@ if(isset($_SESSION["id_perso"])){
 				$date_message	= $row["date_message"];
 				$objet_message	= $row["objet_message"];
 				
-				$date_message = new DateTime($date_message, new DateTimeZone('Europe/Paris'));
-				$date_message->add(new DateInterval('PT1H'));
+				$date_message = date('Y-m-d H:i:s', $date_message);
 				
 				// recupération des destinataires
 				$sql_dest = "SELECT nom_perso FROM perso, message_perso WHERE perso.id_perso = message_perso.id_perso AND id_message='$id_mes'";
@@ -110,7 +111,7 @@ if(isset($_SESSION["id_perso"])){
 			
 				echo "<tr>";
 				echo "	<td>" . $destinataires . "</td>";
-				echo "	<td align='center'>" . $date_message->format('d-m-Y H:i:s') . "</td>";
+				echo "	<td align='center'>" . $date_message . "</td>";
 				echo "	<td colspan=2><a href=message_lire.php?id=" . $id_mes . "&methode=e>" . stripslashes($objet_message) . "</a></td>";
 				echo "</tr>";
 

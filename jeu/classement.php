@@ -6,6 +6,8 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+date_default_timezone_set('Europe/Paris');
+
 if (isset($_POST["choix_class"])){
 	
 	$num_class = $_POST["choix_class"];
@@ -454,7 +456,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		echo "		</thead>";
 		echo "		<tbody>";
 		
-		$sql = "SELECT date_pvict, gain_pvict, texte FROM histo_stats_camp_pv WHERE id_camp='$id_camp_histo' ORDER BY date_pvict ASC";
+		$sql = "SELECT UNIX_TIMESTAMP(date_pvict) as date_pvict, gain_pvict, texte FROM histo_stats_camp_pv WHERE id_camp='$id_camp_histo' ORDER BY date_pvict ASC";
 		$res =  $mysqli->query($sql);
 		
 		while ($t = $res->fetch_assoc()){
@@ -463,11 +465,10 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$gain_pv = $t['gain_pvict'];
 			$text_pv = $t['texte'];
 			
-			$date_pv = new DateTime($date_pv, new DateTimeZone('Europe/Paris'));
-			$date_pv->add(new DateInterval('PT1H'));
+			$date_pv = date('Y-m-d H:i:s', $date_pv);
 			
 			echo "			<tr>";
-			echo "				<td align=center>".$date_pv->format('d-m-Y H:i:s')."</td>";
+			echo "				<td align=center>".$date_pv."</td>";
 			echo "				<td align=center>".$text_pv."</td>";
 			echo "				<td align=center>".$gain_pv."</td>";
 			echo "			</tr>";
@@ -668,7 +669,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	echo "</center>";
 	echo "<br/>";
 	
-	$sql = "SELECT nom_perso, clan, perso.id_perso, date_capture FROM perso, dernier_tombe
+	$sql = "SELECT nom_perso, clan, perso.id_perso, UNIX_TIMESTAMP(date_capture) FROM perso, dernier_tombe
 			WHERE perso.id_perso = dernier_tombe.id_perso_capture
 			ORDER BY date_capture DESC LIMIT 10";
 	$res = $mysqli->query($sql);
@@ -692,8 +693,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		$nom_perso_capt	= $t["nom_perso"];
 		$id_perso_capt	= $t["id_perso"];
 		
-		$date_capture = new DateTime($date_capture, new DateTimeZone('Europe/Paris'));
-		$date_capture->add(new DateInterval('PT1H'));
+		$date_capture = date('Y-m-d H:i:s', $date_capture);
 		
 		if($id_camp_capt == "1"){
 			$couleur_camp = "blue";
@@ -703,7 +703,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		}
 		
 		echo "			<tr>";
-		echo "				<td align=center>".$date_capture->format('d-m-Y H:i:s')."</td>";
+		echo "				<td align=center>".$date_capture."</td>";
 		echo "				<td align=center><font color=$couleur_camp>".$nom_perso_capt."</font></td>";
 		echo "				<td align='center'><a href=\"evenement.php?infoid=".$id_perso_capt."\">" .$id_perso_capt. "</a></td>";
 		echo "			</tr>";
