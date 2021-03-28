@@ -2216,7 +2216,7 @@ if($dispo == '1' || $admin){
 				<?php
 				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
 				
-				$date_dla = date('Y-m-d H:i:s', $n_dla);
+				$date_dla = date('d-m-Y H:i:s', $n_dla);
 				
 				if (anim_perso($mysqli, $id_perso)) {
 					// Récupération des demandes sur la gestion des compagnies
