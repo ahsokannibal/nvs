@@ -10,6 +10,9 @@ if(isset($_SESSION["id_perso"])){
 	
 	//recuperation des variables de sessions
 	$id = $_SESSION["id_perso"];
+	
+	$mess 		= "";
+	$mess_err 	= "";
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
@@ -64,6 +67,8 @@ if(isset($_SESSION["id_perso"])){
 					
 					$sql = "INSERT INTO perso_demande_anim (id_perso, type_demande, info_demande) VALUES ('$id_joueur_bat', '3', '$nouveau_nom_bataillon')";
 					$mysqli->query($sql);
+					
+					$mess .= "Demande de changement de nom de bataillon en '".$_POST['nomBataillon']."' tranmis avec succès.";
 				}
 				else {
 					// Tentative de triche !
@@ -87,7 +92,16 @@ if(isset($_SESSION["id_perso"])){
 				<div class="col-12">
 
 					<div align="center">
-						<h2>Bataillon <?php echo $nom_bataillon; ?></h2>
+						<h2>Bataillon <?php echo $nom_bataillon; ?></h2><br />
+						<?php
+						if (trim($mess) != "") {
+							echo "<font color='blue'>".$mess."</font>";
+						}
+						
+						if (trim($mess_err) != "") {
+							echo "<font color='red'>".$mess_err."</font>";
+						}
+						?>
 					</div>
 					
 					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
@@ -103,7 +117,7 @@ if(isset($_SESSION["id_perso"])){
 								echo "		<input type='text' class='form-control' id='nomBataillon' name='nomBataillon' maxlength='100'>";
 								echo "	</div>";
 								echo "	<div class='form-group col-6'>";
-								echo "		<input type='submit' class='btn btn-warning' name='enregistrer' value='Demander le changement de nom'>";
+								echo "		<input type='submit' class='btn btn-success' name='enregistrer' value='valider le changement de nom'>";
 								echo "	</div>";
 								echo "</form>";
 							}
