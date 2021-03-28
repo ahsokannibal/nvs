@@ -20,6 +20,8 @@ if(isset($_SESSION["id_perso"])){
 		$mess_err 	= "";
 		$mess 		= "";
 		
+		date_default_timezone_set('Europe/Paris');
+		
 		// Récupération du camp de l'animateur 
 		$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso'";
 		$res = $mysqli->query($sql);
@@ -236,7 +238,7 @@ if(isset($_SESSION["id_perso"])){
 										ORDER BY YEAR(date_acces) DESC";
 								}
 								elseif (isset($_GET['detail_complet'])) {
-									$sql = "SELECT * FROM acces_log WHERE id_perso='$id_perso_select' ORDER BY id_acces DESC";
+									$sql = "SELECT UNIX_TIMESTAMP(date_acces) as date_acces, page FROM acces_log WHERE id_perso='$id_perso_select' ORDER BY id_acces DESC";
 								}
 							}
 							$res = $mysqli->query($sql);
@@ -273,6 +275,7 @@ if(isset($_SESSION["id_perso"])){
 								
 								if (((isset($_GET['jour']) || isset($_GET['mois']) || isset($_GET['annee'])) && !isset($_GET['graph_jour']) && !isset($_GET['graph_mois']) && !isset($_GET['graph_annee'])) || isset($_GET['detail_complet'])) {
 									$date_acces	= $t['date_acces'];
+									$date_acces = date('Y-m-d H:i:s', $date_acces);
 									$page_acces	= $t['page'];
 									
 									echo "		<tr>";
