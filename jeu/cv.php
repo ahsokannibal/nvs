@@ -255,7 +255,7 @@ if(isset($id)){
 			$count_capture++;
 			
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé le bâtiment ";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a capturé le bâtiment ";
 			echo $nom_cible_cv." [<a href=\"evenement.php?infoid=".$id_cible_cv."\">".$id_cible_cv."</a>]";
 			echo "	</td>";
 			echo "</tr>";
@@ -265,7 +265,7 @@ if(isset($id)){
 			$count_promotion++;
 			
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été promu <b>".$grade_acteur_cv."</b></td>";
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été promu <b>".$grade_acteur_cv."</b></td>";
 			echo "</tr>";
 		}
 	}
@@ -328,7 +328,7 @@ if(isset($id)){
 			
 			$count++;
 			echo "<tr>";
-			echo "	<td align='center'>".$date_cv->format('d-m-Y H:i:s')."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été capturé de force par encerclement !";			
+			echo "	<td align='center'>".$date_cv."</td><td>".$nom_acteur_cv." [<a href=\"evenement.php?infoid=".$id_acteur_cv."\">".$id_acteur_cv."</a>] a été capturé de force par encerclement !";			
 			echo "	</td>";
 			echo "</tr>";
 			
@@ -390,7 +390,7 @@ if(isset($id)){
 		if ($idActeur_cv == $id && $idCible_cv >= 50000 && $idCible_cv < 200000) {
 			$count++;
 			
-			echo "		<tr><td align='center'>".$date_cv."</td><td>".$nomActeur_cv." [<a href=\"evenement.php?infoid=".$idActeur_cv."\">".$tidActeur_cv."</a>] a détruit ";
+			echo "		<tr><td align='center'>".$date_cv."</td><td>".$nomActeur_cv." [<a href=\"evenement.php?infoid=".$idActeur_cv."\">".$idActeur_cv."</a>] a détruit ";
 			echo $nomCible_cv." [<a href=\"evenement.php?infoid=".$idCible_cv."\">".$idCible_cv."</a>]</td>";
 		}
 	}
