@@ -273,4 +273,62 @@ function chargement_perso_train($mysqli, $id_perso_chargement, $id_instance_trai
 	$sql_maj_perso = "UPDATE perso SET x_perso='$x_train', y_perso='$y_train' WHERE id_perso='$id_perso_chargement'";
 	$mysqli->query($sql_maj_perso);
 }
+
+/**
+ * Fonction permettant de gérer le compteur de blocage du train
+ */
+function gestion_blocage_train($mysqli, $id_instance_train, $idPerso_carte, $x_r, $y_r) {
+	
+	// Est ce qu'il y a déjà une ligne de compteur de blocage ?
+	$sql = "SELECT * FROM train_compteur_blocage WHERE id_train='$id_instance_train'";
+	$res = $mysqli->query($sql);
+	$nb = $res->num_rows;
+	
+	if ($nb > 0 && $nb < 23) {
+		
+		$t = $res->fetch_assoc();
+		$compteur = $t['compteur'];
+		
+		if ($compteur >= 0 && $compteur < 23) {
+			// On augmente le compteur de 1
+			$sql = "UPDATE train_compteur_blocage SET compteur = compteur+1 WHERE id_train = '$id_instance_train'";
+			$mysqli->query($sql);
+		}
+		else if ($compteur >= 23) {
+			// mise à jour de la carte
+			$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_r' AND y_carte='$y_r'";
+			$mysqli->query($sql);
+			
+			// On supprime la barricade qui bloque
+			$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$idPerso_carte'";
+			$mysqli->query($sql);
+			
+			// On supprime la ligne de compteur
+			$sql = "DELETE FROM train_compteur_blocage WHERE id_train='$id_instance_train'";
+			$mysqli->query($sql);
+		}
+	}
+	else {
+		// On créé la ligne
+		$sql = "INSERT INTO train_compteur_blocage (id_train, compteur, date_debut_blocage) VALUES ('$id_instance_train', 0, NOW())";
+		$mysqli->query($sql);
+	}
+}
+
+/**
+ * Fonction qui permet de supprimer la ligne de compteur de blocage si elle existe
+ */
+function suppression_compteur_blocage($mysqli, $id_instance_train) {
+	
+	// Est ce qu'il y a déjà une ligne de compteur de blocage ?
+	$sql = "SELECT * FROM train_compteur_blocage WHERE id_train='$id_instance_train'";
+	$res = $mysqli->query($sql);
+	$nb = $res->num_rows;
+	
+	if ($nb > 0) {
+		// On supprime la ligne de compteur
+		$sql = "DELETE FROM train_compteur_blocage WHERE id_train='$id_instance_train'";
+		$mysqli->query($sql);
+	}
+}
 ?>

@@ -21,6 +21,8 @@ if($dispo == '1' || $admin){
 			$mess_err 	= "";
 			$mess 		= "";
 			
+			date_default_timezone_set('Europe/Paris');
+			
 ?>
 		
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -68,12 +70,13 @@ if($dispo == '1' || $admin){
 						</thead>
 						<tbody>
 						<?php
-						$sql = "SELECT * FROM alerte_anim ORDER BY id_alerte DESC";
+						$sql = "SELECT UNIX_TIMESTAMP(date_alerte) as date_alerte, type_alerte, id_perso, raison_alerte FROM alerte_anim ORDER BY id_alerte DESC";
 						$res = $mysqli->query($sql);
 						
 						while ($t = $res->fetch_assoc()) {
 							
 							$date_alerte 	= $t['date_alerte'];
+							$date_alerte 	= date('Y-m-d H:i:s', $date_alerte);
 							$type_alerte 	= $t['type_alerte'];
 							$id_perso_al 	= $t['id_perso'];
 							$raison_alerte 	= $t['raison_alerte'];

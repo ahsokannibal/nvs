@@ -111,7 +111,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 				$nb_r = $res_r->num_rows;
 
 				if ($nb_r) {
-					// rain trouvé
+					// rail trouvé
 					$t_r = $res_r->fetch_assoc();
 					$x_r = $t_r['x_carte'];
 					$y_r = $t_r['y_carte'];
@@ -125,10 +125,19 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					$idPerso_carte	= $t_c['idPerso_carte'];
 					
 					if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
+						
+						// Compteur blocage
+						gestion_blocage_train($mysqli, $id_instance_train, $idPerso_carte, $x_r, $y_r);
+						
 						// On sort de la boucle et on se déplace pas
 						break;
 					}
 					else {
+						
+						// On supprime le compteur de blocage s'il existe car le train peut se déplacer
+						// Cas où la barricade a été détruite par un joueur
+						suppression_compteur_blocage($mysqli, $id_instance_train);
+						
 						if ($dep_restant < 10) {
 							array_push($tab_dep_train, $x_train.';'.$y_train);
 						}
