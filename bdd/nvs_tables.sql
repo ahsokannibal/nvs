@@ -1304,6 +1304,16 @@ CREATE TABLE `tentative_triche` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `train_compteur_blocage`
+--
+
+CREATE TABLE IF NOT EXISTS `train_compteur_blocage` (
+  `id_train` int(11) NOT NULL,
+  `compteur` int(11) NOT NULL DEFAULT '0',
+  `date_debut_blocage` datetime NOT NULL
+) ENGINE=MyISAM;
+
+--
 -- Structure de la table `train_last_dep`
 --
 
