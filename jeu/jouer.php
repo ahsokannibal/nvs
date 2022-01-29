@@ -206,13 +206,13 @@ if($dispo == '1' || $admin){
 				$dossier_img_joueur = get_dossier_image_joueur($mysqli, $id_joueur_perso);
 				
 				// affichage rosace et bousculades
-				$sql = "SELECT afficher_rosace, bousculade_deplacement, cadrillage FROM joueur WHERE id_joueur='$id_joueur_perso'";
+				$sql = "SELECT afficher_rosace, bousculade_deplacement FROM joueur WHERE id_joueur='$id_joueur_perso'";
 				$res = $mysqli->query($sql);
 				$t = $res->fetch_assoc();
 				
 				$afficher_rosace 	= $t['afficher_rosace'];
 				$bousculade_dep		= $t['bousculade_deplacement'];
-				$cadrillage			= $t['cadrillage'];
+				$cadrillage			= 1;//$t['cadrillage'];
 				
 				$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
 				$res = $mysqli->query($sql);

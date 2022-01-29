@@ -8,7 +8,11 @@ require_once("f_action.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
-include ('../forum/config.php');
+$phpbb_root_path = '../forum/';
+if (is_dir($phpbb_root_path))
+{
+	include ($phpbb_root_path .'config.php');
+}
 
 if(isset($_SESSION["id_perso"])){
 	
@@ -18,8 +22,7 @@ if(isset($_SESSION["id_perso"])){
 	$admin = admin_perso($mysqli, $id_perso);
 	$anim = anim_perso($mysqli, $id_perso);
 	
-	if($anim){
-		
+	if($anim || $admin){
 		$mess_err 	= "";
 		$mess 		= "";
 		

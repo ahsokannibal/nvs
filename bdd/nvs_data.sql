@@ -328,7 +328,7 @@ INSERT INTO `decorations` (`id_decoration`, `description_decoration`, `camp_deco
 (13, 'Médaille du sauvetage', 1, 'medaille_sauvetage_nord.png'),
 (14, 'Ordre du mérite', 2, 'ordre_merite_sud.png'),
 (15, 'Purple Heart', 1, 'purple_heart_nord.png'),
-(16, 'Médaille commémorative de Faifax Stone (Beta)', 1, 'beta.png')
+(16, 'Médaille commémorative de Faifax Stone (Beta)', 1, 'beta.png'),
 (17, 'Médaille commémorative de Faifax Stone (Beta)', 2, 'beta.png');
 
 -- 
@@ -378,8 +378,8 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 -- Contenu de la table `joueur`
 --
 INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES 
-('1', NULL, 'romain.perruchon@gmail.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1'), 
-('2', NULL, 'romshunter@msn.com', '438e1491138fbd67e06aea554a2ad5d0', NULL, NULL, NULL, NULL, '0', '1');
+('1', NULL, 'admin1@example.com', '4fded1464736e77865df232cbcb4cd19', NULL, NULL, NULL, NULL, '0', '1'),
+('2', NULL, 'admin2@example.com', '4fded1464736e77865df232cbcb4cd19', NULL, NULL, NULL, NULL, '0', '1');
 
 --
 -- Contenu de la table `news`

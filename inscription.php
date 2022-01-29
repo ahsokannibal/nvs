@@ -11,10 +11,13 @@ define('IN_PHPBB', true);
 $phpEx = 'php';
 
 $phpbb_root_path = './forum/';
-require_once($phpbb_root_path ."common.php");
-require_once($phpbb_root_path ."includes/functions_user.php");
+if (is_dir($phpbb_root_path))
+{
+	require_once($phpbb_root_path ."common.php");
+	require_once($phpbb_root_path ."includes/functions_user.php");
 
-$request->enable_super_globals();
+	$request->enable_super_globals();
+}
 
 if(config_dispo_jeu($mysqli) == '1'){
 
@@ -34,8 +37,15 @@ if(config_dispo_jeu($mysqli) == '1'){
 					echo "<center>Erreur: Le Pseudo est incorrect! Veuillez en choisir un autre (taille entre 1 et 20, pas de quote, pas que des chiffres, pas la chaine --, etc..) </center><br /><br />";
 				}
 				else {
-					$sql = "SELECT username FROM ".$table_prefix."users WHERE username='".$nom_perso."'";
-					$resultat_user_forum = $mysqli->query($sql);
+					$user_found_in_forum = false;
+					if (is_dir($phpbb_root_path))
+					{
+						$sql = "SELECT username FROM ".$table_prefix."users WHERE username='".$nom_perso."'";
+						$resultat_user_forum = $mysqli->query($sql);
+						if( $resultat_user_forum->num_rows != 0) {
+							$user_found_in_forum = true;
+						}
+					}
 					
 					$sql = "SELECT nom_perso FROM perso WHERE nom_perso='".$nom_perso."'";
 					$resultat_user = $mysqli->query($sql);
@@ -43,7 +53,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 					$sql2 = "SELECT email_joueur FROM joueur WHERE email_joueur='".$email_joueur."'";
 					$resultat_user2 = $mysqli->query($sql2);
 						
-					if( $resultat_user->num_rows != 0 || $resultat_user_forum->num_rows != 0) {
+					if( $resultat_user->num_rows != 0 || $user_found_in_forum) {
 						echo "<center><font color='red'>Erreur: Le pseudo est déjà choisi ou interdit ! Veuillez en choisir un autre</font></center><br /><br />";
 					}
 					elseif ($resultat_user2->num_rows != 0) {
@@ -127,7 +137,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 								else {
 											
 									// insertion du nouveau joueur
-									$lock = "LOCK TABLE (joueur) WRITE";
+									$lock = "LOCK TABLE joueur WRITE";
 									$mysqli->query($lock);
 									
 									$insert_j = "INSERT INTO joueur (email_joueur, mdp_joueur) VALUES ('$email_joueur', '$mdp_joueur')";
@@ -227,7 +237,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 									}					
 									
 									// insertion nouveau perso / Chef
-									$lock = "LOCK TABLE (perso) WRITE";
+									$lock = "LOCK TABLE perso WRITE";
 									$mysqli->query($lock);
 									
 									if (trim($nom_bataillon) == "") {
@@ -247,23 +257,26 @@ if(config_dispo_jeu($mysqli) == '1'){
 									$unlock = "UNLOCK TABLES";
 									$mysqli->query($unlock);
 									
-									// Creation compte forum 
-									$user_row = array(
-										'id_perso'				=> $id,
-										'username'				=> $nom_perso,
-										'user_password'			=> phpbb_hash($old_mdp_joueur),
-										'user_email'			=> $email_joueur,
-										'group_id'				=> $group_id,
-										'user_timezone'			=> 'Europe/Paris',
-										'user_lang'				=> 'fr',
-										'user_type'				=> USER_NORMAL,
-										'user_actkey'			=> '',
-										'user_ip'				=> realip(),
-										'user_regdate'			=> time(),
-										'user_inactive_reason'	=> 0,
-										'user_inactive_time'	=> 0,
-									);
-									user_add($user_row);
+									if (is_dir($phpbb_root_path))
+									{
+										// Creation compte forum 
+										$user_row = array(
+											'id_perso'				=> $id,
+											'username'				=> $nom_perso,
+											'user_password'			=> phpbb_hash($old_mdp_joueur),
+											'user_email'			=> $email_joueur,
+											'group_id'				=> $group_id,
+											'user_timezone'			=> 'Europe/Paris',
+											'user_lang'				=> 'fr',
+											'user_type'				=> USER_NORMAL,
+											'user_actkey'			=> '',
+											'user_ip'				=> realip(),
+											'user_regdate'			=> time(),
+											'user_inactive_reason'	=> 0,
+											'user_inactive_time'	=> 0,
+										);
+										user_add($user_row);
+									}
 									
 									if ($bat_spawn_dispo) {
 										// On met le perso dans le batiment
@@ -323,7 +336,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 									}
 									
 									// Insertion grouillot
-									$lock = "LOCK TABLE (perso) WRITE";
+									$lock = "LOCK TABLE perso WRITE";
 									$mysqli->query($lock);
 									
 									$insert_sql = "INSERT INTO perso (IDJoueur_perso, nom_perso, type_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, bataillon) 
@@ -395,7 +408,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 									L\'admin et l\'équipe d\'animation de Nord VS Sud";
 									
 									// création du message
-									$lock = "LOCK TABLE (message) WRITE";
+									$lock = "LOCK TABLE message WRITE";
 									$mysqli->query($lock);
 									
 									$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message , objet_message ) VALUES ('" . $expediteur . "', NOW(), '" . $message . "', '" . $objet . "')";
