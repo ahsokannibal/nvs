@@ -30,7 +30,6 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 			echo "<a href=\"index.php\" class='btn btn-primary'>retour</a></center>";
 		}
 		else {
-			
 			if ($captcha == $_SESSION["code"]) {
 		
 				// passage du mdp en md5
@@ -58,7 +57,6 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 							$_SESSION["ID_joueur"] = $id_joueur;
 							
 							$_SESSION["id_perso"] = $t_user["id_perso"];
-							
 							$date = time();
 							
 							// recuperation de l'ip du joueur
@@ -79,7 +77,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 								$mysqli->query($sql);
 							}
 							
-							//header("location:jeu/jouer.php?login=ok");
+							header("location:jeu/jouer.php?login=ok");
 						}
 						else {
 							

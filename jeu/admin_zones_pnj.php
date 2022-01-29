@@ -5,7 +5,11 @@ require_once("../fonctions.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
-include ('../forum/config.php');
+$phpbb_root_path = '../forum/';
+if (is_dir($phpbb_root_path))
+{
+	include ($phpbb_root_path .'config.php');
+}
 
 if(isset($_SESSION["id_perso"])){
 	
@@ -70,7 +74,7 @@ if(isset($_SESSION["id_perso"])){
 				
 				$id_pnj_zone = $_POST['select_pnj'];
 				
-				$lock = "LOCK TABLE (zones) WRITE";
+				$lock = "LOCK TABLE zones WRITE";
 				$mysqli->query($lock);
 				
 				$sql = "INSERT INTO zones (xMin_zone, xMax_zone, yMin_zone, yMax_zone) VALUES ('$xMin_creation_zone', '$xMax_creation_zone', '$yMin_creation_zone', '$yMax_creation_zone')";

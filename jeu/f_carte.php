@@ -613,8 +613,9 @@ function in_bat($mysqli, $id){
 	$sql = "SELECT id_instanceBat FROM perso_in_batiment WHERE id_perso='$id'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
+	$nb = $res->num_rows;
 	
-	return $t['id_instanceBat'];
+	return $nb ? $t['id_instanceBat'] : 0;
 }
 
 // fonction qui verifie si le perso est dans un train ou non
@@ -622,8 +623,9 @@ function in_train($mysqli, $id){
 	$sql = "SELECT id_train FROM perso_in_train WHERE id_perso='$id'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
+	$nb = $res->num_rows;
 	
-	return $t['id_train'];
+	return $nb ? $t['id_train'] : 0;
 }
 
 function is_train($mysqli, $id_i_bat) {
