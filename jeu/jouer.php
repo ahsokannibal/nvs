@@ -2453,11 +2453,12 @@ if($dispo == '1' || $admin){
 				$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 				$res_groupe = $mysqli->query($sql_groupe);
 				$t_groupe = $res_groupe->fetch_assoc();
+				$nb = $res_groupe->num_rows;
 				
-				$id_compagnie = $t_groupe['id_compagnie'];
+				$id_compagnie = $nb ? $t_groupe['id_compagnie'] : 0;
 				$genie_compagnie_perso	= 0;
 								
-				if(isset($id_compagnie) && $id_compagnie != ''){
+				if($id_compagnie){
 					
 					// Recuperation des infos sur la compagnie (dont le nom)
 					$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_compagnie'";
@@ -4003,12 +4004,13 @@ if($dispo == '1' || $admin){
 												$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id_perso_im' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 												$res_groupe = $mysqli->query($sql_groupe);
 												$t_groupe = $res_groupe->fetch_assoc();
-												
-												$id_groupe = $t_groupe['id_compagnie'];
+												$nb = $res_groupe->num_rows;
+
+												$id_groupe = $nb ? $t_groupe['id_compagnie'] : 0;
 												
 												$nom_compagnie = '';
 												
-												if(isset($id_groupe) && $id_groupe != ''){
+												if($id_groupe){
 													
 													// recuperation des infos sur la compagnie (dont le nom)
 													$sql_groupe2 = "SELECT * FROM compagnies WHERE id_compagnie='$id_groupe'";

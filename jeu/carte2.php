@@ -253,7 +253,7 @@ if (@$_SESSION["id_perso"]) {
 	ImageDestroy ($image_carte);
 	ImageDestroy ($image_carte_bataillon);
 	ImageDestroy ($image_carte_compagnie);
-	ImageDestroy ($legende_carte);
+	//ImageDestroy ($legende_carte);
 
 	header("Location:afficher_carte.php");
 }
