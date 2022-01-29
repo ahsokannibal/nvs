@@ -3761,7 +3761,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		
 		$couleur_clan_cible = 'black';
 		
-		$gain_pc = 0;
+		$gain_pc_cible = 0;
 		
 	} else {
 	
