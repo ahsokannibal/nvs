@@ -133,7 +133,7 @@ if($dispo == '1' || $admin){
 							$objet = "[Animation] Refus demande Capture";
 							$message = "Bonjour, l'animation a refusée votre demande de capture.";
 				
-							$lock = "LOCK TABLE (message) WRITE";
+							$lock = "LOCK TABLE message WRITE";
 							$mysqli->query($lock);
 							
 							// creation du message
@@ -216,7 +216,7 @@ if($dispo == '1' || $admin){
 							$objet = "[Animation] Capture de votre perso par RP";
 							$message = "Bonjour, l'animation a validé la capture de votre personnage par RP.";
 				
-							$lock = "LOCK TABLE (message) WRITE";
+							$lock = "LOCK TABLE message WRITE";
 							$mysqli->query($lock);
 							
 							// creation du message
@@ -237,7 +237,7 @@ if($dispo == '1' || $admin){
 							$objet = "[Animation] Capture par RP";
 							$message = "Bonjour, l'animation a validé votre capture RP.";
 				
-							$lock = "LOCK TABLE (message) WRITE";
+							$lock = "LOCK TABLE message WRITE";
 							$mysqli->query($lock);
 							
 							// creation du message
@@ -324,7 +324,7 @@ if($dispo == '1' || $admin){
 							$objet = "[Animation] Capture de votre perso par encerclement";
 							$message = "Bonjour, l'animation a validé la capture forcée de votre personnage par encerclement de l'ennemi.";
 				
-							$lock = "LOCK TABLE (message) WRITE";
+							$lock = "LOCK TABLE message WRITE";
 							$mysqli->query($lock);
 							
 							// creation du message

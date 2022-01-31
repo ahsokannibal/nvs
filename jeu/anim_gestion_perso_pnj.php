@@ -179,7 +179,7 @@ if($dispo == '1' || $admin){
 						else {
 									
 							// insertion du nouveau joueur
-							$lock = "LOCK TABLE (joueur) WRITE";
+							$lock = "LOCK TABLE joueur WRITE";
 							$mysqli->query($lock);
 							
 							$insert_j = "INSERT INTO joueur (email_joueur, mdp_joueur) VALUES ('$email_joueur', '$mdp_joueur')";
@@ -279,7 +279,7 @@ if($dispo == '1' || $admin){
 							}					
 							
 							// insertion nouveau perso / Chef
-							$lock = "LOCK TABLE (perso) WRITE";
+							$lock = "LOCK TABLE perso WRITE";
 							$mysqli->query($lock);
 							
 							$nom_bataillon = addslashes($nom_bataillon);

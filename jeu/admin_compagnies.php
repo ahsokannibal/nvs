@@ -281,7 +281,7 @@ if(isset($_SESSION["id_perso"])){
 						J\'ai le plaisir de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été acceptée.";
 			$objet = "Incorporation dans la compagnie";
 			
-			$lock = "LOCK TABLE (joueur) WRITE";
+			$lock = "LOCK TABLE joueur WRITE";
 			$mysqli->query($lock);
 			
 			$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . $nom_compagnie . "', NOW(), '" . $message . "', '" . $objet . "')";

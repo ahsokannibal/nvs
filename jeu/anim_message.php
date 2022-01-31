@@ -95,7 +95,7 @@ if($dispo == '1' || $admin){
 						}
 						$objet = htmlentities(addslashes($txt_objet));
 						
-						$lock = "LOCK TABLE (message) WRITE";
+						$lock = "LOCK TABLE message WRITE";
 						$mysqli->query($lock);
 						
 						// creation du message

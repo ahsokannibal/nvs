@@ -77,7 +77,7 @@ if($dispo == '1' || $admin){
 				$nom_comp		= addslashes($t["nom_compagnie"]);
 				$desc_comp		= addslashes($t["description_compagnie"]);
 				
-				$lock = "LOCK TABLE (compagnies) WRITE";
+				$lock = "LOCK TABLE compagnies WRITE";
 				$mysqli->query($lock);
 				
 				// creation compagnie

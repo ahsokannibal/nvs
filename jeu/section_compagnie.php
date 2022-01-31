@@ -84,7 +84,7 @@ if (@$_SESSION["id_perso"]) {
 											}
 											else {
 									
-												$lock = "LOCK TABLE (compagnies) WRITE";
+												$lock = "LOCK TABLE compagnies WRITE";
 												$mysqli->query($lock);
 											
 												// Création de la section
