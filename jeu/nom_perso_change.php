@@ -5,7 +5,11 @@ require_once("../fonctions.php");
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
-include ('../forum/config.php');
+$phpbb_root_path = '../forum/';
+if (is_dir($phpbb_root_path))
+{
+	include ($phpbb_root_path .'config.php');
+}
 
 if (@$_SESSION["id_perso"]) {
 	
