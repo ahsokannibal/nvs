@@ -64,7 +64,7 @@ if($dispo == '1' || $admin){
 				
 				$objet = "[Animation] Réponse à votre question / remontée";
 				
-				$lock = "LOCK TABLE (message) WRITE";
+				$lock = "LOCK TABLE message WRITE";
 				$mysqli->query($lock);
 				
 				// creation du message

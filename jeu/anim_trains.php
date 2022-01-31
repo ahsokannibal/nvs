@@ -156,7 +156,7 @@ if($dispo == '1' || $admin){
 						}
 						
 						// Creation train
-						$lock = "LOCK TABLE (instance_batiment) WRITE";
+						$lock = "LOCK TABLE instance_batiment WRITE";
 						$mysqli->query($lock);
 						
 						$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 

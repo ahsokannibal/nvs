@@ -76,7 +76,7 @@ if($dispo == '1' || $admin){
 								$extension_deb	= end($temp);
 								$extension_fin	= end($temp_fin);
 						
-								$lock = "LOCK TABLE (anim_capture) WRITE";
+								$lock = "LOCK TABLE anim_capture WRITE";
 								$mysqli->query($lock);
 						
 								$sql = "INSERT INTO anim_capture(date_capture, id_perso, id_perso_capture, titre, message, type_capture, extension_img1, extension_img2) 

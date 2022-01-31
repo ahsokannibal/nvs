@@ -134,7 +134,7 @@ if(isset($_SESSION["id_perso"])){
 									J\'ai le plaisir de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été acceptée.";
 						$objet = "Incorporation dans la compagnie";
 						
-						$lock = "LOCK TABLE (joueur) WRITE";
+						$lock = "LOCK TABLE joueur WRITE";
 						$mysqli->query($lock);
 						
 						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . $nom_compagnie . "', NOW(), '" . $message . "', '" . $objet . "')";
@@ -168,7 +168,7 @@ if(isset($_SESSION["id_perso"])){
 									J\'ai le regret de t\'annoncer que ton entrée dans la compagnie ". $nom_compagnie ." a été refusé.";
 						$objet = "Refus d\'incorporation dans la compagnie";
 						
-						$lock = "LOCK TABLE (joueur) WRITE";
+						$lock = "LOCK TABLE joueur WRITE";
 						$mysqli->query($lock);
 						
 						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . $nom_compagnie . "', NOW(), '" . $message . "', '" . $objet . "')";
@@ -293,7 +293,7 @@ if(isset($_SESSION["id_perso"])){
 									J\'ai le regret de t\'annoncer que ton départ de la compagnie ". addslashes($nom_groupe) ." a été refusé.";
 						$objet = "Refus de départ de la compagnie";
 						
-						$lock = "LOCK TABLE (joueur) WRITE";
+						$lock = "LOCK TABLE joueur WRITE";
 						$mysqli->query($lock);
 						
 						$sql = "INSERT INTO message (expediteur_message, date_message, contenu_message, objet_message) VALUES ( '" . addslashes($nom_groupe) . "', NOW(), '" . $message . "', '" . $objet . "')";

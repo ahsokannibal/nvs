@@ -74,7 +74,7 @@ if(isset($_SESSION["id_perso"])){
 				$expediteur = $pseudo;
 				$message = addslashes($_POST["message"]);
 				
-				$lock = "LOCK TABLE (message) WRITE";
+				$lock = "LOCK TABLE message WRITE";
 				$mysqli->query($lock);
 				
 				// creation du message
