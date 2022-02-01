@@ -9,15 +9,11 @@ $phpbb_root_path = '../forum/';
 if (is_dir($phpbb_root_path))
 {
 	include ($phpbb_root_path .'config.php');
+	define('IN_PHPBB', true);
+	$phpEx = 'php';
+	require_once($phpbb_root_path ."common.php");
+	$request->enable_super_globals();
 }
-
-define('IN_PHPBB', true);
-$phpEx = 'php';
-
-$phpbb_root_path = '../forum/';
-require_once($phpbb_root_path ."common.php");
-
-$request->enable_super_globals();
 
 // recupération config jeu
 $dispo = config_dispo_jeu($mysqli);
