@@ -531,3 +531,4 @@ INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `percept
 --- Ajout de l'auto inscrement pour commencer les perso à 101.
 ---
 ALTER TABLE perso AUTO_INCREMENT=101;
+ALTER TABLE joueur AUTO_INCREMENT=101;
