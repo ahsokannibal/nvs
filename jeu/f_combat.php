@@ -376,7 +376,7 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 			// L'attaque respecte t-elle les 8 heures ?
 			$diff = $date_now - strtotime($date_derniere_attaque);
 			
-			if ($diff < 8 * 60 * 60) {
+			if ($diff < 1 * 60 * 60) {
 				// Loi anti-zerk non respectée
 				$verif_anti_zerk = 0;
 			}
