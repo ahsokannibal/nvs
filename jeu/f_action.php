@@ -67,32 +67,35 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 			$t_rail3 = explode('.', $fond_rail);
 			$num_rail = $t_rail3[0];
 			
-			$image_rail = "rail_".$num_rail.".gif";
-			
 			if ($num_rail == '2' || $num_rail == '7') {
 				// Coline ou foret
 				$cout_pa = 6;
 				$cout_pv = 0;
+				$image_rail = "rail_".$num_rail.".gif";
 			}
 			else if ($num_rail == '3') {
 				// Montagne
 				$cout_pa = 8;
 				$cout_pv = 0;
+				$image_rail = "rail_".$num_rail.".gif";
 			}
 			else if ($num_rail == '4') {
 				// desert
 				$cout_pa = 4;
 				$cout_pv = 50;
+				$image_rail = "rail_".$num_rail.".gif";
 			}
 			else if ($num_rail == '5') {
 				// plaine enneigée
 				$cout_pa = 5;
 				$cout_pv = 0;
+				$image_rail = "rail_".$num_rail.".gif";
 			}
 			else {
 				// plaine
 				$cout_pa = 4;
 				$cout_pv = 0;
+				$image_rail = "rail_1.gif";
 			}
 			
 			if ($pa_perso >= $cout_pa && $pv_perso >= $cout_pv) {
