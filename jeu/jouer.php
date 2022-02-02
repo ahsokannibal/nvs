@@ -2280,7 +2280,7 @@ if($dispo == '1' || $admin){
 				echo "	<td align=right>";
 				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
 				echo "		<a class='btn btn-info' href=\"../faq.php\" target='_blank'><b>FAQ</b></a>";
-				echo "		<a class='btn btn-primary' href=\"../forum/\" target='_blank'><b>Forum</b></a>";
+				echo "		<a class='btn btn-primary' href=\"http://www.forum.persee.ovh/\" target='_blank'><b>Forum</b></a>";
 				if ($type_perso != 6) {
 					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Questions Anim</b></a>";
 					echo "		<a class='btn btn-primary' href=\"capture.php\" target='_blank'><b>Déclarer une capture</b></a>";
