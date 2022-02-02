@@ -108,7 +108,7 @@ $count_online = $res->fetch_array();
 							<hr />
 							<a href="faq.php" style="color: white;">FAQ</b></a>
 							<hr />
-							<a href="/forum" style="color: white;">Le Forum</b></a>
+							<a href="http://www.forum.persee.ovh/" style="color: white;">Le Forum</b></a>
 							<hr />
 							<a href="jeu/classement.php" style="color: white;">Les classements</b></a>
 							<hr />
