@@ -1841,6 +1841,10 @@ if($dispo == '1' || $admin){
 												
 												// échec critique, le perso trébuche, perd 1PM et reste sur place
 												$erreur .= "<b>Vous avez trébuché, vous perdez 1PM !</b>";
+												// mise a jour des evenements
+													$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,$nom_perso,'a trébuché',NULL,'','en $x_persoN/$y_persoN',NOW(),'0')";
+													$mysqli->query($sql);
+												
 											}
 											else {
 												
@@ -1885,6 +1889,9 @@ if($dispo == '1' || $admin){
 													$sql = "UPDATE perso SET pm_perso=pm_perso+1 WHERE id_perso='$id_perso'"; 
 													$mysqli->query($sql);
 													
+													// mise a jour des evenements
+													$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,$nom_perso,'est en forme aujourd'hui !',NULL,'','',NOW(),'0')";
+													$mysqli->query($sql);
 													header("location:jouer.php?message=gainPM");
 												}
 												else {
