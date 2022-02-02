@@ -532,3 +532,11 @@ INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `percept
 ---
 ALTER TABLE perso AUTO_INCREMENT=101;
 ALTER TABLE joueur AUTO_INCREMENT=101;
+
+-------
+------- Table permettant de gérer les ordres données à la compagnie
+-------
+CREATE TABLE `compagnie_ordre` (
+  `id_compagnie` int(11) NOT NULL,
+  `ordre` varchar(2000) NOT NULL
+);
