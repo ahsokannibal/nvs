@@ -64,9 +64,11 @@ if($dispo == '1' || $admin){
 				$sql = "SELECT id_instanceBat FROM perso_in_batiment WHERE id_perso='$id'";
 				$res = $mysqli->query($sql);
 				$tab = $res->fetch_assoc();
+				$nb = $res->num_rows;
 				
-				$id_instance_bat = $tab["id_instanceBat"];		
-			
+				$id_instance_bat = null;
+				if ($nb)
+					$id_instance_bat = $tab["id_instanceBat"];
 			
 	?>
 <html>
