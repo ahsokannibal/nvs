@@ -423,12 +423,13 @@ if($dispo == '1' || $admin){
 													AND idPerso_carte >= 50000 AND idperso_carte < 200000";
 										$res_o = $mysqli->query($sql_o);
 										$t_o = $res_o->fetch_assoc();
+										$nb_obstacles = $res_o->num_rows;
 										
-										$id_obstacle = $t_o['idPerso_carte'];
-										$x_obstacle = $t_o['x_carte'];
-										$y_obstacle = $t_o['y_carte'];
-										
-										if ($id_obstacle != null) {
+										if ($nb_obstacles)
+										{
+											$id_obstacle = $t_o['idPerso_carte'];
+											$x_obstacle = $t_o['x_carte'];
+											$y_obstacle = $t_o['y_carte'];
 											$obstacle_train = true;
 										}
 										
