@@ -23,7 +23,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 
 	if(isset($_POST['creer'])) {
 		
-		if (isset($_POST['cgu']) && $_POST['cgu']=="on") {
+		if (isset($_POST['cgu']) && $_POST['cgu']=="on" && isset($_POST['charte']) && $_POST['charte']=="on") {
 			
 			if ($_POST['camp_perso'] != '0') {
 		
@@ -448,7 +448,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 			}
 		}
 		else {
-			echo "<center>Erreur: Veuillez valider les CGU !</center><br /><br />";
+			echo "<center>Erreur: Veuillez valider les CGU et la charte !</center><br /><br />";
 		}
 	}
 	?>
@@ -489,6 +489,10 @@ if(config_dispo_jeu($mysqli) == '1'){
 			<br/><br/>
 			<input type="checkbox" id="cgu" name="cgu" /> En cochant cette case je confirme avoir lu les <a href='CGU.pdf'>CGU</a>
 			<br /><br />
+			<p> Nord vs Sud est un jeu, je m'engage a faire preuve de fair-play, a accepter d'equilibrer les equipes si necessaire, a ne pas tricher, a ne pas abuser d'eventuels bugs mais a les remonter, a etre bienveillant envers les joueurs plus ou moins impliques, a ne pas etre toxique mais a faire en sorte que l'ambiance intra et inter-camp soit bonne. Tout multicompte ou usage de VPN legitime est a declarer publiquement. L'equipe d'animation sera prompte a sanctionner severement tout contrevenant. </p>
+			<input type="checkbox" id="charte" name="charte" /> En cochant cette case je confirme accepter sans reserve cette charte.
+			<br /><br />
+
 			<input name="creation" type="hidden" value="ok">
 			<input type="submit" name="creer" value="Cr&eacute;er">
 			<br/><br/>
