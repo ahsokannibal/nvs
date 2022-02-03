@@ -29,14 +29,15 @@ $mysqli = db_connexion();
 					</div>
 					
 					<div style="color: azure;">
-						<h3>Développeur / Animateur principal</h3><br />
-						<b>Romain PERRUCHON</b> (Admin sur le forum)
+						<h3>Developpement et admin du jeu depuis fevrier 2022</h3><br />
+						<b>Collectif de joueurs de la v2 - Travail en cours</b> ( :D )
 					</div>
 					
 					<br /><br />
 					
 					<div style="color: azure;">
 						<h3>Remerciements</h3>
+						<b>Romain PERRUCHON</b> (Developpeur principal, a l'origine de la créaton de la v2 du jeu et admin historique de celui-ci. Reviens quand tu veux, jouer ou contribuer ! )<br /><br />						
 						<b>$kulL</b>, <b>James Winter</b>, <b>Augustus Winter</b>, <b>Geoff McDubh</b>, <b>Charly Cœur</b>, <b>Martin Luther King</b>, <b>Jedd Elzey</b>, <b>Furie</b> (pour leur implication et leur aide durant l'Alpha)<br /><br />
 						<b>Robert E. Lee</b> (pour son aide graphique)						
 					</div>
