@@ -397,7 +397,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 									$nom_img = "msg_".$ncamp.".jpg";
 									
 									// message de bienvenue
-									$expediteur = "loka";
+									$expediteur = "admin";
 									$objet = "Bienvenue";
 									$message = "[center][b]Bienvenue dans cette nouvelle version de NvS $nom_perso [/b][/center]";
 									$message .= "[center][img]http://nord-vs-sud.com/images/".$nom_img."[/img][/center]";
