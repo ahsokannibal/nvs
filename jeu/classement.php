@@ -48,7 +48,7 @@ if(isset($erreur)){
 }
 
 if(isset($_GET["top"])){
-	echo "<div align=\"center\"><h2><font color=darkred>Top 10</font></h2></div>";
+	echo "<div align=\"center\"><h2><font color=darkred>Top 50</font></h2></div>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
@@ -62,7 +62,7 @@ if(isset($_GET["top"])){
 	echo "<br />";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?top=ok\">Les tops 50</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
@@ -114,7 +114,7 @@ if(isset($_GET["top"])){
 	
 	if((isset($verif) && $verif) || !isset($_GET["classement"])){
 	
-		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso > '100' ORDER BY $class DESC LIMIT 10";
+		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso > '100' ORDER BY $class DESC LIMIT 50";
 		$res = $mysqli->query($sql);
 		
 		echo "<div class='table-responsive'>";
@@ -184,7 +184,7 @@ if(isset($_GET["titre"])){
 	echo "</div>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
 	echo "	<a class='btn btn-primary' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
@@ -269,7 +269,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "</div>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
@@ -494,7 +494,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	echo "</div>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-primary' href=\"classement.php?super=ok\">Les Supermans</a>";
@@ -600,7 +600,7 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	echo "</div>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-primary' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
@@ -612,7 +612,7 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 			FROM perso_as_entrainement, perso 
 			WHERE perso_as_entrainement.id_perso=perso.id_perso 
 			AND perso.id_perso>'10'
-			ORDER BY niveau_entrainement DESC LIMIT 10";
+			ORDER BY niveau_entrainement DESC LIMIT 50";
 	$res = $mysqli->query($sql);
 	
 	echo "<div class='table-responsive'>";
@@ -661,7 +661,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	echo "</div>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
@@ -671,7 +671,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	
 	$sql = "SELECT nom_perso, clan, perso.id_perso, UNIX_TIMESTAMP(date_capture) as date_capture FROM perso, dernier_tombe
 			WHERE perso.id_perso = dernier_tombe.id_perso_capture
-			ORDER BY date_capture DESC LIMIT 10";
+			ORDER BY date_capture DESC LIMIT 50";
 	$res = $mysqli->query($sql);
 	
 	echo "<div class='table-responsive'>";
@@ -729,7 +729,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "</div>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 10</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
