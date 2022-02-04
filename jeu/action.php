@@ -1513,7 +1513,7 @@ if($dispo == '1' || $admin) {
 														if($id_bat == '1' || $id_bat == '2' || $id_bat == '3' || $id_bat == '6' || $id_bat == '7' || $id_bat == '8' || $id_bat == '9' || $id_bat == '10' || $id_bat == '11'){
 															
 															// Possibilité de construire barricade sur rail
-															if($fond_carte == 'rail.gif'){
+															if($fond_carte == 'rail.gif' OR $fond_carte=='rail_1.gif' OR $fond_carte=='rail_2.gif' OR $fond_carte=='rail_3.gif' OR $fond_carte=='rail_4.gif' OR $fond_carte=='rail_5.gif' OR $fond_carte=='rail_7.gif' OR $fond_carte=='railP.gif'){
 																if($id_bat == '1') {
 																	echo "
 																	<td width=40 height=40> 
