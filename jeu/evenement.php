@@ -4,6 +4,9 @@ require_once("../fonctions.php");
 require_once("f_carte.php");
 require_once("f_entete.php");
 
+//require_once('../mvc/model/Event.php'); exemple d'intégration du modèle "Event" qui gère la récupération et l'enregistrement des évènements en base
+// $userEvents = $event->getUserEvents($id_perso)->fetchAll(PDO::FETCH_CLASS,'Event'); exemple de récupération de tous les évènements d'un perso en POO
+
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
