@@ -4202,7 +4202,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
@@ -4307,7 +4307,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
@@ -4412,7 +4412,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
@@ -4517,7 +4517,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
@@ -4621,7 +4621,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
@@ -4725,7 +4725,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
@@ -4829,7 +4829,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
@@ -4933,7 +4933,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && $fond_carte != 'rail.gif')) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
