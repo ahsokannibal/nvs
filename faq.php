@@ -96,7 +96,7 @@ $mysqli = db_connexion();
 					<div class="card-header" id="headingFive">
 						<h2 class="mb-0">
 							<button class="btn btn-link btn-block text-left collapsed" type="button" data-toggle="collapse" data-target="#collapseFive" aria-expanded="false" aria-controls="collapseFive">
-								Je pars en vacance et je ne pourrais pas jouer, que faire ?
+								Je pars en vacances et je ne pourrais pas jouer, que faire ?
 							</button>
 						</h2>
 					</div>
@@ -105,7 +105,7 @@ $mysqli = db_connexion();
 							Vous avez 2 possibilités :
 							<ul>
 								<li>Mettre vos personnages en permission (Profil -> Gérer son compte -> Partir en permission). Vos personnages disparaitront du jeu jusqu'à ce que vous reveniez. Attention, un départ en permission n'est pas immédiat, il faut attendre 3 jours (prise en compte à minuit) afin que le départ soit effectif donc pensez à faire votre demande en avance (il vous sera possible de continuer à jouer jusqu'à votre départ) ! De plus, vous ne pouvez revenir de permission que minimum 5 jours après le départ effectif.</li>
-								<li>Mettre votre perso en babysitte par un autre joueur. L'autre joueur jouera votre perso à votre place pendant votre absence. Pour cela, ce joueur doit déclarer le Babysitte (Profil -> Gérer son compte -> Déclarer un babysitte). Le Babysitte ne peut se faire que par un joueur du même camp que vous et les interractions entre les persos des 2 joueurs sont interdits durant la période de babysitte. Le babysitte est à vos risques et périls, si vous perdez vos objets / thunes et que votre perso se fait capturer pendant cette période, ce sera de votre responsabilité.</li>
+								<li>Mettre votre perso en babysitte par un autre joueur. L'autre joueur jouera votre perso à votre place pendant votre absence. Pour cela, ce joueur doit déclarer le Babysitte (Profil -> Gérer son compte -> Déclarer un babysitte). Le Babysitte ne peut se faire que par un joueur du même camp que vous et les interactions entre les persos des 2 joueurs sont interdits durant la période de babysitte. Le babysitte est à vos risques et périls, si vous perdez vos objets / thunes et que votre perso se fait capturer pendant cette période, ce sera de votre responsabilité.</li>
 							</ul>
 						</div>
 					</div>
@@ -123,10 +123,10 @@ $mysqli = db_connexion();
 							C'est tout à fait possible mais vous devrez le déclarer (Profil -> Gérer son compte -> Déclarer un multi) ainsi que respecter certaines règles :
 							<ul>
 								<li>Jouer dans le même camp</li>
-								<li>Pas d'interraction entre vos persos (pas d'échange de thunes / objets, pas de bousculades, pas de soins)</li>
-								<li>Pas d'attaques / interractions contre la même cible sous un délai de 8h (Exemple : si Joueur 1 a attaqué Ennemi A à 14h, Joueur 2 qui est multi de Joueur 1 n'a le droit d'attaquer / bousculer Ennemi A qu'à partir de 22h)</li>
+								<li>Pas d'interaction entre vos persos (pas d'échange de thunes / objets, pas de bousculades, pas de soins)</li>
+								<li>Pas d'attaques / interactions contre la même cible sous un délai de 8h (Exemple : si Joueur 1 a attaqué Ennemi A à 14h, Joueur 2 qui est multi de Joueur 1 n'a le droit d'attaquer / bousculer Ennemi A qu'à partir de 22h)</li>
 							</ul>
-							Tout manquement à ces règles seront punies par les animateurs par des peines plus ou moins grande (qui peuvent aller de la simple amende à l'envoi au Pénitencier).
+							Tout manquement à ces règles sera puni par les animateurs par des peines plus ou moins grande (qui peuvent aller de la simple amende à l'envoi au Pénitencier).
 							<b>Si un multi est détecté sans déclaration ou qu'un multi déclaré se trouve être joué par une seule personne, les persos risquent la suppression pure et simple.</b>
 						</div>
 					</div>
@@ -186,7 +186,7 @@ $mysqli = db_connexion();
 					</div>
 					<div id="collapseTen" class="collapse" aria-labelledby="headingTen" data-parent="#accordionExample">
 						<div class="card-body">
-							Chaque type de terrain possède ses spécificités et vous accordent divers bonus et/ou malus. Reportez vous à la <a href='./regles/regles_carte.php'>page de règles dédié</a> pour tous les connaitre.
+							Chaque type de terrain possède ses spécificités et vous accordent divers bonus et/ou malus. Reportez vous à la <a href='./regles/regles_carte.php'>page de règles dédiée</a> pour tous les connaitre.
 						</div>
 					</div>
 				</div>
@@ -256,7 +256,7 @@ $mysqli = db_connexion();
 						<div class="card-body">
 							Un train peut être bloqué pour plusieurs raisons :
 							<ul>
-								<li>La gare de destination du train n'existe plus / à été détruite</li>
+								<li>La gare de destination du train n'existe plus / a été détruite</li>
 								<li>La gare de destination du train n'est plus en état de fonctionner (PV en dessous de 50%)</li>
 								<li>Une barricade a été placée sur la route du train (le train s'arretera alors devant la barricade)</li>
 							</ul>
