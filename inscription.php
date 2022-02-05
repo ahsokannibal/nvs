@@ -489,7 +489,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 			<br/><br/>
 			<input type="checkbox" id="cgu" name="cgu" /> En cochant cette case je confirme avoir lu les <a href='CGU.pdf'>CGU</a>
 			<br /><br />
-			<p> Nord vs Sud est un jeu, je m'engage a faire preuve de fair-play, a accepter d'equilibrer les equipes si necessaire, a ne pas tricher, a ne pas abuser d'eventuels bugs mais a les remonter, a etre bienveillant envers les joueurs plus ou moins impliques, a ne pas etre toxique mais a faire en sorte que l'ambiance intra et inter-camp soit bonne. Tout multicompte ou usage de VPN legitime est a declarer publiquement. L'equipe d'animation sera prompte a sanctionner severement tout contrevenant. </p>
+			<p> Nord vs Sud est un jeu, je m'engage à faire preuve de fair-play, à accepter d’équilibrer les équipes si nécessaire, à ne pas tricher, à ne pas abuser d’éventuels bugs mais à les remonter, à être bienveillant envers les joueurs plus ou moins impliqués, à ne pas être toxique mais à faire en sorte que l'ambiance intra et inter-camp soit bonne. Tout multicompte ou usage de VPN légitime est à déclarer publiquement. L'équipe d'animation sera prompte à sanctionner sévèrement tout contrevenant.  </p>
 			<input type="checkbox" id="charte" name="charte" /> En cochant cette case je confirme accepter sans reserve cette charte.
 			<br /><br />
 
