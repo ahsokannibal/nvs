@@ -101,6 +101,28 @@ function possede_lunette_visee($mysqli, $id_perso) {
 }
 
 /**
+  * Fonction qui retourne la distance du perso à une cible.
+  * @param $id_perso	: L'identifiant du perso qui attaque
+  * @param $id_cible	: L'identifiant du pj ou pnj cible (attaque)
+  * @return int		: distance
+  */
+function get_distance($mysqli, $id_perso, $id_cible){
+	$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_perso'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	$x_perso = $t['x_carte'];
+	$y_perso = $t['y_carte'];
+
+	$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+	$x_cible = $t['x_carte'];
+	$y_cible = $t['y_carte'];
+
+	return max(abs($x_perso - $x_cible), abs($y_perso - $y_cible));
+}
+
+/**
   * Fonction qui verifie si un pnj ou un pj est bien a portee d'attaque sur la carte
   * @param $carte	: La carte sur laquelle se trouve le pj qui attaque
   * @param $id_perso	: L'identifiant du perso qui attaque

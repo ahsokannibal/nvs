@@ -438,8 +438,15 @@ if ($verif_id_perso_session) {
 										
 										// Bonus defense objets cible 
 										$bonus_defense_objet = get_bonus_defense_objet($mysqli, $id_cible);
+
+										$bonus_precision_distance = 0;
+										if ($porteeMax_arme_attaque > 3) {
+											$distance = get_distance($mysqli, $id, $id_cible);
+											if ($distance == $porteeMax_arme_attaque)
+												$bonus_precision_distance = -15;
+										}
 										
-										$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet + $bonus_precision_bat;
+										$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet + $bonus_precision_bat + $bonus_precision_distance;
 										
 										// Bonus Precision Objets
 										$bonus_precision_objet = 0;
@@ -449,11 +456,11 @@ if ($verif_id_perso_session) {
 										else {
 											$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id);
 										}
-										
+
 										$precision_final += $bonus_precision_objet;
 										
 										echo "Votre score de touche : ".$touche."<br>";
-										echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus Précision objet : ".$bonus_precision_objet;
+										echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus Précision objet : ".$bonus_precision_objet."  -- Bonus precision distance : ".$bonus_precision_distance;
 										if ($bonus_precision_bat != 0) {
 											echo " -- Bonus du batiment : ".$bonus_precision_bat;
 										}
@@ -505,13 +512,10 @@ if ($verif_id_perso_session) {
 											
 											$gain_xp = ceil(($degats_final / 20) + $valeur_des_xp);
 											
-											// Limite 3XP par attaque de Gatling
-											if ($id_arme_attaque == 14 && $gain_xp > 3) {
-												$gain_xp = 3;
-											}
-											
-											if ($gain_xp > 10) {
-												$gain_xp = 10;
+											// Limit le nombre d'xp gagné par attaque
+											$max_xp_par_attaque = ceil(20 / floor(10 / $coutPa_arme_attaque));
+											if ($gain_xp > $max_xp_par_attaque) {
+												$gain_xp = $max_xp_par_attaque;
 											}
 											
 											if ($gain_xp_tour_perso + $gain_xp > 20) {
@@ -809,8 +813,8 @@ if ($verif_id_perso_session) {
 														
 														$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
 														
-														// Limite 2 PC par attaque de Gatling
-														if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 2) {
+														// Limite 3 PC par attaque de Gatling
+														if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 3) {
 															$gain_pc_collat = 0;
 														}
 														

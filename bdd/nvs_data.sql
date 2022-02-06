@@ -79,23 +79,23 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.gif'),
 (4, 'Pistolet', 1, 2, 3, 0, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
 (5, 'Pistolet Canon Long', 1, 3, 3, 100, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '2.0', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
-(6, 'Baïonnette', 1, 1, 3, 0, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
+(6, 'Baïonnette', 1, 1, 3, 0, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (7, 'Fusil', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (8, 'Fusil Précision', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
 (9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'cannine.jpg'),
 (10, 'Seringue', 1, 1, 5, 50, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '0.1', 0, 'Seringue pour soigner', 0, 1, 'seringue.jpg'),
 (11, 'Bandages', 1, 1, 3, 50, 0, 0, 0, 0, 2, 2, 10, 35, '0', 0, '0.2', 0, 'Bandages permettant de récupérer des malus de defense', 0, 1, 'bandage.jpg'),
 (12, 'Griffes', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'griffe.png'),
-(13, 'Canon', 2, 5, 6, 0, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
-(14, 'Gatling', 1, 2, 3, 250, 0, 0, 0, 0, 2, 2, 90, 70, '1', 2, '0.0', 0, '', 0, 1, 'gatling.png'),
+(13, 'Canon', 2, 6, 6, 0, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
+(14, 'Gatling', 1, 5, 3, 200, 0, 0, 0, 0, 2, 2, 90, 70, '1', 2, '0.0', 0, '', 0, 1, 'gatling.png'),
 (15, 'Magnum', '1', '2', '3', '150', '0', '0', '0', '0', '16', '16', '8', '40', '0', '0', '2.0', '0', '', '0', '1', 'magnum.jpg'),
 (16, 'Couteau', '1', '1', '3', '10', '0', '0', '0', '0', '15', '15', '4', '35', '0', '0', '0.0', '0', '', '0', '1', 'couteau.png'),
-(17, 'Canon double', '1', '3', '5', '225', '0', '0', '0', '0', '20', '20', '8', '70', '0', '0', '3.0', '0', '', '0', '1', 'canon_double.png'),
+(17, 'Canon double', '1', '3', '5', '225', '0', '0', '0', '0', '20', '20', '8', '75', '0', '0', '3.0', '0', '', '0', '1', 'canon_double.png'),
 (18, 'Sabre normal', 1, 1, 4, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.jpg'),
 (19, 'Pistolet normal', 1, 2, 3, 50, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
-(20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
+(20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
-(22, 'Canon normal', 2, 5, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg');
+(22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg');
 
 
 -- --------------------------------------------------------
@@ -381,8 +381,9 @@ INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `
 -- Contenu de la table `news`
 --
 INSERT INTO `news` (`id_news`, `id_admin`, `date`, `contenu`) VALUES
-(1, 1, '2020-01-06 00:00:00', 'Lancement de l\'Alpha !'),
-(2, 1, '2020-02-01 00:00:00', 'Lancement de la Beta !');
+(1, 1, '2022-02-06 00:00:00', 'Lancement de l\'Alpha communautaire !'),
+(2, 1, '2020-01-06 00:00:00', 'Lancement de l\'Alpha !'),
+(3, 1, '2020-02-01 00:00:00', 'Lancement de la Beta !');
 
 --
 -- Contenu de la table `objet`
@@ -390,8 +391,8 @@ INSERT INTO `news` (`id_news`, `id_admin`, `date`, `contenu`) VALUES
 
 INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `bonusPrecisionCac_objet`, `bonusPrecisionDist_objet`, `bonusPA_objet`, `bonusDefense_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `type_objet`) VALUES
 (1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 'T'),
-(2, 'Gourde d\'eau bien fraiche', 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 5, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 'N'),
-(3, 'Whisky', 0, -3, 50, 0, 0, 0, 0, 0, 0, 0, 1, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 'N'),
+(2, 'Gourde d\'eau bien fraiche', 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 3, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 'N'),
+(3, 'Whisky', 0, -3, 50, 0, 0, 0, 0, 0, 0, 0, 3, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 'N'),
 (4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 'N'),
 (5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 0, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 'E'),
 (6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 'E'),
