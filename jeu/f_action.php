@@ -1247,9 +1247,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp_perso);
+
+	$verif_anti_zerk = gestion_anti_zerk($mysqli, $id_perso);
 	
 	// Les chiens ne peuvent pas réparer les bâtiments
-	if ($type_perso != '6') {
+	if ($type_perso != '6' && $verif_anti_zerk) {
 	
 		// test pa
 		if($pa_perso >= $coutPa){
@@ -1369,13 +1371,16 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			header("Location:jouer.php?erreur=pa");
 		}
 	}
-	else {
+	else if ($type_perso == 6){
 		$text_triche = "Tentative réparation bâtiment avec chien";
 			
 		$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 		$mysqli->query($sql);
 		
 		echo "<center><font color='red'>Les chiens ne peuvent pas réparer les bâtiments...</font></center><br />";
+	}
+	else if (!$verif_anti_zerk){
+		echo "<center><font color='red'>Loi anti-zerk non respectée !</font></center><br />";
 	}
 	echo "<br /><br /><center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 }

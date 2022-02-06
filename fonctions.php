@@ -1,5 +1,5 @@
 <?php
-define ("DUREE_TOUR", 46*60*60);//24*60*60);
+require_once("jeu/config.php");
 
 //%%%%%%%%%%%%%%%%%%//
 // FONCTION DE DB

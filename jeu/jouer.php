@@ -2051,9 +2051,9 @@ if($dispo == '1' || $admin){
 																		// -------------
 																		// - ANTI ZERK -
 																		// -------------
-																		$verif_anti_zerk_bousculade = gestion_anti_zerk_bousculade($mysqli, $id_perso);
+																		$verif_anti_zerk = gestion_anti_zerk($mysqli, $id_perso);
 																		
-																		if ($verif_anti_zerk_bousculade) {
+																		if ($verif_anti_zerk) {
 																		
 																			$chance_bouculade = mt_rand(0,100);
 																			
@@ -2136,7 +2136,7 @@ if($dispo == '1' || $admin){
 																			}
 																		}
 																		else {
-																			$erreur .= "Loi anti-zerk pour les bousculades sur ennemis non respectée ! Vous devez attendre 8h entre votre dernière bousculade sur un ennemi du tour précédent et une nouvelle bousculade sur le nouveau tour.";
+																			$erreur .= "Loi anti-zerk non respectée !";
 																		}
 																	}
 																} else {
