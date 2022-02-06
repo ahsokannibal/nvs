@@ -79,7 +79,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.gif'),
 (4, 'Pistolet', 1, 2, 3, 0, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
 (5, 'Pistolet Canon Long', 1, 3, 3, 100, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '2.0', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
-(6, 'Baïonnette', 1, 1, 3, 0, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
+(6, 'Baïonnette', 1, 1, 3, 0, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (7, 'Fusil', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (8, 'Fusil Précision', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
 (9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'cannine.jpg'),
@@ -93,7 +93,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (17, 'Canon double', '1', '3', '5', '225', '0', '0', '0', '0', '20', '20', '8', '75', '0', '0', '3.0', '0', '', '0', '1', 'canon_double.png'),
 (18, 'Sabre normal', 1, 1, 4, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.jpg'),
 (19, 'Pistolet normal', 1, 2, 3, 50, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
-(20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 6, 60, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
+(20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg');
 
