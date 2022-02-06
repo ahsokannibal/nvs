@@ -15,7 +15,7 @@ $throttle_settings = [
 if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['captcha'])) {
 	
 	// recuperation des variables post
-	$pseudo 	= $_POST['pseudo'];
+	$pseudo 	= trim(filter_input(INPUT_POST, "pseudo", FILTER_SANITIZE_STRING));
 	$mdp 		= $_POST['password'];
 	$captcha	= $_POST['captcha'];
 	
@@ -25,7 +25,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 		echo "<a href=\"index.php\" class='btn btn-primary'>retour</a></center>";
 	}
 	else {
-		if (/*!filtre($pseudo,1,20) ||*/ ctype_digit($pseudo) || strpos($pseudo,'--') !== false) {
+		if (ctype_digit($pseudo) || strpos($pseudo,'--') !== false) {
 			echo "<center><font color='red'>Le Pseudo est incorrect!</font><br />";
 			echo "<a href=\"index.php\" class='btn btn-primary'>retour</a></center>";
 		}
@@ -35,6 +35,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 				// passage du mdp en md5
 				$mdp = md5($mdp); 
 				
+				$pseudo = $mysqli->real_escape_string($pseudo);
 				// recuperation de l'id du joueur et log du joueur
 				$sql = "SELECT id_joueur, mdp_joueur, id_perso FROM joueur,perso WHERE joueur.id_joueur=perso.idJoueur_perso and nom_perso='$pseudo' and chef='1'";		
 				$res = $mysqli->query($sql);

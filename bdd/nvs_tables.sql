@@ -938,7 +938,7 @@ CREATE TABLE `objet_in_carte` (
 CREATE TABLE `perso` (
   `id_perso` int(11) NOT NULL,
   `idJoueur_perso` int(11) NOT NULL,
-  `nom_perso` varchar(50) NOT NULL DEFAULT '',
+  `nom_perso` varchar(50) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
   `type_perso` int(11) NOT NULL DEFAULT '1',
   `x_perso` int(11) NOT NULL DEFAULT '0',
   `y_perso` int(11) NOT NULL DEFAULT '0',

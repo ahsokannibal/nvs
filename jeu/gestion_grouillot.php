@@ -97,8 +97,8 @@ if($dispo == '1' || $admin){
 					// On souhaite renommer un grouillot
 					if (isset($_POST["renommer"]) && isset($_POST["nom_grouillot"]) && isset($_POST["matricule_hidden"])) {
 						
-						$nouveau_nom_grouillot 	= $_POST["nom_grouillot"];
-						$matricule_grouillot 	= $_POST["matricule_hidden"];
+						$nouveau_nom_grouillot = filter_input(INPUT_POST, "nom_grouillot", FILTER_SANITIZE_STRING);
+						$matricule_grouillot = $_POST["matricule_hidden"];
 						
 						// controle matricule perso
 						$verif_matricule = preg_match("#^[0-9]*[0-9]$#i","$matricule_grouillot");
@@ -116,7 +116,8 @@ if($dispo == '1' || $admin){
 								
 								if ($nb == 1) {
 						
-									if (trim($nouveau_nom_grouillot) != "" && filtre($nouveau_nom_grouillot,1,25) && !ctype_digit($nouveau_nom_grouillot) && strpos($nouveau_nom_grouillot,'--') === false) {
+									$nouveau_nom_grouillot = trim($nouveau_nom_grouillot);
+									if (strlen($nouveau_nom_grouillot) >= 2 && strlen($nouveau_nom_grouillot) <= 25 && !ctype_digit($nouveau_nom_grouillot) && strpos($nouveau_nom_grouillot,'--') === false) {
 										
 										$nouveau_nom_grouillot = $mysqli->real_escape_string($nouveau_nom_grouillot);
 										
