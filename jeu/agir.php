@@ -260,7 +260,7 @@ if ($verif_id_perso_session) {
 								// le perso a assez de pa
 								
 								// Cas particulier soins
-								if (($pv_cible == $pvM_cible && $id_arme_attaque == 10) || ($bonusBase_cible == 0 && $id_arme_attaque == 11)) {
+								if (($pv_cible >= $pvM_cible -50 && $id_arme_attaque == 10) || ($bonusBase_cible == 0 && $id_arme_attaque == 11)) {
 									echo "<div class=\"erreur\" align=\"center\">La cible n'a pas besoin de soins !</div>";
 									echo "<a class='btn btn-primary' href=\"jouer.php\">retour</a>";
 								}
@@ -497,7 +497,7 @@ if ($verif_id_perso_session) {
 											
 											$calcul_dif_xp = ($xp_cible - $xp_perso) / 10;
 											
-											if ($calcul_dif_xp < 0) {
+											if ($calcul_dif_xp < 0 || $id_arme_attaque == 10 || $id_arme_attaque == 11) {
 												$valeur_des_xp = 0;
 											} else {
 												$valeur_des_xp = mt_rand(0, $calcul_dif_xp);
