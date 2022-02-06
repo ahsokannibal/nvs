@@ -1205,7 +1205,7 @@ if ($verif_id_perso_session) {
 										<?php
 									}
 									else {
-										echo "Loi anti-zerk non respectée ! Vous devez attendre 8h entre votre dernière attaque du tour précédent et une nouvelle attaque sur le nouveau tour.";
+										echo "Loi anti-zerk non respectée !";
 										echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 									}
 								}			
@@ -2402,8 +2402,10 @@ if ($verif_id_perso_session) {
 										$autorisation_attaque = false;
 									}
 								}
+
+								$verif_anti_zerk = gestion_anti_zerk($mysqli, $id);
 								
-								if ($autorisation_attaque) {
+								if ($autorisation_attaque && $verif_anti_zerk) {
 								
 									echo "Vous avez lancé une attaque sur <b>$nom_batiment [$id_cible]</b>.<br>";
 									
@@ -2794,10 +2796,14 @@ if ($verif_id_perso_session) {
 										echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 									}
 								}
-								else {
+								else if (!$autorisation_attaque) {
 									echo "Erreur : Vous n'avez plus le droit d'attaquer votre bâtiment car il posséde moins de 25% de ses PV et est encerclé par l'ennemi !";
 									echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
-								}							
+								}
+								else if (!$verif_anti_zerk) {
+									echo "Loi anti-zerk non respectée !";
+									echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
+								}
 							}
 							else {
 								//la cible est déjà morte

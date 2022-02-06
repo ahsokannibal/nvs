@@ -255,7 +255,7 @@ if($dispo == '1' || $admin) {
 			if ($verif_idBat && isset($_SESSION["id_perso"])) {
 				
 				$id_perso = $_SESSION["id_perso"];
-				
+
 				// recup coordonnées perso
 				$sql = "SELECT x_perso, y_perso FROM perso WHERE id_perso = '$id_perso'";
 				$res = $mysqli->query($sql);
@@ -1063,7 +1063,7 @@ if($dispo == '1' || $admin) {
 								}
 							}
 							else {
-								echo "<br /><center>Loi anti-zerk non respectée ! Vous devez attendre 8h entre votre dernière attaque du tour précédent et une nouvelle attaque sur le nouveau tour.</center>";
+								echo "<br /><center>Loi anti-zerk non respectée !</center>";
 								echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 							}
 						}
