@@ -813,8 +813,8 @@ if ($verif_id_perso_session) {
 														
 														$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
 														
-														// Limite 2 PC par attaque de Gatling
-														if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 2) {
+														// Limite 3 PC par attaque de Gatling
+														if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 3) {
 															$gain_pc_collat = 0;
 														}
 														
