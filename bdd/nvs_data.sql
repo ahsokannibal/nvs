@@ -347,26 +347,22 @@ VALUES (
 
 INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) VALUES
 (2, 'Caporal', 10, 2),
-(3, 'Caporal Chef', 40, 3),
-(4, 'Sergent', 80, 4),
-(5, '1er Sergent Chef', 200, 5),
-(6, 'Sergent Chef', 300, 6),
-(7, 'Sergent Major', 400, 7),
-(8, 'Adjudant', 550, 8),
-(9, 'Adjudant Chef', 800, 9),
-(10, 'Adjudant Major', 1200, 10),
-(11, 'Sous-Lieutenant', 1800, 11),
-(12, 'Lieutenant', 2700, 12),
-(13, 'Capitaine', 4000, 14),
-(14, 'Commandant', 6000, 15),
-(15, 'Major', 9000, 16),
-(16, 'Lieutenant Colonel', 13500, 17),
-(17, 'Colonel', 20000, 19),
-(18, 'Général de Brigade', 30000, 20),
-(19, 'Général Major', 45000, 21),
-(20, 'Lieutenant Général', 67000, 22),
-(21, 'Général', 100000, 24),
-(22, 'Général des armées', 999999999, 100),
+(3, 'Sergent', 80, 4),
+(4, '1er Sergent', 180, 6),
+(5, 'Sergent d\'ordonnance', 300, 7),
+(6, 'Sergent Quartier Maitre de Compagnie', 440, 8),
+(7, 'Sergent Quartier Maitre de Régiment', 700, 9),
+(8, 'Sergent Major', 950, 10),
+(9, 'Sous-Lieutenant', 1350, 11),
+(10, 'Lieutenant', 1800, 12),
+(11, 'Capitaine', 2500, 13),
+(12, 'Major', 3200, 14),
+(13, 'Lieutenant-Colonel', 4000, 15),
+(14, 'Colonel', 4800, 16),
+(15, 'Général de Brigade', 6500, 17),
+(16, 'Général de Division', 8200, 18),
+(17, 'Général de Corps d\'armée', 11000, 19),
+(18, 'Général des armées', 999999999, 100),
 (1, 'Grouillot 2nd classe', 0, 0),
 (101, 'Grouillot 1ere classe', 0, 0),
 (102, 'Grouillot d\'élite', 0, 0);
@@ -418,8 +414,8 @@ INSERT INTO `perso_as_arme` (`id_perso`, `id_arme`, `est_portee`) VALUES ('2', '
 --
 -- Contenu de la table `perso_as_grade`
 --
-INSERT INTO `perso_as_grade` (`id_perso`, `id_grade`) VALUES ('1', '22');
-INSERT INTO `perso_as_grade` (`id_perso`, `id_grade`) VALUES ('2', '22');
+INSERT INTO `perso_as_grade` (`id_perso`, `id_grade`) VALUES ('1', '18');
+INSERT INTO `perso_as_grade` (`id_perso`, `id_grade`) VALUES ('2', '18');
 
 --
 -- Contenu de la table `perso_as_dossiers`
