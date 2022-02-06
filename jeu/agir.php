@@ -512,13 +512,10 @@ if ($verif_id_perso_session) {
 											
 											$gain_xp = ceil(($degats_final / 20) + $valeur_des_xp);
 											
-											// Limite 3XP par attaque de Gatling
-											if ($id_arme_attaque == 14 && $gain_xp > 3) {
-												$gain_xp = 3;
-											}
-											
-											if ($gain_xp > 10) {
-												$gain_xp = 10;
+											// Limit le nombre d'xp gagné par attaque
+											$max_xp_par_attaque = ceil(20 / floor(10 / $coutPa_arme_attaque));
+											if ($gain_xp > $max_xp_par_attaque) {
+												$gain_xp = $max_xp_par_attaque;
 											}
 											
 											if ($gain_xp_tour_perso + $gain_xp > 20) {
