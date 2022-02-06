@@ -438,8 +438,15 @@ if ($verif_id_perso_session) {
 										
 										// Bonus defense objets cible 
 										$bonus_defense_objet = get_bonus_defense_objet($mysqli, $id_cible);
+
+										$bonus_precision_distance = 0;
+										if ($porteeMax_arme_attaque > 3) {
+											$distance = get_distance($mysqli, $id, $id_cible);
+											if ($distance == $porteeMax_arme_attaque)
+												$bonus_precision_distance = -15;
+										}
 										
-										$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet + $bonus_precision_bat;
+										$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet + $bonus_precision_bat + $bonus_precision_distance;
 										
 										// Bonus Precision Objets
 										$bonus_precision_objet = 0;
@@ -449,11 +456,11 @@ if ($verif_id_perso_session) {
 										else {
 											$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id);
 										}
-										
+
 										$precision_final += $bonus_precision_objet;
 										
 										echo "Votre score de touche : ".$touche."<br>";
-										echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus Précision objet : ".$bonus_precision_objet;
+										echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus Précision objet : ".$bonus_precision_objet."  -- Bonus precision distance : ".$bonus_precision_distance;
 										if ($bonus_precision_bat != 0) {
 											echo " -- Bonus du batiment : ".$bonus_precision_bat;
 										}
