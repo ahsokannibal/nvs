@@ -3037,7 +3037,7 @@ function action_entrainement($mysqli, $id_perso){
  * @param $id_perso	: L'identifiant du personnage qui veut donner un objet
  * @param $id_cible	: L'identifiant du personnage a qui on veut donner un objet
  * @param $type_objet	: La nature de l'objet (1 => Or, 2 => Objet, 3 => Arme, 4 => Armure)
- * @param $id_objet	: L'identifiant de l'objet a deposer
+ * @param $id_objet	: L'identifiant de l'objet a donner
  * @param $quantite	: La quantite
  */
 function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $quantite){
@@ -3302,6 +3302,19 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quantite){
 
 	// Verification que le perso possede bien cet objet
+	//Or
+	if($type_objet == 1){
+		$sql_vo = "SELECT or_perso FROM perso WHERE id_perso='$id_perso'";
+		$res_vo = $mysqli->query($sql_vo);
+		$t_vo = $res_vo->fetch_assoc();
+			
+		$or_perso = $t_vo['or_perso'];
+		$poid_objet = 0;
+		
+		if($or_perso >= $quantite && $quantite > 0){
+			$nb = true;
+		}
+	}
 	// Objet
 	if($type_objet == 2){
 		$sql = "SELECT perso_as_objet.id_objet, poids_objet FROM perso_as_objet, objet WHERE id_perso='$id_perso' 
@@ -3344,6 +3357,12 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 			
 			$poid_total = $poid_objet * $quantite;
 			
+			// Or
+			If($type_objet == 1){
+				// On met a jour l'or du perso
+				$sql_u = "UPDATE perso SET or_perso=or_perso-$quantite WHERE id_perso='$id_perso'";
+				$mysqli->query($sql_u);
+			}
 			// Objet
 			if($type_objet == 2){
 				// Suppression de l'inventaire du perso
@@ -3364,7 +3383,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 			
 			
 			// Verification si l'objet existe deja sur cette case
-			$sql = "SELECT nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso' 
+			$sql = "SELECT nb_objet FROM objet_in_carte, perso WHERE id_perso='$id_perso'
 					AND objet_in_carte.x_carte = perso.x_perso AND objet_in_carte.y_carte = perso.y_perso
 					AND type_objet = '$type_objet' AND id_objet = '$id_objet'";
 			$res = $mysqli->query($sql);
@@ -3374,7 +3393,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 			
 			if($nb_o){
 				// On met a jour le nombre
-				$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $quantite 
+				$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $quantite
 						WHERE type_objet='$type_objet' AND id_objet='$id_objet'
 						AND x_carte='$x_perso' AND y_carte='$y_perso'";
 				$mysqli->query($sql);

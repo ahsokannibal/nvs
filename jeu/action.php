@@ -1837,6 +1837,31 @@ if($dispo == '1' || $admin) {
 										echo "	</tr>";
 										
 										// Recuperation des objets / armes / armures que possede le perso
+										// Or
+										$compteur_or = 0;
+										$sql_o0 = "SELECT or_perso FROM perso WHERE id_perso='$id_perso'";
+										$res_o0 = $mysqli->query($sql_o0);
+										$t_o0 = $res_o0->fetch_assoc();
+										
+										$or_perso = $t_o0['or_perso'];
+										
+										echo "<tr>";
+										echo "<td><img src='../images/or.png' alt='thune' height='40' width='40' /><span><b>Thune</b></span></td>";
+										echo "<td align='center'>0</td>";
+												
+										echo "<form method='post' action='action.php'>";		
+										echo "<td align='center'>";
+										echo "<select name=\"select_quantite_depot\">";
+										while ($compteur_or <= $or_perso){
+											echo "<option value=\"$compteur_or\">$compteur_or</option>";
+											$compteur_or++;
+										}
+										echo "</select>";
+										echo "</td>";
+										echo "<td align='center'><input type='submit' name='valid_objet_depo' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_depo' value='0,1,0' /></td>";	
+										echo "</form>";
+										echo "</tr>";
+										
 										// Objets (sauf ticket de train qui sont nomminatifs)
 										$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet != '1' AND equip_objet='0' ORDER BY id_objet";
 										$res_o = $mysqli->query($sql_o);
