@@ -27,16 +27,17 @@ if(config_dispo_jeu($mysqli) == '1'){
 			
 			if ($_POST['camp_perso'] != '0') {
 		
-				$nom_perso 		= $_POST['nom_perso'];
+				$nom_perso 	= trim(filter_input(INPUT_POST, "nom_perso", FILTER_SANITIZE_STRING));
 				$email_joueur 	= $_POST['email_joueur'];
 				$nom_bataillon	= $_POST['nom_bataillon'];
 				$mdp_joueur 	= $_POST['mdp_joueur'];
 				$camp 			= $_POST['camp_perso'];
 			
-				if (!filtre($nom_perso,1,20) || ctype_digit($nom_perso) || strpos($nom_perso,'--') !== false){
+				if (strlen($nom_perso) < 2 || strlen($nom_perso) > 25 ||ctype_digit($nom_perso) || strpos($nom_perso,'--') !== false){
 					echo "<center>Erreur: Le Pseudo est incorrect! Veuillez en choisir un autre (taille entre 1 et 20, pas de quote, pas que des chiffres, pas la chaine --, etc..) </center><br /><br />";
 				}
 				else {
+					$nom_perso = $mysqli->real_escape_string($nom_perso);
 					$user_found_in_forum = false;
 					if (is_dir($phpbb_root_path))
 					{
