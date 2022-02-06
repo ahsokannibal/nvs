@@ -1366,12 +1366,25 @@ CREATE TABLE `zones` (
 --
 
 CREATE TABLE IF NOT EXISTS `zone_respawn_camp` (
-  `id_zone` int(11) NOT NULL,
+  `id_zone` int(11) NOT NULL DEFAULT '0',
   `id_camp` int(11) NOT NULL,
   `x_min_zone` int(11) NOT NULL,
   `x_max_zone` int(11) NOT NULL,
   `y_min_zone` int(11) NOT NULL,
   `y_max_zone` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Structure de la table `log_action_animation`
+--
+
+CREATE TABLE IF NOT EXISTS `log_action_animation` (
+  `id` int(11) NOT NULL DEFAULT '0',
+  `date_acces` DATETIME NOT NULL,
+  `id_perso` int(11) NOT NULL,
+  `page` varchar(50) NOT NULL,
+  `action` varchar(50) NOT NULL,
+  `texte` varchar(50) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
