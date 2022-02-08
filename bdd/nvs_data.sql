@@ -78,7 +78,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (2, 'Sabre lourd', 1, 1, 5, 250, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '2.5', 0, '', 0, 1, 'sabre_lourd.jpg'),
 (3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.gif'),
 (4, 'Pistolet', 1, 2, 3, 0, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
-(5, 'Pistolet Canon Long', 1, 3, 3, 100, 0, 0, 0, 0, 16, 16, 6, 45, '0', 0, '2.0', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
+(5, 'Pistolet Canon Long', 1, 2, 3, 100, 0, 0, 0, 0, 16, 16, 6, 60, '0', 0, '2.0', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
 (6, 'Baïonnette', 1, 1, 3, 0, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (7, 'Fusil', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (8, 'Fusil Précision', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
@@ -95,7 +95,8 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (19, 'Pistolet normal', 1, 2, 3, 50, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
 (20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
-(22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg');
+(22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
+(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.jpg');
 
 
 -- --------------------------------------------------------
@@ -135,7 +136,9 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (19, 2),
 (20, 3),
 (21, 3),
-(22, 5);
+(22, 5),
+(23, 1),
+(23, 2);
 
 -- --------------------------------------------------------
 
@@ -396,7 +399,7 @@ INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_o
 (4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 'N'),
 (5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 0, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 'E'),
 (6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 'E'),
-(7, 'Lunette de visée', 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Coût attaque à distance +1, Bonus Précision à distance +15)', 'E');
+(7, 'Lunette de visée', 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Coût attaque à distance +2, Bonus Précision à distance +15)', 'E');
 
 --
 -- Contenu de la table `perso`
