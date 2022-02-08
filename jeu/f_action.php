@@ -3747,14 +3747,25 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			AND arme.porteeMax_arme = '1'
 			AND perso.id_perso = '$id_perso'";
 	$res = $mysqli->query($sql);
-	$t_arme = $res->fetch_assoc();
-	
-	$id_arme_attaque	= $t_arme['id_arme'];
-	$nom_arme 			= $t_arme['nom_arme'];
-	$degats_arme 		= $t_arme['degatMin_arme'];
-	$valeur_des_arme	= $t_arme['valeur_des_arme'];
-	$precision_arme 	= $t_arme['precision_arme'];
-	$coutPa_arme		= $t_arme['coutPa_arme'];
+	$nb = $res->num_rows;
+
+	if ($nb) {
+		$t_arme = $res->fetch_assoc();
+		$id_arme_attaque	= $t_arme['id_arme'];
+		$nom_arme 			= $t_arme['nom_arme'];
+		$degats_arme 		= $t_arme['degatMin_arme'];
+		$valeur_des_arme	= $t_arme['valeur_des_arme'];
+		$precision_arme 	= $t_arme['precision_arme'];
+		$coutPa_arme		= $t_arme['coutPa_arme'];
+	} else {
+		// Poings
+		$id_arme_attaque	= 1000;
+		$nom_arme 		= "Poings";
+		$degats_arme 		= 4;
+		$valeur_des_arme	= 6;
+		$precision_arme 	= 30;
+		$coutPa_arme		= 3;
+	}
 	
 	// recup id joueur perso
 	$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
@@ -4173,9 +4184,9 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
 				$mysqli->query($sql);
 				
-				// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
+				// Gain de 2 XP si esquive attaque d'un perso d'un autre camp
 				if ($idPerso_carte < 50000 && $clan_cible != $clan && !$max_xp_tour_atteint) {
-					$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1, gain_xp_tour = gain_xp_tour + 1 WHERE id_perso='$idPerso_carte'";
+					$sql = "UPDATE perso SET xp_perso = xp_perso + 2, pi_perso = pi_perso + 2, gain_xp_tour = gain_xp_tour + 2 WHERE id_perso='$idPerso_carte'";
 					$mysqli->query($sql);
 				}
 				

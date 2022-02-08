@@ -366,7 +366,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					else {
 					
 						// gain xp esquive et ajout malus Cible
-						$sql = "UPDATE perso SET xp_perso=xp_perso+1, pi_perso=pi_perso+1, bonus_perso=bonus_perso-1 WHERE id_perso='$id_perso_cible'";
+						$sql = "UPDATE perso SET xp_perso=xp_perso+2, pi_perso=pi_perso+2, bonus_perso=bonus_perso-2 WHERE id_perso='$id_perso_cible'";
 						$mysqli->query($sql);
 										
 						// maj evenement
