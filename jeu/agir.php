@@ -260,7 +260,7 @@ if ($verif_id_perso_session) {
 								// le perso a assez de pa
 								
 								// Cas particulier soins
-								if (($pv_cible >= $pvM_cible -50 && $id_arme_attaque == 10) || ($bonusBase_cible == 0 && $id_arme_attaque == 11)) {
+								if (($pv_cible >= $pvM_cible -30 && $id_arme_attaque == 10) || ($bonusBase_cible == 0 && $id_arme_attaque == 11)) {
 									echo "<div class=\"erreur\" align=\"center\">La cible n'a pas besoin de soins !</div>";
 									echo "<a class='btn btn-primary' href=\"jouer.php\">retour</a>";
 								}
