@@ -1157,9 +1157,9 @@ if ($verif_id_perso_session) {
 												}
 												$mysqli->query($sql);
 												
-												// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
+												// Gain de 2 XP si esquive attaque d'un perso d'un autre camp
 												if($clan_cible != $clan_perso && !$max_xp_tour_atteint){
-													$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1, gain_xp_tour=gain_xp_tour + 1 WHERE id_perso='$id_cible'";
+													$sql = "UPDATE perso SET xp_perso = xp_perso + 2, pi_perso = pi_perso + 2, gain_xp_tour=gain_xp_tour + 2 WHERE id_perso='$id_cible'";
 													$mysqli->query($sql);
 												}
 											}

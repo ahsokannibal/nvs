@@ -4173,9 +4173,9 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id_perso', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
 				$mysqli->query($sql);
 				
-				// Gain de 1 XP si esquive attaque d'un perso d'un autre camp
+				// Gain de 2 XP si esquive attaque d'un perso d'un autre camp
 				if ($idPerso_carte < 50000 && $clan_cible != $clan && !$max_xp_tour_atteint) {
-					$sql = "UPDATE perso SET xp_perso = xp_perso + 1, pi_perso = pi_perso + 1, gain_xp_tour = gain_xp_tour + 1 WHERE id_perso='$idPerso_carte'";
+					$sql = "UPDATE perso SET xp_perso = xp_perso + 2, pi_perso = pi_perso + 2, gain_xp_tour = gain_xp_tour + 2 WHERE id_perso='$idPerso_carte'";
 					$mysqli->query($sql);
 				}
 				
