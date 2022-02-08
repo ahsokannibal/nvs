@@ -3747,14 +3747,25 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			AND arme.porteeMax_arme = '1'
 			AND perso.id_perso = '$id_perso'";
 	$res = $mysqli->query($sql);
-	$t_arme = $res->fetch_assoc();
-	
-	$id_arme_attaque	= $t_arme['id_arme'];
-	$nom_arme 			= $t_arme['nom_arme'];
-	$degats_arme 		= $t_arme['degatMin_arme'];
-	$valeur_des_arme	= $t_arme['valeur_des_arme'];
-	$precision_arme 	= $t_arme['precision_arme'];
-	$coutPa_arme		= $t_arme['coutPa_arme'];
+	$nb = $res->num_rows;
+
+	if ($nb) {
+		$t_arme = $res->fetch_assoc();
+		$id_arme_attaque	= $t_arme['id_arme'];
+		$nom_arme 			= $t_arme['nom_arme'];
+		$degats_arme 		= $t_arme['degatMin_arme'];
+		$valeur_des_arme	= $t_arme['valeur_des_arme'];
+		$precision_arme 	= $t_arme['precision_arme'];
+		$coutPa_arme		= $t_arme['coutPa_arme'];
+	} else {
+		// Poings
+		$id_arme_attaque	= 1000;
+		$nom_arme 		= "Poings";
+		$degats_arme 		= 4;
+		$valeur_des_arme	= 6;
+		$precision_arme 	= 30;
+		$coutPa_arme		= 3;
+	}
 	
 	// recup id joueur perso
 	$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
