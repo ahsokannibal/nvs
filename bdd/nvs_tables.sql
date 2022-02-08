@@ -1388,6 +1388,14 @@ CREATE TABLE IF NOT EXISTS `log_action_animation` (
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
+-- Table permettant de gérer les ordres données à la compagnie
+--
+CREATE TABLE `compagnie_ordre` (
+  `id_compagnie` int(11) NOT NULL,
+  `ordre` varchar(2000) NOT NULL
+);
+
+--
 -- Index pour les tables exportées
 --
 
@@ -1739,7 +1747,7 @@ ALTER TABLE `objet`
 -- AUTO_INCREMENT pour la table `perso`
 --
 ALTER TABLE `perso`
-  MODIFY `id_perso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id_perso` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=101;
 --
 -- AUTO_INCREMENT pour la table `pnj`
 --
