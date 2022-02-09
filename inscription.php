@@ -22,6 +22,7 @@ if (is_dir($phpbb_root_path))
 if(config_dispo_jeu($mysqli) == '1'){
 
 	if(isset($_POST['creer'])) {
+		$_SESSION['old_input'] = $_POST;
 		
 		if (isset($_POST['cgu']) && $_POST['cgu']=="on" && isset($_POST['charte']) && $_POST['charte']=="on") {
 			
@@ -34,7 +35,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 				$camp 			= $_POST['camp_perso'];
 			
 				if (strlen($nom_perso) < 2 || strlen($nom_perso) > 25 ||ctype_digit($nom_perso) || strpos($nom_perso,'--') !== false){
-					echo "<center>Erreur: Le Pseudo est incorrect! Veuillez en choisir un autre (taille entre 1 et 20, pas de quote, pas que des chiffres, pas la chaine --, etc..) </center><br /><br />";
+					$error = "Erreur : Le Pseudo est incorrect ! Veuillez en choisir un autre (taille entre 1 et 25, pas de quote, pas que des chiffres, pas la chaine --, etc..)";
 				}
 				else {
 					$nom_perso = $mysqli->real_escape_string($nom_perso);
@@ -55,19 +56,20 @@ if(config_dispo_jeu($mysqli) == '1'){
 					$resultat_user2 = $mysqli->query($sql2);
 						
 					if( $resultat_user->num_rows != 0 || $user_found_in_forum) {
-						echo "<center><font color='red'>Erreur: Le pseudo est déjà choisi ou interdit ! Veuillez en choisir un autre</font></center><br /><br />";
+						$error = "Erreur : Le pseudo est déjà choisi ou interdit ! Veuillez en choisir un autre";
 					}
 					elseif ($resultat_user2->num_rows != 0) {
-						echo "<center><font color='red'>Erreur: Vous avez déjà creer un perso avec cet email, un seul perso par joueur</font></center><br /><br />";
+						$error = "Erreur : Vous avez déjà creé un perso avec cet email, un seul perso par joueur";
 					}
 					elseif (!filtremail($email_joueur)) {
-						echo "<center><font color='red'>Erreur: Email incorrect</font></center><br /><br />";
+						$error = "Erreur : Email incorrect";
 					}
 					elseif ($mdp_joueur == "") {
-						echo "<center><font color='red'>Erreur: Veuillez entrer un mot de passe</font></center><br /><br />";
+						$error = "Erreur : Veuillez entrer un mot de passe";
 					}
 					else {
 						if($_POST['creation']=="ok") {
+							unset($_SESSION['old_input']);
 							
 							// sécurité camp
 							if($camp == "1" || $camp == "2"){
@@ -397,10 +399,24 @@ if(config_dispo_jeu($mysqli) == '1'){
 									
 									$nom_img = "msg_".$ncamp.".jpg";
 									
-									// message de bienvenue
-									$expediteur = "admin";
-									$objet = "Bienvenue";
-									$message = "[center][b]Bienvenue dans cette nouvelle version de NvS $nom_perso [/b][/center]";
+									// message de bienvenue personnalisé selon le camp
+									switch($camp){
+										case 1:
+											$expediteur = "Abraham Lincoln";
+											$nom_camp = "Au nom de l\'armée de l\'Union";
+											break;
+										case 2:
+											$expediteur = "Jefferson Davis";
+											$nom_camp = "Au nom de l\'armée des Etats confédérés";
+											break;
+										default:
+											$expediteur = "admin";
+											$nom_camp = "";
+									}
+
+									$objet = "Lettre prioritaire !";
+									$message = "[center][b]bienvenue dans cette nouvelle version de NvS ".$nom_perso.".
+									".$nom_camp.", je suis fier de t\'accueillir dans nos rangs. [/b][/center]";
 									$message .= "[center][img]http://nord-vs-sud.com/images/".$nom_img."[/img][/center]";
 									$message .= "
 									
@@ -452,52 +468,6 @@ if(config_dispo_jeu($mysqli) == '1'){
 			echo "<center>Erreur: Veuillez valider les CGU et la charte !</center><br /><br />";
 		}
 	}
-	?>
-	<html>
-	<head>
-		<title>Nord VS Sud</title>
-		
-		<!-- Required meta tags -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-		
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-	</head>
-	
-	<body background="">
-		<center>
-		<font color="blue" size=5 face="Verdana, Arial, Helvetica, sans-serif"><b>INSCRIPTION</b></font><br/><br/>
-		<form method="post" action="inscription.php">
-			Entrez un nom pour votre personnage:<br/>
-			<input type="text" name="nom_perso" value="" size="20" maxlength="30">
-			<br/>
-			Entrez un nom pour votre bataillon:<br/>
-			<input type="text" name="nom_bataillon" value="" size="20" maxlength="100">
-			<br/>
-			Entrez votre email:<br/>
-			<input type="text" name="email_joueur" value="" size="20" maxlength="60">
-			<br/>
-			Entrez votre mot de passe:<br/>
-			<input type="password" name="mdp_joueur" value="" size="20" maxlength="20">
-			<br/>
-			Choisissez votre camp:<br/>
-			<select name="camp_perso">
-				<option value="0">-- Choisir un camp --</option>
-				<option value="1">Nord</option>
-				<option value="2">Sud</option>
-			</select>
-			<br/><br/>
-			<input type="checkbox" id="cgu" name="cgu" /> En cochant cette case je confirme avoir lu les <a href='CGU.pdf'>CGU</a>
-			<br /><br />
-			<p> Nord vs Sud est un jeu, je m'engage à faire preuve de fair-play, à accepter d’équilibrer les équipes si nécessaire, à ne pas tricher, à ne pas abuser d’éventuels bugs mais à les remonter, à être bienveillant envers les joueurs plus ou moins impliqués, à ne pas être toxique mais à faire en sorte que l'ambiance intra et inter-camp soit bonne. Tout multicompte ou usage de VPN légitime est à déclarer publiquement. L'équipe d'animation sera prompte à sanctionner sévèrement tout contrevenant.  </p>
-			<input type="checkbox" id="charte" name="charte" /> En cochant cette case je confirme accepter sans reserve cette charte.
-			<br /><br />
-
-			<input name="creation" type="hidden" value="ok">
-			<input type="submit" name="creer" value="Cr&eacute;er">
-			<br/><br/>
-	<?php
 	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND chef='1'";
 	$res_nbb = $mysqli->query($sql_nbb);
 	$nbb = $res_nbb->num_rows;
@@ -505,39 +475,8 @@ if(config_dispo_jeu($mysqli) == '1'){
 	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND chef='1'";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
-	echo "<font color=blue>Nombre de persos au Nord : $nbb</font>&nbsp;&nbsp;&nbsp;&nbsp;<font color=red>Nombre de persos au Sud : $nbr</font>";
 	
-	if (isset ($_GET["voir"])) {
-		echo "<br /><font color=\"#660000\"><b>Personnages(s) existant(s):</b><br>(choisir un nom diff&eacute;rent)<br><br>";
-	
-		$sql = "SELECT nom_perso FROM perso";
-		$resultat = $mysqli->query($sql);
-		$tab = $resultat->fetch_row();
-		echo $tab[0];
-		while ($tab = $resultat->fetch_row()) {
-			echo " - ".$tab[0];
-		}
-		echo "</font><br><br>Masquer la liste :<br>";
-		echo "<a href=\"inscription.php\"><img border=0 src=\"images/b_ok.gif\"></a>";
-	}
-	?>
-			</font>
-		
-			<table border="0">
-			  
-			</table>
-		</form>
-		</center>
-	
-		<!-- Optional JavaScript -->
-		<!-- jQuery first, then Popper.js, then Bootstrap JS -->
-		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-	
-	</body>
-</html>
-<?php
+	require_once('mvc/view/register.php');
 }
 else {
 	// logout
