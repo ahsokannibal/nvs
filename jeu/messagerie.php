@@ -68,7 +68,8 @@ if(isset($_SESSION["id_perso"])){
 		$sql_a_lire = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier='1'";
 		$res_a_lire = $mysqli->query($sql_a_lire);
 		$a_lire = $res_a_lire->num_rows;
-
+		
+		// Requête redondante. Pourquoi ? A vérifier (Magnus)
 		$sql_dossier = "SELECT id_message FROM message_perso WHERE lu_message='0' AND supprime_message='0' AND id_perso='".$id."' AND id_dossier!='1'";
 		$res_dossier = $mysqli->query($sql_dossier);
 		$a_lire_dossier = $res_dossier->num_rows;

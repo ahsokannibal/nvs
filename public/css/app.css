@@ -1,0 +1,38 @@
+/* Css général */
+
+body{
+	background:#828282;
+}
+
+.bg-gray-300 {
+	background:#969696;
+}
+
+.h-6 {
+	height:1.5rem;
+}
+
+.w-6 {
+	height:1.5rem;
+}
+
+.rotate-20deg {
+	transform: rotate(-20deg);
+}
+
+.h-20 {
+	height:20rem;
+}
+
+.h-full {
+	height:100%;
+}
+
+.w-full {
+	width:100%;
+}
+
+.news {
+	overflow-y: scroll;
+	text-overflow: "";
+}
