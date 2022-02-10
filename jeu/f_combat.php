@@ -468,12 +468,6 @@ function mail_attaque($mysqli, $nom_attaquant, $id_cible){
 	mail($destinataire, $titre, $message, $headers);
 }
 
-function recupere_voisins($mysqli, $id_cible, $x_cible, $y_cible){
-	$sql = "SELECT idPerso_carte FROM carte WHERE x_carte >= $x_cible - 1 AND x_carte <= $x_cible + 1 AND y_carte >= $y_cible - 1 AND y_carte <= $y_cible + 1 AND occupee_carte = '1' AND idPerso_carte != '$id_cible'";
-	$res_recherche_collat = $mysqli->query($sql);
-	return $res_recherche_collat;
-}
-
 function log_attaque($mysqli, $id, $id_cible, $id_arme_attaque, $degats, $touche){
 	// Insertion log attaque
 	$message_log = $id.' a attaqué '.$id_cible;
@@ -537,17 +531,6 @@ function calcul_gain_xp($xp_perso, $xp_cible, $id_arme_attaque, $coutPa_arme_att
 	return $gain_xp;
 }
 
-function inflige_degats($mysqli, $id_cible, $degats_final){
-	// mise a jour des pv et des malus de la cible
-	$sql = "UPDATE perso SET pv_perso=pv_perso-$degats_final, bonus_perso=bonus_perso-2 WHERE id_perso='$id_cible'";
-	$mysqli->query($sql);
-}
-
-function perso_gain_xp($mysqli, $id, $gain_xp){
-	$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'"; 
-	$mysqli->query($sql);
-}
-
 function gain_pc_chef($mysqli, $id, $gain_pc){
 	// recup id perso chef
 	$sql = "SELECT id_perso FROM `perso` WHERE idJoueur_perso=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1' ";
@@ -558,12 +541,6 @@ function gain_pc_chef($mysqli, $id, $gain_pc){
 
 	// MAJ PC Chef
 	$sql = "UPDATE perso SET pc_perso = pc_perso + $gain_pc WHERE id_perso='$id_perso_chef'";
-	$mysqli->query($sql);
-}
-
-function event_attaque($mysqli, $id, $couleur_clan_perso, $nom_perso, $attaque_str, $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc){
-	// mise a jour de la table evenement
-	$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a $attaque_str ','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : $gain_pc )',NOW(),'0')";
 	$mysqli->query($sql);
 }
 
@@ -723,15 +700,16 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 
 function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque){
 	// Récupération des cibles potentielles autour de la cible principale
-	$res_recherche_collat = recupere_voisins($mysqli, $id_cible, $x_cible, $y_cible);
+	$model_carte = new Carte();
+	$res_recherche_collat = $model_carte->recupereVoisins($id_cible, $x_cible, $y_cible)->fetchAll(PDO::FETCH_CLASS,'Carte');;
 
 	$gain_xp_collat_cumul = 0;
 	$gain_pc_collat_cumul = 0;
 
 	// On parcours les cibles pour degats collateraux
-	while ($t_recherche_collat = $res_recherche_collat->fetch_assoc()) {
+	foreach($res_recherche_collat as $t_recherche_collat) {
 
-		$id_cible_collat = $t_recherche_collat["idPerso_carte"];
+		$id_cible_collat = $t_recherche_collat->idPerso_carte;
 
 		if ($id_cible_collat < 50000) {
 
