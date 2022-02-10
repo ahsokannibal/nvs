@@ -3,6 +3,9 @@ session_start();
 require_once("../fonctions.php");
 require_once("f_carte.php");
 require_once("f_combat.php");
+require_once('../mvc/model/Event.php');
+require_once('../mvc/model/Carte.php');
+require_once('../mvc/model/Perso.php');
 
 $mysqli = db_connexion();
 
@@ -30,6 +33,10 @@ if ($verif_id_perso_session) {
 	<body>
 		<div class="container-fluid">
 <?php
+
+	$model_event = new Event();
+	$model_carte = new Carte();
+	$model_perso = new Perso();
 
 	$carte = "carte";
 	$verif = false;
@@ -517,7 +524,7 @@ if ($verif_id_perso_session) {
 												
 											} else {
 												// mise a jour des pv et des malus de la cible
-												inflige_degats($mysqli, $id_cible, $degats_final);
+												$model_perso->infligeDegats($id_cible, $degats_final);
 												echo "<br>Vous avez infligé $degats_final dégâts à la cible.<br>";
 											}
 											
@@ -528,7 +535,7 @@ if ($verif_id_perso_session) {
 											echo "<br />";
 											
 											// mise a jour des xp/pi
-											perso_gain_xp($mysqli, $id, $gain_xp);
+											$model_perso->perso_gain_xp($id, $gain_xp);
 											
 											// Passage grade grouillot
 											passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
@@ -536,11 +543,11 @@ if ($verif_id_perso_session) {
 											gain_pc_chef($mysqli, $id, $gain_pc);
 											
 											if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
-												event_attaque($mysqli, $id, $couleur_clan_perso, $nom_perso, "soigné", $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
+												$model_event->putEventAttaque($id, $couleur_clan_perso, $nom_perso, "soigné", $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
 											} else if($id_arme_attaque == 13 || $id_arme_attaque == 22) {
-												event_attaque($mysqli, $id, $couleur_clan_perso, $nom_perso, "bombardé", $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
+												$model_event->putEventAttaque($id, $couleur_clan_perso, $nom_perso, "bombardé", $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
 											} else {
-												event_attaque($mysqli, $id, $couleur_clan_perso, $nom_perso, "attaqué", $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
+												$model_event->putEventAttaque($id, $couleur_clan_perso, $nom_perso, "attaqué", $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
 											}
 											
 											check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_perso, $nom_perso, $nom_grade_perso, $id_cible, $clan_cible, $couleur_clan_cible, $nom_cible, $nom_grade_cible, $pi_cible, $or_cible);
@@ -598,16 +605,16 @@ if ($verif_id_perso_session) {
 											// Regarde si le boulet touche un voisin
 											if ($id_arme_attaque == 13 || $id_arme_attaque == 22) {
 												// Récupération des cibles potentielles autour de la cible principale
-												$res_recherche_voisins = recupere_voisins($mysqli, $id_cible, $x_cible, $y_cible);
-												$nb_voisins = $res_recherche_voisins->num_rows;
+												$res_recherche_voisins = $model_carte->recupereVoisins($id_cible, $x_cible, $y_cible)->fetchAll(PDO::FETCH_CLASS,'Carte');;
+												$nb_voisins = count($res_recherche_voisins);
 
 												// On selectionne un voisin qui va se prendre le boulet
 												$id_voisin_touche = mt_rand(0,7);
 
 												if ($id_voisin_touche < $nb_voisins){
 													$tableau_cibles = array();
-													while ($t_v = $res_recherche_voisins->fetch_assoc()) {
-														$id_cible 		= $t_v['idPerso_carte'];
+													foreach($res_recherche_voisins as $t_v) {
+														$id_cible 		= $t_v->idPerso_carte;
 														array_push($tableau_cibles, $id_cible);
 													}
 
@@ -616,7 +623,7 @@ if ($verif_id_perso_session) {
 													// Calcul touche
 													$touche = mt_rand(0,100);
 													$precision_final = 100; //TODO: pour le moment touche à tous les coups s'il y a une unité sur la case, peut-être envisager tenir compte du bonus de l'unité.
-													if ($touche <= $precision_final && (id_cible < 50000 || id_cible >= 200000)){
+													if ($touche <= $precision_final && ($id_voisin < 50000 || $id_voisin >= 200000)){
 														$t_cible = get_cible($mysqli, $id_voisin);
 														$protec_cible		= $t_cible["protec_perso"];
 														$xp_cible 		= $t_cible["xp_perso"];
@@ -637,8 +644,8 @@ if ($verif_id_perso_session) {
 															$gain_xp = 20 - $gain_xp_tour_perso;
 															$max_xp_tour_atteint = true;
 														}
-														inflige_degats($mysqli, $id_voisin, $degats_final);
-														perso_gain_xp($mysqli, $id, $gain_xp);
+														$model_perso->infligeDegats($id_voisin, $degats_final);
+														$model_perso->perso_gain_xp($id, $gain_xp);
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 
 														$gain_pc = calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible);
@@ -647,7 +654,7 @@ if ($verif_id_perso_session) {
 														echo "Votre boulet a rencontré un obstable ! Vous avez infligé $degats_final dégâts à <font color='$couleur_clan_cible'>$nom_cible</font> - Matricule $id_voisin.<br>";
 														echo "Vous avez gagné $gain_xp xp.<br />";
 
-														event_attaque($mysqli, $id, $couleur_clan_perso, $nom_perso, "atteint", $id_voisin, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
+														$model_event->putEventAttaque($id, $couleur_clan_perso, $nom_perso, "atteint", $id_voisin, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
 														check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_perso, $nom_perso, $nom_grade_perso, $id_cible, $clan_cible, $couleur_clan_cible, $nom_cible, $nom_grade_cible, $pi_cible, $or_cible);
 														// L'arme fait des dégats de zone
 														$degats_collat = floor($degats_final / 2);
