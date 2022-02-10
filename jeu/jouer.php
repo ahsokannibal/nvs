@@ -3408,48 +3408,52 @@ if($dispo == '1' || $admin){
 												while($t_cible_portee_dist = $res_portee_dist->fetch_assoc()) {
 													
 													$id_cible_dist = $t_cible_portee_dist["idPerso_carte"];
-													
-													if ($id_cible_dist < 50000) {
+													$id_instance_in_bat = in_bat($mysqli,$id_perso);
 
-														// Un autre perso
-														$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_dist'";
-														$res = $mysqli->query($sql);
-														$tab = $res->fetch_assoc();
+													if ($id_cible_dist != $id_instance_in_bat) {
 														
-														$nom_cible_dist = $tab["nom_perso"];
-														$camp_cible_cac	= $tab["clan"];
+														if ($id_cible_dist < 50000) {
+
+															// Un autre perso
+															$sql = "SELECT nom_perso, clan FROM perso WHERE id_perso='$id_cible_dist'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
 															
-														$couleur_clan_cible = couleur_clan($camp_cible_cac);
+															$nom_cible_dist = $tab["nom_perso"];
+															$camp_cible_cac	= $tab["clan"];
+																
+															$couleur_clan_cible = couleur_clan($camp_cible_cac);
+															
+														} else if ($id_cible_dist >= 200000) {
+															
+															// Un PNJ
+															$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_dist'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_dist = $tab["nom_pnj"];
+															
+															$couleur_clan_cible = "grey";
+															
+														} else {
 														
-													} else if ($id_cible_dist >= 200000) {
+															// Un Batiment
+															$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
+															$res = $mysqli->query($sql);
+															$tab = $res->fetch_assoc();
+															
+															$nom_cible_dist = $tab["nom_batiment"];
+															if ($tab["nom_instance"] != "") {
+																$nom_cible_dist .= " ".$tab["nom_instance"];
+															}
+															
+															$camp_cible_dist	= $tab["camp_instance"];
 														
-														// Un PNJ
-														$sql = "SELECT nom_pnj FROM pnj, instance_pnj WHERE pnj.id_pnj = instance_pnj.id_pnj AND idInstance_pnj = '$id_cible_dist'";
-														$res = $mysqli->query($sql);
-														$tab = $res->fetch_assoc();
-														
-														$nom_cible_dist = $tab["nom_pnj"];
-														
-														$couleur_clan_cible = "grey";
-														
-													} else {
-														
-														// Un Batiment
-														$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
-														$res = $mysqli->query($sql);
-														$tab = $res->fetch_assoc();
-														
-														$nom_cible_dist = $tab["nom_batiment"];
-														if ($tab["nom_instance"] != "") {
-															$nom_cible_dist .= " ".$tab["nom_instance"];
+															$couleur_clan_cible = couleur_clan($camp_cible_dist);
 														}
 														
-														$camp_cible_dist	= $tab["camp_instance"];
-														
-														$couleur_clan_cible = couleur_clan($camp_cible_dist);
+														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
 													}
-													
-													echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
 												}
 											}
 											?>
