@@ -39,15 +39,6 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			$camp_canon 		= $t_canon['camp_canon'];
 			$dla_canon			= $t_canon['date_activation'];
 			
-			// Calcul nouvelle date activation canon
-			$date = time();
-			
-			$new_dla = $date + DUREE_TOUR;
-			
-			// MAJ date_activation canon 
-			$sql = "UPDATE instance_batiment_canon SET date_activation=FROM_UNIXTIME($new_dla) WHERE id_instance_canon='$id_instance_canon'";
-			$mysqli->query($sql);
-			
 			$couleur_clan_canon = couleur_clan($camp_canon);
 			
 			echo "<br />* Canon ".$id_instance_canon." du Batiment ".$id_instance_bat." :<br />";
@@ -75,6 +66,12 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			}
 			
 			if (!empty($tableau_cibles)) {
+				// Calcul nouvelle date activation canon
+				$date = time();
+				$new_dla = $date + DUREE_TOUR;
+				// MAJ date_activation canon
+				$sql = "UPDATE instance_batiment_canon SET date_activation=FROM_UNIXTIME($new_dla) WHERE id_instance_canon='$id_instance_canon'";
+				$mysqli->query($sql);
 			
 				$id_perso_cible = $tableau_cibles[array_rand($tableau_cibles)];
 				
