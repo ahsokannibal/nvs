@@ -6,7 +6,7 @@ require_once("jeu/config.php");
 //%%%%%%%%%%%%%%%%%%//
 function db_connexion() //CONNEXION A LA DB
 {
-	$connexion = mysqli_connect("localhost","root","yolo","nvs");
+	$connexion = mysqli_connect("localhost",BDD_LOGIN,BDD_PASSWORD,"nvs");
 	//$connexion = mysqli_connect("localhost","root","yolo","nvs_db");
 	//$connexion = mysqli_connect("localhost","lokarugp_loka","archimede2891","lokarugp_nvs");
 	//$connexion = mysqli_connect("localhost","root","eptm","nvs");

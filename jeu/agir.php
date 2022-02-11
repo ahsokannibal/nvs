@@ -651,7 +651,7 @@ if ($verif_id_perso_session) {
 														$gain_pc = calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible);
 														gain_pc_chef($mysqli, $id, $gain_pc);
 
-														echo "Votre boulet a rencontré un obstable ! Vous avez infligé $degats_final dégâts à <font color='$couleur_clan_cible'>$nom_cible</font> - Matricule $id_voisin.<br>";
+														echo "Votre boulet a rencontré un obstacle ! Vous avez infligé $degats_final dégâts à <font color='$couleur_clan_cible'>$nom_cible</font> - Matricule $id_voisin.<br>";
 														echo "Vous avez gagné $gain_xp xp.<br />";
 
 														$model_event->putEventAttaque($id, $couleur_clan_perso, $nom_perso, "atteint", $id_voisin, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc);
