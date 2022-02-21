@@ -32,6 +32,18 @@ CREATE TABLE IF NOT EXISTS `acces_log` (
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
+-- Table `Camp`
+--
+
+CREATE TABLE `camp` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `desc` text COLLATE utf8mb4_unicode_ci NOT NULL,
+  `color` varchar(255) COLLATE utf8mb4_unicode_ci NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
 -- Structure de la table `action`
 --
 
