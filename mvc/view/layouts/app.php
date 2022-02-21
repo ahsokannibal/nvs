@@ -40,7 +40,7 @@
             </main>
 			
 			<!-- Page Footer -->
-			<footer class='text-center my-3'>
+			<footer class='container-xxl text-center my-3'>
 				Nord vs Sud - Le jeu au tour par tour sur la guerre civile américaine
 			</footer>
         </div>

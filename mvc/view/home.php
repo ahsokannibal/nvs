@@ -4,8 +4,8 @@ $title = "";
 /* ---Content--- */
 ob_start();
 ?>
-<div class="row">
-	<div class="col-sm-2">
+<div class="row justify-content-center">
+	<div class="col-11 col-sm-3 mb-4 mb-sm-0">
 		<div class='row pt-4'>
 			<h4>
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -50,9 +50,9 @@ ob_start();
 			</form>
 		</div>
 	</div>
-	<div class="col-8">
-		<div class='row'>
-			<div class='col shadow bg-gray-300 rounded-3 p-4 mx-2 h-20'>
+	<div class="col-12 col-sm-7">
+		<div class='row justify-content-center'>
+			<div class='col-11 col-sm shadow bg-gray-300 rounded-3 p-4 mx-2 mb-3 h-22'>
 				<h4>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rotate-20deg align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -60,11 +60,11 @@ ob_start();
 					Inscription
 				</h4>
 				<p>
-					Nombre de joueurs inscrit : <?= $nb_inscrit; ?> <br />
-					Dernier inscrit : <?= couleur_nation($clan_last_inscrit, $pseudo_last_inscrit); ?>
+					<?= $nb_inscrit; ?> joueur(s) inscrit(s)<br />
+					Dernier inscrit :<br/> <?= couleur_nation($clan_last_inscrit, $pseudo_last_inscrit); ?>
 				</p>
 				<p>
-					Persos actifs : <span class='text-primary fw-bold'>nordistes : <?= $nb_persos_nord_actifs; ?></span> / <span class='text-danger fw-bold'>sudistes : <?= $nb_persos_sud_actifs; ?></span>
+					Persos actifs : <br/><span class='text-primary fw-bold'>nordistes : <?= $nb_persos_nord_actifs; ?></span> / <span class='text-danger fw-bold'>sudistes : <?= $nb_persos_sud_actifs; ?></span>
 				</p>
 				<p>
 					Vous voulez en découdre ?<br/>
@@ -74,8 +74,7 @@ ob_start();
 					</div>
 				</p>
 			</div>
-			
-			<div class='col shadow bg-gray-300 rounded-3 p-4 mx-2 h-20 news'>
+			<div class='col-11 col-sm shadow bg-gray-300 rounded-3 p-4 mx-2 h-22 news'>
 				<h4>
 					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rotate-20deg align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
 					  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
@@ -100,10 +99,9 @@ ob_start();
 				</p>
 				<?php endif; ?>
 			</div>
-			
 		</div>
-		<div class='row'>
-			<div class='col shadow bg-gray-300 rounded-3 p-2 m-2'>
+		<div class='row justify-content-center'>
+			<div class='col-11 col-sm shadow bg-gray-300 rounded-3 p-4 m-2'>
 				<!-- texte à repenser éventuellement -->
 				<h3>Synopsis</h3>
 				<p>
@@ -140,7 +138,7 @@ ob_start();
 			</div>
 		</div>
 	</div>
-	<aside class='col'>
+	<aside class='col-12 col-sm px-3'>
 			<a href="presentation.php" class='link-light'>Présentation du jeu</b></a>
 			<hr />
 			<a href="regles/regles.php" class='link-light'>Règles</b></a>
