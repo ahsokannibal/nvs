@@ -6,7 +6,6 @@ function entete($mysqli, $id) {
 		
 		// Perso
 		if($id < 50000) {
-			
 			$sql = "SELECT nom_perso, xp_perso, idJoueur_perso, image_perso, bataillon, clan FROM perso WHERE id_perso ='$id'";
 			$result = $mysqli->query($sql);
 			$tabAttr = $result->fetch_assoc();
@@ -47,7 +46,7 @@ function entete($mysqli, $id) {
 			$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res_groupe = $mysqli->query($sql_groupe);
 			$t_groupe = $res_groupe->fetch_assoc();
-			$id_groupe = $t_groupe['id_compagnie'];
+			$id_groupe = isset($t_groupe['id_compagnie']) ? $t_groupe['id_compagnie'] : '';
 												
 			if(isset($id_groupe) && $id_groupe != ''){
 				// recuperation des infos sur la compagnie (dont le nom)
@@ -188,17 +187,6 @@ function entete($mysqli, $id) {
 function entete_mort($mysqli, $id) {
 	
 	if ($id) {
-		
-		// Perso ou PNJ
-		if($id < 50000 || $id >= 200000) {
-			
-			echo "<div align='center'>";
-			echo "	<a class='btn btn-primary' href='evenement.php?infoid=$id'>Évènement</a>&nbsp;&nbsp;";
-			echo "	<a class='btn btn-primary' href='cv.php?infoid=$id'>CV</a>&nbsp;&nbsp;";
-			echo "</div>";
-			
-		}
-		
 		echo "<font color='red'><b>";
 		if($id < 50000){
 			echo "<center>Ce perso n'existe pas ou a été viré</center>";
