@@ -51,9 +51,42 @@ class Perso extends Model
 	public function __set($name, $value) {}
 	
 	public function __get($name){
-		return $name;
+		return $this->$name;
 	}
 
+	public function persoExist($id){
+		$db = $this->dbConnectPDO();
+		
+		$query = 'SELECT COUNT(*) FROM perso WHERE id_perso=:id';
+		
+		$request = $db->prepare($query);
+		$request->bindParam('id', $id, PDO::PARAM_INT);
+		$request->execute();
+		$result = (boolean) $request->fetchColumn();
+		
+		return $result;
+	}
+	
+	public function getPerso($id,$attributs = []){
+		$db = $this->dbConnectPDO();
+		
+		if($attributs){
+			$attributs = implode(', ',$attributs);
+		}else{
+			$attributs = "*";
+		}
+		
+		$query = 'SELECT '.$attributs.' FROM perso WHERE id_perso=:id';
+		
+		$request = $db->prepare($query);
+		$request->bindParam('id', $id, PDO::PARAM_INT);
+		$request->execute();
+		$request->setFetchMode(PDO::FETCH_CLASS,get_class($this));
+		$result = $request->fetch();
+
+		return $result;
+	}
+	
 	public function infligeDegats($id_cible, $degats_final){
 		$db = $this->dbConnectPDO();
 		// mise a jour des pv et des malus de la cible

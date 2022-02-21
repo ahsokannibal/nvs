@@ -12,6 +12,7 @@ class Event extends Model
 	private $date_evenement;
 	private $special;
 	
+	// à voir pour réorganiser la table à terme avec les noms suivants :
     // private $perso_id;
 	// private $event;
 	// private $target_id;
@@ -22,7 +23,7 @@ class Event extends Model
 	public function __set($name, $value) {}
 	
 	public function __get($name){
-		return $name;
+		return $this->$name;
 	}
 	
 	public function createEvent(){
@@ -31,16 +32,43 @@ class Event extends Model
 		return "fonction d'enregistrement à programmer";
 	}
 	
-	public function getUserEvents($id){
+	public function getEvent($id,$attributs = []){
 		$db = $this->dbConnectPDO();
 		
-		$query = 'SELECT * FROM evenement WHERE IDActeur_evenement=:perso_id';
+		if($attributs){
+			$attributs = implode(', ',$attributs);
+		}else{
+			$attributs = "*";
+		}
+		
+		$query = 'SELECT '.$attributs.' FROM evenement WHERE ID_evenement=:id';
+		
+		$request = $db->prepare($query);
+		$request->bindParam('id', $id, PDO::PARAM_INT);
+		$request->execute();
+		$request->setFetchMode(PDO::FETCH_CLASS,get_class($this));
+		$result = $request->fetch();
+
+		return $result;
+	}
+	
+	public function getUserEvents($id,$attributs = []){
+		$db = $this->dbConnectPDO();
+		
+		if($attributs){
+			$attributs = implode(', ',$attributs);
+		}else{
+			$attributs = "*";
+		}
+		
+		$query = 'SELECT '.$attributs.' FROM evenement WHERE IDActeur_evenement=:perso_id';
 		
 		$request = $db->prepare($query);
 		$request->bindParam('perso_id', $id, PDO::PARAM_INT);
 		$request->execute();
+		$result = $request->fetchAll(PDO::FETCH_CLASS,'Event');
 
-		return $request;
+		return $result;
 	}
 
 	public function putEventAttaque($id, $couleur_clan_perso, $nom_perso, $attaque_str, $id_cible, $couleur_clan_cible, $nom_cible, $touche, $precision_final, $degats_final, $gain_xp, $gain_pc){
