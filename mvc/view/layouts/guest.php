@@ -30,15 +30,15 @@
             <?php //include('layouts.navigation') ?>
 
             <!-- Page Header -->
-            <header class='container-xxl mt-3 mb-5'>
+            <header class='container-xxl my-0 mt-sm-3 mb-sm-5'>
 				<div class="row text-center">
 					<div class="col-4">
 						<a href='index.php' class='text-decoration-none text-reset'>
-							<img src="images/accueil/logo_NVS_lee.png" alt='baniere NVS' class="img-fluid" />
+							<img src="images/accueil/logo_NVS_lee.png" alt='logo NVS' class="img-fluid" />
 						</a>
 					</div>
 					<div class="col-8">
-							<img src="images/accueil/baniere_accueil.jpg" alt='baniere NVS' class="img-fluid" />
+							<img src="images/accueil/baniere_accueil.jpg" alt='bannière NVS' class="img-fluid" />
 					</div>
 						<!--
 						<h1>1861 : Nord vs Sud</h1>
@@ -53,7 +53,7 @@
             </main>
 			
 			<!-- Page Footer -->
-			<footer class='text-center my-3'>
+			<footer class='container-xxl text-center my-3'>
 				Nord vs Sud - Le jeu au tour par tour sur la guerre civile américaine
 			</footer>
         </div>
