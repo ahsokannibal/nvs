@@ -35,7 +35,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 				$camp 			= $_POST['camp_perso'];
 			
 				if (strlen($nom_perso) < 2 || strlen($nom_perso) > 25 ||ctype_digit($nom_perso) || strpos($nom_perso,'--') !== false){
-					$error = "Erreur : Le Pseudo est incorrect ! Veuillez en choisir un autre (taille entre 1 et 25, pas de quote, pas que des chiffres, pas la chaine --, etc..)";
+					$error = "Erreur : Le Pseudo est incorrect ! Veuillez en choisir un autre (taille entre 1 et 25, pas de quote, pas que des chiffres, pas la chaîne --, etc..)";
 				}
 				else {
 					$nom_perso = $mysqli->real_escape_string($nom_perso);
@@ -454,18 +454,18 @@ if(config_dispo_jeu($mysqli) == '1'){
 								
 							}
 							else {
-								echo "<center>Erreur: Camp invalide !</center><br /><br />";
+								$error =  "Erreur : Camp invalide !";
 							}
 						}
 					}
 				}
 			}
 			else {
-				echo "<center>Erreur: Veuillez choisir un camp !</center><br /><br />";
+				$error =  "Erreur: Veuillez choisir un camp !";
 			}
 		}
 		else {
-			echo "<center>Erreur: Veuillez valider les CGU et la charte !</center><br /><br />";
+			$error =  "Erreur : Veuillez valider les CGU et la charte !";
 		}
 	}
 	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND chef='1'";
