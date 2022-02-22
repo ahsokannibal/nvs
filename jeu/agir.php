@@ -1164,7 +1164,7 @@ if ($verif_id_perso_session) {
 									// L'arme fait des dégats de zone
 									if ($degatZone_arme_attaque) {
 										$degats_collat = floor($degats_final / 2);
-										check_degats_zone($mysqli, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+										check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
 									}
 									
 									if ($pv_cible > 0) {
