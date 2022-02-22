@@ -2490,7 +2490,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 			}
 			
 			// calcul pourcentage de reussite
-			$pourcentage_reussite = 60;
+			$pourcentage_reussite = 80;
 			
 			$reussite = rand(0,100);
 			
