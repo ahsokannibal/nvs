@@ -172,8 +172,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 								$pc_perso_fin	= $pc_cible - $pc_perdu;
 							}
 							else {
-								// Quand un grouillot meurt, il perd tout ses Pi
-								$pi_perso_fin = 0;
+								$pi_perso_fin = floor(($pi_cible * 60) / 100);
 								$xp_perso_fin = $xp_cible;
 								$pc_perso_fin = $pc_cible;
 							}
@@ -303,8 +302,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$pc_perso_fin	= $pc_collat - $pc_perdu;
 									}
 									else {
-										// Quand un grouillot meurt, il perd tout ses Pi
-										$pi_perso_fin = 0;
+										$pi_perso_fin = floor(($pi_collat * 60) / 100);
 										$xp_perso_fin = $xp_collat;
 										$pc_perso_fin = $pc_collat;
 									}

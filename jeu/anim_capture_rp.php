@@ -282,8 +282,7 @@ if($dispo == '1' || $admin){
 								$pc_perso_fin	= $pc_perso_capture - $pc_perdu;
 							}
 							else {
-								// Quand un grouillot meurt, il perd tout ses Pi
-								$pi_perso_fin = 0;
+								$pi_perso_fin = floor(($pi_perso_capture * 60) / 100);
 								$pc_perso_fin = $pc_perso_capture;
 							}
 		
