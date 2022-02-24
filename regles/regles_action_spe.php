@@ -116,7 +116,7 @@ Les barricades apparaissent sur la carte avec 25pv/250. Il est possible de les r
 					<div id="saboter">
 					<h2>Saboter</h2>
 Lorsqu'on se trouve à proximité d'une case de pont, une action "Saboter" apparait (accéssible pour toutes les unités).<br />
-Pour 10PA, cette action, ayant 60% de chance de réussite, sabotera le pont pour entre 50 et 200PV.<br />
+Pour 10PA, cette action, ayant 80% de chance de réussite, sabotera le pont pour entre 50 et 200PV.<br />
 Les unités du génie étant plus efficaces pour saboter un pont, elles feront le double de dégâts ! 
 <br /><br />
 					</div>

@@ -149,7 +149,7 @@
 							<tr>
 								<td align='center'><img src='../images_perso/v1/soigneur_nord.gif' alt='soigneur'><img src='../images_perso/v1/soigneur_sud.gif' alt='soigneur'></td>
 								<td align='center'>Soigneur</td>
-								<td align='center'>500</td>
+								<td align='center'>400</td>
 								<td align='center'>10</td>
 								<td align='center'>6</td>
 								<td align='center'>4</td>
