@@ -269,10 +269,10 @@ function verif_contraintes_construction_ennemis($mysqli, $id_bat, $camp_perso, $
 	}
 	else if ($id_bat == '7') {
 		// Hopital
-		$nb_cases_ennemi 	= 10;
+		$nb_cases_ennemi 	= 5;
 	}
 	else {
-		$nb_cases_ennemi 	= 30;
+		$nb_cases_ennemi 	= 5;
 	}
 	
 	// Verification distance avec ennemis
