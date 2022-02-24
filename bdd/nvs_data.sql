@@ -149,7 +149,7 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `description`, `taille_batiment`) VALUES
 (1, 'Barricade', 250, 'Une barricade permet de tenir des positions defensives', 1),
 (2, 'Tour de guet', 250, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis', 1),
-(5, 'Pont', 750, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau', 1),
+(5, 'Pont', 200, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau', 1),
 (6, 'Entrepot', 1000, 'Un entrepot permet de stocker et vendre du mat&eacute;riel', 1),
 (7, 'Hopital', 1000, 'Un hopital de campagne permet de soigner des blessers', 1),
 (8, 'Fortin', 6000, 'Un fortin permet de prendre position sur une partie de la carte', 3),

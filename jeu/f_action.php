@@ -484,8 +484,8 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 			}
 		}
 		
-		// 30 PM entre chaque pont
-		$distance_min_pont = 30;
+		// 20 PM entre chaque pont
+		$distance_min_pont = 20;
 		
 		$sql = "SELECT save_info_carte FROM carte 
 					WHERE x_carte >= $x_bat - $distance_min_pont
@@ -2490,7 +2490,7 @@ function action_saboter($mysqli, $id_perso, $id_bat, $id_action){
 			}
 			
 			// calcul pourcentage de reussite
-			$pourcentage_reussite = 60;
+			$pourcentage_reussite = 80;
 			
 			$reussite = rand(0,100);
 			
