@@ -361,28 +361,28 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 	$verif_nb_bats = $t['nb_bat'];
 	
 	// Verification distance avec gare
-	$sql = "SELECT count(id_instanceBat) as nb_gare FROM instance_batiment 
-			WHERE x_instance >= $x_bat - $nb_cases_gare
-			AND x_instance <= $x_bat + $nb_cases_gare
-			AND y_instance >= $y_bat - $nb_cases_gare
-			AND y_instance <= $y_bat + $nb_cases_gare
-			AND id_batiment='11' AND camp_instance='$camp_perso' AND pv_instance > 0";
+	$sql = "SELECT count(id_instanceBat) as nb_gare FROM instance_batiment INNER JOIN batiment ON instance_batiment.id_batiment = batiment.id_batiment
+			WHERE x_instance >= $x_bat - $nb_cases_gare - taille_batiment / 2
+			AND x_instance <= $x_bat + $nb_cases_gare + taille_batiment / 2
+			AND y_instance >= $y_bat - $nb_cases_gare - taille_batiment / 2
+			AND y_instance <= $y_bat + $nb_cases_gare + taille_batiment / 2
+			AND instance_batiment.id_batiment='11' AND camp_instance='$camp_perso' AND pv_instance > 0";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
 	$verif_nb_gares = $t['nb_gare'];
 	
 	// Verification distance avec autres batiments de rapatriement
-	$sql = "SELECT count(id_instanceBat) as nb_rapat FROM instance_batiment 
-			WHERE x_instance >= $x_bat - $nb_cases_rapat
-			AND x_instance <= $x_bat + $nb_cases_rapat
-			AND y_instance >= $y_bat - $nb_cases_rapat
-			AND y_instance <= $y_bat + $nb_cases_rapat
+	$sql = "SELECT count(id_instanceBat) as nb_rapat FROM instance_batiment INNER JOIN batiment ON instance_batiment.id_batiment = batiment.id_batiment
+			WHERE x_instance >= $x_bat - $nb_cases_rapat - taille_batiment / 2
+			AND x_instance <= $x_bat + $nb_cases_rapat + taille_batiment / 2
+			AND y_instance >= $y_bat - $nb_cases_rapat - taille_batiment / 2
+			AND y_instance <= $y_bat + $nb_cases_rapat + taille_batiment / 2
 			AND camp_instance='$camp_perso'
-			AND (id_batiment='7' OR id_batiment='8' OR id_batiment='9') AND pv_instance > 0";
+			AND (instance_batiment.id_batiment='7' OR instance_batiment.id_batiment='8' OR instance_batiment.id_batiment='9') AND pv_instance > 0";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
-	
+
 	$verif_nb_rapats = $t['nb_rapat'];
 	
 	$verif_distance_tour = 0;
