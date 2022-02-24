@@ -559,6 +559,7 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 
 	// il est mort
 	if ($pv_cible <= 0) {
+											echo("DEBUG 001");
 
 		if (in_bat($mysqli, $id_cible)) {
 
@@ -588,8 +589,7 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 			$pc_perso_fin	= $pc_perso - $pc_perdu;
 		}
 		else {
-			// Quand un grouillot meurt, il perd tout ses Pi
-			$pi_perso_fin = 0;
+			$pi_perso_fin = floor(($pi_cible * 60) / 100);
 			$pc_perso_fin = $pc_perso;
 		}
 
@@ -843,8 +843,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 					$pc_perso_fin	= $pc_collat_fin - $pc_perdu;
 				}
 				else {
-					// Quand un grouillot meurt, il perd tout ses Pi
-					$pi_perso_fin = 0;
+					$pi_perso_fin = floor(($pi_collat_fin * 60) / 100);
 					$pc_perso_fin = $pc_collat_fin;
 				}
 
