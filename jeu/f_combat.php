@@ -559,7 +559,6 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 
 	// il est mort
 	if ($pv_cible <= 0) {
-											echo("DEBUG 001");
 
 		if (in_bat($mysqli, $id_cible)) {
 
