@@ -80,7 +80,7 @@ Enfin chaque personnage a trois compteurs de malus : malus de déplacement (malu
 					<h2>XPI</h2>
 Les XPI permettent d'améliorer les caractéristiques de vos personnages. Ils sont le parallèle à votre expérience. Mais tandis que votre expérience est acquise, les points d'investissements peuvent être dépensés en améliorations.<br />
 Si vous gagnez 20 XP , vous pourrez alors dépenser 20 XPI.<br /><br />
-Lorsque vous êtes capturé, votre chef perd 5% de ses XPI, et vos grouillots perdent la totalité de leur XPI. Investissez les donc au bon moment !				
+Lorsque vous êtes capturé, votre chef perd 5% de ses XPI tandis que vos grouillots perdent 40% de leurs XPI. Investissez les donc au bon moment !				
 <br /><br />
 					<h2>XP</h2>
 L'expérience est la valeur image de votre expérience dans les combats. L'expérience est gagnée en frappant l'ennemi ou des animaux, en construisant des bâtiments, mais également en remplissant des missions et atteignant des objectifs que les officiers supérieurs vous auront assignés.

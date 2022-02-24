@@ -231,6 +231,7 @@ $mysqli = db_connexion();
 							?>
 						</table>
 					</div>
+					Les canons, gatling et fusil de précision ont 15% de précision de moins lors de leurs attaques en limite de portée.
 					
 					<br /><br />
 					
@@ -326,7 +327,7 @@ $mysqli = db_connexion();
 								<td align='center'>Lunette de visée</td>
 								<td align='center'>Équipable</td>
 								<td align='center'>+15 en précision à distance</td>
-								<td align='center'>Coût +1 PA par attaque à distance</td>
+								<td align='center'>Coût +2 PA par attaque à distance</td>
 								<td align='center'>0.2kg</td>
 								<td align='center'>200 thunes</td>
 								<td align='center'>Fort / Fortin</td>

@@ -184,7 +184,7 @@
 								<td align='center'><img src='../images_perso/b5b.png' alt='pont'></td>
 								<td align='center'>Pont</td>
 								<td align='center'>1 case</td>
-								<td align='center'>750</td>
+								<td align='center'>200</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
