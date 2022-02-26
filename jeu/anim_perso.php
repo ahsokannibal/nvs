@@ -498,7 +498,7 @@ if($dispo == '1' || $admin){
 									$nom_perso 		= $t_c['nom_perso'];
 									
 									echo "<tr>";
-									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso_aff."'>".$id_perso_aff."</a>]</td>";
+									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso_aff."&type=perso'>".$id_perso_aff."</a>]</td>";
 									echo "	<td align='center'>".$nom_demande."</td>";
 									echo "	<td align='center'>".$info_demande."</td>";
 									echo "	<td align='center'>";

@@ -84,7 +84,7 @@ if($dispo == '1' || $admin){
 							echo "<tr>";
 							echo "	<td align='center'>".$date_alerte."</td>";
 							echo "	<td align='center'>".$type_alerte."</td>";
-							echo "	<td align='center'><a href='evenement.php?infoid=".$id_perso_al."'>".$id_perso_al."</a></td>";
+							echo "	<td align='center'><a href='evenement.php?infoid=".$id_perso_al."&type=perso'>".$id_perso_al."</a></td>";
 							echo "	<td align='center'>".$raison_alerte."</td>";
 							echo "	<td></td>";
 							echo "</tr>";

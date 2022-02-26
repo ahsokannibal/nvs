@@ -200,7 +200,7 @@ if(isset($_SESSION["id_perso"])){
 								echo "<form method=\"post\" action=\"admin_batiments.php\">";
 								echo "			<td align='center'>";
 								echo "				<input type='hidden' name='hid_id_instance_rename' value='$id_instance_bat'>";
-								echo "				<font color='".$color_camp."'>".$nom_bat." <input type='text' name='nom_batiment' value='".$nom_instance_bat."' ><input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'> [<a href='evenement.php?infoid=".$id_instance_bat."'>".$id_instance_bat."</a>]</font>";
+								echo "				<font color='".$color_camp."'>".$nom_bat." <input type='text' name='nom_batiment' value='".$nom_instance_bat."' ><input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'> [<a href='evenement.php?infoid=".$id_instance_bat."&type=bat'>".$id_instance_bat."</a>]</font>";
 								echo "			</td>";
 								echo "</form>";
 								echo "			<td align='center'>".$x_instance_bat."/".$y_instance_bat."</td>";

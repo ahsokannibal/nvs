@@ -1,11 +1,21 @@
 /* Css général */
 
 body{
+	background:#EEEEEE;
+	background-image: url("../images/bg/'f724149e.png");
+}
+
+.guest{
 	background:#828282;
+	background-image: url("../images/bg/'f724149e.png");
 }
 
 .bg-gray-300 {
-	background:#969696;
+	background-color: rgba(128, 128, 128,0.5);
+}
+
+.bg-gray-light {
+	background-color: rgba(236, 236, 236,0.3);
 }
 
 .h-6 {

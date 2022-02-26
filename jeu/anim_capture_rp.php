@@ -479,8 +479,8 @@ if($dispo == '1' || $admin){
 									
 									echo "<tr>";
 									echo "	<td align='center'>".$date_capture."</td>";
-									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
-									echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."'>".$id_perso_capture."</a>]</td>";
+									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>]</td>";
+									echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."&type=perso'>".$id_perso_capture."</a>]</td>";
 									echo "	<td align='center'>".$titre_capture."</td>";
 									echo "	<td align='center'>".$message."</td>";
 									echo "	<td align='center'>";
@@ -562,8 +562,8 @@ if($dispo == '1' || $admin){
 									
 									echo "<tr>";
 									echo "	<td align='center'>".$date_capture."</td>";
-									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
-									echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."'>".$id_perso_capture."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso_capture."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
+									echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
+									echo "	<td align='center'>".$nom_perso_capture." [<a href='evenement.php?infoid=".$id_perso_capture."&type=perso'>".$id_perso_capture."</a>] <a href='nouveau_message.php?pseudo=".$nom_perso_capture."' target='_blank'><img src='../images/messagerie.png' width='30' height='30' alt='contacter' title='contacter'></a></td>";
 									echo "	<td align='center'>".$titre_capture."</td>";
 									echo "	<td align='center'>".$message."</td>";
 									echo "	<td align='center'><a href='".$lien_image_debut."' target='_blank'>Image 1</a><br/><a href='".$lien_image_fin."' target='_blank'>Image 2</a></td>";

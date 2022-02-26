@@ -167,7 +167,7 @@ if($dispo == '1' || $admin){
 					<div class="table-responsive">
 						<table border='1' width='100%'>
 							<tr>
-								<td><b>Auteur de la question : </b></td><td><?php echo $nom_perso." [<a href='evenement.php?infoid='>".$id_perso."</a>]"; ?></td>
+								<td><b>Auteur de la question : </b></td><td><?php echo $nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>]"; ?></td>
 								<td><b>Date d'envoi : </b></td><td><?php echo $date_question; ?></td>
 							</tr>
 							<tr>
@@ -246,7 +246,7 @@ if($dispo == '1' || $admin){
 					<div class="table-responsive">
 						<table border='1' width='100%'>
 							<tr>
-								<td width='20%'><b>Auteur de la question : </b></td><td width='30%'><?php echo $nom_perso." [<a href='evenement.php?infoid='>".$id_perso."</a>]"; ?></td>
+								<td width='20%'><b>Auteur de la question : </b></td><td width='30%'><?php echo $nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>]"; ?></td>
 								<td width='20%'><b>Date d'envoi : </b></td><td width='30%'><?php echo $date_question; ?></td>
 							</tr>
 							<tr>
@@ -269,7 +269,7 @@ if($dispo == '1' || $admin){
 					<div class="table-responsive">
 						<table border='1' width='100%'>
 							<tr>
-								<td width='20%'><b>Auteur de la réponse : </b></td><td width='30%'><?php echo $nom_perso_rep." [<a href='evenement.php?infoid='>".$id_perso_rep."</a>]"; ?></td>
+								<td width='20%'><b>Auteur de la réponse : </b></td><td width='30%'><?php echo $nom_perso_rep." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso_rep."</a>]"; ?></td>
 								<td width='20%'><b>Date de la réponse : </b></td><td width='30%'><?php echo $date_reponse; ?></td>
 							</tr>
 							<tr>
@@ -330,7 +330,7 @@ if($dispo == '1' || $admin){
 										$status_question	= $t['status'];
 										
 										echo "<tr>";
-										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>]</td>";
 										echo "	<td align='center'>".$titre_question."</td>";
 										echo "	<td align='center'>".$question."</td>";
 										echo "	<td align='center'>";
@@ -382,7 +382,7 @@ if($dispo == '1' || $admin){
 										$status_question	= $t['status'];
 										
 										echo "<tr>";
-										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+										echo "	<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>]</td>";
 										echo "	<td align='center'>".$titre_question."</td>";
 										echo "	<td align='center'>".$question."</td>";
 										echo "	<td align='center'>";

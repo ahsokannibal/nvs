@@ -213,7 +213,7 @@ if($dispo == '1' || $admin){
 									echo "<form method=\"post\" action=\"anim_batiment.php\">";
 									echo "	<td>";
 									echo "		<input type='hidden' name='hid_id_instance_rename' value='$id_instance'>";
-									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." [<a href='evenement.php?infoid=".$id_instance."' target='_blank'>".$id_instance."</a>]";
+									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." [<a href='evenement.php?infoid=".$id_instance."&type=bat' target='_blank'>".$id_instance."</a>]";
 									echo "	</td>";
 									echo "	<td>";
 									echo "		<input type='text' name='nom_batiment' value='".$nom_instance."' > <input type='submit' name='rename_bat' value='Renommer' class='btn btn-primary'>";
@@ -292,7 +292,7 @@ if($dispo == '1' || $admin){
 									echo "<tr>";
 									echo "	<td>";
 									echo "		<input type='hidden' name='hid_id_instance_rename' value='$id_instance'>";
-									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." [<a href='evenement.php?infoid=".$id_instance."'>".$id_instance."</a>]";
+									echo "		<img src='../images_perso/".$image_bat."' width='40' height='40' /> ".$nom_batiment." [<a href='evenement.php?infoid=".$id_instance."&type=bat'>".$id_instance."</a>]";
 									echo "	</td>";
 									
 									// PV

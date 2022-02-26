@@ -131,8 +131,8 @@ if(isset($_SESSION["id_perso"])){
 								else {
 									echo "			<td align='center'><i>Non défini (déclaré avant évolution)</i></td>";
 								}
-								echo "			<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
-								echo "			<td align='center'>".$nom_multi." [<a href='evenement.php?infoid=".$id_multi."'>".$id_multi."</a>]</td>";
+								echo "			<td align='center'>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>]</td>";
+								echo "			<td align='center'>".$nom_multi." [<a href='evenement.php?infoid=".$id_multi."&type=perso'>".$id_multi."</a>]</td>";
 								echo "			<td align='center'><a href='anim_multi.php?detail_id=".$id_decla."' class='btn btn-primary'>Consulter le détail</a></td>";
 								echo "		</tr>";
 							}

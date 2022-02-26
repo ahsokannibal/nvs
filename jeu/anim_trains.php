@@ -474,7 +474,7 @@ if($dispo == '1' || $admin){
 									
 									echo "	<td>";
 									if ($id_train != NULL && $id_train != 0) {
-										echo "<img src='../images_perso/b12b.gif' width='40' height='40' />Train [<a href='evenement.php?infoid=".$id_train."' target='_blank'>".$id_train."</a>]";
+										echo "<img src='../images_perso/b12b.gif' width='40' height='40' />Train [<a href='evenement.php?infoid=".$id_train."&type=vehicle' target='_blank'>".$id_train."</a>]";
 										$pourc_pv_train = affiche_jauge($pv_train, $pvMax_train); 
 										echo round($pourc_pv_train,2)."% ou $pv_train/$pvMax_train";
 									}
@@ -483,7 +483,7 @@ if($dispo == '1' || $admin){
 									}
 									echo "	</td>";
 									echo "	<td>";
-									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare1." [<a href='evenement.php?infoid=".$id_gare1."' target='_blank'>".$id_gare1."</a>]";
+									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare1." [<a href='evenement.php?infoid=".$id_gare1."&type=bat' target='_blank'>".$id_gare1."</a>]";
 									if ($pv_gare1 != null) {
 										$pourc_pv_gare1 = affiche_jauge($pv_gare1, $pvMax_gare1); 
 										echo round($pourc_pv_gare1,2)."% ou $pv_gare1/$pvMax_gare1";
@@ -493,7 +493,7 @@ if($dispo == '1' || $admin){
 									}
 									echo "	</td>";
 									echo "	<td>";
-									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare2." [<a href='evenement.php?infoid=".$id_gare2."' target='_blank'>".$id_gare2."</a>]";
+									echo "<img src='../images_perso/b11b.png' width='40' height='40' />Gare ".$nom_gare2." [<a href='evenement.php?infoid=".$id_gare2."&type=bat' target='_blank'>".$id_gare2."</a>]";
 									if ($pv_gare2 != null) {
 										$pourc_pv_gare2 = affiche_jauge($pv_gare2, $pvMax_gare2); 
 										echo round($pourc_pv_gare2,2)."% ou $pv_gare2/$pvMax_gare2";
@@ -504,7 +504,7 @@ if($dispo == '1' || $admin){
 									echo "	</td>";
 									echo "	<td>";
 									if ($id_train != NULL && $id_train != 0) {
-										echo "Position actuelle : ".$x_train."/".$y_train." - En direction de la Gare ".$nom_gare_direction." [<a href='evenement.php?infoid=".$gare_direction."' target='_blank'>".$gare_direction."</a>]";
+										echo "Position actuelle : ".$x_train."/".$y_train." - En direction de la Gare ".$nom_gare_direction." [<a href='evenement.php?infoid=".$gare_direction."&type=bat' target='_blank'>".$gare_direction."</a>]";
 									}
 									echo "	</td>";
 									
@@ -601,7 +601,7 @@ if($dispo == '1' || $admin){
 								
 								$id_gare_creer_liaison = $_GET['creer_liaison'];
 								
-								echo "<b>Création de la liaison pour la gare [<a href='evenement.php?infoid=".$id_gare_creer_liaison."' target='_blank'>".$id_gare_creer_liaison."</a>]</b><br />";
+								echo "<b>Création de la liaison pour la gare [<a href='evenement.php?infoid=".$id_gare_creer_liaison."&type=bat' target='_blank'>".$id_gare_creer_liaison."</a>]</b><br />";
 								
 								$sql_gares = "SELECT id_instanceBat, nom_instance FROM instance_batiment 
 										WHERE camp_instance='$camp' AND id_batiment='11' AND id_instanceBat != '$id_gare_creer_liaison' 
@@ -629,7 +629,7 @@ if($dispo == '1' || $admin){
 								echo "<b>Les gares suivantes ne possèdent pas de liaison</b><br />";
 								
 								foreach ($diff_gares as $gare){								
-									echo "Gare [<a href='evenement.php?infoid=".$gare."' target='_blank'>".$gare."</a>] <a href='anim_trains.php?creer_liaison=".$gare."' class='btn btn-warning'>Créer la liaison</a><br />";
+									echo "Gare [<a href='evenement.php?infoid=".$gare."&type=bat' target='_blank'>".$gare."</a>] <a href='anim_trains.php?creer_liaison=".$gare."' class='btn btn-warning'>Créer la liaison</a><br />";
 								}
 							}
 						}

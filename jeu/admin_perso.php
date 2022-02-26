@@ -727,7 +727,7 @@ if(isset($_SESSION["id_perso"])){
 											echo "- Ticket non valide - "; 
 										}
 										else {
-											echo "<a class='btn btn-primary' style='height:38px;' href='evenement.php?infoid=".$destination."'>".$destination."</a>";
+											echo "<a class='btn btn-primary' style='height:38px;' href='evenement.php?infoid=".$destination."&type=bat'>".$destination."</a>";
 											echo "<a class='btn btn-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&dest=".$destination."&delete=ok\"><i class='fa fa-trash'></i></a><br />";
 										}
 									}

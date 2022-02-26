@@ -471,7 +471,7 @@ if(isset($_SESSION["id_perso"])){
 								$attenteValidation_compagnie	= $t['attenteValidation_compagnie'];
 								
 								echo "		<tr>";
-								echo "			<td>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."'>".$id_perso."</a>]</td>";
+								echo "			<td>".$nom_perso." [<a href='evenement.php?infoid=".$id_perso."&type=perso'>".$id_perso."</a>]</td>";
 								echo "<form method='POST' action='admin_compagnies.php'>";
 								echo "			<td>".$poste_perso_compagnie;
 								echo "	<input type='submit' class='btn btn-warning' value='changer de poste'>";

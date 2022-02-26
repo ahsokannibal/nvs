@@ -26,11 +26,11 @@
 		<script type="text/javascript" src="public/js/app.js" defer></script>
     </head>
     <body>
-        <div class='app'>
+        <div class='guest'>
             <?php //include('layouts.navigation') ?>
 
             <!-- Page Header -->
-            <header class='container-xxl my-0 mt-sm-3 mb-sm-5'>
+            <header class='container-xxl my-0 pt-sm-3 mb-sm-5'>
 				<div class="row text-center">
 					<div class="col-4">
 						<a href='index.php' class='text-decoration-none text-reset'>

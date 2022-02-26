@@ -514,7 +514,7 @@ if($dispo == '1' || $admin){
 									$duree_bagne 		= $t_b['duree'];
 									
 									echo "		<tr>";
-									echo "			<td><font color='".$couleur_camp_perso_peni."'><b>".$nom_perso_peni."</b> [<a href='evenement.php?infoid=".$id_perso_peni."'' target='_blank'>".$id_perso_peni."</a>]</font></td>";
+									echo "			<td><font color='".$couleur_camp_perso_peni."'><b>".$nom_perso_peni."</b> [<a href='evenement.php?infoid=".$id_perso_peni."&type=perso'' target='_blank'>".$id_perso_peni."</a>]</font></td>";
 									echo "			<td>".$date_debut_bagne."</td>";
 									if (isset($duree_bagne)) {
 										echo "			<td>".$duree_bagne." jours</td>";
