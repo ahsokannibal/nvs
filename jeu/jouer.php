@@ -4387,18 +4387,18 @@ if($dispo == '1' || $admin){
 											<img src='../images/Action.png' border='0'/>
 											<form method='post' action='action.php'>
 												<select name='liste_action'>
-													<option value="invalide">-- -- -- -- -- -- - Choisir une action - -- -- -- -- -- --</option>
+													<option value="invalide" selected>-- -- -- -- -- -- - Choisir une action - -- -- -- -- -- --</option>
 													<?php
 													
 													// Action d'entrainement
 													if($pa_perso >= 10){
-														echo "<option value=\"65\">Entrainement (10 pa)</option>";
+														echo "<option value=\"65\">Entrainement (10 PA)</option>";
 													}
 													
 													// Action Déposer Objet
 													if($pa_perso >= 1){
-														echo "<option value=\"110\">Deposer objet (1 pa)</option>";
-														echo "<option value=\"139\">Donner objet (1 pa)</option>";
+														echo "<option value=\"110\">Deposer objet (1 PA)</option>";
+														echo "<option value=\"139\">Donner objet (1 PA)</option>";
 													}
 													
 													// Actions selon le type d'unité
@@ -4406,7 +4406,7 @@ if($dispo == '1' || $admin){
 													// Cavalerie et cavalerie lourde
 													if (($type_perso == 1 || $type_perso == 2) && $pm_perso >= 4 && !in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
 														// Charge = 999
-														echo "<option value=\"999\">Charger (tous les pa)</option>";
+														echo '<option value="999">Charger (tous les PA)</option>';
 													}
 													
 													$sql = "SELECT action.id_action, nom_action, coutPa_action, reflexive_action
@@ -4432,13 +4432,13 @@ if($dispo == '1' || $admin){
 														if (!in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
 															if ($cout_PA <= $pa_perso){
 																if ($id_ac == 1 && $pm_perso >= $pmMax_perso) {
-																	echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "pa)</option>";;
+																	echo "<option value=\"$id_ac\">".$nom_ac." (Tous les PA/PM)</option>";;
 																}
 																else if ($id_ac == 147) {
-																	echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "pa à 8pa)</option>";;
+																	echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "PA à 8PA)</option>";;
 																}
 																else {
-																	echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "pa)</option>";;
+																	echo "<option value=\"$id_ac\">".$nom_ac." (". $cout_PA . "PA)</option>";;
 																}
 															}
 														}
@@ -4453,8 +4453,7 @@ if($dispo == '1' || $admin){
 																	}
 																}
 															}
-														}														
-														
+														}
 													}
 													?>
 													<option value="invalide">-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- --</option>
