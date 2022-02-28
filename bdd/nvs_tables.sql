@@ -240,7 +240,8 @@ CREATE TABLE `batiment` (
   `nom_batiment` varchar(125) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
   `pvMax_batiment` int(11) NOT NULL DEFAULT '20',
   `description` text CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
-  `taille_batiment` int(11) NOT NULL DEFAULT '1'
+  `taille_batiment` int(11) NOT NULL DEFAULT '1',
+  `capturable` tinyint(1) NOT NULL DEFAULT '0',
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1346,7 +1347,8 @@ CREATE TABLE `type_unite` (
   `pa_unite` int(11) NOT NULL,
   `pm_unite` int(11) NOT NULL,
   `image_unite` VARCHAR(255) NULL,
-  `cout_pg` int(11) NOT NULL
+  `cout_pg` int(11) NOT NULL,
+  `capturer_bat` tinyint(1) NOT NULL DEFAULT '0',
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
