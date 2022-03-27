@@ -287,54 +287,63 @@ CREATE TABLE `banque_log` (
 --
 
 CREATE TABLE `carte` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id_carte` int(10) unsigned NOT NULL,
   `x_carte` int(11) NOT NULL DEFAULT '0',
   `y_carte` int(11) NOT NULL DEFAULT '0',
   `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
   `fond_carte` varchar(20) NOT NULL DEFAULT '',
   `idPerso_carte` int(11) DEFAULT '0',
+  `type_perso` varchar(255) NOT NULL DEFAULT 'undefined',
   `image_carte` varchar(100) DEFAULT NULL,
-  `vue_nord` int(11) DEFAULT '0',
-  `vue_sud` int(11) DEFAULT '0',
-  `coordonnees` varchar(250) DEFAULT NULL
+  `save_info_carte` varchar(255) DEFAULT NULL,
+  `vue_nord` tinyint(1) DEFAULT '0',
+  `vue_sud` tinyint(1) DEFAULT '0',
+  `coordonnees` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-ALTER TABLE `carte` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
 
 --
 -- Structure de la table `carte2`
 --
 
 CREATE TABLE `carte2` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id_carte` int(10) unsigned NOT NULL,
   `x_carte` int(11) NOT NULL DEFAULT '0',
   `y_carte` int(11) NOT NULL DEFAULT '0',
   `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
   `fond_carte` varchar(20) NOT NULL DEFAULT '',
   `idPerso_carte` int(11) DEFAULT '0',
+  `type_perso` varchar(255) NOT NULL DEFAULT 'undefined',
   `image_carte` varchar(100) DEFAULT NULL,
-  `vue_nord` int(11) DEFAULT '0',
-  `vue_sud` int(11) DEFAULT '0',
-  `coordonnees` varchar(250) DEFAULT NULL
+  `save_info_carte` varchar(255) DEFAULT NULL,
+  `vue_nord` tinyint(1) DEFAULT '0',
+  `vue_sud` tinyint(1) DEFAULT '0',
+  `coordonnees` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-ALTER TABLE `carte2` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
 
 --
 -- Structure de la table `carte3`
 --
 
 CREATE TABLE `carte3` (
+  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
+  `id_carte` int(10) unsigned NOT NULL,
   `x_carte` int(11) NOT NULL DEFAULT '0',
   `y_carte` int(11) NOT NULL DEFAULT '0',
   `occupee_carte` enum('0','1') NOT NULL DEFAULT '0',
   `fond_carte` varchar(20) NOT NULL DEFAULT '',
   `idPerso_carte` int(11) DEFAULT '0',
+  `type_perso` varchar(255) NOT NULL DEFAULT 'undefined',
   `image_carte` varchar(100) DEFAULT NULL,
-  `vue_nord` int(11) DEFAULT '0',
-  `vue_sud` int(11) DEFAULT '0',
-  `coordonnees` varchar(250) DEFAULT NULL
+  `save_info_carte` varchar(255) DEFAULT NULL,
+  `vue_nord` tinyint(1) DEFAULT '0',
+  `vue_sud` tinyint(1) DEFAULT '0',
+  `coordonnees` varchar(250) DEFAULT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
-ALTER TABLE `carte3` ADD `save_info_carte` VARCHAR(255) NULL DEFAULT NULL AFTER `image_carte`;
 
 -- --------------------------------------------------------
 
@@ -447,7 +456,7 @@ CREATE TABLE `competence_as_competence` (
 
 CREATE TABLE IF NOT EXISTS `config_jeu` (
   `code_config` varchar(255) NOT NULL,
-  `valeur_config` varchar(255) NOT NULL
+  `valeur_config` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
