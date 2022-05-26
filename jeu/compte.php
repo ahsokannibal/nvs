@@ -146,19 +146,22 @@ if($dispo == '1' || $admin){
 						$sql = "UPDATE joueur SET mdp_joueur='$mdp_hash' WHERE id_joueur ='".$id_joueur."'";
 						$mysqli->query($sql);
 						
-						$new_mdp_forum = phpbb_hash($mdp);
-						
-						// Récupération de l'id de l'utilisateur sur le forum 
-						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-									(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
-										(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1')";
-						$res = $mysqli->query($sql);
-						$t = $res->fetch_assoc();
-						
-						$id_user_forum = $t['user_id'];
-						
-						$sql = "UPDATE ".$table_prefix."users SET user_password='$new_mdp_forum' WHERE user_id='$id_user_forum'";
-						$mysqli->query($sql);
+						if (is_dir($phpbb_root_path))
+						{
+							$new_mdp_forum = phpbb_hash($mdp);
+
+							// Récupération de l'id de l'utilisateur sur le forum 
+							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+								(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+								(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1')";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+
+							$id_user_forum = $t['user_id'];
+
+							$sql = "UPDATE ".$table_prefix."users SET user_password='$new_mdp_forum' WHERE user_id='$id_user_forum'";
+							$mysqli->query($sql);
+						}
 						
 						$mess .=  "Mot de passe chang&eacute;";
 					}

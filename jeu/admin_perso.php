@@ -846,7 +846,7 @@ if(isset($_SESSION["id_perso"])){
 			<div class='row'>
 				<?php
 				if (isset($_GET['modifier_mdp'])) {
-					echo "	<div class='col-12>";
+					echo "	<div class='col-12'>";
 					echo "	<form method='POST' action='admin_perso.php'>";
 					echo "		<label for='mdp_perso'>Nouveau Mot de passe : </label>";
 					echo "		<input type='text' id='mdp_perso' name='mdp_perso' value='' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'>";
