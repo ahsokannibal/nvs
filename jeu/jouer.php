@@ -3178,7 +3178,7 @@ if($dispo == '1' || $admin){
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td align='center'><?php echo $coutPa_arme_dist; if (possede_lunette_visee($mysqli, $id_perso)) { echo " (+1)"; } ?></td>
+									<td align='center'><?php echo $coutPa_arme_dist; if (possede_lunette_visee($mysqli, $id_perso)) { echo " (+2)"; } ?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
