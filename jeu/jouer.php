@@ -12,6 +12,8 @@ include ('../nb_online.php');
 
 date_default_timezone_set('Europe/Paris');
 
+$id_perso = 0;
+
 // Traitement selection perso
 if (isset($_POST["liste_perso"]) && $_POST["liste_perso"] != "") {
 	
