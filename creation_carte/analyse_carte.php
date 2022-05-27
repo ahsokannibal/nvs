@@ -57,6 +57,9 @@ for ($x_pixel = 0; $x_pixel < $taille_x; $x_pixel++) {
 	}
 }
 
+$sql = "UPDATE carte2 SET coordonnees = CONCAT (x_carte, ';', y_carte)";
+$mysqli->query($sql);
+
 echo "Fin creation carte";
 
 ?>
