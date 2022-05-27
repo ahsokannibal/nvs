@@ -4,6 +4,7 @@ define ("DUREE_TOUR", 46*60*60);
 // Antizerk de 10h
 define ("DUREE_ANTI_ZERK_S", 10*60*60);
 // Connexion a la bdd
+define ("BDD_NAME", "nvs");
 define ("BDD_LOGIN", "root");
 define ("BDD_PASSWORD", "yolo");
 
