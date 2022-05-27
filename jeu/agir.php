@@ -145,11 +145,11 @@ if ($verif_id_perso_session) {
 				}
 			}
 			
-			if ($porteeMax_arme_attaque > 1 && possede_lunette_visee($mysqli, $id)) {
-				$coutPa_arme_attaque = $coutPa_arme_attaque + 2;
-			}
-			
 			if ($verif_arme) {
+
+				if ($porteeMax_arme_attaque > 1 && possede_lunette_visee($mysqli, $id)) {
+					$coutPa_arme_attaque = $coutPa_arme_attaque + 2;
+				}
 			
 				if(!in_bat($mysqli, $id) || (in_bat($mysqli, $id) && $porteeMax_arme_attaque > 1)){
 					
@@ -1158,13 +1158,13 @@ if ($verif_id_perso_session) {
 										$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible','$nom_cible',NOW())";
 										$mysqli->query($sql);
 										
-										echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour ]</a></center>";
+										echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 									}
 									
 									// L'arme fait des dégats de zone
 									if ($degatZone_arme_attaque) {
 										$degats_collat = floor($degats_final / 2);
-										check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+										check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
 									}
 									
 									if ($pv_cible > 0) {
