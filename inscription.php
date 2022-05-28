@@ -468,11 +468,11 @@ if(config_dispo_jeu($mysqli) == '1'){
 			$error =  "Erreur : Veuillez valider les CGU et la charte !";
 		}
 	}
-	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND chef='1'";
+	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND chef='1' AND est_gele='0'";
 	$res_nbb = $mysqli->query($sql_nbb);
 	$nbb = $res_nbb->num_rows;
 	
-	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND chef='1'";
+	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND chef='1' AND est_gele='0'";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
 	
