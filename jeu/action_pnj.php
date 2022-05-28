@@ -250,6 +250,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					
 					//on verifie si le perso est toujours dans la visu du pnj
 					if ($id_pj = perso_visu_pnj($mysqli,$x_i,$y_i,$perception,$dernier_a_i)) {
+						$id_cible = $dernier_a_i;
 						
 						// on regarde si le perso est au CaC
 						if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)){
@@ -482,6 +483,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 						// il n'est plus dans la visu
 						// on recupere le perso le plus proche du pnj
 						if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
+							$id_cible = $id_pj;
 						
 							// recuperation des coordonnées de la cible
 							$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso=$id_pj";
@@ -659,6 +661,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					
 					//on verifie si le perso est toujours dans la visu du pnj
 					if ($id_pj = perso_visu_pnj($mysqli, $x_i,$y_i,$perception,$dernier_a_i)) {
+						$id_cible = $dernier_a_i;
 					
 						// on regarde si le perso est au CaC
 						if(proxi_perso_cible($mysqli,$x_i,$y_i,$dernier_a_i)){
@@ -889,6 +892,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 						// il n'est plus dans la visu
 						// on recupere le perso le plus proche du pnj
 						if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
+							$id_cible = $id_pj;
 						
 							// -- TODO -- //
 							// verif ami des animaux //
@@ -1042,6 +1046,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 							
 							// on recupere le perso le plus proche du pnj
 							if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
+								$id_cible = $id_pj;
 							
 								// recuperation des coordonnées de la cible
 								$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso=$id_pj";
@@ -1178,6 +1183,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					// il n'a pas été attaqué
 					// on recupere le perso le plus proche du pnj
 					if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
+						$id_cible = $id_pj;
 						
 						// -- TODO -- //
 						// verif ami des animaux //
@@ -1332,6 +1338,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 						
 						// on recupere le perso le plus proche du pnj
 						if($id_pj = proche_perso($mysqli,$x_i,$y_i,$perception)){
+							$id_cible = $id_pj;
 						
 							// recuperation des coordonnées de la cible
 							$sql = "SELECT x_perso, y_perso FROM perso WHERE ID_perso='$id_pj'";
