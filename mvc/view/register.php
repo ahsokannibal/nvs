@@ -40,7 +40,7 @@ ob_start();
 						<option value="2">Sud</option>
 					</select>
 					<div class='text-center mt-1'>
-						<span class='text-primary fw-bold'>Persos au Nord : <?= $nbb ?></span> / <span class='text-danger fw-bold'>Persos au Sud : <?= $nbr?> </span>
+						<span class='text-primary fw-bold'>Joueurs actifs au Nord : <?= $nbb ?></span> / <span class='text-danger fw-bold'>Joueurs actifs au Sud : <?= $nbr?> </span>
 					</div>
 				</div>
 				<div class="form-check mb-3">
