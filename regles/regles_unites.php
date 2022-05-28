@@ -171,12 +171,12 @@
 							<tr>
 								<td align='center'><img src='../images_perso/v1/toutou_nord.gif' alt='toutou'><img src='../images_perso/v1/toutou_sud.gif' alt='toutou'></td>
 								<td align='center'>Chien</td>
-								<td align='center'>200</td>
+								<td align='center'>125</td>
 								<td align='center'>10</td>
-								<td align='center'>20</td>
+								<td align='center'>12</td>
 								<td align='center'>5</td>
 								<td align='center'>20</td>
-								<td align='center'>10</td>
+								<td align='center'>0</td>
 								<td align='center'>Les chiens sont des animaux domestiques entraînés à traquer l'ennemi grâce à leur flair très développé. Il est accessible uniquement à partir du grade de Sergent Chef et limité à 1 par bataillon.</td>
 							</tr>
 						</table>
