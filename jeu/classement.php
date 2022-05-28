@@ -55,34 +55,36 @@ if(isset($_GET["top"])){
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
-	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
 	echo "</div>";
-	
-	echo "<br />";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?top=ok\">Les tops 50</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "</center>";
+	echo "<br/>";
+
+	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
 	echo "</center>";
 	echo "<br/>";
-	
-	echo "<center>";
-	echo "	<form method=\"post\" action=\"classement.php\">";
-	echo "	Choix classement :";
-	echo "		<select name=\"choix_class\" onchange=\"this.form.submit()\">";
-	echo "			<OPTION value='1'"; if(isset($_GET["classement"]) && $_GET["classement"] == 1) echo " selected"; echo">Les machines à tuer</option>"; 
-	echo "			<OPTION value='2'"; if(isset($_GET["classement"]) && $_GET["classement"] == 2) echo " selected"; echo">Les habitués des hôpitaux</option>"; 
-	echo "			<OPTION value='3'"; if(isset($_GET["classement"]) && $_GET["classement"] == 3) echo " selected"; echo">Les chasseurs</option>";
-	echo "			<OPTION value='4'"; if(isset($_GET["classement"]) && $_GET["classement"] == 4) echo " selected"; echo">Les picsou</option>";
-	echo "		</select>";
-	echo "		<input type=\"submit\" name=\"ch_c\" value=\"ok\">";
-	echo "	</form>";
-	echo "</center>";
-	echo "<br />";
 	
 	if(isset($_GET["classement"])) {
 		$num_c = $_GET["classement"];
@@ -179,13 +181,31 @@ if(isset($_GET["titre"])){
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
-	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
 	echo "</div>";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?titre=ok\">Les Titres</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "</center>";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
@@ -264,16 +284,34 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
-	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
 	echo "</div>";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "</center>";
+	echo "<br/>";
+
+	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
 	echo "</center>";
 	echo "<br/>";
 	
@@ -489,15 +527,33 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
-	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
 	echo "</div>";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "</center>";
+	echo "<br/>";
+
+	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?super=ok\">Les Supermans</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
 	echo "</center>";
 	echo "<br/>";
@@ -595,14 +651,32 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
-	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
 	echo "</div>";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "</center>";
+	echo "<br/>";
+
+	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
 	echo "</center>";
@@ -656,12 +730,30 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
-	echo "	<a class='btn btn-info' href=\"classement.php\">Classement Global</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
 	echo "</div>";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "</center>";
+	echo "<br/>";
+
+	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
@@ -724,25 +816,72 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Classement Global</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
 	echo "</div>";
+	echo "<br/>";
+
+	echo "<center>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
+	echo "</center>";
+	echo "<br/>";
 	
 	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok\">Les tops 50</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "</center>";
+	echo "<br/>";
+
+	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?titre=ok\">Les Titres</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?training=ok\">Les pros de l'entrainement</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?super=ok\">Les Supermans</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
 	echo "</center>";
 	echo "<br/>";
+
+	$type_perso = 1;
+	if (isset($_GET["type_perso"]))
+	{
+		switch($_GET["type_perso"]) {
+		case "cavalerie":
+			$type_perso = 2;
+			break;
+		case "infanterie":
+			$type_perso = 3;
+			break;
+		case "soigneur":
+			$type_perso = 4;
+			break;
+		case "artillerie":
+			$type_perso = 5;
+			break;
+		case "chien":
+			$type_perso = 6;
+			break;
+		}
+	}
+
+	$order_by = "xp_perso";
+	if (isset($_GET["grade"]))
+	{
+		$order_by = "id_grade";
+	}
 	
 	// recuperation des valeurs en excluant les persos pnj
 	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades 
 			WHERE perso.id_perso = perso_as_grade.id_perso 
 			AND perso_as_grade.id_grade = grades.id_grade
 			AND perso.id_perso > '100'
-			ORDER BY xp_perso DESC";
+			AND perso.type_perso = ".$type_perso."
+			ORDER BY ".$order_by." DESC LIMIT 50";
 	$res = $mysqli->query($sql);
 	
 	
