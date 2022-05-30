@@ -74,7 +74,7 @@ if(isset($_GET["top"])){
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Grosses fortunes</a>";
 	echo "</center>";
 	echo "<br/>";
 
@@ -140,7 +140,7 @@ if(isset($_GET["top"])){
 			echo "<center><h3><font color=darkred>Les Chasseurs</font></h3></center>";
 		}
 		if($class == "or_perso") {
-			echo "<center><h3><font color=darkred>Les Picsou</font></h3></center>";
+			echo "<center><h3><font color=darkred>Grosses fortunes</font></h3></center>";
 		}
 			
 		while($t = $res->fetch_assoc()){
@@ -200,7 +200,7 @@ if(isset($_GET["titre"])){
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Grosses fortunes</a>";
 	echo "</center>";
 	echo "<br/>";
 
@@ -303,7 +303,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Grosses fortunes</a>";
 	echo "</center>";
 	echo "<br/>";
 
@@ -546,7 +546,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Grosses fortunes</a>";
 	echo "</center>";
 	echo "<br/>";
 
@@ -670,7 +670,7 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Grosses fortunes</a>";
 	echo "</center>";
 	echo "<br/>";
 
@@ -749,7 +749,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Grosses fortunes</a>";
 	echo "</center>";
 	echo "<br/>";
 
@@ -835,7 +835,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=3\">Chasseurs</a>";
-	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Fortunés</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=4\">Grosses fortunes</a>";
 	echo "</center>";
 	echo "<br/>";
 
@@ -870,9 +870,11 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	}
 
 	$order_by = "xp_perso";
+	$limit = 50;
 	if (isset($_GET["grade"]))
 	{
 		$order_by = "id_grade";
+		$limit = 50000;
 	}
 	
 	// recuperation des valeurs en excluant les persos pnj
@@ -881,7 +883,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 			AND perso_as_grade.id_grade = grades.id_grade
 			AND perso.id_perso > '100'
 			AND perso.type_perso = ".$type_perso."
-			ORDER BY ".$order_by." DESC LIMIT 50";
+			ORDER BY ".$order_by." DESC LIMIT ".$limit;
 	$res = $mysqli->query($sql);
 	
 	
