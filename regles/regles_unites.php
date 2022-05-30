@@ -93,6 +93,7 @@
 						<li>Une infanterie vaut 2 points de grouillot. Il gagne une solde de 1 thune par tour.</li>
 						<li>Un soigneur vaut 3 points de grouillot. Il gagne une solde de 2 thunes par tour.</li>
 						<li>Une cavalerie lourde vaut 4 points de grouillot. Il gagne une solde de 2 thunes par tour.</li>
+						<li>Une cavalerie légère vaut 3 points de grouillot. Il gagne une solde de 1 thunes par tour.</li>
 						<li>Une artillerie vaut 5 points de grouillot. Il gagne une solde de 3 thunes par tour.</li>
 					</ul></p>
 					<p>Vous n'avez pas l'obligation d'utiliser tout vos PG, ces derniers seront alors conservés pour une utilisation postérieure.<br />
@@ -178,6 +179,17 @@
 								<td align='center'>20</td>
 								<td align='center'>0</td>
 								<td align='center'>Les chiens sont des animaux domestiques entraînés à traquer l'ennemi grâce à leur flair très développé. Il est accessible uniquement à partir du grade de Sergent Chef et limité à 1 par bataillon.</td>
+							</tr>
+							<tr>
+								<td align='center'><img src='../images_perso/v1/cavalerie_nord.gif' alt='cavalerie'><img src='../images_perso/v1/cavalerie_sud.gif' alt='cavalerie'></td>
+								<td align='center'>Cavalerie Légère</td>
+								<td align='center'>400</td>
+								<td align='center'>8</td>
+								<td align='center'>12</td>
+								<td align='center'>6</td>
+								<td align='center'>60</td>
+								<td align='center'>0</td>
+								<td align='center'>La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d'ennemis.</td>
 							</tr>
 						</table>
 					</div>

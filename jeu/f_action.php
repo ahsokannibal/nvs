@@ -3717,22 +3717,31 @@ function charge_cible_terrain_impraticable($mysqli, $id_perso, $nom_perso, $imag
  */
 function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $couleur_clan_perso, $grade_perso, $pa_perso, $xp_perso, $x_perso_final, $y_perso_final, $nb_deplacements, $idPerso_carte) {
 	
-	$gain_bonus_pc = true;
-	
 	$sql = "UPDATE carte SET occupee_carte='1', idPerso_carte='$id_perso', image_carte='$image_perso' WHERE x_carte = $x_perso_final AND y_carte = $y_perso_final";
 	$mysqli->query($sql);
 	
-	$sql = "SELECT gain_xp_tour FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT gain_xp_tour, type_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
 	$gain_xp_tour_perso = $t['gain_xp_tour'];
+	$type_perso = $t['type_perso'];
 	if ($gain_xp_tour_perso >= 20) {
 		$max_xp_tour_atteint = true;
 	}
 	else {
 		$max_xp_tour_atteint = false;
 	}
+
+	// Bonus PC cavalerie lourde
+	$gain_bonus_pc = false;
+	if ($type_perso == 2 && $idPerso_carte < 200000)
+		$gain_bonus_pc = true;
+
+	// Bonus charge 30 pour cav lourde, 20 pour cav légère
+	$base_bonus_degats_charge = 30;
+	if ($type_perso == 7)
+		$base_bonus_degats_charge = 20;
 	
 	// Mise à jour du perso
 	$sql = "UPDATE perso SET pm_perso = pm_perso - $nb_deplacements, x_perso = $x_perso_final, y_perso = $y_perso_final WHERE id_perso='$id_perso'";
@@ -3897,7 +3906,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				// Le perso touche sa cible
 				
 				// calcul des dégats
-				$bonus_degats_charge = 30 - $nb_attaque*10;
+				$bonus_degats_charge = max(0, $base_bonus_degats_charge - $nb_attaque*10);
 				$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 				
 				$degats_tmp = calcul_des_attaque($degats_arme, $valeur_des_arme);

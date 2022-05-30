@@ -108,14 +108,19 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (1, 1),
 (1, 2),
+(1, 7),
 (2, 1),
 (2, 2),
+(2, 7),
 (3, 1),
 (3, 2),
+(3, 7),
 (4, 1),
 (4, 2),
+(4, 7),
 (5, 1),
 (5, 2),
+(5, 7),
 (6, 3),
 (7, 3),
 (8, 3),
@@ -127,18 +132,23 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (14, 5),
 (15, 1),
 (15, 2),
+(15, 7),
 (16, 1),
 (16, 2),
+(16, 7),
 (17, 3),
 (18, 1),
 (18, 2),
+(18, 7),
 (19, 1),
 (19, 2),
+(19, 7),
 (20, 3),
 (21, 3),
 (22, 5),
 (23, 1),
 (23, 2);
+(23, 7);
 
 -- --------------------------------------------------------
 
@@ -522,6 +532,7 @@ INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `percept
 (4, 'Soigneur', 'Les soigneurs sont des unités nordistes/sudistes non combattantes dont le rôle est uniquement de soigner les troupes parties sur le front. Plus rapides que des infanteries classiques, elles doivent malgré tout rester prudentes sur le front.', 4, 10, 30, 400, 10, 6, 'soigneur', 3),
 (5, 'Artillerie', 'La plus puissante de toutes les unités combattantes. L\'artillerie est tout simplement extrèmement puissante, pouvant réduire en miette tout un bataillon en très peu de temps. Mais c\'est une unité extrèmement peu mobile et qui ne peut se battre au corps à corps et donc qui nécessite beaucoup d\'attention et de protection.', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
 (6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 0, 20, 125, 10, 12, 'toutou', 1);
+(7, 'Cavalerie légère', 'La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d'ennemis.', 6, 0, 60, 400, 8, 12, 'cavalerie', 3),
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

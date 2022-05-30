@@ -4428,7 +4428,7 @@ if($dispo == '1' || $admin){
 													// Actions selon le type d'unité
 													
 													// Cavalerie et cavalerie lourde
-													if (($type_perso == 1 || $type_perso == 2) && $pm_perso >= 4 && !in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
+													if (($type_perso == 1 || $type_perso == 2 || $type_perso == 7) && $pm_perso >= 4 && !in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
 														// Charge = 999
 														echo '<option value="999">Charger (tous les PA)</option>';
 													}

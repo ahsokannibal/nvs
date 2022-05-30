@@ -838,7 +838,7 @@ if($dispo == '1' || $admin) {
 					if ($id_action=='999') {
 						
 						// On verifie que le perso soit bien un cavalier
-						$sql ="SELECT type_perso FROM perso WHERE id_perso='$id_perso' AND (type_perso='1' OR type_perso='2')";
+						$sql ="SELECT type_perso FROM perso WHERE id_perso='$id_perso' AND (type_perso='1' OR type_perso='2' OR type_perso='7')";
 						$res = $mysqli->query($sql);
 						$verif_charge = $res->num_rows;
 						
