@@ -966,269 +966,281 @@ if ($verif_id_perso_session) {
 							//la cible est encore en vie
 							if ($pv_cible > 0) {
 
-								// maj dernierAttaquant_i
-								$sql = "UPDATE instance_pnj SET dernierAttaquant_i = $id WHERE idInstance_pnj = '$id_cible'";
-								$mysqli->query($sql);
-										
-								echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
-									
-								// Calcul touche
-								$touche = mt_rand(0,100);
-								
-								// Où se trouve la cible ?
-								$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-								$res = $mysqli->query($sql);
-								$t = $res->fetch_assoc();
-								
-								$fond_carte_cible = $t['fond_carte'];
-								
-								$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
-								
-								// Bonus Précision batiment
-								$bonus_precision_bat = 0;
-								
-								if (in_bat($mysqli, $id)) {
-									
-									$id_inst_bat_perso = in_bat($mysqli, $id);
-									
-									$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat_perso'";
+								// -------------
+								// - ANTI ZERK -
+								// -------------
+								$verif_anti_zerk = gestion_anti_zerk($mysqli, $id);
+
+								if ($verif_anti_zerk) {
+
+									// maj dernierAttaquant_i
+									$sql = "UPDATE instance_pnj SET dernierAttaquant_i = $id WHERE idInstance_pnj = '$id_cible'";
+									$mysqli->query($sql);
+
+									echo "Vous avez lancé une attaque sur <b>$nom_cible [$id_cible]</b> avec $nom_arme_attaque<br/>";
+
+									// Calcul touche
+									$touche = mt_rand(0,100);
+
+									// Où se trouve la cible ?
+									$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
 									$res = $mysqli->query($sql);
 									$t = $res->fetch_assoc();
-									
-									$id_bat_perso = $t['id_batiment'];
-									
-									$bonus_precision_bat = get_bonus_attaque_from_batiment($id_bat_perso);
-								}
-								else if (in_train($mysqli, $id)) {
-									$bonus_precision_bat = -30;
-								}
-								
-								$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain + $bonus_precision_bat;
-								
-								$bonus_precision_objet = 0;
-								if ($porteeMax_arme_attaque == 1) {
-									$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id);
-								}
-								else {
-									$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id);
-								}
-								
-								$precision_final += $bonus_precision_objet;
-								
-								echo "Votre score de touche : ".$touche."<br>";
-								echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque;
-								if ($bonus_precision_bat != 0) {
-									echo " -- Bonus du batiment : ".$bonus_precision_bat;
-								}
-								echo " -- Defense cible : ".$bonus_cible." -- Defense terrain : ".$bonus_defense_terrain." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
-								
-								// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
-								if ($touche <= $precision_final && $touche < 98) {
-					
-									// calcul degats arme
-									$degats_tmp 	= calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
-									$degats_final 	= $degats_tmp - $protec_cible;
-									
-									// Insertion log attaque
-									$message_log = $id.' a attaqué '.$id_cible;
-									$type_action = "Attaque ".$id_arme_attaque;
-									$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
-									$mysqli->query($sql);
-									
-									if($degats_final < 0) {
-										$degats_final = 0;
+
+									$fond_carte_cible = $t['fond_carte'];
+
+									$bonus_defense_terrain = get_bonus_defense_terrain($fond_carte_cible, $porteeMax_arme_attaque);
+
+									// Bonus Précision batiment
+									$bonus_precision_bat = 0;
+
+									if (in_bat($mysqli, $id)) {
+
+										$id_inst_bat_perso = in_bat($mysqli, $id);
+
+										$sql = "SELECT id_batiment FROM instance_batiment WHERE id_instanceBat='$id_inst_bat_perso'";
+										$res = $mysqli->query($sql);
+										$t = $res->fetch_assoc();
+
+										$id_bat_perso = $t['id_batiment'];
+
+										$bonus_precision_bat = get_bonus_attaque_from_batiment($id_bat_perso);
 									}
-									
-									if ($touche <= 2) {
-										// Coup critique ! Dégats et Gains PC X 2
-										$degats_final = $degats_final * 2;
+									else if (in_train($mysqli, $id)) {
+										$bonus_precision_bat = -30;
 									}
-									
-									// TODO - calcul gain XP selon pnj
-									$gain_xp = mt_rand(1, 4);
-									
-									// Limite 3XP par attaque de Gatling
-									if ($id_arme_attaque == 14 && $gain_xp > 3) {
-										$gain_xp = 3;
+
+									$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain + $bonus_precision_bat;
+
+									$bonus_precision_objet = 0;
+									if ($porteeMax_arme_attaque == 1) {
+										$bonus_precision_objet = getBonusPrecisionCacObjet($mysqli, $id);
 									}
-									
-									if ($gain_xp_tour_perso + $gain_xp > 20) {
-										$gain_xp = 20 - $gain_xp_tour_perso;
-										$max_xp_tour_atteint = true;
+									else {
+										$bonus_precision_objet = getBonusPrecisionDistObjet($mysqli, $id);
 									}
-									
-									if ($id_arme_attaque == 10) {
-											
-										// Seringue
-										if ($pv_cible + $degats_final >= $pvMax_cible) {
-											$degats_final = $pvMax_cible - $pv_cible;
+
+									$precision_final += $bonus_precision_objet;
+
+									echo "Votre score de touche : ".$touche."<br>";
+									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque;
+									if ($bonus_precision_bat != 0) {
+										echo " -- Bonus du batiment : ".$bonus_precision_bat;
+									}
+									echo " -- Defense cible : ".$bonus_cible." -- Defense terrain : ".$bonus_defense_terrain." -- Bonus Précision objet : ".$bonus_precision_objet.")<br>";
+
+									// Score touche <= precision arme utilisée - bonus cible pour l'attaque = La cible est touchée
+									if ($touche <= $precision_final && $touche < 98) {
+
+										// calcul degats arme
+										$degats_tmp 	= calcul_des_attaque($degatMin_arme_attaque, $valeur_des_arme_attaque);
+										$degats_final 	= $degats_tmp - $protec_cible;
+
+										// Insertion log attaque
+										$message_log = $id.' a attaqué '.$id_cible;
+										$type_action = "Attaque ".$id_arme_attaque;
+										$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, degats, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$degats_tmp', '$touche', '$message_log')";
+										$mysqli->query($sql);
+
+										if($degats_final < 0) {
+											$degats_final = 0;
 										}
-											
-										// mise a jour des pv
-										$sql = "UPDATE instance_pnj SET pv_i = pv_i + $degats_final WHERE idInstance_pnj = '$id_cible'";
-										$mysqli->query($sql);
-											
-										echo "<br>Vous avez soigné $degats_final dégâts à la cible.<br><br>";
-											
-									} else if ($id_arme_attaque == 11) {
-											
-										// Bandage
-										echo "<br>Vous avez soigné $degats_final malus à la cible.<br><br>";
-											
-									} else {
-									
-										// mise a jour des pv du pnj
-										$sql = "UPDATE instance_pnj SET pv_i = pv_i - $degats_final WHERE idInstance_pnj = '$id_cible'";
-										$mysqli->query($sql);
-										
-										echo "<br>Vous avez infligé <b>$degats_final</b> dégâts à la cible.<br><br>";
-									}
-									
-									echo "Vous avez gagné <b>$gain_xp</b> xp.";
-									
-									// maj gain xp / pi perso
-									$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'";
-									$mysqli->query($sql);
-									
-									// Passage grade grouillot
-									passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
-									
-									if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
-										
-										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a soigné ','$id_cible','<b>$nom_cible</b>',' ( Précision : $touche / $precision_final ; Soins : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";
-										$mysqli->query($sql);
-										
-									} else {
-										
-										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<b>$nom_cible</b>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";
-										$mysqli->query($sql);
-										
-									}
-									
-									// recuperation des données du pnj aprés attaque
-									$sql = "SELECT id_pnj, pv_i, x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
-									$res = $mysqli->query($sql);
-									$tab = $res->fetch_assoc();
-									
-									$pv_cible = $tab["pv_i"];
-									$x_cible = $tab["x_i"];
-									$y_cible = $tab["y_i"];
-									$id_pnj = $tab["id_pnj"];
-										
-									// il est mort
-									if ($pv_cible <= 0) {
-									
-										echo "Vous avez tué votre cible ! <font color=red>Félicitations.</font>";
-									
-										// on l'efface de la carte
-										$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
-										$mysqli->query($sql);
-										
-										// on le delete
-										$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
-										$mysqli->query($sql);
-										
-										// verification que le perso n'a pas déjà tué ce type de pnj
-										$sql_v = "SELECT id_pnj FROM perso_as_killpnj WHERE id_pnj='$id_pnj' AND id_perso='$id'";
-										$res_v = $mysqli->query($sql_v);
-										$verif_pnj = $res_v->num_rows;
-										
-										// nb_pnj 
-										$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso='$id'";
-										$mysqli->query($sql);
-										
-										if($verif_pnj == 0){
-											// il n'a jamais tué de pnj de ce type => insert
-											$sql = "INSERT INTO perso_as_killpnj VALUES('$id','$id_pnj','1')";
+
+										if ($touche <= 2) {
+											// Coup critique ! Dégats et Gains PC X 2
+											$degats_final = $degats_final * 2;
+										}
+
+										// TODO - calcul gain XP selon pnj
+										$gain_xp = mt_rand(1, 4);
+
+										// Limite 3XP par attaque de Gatling
+										if ($id_arme_attaque == 14 && $gain_xp > 3) {
+											$gain_xp = 3;
+										}
+
+										if ($gain_xp_tour_perso + $gain_xp > 20) {
+											$gain_xp = 20 - $gain_xp_tour_perso;
+											$max_xp_tour_atteint = true;
+										}
+
+										if ($id_arme_attaque == 10) {
+
+											// Seringue
+											if ($pv_cible + $degats_final >= $pvMax_cible) {
+												$degats_final = $pvMax_cible - $pv_cible;
+											}
+
+											// mise a jour des pv
+											$sql = "UPDATE instance_pnj SET pv_i = pv_i + $degats_final WHERE idInstance_pnj = '$id_cible'";
 											$mysqli->query($sql);
-										}
-										else { 
-											// il en a déjà tué => update
-											$sql = "UPDATE perso_as_killpnj SET nb_pnj=nb_pnj+1 WHERE id_perso='$id' AND id_pnj='$id_pnj'";
+
+											echo "<br>Vous avez soigné $degats_final dégâts à la cible.<br><br>";
+
+										} else if ($id_arme_attaque == 11) {
+
+											// Bandage
+											echo "<br>Vous avez soigné $degats_final malus à la cible.<br><br>";
+
+										} else {
+
+											// mise a jour des pv du pnj
+											$sql = "UPDATE instance_pnj SET pv_i = pv_i - $degats_final WHERE idInstance_pnj = '$id_cible'";
 											$mysqli->query($sql);
+
+											echo "<br>Vous avez infligé <b>$degats_final</b> dégâts à la cible.<br><br>";
 										}
-										
-										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a tué','$id_cible','<b>$nom_cible</b>','',NOW(),'0')";
+
+										echo "Vous avez gagné <b>$gain_xp</b> xp.";
+
+										// maj gain xp / pi perso
+										$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'";
 										$mysqli->query($sql);
-										
-										// maj cv
-										$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible','$nom_cible',NOW())";
-										$mysqli->query($sql);
-										
-										echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
-									}
-									
-									// L'arme fait des dégats de zone
-									if ($degatZone_arme_attaque) {
-										$degats_collat = floor($degats_final / 2);
-										check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
-									}
-									
-									if ($pv_cible > 0) {
-									?>
+
+										// Passage grade grouillot
+										passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
+
+										if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
+
+											// maj evenement
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a soigné ','$id_cible','<b>$nom_cible</b>',' ( Précision : $touche / $precision_final ; Soins : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";
+											$mysqli->query($sql);
+
+										} else {
+
+											// maj evenement
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<b>$nom_cible</b>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";
+											$mysqli->query($sql);
+
+										}
+
+										// recuperation des données du pnj aprés attaque
+										$sql = "SELECT id_pnj, pv_i, x_i, y_i FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
+										$res = $mysqli->query($sql);
+										$tab = $res->fetch_assoc();
+
+										$pv_cible = $tab["pv_i"];
+										$x_cible = $tab["x_i"];
+										$y_cible = $tab["y_i"];
+										$id_pnj = $tab["id_pnj"];
+
+										// il est mort
+										if ($pv_cible <= 0) {
+
+											echo "Vous avez tué votre cible ! <font color=red>Félicitations.</font>";
+
+											// on l'efface de la carte
+											$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_cible' AND y_carte='$y_cible'";
+											$mysqli->query($sql);
+
+											// on le delete
+											$sql = "DELETE FROM instance_pnj WHERE idInstance_pnj='$id_cible'";
+											$mysqli->query($sql);
+
+											// verification que le perso n'a pas déjà tué ce type de pnj
+											$sql_v = "SELECT id_pnj FROM perso_as_killpnj WHERE id_pnj='$id_pnj' AND id_perso='$id'";
+											$res_v = $mysqli->query($sql_v);
+											$verif_pnj = $res_v->num_rows;
+
+											// nb_pnj 
+											$sql = "UPDATE perso SET nb_pnj=nb_pnj+1 WHERE id_perso='$id'";
+											$mysqli->query($sql);
+
+											if($verif_pnj == 0){
+												// il n'a jamais tué de pnj de ce type => insert
+												$sql = "INSERT INTO perso_as_killpnj VALUES('$id','$id_pnj','1')";
+												$mysqli->query($sql);
+											}
+											else { 
+												// il en a déjà tué => update
+												$sql = "UPDATE perso_as_killpnj SET nb_pnj=nb_pnj+1 WHERE id_perso='$id' AND id_pnj='$id_pnj'";
+												$mysqli->query($sql);
+											}
+
+											// maj evenement
+											$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a tué','$id_cible','<b>$nom_cible</b>','',NOW(),'0')";
+											$mysqli->query($sql);
+
+											// maj cv
+											$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible','$nom_cible',NOW())";
+											$mysqli->query($sql);
+
+											echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
+										}
+
+										// L'arme fait des dégats de zone
+										if ($degatZone_arme_attaque) {
+											$degats_collat = floor($degats_final / 2);
+											check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+										}
+
+										if ($pv_cible > 0) {
+?>
 										<br />
 										<form action="agir.php" method="post">
 											<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
 											<input type="submit" name="re_attaque" value="attaquer à nouveau" />
 										</form> 
-										
+
 										<br />
-									<?php
-										echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
-									}						
-								}
-								else { // la cible a esquivé l'attaque
-					
-									echo "<br>Vous avez raté votre cible.<br><br>";
-									
-									if ($touche >= 98) {
-										// Echec critique !
-										// Ajout d'un malus supplémentaire à l'attaquant
-										$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
-									} else {
-										// ajout malus cible
-										$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 1 WHERE idInstance_pnj='$id_cible'";
+<?php
+											echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
+										}						
 									}
-									$mysqli->query($sql);
-									
-									// Insertion log attaque
-									$message_log = $id.' a raté son attaque sur '.$id_cible;
-									$type_action = "Attaque ".$id_arme_attaque;
-									$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
-									$mysqli->query($sql);
-										
-									// maj evenement
-									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
-									$mysqli->query($sql);
-									
-									if ($pv_cible > 0) {
-										
-										if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
-											$texte_submit = "soigner à nouveau";
+									else { // la cible a esquivé l'attaque
+
+										echo "<br>Vous avez raté votre cible.<br><br>";
+
+										if ($touche >= 98) {
+											// Echec critique !
+											// Ajout d'un malus supplémentaire à l'attaquant
+											$sql = "UPDATE perso SET bonus_perso = bonus_perso - 1 WHERE id_perso='$id'";
 										} else {
-											$texte_submit = "attaquer à nouveau";
+											// ajout malus cible
+											$sql = "UPDATE instance_pnj SET bonus_i = bonus_i - 1 WHERE idInstance_pnj='$id_cible'";
 										}
-									?>
+										$mysqli->query($sql);
+
+										// Insertion log attaque
+										$message_log = $id.' a raté son attaque sur '.$id_cible;
+										$type_action = "Attaque ".$id_arme_attaque;
+										$sql = "INSERT INTO log (date_log, id_perso, type_action, id_arme, pourcentage, message_log) VALUES (NOW(), '$id', '$type_action', '$id_arme_attaque', '$touche', '$message_log')";
+										$mysqli->query($sql);
+
+										// maj evenement
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_cible,'<b>$nom_cible</b>','a esquivé l\'attaque de','$id','<font color=$couleur_clan_perso><b>$nom_perso</b></font>',' ( Précision : $touche / $precision_final ; Gain XP : 0)',NOW(),'0')";
+										$mysqli->query($sql);
+
+										if ($pv_cible > 0) {
+
+											if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
+												$texte_submit = "soigner à nouveau";
+											} else {
+												$texte_submit = "attaquer à nouveau";
+											}
+?>
 										<br />
 										<form action="agir.php" method="post">
 											<input type="hidden" name="re_attaque_hid" value="<?php echo $id_cible.",".$id_arme_attaque;?>" />
 											<input type="submit" name="re_attaque" value="<?php echo $texte_submit; ?>" />
 										</form> 
-										
+
 										<br />
-									<?php
-										echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
+<?php
+											echo "<br/><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
+										}
+
 									}
-					
+
+									//mise à jour des pa
+									$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_arme_attaque WHERE id_perso='$id'";
+									$res = $mysqli->query($sql);
 								}
-								
-								//mise à jour des pa
-								$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_arme_attaque WHERE id_perso='$id'";
-								$res = $mysqli->query($sql);
-							}			
+								else {
+									echo "Loi anti-zerk non respectée !";
+									echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
+								}
+							}
 							else {
 								
 								//la cible est déjà morte
