@@ -168,8 +168,12 @@ if($dispo == '1' || $admin){
 								
 							} else {
 						
-								// Cavalerie Lourde
-								if (isset($_POST["2"])) {
+								// Cavalerie lourde et légère
+								if (isset($_POST["2"]) || isset($_POST["7"])) {
+
+									$id_unite = 2;
+									if (isset($_POST["7"]))
+										$id_unite = 7;
 									
 									// Besoin de 3PA pour recruter
 									if ($pa_perso >= 3) {
@@ -195,7 +199,7 @@ if($dispo == '1' || $admin){
 										$pg_restant = $pg - $pg_utilise;
 										
 										// Récupérer coût PG unite 
-										$sql = "SELECT cout_pg, nom_unite, perception_unite, protection_unite, recup_unite, pv_unite, pa_unite, pm_unite, image_unite FROM type_unite WHERE id_unite='2'";
+										$sql = "SELECT cout_pg, nom_unite, perception_unite, protection_unite, recup_unite, pv_unite, pa_unite, pm_unite, image_unite FROM type_unite WHERE id_unite='.$id_unite.'";
 										$res = $mysqli->query($sql);
 										$tab = $res->fetch_assoc();
 										
@@ -251,8 +255,8 @@ if($dispo == '1' || $admin){
 											$bataillon = addslashes($bataillon);
 											
 											// Créer nouveau Perso et la placer dans ce même batiment
-											$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
-													VALUES ('$id_joueur', '2', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
+											$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, paMax_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+													VALUES ('$id_joueur', $id_unite, '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', $pa_unite, '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
 											$mysqli->query($sql);
 											
 											// Récupération de l'id du perso créé 
