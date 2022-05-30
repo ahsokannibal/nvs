@@ -145,7 +145,7 @@ ob_start();
 			<hr />
 			<a href="faq.php" class='link-light'>FAQ</b></a>
 			<hr />
-			<a href="/forum" class='link-light'>Le Forum</b></a>
+			<a href="http://forum.persee.ovh/" class='link-light'>Le Forum</b></a>
 			<hr />
 			<a href="jeu/classement.php" class='link-light'>Les classements</b></a>
 			<hr />
