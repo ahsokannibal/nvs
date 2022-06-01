@@ -155,7 +155,7 @@
 								<td align='center'>6</td>
 								<td align='center'>4</td>
 								<td align='center'>30</td>
-								<td align='center'>10</td>
+								<td align='center'>0</td>
 								<td align='center'>Les soigneurs sont des unités Nordistes/Sudistes non combattantes dont le rôle est uniquement de soigner les troupes parties sur le front. Plus rapides que des infanteries classiques, ces unités doivent malgré tout rester prudentes sur le front.</td>
 							</tr>
 							<tr>
@@ -188,7 +188,7 @@
 								<td align='center'>12</td>
 								<td align='center'>6</td>
 								<td align='center'>60</td>
-								<td align='center'>0</td>
+								<td align='center'>5</td>
 								<td align='center'>La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d'ennemis.</td>
 							</tr>
 						</table>
