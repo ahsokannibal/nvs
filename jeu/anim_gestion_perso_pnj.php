@@ -298,7 +298,7 @@ if($dispo == '1' || $admin){
 							$mysqli->query($unlock);
 							
 							// Creation compte forum 
-							$user_row = array(
+						/*	$user_row = array(
 								'id_perso'				=> $id,
 								'username'				=> $nom_perso,
 								'user_password'			=> phpbb_hash($old_mdp_joueur),
@@ -314,6 +314,7 @@ if($dispo == '1' || $admin){
 								'user_inactive_time'	=> 0,
 							);
 							user_add($user_row);
+							*/
 							
 							if ($bat_spawn_dispo) {
 								// On met le perso dans le batiment
