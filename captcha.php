@@ -18,7 +18,7 @@ $tab_mot			= str_split($mot);
 $largeur 			= 180;
 $hauteur 			= 24;
 $milieuHauteur 		= ($hauteur / 2) - 8;
-$_SESSION["code"]	= $mot;
+$_SESSION["captcha"] = $mot;
 
 $image 		= imagecreatetruecolor($largeur, $hauteur);
 $background = array(

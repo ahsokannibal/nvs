@@ -2,10 +2,19 @@
 
 body{
 	background:#828282;
+	background-image: url("../img/bg/grey_rock.png");
 }
 
 .bg-gray-300 {
-	background:#969696;
+	background-color: rgba(128, 128, 128,0.5);
+}
+
+.bg-gray-light {
+	background-color: rgba(236, 236, 236,0.3);
+}
+
+.bg-white-200 {
+	background-color: rgba(255, 255, 255,0.3);
 }
 
 .h-6 {
@@ -13,7 +22,18 @@ body{
 }
 
 .w-6 {
-	height:1.5rem;
+	width:1.5rem;
+}
+
+.warning-icon-lg {
+	height:2.5rem;
+	width:2.5rem;
+}
+
+.maintenance-icon-lg {
+	height:3.5rem;
+	width:3.5rem;
+	transform:rotate(45deg);
 }
 
 .rotate-20deg {
@@ -39,4 +59,189 @@ body{
 .news {
 	overflow-y: scroll;
 	text-overflow: "";
+}
+
+/* CSS de la carte */
+.map_bg{
+	background-color:#d4be95;
+}
+
+.tile{
+	width:40px !important;
+	height:40px !important;
+	background-size: 100%;
+	background-repeat:no-repeat;
+	padding:0;
+	margin:0;
+	/* border:1px solid rgb(33,37,41); */
+}
+
+.tile-pixel{
+	width:4px !important;
+	height:4px !important;
+	background-size: 100%;
+	background-repeat:no-repeat;
+	padding:0;
+	margin:0;
+	font-size:2px;
+	/* border:1px solid rgb(33,37,41); */
+}
+
+.selected-line {
+	background-color:rgba(129,156,84,1);
+	box-sizing:content-box;
+}
+
+.selected-line.x {
+	border-left-width:1px !important;
+	border-right-width:1px !important;
+	border-left-style:dashed !important;
+	border-right-style:dashed !important;
+	border-left-color:rgb(248,249,250);
+	border-right-color:rgb(248,249,250);
+}
+
+.selected-line.y {
+	border-top-width:1px !important;
+	border-bottom-width:1px !important;
+	border-top-style:dashed !important;
+	border-bottom-style:dashed !important;
+	border-top-color:rgb(248,249,250);
+	border-bottom-color:rgb(248,249,250);
+}
+
+.ground{
+
+}
+
+.ground-0{
+	background-color:rgba(39,83,107,1);
+	background-image: url('../img/grounds/space.png');
+}
+
+.ground-1{/*grass*/
+	background-color:rgba(129,156,84,1);
+	background-image: url('../img/grounds/v2/grass.png');
+}
+.ground-2{/*hill*/
+	background-color:rgba(96,110,70,1);
+	background-image: url('../img/grounds/v2/hill.png');
+}
+.ground-3{/*mountain*/
+	background-color:rgba(134,118,89,1);
+	background-image: url('../img/grounds/v2/mountain.png');
+}
+.ground-4{
+	background-color:rgba(215,197,101,1);
+	background-image: url('../img/grounds/4.gif');
+}
+.ground-5{
+	background-color:rgba(255,255,255,1);
+	background-image: url('../img/grounds/5.gif');
+}
+.ground-6{
+	background-color:rgba(169,177,166,1);
+	background-image: url('../img/grounds/6.gif');
+}
+.ground-7{/*forest*/
+	background-color:rgba(60,86,33,1);
+	background-image: url('../img/grounds/v2/forest.png');
+}
+.ground-8{
+	background-color:rgba(92,191,207,1);
+	background-image: url('../img/grounds/8.gif');
+}
+.ground-9{
+	background-color:rgba(39,141,227,1);
+	background-image: url('../img/grounds/9.gif');
+}
+
+/* terrains version pixel */
+.ground-pixel-1{/*grass*/
+	background-color:rgba(129,156,84,1);
+}
+.ground-pixel-2{/*hill*/
+	background-color:rgba(96,110,70,1);
+}
+.ground-pixel-3{/*mountain*/
+	background-color:rgba(134,118,89,1);
+}
+.ground-pixel-4{
+	background-color:rgba(215,197,101,1);
+}
+.ground-pixel-5{
+	background-color:rgba(255,255,255,1);
+}
+.ground-pixel-6{
+	background-color:rgba(169,177,166,1);
+}
+.ground-pixel-7{/*forest*/
+	background-color:rgba(60,86,33,1);
+}
+.ground-pixel-8{
+	background-color:rgba(92,191,207,1);
+}
+.ground-pixel-9{
+	background-color:rgba(39,141,227,1);
+}
+
+/* terrains version svg */
+.ground-svg-1{/*grass*/
+	fill:rgba(129,156,84,1);
+}
+.ground-svg-2{/*hill*/
+	fill:rgba(96,110,70,1);
+}
+.ground-svg-3{/*mountain*/
+	fill:rgba(134,118,89,1);
+}
+.ground-svg-4{
+	fill:rgba(215,197,101,1);
+}
+.ground-svg-5{
+	fill:rgba(255,255,255,1);
+}
+.ground-svg-6{
+	fill:rgba(169,177,166,1);
+}
+.ground-svg-7{/*forest*/
+	fill:rgba(60,86,33,1);
+}
+.ground-svg-8{
+	fill:rgba(92,191,207,1);
+}
+.ground-svg-9{
+	fill:rgba(39,141,227,1);
+}
+
+.tile-perso{
+	position:relative;
+}
+
+.tile-pixel-perso{
+	background-color:rgba(0,0,0,1);
+}
+
+.tile-perso-id {
+	position:absolute;
+	bottom:0;
+	width:100%;
+	text-align:center;
+	font-weight:bold;
+}
+
+.nord.color {
+	color:rgba(25,95,190,1);
+}
+
+.sud.color {
+	color:rgba(190,25,25,1);
+}
+
+.outlaw.color {
+	color:;
+}
+
+.indien.color {
+	color:;
 }
