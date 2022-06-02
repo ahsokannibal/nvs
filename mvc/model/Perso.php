@@ -54,6 +54,11 @@ class Perso extends Model
 		return $this->$name;
 	}
 
+	/**
+     * Vérifie que le perso existe
+     *
+     * @return bool
+     */
 	public function persoExist($id){
 		$db = $this->dbConnectPDO();
 		
@@ -67,6 +72,11 @@ class Perso extends Model
 		return $result;
 	}
 	
+	/**
+     * Récupère les infos du perso
+     *
+     * @return class Perso
+     */
 	public function getPerso($id,$attributs = []){
 		$db = $this->dbConnectPDO();
 		
@@ -84,6 +94,59 @@ class Perso extends Model
 		$request->setFetchMode(PDO::FETCH_CLASS,get_class($this));
 		$result = $request->fetch();
 
+		return $result;
+	}
+	
+	/**
+     * Récupère le nombre de personnages actifs
+     *
+     * @return int
+     */
+	 public function countPersos($camp=false){
+		$db = $this->dbConnectPDO();
+		
+		if($camp){
+			$query = 'SELECT COUNT(*) FROM perso WHERE est_gele="0" AND clan=:camp';
+		}else{
+			$query = 'SELECT COUNT(*) FROM perso WHERE est_gele="0"';
+		}
+
+		$request = $db->prepare($query);
+		$request->bindParam('camp', $camp, PDO::PARAM_INT);
+		$request->execute();
+		$request->setFetchMode(PDO::FETCH_NUM);
+		$result = $request->fetch();
+
+		return $result[0];
+	 }
+	
+	/**
+     * Savoir si l'utilisateur d'un personnage est admin, anim, ou rédacteur
+     *
+     * @return bool
+     */
+	public function is($id, $profil){
+		$db = $this->dbConnectPDO();
+
+		switch($profil){
+			case 'admin':
+				$profil = "admin_perso";
+				break;
+			case 'anim':
+				$profil = "animateur";
+				break;
+			case 'redac':
+				$profil = "redacteur";
+				break;
+			default:
+		}
+		$query = 'SELECT '.$profil.' FROM joueur INNER JOIN perso ON perso.id_perso=:id AND perso.idJoueur_perso  = joueur.id_joueur';
+		
+		$request = $db->prepare($query);
+		$request->bindParam('id', $id, PDO::PARAM_INT);
+		$request->execute();
+		$result = (boolean) $request->fetchColumn();
+		
 		return $result;
 	}
 	

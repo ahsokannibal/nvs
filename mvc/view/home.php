@@ -1,105 +1,28 @@
 <?php
 $title = "";
 
+/* ---Header--- */
+ob_start();
+?>
+<div class="row justify-content-center text-center">
+	<div class="col col-md-6">
+		<h2 class='mb-3'>LE JEU</h2>
+		<nav>
+			<a class="btn btn-primary" href="/jeu/jouer.php">COUCOU</a>
+		</nav>
+	</div>
+</div>
+<?php
+$header = ob_get_clean();
+
 /* ---Content--- */
 ob_start();
 ?>
 <div class="row justify-content-center">
-	<div class="col-11 col-sm-3 mb-4 mb-sm-0">
-		<div class='row pt-4'>
-			<h4>
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-				  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
-				</svg>
-				Connexion
-			</h4>
-			<?php
-				if (isset($_GET['nouveau_tour']) && $_GET['nouveau_tour'] == 'ok'):
-			?>
-				<p class='alert alert-danger fw-bold' role="alert">
-					<svg xmlns="http://www.w3.org/2000/svg" class="" width='26' height='26' fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-					</svg>
-					Nouveau tour
-				</p>
-			<?php
-				endif;
-			?>
-			<form class='' action="login.php" method="post" name="login" id="login">
-				<div class="mb-3">
-					<label for="pseudo" class='form-label visually-hidden'>Pseudo</label>
-					<input type="text" class="form-control form-control-sm" id="pseudo" name='pseudo' placeholder="Pseudo">
-				</div>
-				<div class="mb-3">
-					<label for="pseudo" class='form-label visually-hidden'>Mot de Passe</label>
-					<input type="password" class="form-control form-control-sm" id="password" name='password' placeholder="Mot de Passe">
-				</div>
-				<div class="mb-3">
-					<label for="pseudo" class='form-label'>Etes-vous un robot ?</label>
-					<div class=''>
-						<a href='#' id='reload_captcha' class='mx-2'><img src="captcha.php" id='captcha'/></a>
-						<input id='captcha_input' name="captcha" type="text" class="form-control form-control-sm mt-2" placeholder="Entrez le texte de l'image">
-					</div>
-				</div>
-				<div class="mb-3">
-					<input class='btn btn-light btn-sm' type="submit" name="Submit" value="Se connecter">
-				</div>
-				<div>
-					<a href="mdp_perdu.php" class='text-light ml-2'>Mot de passe perdu ?</a>
-				</div>
-			</form>
-		</div>
+	<div class="col-12 alert alert-success">
+		<h1>Vous êtes connecté</h1>
 	</div>
-	<div class="col-12 col-sm-7">
-		<div class='row justify-content-center'>
-			<div class='col-11 col-sm shadow bg-gray-300 rounded-3 p-4 mx-2 mb-3 h-22'>
-				<h4>
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rotate-20deg align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-						<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-					</svg>
-					Inscription
-				</h4>
-				<p>
-					<?= $nb_inscrit; ?> joueur(s) inscrit(s)<br />
-					Dernier inscrit :<br/> <?= couleur_nation($clan_last_inscrit, $pseudo_last_inscrit); ?>
-				</p>
-				<p>
-					Persos actifs : <br/><span class='text-primary fw-bold'>nordistes : <?= $nb_persos_nord_actifs; ?></span> / <span class='text-danger fw-bold'>sudistes : <?= $nb_persos_sud_actifs; ?></span>
-				</p>
-				<p>
-					Vous voulez en découdre ?<br/>
-					Engagez-vous soldat !<br/>
-					<div class='mt-1'>
-					<a href="inscription.php" class="btn btn-light">S'inscrire</b></a>
-					</div>
-				</p>
-			</div>
-			<div class='col-11 col-sm shadow bg-gray-300 rounded-3 p-4 mx-2 h-22 news'>
-				<h4>
-					<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 rotate-20deg align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-					  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-					</svg>
-					Les nouvelles du front
-				</h4>
-				<?php if($res_news):?>
-					<?php foreach($res_news as $new): ?>
-						<p>
-							<?php
-								$d = new DateTime($new['date']);
-								echo $d->format('d-m-Y');
-							?>
-							<br/>
-							<?= $new['contenu'] ?><br/>
-							-----
-						</p>
-					<?php endforeach ?>
-				<?php else: ?>
-				<p>
-					Aucune nouvelle... espérons que nos soldats vont bien !
-				</p>
-				<?php endif; ?>
-			</div>
-		</div>
+	<div class="col-12">
 		<div class='row justify-content-center'>
 			<div class='col-11 col-sm shadow bg-gray-300 rounded-3 p-4 m-2'>
 				<!-- texte à repenser éventuellement -->
@@ -157,4 +80,4 @@ ob_start();
 		
 <?php $content = ob_get_clean(); ?>
 
-<?php require('layouts/guest.php'); ?>
+<?php require('layouts/app.php'); ?>

@@ -1,9 +1,8 @@
 <?php
-
-require_once('../jeu/config.php');
+require_once('jeu/config.php');
 
 abstract class Model
-{
+{	
     protected function dbConnectPDO()
     {
 		try{

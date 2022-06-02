@@ -30,7 +30,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 			echo "<a href=\"index.php\" class='btn btn-primary'>retour</a></center>";
 		}
 		else {
-			if ($captcha == $_SESSION["code"]) {
+			if ($captcha == $_SESSION["captcha"]) {
 		
 				// passage du mdp en md5
 				$mdp = md5($mdp); 
