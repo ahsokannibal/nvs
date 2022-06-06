@@ -869,12 +869,14 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 		}
 	}
 
+	$show_xp = true;
 	$order_by = "xp_perso";
 	$limit = 50;
 	if (isset($_GET["grade"]))
 	{
 		$order_by = "id_grade";
 		$limit = 50000;
+		$show_xp = false;
 	}
 	
 	// recuperation des valeurs en excluant les persos pnj
@@ -894,7 +896,8 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "				<th style='text-align:center'><font color=darkred>Position</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nom</font></th>";
 	echo "				<th style='text-align:center' data-defaultsign='_19'><font color=darkred>Matricule</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>XP</font></th>";
+	if ($show_xp)
+		echo "				<th style='text-align:center'><font color=darkred>XP</font></th>";
 	echo "				<th style='text-align:center' data-defaultsign='_19'><font color=darkred>Grade</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
@@ -930,7 +933,8 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 		echo "				<td align=center>$cc</td>";
 		echo "				<td align=center><font color=$couleur_camp>".$t2['nom_perso']."</font></td>";
 		echo "				<td align='center'><a href=\"evenement.php?infoid=".$t2['id_perso']."\">" .$t2['id_perso']. "</a></td>";
-		echo "				<td align=center>".$t2['xp_perso']."</td>";
+		if ($show_xp)
+			echo "				<td align=center>".$t2['xp_perso']."</td>";
 		echo "				<td align='center' data-value='".$id_grade_perso."'><img src=\"../images/grades/" . $id_grade_perso . ".gif\" /> ".$t2['nom_grade']."</td>";
 		echo "			</tr>";
 	}
