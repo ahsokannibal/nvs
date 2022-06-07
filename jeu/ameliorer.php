@@ -91,7 +91,7 @@ if($dispo == '1' || $admin){
 			
 			<br /><br />
 				
-			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 			<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
 			
 			<?php

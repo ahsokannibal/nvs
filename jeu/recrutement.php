@@ -117,7 +117,7 @@ if($dispo == '1' || $admin){
 	
 			<br /><br /><center><h1>Recrutement des grouillots</h1></center>
 			
-			<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
+			<div align=center><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></div>
 			<br />
 			<?php
 					if ($id_instance_bat == NULL) {
