@@ -350,11 +350,7 @@ $mysqli = db_connexion();
 					<p>Vous pouvez donner de la thune à un autre joueur ou la placer sur le compte de votre compagnie (somme minimale: 25 thunes).</p>
 					
 					<p>Attention, vous pouvez perdre de la thune à la capture de votre personnage.<br />
-					La perte de thunes transportées à sa capture est calculée ainsi: <br />
-					<ul>
-						<li>30% à la capture de votre chef de bataillon</li>
-						<li>10% à la capture d'un de vos grouillots</li>
-					</ul>
+					La perte de thunes transportées à sa capture est de 30%. <br />
 					D'où l'avantage de faire partie d'une compagnie et de placer son argent dans la caisse de cette dernière. 
 					</p>
 					

@@ -468,7 +468,7 @@ function touche($pourcent)
 
 function gain_po_mort($thune_cible)
 {
-	return floor(10*($thune_cible/100));
+	return floor(30*($thune_cible/100));
 }
 
 function gain_xp_mort($xp_cible, $xp)

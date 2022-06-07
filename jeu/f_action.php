@@ -4007,7 +4007,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 					
 					if ($idPerso_carte < 50000) {
 						// Perte or 
-						$calcul_perte_or = floor(($or_cible * 30) / 100);
+						$calcul_perte_or = gain_po_mort($or_cible);
 						
 						// MAJ perte thunes cible
 						$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
