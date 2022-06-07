@@ -654,6 +654,9 @@ if($dispo == '1' || $admin){
 					<tr>
 						<td>Chien</td><td><img src="../images_perso/v1/toutou_nord.gif"> <img src="../images_perso/v1/toutou_sud.gif"></td><td><img src="../images_perso/v2/toutou_nord.gif"> <img src="../images_perso/v2/toutou_sud.gif"></td>
 					</tr>
+					<tr>
+						<td>Cavalerie légère</td><td><img src="../images_perso/v1/cavalerie_legere_nord.gif"> <img src="../images_perso/v1/cavalerie_legere_sud.gif"></td><td><img src="../images_perso/v2/cavalerie_legere_nord.gif"> <img src="../images_perso/v2/cavalerie_legere_sud.gif"></td>
+					</tr>
 				</table>
 				
 				<?php
