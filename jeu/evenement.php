@@ -315,6 +315,9 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "a bombardé ") {
 						$phrase_evenement = "a été bombardé par";
 					}
+					else if ($phrase_evenement == "a atteint ") {
+						$phrase_evenement = "a été atteint par";
+					}
 					else if ($phrase_evenement == " a raté son attaque contre") {
 						$phrase_evenement = "a esquivé l'attaque de";
 					}
