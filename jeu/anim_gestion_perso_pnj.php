@@ -126,6 +126,9 @@ if($dispo == '1' || $admin){
 							else if ($type_perso == 6) {
 								$image_chef = "toutou_nord.gif";
 							}
+							else if ($type_perso == 7) {
+								$image_chef = "cavalerie_legere_nord.gif";
+							}
 						}
 						
 						if($camp == 2){
@@ -152,6 +155,9 @@ if($dispo == '1' || $admin){
 							}
 							else if ($type_perso == 6) {
 								$image_chef = "toutou_sud.gif";
+							}
+							else if ($type_perso == 7) {
+								$image_chef = "cavalerie_legere_sud.gif";
 							}
 						}
 					
