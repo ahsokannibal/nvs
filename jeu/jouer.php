@@ -2632,7 +2632,7 @@ if($dispo == '1' || $admin){
 					<table border=0 align="center" width=100%>
 						<tr>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_profil; ?>" alt="profil"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
 							<?php
