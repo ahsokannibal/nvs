@@ -104,7 +104,7 @@ if(isset($_SESSION["id_perso"])){
 						?>
 					</div>
 					
-					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
+					<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 					
 					<div align='center'>
 						
