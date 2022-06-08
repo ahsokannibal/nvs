@@ -1073,4 +1073,16 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 	}
 }
 
+function verif_charge_pm($type_perso, $pm_perso) {
+	if (!($type_perso == 1 || $type_perso == 2 || $type_perso == 7 || $type_perso == 3))
+		return false;
+	return $pm_perso >= distance_min_charge_pm($type_perso);
+}
+
+function distance_min_charge_pm($type_perso) {
+	if ($type_perso == 3)
+		return 2;
+	return 4;
+}
+
 ?>
