@@ -3740,8 +3740,13 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 
 	// Bonus charge 30 pour cav lourde, 20 pour cav légère
 	$base_bonus_degats_charge = 30;
+	$diminution_bonus_degats_charge = 10;
 	if ($type_perso == 7)
 		$base_bonus_degats_charge = 20;
+	else if ($type_perso == 3) {
+		$base_bonus_degats_charge = 20;
+		$diminution_bonus_degats_charge = 5;
+	}
 	
 	// Mise à jour du perso
 	$sql = "UPDATE perso SET pm_perso = pm_perso - $nb_deplacements, x_perso = $x_perso_final, y_perso = $y_perso_final WHERE id_perso='$id_perso'";
@@ -3906,7 +3911,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				// Le perso touche sa cible
 				
 				// calcul des dégats
-				$bonus_degats_charge = max(0, $base_bonus_degats_charge - $nb_attaque*10);
+				$bonus_degats_charge = max(0, $base_bonus_degats_charge - $nb_attaque*$diminution_bonus_degats_charge);
 				$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 				
 				$degats_tmp = calcul_des_attaque($degats_arme, $valeur_des_arme);
@@ -4229,9 +4234,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
  * Fonction permettant d'effectuer une charge vers le haut
  * y + 1
  */
-function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_haut($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4249,7 +4255,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4334,9 +4340,10 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
  * Fonction de charge vers la direction haut gauche
  * x - 1 et y + 1
  */
-function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4354,7 +4361,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4439,9 +4446,10 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
  * Fonction de charge vers la direction gauche
  * x - 1
  */
-function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4459,7 +4467,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4544,9 +4552,10 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
  * Fonction de charge vers la direction bas gauche
  * x - 1 et y - 1
  */
-function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4564,7 +4573,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4648,9 +4657,10 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
  * Fonction de charge vers la direction bas
  * y - 1 
  */
-function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_bas($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4668,7 +4678,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4752,9 +4762,10 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
  * Fonction de charge vers la direction bas droite
  * x + 1 et y - 1
  */
-function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_bas_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4772,7 +4783,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4856,9 +4867,10 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
  * Fonction de charge vers la direction droite
  * x + 1
  */
-function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4876,7 +4888,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4960,9 +4972,10 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
  * Fonction de charge vers la direction haut droite
  * x + 1 et y + 1
  */
-function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_haut_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4980,7 +4993,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -5059,4 +5072,5 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 		}
 	}
 }
+
 ?>

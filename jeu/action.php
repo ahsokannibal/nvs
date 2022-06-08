@@ -94,7 +94,7 @@ if($dispo == '1' || $admin) {
 			$direction_charge = $_POST['action_charge'];
 			
 			// Recup infos perso
-			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, type_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
@@ -107,6 +107,7 @@ if($dispo == '1' || $admin) {
 			$pm_perso 		= $t_perso['pm_perso'];
 			$pv_perso		= $t_perso['pv_perso'];
 			$xp_perso		= $t_perso['xp_perso'];
+			$type_perso		= $t_perso['type_perso'];
 			$clan			= $t_perso['clan'];
 			$image_perso	= $t_perso["image_perso"];
 			$grade_perso	= $t_perso["id_grade"];
@@ -116,40 +117,40 @@ if($dispo == '1' || $admin) {
 			
 			if ($pv_perso > 0) {
 			
-				// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
-				if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso >= 4) {
+				// Pour pouvoir charger, il faut avoir tout ses PA et XXPM
+				if ($pa_perso == $paMax_perso + $bonusPA_perso && verif_charge_pm($type_perso, $pm_perso)) {
 				
 					// Déplacement du perso dans l'axe choisi
 					if ($direction_charge == 'haut') {
-						charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_haut($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					if ($direction_charge == 'haut_gauche') {
-						charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_haut_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					if ($direction_charge == 'gauche') {
-						charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					if ($direction_charge == 'bas_gauche') {
-						charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_bas_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					if ($direction_charge == 'bas') {
-						charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_bas($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					if ($direction_charge == 'bas_droite') {
-						charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_bas_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					if ($direction_charge == 'droite') {
-						charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					if ($direction_charge == 'haut_droite') {
-						charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+						charge_haut_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 					}
 					
 					// retour a la page de jeu
@@ -171,7 +172,7 @@ if($dispo == '1' || $admin) {
 				$direction_charge = $_POST['hid_action_charge'];
 				
 				// Recup infos perso
-				$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+				$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, type_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso.id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
@@ -184,6 +185,7 @@ if($dispo == '1' || $admin) {
 				$pm_perso 		= $t_perso['pm_perso'];
 				$pv_perso		= $t_perso['pv_perso'];
 				$xp_perso		= $t_perso['xp_perso'];
+				$type_perso		= $t_perso['type_perso'];
 				$clan			= $t_perso['clan'];
 				$image_perso	= $t_perso["image_perso"];
 				$grade_perso	= $t_perso["id_grade"];
@@ -193,40 +195,40 @@ if($dispo == '1' || $admin) {
 				
 				if ($pv_perso > 0) {
 				
-					// Pour pouvoir charger, il faut avoir tout ses PA et 40 PM
-					if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso >= 4) {
+					// Pour pouvoir charger, il faut avoir tout ses PA et XXPM
+					if ($pa_perso == $paMax_perso + $bonusPA_perso && verif_charge_pm($type_perso, $pm_perso)) {
 					
 						// Déplacement du perso dans l'axe choisi
 						if ($direction_charge == 'haut') {
-							charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_haut($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						if ($direction_charge == 'haut_gauche') {
-							charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_haut_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						if ($direction_charge == 'gauche') {
-							charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						if ($direction_charge == 'bas_gauche') {
-							charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_bas_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						if ($direction_charge == 'bas') {
-							charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_bas($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						if ($direction_charge == 'bas_droite') {
-							charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_bas_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						if ($direction_charge == 'droite') {
-							charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						if ($direction_charge == 'haut_droite') {
-							charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
+							charge_haut_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso);
 						}
 						
 						// retour a la page de jeu
@@ -838,9 +840,11 @@ if($dispo == '1' || $admin) {
 					if ($id_action=='999') {
 						
 						// On verifie que le perso soit bien un cavalier
-						$sql ="SELECT type_perso FROM perso WHERE id_perso='$id_perso' AND (type_perso='1' OR type_perso='2' OR type_perso='7')";
+						$sql ="SELECT type_perso FROM perso WHERE id_perso='$id_perso' AND (type_perso='1' OR type_perso='2' OR type_perso='7' OR type_perso='3')";
 						$res = $mysqli->query($sql);
 						$verif_charge = $res->num_rows;
+						$t_perso1 = $res->fetch_assoc();
+						$type_perso = $t_perso1["type_perso"];
 						
 						if ($verif_charge) {
 						
@@ -888,9 +892,9 @@ if($dispo == '1' || $admin) {
 								if ($perception_final <= 0) {
 									$perception_final = 1;
 								}
-								
-								// Pour pouvoir charger, il faut avoir tout ses PA, 40 PM et être sur de la plaine
-								if ($pa_perso == $paMax_perso + $bonusPA_perso && $pm_perso >= 4 && $fond_carte_perso == '1.gif') {
+
+								// Pour pouvoir charger, il faut avoir tout ses PA, XXPM et être sur de la plaine
+								if ($pa_perso == $paMax_perso + $bonusPA_perso && verif_charge_pm($type_perso, $pm_perso) && $fond_carte_perso == '1.gif') {
 									
 									// recuperation des donnees de la carte
 									$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 
@@ -1057,8 +1061,8 @@ if($dispo == '1' || $admin) {
 									echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>annuler</b></a></center>";
 								} else {
 									
-									// Besoin de 40PM, de tout ses PA et être sur de la plaine pour pouvoir charger
-									echo "<br /><center>Vous avez besoin de tous vos PA, de 4PM et d'être sur de la plaine afin de pouvoir charger !</center>";
+									// Besoin de XXPM, de tout ses PA et être sur de la plaine pour pouvoir charger
+									echo "<br /><center>Vous avez besoin de tous vos PA, de 4PM pour un cavalier ou 2PM pour infanterie et d'être sur de la plaine afin de pouvoir charger !</center>";
 									echo "<br /><br /><center><a class='btn btn-primary' href='jouer.php'><b>retour</b></a></center>";
 								}
 							}
@@ -1072,7 +1076,7 @@ if($dispo == '1' || $admin) {
 							echo "<br /><center>Pas bien d'essayer de tricher !";
 							echo "<br /><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 							
-							$text_triche = "Tentative charge sans être cavalier";
+							$text_triche = "Tentative charge sans être cavalier ni infanterie";
 							
 							$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 							$mysqli->query($sql);

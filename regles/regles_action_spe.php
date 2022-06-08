@@ -90,14 +90,17 @@ Pour bousculer une unité, il vous suffit de vous déplacer sur elle (avec les f
 					</div>
 					<div id="charge">
 					<h2>Charger</h2>
-La charge est une option de combat disponible uniquement pour les cavaleries. Celles ci s'élancent dans la plaine et vont enfoncer les lignes adverses infligeant par la même occasion de terribles dégâts.<br />
-<b>Pour charger, il faut avoir tous ses PA et au moins 4 PM.</b><br />
-La charge s'effectue sur une distance max de 5 cases et avec <b>3 cases d'élan minimum</b>.<br />
-Une fois au contact et dans la limite de vos PA, vos attaques au corps-à-corps seront automatiquement effectuées avec un bonus de +30 dégâts pour la première attaque, de +20 dégâts pour la seconde, de +10 dégât pour la troisième et de +0 pour la quatrième et les suivantes.<br />
+La charge est une option de combat disponible uniquement pour les cavaleries et infanteries. Celles ci s'élancent dans la plaine et vont enfoncer les lignes adverses infligeant par la même occasion de terribles dégâts.<br />
+<b>Pour charger, il faut avoir tous ses PA et au moins 4 PM pour les cavaliers ou 2 PM pour les infanteries.</b><br />
+La charge s'effectue sur une distance max de 5 cases et avec <b>3 cases d'élan minimum pour les cavaliers et 1 case minimum pour les infanteries</b>.<br />
+Une fois au contact et dans la limite de vos PA, vos attaques au corps-à-corps seront automatiquement effectuées avec un bonus de dégats. <br />
+Le bonus de dégats pour les chefs et cavaleries lourdes est de +30 dégâts pour la première attaque, de +20 dégâts pour la seconde, de +10 dégât pour la troisième et de +0 pour la quatrième et les suivantes.<br />
+Pour les cavaleries légères le bonus est de +20, +10 et 0 ensuite.<br />
+Pour les infanteries le bonus est de +20, +15, +10, +5 et 0 ensuite.<br />
 A la fin de la charge, les PA non utilisés pour les attaques ne sont pas supprimés (exemple : un cavalier avec 10PA qui charge au sabre, fera 2 attaques à 4PA et il lui restera 2 PA à la fin de la charge).<br />
-Une cavalerie qui charge un bâtiment perd 40 PV et ne fait aucun dégât.<br />
-Une cavalerie ne peut charger qu'en plaine ou dans les steppes, et AUCUN obstacle (les routes et rails ne sont pas considéré comme un obstacle) ne doit se trouver sur sa route, la cible doit aussi se trouver en plaine ou sur une steppe.<br />
-Lors d'une charge complète de cavalerie, si toutes les attaques réussissent, un bonus de 1PC sera accordé.
+Une unité qui charge un bâtiment perd 40 PV et ne fait aucun dégât.<br />
+Une unité ne peut charger qu'en plaine ou dans les steppes, et AUCUN obstacle (les routes et rails ne sont pas considéré comme un obstacle) ne doit se trouver sur sa route, la cible doit aussi se trouver en plaine ou sur une steppe.<br />
+Lors d'une charge complète de grouillot cavalier lourd, si toutes les attaques réussissent, un bonus de 1PC sera accordé.
 <br /><br />
 					</div>
 					<div id="sieste">
