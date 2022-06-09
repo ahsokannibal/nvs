@@ -365,7 +365,7 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 	$verif_anti_zerk = 1;
 						
 	// Verification si enregistrement d'attaque existant
-	$sql = "SELECT * FROM anti_zerk WHERE id_perso='$id_perso'";
+	$sql = "SELECT *, TIME_TO_SEC(TIMEDIFF(NOW(), date_derniere_attaque)) as diff FROM anti_zerk WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$nb_enr_anti_zerk = $res->num_rows;
 	
@@ -376,24 +376,17 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 	
 	$dla_perso = $t_p['DLA_perso'];
 
-	date_default_timezone_set('UTC');
-	
 	if ($nb_enr_anti_zerk > 0) {
 		
 		$t_zerk = $res->fetch_assoc();
 		
 		$date_derniere_attaque 		= $t_zerk['date_derniere_attaque'];
 		$date_nouveau_tour			= $t_zerk['date_nouveau_tour'];
+		$diff				= $t_zerk['diff'];
 		
-		$date_now = time();
-		
-		$diff_date = $date_now - strtotime($date_nouveau_tour);
-		
-		if ($diff_date >= 0) {
+		if ($dla_perso != $date_nouveau_tour) {
 			// Un nouveau tour a été enclenché depuis la dernière attaque
 			// L'attaque respecte t-elle les 8 heures ?
-			$diff = $date_now - strtotime($date_derniere_attaque);
-			
 			if ($diff < DUREE_ANTI_ZERK_S) {
 				// Loi anti-zerk non respectée
 				$verif_anti_zerk = 0;
@@ -417,8 +410,6 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 		$sql = "INSERT INTO anti_zerk(id_perso, date_derniere_attaque, date_nouveau_tour) VALUES ('$id_perso', NOW(), '$dla_perso')";
 		$mysqli->query($sql);
 	}
-
-	date_default_timezone_set('Europe/Paris');
 	
 	return $verif_anti_zerk;
 }
