@@ -961,7 +961,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				$max_xp_tour_atteint = true;
 			}
 
-			$gain_xp_collat_cumul += gain_xp_collat;
+			$gain_xp_collat_cumul += $gain_xp_collat;
 
 			// mise a jour des pv de la cible
 			$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
