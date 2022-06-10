@@ -53,7 +53,7 @@ if($dispo == '1' || $admin){
 						<h2>Trésorerie</h2>
 					</div>
 					
-					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
+					<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 			<?php
 			if(isset($_GET["id_compagnie"])) {
 				
