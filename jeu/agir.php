@@ -536,6 +536,7 @@ if ($verif_id_perso_session) {
 											
 											// mise a jour des xp/pi
 											$model_perso->perso_gain_xp($id, $gain_xp);
+											$gain_xp_tour_perso += $gain_xp;
 											
 											// Passage grade grouillot
 											passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
@@ -646,6 +647,7 @@ if ($verif_id_perso_session) {
 														}
 														$model_perso->infligeDegats($id_voisin, $degats_final);
 														$model_perso->perso_gain_xp($id, $gain_xp);
+														$gain_xp_tour_perso += $gain_xp;
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 
 														$gain_pc = calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible);

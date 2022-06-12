@@ -515,6 +515,12 @@ function calcul_gain_xp($xp_perso, $xp_cible, $id_arme_attaque, $coutPa_arme_att
 
 	// Limit le nombre d'xp gagné par attaque
 	$max_xp_par_attaque = ceil(20 / floor(10 / $coutPa_arme_attaque));
+	// Pour le canon et gatling, reserve respectivement 4 et 2 xp pour collats
+	if ($id_arme_attaque == 13 || $id_arme_attaque == 22) {
+		$max_xp_par_attaque = max(0, $max_xp_par_attaque-4);
+	} else if ($id_arme_attaque == 14) {
+		$max_xp_par_attaque = max(0, $max_xp_par_attaque-2);
+	}
 	if ($gain_xp > $max_xp_par_attaque) {
 		$gain_xp = $max_xp_par_attaque;
 	}
@@ -694,7 +700,13 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 	$res_recherche_collat = $model_carte->recupereVoisins($id_cible, $x_cible, $y_cible)->fetchAll(PDO::FETCH_CLASS,'Carte');;
 
 	$gain_xp_collat_cumul = 0;
+	$max_gain_xp_collat_cumul = 4;
 	$gain_pc_collat_cumul = 0;
+	$model_perso = new Perso();
+
+	// Limite a 2xp le gain max pour collats
+	if ($id_arme_attaque == 14)
+		$max_gain_xp_collat_cumul = 2;
 
 	// On parcours les cibles pour degats collateraux
 	foreach($res_recherche_collat as $t_recherche_collat) {
@@ -740,8 +752,8 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 			$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
 
-			// Limite 3 PC par attaque de Gatling
-			if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 3) {
+			// Limite 2 PC par attaque de Gatling
+			if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 2) {
 				$gain_pc_collat = 0;
 			}
 
@@ -751,28 +763,17 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 			echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat.<br>";
 
-			// Limite 3XP par attaque de Gatling
-			if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
+			if ($gain_xp_collat_cumul <= $max_gain_xp_collat_cumul && !$max_xp_tour_atteint) {
 				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
-
-				// Passage grade grouillot
-				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
-			}
-			else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
-				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
-
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
+				$model_perso->perso_gain_xp($id, $gain_xp_collat);
+				$gain_xp_tour_perso += $gain_xp_collat;
 
 				// Passage grade grouillot
 				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 
 			} else {
+				$gain_xp_collat = 0;
 				echo "Vous avez gagné 0 xp";
 				if ($max_xp_tour_atteint) {
 					echo " (maximum de gain d'xp par tour atteint)";
@@ -969,28 +970,17 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 			echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
 
-			// Limite 3XP par attaque de Gatling
-			if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
+			if ($gain_xp_collat_cumul <= $max_gain_xp_collat_cumul && !$max_xp_tour_atteint) {
 				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
-
-				// Passage grade grouillot
-				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
-			}
-			else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
-				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
-
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
+				$model_perso->perso_gain_xp($id, $gain_xp_collat);
+				$gain_xp_tour_perso += $gain_xp_collat;
 
 				// Passage grade grouillot
 				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 
 			} else {
+				$gain_xp_collat = 0;
 				echo "Vous avez gagné 0 xp";
 				if ($max_xp_tour_atteint) {
 					echo " (maximum de gain d'xp par tour atteint)";
