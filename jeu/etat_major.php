@@ -203,7 +203,7 @@ if($dispo == '1' || $admin){
 				</div>
 			</nav>
 		
-			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 			
 			<div align='center'>Nombre de membres dans l'état major : <?php echo $nb_persos_em; ?></div>
 			<?php

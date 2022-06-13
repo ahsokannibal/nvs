@@ -57,7 +57,7 @@ if (isset($_SESSION["id_perso"])) {
 			inputId.value = pos[valueToShow];
 		}
 		</script>
-		
+		<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 		<div class="row">
 			<div class="col-12" align='center'>
 				<a href='histo_carte.php' class='btn btn-primary'>Afficher l'historique de la carte</a>

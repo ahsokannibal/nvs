@@ -52,6 +52,7 @@ if(isset($_GET["top"])){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
@@ -178,6 +179,7 @@ if(isset($_GET["titre"])){
 
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
@@ -281,6 +283,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
@@ -524,6 +527,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
@@ -648,6 +652,7 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
@@ -727,6 +732,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
@@ -813,6 +819,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
 	
 	echo "<div align=\"center\">";
