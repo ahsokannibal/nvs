@@ -2647,7 +2647,7 @@ if($dispo == '1' || $admin){
 							if ($type_perso != 6) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="compagnie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a>
+								<a href="compagnie.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a>
 							</td>
 							<?php
 							}
@@ -2659,8 +2659,8 @@ if($dispo == '1' || $admin){
 							?>
 						</tr>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<span class='badge badge-pill badge-danger' title='malus de défense dû aux attaques'>$bonus_perso</span>";} ?></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php"><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<span class='badge badge-pill badge-danger' title='malus de défense dû aux attaques'>$bonus_perso</span>";} ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php"><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
 							<?php 
 							$sql_mes = "SELECT count(id_message) as nb_mes from message_perso where id_perso='$id_perso' and lu_message='0' AND supprime_message='0'";
@@ -2689,7 +2689,7 @@ if($dispo == '1' || $admin){
 							if ($type_perso != 6) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a>
+								<a href="compagnie.php"><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a>
 								<?php
 								if ($nb_demandes_adhesion_compagnie) {
 									echo "<span class='badge badge-pill badge-success'>$nb_demandes_adhesion_compagnie</span>";
