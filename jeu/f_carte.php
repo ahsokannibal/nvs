@@ -175,8 +175,8 @@ function get_malus_visu($fond)
 function get_malus_recup($fond) 
 {
 	switch($fond) {
-		case(I_MARECAGE): return -5; break; 
-		case(I_DESERT): return 10; break;
+		case(I_MARECAGE): return -20; break; 
+		case(I_DESERT): return -100; break;
 		default: return 0;
 	}
 }
@@ -274,8 +274,8 @@ function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 			case(I_FORET): return 20; break;
 			case(I_EAU): return 10; break;
 			case(I_DESERT): return -10; break;
-			case(I_COLLINE): return -10; break;
-			case(I_MONTAGNE): return 10; break;
+			case(I_COLLINE): return 10; break;
+			case(I_MONTAGNE): return 20; break;
 			case(I_PONT_B): return -10; break;
 			case(I_PONT_R): return -10; break;
 			default: return 0;
@@ -287,6 +287,8 @@ function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 			case(I_MARECAGE): return -10; break;
 			case(I_DESERT): return -10; break;
 			case(I_EAU): return 10; break;
+			case(I_COLLINE): return 10; break;
+			case(I_MONTAGNE): return 20; break;
 			case(I_PONT_B): return -10; break;
 			case(I_PONT_R): return -10; break;
 			default: return 0;
