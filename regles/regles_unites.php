@@ -178,7 +178,7 @@
 								<td align='center'>5</td>
 								<td align='center'>20</td>
 								<td align='center'>0</td>
-								<td align='center'>Les chiens sont des animaux domestiques entraînés à traquer l'ennemi grâce à leur flair très développé. Il est accessible uniquement à partir du grade de Sergent Chef et limité à 1 par bataillon.</td>
+								<td align='center'>Les chiens sont des animaux domestiques entraînés à traquer l'ennemi grâce à leur flair très développé. Il est accessible uniquement à partir du grade de Sergent.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/v1/cavalerie_legere_nord.gif' alt='cavalerie'><img src='../images_perso/v1/cavalerie_legere_sud.gif' alt='cavalerie'></td>
