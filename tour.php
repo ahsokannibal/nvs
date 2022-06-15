@@ -340,27 +340,9 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 			$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
 			$gain_pc = 0;
 		}
-
-
-		$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x_perso_nouveau_tour AND y_carte=$y_perso_nouveau_tour";
-		$res_map = $mysqli->query($sql);
-		$t_carte1 = $res_map->fetch_assoc();
-		$fond = $t_carte1["fond_carte"];
-	
-		// Bonus recup batiment
-		$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso_nouveau_tour);
-
-		// bonus recup terrain
-		$bonus_recup_terrain = get_malus_recup($fond);
-
-		// Calcul pv nouveau tour
-		$pv_nouveau = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour + $bonus_recup_bat + $bonus_recup_terrain;
-		if ($pv_nouveau > $pv_max_perso_nouveau_tour) {
-			$pv_nouveau = $pv_max_perso_nouveau_tour;
-		}
 		
 		// Le perso est mort
-		if ($pv_nouveau <= 0) {
+		if ($pv_perso_nouveau_tour <= 0) {
 			
 			// ---------------------- //
 			//    RESPAWN BATIMENT    //
@@ -506,6 +488,12 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 		}
 		else {
 			
+			$sql = "SELECT fond_carte FROM carte WHERE x_carte=$x_perso_nouveau_tour AND y_carte=$y_perso_nouveau_tour";
+			$res_map = $mysqli->query($sql);
+			$t_carte1 = $res_map->fetch_assoc();
+					
+			$fond = $t_carte1["fond_carte"];
+			
 			// Gestion convalescence
 			if ($convalescence_nouveau_tour) {
 				$pm_nouveau = ($pm_max_perso_nouveau_tour / 2) + $bonusPM_nouveau_tour;
@@ -519,6 +507,18 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 			// Prise en compte malus PM des bousculades (PM négatifs)
 			if ($pm_perso_nouveau_tour < 0) {
 				$pm_nouveau += $pm_perso_nouveau_tour;
+			}
+			
+			// Bonus recup batiment
+			$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso_nouveau_tour);
+			
+			// bonus recup terrain
+			$bonus_recup_terrain = get_malus_recup($fond);
+			
+			// Calcul pv nouveau tour 
+			$pv_nouveau = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour + $bonus_recup_bat + $bonus_recup_terrain;
+			if ($pv_nouveau > $pv_max_perso_nouveau_tour) {
+				$pv_nouveau = $pv_max_perso_nouveau_tour;
 			}
 			
 			// calcul bourre perso
