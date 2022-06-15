@@ -519,6 +519,9 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 			$pv_nouveau = $pv_perso_nouveau_tour + $recup_perso_nouveau_tour + $bonus_recup_bat + $bonus_recup_terrain;
 			if ($pv_nouveau > $pv_max_perso_nouveau_tour) {
 				$pv_nouveau = $pv_max_perso_nouveau_tour;
+			} else if ($pv_nouveau <= 0) {
+				// ne tue pas le perso
+				$pv_nouveau = 1;
 			}
 			
 			// calcul bourre perso
