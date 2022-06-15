@@ -782,6 +782,30 @@ CREATE TABLE `joueur_as_ip` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `user_ok_logins`
+--
+
+CREATE TABLE `user_ok_logins` (
+  `id_joueur` int(11) NOT NULL DEFAULT '0',
+  `ip_joueur` varchar(100) NOT NULL DEFAULT '000.000.000.000',
+  `time` datetime NOT NULL,
+  `user_agent` varchar(100) NOT NULL DEFAULT '',
+  `cookie_val` varchar(300) NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Structure de la table `whitelist_triche`
+--
+
+CREATE TABLE `whitelist_triche` (
+  `id` INT NOT NULL AUTO_INCREMENT , 
+  `id_joueur` int(11) NOT NULL DEFAULT '0',
+   PRIMARY KEY (`id`)
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `liaisons_gare`
 --
 

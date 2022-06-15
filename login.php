@@ -4,6 +4,13 @@ session_start();
 require_once("fonctions.php");
 require_once("f_login.php");
 
+function get_user_agent() {
+   if (isSet($_SERVER))
+	return $_SERVER['HTTP_USER_AGENT'];
+   else
+     return getenv('HTTP_USER_AGENT');
+}
+
 $mysqli = db_connexion();
 
 $throttle_settings = [
@@ -62,6 +69,8 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 							
 							// recuperation de l'ip du joueur
 							$ip_joueur = realip();
+							$user_agent = get_user_agent();
+							$cookie_val = filter_input(INPUT_COOKIE, "PHPSESSID", FILTER_SANITIZE_STRING);
 							
 							// Est ce que ce joueur est déjà présent avec cette IP
 							$sql = "SELECT * FROM joueur_as_ip WHERE ip_joueur = '$ip_joueur' AND id_joueur='$id_joueur'";
@@ -77,6 +86,10 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 								$sql = "INSERT INTO joueur_as_ip VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),FROM_UNIXTIME($date))";
 								$mysqli->query($sql);
 							}
+
+
+							$sql = "INSERT INTO user_ok_logins VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),'$user_agent','$cookie_val')";
+							$mysqli->query($sql);
 							
 							header("location:jeu/jouer.php?login=ok");
 						}
