@@ -141,7 +141,7 @@ function cout_pm($fond)
 		case(I_FORET): return 2; break; 	//foret
 		case(I_EAU): return 4; break; 		//eau
 		case(I_MARECAGE): return 2; break; 	//marecage
-		case(I_DESERT): return 4; break; 	//desert
+		case(I_DESERT): return 1; break; 	//desert
 		case(I_COLLINE): return 2; break; 	//colline
 		case(I_MONTAGNE): return 4; break; 	// montagne
 		case(I_ROUTE_B): return 1; break; 	// route bleu
