@@ -58,6 +58,9 @@
 						<li class="nav-item">
 							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
 						</li>
+						<li class="nav-item">
+							<a href="../jeu/jouer.php"> <input type="button" value="Retour au jeu"> </a>
+						</li>
 					</ul>
 				</div>
 			</nav>

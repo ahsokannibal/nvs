@@ -35,7 +35,7 @@ if($dispo == '1' || $admin){
 	</head>
 	<body>
 		<div class="container">
-		
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 		</div>
 	
 		<!-- Optional JavaScript -->
