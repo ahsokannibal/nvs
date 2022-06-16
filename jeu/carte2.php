@@ -27,6 +27,7 @@ if (@$_SESSION["id_perso"]) {
 	
 	// couleurs perso_carte
 	$noir 							= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
+	$brouillard_general				= Imagecolorallocate($perso_carte, 160, 150, 120); // taupe
 	$couleur_vert 					= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
 	$couleur_perso_clan1 			= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
 	$couleur_perso_clan2 			= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
@@ -146,6 +147,15 @@ if (@$_SESSION["id_perso"]) {
 	}
 	$res = $mysqli->query($sql);
 	
+	while($not_discovered = $res->fetch_assoc()){
+		
+		$x 			= $not_discovered["x_carte"];
+		$y 			= $not_discovered["y_carte"];
+		$fond		= $not_discovered["fond_carte"];
+		
+		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $brouillard_general);
+	}
+	/*
 	while ($t = $res->fetch_assoc()){
 		
 		$x 			= $t["x_carte"];
@@ -178,18 +188,8 @@ if (@$_SESSION["id_perso"]) {
 			$couleur_brouillard = $couleur_brouillard_plaine;
 		}
 		
-		/*
-		$rand = mt_rand(1,2);
-		
-		if ($rand == 1) {
-			$couleur_brouillard = $couleur_brouillard1;
-		}
-		else {
-			$couleur_brouillard = $couleur_brouillard2;
-		}*/
-		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
-	}
+	}*/
 
 	// creation de l'image perso
 	imagepng($perso_carte, "carte/perso$id.png");
