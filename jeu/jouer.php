@@ -2830,7 +2830,7 @@ if($dispo == '1' || $admin){
 						WHERE arme.id_arme = perso_as_arme.id_arme
 						AND porteeMax_arme = 1
 						AND perso_as_arme.est_portee = '1'
-						AND id_perso = '$id_perso'";
+						AND id_perso = '$id_perso' ORDER BY arme.id_arme DESC";
 				$res = $mysqli->query($sql);
 				$nb_cac = $res->num_rows;
 				
