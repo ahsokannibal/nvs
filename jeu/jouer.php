@@ -2279,14 +2279,14 @@ if($dispo == '1' || $admin){
 				echo "<tr>";
 				echo "	<td>Prochain tour :  ".$date_dla."</td>";
 				echo "	<td align=right>";
-				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
-				echo "		<a class='btn btn-info' href=\"../faq.php\" target='_blank'><b>FAQ</b></a>";
+				echo "		<a class='btn btn-info' href=\"../regles/regles.php\"><b>Règles</b></a>";
+				echo "		<a class='btn btn-info' href=\"../faq.php\"><b>FAQ</b></a>";
 				echo "		<a class='btn btn-primary' href=\"http://www.forum.persee.ovh/\" target='_blank'><b>Forum</b></a>";
 				if ($type_perso != 6) {
-					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Questions Anim</b></a>";
-					echo "		<a class='btn btn-primary' href=\"capture.php\" target='_blank'><b>Déclarer une capture</b></a>";
+					echo "		<a class='btn btn-primary' href=\"question_anim.php\"><b>Questions Anim</b></a>";
+					echo "		<a class='btn btn-primary' href=\"capture.php\"><b>Déclarer une capture</b></a>";
 				}
-				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions ";
+				echo "		<a class='btn btn-warning' href=\"missions.php\"><b>Missions ";
 				if ($nb_missions_actives > 0) {
 					echo "<span class='badge badge-success'>".$nb_missions_actives."</span>";
 				}
@@ -2329,7 +2329,7 @@ if($dispo == '1' || $admin){
 						echo " <a class='btn btn-info' href='https://discord.gg/zE9knsyRGr' target='_blank'>Discord sud</a>";
 				}
 					
-				echo " <a class='btn btn-info' href='visu.php' target='_blank'>Visu</a>";
+				echo " <a class='btn btn-info' href='visu.php'>Visu</a>";
 				//fin d'ajout lien Discord et de la visu
 				
 				echo "	</td>";
@@ -2616,14 +2616,14 @@ if($dispo == '1' || $admin){
 								<input type='submit' name='select_perso' value='ok' />
 							</form>
 						</td>
-						<td align=center><b>Grade : <a href="grades.php" target='_blank'></b><?php echo $nom_grade_perso; ?>
+						<td align=center><b>Grade : <a href="grades.php"></b><?php echo $nom_grade_perso; ?>
 							<img alt="<?php echo $nom_grade_perso; ?>" title="<?php echo $nom_grade_perso; ?>" src="../images/grades/<?php echo $id_grade_perso . ".gif";?>" width=40 height=40></a>
 						</td>
 					</tr>
 					<tr>
 						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; ?></td>
-						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
-						<td align=center><b>Compagnie : </b><?php echo "<a href=\"compagnie.php\" target='_blank'>" . stripslashes($nom_compagnie_perso) . "</a>"; ?></td>
+						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\">" . $bataillon_perso . "</a>"; ?></td>
+						<td align=center><b>Compagnie : </b><?php echo "<a href=\"compagnie.php\">" . stripslashes($nom_compagnie_perso) . "</a>"; ?></td>
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
@@ -2633,16 +2633,16 @@ if($dispo == '1' || $admin){
 						<tr>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_profil; ?>" alt="profil"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php"><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_messagerie; ?>" alt="messagerie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_messagerie; ?>" alt="messagerie"></a></td>
 							<?php
 							}
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=88 height=92 border=0 src="../images/classement2.png" alt="classement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php"><img width=88 height=92 border=0 src="../images/classement2.png" alt="classement"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
@@ -2653,7 +2653,7 @@ if($dispo == '1' || $admin){
 							}
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=117 height=89 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php"><img width=117 height=89 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
 							<?php	
 							}
 							?>
@@ -2661,7 +2661,7 @@ if($dispo == '1' || $admin){
 						<tr>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php"><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<span class='badge badge-pill badge-danger' title='malus de défense dû aux attaques'>$bonus_perso</span>";} ?></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php"><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php"><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
 							<?php 
 							$sql_mes = "SELECT count(id_message) as nb_mes from message_perso where id_perso='$id_perso' and lu_message='0' AND supprime_message='0'";
 							$res_mes = $mysqli->query($sql_mes);
@@ -2669,12 +2669,12 @@ if($dispo == '1' || $admin){
 							
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php"><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a>
+								<a href="messagerie.php"><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a>
 								<?php 
 								if($nb_nouveaux_mes) { 
 									echo "<span class='badge badge-pill badge-danger'>$nb_nouveaux_mes</span>"; 
@@ -2684,7 +2684,7 @@ if($dispo == '1' || $admin){
 							<?php
 							}
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=16 border=0 src="../images/classement_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php"><img width=83 height=16 border=0 src="../images/classement_titrev2.png"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
@@ -2709,7 +2709,7 @@ if($dispo == '1' || $admin){
 							if ($nb_em) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="etat_major.php" target='_blank'><img width=83 height=16 border=0 src="../images/em_titrev2.png" alt="etat major"></a>
+								<a href="etat_major.php"><img width=83 height=16 border=0 src="../images/em_titrev2.png" alt="etat major"></a>
 								<?php
 								if ($nb_compagnie_attente_em) {
 									echo "<br/><font color=red><b>$nb_compagnie_attente_em</b> compagnie(s) en attente de validation</font>";
@@ -4531,8 +4531,8 @@ if($dispo == '1' || $admin){
 									<tr>
 										<td background='../images/background.jpg' align='left' colspan='3'>
 											<?php 
-											echo "<div><a href=\"nouveau_message.php?visu=ok&camp=".$clan_perso."\" target='_blank'><img class='img-fluid' src='../images/Ecrire.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message aux persos de son camp dans sa visu' border=0 /><font face='Playball' size='5'><b>Envoyer un MP à sa visu</b></font></a></div>";
-											echo "<div><a href=\"nouveau_message.php?visu=ok\" target='_blank'><img class='img-fluid' src='../images/porte_voix.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message à tous les persos dans sa visu' border=0 width='100' height='80' /><font face='Playball' size='5'><b>Crier très fort</b></font></a></div>";
+											echo "<div><a href=\"nouveau_message.php?visu=ok&camp=".$clan_perso."\"><img class='img-fluid' src='../images/Ecrire.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message aux persos de son camp dans sa visu' border=0 /><font face='Playball' size='5'><b>Envoyer un MP à sa visu</b></font></a></div>";
+											echo "<div><a href=\"nouveau_message.php?visu=ok\"><img class='img-fluid' src='../images/porte_voix.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message à tous les persos dans sa visu' border=0 width='100' height='80' /><font face='Playball' size='5'><b>Crier très fort</b></font></a></div>";
 											?>
 										</td>
 									</tr>

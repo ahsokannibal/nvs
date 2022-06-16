@@ -116,7 +116,7 @@ if($dispo == '1' || $admin){
 				</div>
 			</nav>
 		
-			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 			
 			<h1>Cartes suivantes</h1>
 			
