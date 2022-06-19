@@ -152,6 +152,28 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Contenu de la table `objet_as_type_unite`
+--
+
+INSERT INTO `objet_as_type_unite` (`id_objet`, `id_type_unite`) VALUES
+(5, 3),
+(5, 4),
+(5, 5),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5),
+(6, 7),
+(7, 1),
+(7, 2),
+(7, 3),
+(7, 4),
+(7, 5),
+(7, 7);
+-- --------------------------------------------------------
+
+--
 -- Contenu de la table `batiment`
 --
 

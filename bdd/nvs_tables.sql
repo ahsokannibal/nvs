@@ -204,6 +204,17 @@ CREATE TABLE `arme_as_type_unite` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `objet_as_type_unite`
+--
+
+CREATE TABLE `objet_as_type_unite` (
+  `id_objet` int(11) NOT NULL,
+  `id_type_unite` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `armure`
 --
 
