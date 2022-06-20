@@ -1252,6 +1252,7 @@ function min_gain_xp_construction($id_bat) {
 	switch($id_bat) {
 		case(1): return 1; break;
 		case(2): return 1; break;
+		case(5): return 3; break;
 		case(7): return 3; break;
 		case(8): return 8; break;
 		case(9): return 10; break;
@@ -1267,10 +1268,18 @@ function max_gain_xp_construction($id_bat) {
 	switch($id_bat) {
 		case(1): return 2; break;
 		case(2): return 3; break;
+		case(5): return 5; break;
 		case(7): return 5; break;
 		case(8): return 10; break;
 		case(9): return 15; break;
 		case(11): return 7; break;
+		default: return 0;
+	}
+}
+
+function gain_pc_construction($id_bat) {
+	switch($id_bat) {
+		case(5): return 1; break;
 		default: return 0;
 	}
 }
