@@ -104,11 +104,13 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 				$sql = "UPDATE $carte SET fond_carte='$image_rail' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
 				$mysqli->query($sql);
 				
-				$gain_xp = rand(1,3);
+				$gain_xp = rand(3,5);
 				
 				// maj pa perso 
 				$sql = "UPDATE perso SET pa_perso = pa_perso - $cout_pa, pv_perso = pv_perso - $cout_pv, xp_perso = xp_perso + $gain_xp, pi_perso = pi_perso + $gain_xp WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
+
+				gain_pc_chef($mysqli, $id_perso, 1);
 				
 				//mise a jour de la table evenement
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'',' - gain de $gain_xp XP/PI',NOW(),'0')";
@@ -697,7 +699,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 								
 								if ($verif_fond_carte) {								
 								
-									$gain_xp = $gain_xp = rand(min_gain_xp_construction($id_bat), max_gain_xp_construction($id_bat));
+									$gain_xp = rand(min_gain_xp_construction($id_bat), max_gain_xp_construction($id_bat));
+									$gain_pc = gain_pc_construction($id_bat);
 									
 									if ($gain_xp_tour_perso + $gain_xp > 20) {
 										$gain_xp = 0;
@@ -749,6 +752,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 														$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id_perso'";
 														$mysqli->query($sql);
 													}
+
+													gain_pc_chef($mysqli, $id_perso, $gain_pc);
 													
 													$pv_bat = rand($pvMin, $pvMin * 2);
 													$img_bat = "b".$id_bat."".$bat_camp.".png";
