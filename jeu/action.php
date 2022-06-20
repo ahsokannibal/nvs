@@ -894,7 +894,7 @@ if($dispo == '1' || $admin) {
 								}
 
 								// Pour pouvoir charger, il faut avoir tout ses PA, XXPM et être sur de la plaine
-								if ($pa_perso == $paMax_perso + $bonusPA_perso && verif_charge_pm($type_perso, $pm_perso) && $fond_carte_perso == '1.gif') {
+								if ($pa_perso == $paMax_perso + $bonusPA_perso && verif_charge_pm($type_perso, $pm_perso) && ($fond_carte_perso == '1.gif' || 0 === strpos($fond_carte_perso, 'rail'))) {
 									
 									// recuperation des donnees de la carte
 									$sql = "SELECT x_carte, y_carte, fond_carte, occupee_carte, image_carte, idPerso_carte 

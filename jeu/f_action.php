@@ -4273,7 +4273,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_p
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4379,7 +4379,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_pers
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4485,7 +4485,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4591,7 +4591,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4696,7 +4696,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_pe
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4801,7 +4801,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4906,7 +4906,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -5011,7 +5011,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_pers
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
