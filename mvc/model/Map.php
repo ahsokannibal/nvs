@@ -13,6 +13,8 @@ class Carte extends Model
 	public $vue_nord;
 	public $vue_sud;
 	public $coordonnees;
+	public $vue_nord_date;
+	public $vue_sud_date;
 	protected $xMax;
 	protected $yMax;
 	protected $terrains = [
@@ -102,7 +104,7 @@ class Carte extends Model
 				$y = $y_max-1 - $y_pixel;
 				
 				$coordo = $x.';'.$y;
-				$query = "INSERT INTO $carte (id_carte,x_carte,y_carte,occupee_carte,fond_carte,idPerso_carte,image_carte,save_info_carte,vue_nord,vue_sud,coordonnees) VALUES (:id,:x,:y,'0',:fond,NULL,NULL,NULL,0,0,:coordo)";
+				$query = "INSERT INTO $carte (id_carte,x_carte,y_carte,occupee_carte,fond_carte,idPerso_carte,image_carte,save_info_carte,vue_nord,vue_sud,coordonnees,vue_nord_date,vue_sud_date) VALUES (:id,:x,:y,'0',:fond,NULL,NULL,NULL,0,0,:coordo,NULL,NULL)";
 				$request = $db->prepare($query);
 				$request->bindParam('id', $id, PDO::PARAM_INT);
 				$request->bindParam('x', $x, PDO::PARAM_INT);

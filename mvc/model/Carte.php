@@ -12,6 +12,8 @@ class Carte extends Model
 	public $vue_nord;
 	public $vue_sud;
 	public $coordonnees;
+	public $vue_nord_date;
+	public $vue_sud_date;
 
 	public function __set($name, $value) {}
 	

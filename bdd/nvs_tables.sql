@@ -352,6 +352,8 @@ CREATE TABLE `carte3` (
   `save_info_carte` varchar(255) DEFAULT NULL,
   `vue_nord` tinyint(1) DEFAULT '0',
   `vue_sud` tinyint(1) DEFAULT '0',
+  `vue_nord_date` datetime DEFAULT NULL,
+  `vue_sud_date` datetime DEFAULT NULL,
   `coordonnees` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;

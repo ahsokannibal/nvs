@@ -27,7 +27,7 @@ if (@$_SESSION["id_perso"]) {
 	
 	// couleurs perso_carte
 	$noir 							= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
-	$brouillard_general				= Imagecolorallocate($perso_carte, 160, 150, 120); // taupe
+	$brouillard_general				= $noir;
 	$couleur_vert 					= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
 	$couleur_perso_clan1 			= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
 	$couleur_perso_clan2 			= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
@@ -143,7 +143,7 @@ if (@$_SESSION["id_perso"]) {
 		imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 	}
 	
-	// J'ajoute le brouillard de guerre
+	// J'ajoute les cases non découvertes
 	if ($camp_perso == '1') {
 		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
 	}
@@ -160,7 +160,27 @@ if (@$_SESSION["id_perso"]) {
 		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $brouillard_general);
 	}
-	/*
+
+	// J'ajoute le brouillard de guerre
+	if ($camp_perso == '1') {
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte
+			WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib
+			ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = 1)
+			AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2
+			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 1)
+			AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_nord_date))>".BROUILLARD_DE_GUERRE_S;
+	}
+	else if ($camp_perso == '2') {
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte
+			WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib
+			ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = 2)
+			AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2
+			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 2)
+			AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_sud_date))>".BROUILLARD_DE_GUERRE_S;
+	}
+	$res = $mysqli->query($sql);
+	echo $res->num_rows;
+	
 	while ($t = $res->fetch_assoc()){
 		
 		$x 			= $t["x_carte"];
@@ -194,7 +214,7 @@ if (@$_SESSION["id_perso"]) {
 		}
 		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
-	}*/
+	}
 
 	// creation de l'image perso
 	imagepng($perso_carte, "carte/perso$id.png");
