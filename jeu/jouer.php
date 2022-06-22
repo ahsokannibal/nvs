@@ -669,13 +669,13 @@ if($dispo == '1' || $admin){
 													$perception_final = $perception_perso + $bonus_visu;
 													if ($id_perso >= 100) {
 														if ($clan_p == 1) {
-															$sql = "UPDATE $carte SET vue_nord='1' 
+															$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW()
 																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 															$mysqli->query($sql);
 														}
 														else if ($clan_p == 2) {
-															$sql = "UPDATE $carte SET vue_sud='1' 
+															$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW()
 																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 															$mysqli->query($sql);
@@ -1398,13 +1398,13 @@ if($dispo == '1' || $admin){
 														$perception_final = $perception_perso + $bonus_visu;
 														if ($id_perso >= 100) {
 															if ($clan_p == 1) {
-																$sql = "UPDATE $carte SET vue_nord='1' 
+																$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 																		WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																		AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																$mysqli->query($sql);
 															}
 															else if ($clan_p == 2) {
-																$sql = "UPDATE $carte SET vue_sud='1' 
+																$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW()
 																		WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																		AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																$mysqli->query($sql);
@@ -1662,13 +1662,13 @@ if($dispo == '1' || $admin){
 									$perception_final = $perception_perso + $bonus_visu;
 									if ($id_perso >= 100) {
 										if ($clan_p == 1) {
-											$sql = "UPDATE $carte SET vue_nord='1' 
+											$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 													WHERE x_carte >= $xs - $perception_final AND x_carte <= $xs + $perception_final
 													AND y_carte >= $ys - $perception_final AND y_carte <= $ys + $perception_final";
 											$mysqli->query($sql);
 										}
 										else if ($clan_p == 2) {
-											$sql = "UPDATE $carte SET vue_sud='1' 
+											$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 													WHERE x_carte >= $xs - $perception_final AND x_carte <= $xs + $perception_final
 													AND y_carte >= $ys - $perception_final AND y_carte <= $ys + $perception_final";
 											$mysqli->query($sql);
@@ -1868,13 +1868,13 @@ if($dispo == '1' || $admin){
 												$perception_final = $perception_perso + $bonus_visu;
 												if ($id_perso >= 100) {
 													if ($clan_p == 1) {
-														$sql = "UPDATE $carte SET vue_nord='1' 
+														$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW()
 																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 														$mysqli->query($sql);
 													}
 													else if ($clan_p == 2) {
-														$sql = "UPDATE $carte SET vue_sud='1' 
+														$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 														$mysqli->query($sql);
@@ -2025,13 +2025,13 @@ if($dispo == '1' || $admin){
 																			$perception_final = $perception_perso + $bonus_visu;
 																			if ($id_perso >= 100) {
 																				if ($clan_p == 1) {
-																					$sql = "UPDATE $carte SET vue_nord='1' 
+																					$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 																							WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																							AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																					$mysqli->query($sql);
 																				}
 																				else if ($clan_p == 2) {
-																					$sql = "UPDATE $carte SET vue_sud='1' 
+																					$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 																							WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																							AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																					$mysqli->query($sql);
@@ -2106,13 +2106,13 @@ if($dispo == '1' || $admin){
 																				$perception_final = $perception_perso + $bonus_visu;
 																				if ($id_perso >= 100) {
 																					if ($clan_p == 1) {
-																						$sql = "UPDATE $carte SET vue_nord='1' 
+																						$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 																								WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																								AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																						$mysqli->query($sql);
 																					}
 																					else if ($clan_p == 2) {
-																						$sql = "UPDATE $carte SET vue_sud='1' 
+																						$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 																								WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																								AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																						$mysqli->query($sql);
@@ -2433,7 +2433,7 @@ if($dispo == '1' || $admin){
 					$image_em 			= "em_nord2.png";
 					
 					if ($id_perso >= 100) {
-						$sql = "UPDATE $carte SET vue_nord='1' 
+						$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 								WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
 								AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
 						$mysqli->query($sql);
@@ -2451,7 +2451,7 @@ if($dispo == '1' || $admin){
 					$image_em 			= "em_sud2.png";
 					
 					if ($id_perso >= 100) {
-						$sql = "UPDATE $carte SET vue_sud='1' 
+						$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 								WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
 								AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
 						$mysqli->query($sql);
