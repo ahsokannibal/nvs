@@ -124,7 +124,7 @@ function afficher_liens_in_bat($mysqli, $id_perso) {
 function afficher_liens_prox_bat($mysqli, $id_perso, $x_perso, $y_perso, $type_perso) {
 	
 	// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-	$res_bat = id_prox_bat($mysqli, $x_perso, $y_perso); 
+	$res_bat = id_prox_bat($mysqli, $x_perso, $y_perso);
 	
 	while ($bat1 = $res_bat->fetch_assoc()) {
 		
@@ -169,6 +169,9 @@ function afficher_liens_prox_bat($mysqli, $id_perso, $x_perso, $y_perso, $type_p
 		// Pont
 		// Les chiens ne peuvent pas saboter les ponts
 		if ($bat == 5 && $type_perso != '6') {
+			if ($pv_instance < $pvMax_instance) {
+				echo "		<div><a href='action.php?bat=".$id_bat."&reparer=ok' > Reparer ".$nom_bat." ".$nom_ibat." [".$id_bat."] (5 PA)</a></div>";
+			}
 			echo "		<div><a href='action.php?bat=".$id_bat."&saboter=ok' > Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
 		}
 	}

@@ -1433,12 +1433,18 @@ if($dispo == '1' || $admin) {
 											$taille_batiment= $t_bat['taille_batiment'];
 											$camp_batiment 	= $t_bat['clan'];
 											
-											if($camp_batiment == '1'){
-												$camp_b = 'b';
+											switch($camp_batiment){
+												case "1":
+													$camp_b = 'b';
+													break;
+												case "2":
+													$camp_b = 'r';
+													break;
+												default:
+													$camp_b = 'g';
+												
 											}
-											if($camp_batiment == '2'){
-												$camp_b = 'r';
-											}
+											
 											$image_bat = "b".$id_bat."".$camp_b.".png";
 										}
 										

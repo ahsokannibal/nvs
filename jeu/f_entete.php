@@ -126,17 +126,22 @@ function entete($mysqli, $id) {
 				$camp_instance 			= $bat['camp_instance'];
 				$contenance_instance 	= $bat['contenance_instance'];
 				
-				if($camp_instance == '1'){
-					$couleur_camp_instance = 'blue';
-					$nom_clan = 'Nord';
-				}
-				if($camp_instance == '2'){
-					$couleur_camp_instance = 'red';
+				switch($camp_instance){
+					case "1":
+						$couleur_camp_instance = 'blue';
+						$nom_clan = 'Nord';
+						break;
+					case "2":
+						$couleur_camp_instance = 'red';
 					$nom_clan = 'Sud';
-				}
-				if($camp_instance == '3'){
-					$couleur_camp_instance = 'purple';
-					$nom_clan = 'Violets';
+						break;
+					case "3":
+						$couleur_camp_instance = 'purple';
+						$nom_clan = 'Violets';
+						break;
+					default:
+						$couleur_camp_instance = 'grey';
+						$nom_clan = 'Neutre';
 				}
 				
 				$image_bat = "b".$id_batiment."".$couleur_camp_instance[0].".png";
@@ -156,7 +161,7 @@ function entete($mysqli, $id) {
 				echo "  <tr><td width=\"60%\" align='center'>Batiment : $nom_batiment $nom_instance_batiment [$id]</td></tr>";
 				echo "  <tr><td align='center'>Camp : <font color=\"$couleur_camp_instance\">$nom_clan</font></td></tr>";
 				
-				if($camp_perso == $camp_instance){
+				if($camp_perso == $camp_instance OR $camp_instance == 0){
 					echo "<tr><td align='center'>";
 					$pourc = affiche_jauge($pv_instance, $pvMax_instance); 
 					echo "".round($pourc)."% ou $pv_instance/$pvMax_instance PV</td></tr>";

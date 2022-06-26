@@ -3933,13 +3933,17 @@ if($dispo == '1' || $admin){
 											$nom_i_bat	= $t_im["nom_instance"];
 											$nom_bat	= $t_im["nom_batiment"];
 											
-											if($camp_bat == '1'){
-												$camp_bat2 		= 'bleu';
-												$image_profil 	= "Nord.gif";
-											}
-											if($camp_bat == '2'){
-												$camp_bat2 		= 'rouge';
-												$image_profil 	= "Sud.gif";
+											switch($camp_bat){
+												case '1':
+													$camp_bat2 		= 'bleu';
+													$image_profil 	= "Nord.gif";
+													break;
+												case '2':
+													$camp_bat2 		= 'rouge';
+													$image_profil 	= "Sud.gif";
+												default:
+													$camp_bat3 		= 'neutre';
+													$image_profil 	= "neutre.gif";
 											}
 											
 											$blason="mini_blason_".$camp_bat2.".gif";
