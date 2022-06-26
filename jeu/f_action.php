@@ -494,7 +494,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 					AND x_carte <= $x_bat + $distance_min_pont
 					AND y_carte >= $y_bat - $distance_min_pont
 					AND y_carte <= $y_bat + $distance_min_pont
-					AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
+					AND (fond_carte='b5b.png' OR fond_carte='b5r.png' OR fond_carte='b5g.png')
 					AND save_info_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
 		$res = $mysqli->query($sql);
 		$verif_distance_pont = $res->num_rows;
@@ -509,6 +509,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 					AND y_carte <= $y_bat + $distance_min_bat
 					AND fond_carte!='b5b.png'
 					AND fond_carte!='b5r.png'
+					AND fond_carte!='b5g.png'
 					AND idPerso_carte >= 50000 AND idPerso_carte < 200000";
 		$res = $mysqli->query($sql);
 		$verif_distance_pont_bat = $res->num_rows;
@@ -537,7 +538,7 @@ function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
 				AND x_carte <= $x_pont + 1
 				AND y_carte >= $y_pont - 1
 				AND y_carte <= $y_pont + 1
-				AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
+				AND (fond_carte='b5b.png' OR fond_carte='b5r.png'  OR fond_carte='b5g.png')
 				AND coordonnees NOT IN (SELECT coordonnees FROM carte WHERE x_carte=$x_pont AND y_carte=$y_pont)
 				AND save_info_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
 	$res = $mysqli->query($sql);
@@ -626,6 +627,10 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 			$bat_camp = "r";
 		}
 		else if($camp_perso == '3'){
+			$bat_camp = "g";
+		}
+		
+		if($id_bat == '5'){
 			$bat_camp = "g";
 		}
 		
@@ -771,6 +776,10 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 														$t = $res->fetch_assoc();
 														
 														$fond_carte_construction = $t['fond_carte'];
+														
+														if ($id_bat == 5) {// neutralité du pont
+															$camp_perso = 0;
+														}
 														
 														// mise a jour de la table instance_bat
 														$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, camp_origine_instance, contenance_instance, terrain_instance) 

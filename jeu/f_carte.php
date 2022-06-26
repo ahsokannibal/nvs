@@ -1020,9 +1020,12 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 				}
 			}
 			
-			// Pont
-			// Les chiens ne peuvent pas saboter les ponts
+			// Pont (neutres)
+			// Les chiens ne peuvent pas réparer ni saboter les ponts
 			if ($bat == 5 && $type_perso != '6') {
+				if ($pv_instance < $pvMax_instance) {
+					$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat] (5 PA)</a>~~</font></center>";
+				}
 				$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat] (10 PA)</a>~~</font></center>";
 			}
 		}

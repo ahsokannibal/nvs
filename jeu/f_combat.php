@@ -293,7 +293,12 @@ function est_chanceux($mysqli, $id_perso){
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
-	return $t['nb_points'];
+	if($t){
+		return $t['nb_points'];
+	}else{
+		return false;
+	}
+	
 }
 
 /**
