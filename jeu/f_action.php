@@ -3344,7 +3344,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 		$poid_objet = $t["poids_arme"];
 	}
 	
-	if($nb){
+	if($nb && intval($nb)>=intval($quantite)){
 		
 		$coutPa = 1;
 		
