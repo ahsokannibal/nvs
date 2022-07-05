@@ -52,6 +52,7 @@ if(isset($_SESSION["id_perso"])){
 						<a href='admin_triche.php?affiche=email' class='btn btn-warning'>Tableau emails proches</a>
 						<a href='admin_triche.php?affiche=ip' class='btn btn-warning'>Tableau connexions même IP</a>
 						<a href='admin_triche.php?affiche=ip2' class='btn btn-warning'>Tableau connexions même IP 2</a>
+						<a href='admin_triche.php?affiche=connexions' class='btn btn-warning'>Connexions</a>
 						<a href='admin_triche.php?affiche=cookie' class='btn btn-warning'>Tableau connexions même cookie</a>
 						<a href='admin_triche.php?affiche=whitelist' class='btn btn-warning'>Whiteliste</a>
 					</div>
@@ -324,6 +325,80 @@ if(isset($_SESSION["id_perso"])){
 							?>
 								</td>
 							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<?php
+			}
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "connexions")) {
+			?>
+			<div class="row">
+				<div class="col-12">
+
+					<div align='center'><h3>Connexions</h3></div>
+
+					<?php
+					if(isset($_GET['select_perso']) && $_GET['select_perso'] != '') {
+						$id_perso_select = $_GET['select_perso'];
+					}
+					?>
+
+					<form method='GET' action='admin_triche.php'>
+						<input type="hidden" id="affiche" name="affiche" value="connexions">
+						<select name="select_perso">
+							<?php
+							$sql = "SELECT id_perso, nom_perso FROM perso WHERE chef=1 ORDER BY id_perso ASC";
+							$res = $mysqli->query($sql);
+							while ($t = $res->fetch_assoc()) {
+								$id_perso 	= $t["id_perso"];
+								$nom_perso 	= $t["nom_perso"];
+								echo "<option value='".$id_perso."'";
+								if (isset($id_perso_select) && $id_perso_select == $id_perso) {
+									echo " selected";
+								}
+								echo ">".$nom_perso." [".$id_perso."] </option>";
+							}
+							?>
+						</select>
+						<button>Selectionner</button>
+					</form>
+
+					<div id="table_ip" class="table-responsive">
+						<table border="1" width='100%'>
+							<tr>
+								<th style='text-align:center'>Connexions</th><th style='text-align:center'>VPN</th>
+							</tr>
+							<?php
+
+							if (isset($id_perso_select) && $id_perso_select != 0) {
+								$sql = "SELECT ip_joueur, id_joueur, time, user_agent, cookie_val, nom_perso, id_perso, clan FROM user_ok_logins JOIN perso ON id_joueur=idJoueur_perso WHERE id_perso='$id_perso_select' ORDER BY time DESC";
+								$res = $mysqli->query($sql);
+								while ($t = $res->fetch_assoc()) {
+									echo "<tr> <td>";
+									$time 		= $t["time"];
+									$cookie_val 	= $t["cookie_val"];
+									$nom_perso 	= $t["nom_perso"];
+									$id_perso 	= $t["id_perso"];
+									$clan 		= $t["clan"];
+									$ip_joueur 	= $t["ip_joueur"];
+									$id_joueur 	= $t["id_joueur"];
+									$user_agent 		= $t["user_agent"];
+									$color_p = "black";
+									if ($clan == 1) {
+										$color_p = "blue";
+									} else if ($clan == 2) {
+										$color_p = "red";
+									}
+									echo "".$time.", id_joueur : $id_joueur";
+									echo ", <font color='$color_p'>".$nom_perso." [".$id_perso."]</font>";
+									echo ", ip : ".$ip_joueur.", user-agent : '".$user_agent."' <br />";
+									echo "</td><td>";
+									echo "<a href='https://www.ipqualityscore.com/vpn-ip-address-check/lookup/$ip_joueur'>check</a>";
+									echo "</td></tr>";
+								}
+							}
+							?>
 						</table>
 					</div>
 				</div>
