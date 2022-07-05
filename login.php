@@ -44,7 +44,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 				
 				$pseudo = $mysqli->real_escape_string($pseudo);
 				// recuperation de l'id du joueur et log du joueur
-				$sql = "SELECT id_joueur, mdp_joueur, id_perso FROM joueur,perso WHERE joueur.id_joueur=perso.idJoueur_perso and nom_perso='$pseudo' and chef='1'";		
+				$sql = "SELECT id_joueur, mdp_joueur, id_perso FROM joueur,perso WHERE joueur.id_joueur=perso.idJoueur_perso and nom_perso='$pseudo' and chef='1' and pendu=0";
 				$res = $mysqli->query($sql);
 				$t_user = $res->fetch_assoc();
 				

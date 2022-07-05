@@ -774,7 +774,8 @@ CREATE TABLE `joueur` (
   `mail_mp` INT NOT NULL DEFAULT '0',
   `valid_case` INT NOT NULL DEFAULT '0',
   `afficher_rosace` INT NOT NULL DEFAULT '1',
-  `bousculade_deplacement` INT NOT NULL DEFAULT '1'
+  `bousculade_deplacement` INT NOT NULL DEFAULT '1',
+  `pendu` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
