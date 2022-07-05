@@ -2,6 +2,7 @@
 session_start();
 require_once("../fonctions.php");
 require_once("f_carte.php");
+require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
@@ -22,9 +23,12 @@ if(isset($_SESSION["id_perso"])){
 		if (isset($_POST['matricule_pendre_hidden'])) {
 			
 			$id_perso_pendre = $_POST['matricule_pendre_hidden'];
+
+			$sql = "UPDATE joueur SET pendu=1 WHERE id_joueur=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
+			$mysqli->query($sql);
 			
 			// Récupération de tous les persos
-			$sql = "SELECT id_perso, nom_perso, type_perso FROM perso WHERE perso.idJoueur_perso = (SELECT perso.idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
+			$sql = "SELECT id_perso, nom_perso, type_perso, clan FROM perso WHERE perso.idJoueur_perso = (SELECT perso.idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
 			$res = $mysqli->query($sql);
 			
 			while ($t = $res->fetch_assoc()) {
@@ -32,6 +36,9 @@ if(isset($_SESSION["id_perso"])){
 				$id_perso_a_pendre 		= $t['id_perso'];
 				$nom_perso_a_pendre		= $t['nom_perso'];
 				$type_perso_a_pendre	= $t['type_perso'];
+				$clan	= $t['clan'];
+
+				$couleur_clan_perso = couleur_clan($clan);
 				
 				if ($type_perso_a_pendre == 1) {
 					
@@ -68,7 +75,8 @@ if(isset($_SESSION["id_perso"])){
 				}
 				
 				// Ok - renvoi du perso						
-				$sql = "DELETE FROM perso WHERE id_perso='$id_perso_a_pendre'";
+				// maj cv
+				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ('$id_perso_a_pendre','Pendaison','', '$id_perso_a_pendre','<font color=$couleur_clan_perso>$nom_perso_a_pendre</font>', '', NOW(), 1)";
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso_a_pendre'";
@@ -90,9 +98,6 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$id_perso_a_pendre'";
-				$mysqli->query($sql);
-				
-				$sql = "DELETE FROM perso_as_grade WHERE id_perso='$id_perso_a_pendre'";
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$id_perso_a_pendre'";
@@ -150,7 +155,7 @@ if(isset($_SESSION["id_perso"])){
 				
 				$sql = "DELETE FROM perso_in_mission WHERE id_perso='$id_perso_a_pendre'";
 				$mysqli->query($sql);
-				
+
 				echo "<center><font color='blue'>Le perso $nom_perso_a_pendre avec la matricule $id_perso_a_pendre a bien été pendu.</font></center><br/>";
 			}
 		}
