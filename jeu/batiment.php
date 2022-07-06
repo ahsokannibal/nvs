@@ -1500,18 +1500,21 @@ if($dispo == '1' || $admin){
 								$array_dest				= array($base_dest);
 								$array_parcours			= array($base_dest);
 								$array_parcours_tmp		= array();
+								$array_parcours_value_dest	= array();
+								$array_parcours_value_dest_tmp	= array();
 								$nb_liaisons			= 1;
 								$value_dest 			= "";
 								
 								$profondeur = 1;
 								$prof_tmp	= 1;
-								
+
 								while (count($array_parcours) > 0) {
 									
 									$array_parcours_tmp = array();
+									$array_parcours_value_dest_tmp = array();
 									
 									$taille_parcours = count($array_parcours);
-									
+
 									for ($i = 0; $i < $taille_parcours; $i++) {
 										
 										$base_dest = $array_parcours[$i];
@@ -1528,14 +1531,14 @@ if($dispo == '1' || $admin){
 											
 											$id_gare1 = $t['id_gare1'];
 											$id_gare2 = $t['id_gare2'];
-											
+
 											if ($id_gare1 == $base_dest) {
 												$destination = $id_gare2;
 											}
 											else {
 												$destination = $id_gare1;
 											}
-											
+
 											// Récupération infos destination
 											$sql_dest = "SELECT nom_instance, camp_instance FROM instance_batiment WHERE id_instanceBat='$destination'";
 											$res_dest = $mysqli->query($sql_dest);
@@ -1548,24 +1551,11 @@ if($dispo == '1' || $admin){
 											
 											$cout_thune = $profondeur * 5;
 											
-											if (trim($value_dest) != "") {
-												$value_dest .= ",";
-											}
-											
 											if ($profondeur == 1) {
 												$value_dest = $destination;
 											}
 											else {
-												if ($profondeur == $prof_tmp) {
-													$taille_chaine = ($profondeur - 1) * 6;
-													// On retire la dernière gare ajoutée vu qu'on est sur la même profondeur
-													$value_dest = substr($value_dest, 0, $taille_chaine);													
-													$value_dest .= $destination;
-												}
-												else {
-													$prof_tmp = $profondeur;
-													$value_dest .= $destination;
-												}
+												$value_dest = $array_parcours_value_dest[$i].",".$destination;
 											}
 											
 											if ($camp_dest == $camp) {
@@ -1574,7 +1564,7 @@ if($dispo == '1' || $admin){
 												
 												// Achat de tickets
 												echo "<tr>";
-												echo "	<td align='center'>$nom_destination</td>";
+												echo "	<td align='center'>$nom_destination - (tickets : $value_dest)</td>";
 												echo "	<td align='center'><input type='hidden' name='ticket_hidden' value='$value_dest'> <input type='submit' class='btn btn-primary' name='acheter_ticket' value='Acheter un ticket (".$cout_thune." thunes)'></td>";
 												echo "</tr>";
 												
@@ -1589,12 +1579,12 @@ if($dispo == '1' || $admin){
 											
 											array_push($array_dest, $destination);
 											array_push($array_parcours_tmp, $destination);				
-											
-											$base_dest = $destination;
+											array_push($array_parcours_value_dest_tmp, $value_dest);
 										}
 									}
 									
 									$array_parcours = $array_parcours_tmp;
+									$array_parcours_value_dest = $array_parcours_value_dest_tmp;
 									
 									$profondeur++;
 								}
