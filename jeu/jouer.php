@@ -3971,7 +3971,7 @@ if($dispo == '1' || $admin){
 												echo "<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												
 												if (!nation_perso_bat($mysqli, $id_perso, $idI_bat)) {
-													if(batiment_vide($mysqli, $idI_bat) && batiment_pv_capturable($mysqli, $idI_bat) && $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 10 && $type_bat != 11 && $type_bat == 2 && $type_perso == 3){
+													if(batiment_vide($mysqli, $idI_bat) && batiment_pv_capturable($mysqli, $idI_bat)&& $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 10 && $type_bat != 11 && $type_perso == 3){
 														echo "<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."'>Capturer ce bâtiment</a></div>";
 													}
 												}
