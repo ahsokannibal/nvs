@@ -30,7 +30,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					WHERE id_instance_bat='$id_instance_bat'
 					AND (date_activation is NULL OR date_activation < NOW())";
 		$res_canon = $mysqli->query($sql_canon);
-		
+
 		while ($t_canon = $res_canon->fetch_assoc()) {
 			
 			$id_instance_canon 	= $t_canon['id_instance_canon'];
@@ -315,8 +315,8 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										// On dépose la perte de PO par terre
 										// Verification si l'objet existe deja sur cette case
 										$sql = "SELECT nb_objet FROM objet_in_carte 
-												WHERE objet_in_carte.x_carte = $x_collat_fin 
-												AND objet_in_carte.y_carte = $y_collat_fin 
+												WHERE objet_in_carte.x_carte = $x_collat 
+												AND objet_in_carte.y_carte = $y_collat 
 												AND type_objet = '1' AND id_objet = '0'";
 										$res = $mysqli->query($sql);
 										$to = $res->fetch_assoc();
@@ -327,18 +327,14 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// On met a jour le nombre
 											$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
 													WHERE type_objet='1' AND id_objet='0'
-													AND x_carte='$x_collat_fin' AND y_carte='$y_collat_fin'";
+													AND x_carte='$x_collat_fin' AND y_carte='$y_collat'";
 											$mysqli->query($sql);
 										}
 										else {
 											// Insertion dans la table objet_in_carte : On cree le premier enregistrement
-											$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat_fin','$y_collat_fin')";
+											$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat','$y_collat')";
 											$mysqli->query($sql);
 										}
-										
-										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible_collat')";
-										$mysqli->query($sql);
 									}
 									
 									// maj evenements
@@ -354,6 +350,10 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$camp_canon";
 										$mysqli->query($sql);
 									}
+
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible_collat')";
+									$mysqli->query($sql);
 								}
 							}
 						}
