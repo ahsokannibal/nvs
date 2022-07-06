@@ -500,7 +500,7 @@ if(isset($_SESSION["id_perso"])){
 											VALUES ($id_i_bat,'<font color=$couleur_clan_bat><b>$nom_bat</b></font>','a été construit par un animateur',NULL,'','',NOW(),'0')";
 									$mysqli->query($sql);
 									
-									$texte = "Construction du batiment $nom_bat [$id_i_bat] - verification contraintes : $verif";
+									$texte = "Constr bat $nom_bat [$id_i_bat] - $verif";
 									
 									// log_action_animation
 									$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'anim_creer_batiment.php', 'creation batiment', '$texte')";
