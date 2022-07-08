@@ -96,7 +96,8 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
-(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.jpg');
+(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.jpg'),
+(24, 'Sabre léger', '1', '1', '4', '0', '0', '0', '0', '0', '16', '16', '6', '80', '0', '0', '0.0', '0', '', '0', '1', 'sabre.png');
 
 
 -- --------------------------------------------------------
@@ -108,10 +109,8 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (1, 1),
 (1, 2),
-(1, 7),
 (2, 1),
 (2, 2),
-(2, 7),
 (3, 1),
 (3, 2),
 (3, 7),
@@ -139,7 +138,6 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (17, 3),
 (18, 1),
 (18, 2),
-(18, 7),
 (19, 1),
 (19, 2),
 (19, 7),
@@ -147,7 +145,8 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (21, 3),
 (22, 5),
 (23, 1),
-(23, 2);
+(23, 2),
+(24, 7);
 
 -- --------------------------------------------------------
 

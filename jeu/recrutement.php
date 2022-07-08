@@ -285,8 +285,13 @@ if($dispo == '1' || $admin){
 											
 											//------- Ajout des armes à la cavalerie
 											// Arme Cac : sabre
-											$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','1','1')";
-											$mysqli->query($sql);
+											if ($id_unite == 7) {
+												$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','24','1')";
+												$mysqli->query($sql);
+											} else {
+												$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','1','1')";
+												$mysqli->query($sql);
+											}
 											
 											// Arme distance : pistolet 
 											$sql = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso_cree','4','1')";
