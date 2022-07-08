@@ -170,7 +170,7 @@ if($dispo == '1' || $admin){
 											J\'ai le regret de t\'annoncer que ta demande d\'emprunt de $montant_emp thunes a été refusé.";
 								$objet = "Refus emprunt du trésorier de la compagnie";
 								
-								$lock = "LOCK TABLE joueur WRITE";
+								$lock = "LOCK TABLE message WRITE";
 								$mysqli->query($lock);
 								
 								$sql = "INSERT INTO message (id_expediteur, expediteur_message, date_message, contenu_message, objet_message) 
