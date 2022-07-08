@@ -189,6 +189,7 @@ if($dispo == '1' || $admin){
 						}
 						else if ($type_demande_maj == 4) {
 							// Demande de changement de camp
+							$malus = isset($_GET['malus']);
 							
 							// Récupération du camp cible
 							$sql = "SELECT info_demande FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='4'";
@@ -264,7 +265,7 @@ if($dispo == '1' || $admin){
 							$nom_perso_chef = $t_chef['nom_perso'];
 							$pc_perso_chef	= $t_chef['pc_perso'];
 							
-							$new_pc_chef = floor(($pc_perso_chef * 90) / 100);
+							$new_pc_chef = $malus ? floor(($pc_perso_chef * 90) / 100) : $pc_perso_chef;
 							
 							if ($camp_cible == 1) {
 								$image_perso	= 'cavalerie_nord.gif';
@@ -497,7 +498,8 @@ if($dispo == '1' || $admin){
 									echo "	<td align='center'>".$nom_demande."</td>";
 									echo "	<td align='center'>".$info_demande."</td>";
 									echo "	<td align='center'>";
-									echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter</a>";
+									echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter (sans malus)</a>";
+									echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok&malus\">Accepter (avec malus)</a>";
 									echo "		<a class='btn btn-danger' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=refus\">Refuser</a>";
 									echo "	</td>";
 									echo "</tr>";
