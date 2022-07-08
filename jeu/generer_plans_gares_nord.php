@@ -116,6 +116,19 @@ while ($t = $res->fetch_assoc()){
 	ImageString($gare_carte, 12, ($x*3)-($taille_text*3), ((600-($y*3))) + 3, $nom_bat, $noir);
 }
 
+// Cache les cases non découvertes
+$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
+$res = $mysqli->query($sql);
+
+while($not_discovered = $res->fetch_assoc()){
+
+	$x 			= $not_discovered["x_carte"];
+	$y 			= $not_discovered["y_carte"];
+	$fond		= $not_discovered["fond_carte"];
+
+	imagefilledrectangle ($gare_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $noir);
+}
+
 imagepng($gare_carte, "carte/gare_nord.png");
 
 imagecopymerge($image_p, $gare_carte, 0, 0, 0, 0, 603, 603, 100);
