@@ -327,13 +327,13 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$sql = "SELECT id_camp, nb_kill FROM stats_camp_kill";
 	$res = $mysqli->query($sql);
 	
-	// Nombre de persos au Nord
-	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1'";
+	// Nombre de joueurs actifs au Nord
+	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND est_gele='0' and chef=1";
 	$res_nbb = $mysqli->query($sql_nbb);
 	$nbb = $res_nbb->num_rows;
 	
-	// Nombre de persos au Sud
-	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2'";
+	// Nombre de joueurs actifs au Sud
+	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND est_gele='0' and chef=1";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
 
@@ -434,7 +434,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "		<thead>";
 	echo "			<tr>";
 	echo "				<th style='text-align:center'><font color=darkred>Camp</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de joueurs actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures ennemis</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures alliés</font></th>";
