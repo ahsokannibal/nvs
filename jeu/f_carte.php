@@ -1041,9 +1041,9 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 function isTypePersoBousculable($type_perso, $type_perso_b) {
 	
 	// Cavalier
-	if ($type_perso == 1 || $type_perso == 2) {
+	if ($type_perso == 1 || $type_perso == 2 || $type_perso == 7) {
 		// Peut bousculer infanterie et autres cavaliers
-		if ($type_perso_b == 1 || $type_perso_b == 2 || $type_perso_b == 3) {
+		if ($type_perso_b == 1 || $type_perso_b == 2 || $type_perso_b == 3 || $type_perso_b == 7) {
 			return true;
 		} else {
 			return false;
