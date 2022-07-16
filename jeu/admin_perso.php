@@ -152,6 +152,10 @@ if(isset($_SESSION["id_perso"])){
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso_a_pendre'";
 				}
 				$mysqli->query($sql);
+
+				// On téléporte le perso hors carte
+				$sql = "UPDATE perso SET x_perso='1000', y_perso='1000' WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_in_mission WHERE id_perso='$id_perso_a_pendre'";
 				$mysqli->query($sql);
