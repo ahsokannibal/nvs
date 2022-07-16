@@ -35,7 +35,6 @@ $couleur_brouillard_foret		= Imagecolorallocate($perso_carte, 97, 77, 26); // Va
 
 // couleurs image_carte
 $couleur_bataillon		= Imagecolorallocate($image_carte, 0, 0, 0); // noir
-$couleur_compagnie		= Imagecolorallocate($image_carte_compagnie, 0, 0, 0); // noir
 
 // je vais chercher les rails dans ma table
 $sql = "SELECT x_carte, y_carte FROM carte 
@@ -116,8 +115,26 @@ while ($t = $res->fetch_assoc()){
 	imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 }
 
-// J'ajoute le brouillard de guerre
+// J'ajoute les cases non découvertes
 $sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_sud='0'";
+$res = $mysqli->query($sql);
+
+while($not_discovered = $res->fetch_assoc()){
+
+	$x 			= $not_discovered["x_carte"];
+	$y 			= $not_discovered["y_carte"];
+	$fond		= $not_discovered["fond_carte"];
+
+	imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $noir);
+}
+
+// J'ajoute le brouillard de guerre
+$sql = "SELECT x_carte, y_carte, fond_carte FROM carte
+	WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib
+	ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = 2)
+	AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2
+	ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 2)
+	AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_sud_date))>".BROUILLARD_DE_GUERRE_S;
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
