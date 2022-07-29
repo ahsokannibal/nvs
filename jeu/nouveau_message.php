@@ -60,11 +60,9 @@ if(isset($_SESSION["id_perso"])){
 				echo "<div class=\"info\">Vous devez obligatoirement renseigner le destinataire du message</div>";
 			}
 			else {
-				if(trim($_POST["objet"]) == ""){
+				$objet = trim(filter_input(INPUT_POST, "objet", FILTER_SANITIZE_STRING));
+				if(strlen($objet) == 0){
 					$objet = "(Sans objet)";
-				}
-				else {
-					$objet = htmlentities(addslashes($_POST["objet"]));
 				}
 				
 				$destinataire = $_POST["destinataire"];
@@ -72,7 +70,7 @@ if(isset($_SESSION["id_perso"])){
 				$nbdest = count($dest);
 				
 				$expediteur = $pseudo;
-				$message = addslashes($_POST["message"]);
+				$message = trim(filter_input(INPUT_POST, "message", FILTER_SANITIZE_STRING));
 				
 				$lock = "LOCK TABLE message WRITE";
 				$mysqli->query($lock);
@@ -85,7 +83,10 @@ if(isset($_SESSION["id_perso"])){
 				
 				$unlock = "UNLOCK TABLES";
 				$mysqli->query($unlock);
-				
+
+				if (!$id_message) {
+					echo "<div class=\"erreur\">Une erreur s'est produite.</div>";
+				} else {
 				for ($i = 0; $i < $nbdest; $i++) {
 					
 					// recupération du nom du perso destinataire
@@ -132,6 +133,7 @@ if(isset($_SESSION["id_perso"])){
 						
 						header("Location:messagerie.php?envoi=ok");
 					}
+				}
 				}
 			}
 		}
