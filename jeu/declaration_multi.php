@@ -125,7 +125,11 @@ if($dispo == '1' || $admin){
 					</div>
 				</div>
 			</div>
+
+			<p>A des fins de transparence, les multicomptes (même famille, colocs, ...) sont à déclarer sur le salon dédié du discord commun.</p>
+			<p>Les multicomptes sauvages sont formellement interdits et seront sévèrement sanctionnés.</p>
 			
+<!---
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
@@ -180,6 +184,7 @@ if($dispo == '1' || $admin){
 				</div>
 			</div>
 			
+-->
 		</div>
 		
 		<!-- Optional JavaScript -->
