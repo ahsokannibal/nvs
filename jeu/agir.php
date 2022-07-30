@@ -1534,7 +1534,9 @@ if ($verif_id_perso_session) {
 								
 									echo "Vous avez lancé une attaque sur <b>$nom_batiment [$id_cible]</b>.<br>";
 									
-									$gain_xp = mt_rand(1,3);
+									$gain_xp = 1;
+									if ($camp_instance != $clan_perso)
+										$gain_xp = mt_rand(1,3);
 									
 									if ($gain_xp_tour_perso + $gain_xp > 20) {
 										$gain_xp = 20 - $gain_xp_tour_perso;
@@ -1604,6 +1606,7 @@ if ($verif_id_perso_session) {
 										}
 										
 										// Canon d'artillerie
+										$bonus_degats_canon = 0;
 										if ($id_arme_attaque == 13 || $id_arme_attaque == 22) {
 											// Bonus dégats 20D10
 											$bonus_degats_canon = calcul_des_attaque(20, 10);
@@ -1866,6 +1869,13 @@ if ($verif_id_perso_session) {
 												$mysqli->query($sql);
 												
 											}
+
+											// L'arme fait des dégats de zone
+											if ($degatZone_arme_attaque) {
+												$degats_collat = floor(($degats_final - $bonus_degats_canon) / 3);
+												check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+											}
+
 												
 											echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 										}

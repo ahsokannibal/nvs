@@ -1054,7 +1054,102 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				echo "<br><center><a href=\"jouer.php\">retour</a></center>";
 			}
 		} else {
-			// Batiment => pas de collat sur batiment
+			// recuperation des données du batiment	
+			$sql = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, description, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance 
+					FROM batiment, instance_batiment
+					WHERE batiment.id_batiment=instance_batiment.id_batiment
+					AND id_instanceBat=$id_cible_collat";
+			$res = $mysqli->query($sql);
+			$bat = $res->fetch_assoc();
+			
+			$id_batiment 			= $bat['id_batiment'];
+			$nom_batiment 			= $bat['nom_batiment'];
+			$taille_batiment		= $bat['taille_batiment'];
+			$description_batiment 	= $bat['description'];
+			$nom_instance_batiment 	= $bat['nom_instance'];
+			$pv_instance 			= $bat['pv_instance'];
+			$pvMax_instance 		= $bat['pvMax_instance'];
+			$x_instance 			= $bat['x_instance'];
+			$y_instance 			= $bat['y_instance'];
+			$camp_instance 			= $bat['camp_instance'];
+			$contenance_instance 	= $bat['contenance_instance'];
+
+			if($camp_instance == '1'){
+				$camp_bat 		= 'b';
+				$couleur_bat 	= 'blue';
+				$nom_camp_bat 	= 'Nord';
+			}
+			if($camp_instance == '2'){
+				$camp_bat 		= 'r';
+				$couleur_bat 	= 'red';
+				$nom_camp_bat 	= 'Sud';
+			}
+
+			// inflige seulement degats collat aux barricades
+			if ($id_batiment != 1)
+				continue;
+
+			//la cible est encore en vie
+			if ($pv_instance > 0) {
+				$gain_xp_collat = 1;
+				if ($gain_xp_tour_perso + $gain_xp_collat > 20) {
+					$gain_xp_collat = 0;
+					$max_xp_tour_atteint = true;
+				}
+
+				$gain_xp_collat_cumul += $gain_xp_collat;
+
+				echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_batiment<br>";
+
+				// mise à jour des pv du batiment
+				$sql = "UPDATE instance_batiment SET pv_instance=pv_instance-$degats_collat WHERE id_instanceBat='$id_cible_collat'";
+				$mysqli->query($sql);
+
+				if ($gain_xp_collat_cumul <= $max_gain_xp_collat_cumul && !$max_xp_tour_atteint) {
+					echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
+
+					$model_perso->perso_gain_xp($id, $gain_xp_collat);
+					$gain_xp_tour_perso += $gain_xp_collat;
+
+					// Passage grade grouillot
+					passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
+
+				} else {
+					$gain_xp_collat = 0;
+					echo "Vous avez gagné 0 xp";
+					if ($max_xp_tour_atteint) {
+						echo " (maximum de gain d'xp par tour atteint)";
+					} else {
+						echo " (maximum de gain d'xp par attaque atteint)";
+					}
+					echo ".<br>";
+				}
+
+				// maj evenement
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<b>$nom_batiment</b>',' ( Dégâts : $degats_collat ; Gain XP : $gain_xp_collat ; Gain PC : 0 )',NOW(),'0')";
+				$mysqli->query($sql);
+
+				if ($pv_instance - $degats_collat <= 0) {
+					// on efface le batiment de la carte
+					$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_instance' AND y_carte='$y_instance'";
+					$mysqli->query($sql);
+
+					// on delete le bâtiment
+					$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_cible_collat'";
+					$mysqli->query($sql);
+
+					echo "Vous avez détruit votre cible ! <font color=red>Félicitations.</font><br>";
+
+					// maj evenement
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a détruit','$id_cible_collat','<font color=$couleur_bat><b>$nom_batiment $nom_instance_batiment</b></font>','',NOW(),'0')";
+					$mysqli->query($sql);
+
+					// maj cv
+					$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
+					$mysqli->query($sql);
+
+				}
+			}
 		}
 	}
 }
