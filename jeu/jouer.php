@@ -1536,6 +1536,9 @@ if($dispo == '1' || $admin){
 					// mise a jour du bonus de perception du perso
 					$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
 					
+				} else if (in_train($mysqli, $id_perso)) {
+					$bonus_perc = -1;
+					$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
 				} else {
 					
 					$sql = "SELECT fond_carte FROM $carte WHERE x_carte=$x_persoN AND y_carte=$y_persoN";
