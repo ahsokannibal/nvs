@@ -181,7 +181,7 @@
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
-								<td>Il s'agit d'une espèce de mur de protection permettant de défendre une ligne de front. La barricade suit ces règles : on la construit pour 10PA, elle possède 250 PV au maximum et un personnage ne peut la franchir tant qu'elle n'est pas détruite. Elles ne peuvent être construites qu'en plaine par des infanteries. Lorsqu'une Barricade est construite, elle possédera entre 15 et 30 PV.</td>
+								<td>Il s'agit d'une espèce de mur de protection permettant de défendre une ligne de front. La barricade suit ces règles : on la construit pour 5PA, elle possède 250 PV au maximum et un personnage ne peut la franchir tant qu'elle n'est pas détruite. Elles ne peuvent être construites qu'en plaine par des infanteries. Lorsqu'une Barricade est construite, elle possédera entre 60 et 120 PV.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b5b.png' alt='pont'></td>
