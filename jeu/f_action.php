@@ -91,6 +91,12 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 				$cout_pv = 0;
 				$image_rail = "rail_".$num_rail.".gif";
 			}
+			else if ($num_rail == '8') {
+				// eau peu profonde
+				$cout_pa = 8;
+				$cout_pv = 0;
+				$image_rail = "railP.gif";
+			}
 			else {
 				// plaine
 				$cout_pa = 4;
