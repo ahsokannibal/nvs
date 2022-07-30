@@ -473,7 +473,7 @@ CREATE TABLE `competence_as_competence` (
 
 CREATE TABLE IF NOT EXISTS `config_jeu` (
   `code_config` varchar(255) NOT NULL,
-  `valeur_config` tinyint(1) NOT NULL DEFAULT '0'
+  `valeur_config` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
