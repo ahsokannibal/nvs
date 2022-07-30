@@ -3828,6 +3828,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		$couleur_clan_cible = 'black';
 		
 		$gain_pc_cible = 0;
+
+		// maj dernierAttaquant_i
+		$sql = "UPDATE instance_pnj SET dernierAttaquant_i = $id_perso WHERE idInstance_pnj = '$idPerso_carte'";
+		$mysqli->query($sql);
 		
 	} else {
 	

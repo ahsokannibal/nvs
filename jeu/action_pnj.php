@@ -75,10 +75,15 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			$sql = "UPDATE instance_pnj SET pv_i=pv_i+$recup WHERE idInstance_pnj=$id_i_pnj";
 			$mysqli->query($sql);
 		}
-		else {
+		else if ($pv_i < $pvMax) {
 			$sql = "UPDATE instance_pnj SET pv_i=$pvMax WHERE idInstance_pnj=$id_i_pnj";
 			$mysqli->query($sql);
 		}
+		else {
+			$sql = "UPDATE instance_pnj SET dernierAttaquant_i=0 WHERE idInstance_pnj=$id_i_pnj";
+			$mysqli->query($sql);
+		}
+
 		
 		// on recupere les infos de l'instance
 		$sql = "SELECT pv_i, pm_i, x_i, y_i, dernierAttaquant_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
