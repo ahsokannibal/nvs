@@ -4142,19 +4142,18 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 							// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
 							// Calcul PI
 							$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
-							$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
 							
 							// Calcul PC
 							$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
 							$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
 						}
 						else {
-							$pi_perso_fin = floor(($pi_perso_cible * 60) / 100);
+							$pi_perdu 		= floor(($pi_perso_cible * 40) / 100);
 							$pc_perso_fin = $pc_perso_cible;
 						}
 						
 						// maj stats / XP / PI / PC de la cible
-						$sql = "UPDATE perso SET pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+						$sql = "UPDATE perso SET xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 						$mysqli->query($sql);
 						
 						// maj stats du perso

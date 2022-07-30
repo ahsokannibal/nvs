@@ -158,19 +158,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 								// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 								// Calcul PI
 								$pi_perdu 		= floor(($pi_cible * 5) / 100);
-								$pi_perso_fin 	= $pi_cible - $pi_perdu;
 								
 								// Calcul PC
 								$pc_perdu		= floor(($pc_cible * 5) / 100);
 								$pc_perso_fin	= $pc_cible - $pc_perdu;
 							}
 							else {
-								$pi_perso_fin = floor(($pi_cible * 60) / 100);
+								$pi_perdu 		= floor(($pi_cible * 40) / 100);
 								$pc_perso_fin = $pc_cible;
 							}
 		
 							// MAJ perte xp/po/stat cible
-							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 							$mysqli->query($sql);
 							
 							// maj carte
@@ -311,19 +310,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_cible * 5) / 100);
-										$pi_perso_fin 	= $pi_cible - $pi_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_cible * 5) / 100);
 										$pc_perso_fin	= $pc_cible - $pc_perdu;
 									}
 									else {
-										$pi_perso_fin = floor(($pi_cible * 60) / 100);
+										$pi_perdu 		= floor(($pi_cible * 40) / 100);
 										$pc_perso_fin = $pc_cible;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 									
 									// maj carte
@@ -440,19 +438,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -574,19 +571,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -721,19 +717,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_cible * 5) / 100);
-										$pi_perso_fin 	= $pi_cible - $pi_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_cible * 5) / 100);
 										$pc_perso_fin	= $pc_cible - $pc_perdu;
 									}
 									else {
-										$pi_perso_fin = floor(($pi_cible * 60) / 100);
+										$pi_perdu 		= floor(($pi_cible * 40) / 100);
 										$pc_perso_fin = $pc_cible;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 									
 									// maj carte
@@ -849,19 +844,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -990,19 +984,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -1138,19 +1131,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 												// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 												// Calcul PI
 												$pi_perdu 		= floor(($pi_cible * 5) / 100);
-												$pi_perso_fin 	= $pi_cible - $pi_perdu;
 												
 												// Calcul PC
 												$pc_perdu		= floor(($pc_cible * 5) / 100);
 												$pc_perso_fin	= $pc_cible - $pc_perdu;
 											}
 											else {
-												$pi_perso_fin = floor(($pi_cible * 60) / 100);
+												$pi_perdu 		= floor(($pi_cible * 40) / 100);
 												$pc_perso_fin = $pc_cible;
 											}
 						
 											// MAJ perte xp/po/stat cible
-											$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+											$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 											$mysqli->query($sql);
 											
 											// maj carte
@@ -1281,19 +1273,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_cible * 5) / 100);
-										$pi_perso_fin 	= $pi_cible - $pi_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_cible * 5) / 100);
 										$pc_perso_fin	= $pc_cible - $pc_perdu;
 									}
 									else {
-										$pi_perso_fin = floor(($pi_cible * 60) / 100);
+										$pi_perdu 		= floor(($pi_cible * 40) / 100);
 										$pc_perso_fin = $pc_cible;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 									
 									// maj carte
@@ -1430,19 +1421,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
