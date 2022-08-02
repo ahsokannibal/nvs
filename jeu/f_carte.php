@@ -135,10 +135,10 @@ function verif_coord_in_perception($x, $y, $x_perso, $y_perso, $perception) {
 }
 
 // Donne le nombre de pm que coute le deplacement suivant le terrain
-function cout_pm($fond) 
+function cout_pm($fond, $type_perso) 
 {
 	switch($fond) {
-		case(I_FORET): return 2; break; 	//foret
+		case(I_FORET): return ($type_perso == 3 || $type_perso == 7) ? 1 : 2; break; 	//foret
 		case(I_EAU): return 4; break; 		//eau
 		case(I_MARECAGE): return 2; break; 	//marecage
 		case(I_DESERT): return 1; break; 	//desert
@@ -152,7 +152,7 @@ function cout_pm($fond)
 		case(I_RAIL1): return 1; break; 	// nouveau rail sur plaine
 		case(I_RAIL2): return 1; break; 	// rail sur coline
 		case(I_RAIL3): return 2; break; 	// rail sur montagne
-		case(I_RAIL4): return 2; break; 	// rail sur desert
+		case(I_RAIL4): return 1; break; 	// rail sur desert
 		case(I_RAIL5): return 1; break; 	// rail sur plaine enneigée
 		case(I_RAIL7): return 1; break; 	// rail sur forêt
 		case(I_RAILP): return 1; break; 	// rail sur pont

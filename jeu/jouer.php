@@ -628,7 +628,7 @@ if($dispo == '1' || $admin){
 												$ys 	= $t["y_carte"];
 												$fond 	= $t["fond_carte"];
 												
-												$cout_pm = cout_pm($fond);
+												$cout_pm = cout_pm($fond, $type_perso);
 												
 												// verification des pm du perso
 												if($pm_perso + $malus_pm >= $cout_pm){
@@ -1358,7 +1358,7 @@ if($dispo == '1' || $admin){
 												// On vérifie que la case n'est pas déjà occupée
 												if (!$oc_c) {
 													
-													$cout_pm = cout_pm($fond);
+													$cout_pm = cout_pm($fond, $type_perso);
 													
 													if ($pm_perso + $malus_pm >= $cout_pm) {
 													
@@ -1829,7 +1829,7 @@ if($dispo == '1' || $admin){
 								$case_occupee 	= $t_carte1["occupee_carte"];
 								$fond 			= $t_carte1["fond_carte"];
 								
-								$cout_pm 	= cout_pm($fond);
+								$cout_pm 	= cout_pm($fond, $type_perso);
 		
 								if (!is_eau_p($fond)) {
 									
@@ -1976,7 +1976,7 @@ if($dispo == '1' || $admin){
 															$case_occupeeB 	= $t_carteB["occupee_carte"];
 															$fondB 			= $t_carteB["fond_carte"];
 															
-															$cout_pmB 		= cout_pm($fondB);
+															$cout_pmB 		= cout_pm($fondB, $type_perso);
 															$bonus_visuB 	= get_malus_visu($fondB) + getBonusObjet($mysqli, $id_perso);
 															
 															// Case cible de la bousculade est-elle déjà occupée ?
@@ -4001,7 +4001,7 @@ if($dispo == '1' || $admin){
 												$fond_im 		= $tab["fond_carte"];
 												
 												$nom_terrain 	= get_nom_terrain($fond_im);
-												$cout_pm 		= cout_pm($fond_im);
+												$cout_pm 		= cout_pm($fond_im, $type_perso);
 												
 												//recuperation du type de perso (image)
 												$sql_perso_im = "SELECT * FROM perso WHERE id_perso='$id_perso_im'";
@@ -4187,7 +4187,7 @@ if($dispo == '1' || $admin){
 										
 										$fond_carte = $tab["fond_carte"];
 										
-										$cout_pm = cout_pm($fond_carte);
+										$cout_pm = cout_pm($fond_carte, $type_perso);
 										
 										afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat, $nom_bat, $cout_pm);
 									}
@@ -4196,7 +4196,7 @@ if($dispo == '1' || $admin){
 										$fond_im 			= $tab["fond_carte"];
 												
 										$nom_terrain 		= get_nom_terrain($fond_im);
-										$cout_pm_terrain 	= cout_pm($fond_im);
+										$cout_pm_terrain 	= cout_pm($fond_im, $type_perso);
 										
 										// verification s'il y a un objet sur cette case
 										$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
