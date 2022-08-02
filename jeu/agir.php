@@ -164,6 +164,7 @@ if ($verif_id_perso_session) {
 					
 					$nom_perso 		= $t_perso["nom_perso"];
 					$image_perso 	= $t_perso["image_perso"];
+					$perc 			= $t_perso["perception_perso"] + $t_perso["bonusPerception_perso"];
 					$xp_perso 		= $t_perso["xp_perso"];
 					$x_perso 		= $t_perso["x_perso"];
 					$y_perso 		= $t_perso["y_perso"];
@@ -201,7 +202,7 @@ if ($verif_id_perso_session) {
 						$couleur_clan_perso = couleur_clan($clan_perso);
 						
 						// verification si le perso est bien a portée d'attaque			
-						if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
+						if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $perc)) {
 							
 							// recuperation des données du perso cible
 							$t_cible = get_cible($mysqli, $id_cible);
@@ -820,6 +821,7 @@ if ($verif_id_perso_session) {
 				
 				$nom_perso 		= $t_perso["nom_perso"];
 				$image_perso 	= $t_perso["image_perso"];
+				$perc 			= $t_perso["perception_perso"] + $t_perso["bonusPerception_perso"];
 				$xp_perso 		= $t_perso["xp_perso"];
 				$x_perso 		= $t_perso["x_perso"];
 				$y_perso 		= $t_perso["y_perso"];
@@ -855,7 +857,7 @@ if ($verif_id_perso_session) {
 					// Récupération de la couleur associée au clan du perso
 					$couleur_clan_perso = couleur_clan($clan_perso);
 					
-					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
+					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $perc)) {
 							
 						// recuperation des données du pnj		
 						$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pv_i, x_i, y_i, bonus_i, pm_pnj, pv_i, pvMax_pnj, protec_pnj 
@@ -1353,6 +1355,7 @@ if ($verif_id_perso_session) {
 				
 				$nom_perso 		= $t_perso["nom_perso"];
 				$image_perso 	= $t_perso["image_perso"];
+				$perc 			= $t_perso["perception_perso"] + $t_perso["bonusPerception_perso"];
 				$xp_perso 		= $t_perso["xp_perso"];
 				$x_perso 		= $t_perso["x_perso"];
 				$y_perso 		= $t_perso["y_perso"];
@@ -1387,7 +1390,7 @@ if ($verif_id_perso_session) {
 					// Récupération de la couleur associée au clan du perso
 					$couleur_clan_perso = couleur_clan($clan_perso);
 					
-					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
+					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $perc)) {
 					
 						$coutPa_attaque=$coutPa_arme_attaque;
 								

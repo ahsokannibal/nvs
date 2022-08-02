@@ -26,6 +26,9 @@ function is_deja_tue_pnj($mysqli, $id_perso, $id_pnj){
 	
 	$sql = "SELECT nb_pnj FROM perso_as_killpnj WHERE id_perso='$id_perso' and id_pnj='$id_pnj'";
 	$res = $mysqli->query($sql);
+	if($res->num_rows == 0){
+		return 0;
+	}
 	$t_verif_t = $res->fetch_assoc();
 	
 	return $t_verif_t["nb_pnj"];
@@ -107,11 +110,19 @@ function possede_lunette_visee($mysqli, $id_perso) {
   * @return int		: distance
   */
 function get_distance($mysqli, $id_perso, $id_cible){
-	$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_perso'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$x_perso = $t['x_carte'];
-	$y_perso = $t['y_carte'];
+	if(in_bat($mysqli, $id_perso)){
+		$sql = "SELECT x_instance,y_instance from instance_batiment ib LEFT JOIN perso_in_batiment pib ON pib.id_instanceBat =  ib.id_instanceBat WHERE pib.id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$x_perso = $t['x_instance'];
+		$y_perso = $t['y_instance'];
+	}else{ 
+		$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$x_perso = $t['x_carte'];
+		$y_perso = $t['y_carte'];
+	}
 
 	$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
 	$res = $mysqli->query($sql);
@@ -140,6 +151,11 @@ function is_a_portee_attaque($mysqli, $carte, $id_perso, $id_cible, $portee_min,
 		return 0;
 	}
 
+	//On récupère le type de terrain du perso
+	$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
+
+	//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
+	$portee_max += get_bonus_portee($fond_carte);
 	// On réduit la portée max à la perception du perso
 	if($per_perso < $portee_max){
 		$portee_max = $per_perso;
@@ -209,10 +225,17 @@ function resource_liste_cibles_a_portee_attaque($mysqli, $carte, $id_perso, $por
 	}
 	else {
 	
+		//On récupère le type de terrain du perso
+		$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
+
+		//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
+		$portee_max += get_bonus_portee($fond_carte);
+		
 		// On réduit la portée max à la perception du perso
 		if($per_perso < $portee_max){
 			$portee_max = $per_perso;
 		}
+
 
 		// Requete qui recupere les cases a portee d'attaque
 		$sql = "(

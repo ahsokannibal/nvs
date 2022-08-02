@@ -160,6 +160,17 @@ function cout_pm($fond)
 	}
 }
 
+/**
+ * Donne les bonus en portée selon le terrain
+ */
+function get_bonus_portee($fond){
+	switch($fond) {
+		case(I_COLLINE): return 1; break; //colline
+		case(I_MONTAGNE): return 2; break; //montagne
+		default: return 0;
+	}
+}
+
 // Donne les malus en visu suivant le terrain
 function get_malus_visu($fond) 
 {
@@ -1327,5 +1338,23 @@ function get_image_type_perso($type_p, $camp_perso) {
 	}
 	
 	return $im_type_perso;
+}
+
+/**
+ * Fonction qui récupère le fond_carte d'un perso sur base de son id
+ */
+function get_fond_carte_perso($mysqli,$carte, $id_perso){
+	$sql = "SELECT fond_carte FROM $carte 
+	WHERE idPerso_carte = $id_perso";
+
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+
+	//On teste que la requête retourne bien un résultat
+	if($res->num_rows == 1){
+		return $t["fond_carte"];
+	}
+	return "";
+	
 }
 ?>
