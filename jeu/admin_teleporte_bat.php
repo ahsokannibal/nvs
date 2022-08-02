@@ -143,7 +143,7 @@ if(isset($_SESSION["id_perso"])){
 						$sql = "SELECT id_instanceBat, nom_instance, nom_batiment, x_instance, y_instance FROM instance_batiment, batiment, perso 
 								WHERE instance_batiment.camp_instance = perso.clan
 								AND instance_batiment.id_batiment = batiment.id_batiment
-								AND ( instance_batiment.id_batiment='9' OR instance_batiment.id_batiment='8' OR instance_batiment.id_batiment='7' OR instance_batiment.id_batiment='11')
+								AND ( instance_batiment.id_batiment='9' OR instance_batiment.id_batiment='8' OR instance_batiment.id_batiment='7' OR instance_batiment.id_batiment='11' OR instance_batiment.id_batiment='12')
 								AND perso.id_perso = '$id_perso_a_teleporter'
 								ORDER BY id_instanceBat ASC";
 						$res = $mysqli->query($sql);
