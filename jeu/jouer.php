@@ -3235,7 +3235,7 @@ if($dispo == '1' || $admin){
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td align='center'><?php echo $porteeMax_arme_dist; ?></td>
+									<td align='center'><?php if(!in_bat($mysqli, $id_perso)) echo $porteeMax_arme_dist + get_bonus_portee($fond); else echo $porteeMax_arme_dist?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
