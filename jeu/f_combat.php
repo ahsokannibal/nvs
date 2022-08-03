@@ -181,11 +181,15 @@ function is_a_portee_attaque($mysqli, $carte, $id_perso, $id_cible, $portee_min,
 		return 0;
 	}
 
-	//On récupère le type de terrain du perso
-	$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
+	//bonus de portée du terrain uniquement pour les armes à distance
+	if($portee_max > 1){
+		//On récupère le type de terrain du perso
+		$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
 
-	//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
-	$portee_max += get_bonus_portee($fond_carte);
+		//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
+		$portee_max += get_bonus_portee($fond_carte);
+	}
+	
 	// On réduit la portée max à la perception du perso
 	if($per_perso < $portee_max){
 		$portee_max = $per_perso;
@@ -255,12 +259,14 @@ function resource_liste_cibles_a_portee_attaque($mysqli, $carte, $id_perso, $por
 	}
 	else {
 	
-		//On récupère le type de terrain du perso
-		$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
+		//bonus de portée du terrain uniquement pour les armes à distance
+		if($type_attaque == 'dist'){
+			//On récupère le type de terrain du perso
+			$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
 
-		//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
-		$portee_max += get_bonus_portee($fond_carte);
-		
+			//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
+			$portee_max += get_bonus_portee($fond_carte);
+		}
 		// On réduit la portée max à la perception du perso
 		if($per_perso < $portee_max){
 			$portee_max = $per_perso;
