@@ -123,13 +123,43 @@ function get_distance($mysqli, $id_perso, $id_cible){
 		$x_perso = $t['x_carte'];
 		$y_perso = $t['y_carte'];
 	}
+	$x_cible = "";
+	$y_cible = "";
+	//si la cible est un batiment, 
+	if($id_cible >= 50000 && $id_cible < 200000){
+		$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
+		$res = $mysqli->query($sql);
+		$rows = $res->fetch_all(MYSQLI_ASSOC);
+		$first = true;
+		$distance_min;
+		//on va chercher la case la plus proche en distance du batiment
+		foreach ($rows as $row) {
+			//on initialise ainsi pour que les variables aient une première valeur
+			if ($first) {
+				print("first");
+				$first = false;
+				$x_cible = $row['x_carte'];
+				$y_cible = $row['y_carte'];
+				$distance_min = max(abs($x_perso-$row['x_carte']), abs($y_perso-$row['y_carte']));
+			}else{
+				$distance = max(abs($x_perso-$row['x_carte']), abs($y_perso-$row['y_carte']));
+				//Si on trouve une case plus proche
+				if($distance < $distance_min){
+					$x_cible = $row['x_carte'];
+					$y_cible = $row['y_carte'];
+					$distance_min=$distance;
+				}				
+			}
+		}
+	}else{
+		$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$x_cible = $t['x_carte'];
+		$y_cible = $t['y_carte'];
 
-	$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$x_cible = $t['x_carte'];
-	$y_cible = $t['y_carte'];
-
+	}
+	
 	return max(abs($x_perso - $x_cible), abs($y_perso - $y_cible));
 }
 

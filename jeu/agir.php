@@ -441,10 +441,15 @@ if ($verif_id_perso_session) {
 										// Bonus defense objets cible 
 										$bonus_defense_objet = get_bonus_defense_objet($mysqli, $id_cible);
 
+										//attaque avec arme 4+ de portée, baisse de précision sur max distance
 										$bonus_precision_distance = 0;
 										if ($porteeMax_arme_attaque > 3) {
 											$distance = get_distance($mysqli, $id, $id_cible);
-											if ($distance == $porteeMax_arme_attaque)
+											//on récupère le bonus de portée si le joueur n'est pas dans un batiment
+											$fond = get_fond_carte_perso($mysqli, $carte, $id);
+											$bonus_portee = in_bat($mysqli, $id)||empty($fond)?0:get_bonus_portee($fond);
+
+											if ($distance == $porteeMax_arme_attaque + $bonus_portee)
 												$bonus_precision_distance = -15;
 										}
 										
@@ -1014,7 +1019,19 @@ if ($verif_id_perso_session) {
 										$bonus_precision_bat = -30;
 									}
 
-									$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain + $bonus_precision_bat;
+									//attaque avec arme 4+ de portée, baisse de précision sur max distance
+									$bonus_precision_distance = 0;
+									if ($porteeMax_arme_attaque > 3) {
+										$distance = get_distance($mysqli, $id, $id_cible);
+										//on récupère le bonus de portée si le joueur n'est pas dans un batiment
+										$fond = get_fond_carte_perso($mysqli, $carte, $id);
+										$bonus_portee = in_bat($mysqli, $id)||empty($fond)?0:get_bonus_portee($fond);
+
+										if ($distance == $porteeMax_arme_attaque + $bonus_portee)
+											$bonus_precision_distance = -15;
+									}
+
+									$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain + $bonus_precision_bat + $bonus_precision_distance;
 
 									$bonus_precision_objet = 0;
 									if ($porteeMax_arme_attaque == 1) {
@@ -1027,7 +1044,7 @@ if ($verif_id_perso_session) {
 									$precision_final += $bonus_precision_objet;
 
 									echo "Votre score de touche : ".$touche."<br>";
-									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque;
+									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus precision distance : ".$bonus_precision_distance;
 									if ($bonus_precision_bat != 0) {
 										echo " -- Bonus du batiment : ".$bonus_precision_bat;
 									}
@@ -1568,7 +1585,19 @@ if ($verif_id_perso_session) {
 										$bonus_precision_bat = -30;
 									}							
 									
-									$precision_final = $precision_arme_attaque + $bonus_precision_bat;
+									//attaque avec arme 4+ de portée, baisse de précision sur max distance
+									$bonus_precision_distance = 0;
+									if ($porteeMax_arme_attaque > 3) {
+										$distance = get_distance($mysqli, $id, $id_cible);
+										//on récupère le bonus de portée si le joueur n'est pas dans un batiment
+										$fond = get_fond_carte_perso($mysqli, $carte, $id);
+										$bonus_portee = in_bat($mysqli, $id)||empty($fond)?0:get_bonus_portee($fond);
+										print($distance.' '.($porteeMax_arme_attaque + $bonus_portee));
+										if ($distance == $porteeMax_arme_attaque + $bonus_portee)
+											$bonus_precision_distance = -15;
+									}
+
+									$precision_final = $precision_arme_attaque + $bonus_precision_bat + $bonus_precision_distance;
 									
 									$bonus_precision_objet = 0;
 									if ($porteeMax_arme_attaque == 1) {
@@ -1581,7 +1610,7 @@ if ($verif_id_perso_session) {
 									$precision_final += $bonus_precision_objet;
 									
 									echo "Votre score de touche : ".$touche."<br>";
-									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Bonus Précision objet : ".$bonus_precision_objet."";
+									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Bonus Précision objet : ".$bonus_precision_objet."  -- Bonus precision distance : ".$bonus_precision_distance;
 									if ($bonus_precision_bat != 0) {
 										echo " -- Bonus du batiment : ".$bonus_precision_bat."";
 									}
