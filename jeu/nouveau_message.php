@@ -60,9 +60,11 @@ if(isset($_SESSION["id_perso"])){
 				echo "<div class=\"info\">Vous devez obligatoirement renseigner le destinataire du message</div>";
 			}
 			else {
-				$objet = trim(filter_input(INPUT_POST, "objet", FILTER_SANITIZE_STRING));
-				if(strlen($objet) == 0){
+				if(trim($_POST["objet"]) == ""){
 					$objet = "(Sans objet)";
+				}
+				else {
+					$objet = htmlentities(addslashes($_POST["objet"]));
 				}
 				
 				$destinataire = $_POST["destinataire"];
@@ -70,7 +72,7 @@ if(isset($_SESSION["id_perso"])){
 				$nbdest = count($dest);
 				
 				$expediteur = $pseudo;
-				$message = trim(filter_input(INPUT_POST, "message", FILTER_SANITIZE_STRING));
+				$message = addslashes($_POST["message"]);
 				
 				$lock = "LOCK TABLE message WRITE";
 				$mysqli->query($lock);
