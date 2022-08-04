@@ -136,7 +136,6 @@ function get_distance($mysqli, $id_perso, $id_cible){
 		foreach ($rows as $row) {
 			//on initialise ainsi pour que les variables aient une première valeur
 			if ($first) {
-				print("first");
 				$first = false;
 				$x_cible = $row['x_carte'];
 				$y_cible = $row['y_carte'];
