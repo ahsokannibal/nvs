@@ -56,7 +56,12 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 		$t_rail2 = explode(',',$t_rail);
 		$x_rail = $t_rail2[0];
 		$y_rail = $t_rail2[1];
-		$fond_rail = $t_rail2[2];
+
+		// récupération du rail à détruire
+		$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$fond_rail = $t['fond_carte'];
 		
 		// verification possibilité construction rail
 		$verif_construction_rail = verification_construction_rail($mysqli, $x_rail, $y_rail);
