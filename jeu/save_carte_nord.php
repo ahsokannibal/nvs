@@ -25,6 +25,7 @@ $couleur_perso_clan1 			= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu
 $couleur_perso_clan2 			= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
 $couleur_bat_clan1 				= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
 $couleur_bat_clan2 				= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
+$couleur_bat_neutre				= Imagecolorallocate($perso_carte, 130, 130, 130); // gris batiments
 $couleur_rail					= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
 $couleur_brouillard_plaine		= Imagecolorallocate($perso_carte, 208, 192, 122); // Chamois
 $couleur_brouillard_eau			= Imagecolorallocate($perso_carte, 187, 174, 152); // Grège
@@ -95,7 +96,7 @@ while ($t = $res->fetch_assoc()){
 }
 
 // je vais chercher les batiments dans ma table
-$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND pv_instance>0";
+$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND (pv_instance>0 OR instance_batiment.id_batiment = 13)";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -104,15 +105,26 @@ while ($t = $res->fetch_assoc()){
 	$y 			= $t["y_instance"];
 	$camp 		= $t["camp_instance"];
 	$taille_bat = $t["taille_batiment"];
+	$id_bat 		= $t["id_batiment"];
 	
-	if($camp == '1'){
+	switch($camp){
+	case "1":
 		$color = $couleur_bat_clan1;
-	}
-	if($camp == '2'){
+		break;
+	case "2":
 		$color = $couleur_bat_clan2;
+		break;
+	default:
+		$color = $couleur_bat_neutre;
 	}
 	
 	imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
+
+	// Met en évidence les points stratégiques
+	if ($id_bat == 13) {
+		imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $color);
+		imageellipse($perso_carte, 3*$x, 600-3*$y, 21, 21, $color);
+	}
 }
 
 // J'ajoute les cases non découvertes
