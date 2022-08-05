@@ -49,7 +49,8 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 (140, 'Apaiser', 1, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 2, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
 (145, 'Bousculer', 1, 'Permet de bouculer quelqu\'un', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (146, 'Construire - Gare', 1, 'Permet de construire une gare.', 1, 0, 0, 250, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(147, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+(147, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(148, 'Construire - Point stratégique', 1, 'Permet de construire un point stratégique.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,8 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 (54, 7, 50),
 (59, 8, 50),
 (64, 9, 100),
-(146, 11, 50);
+(146, 11, 50),
+(148, 13, 1);
 
 
 -- --------------------------------------------------------
@@ -186,7 +188,8 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 (9, 'Fort', 10000, 'Un fort, à defendre coute que coute', 5),
 (10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels', 3),
 (11, 'Gare', 5000, 'Une gare', 3),
-(12, 'Train', 2500, 'Un train', 1);
+(12, 'Train', 2500, 'Un train', 1),
+(13, 'Point stratégique', 100000, 'Point stratégique dont le controle rapporte des points de victoire', 1);
 
 -- --------------------------------------------------------
 
