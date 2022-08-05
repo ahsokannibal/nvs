@@ -46,7 +46,7 @@ if(isset($_SESSION["id_perso"])){
 			else if($camp_bat == '2'){
 				$bat_camp = "r";
 			}
-			else if($camp_bat == '3'){
+			else if($camp_bat == '0'){
 				$bat_camp = "g";
 			}
 			
@@ -67,7 +67,7 @@ if(isset($_SESSION["id_perso"])){
 			
 			$verif_occ_in_map = verif_position_libre($mysqli, $x_bat, $y_bat, $X_MAX, $Y_MAX);
 			
-			if ($verif_occ_in_map) {
+			if ($verif_occ_in_map && ($camp_bat == '1' || $camp_bat == '2' || ($camp_bat == '0' && $id_bat == 13))) {
 					
 				$verif_fond_carte = true;
 
@@ -535,7 +535,7 @@ if(isset($_SESSION["id_perso"])){
 				}
 			}
 			else {				
-				echo "<center>Vous ne pouvez pas construire ce bâtiment la case cible est occupée ou hors carte<br />";
+				echo "<center>Vous ne pouvez pas construire ce bâtiment la case cible est occupée ou hors carte ou le camp pour le batiment n'est pas correct<br />";
 				echo "<a href='anim_creer_batiment.php' class='btn btn-primary'>retour</a></center>";
 			}
 			
@@ -596,6 +596,7 @@ if(isset($_SESSION["id_perso"])){
 							<option value='11'>Gare</option>
 							<option value='8'>Fortin</option>
 							<option value='9'>Fort</option>
+							<option value='13'>Point stratégique</option>
 						</select>
 						<select name="select_verifications">
 							<option value='1'>Aucune verification des contraintes</option>
@@ -604,6 +605,7 @@ if(isset($_SESSION["id_perso"])){
 						<select name="select_camp">
 							<option value='1'>Nord</option>
 							<option value='2'>Sud</option>
+							<option value='0'>Neutre</option>
 						</select>
 						<input type='text' value='' name='coord_x_placement' placeholder='x'>
 						<input type='text' value='' name='coord_y_placement' placeholder='y'>

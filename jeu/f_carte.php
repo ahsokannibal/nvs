@@ -703,7 +703,7 @@ function batiment_pv_capturable($mysqli, $id_bat){
 	$pvMax_instance	= $t['pvMax_instance'];
 	
 	// Calcul pourcentage pv du batiment 
-	$pourc_pv_instance = ($pv_instance / $pvMax_instance) * 100;
+	$pourc_pv_instance = $pvMax_instance == 0 ? 0 : ($pv_instance / $pvMax_instance) * 100;
 	
 	return $pourc_pv_instance <= 80;
 }

@@ -763,7 +763,7 @@ if($dispo == '1' || $admin){
 														// Verification si le perso est de la même nation ou non que le batiment
 														if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
 															
-															$pourc_pv_instance = ($pv_batiment / $pvMax_batiment) * 100;
+															$pourc_pv_instance = $pvMax_batiment == 0 ? 0 : ($pv_batiment / $pvMax_batiment) * 100;
 													
 															if ($pourc_pv_instance <= 80) {
 															
@@ -979,7 +979,7 @@ if($dispo == '1' || $admin){
 														// verification si le perso est de la même nation que le batiment
 														if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
 															
-															$pourc_pv_instance = ($pv_batiment / $pvMax_batiment) * 100;
+															$pourc_pv_instance = $pvMax_batiment == 0 ? 0 : ($pv_batiment / $pvMax_batiment) * 100;
 													
 															if ($pourc_pv_instance <= 80) {
 																

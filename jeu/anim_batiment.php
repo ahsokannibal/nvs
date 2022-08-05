@@ -170,6 +170,7 @@ if($dispo == '1' || $admin){
 										AND instance_batiment.id_batiment != '2' 
 										AND instance_batiment.id_batiment != '5' 
 										AND instance_batiment.id_batiment != '12'
+										AND instance_batiment.id_batiment != '13'
 										ORDER BY instance_batiment.id_batiment";
 								$res = $mysqli->query($sql);
 								
