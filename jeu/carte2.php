@@ -117,9 +117,10 @@ if (@$_SESSION["id_perso"]) {
 			imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $noir);
 		}
 	}
+
 	
 	// je vais chercher les batiments dans ma table
-	$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND pv_instance>0";
+	$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND (pv_instance>0 OR instance_batiment.id_batiment = 13)";
 	$res = $mysqli->query($sql);
 	
 	while ($t = $res->fetch_assoc()){
@@ -128,6 +129,7 @@ if (@$_SESSION["id_perso"]) {
 		$y 			= $t["y_instance"];
 		$camp 		= $t["camp_instance"];
 		$taille_bat = $t["taille_batiment"];
+		$id_bat 		= $t["id_batiment"];
 
 		switch($camp){
 			case "1":
@@ -141,6 +143,12 @@ if (@$_SESSION["id_perso"]) {
 		}
 
 		imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
+
+		// Met en évidence les points stratégiques
+		if ($id_bat == 13) {
+			imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $color);
+			imageellipse($perso_carte, 3*$x, 600-3*$y, 21, 21, $color);
+		}
 	}
 	
 	// J'ajoute les cases non découvertes
