@@ -1,4 +1,5 @@
 <?php
+require_once("f_utils_carte.php");
 session_start();
 
 header("Content-type: image/png");//on va commencer par declarer que l'on veut creer une image
@@ -119,8 +120,7 @@ while ($t = $res->fetch_assoc()){
 
 	// Met en évidence les points stratégiques
 	if ($id_bat == 13) {
-		imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $color);
-		imageellipse($perso_carte, 3*$x, 600-3*$y, 21, 21, $color);
+		drawStar($perso_carte,3*$x,600-3*$y,10,5,$color);
 	}
 }
 
