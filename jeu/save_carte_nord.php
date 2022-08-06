@@ -95,8 +95,8 @@ while ($t = $res->fetch_assoc()){
 	}
 }
 
-// je vais chercher les batiments dans ma table
-$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND (pv_instance>0 OR instance_batiment.id_batiment = 13)";
+// je vais chercher les batiments dans ma table (autres que entrepots, hopitaux, fort, fortins, gares et points stratégiques)
+$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND (pv_instance>0 AND (instance_batiment.id_batiment<6 OR instance_batiment.id_batiment>11))";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -106,38 +106,19 @@ while ($t = $res->fetch_assoc()){
 	$camp 		= $t["camp_instance"];
 	$taille_bat = $t["taille_batiment"];
 	$id_bat 		= $t["id_batiment"];
-	
+
 	switch($camp){
-	case "1":
-		$color = $couleur_bat_clan1;
-		break;
-	case "2":
-		$color = $couleur_bat_clan2;
-		break;
-	default:
-		$color = $couleur_bat_neutre;
+		case "1":
+			$color = $couleur_bat_clan1;
+			break;
+		case "2":
+			$color = $couleur_bat_clan2;
+			break;
+		default:
+			$color = $couleur_bat_neutre;
 	}
-	
+
 	imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
-
-	// Met en évidence les points stratégiques
-	if ($id_bat == 13) {
-		imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $color);
-		imageellipse($perso_carte, 3*$x, 600-3*$y, 21, 21, $color);
-	}
-}
-
-// J'ajoute les cases non découvertes
-$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
-$res = $mysqli->query($sql);
-
-while($not_discovered = $res->fetch_assoc()){
-
-	$x 			= $not_discovered["x_carte"];
-	$y 			= $not_discovered["y_carte"];
-	$fond		= $not_discovered["fond_carte"];
-
-	imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $noir);
 }
 
 // J'ajoute le brouillard de guerre
@@ -184,6 +165,51 @@ while ($t = $res->fetch_assoc()){
 	}
 	
 	imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
+}
+
+// je vais chercher les batiments dans ma table (entrepots, hopitaux, fort, fortins, gares et points stratégiques)
+$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND ((pv_instance>0 AND instance_batiment.id_batiment>=6 AND instance_batiment.id_batiment<=11) OR instance_batiment.id_batiment = 13)";
+$res = $mysqli->query($sql);
+
+while ($t = $res->fetch_assoc()){
+
+	$x 			= $t["x_instance"];
+	$y 			= $t["y_instance"];
+	$camp 		= $t["camp_instance"];
+	$taille_bat = $t["taille_batiment"];
+	$id_bat 		= $t["id_batiment"];
+
+	switch($camp){
+	case "1":
+		$color = $couleur_bat_clan1;
+		break;
+	case "2":
+		$color = $couleur_bat_clan2;
+		break;
+	default:
+		$color = $couleur_bat_neutre;
+	}
+
+	imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
+
+	// Met en évidence les points stratégiques
+	if ($id_bat == 13) {
+		imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $color);
+		imageellipse($perso_carte, 3*$x, 600-3*$y, 21, 21, $color);
+	}
+}
+
+// J'ajoute les cases non découvertes
+$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
+$res = $mysqli->query($sql);
+
+while($not_discovered = $res->fetch_assoc()){
+
+	$x 			= $not_discovered["x_carte"];
+	$y 			= $not_discovered["y_carte"];
+	$fond		= $not_discovered["fond_carte"];
+
+	imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $noir);
 }
 
 $date = date('Y-m-d-H-i-s');
