@@ -389,13 +389,24 @@ if($dispo == '1' || $admin) {
 			
 			// verification bat est un id correct
 			$verif_idBat = preg_match("#^[0-9]*[0-9]$#i","$id_bat");
+
 			
 			if ($verif_idBat && isset($_SESSION["id_perso"])) {
 		
 				$id_perso = $_SESSION["id_perso"];
-				
-				action_saboter($mysqli, $id_perso, $id_bat, 104);
-			
+
+				// Recup infos perso
+				$sql = "SELECT type_perso FROM perso WHERE id_perso='$id_perso'";
+				$res = $mysqli->query($sql);
+				$t_perso = $res->fetch_assoc();
+				$type_perso		= $t_perso['type_perso'];
+
+				// les chiens ne peuvent pas saboter
+				if ($type_perso != 6) {
+					action_saboter($mysqli, $id_perso, $id_bat, 104);
+				} else {
+					echo "<center><font color='red'>les chiens ne peuvent pas saboter.</font></center>";
+				}
 			}
 		}
 		

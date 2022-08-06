@@ -4198,7 +4198,7 @@ if($dispo == '1' || $admin){
 										
 										$cout_pm = cout_pm($fond_carte, $type_perso);
 										
-										afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat, $nom_bat, $cout_pm);
+										afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat, $nom_bat, $cout_pm, $type_perso);
 									}
 									else {
 										
