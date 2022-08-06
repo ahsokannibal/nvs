@@ -170,12 +170,18 @@ if (@$_SESSION["id_perso"]) {
 	}
 
 	// J'ajoute le brouillard de guerre
+	// le brouillard est levé a : 
+	// - 20 cases pour les forts et fortins
+	// - 10 cases pour les gares
+	// - 5 cases pour les tours de guet
 	if ($camp_perso == '1') {
 		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte
 			WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib
 			ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = 1)
 			AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2
-			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 1)
+			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=11 AND ib2.camp_instance = 1)
+			AND coordonnees NOT IN (SELECT ca3.coordonnees FROM carte ca3 LEFT JOIN instance_batiment ib2
+			ON ((ca3.x_carte BETWEEN(ib2.x_instance -5) AND (ib2.x_instance +5)) AND (ca3.y_carte BETWEEN(ib2.y_instance -5) AND(ib2.y_instance +5))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 1)
 			AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_nord_date))>".BROUILLARD_DE_GUERRE_S;
 	}
 	else if ($camp_perso == '2') {
@@ -183,7 +189,9 @@ if (@$_SESSION["id_perso"]) {
 			WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib
 			ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = 2)
 			AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2
-			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 2)
+			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=11 AND ib2.camp_instance = 2)
+			AND coordonnees NOT IN (SELECT ca3.coordonnees FROM carte ca3 LEFT JOIN instance_batiment ib2
+			ON ((ca3.x_carte BETWEEN(ib2.x_instance -5) AND (ib2.x_instance +5)) AND (ca3.y_carte BETWEEN(ib2.y_instance -5) AND(ib2.y_instance +5))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 2)
 			AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_sud_date))>".BROUILLARD_DE_GUERRE_S;
 	}
 	$res = $mysqli->query($sql);
