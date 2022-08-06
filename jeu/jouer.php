@@ -3401,7 +3401,7 @@ if($dispo == '1' || $admin){
 														} else {
 															
 															// Un Batiment
-															$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+															$sql = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
 															$res = $mysqli->query($sql);
 															$tab = $res->fetch_assoc();
 															
@@ -3413,6 +3413,9 @@ if($dispo == '1' || $admin){
 															$camp_cible_cac	= $tab["camp_instance"];
 															
 															$couleur_clan_cible = couleur_clan($camp_cible_cac);
+															$pv_instance	= $tab["pv_instance"];
+															if ($pv_instance <= 0)
+																continue;
 														}
 														
 														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
@@ -3465,7 +3468,7 @@ if($dispo == '1' || $admin){
 														} else {
 														
 															// Un Batiment
-															$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
+															$sql = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
 															$res = $mysqli->query($sql);
 															$tab = $res->fetch_assoc();
 															
@@ -3477,6 +3480,9 @@ if($dispo == '1' || $admin){
 															$camp_cible_dist	= $tab["camp_instance"];
 														
 															$couleur_clan_cible = couleur_clan($camp_cible_dist);
+															$pv_instance	= $tab["pv_instance"];
+															if ($pv_instance <= 0)
+																continue;
 														}
 														
 														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
@@ -3583,13 +3589,16 @@ if($dispo == '1' || $admin){
 														} else {
 															
 															// Un Batiment
-															$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+															$sql = "SELECT nom_batiment FROM batiment, instance_batiment, pv_instance WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
 															$res = $mysqli->query($sql);
 															$tab = $res->fetch_assoc();
 															
 															$nom_cible_cac = $tab["nom_batiment"];
 															
 															$couleur_clan_cible = "black";
+															$pv_instance	= $tab["pv_instance"];
+															if ($pv_instance <= 0)
+																continue;
 														}
 														
 														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
