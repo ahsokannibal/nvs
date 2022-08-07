@@ -3954,7 +3954,7 @@ if($dispo == '1' || $admin){
 													$camp_bat2 		= 'rouge';
 													$image_profil 	= "Sud.gif";
 												default:
-													$camp_bat3 		= 'neutre';
+													$camp_bat2 		= 'neutre';
 													$image_profil 	= "neutre.gif";
 											}
 											
