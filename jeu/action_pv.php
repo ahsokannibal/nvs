@@ -36,7 +36,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 		$nom_camp = $camp == 1 ? "Nord" : "Sud";
 
 		// Ajout des PV
-		$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire - ".$gain_pv." WHERE id_camp='".$camp."'";
+		$sql = "UPDATE stats_camp_pv SET points_victoire = points_victoire + ".$gain_pv." WHERE id_camp='".$camp."'";
 		$mysqli->query($sql);
 
 		// Ajout de l'historique
