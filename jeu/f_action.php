@@ -1315,7 +1315,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			
 				// calcul gain xp
 				$gain_xp = rand(1,3);
-				
+
+				if ($verif_gc && $genie_perso == 1) {
+					$gain_xp = $gain_xp *2;
+				}
+
 				if($camp_bat != $camp_perso){
 					$gain_xp = 1;
 				}
