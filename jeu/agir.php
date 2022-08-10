@@ -1664,7 +1664,7 @@ if ($verif_id_perso_session) {
 											// Passage grade grouillot
 											passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 										}
-											
+
 										// maj evenement
 										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";
 										$mysqli->query($sql);					
@@ -1678,6 +1678,10 @@ if ($verif_id_perso_session) {
 										$x_cible 		= $tab["x_instance"];
 										$y_cible 		= $tab["y_instance"];
 										$id_batiment 	= $tab["id_batiment"];
+
+										// Gain pc sur attaque d'une tour de guet d'un autre camp
+										if ($camp_instance != $clan_perso && $id_batiment == 2)
+											gain_pc_chef($mysqli, $id, 1);
 										
 										/* Début du traitement de la destruction du batiment*/
 										// il est detruit
