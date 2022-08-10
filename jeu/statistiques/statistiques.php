@@ -1,61 +1,6 @@
 <?php
 session_start();
-require_once("../../fonctions.php");
 include("functions_statistiques.php");
-
-$mysqli = db_connexion();
-
-include ('../../nb_online.php');
-
-$stat=1;
-
-// calcul moyenne
-$sql = "SELECT SUM(pourcentage) as somme_pourcentage, SUM(degats) as somme_degats, count(pourcentage) as nb_pourcentage, count(degats) as nb_degats FROM log WHERE type_action = '$stat'";
-$res = $mysqli->query($sql);
-$t = $res->fetch_assoc();
-
-$somme_pourcentage 	= $t['somme_pourcentage'];
-$nb_pourcentage		= $t['nb_pourcentage'];
-$somme_degats	 	= $t['somme_degats'];
-$nb_degats			= $t['nb_degats'];
-
-if ($nb_pourcentage > 0) {
-	$moyenne_pourcentage 	= $somme_pourcentage / $nb_pourcentage;
-}
-else {
-	$moyenne_pourcentage 	= 0;
-}
-
-if ($nb_degats > 0) {
-	$moyenne_degats			= $somme_degats / $nb_degats;
-}
-else {
-	$moyenne_degats			= 0;
-}
-
-// Calcul nombre de réussite
-$nb_reussite 		= 0;
-$chance_reussite 	= 0;
-
-if ($stat == "Bousculade") {
-	
-	$chance_reussite = 66;
-
-	$sql = "SELECT pourcentage FROM log WHERE type_action = '$stat'";
-	$res = $mysqli->query($sql);
-
-	while ($t = $res->fetch_assoc()) {
-		
-		$pourcentage 	= $t['pourcentage'];
-		
-		if ($pourcentage < $chance_reussite) {
-			$nb_reussite++;
-		}
-	}
-
-	// calcul pourcentage reussite
-	$pourcentage_reussite 	= ($nb_reussite / $nb_pourcentage) * 100;
-}
 
 ?>
 
@@ -68,6 +13,8 @@ if ($stat == "Bousculade") {
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.css">
+		
+
 		
 		<link rel="stylesheet" href="css/style.css" />
 	</head>
@@ -124,39 +71,67 @@ if ($stat == "Bousculade") {
 				</div>
 			</div>
 		</div>
-		<!--  <div class="row py-2">
-			<div class="col-md-12 py-1">
-				<div class="card">
-					<div class="card-body">
-						<canvas id="playersGrouillot"></canvas>
-					</div>
-				</div>
-			</div>
-		</div>-->
 		<div class="row  my-5 white-bg">
 			<div class="col">
-				<table id="playersData" class="display nowrap" style="width:100%">
-					<thead>
-					<tr>
-						<th>Matricule</th> 
-						<th>Nom</th>
-						<th>Type</th>
-						<th>Grade</th>
-						<th>Camp</th>
-						<th>Bataillon</th>
-					</tr>
-					</thead>
-					<tfoot>
-					<tr>
-						<th>Matricule</th> 
-						<th>Nom</th>
-						<th>Type</th>
-						<th>Grade</th>
-						<th>Camp</th>
-						<th>Bataillon</th>
-					</tr>
-					</tfoot>
-				</table>
+				<div>
+					<ul class="nav nav-tabs" role="tablist">
+						<li class="nav-item">
+							<a class="nav-link active" href="#tab-table1" data-toggle="tab" role="tab" aria-controls="home" aria-selected="true">Joueurs</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#tab-table2" data-toggle="tab" role="tab" aria-controls="home" aria-selected="false">Armes</a>
+						</li>
+					</ul>
+					<div class="tab-content">
+						<div class="tab-pane active" id="tab-table1">
+						<table id="playersData" class="display nowrap" style="width:100%">
+							<thead>
+							<tr>
+								<th>Matricule</th> 
+								<th>Nom</th>
+								<th>Type</th>
+								<th>Grade</th>
+								<th>Camp</th>
+								<th>Bataillon</th>
+							</tr>
+							</thead>
+							<tfoot>
+							<tr>
+								<th>Matricule</th> 
+								<th>Nom</th>
+								<th>Type</th>
+								<th>Grade</th>
+								<th>Camp</th>
+								<th>Bataillon</th>
+							</tr>
+							</tfoot>
+						</table>
+						</div>
+						<div class="tab-pane" id="tab-table2">
+							<table id="armesData" class="display nowrap" style="width:100%">
+								<thead>
+								<tr>
+									<th>Arme</th> 
+									<th>Nombre d'attaques</th>
+									<th>Précision moyenne</th>
+									<th>Dégat moyen</th>
+									<th>Camp</th>
+								</tr>
+								</thead>
+								<tfoot>
+								<tr>
+									<th>Arme</th> 
+									<th>Nombre d'attaques</th>
+									<th>Précision moyenne</th>
+									<th>Dégat moyen</th>
+									<th>Camp</th>
+								</tr>
+								</tfoot>
+							</table>
+						</div>
+					</div>
+				</div>
+				
 			</div>
 		</div>
 	</div>
@@ -167,8 +142,8 @@ if ($stat == "Bousculade") {
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.js"></script>
 	<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"></script>
 	<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/responsive/2.2.4/js/dataTables.responsive.min.js"></script>
-	<script type="text/javascript" charset="utf8" src="joueurs.js"></script>
-
+	<script type="text/javascript" charset="utf8" src="graphs.js"></script>
+	<script type="text/javascript" charset="utf8" src="datatables.js"></script>
 	
 	</body>
 </html>

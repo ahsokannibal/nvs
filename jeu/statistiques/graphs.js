@@ -72,18 +72,17 @@ function getBarChartData(labels, dataNord, dataSud){
 	};
 }
 
-var listTypes = ['Chef', 'infanterie', 'cavalerie', 'soigneur', 'artillerie', 'toutou'];
+var listTypes = ['Chef', 'Infanterie', 'Cavalerie lourde', 'Soigneur', 'Artillerie', 'Toutou', 'Cavalerie légère'];
 
 
 function createGrouillotBarChartDatas(labels, dataNord, dataSud){
 	listTypes.forEach(function(type){
 		var countNord;
 		var foundNord = dataBarChart.find(function(element, index){
-			if(element.camp=='Nord' && element.type==type){
+			if(element.camp=='1' && element.type==type){
 				return true;
 			}
 		});
-
 		if(foundNord != undefined){
 			countNord = foundNord.compte;
 		}else{
@@ -92,7 +91,7 @@ function createGrouillotBarChartDatas(labels, dataNord, dataSud){
 		
 		var countSud;
 		var foundSud = dataBarChart.find(function(element, index){
-			if(element.camp=='Sud' && element.type==type){
+			if(element.camp=='2' && element.type==type){
 				return true;
 			}
 		});
@@ -197,7 +196,7 @@ function createGadeBarChartDatas(labels, dataNord, dataSud){
 		}
 		var countNord;
 		var foundNord = dataGradeBarChart.find(function(element, index){
-			if(element.camp=='Nord' && element.grade===data.grade){
+			if(element.camp=='1' && element.grade===data.grade){
 				return true;
 			}
 		});
@@ -210,7 +209,7 @@ function createGadeBarChartDatas(labels, dataNord, dataSud){
 		
 		var countSud;
 		var foundSud = dataGradeBarChart.find(function(element, index){
-			if(element.camp=='Sud' && element.grade===data.grade){
+			if(element.camp=='2' && element.grade===data.grade){
 				return true;
 			}
 		});
@@ -220,7 +219,6 @@ function createGadeBarChartDatas(labels, dataNord, dataSud){
 		}else{
 			countSud=0;
 		}
-		
 		if(countNord != 0 || countSud != 0){
 			labels.push(data.grade);
 			dataNord.push(countNord);
@@ -256,22 +254,9 @@ function setGradesChart(){
 	});
 }
 
-function getUnitNameByType(type){
-    switch(parseInt(type)){
-        case 1 : return 'Chef';
-        case 2 : return 'cavalerie';
-        case 3 : return 'infanterie';
-        case 4 : return 'soigneur';
-        case 5 : return 'artillerie';
-        case 6 : return 'toutou';
-        case 7 : return 'scout';
-        default : return '';
-    }
-}
-
 $.ajax({
     method: "POST",
-    url: "/statistiquenvs/router.php",
+    url: "functions_statistiques.php",
     data:{
 		"type" :"player",
 		"function":"playersSideCharts",
@@ -290,7 +275,7 @@ $.ajax({
 
 $.ajax({
     method: "POST",
-    url: "/statistiquenvs/router.php",
+    url: "functions_statistiques.php",
     data:{
 		"type" :"player",
 		"function":"playersGrouillotsCharts",
@@ -308,7 +293,7 @@ $.ajax({
 
 $.ajax({
     method: "POST",
-    url: "/statistiquenvs/router.php",
+    url: "functions_statistiques.php",
     data:{
 		"type" :"player",
 		"function":"pgPieChart",
@@ -327,7 +312,7 @@ $.ajax({
 
 $.ajax({
     method: "POST",
-    url: "/statistiquenvs/router.php",
+    url: "functions_statistiques.php",
     data:{
 		"type" :"player",
 		"function":"playersGradeCharts",
@@ -347,60 +332,3 @@ $(window).resize(function(){
 	setChart();
 	setGrouillotChart();
 });
-
-$(document).ready(function() {
-    var table = $('#playersData').DataTable( {
-		'rowCallback': function(row, data, index){
-			if(data['camp']== "2"){
-				$(row).find('td:eq(4)').css('color', 'red');
-			}else{
-				$(row).find('td:eq(4)').css('color', 'blue');
-			}
-		},
-        "ajax": {
-            "url" : "functions_statistiques.php",
-            "type":"POST",
-            "data":{
-				"type" :"player",
-				"function":"listAll",
-				"params":"..."
-            },
-            "dataSrc": ""
-		},
-		"responsive":"true",
-		"order": [[ 0, "desc" ]],
-		"columns": [
-            { "data": "matricule" },
-            { "data": "nom" },
-            { "data": "type" },
-            { "data": "grade" },
-            { "data": "camp" },
-            { "data": "bataillon" },
-        ],
-        "columnDefs": [ {
-            "targets": 0,
-            "data": "matricule",
-            "render": function (data, type, full, meta){
-                return '<a target="_blank" href="https://nord-vs-sud.fr/jeu/evenement.php?infoid='+data+'">'+ data + '</a>';
-            
-            }
-            
-        },{
-            "targets": 2,
-            "data": "type",
-            "render": function (data, type, full, meta){
-                return getUnitNameByType(data);
-            }
-        },{
-            "targets": 4,
-            "data": "camp",
-            "render": function (data, type, full, meta){
-                return (data==1)? 'Nord':'Sud';
-            }
-        }]
-        
-    });
-} );
-
-
-
