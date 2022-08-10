@@ -115,6 +115,10 @@ while ($t = $res->fetch_assoc()){
 	default:
 		$color = $couleur_bat_neutre;
 	}
+
+	// barricade
+	if ($id_bat == 1)
+		$color = $couleur_bat_neutre;
 	
 	imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 
