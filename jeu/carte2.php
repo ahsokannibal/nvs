@@ -54,6 +54,11 @@ if (@$_SESSION["id_perso"]) {
 	
 	$id_joueur 	= $t2["idJoueur_perso"];
 	$camp_perso	= $t2["clan"];	
+
+	if ($camp_perso != '1' && $camp_perso != '2') {
+		header("Location:afficher_carte.php");
+		exit();
+	}
 	
 	// je vais chercher les rails dans ma table
 	$sql = "SELECT x_carte, y_carte FROM carte 
