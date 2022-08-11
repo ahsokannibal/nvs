@@ -20,10 +20,12 @@ function entete($mysqli, $id) {
 			if($clan_perso == '1'){
 				$couleur_clan_perso = 'blue';
 				$nom_clan = 'Nord';
-			}
-			if($clan_perso == '2'){
+			} else if($clan_perso == '2'){
 				$couleur_clan_perso = 'red';
 				$nom_clan = 'Sud';
+			} else if($clan_perso == '0'){
+				$couleur_clan_perso = 'black';
+				$nom_clan = 'Neutre';
 			}
 			
 			// récupération du grade du perso 

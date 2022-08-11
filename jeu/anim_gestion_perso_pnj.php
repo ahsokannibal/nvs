@@ -56,6 +56,7 @@ if($dispo == '1' || $admin){
 				&& isset($_POST['select_matricule']) && trim($_POST['select_matricule']) != ""
 				&& isset($_POST['select_type_perso']) && trim($_POST['select_type_perso']) != ""
 				&& isset($_POST['select_grade_perso']) && trim($_POST['select_grade_perso']) != ""
+				&& isset($_POST['select_clan_perso']) && trim($_POST['select_clan_perso']) != ""
 				) {
 				
 				$nom_perso 		= $_POST['pseudo'];
@@ -65,6 +66,7 @@ if($dispo == '1' || $admin){
 				$matricule		= $_POST['select_matricule'];
 				$type_perso		= $_POST['select_type_perso'];
 				$grade_perso	= $_POST['select_grade_perso'];
+				$clan_perso	= (int)$_POST['select_clan_perso'];
 				
 				// Récupération pc grade perso
 				$sql = "SELECT pc_grade FROM grades WHERE id_grade = '$grade_perso'";
@@ -73,16 +75,13 @@ if($dispo == '1' || $admin){
 				
 				$pc_grade_perso = $t['pc_grade'];
 				
-				$sql = "SELECT username FROM ".$table_prefix."users WHERE username='".$nom_perso."'";
-				$resultat_user_forum = $mysqli->query($sql);
-				
 				$sql = "SELECT nom_perso FROM perso WHERE nom_perso='".$nom_perso."'";
 				$resultat_user = $mysqli->query($sql);
 				
 				$sql2 = "SELECT email_joueur FROM joueur WHERE email_joueur='".$email_joueur."'";
 				$resultat_user2 = $mysqli->query($sql2);
 					
-				if( $resultat_user->num_rows != 0 || $resultat_user_forum->num_rows != 0) {
+				if( $resultat_user->num_rows != 0) {
 					echo "<center><font color='red'>Erreur: Le pseudo est déjà choisi ou interdit ! Veuillez en choisir un autre</font></center><br /><br />";
 				}
 				elseif ($resultat_user2->num_rows != 0) {
@@ -96,19 +95,17 @@ if($dispo == '1' || $admin){
 				}
 				else {
 					// sécurité camp
-					if($camp == "1" || $camp == "2"){
+					if($camp == $clan_perso || $clan_perso == 0){
 						
 						$old_mdp_joueur = $mdp_joueur;
 						$mdp_joueur = md5($mdp_joueur);
 						
-						if($camp == 1){
+						if($clan_perso == 1){
 							$x_min_spawn 		= 160;
 							$x_max_spawn 		= 200;
 							$y_min_spawn 		= 160;
 							$y_max_spawn 		= 200;
 							$group_id 			= 8;
-							$nom_camp 			= 'Nordistes';
-							$ncamp 				= "Nord";
 							$couleur_clan_perso = "blue";
 							
 							if ($type_perso == 1 || $type_perso == 2) {
@@ -131,14 +128,12 @@ if($dispo == '1' || $admin){
 							}
 						}
 						
-						if($camp == 2){
+						if($clan_perso == 2){
 							$x_min_spawn 		= 0;
 							$x_max_spawn 		= 40;
 							$y_min_spawn 		= 0;
 							$y_max_spawn 		= 40;
 							$group_id 			= 9;
-							$nom_camp 			= 'Sudistes';
-							$ncamp 				= "Sud";
 							$couleur_clan_perso = "red";
 							
 							if ($type_perso == 1 || $type_perso == 2) {
@@ -158,6 +153,33 @@ if($dispo == '1' || $admin){
 							}
 							else if ($type_perso == 7) {
 								$image_chef = "cavalerie_legere_sud.gif";
+							}
+						}
+					
+						if($clan_perso == 0){
+							$x_min_spawn 		= 0;
+							$x_max_spawn 		= 20;
+							$y_min_spawn 		= 90;
+							$y_max_spawn 		= 110;
+							$couleur_clan_perso = "black";
+							
+							if ($type_perso == 1 || $type_perso == 2) {
+								$image_chef = "outlaw.gif";
+							}
+							else if ($type_perso == 3) {
+								$image_chef = "outlaw.gif";
+							}
+							else if ($type_perso == 4) {
+								$image_chef = "outlaw.gif";
+							}
+							else if ($type_perso == 5) {
+								$image_chef = "outlaw.gif";
+							}
+							else if ($type_perso == 6) {
+								$image_chef = "outlaw.gif";
+							}
+							else if ($type_perso == 7) {
+								$image_chef = "outlaw.gif";
 							}
 						}
 					
@@ -200,7 +222,7 @@ if($dispo == '1' || $admin){
 							$bat_spawn_dispo = false;
 							
 							// verification si fort pas en siége présent pour spawn
-							$sql = "SELECT x_instance, y_instance, id_instanceBat, contenance_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE camp_instance='$camp' AND id_batiment='9'";
+							$sql = "SELECT x_instance, y_instance, id_instanceBat, contenance_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE camp_instance='$clan_perso' AND id_batiment='9'";
 							$res = $mysqli->query($sql);
 							
 							while($t = $res->fetch_assoc()) {
@@ -215,7 +237,7 @@ if($dispo == '1' || $admin){
 								// calcul pourcentage pv bat 
 								$pourcentage_pv_bat = ceil(($pv_bat * 100) / $pvMax_bat);
 								
-								$nb_ennemis_siege = nb_ennemis_siege_batiment($mysqli, $x, $y, $camp);
+								$nb_ennemis_siege = nb_ennemis_siege_batiment($mysqli, $x, $y, $clan_perso);
 								
 								// Récupération du nombre de perso dans ce batiment
 								$sql_n = "SELECT count(id_perso) as nb_perso_bat FROM perso_in_batiment WHERE id_instanceBat='$id_bat'";
@@ -235,7 +257,7 @@ if($dispo == '1' || $admin){
 							if (!$bat_spawn_dispo) {
 								
 								// Verification des fortins
-								$sql = "SELECT x_instance, y_instance, id_instanceBat, contenance_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE camp_instance='$camp' AND id_batiment='8'";
+								$sql = "SELECT x_instance, y_instance, id_instanceBat, contenance_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE camp_instance='$clan_perso' AND id_batiment='8'";
 								$res = $mysqli->query($sql);
 								
 								while($t = $res->fetch_assoc()) {
@@ -293,7 +315,7 @@ if($dispo == '1' || $admin){
 							$nom_bataillon = addslashes($nom_bataillon);
 							
 							$insert_sql = "	INSERT INTO perso (id_perso, IDJoueur_perso, nom_perso, x_perso, y_perso, pc_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, or_perso, clan, message_perso, chef, bataillon) 
-											VALUES ('$matricule','$IDJoueur_perso','$nom_perso','$x','$y','$pc_grade_perso','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$protec_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), '20', $camp, '', 1, '$nom_bataillon')";
+											VALUES ('$matricule','$IDJoueur_perso','$nom_perso','$x','$y','$pc_grade_perso','$pvMax_chef','$pvMax_chef','$pmMax_chef','$pmMax_chef','$perc_chef','$recup_chef','$protec_chef','$pamax_chef','$image_chef',NOW(),FROM_UNIXTIME($dla), '20', $clan_perso, '', 1, '$nom_bataillon')";
 							
 							if (!$mysqli->query($insert_sql)) {
 								printf("Erreur : %s\n", $mysqli->error);
@@ -366,7 +388,7 @@ if($dispo == '1' || $admin){
 						}
 					}
 					else {
-						$mess_err .= "<center>Erreur: Camp invalide !</center><br /><br />";
+						$mess_err .= "<center>Erreur: Le camp doit être celui de l'anim ou neutre</center><br /><br />";
 					}
 				}
 			}
@@ -428,7 +450,7 @@ if($dispo == '1' || $admin){
 				$y_perso_pnj	= $t['y_perso'];
 				$nom_perso		= $t["nom_perso"];
 				
-				if ($camp_perso_pnj == $camp) {
+				if ($camp_perso_pnj == $camp || $camp_perso_pnj == 0) {
 					
 					// On souhaite téléporter le perso hors carte
 					if (isset($_GET['hors_carte']) && $_GET['hors_carte'] == 'ok') {
@@ -514,7 +536,7 @@ if($dispo == '1' || $admin){
 						
 						$mess .= "Le perso PNJ d'id $id_perso_teleport a bien été téléporté en $x_teleport / $y_teleport";
 						
-						$texte = addslashes("Téléportation du Perso PNJ matricule ".$id_perso_teleport." en ".$x_teleport." / ".$y_teleport."");
+						$texte = addslashes("Télép PNJ[".$id_perso_teleport."] : ".$x_teleport."/".$y_teleport."");
 				
 						// log_action_animation
 						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_gestion_perso_pnj.php', 'Téléportation Perso PNJ', '$texte')";
@@ -761,8 +783,8 @@ if($dispo == '1' || $admin){
 						if (!isset($_GET['creer']) && !isset($_GET['creer_pnj_forum'])) {
 						?>
 						<a class="btn btn-success" href="anim_gestion_perso_pnj.php?creer=ok">Créer un perso</a>
-						<a class="btn btn-success" href="anim_gestion_perso_pnj.php?creer_pnj_forum=ok">Créer un PNJ Forum</a>
 						<?php
+						//<a class="btn btn-success" href="anim_gestion_perso_pnj.php?creer_pnj_forum=ok">Créer un PNJ Forum</a>
 						}
 						?>
 					</div>
@@ -815,7 +837,7 @@ if($dispo == '1' || $admin){
 								<label for="select_type_perso">Type de perso</label>
 								<select name='select_type_perso' id='select_type_perso' class="form-control">
 									<?php
-									$sql = "SELECT id_unite, nom_unite FROM type_unite WHERE id_unite = 1";
+									$sql = "SELECT id_unite, nom_unite FROM type_unite WHERE id_unite = 1 OR id_unite = 3";
 									$res = $mysqli->query($sql);
 									
 									while ($t = $res->fetch_assoc()) {
@@ -841,6 +863,14 @@ if($dispo == '1' || $admin){
 										echo "<option value='".$id_grade."'>".$nom_grade."</option>";
 									}
 									?>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="select_clan_perso">Camp du perso</label>
+								<select name='select_clan_perso' id='select_clan_perso' class="form-control">
+									<option value='1'>Nord</option>
+									<option value='2'>Sud</option>
+									<option value='0'>Neutre</option>
 								</select>
 							</div>
 							<div class="form-group">
@@ -910,7 +940,7 @@ if($dispo == '1' || $admin){
 										WHERE perso.id_perso = perso_as_grade.id_perso
 										AND perso_as_grade.id_grade = grades.id_grade
 										AND perso.id_perso > 2 AND perso.id_perso < 100 
-										AND clan = '$camp'
+										AND (clan = '$camp' OR clan = 0)
 										ORDER BY perso.id_perso";
 								$res = $mysqli->query($sql);
 								

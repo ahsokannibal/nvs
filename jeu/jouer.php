@@ -2460,6 +2460,17 @@ if($dispo == '1' || $admin){
 						$mysqli->query($sql);
 					}
 				}
+				if($clan_perso == 0){
+					$clan = 'rond_r.png';
+					$couleur_clan_perso = 'black';
+					
+					$image_profil 		= "profil_sud4.png";
+					$image_sac 			= "sac_sud2.png";
+					$image_compagnie 	= "compagnie_sud2.png";
+					$image_evenement 	= "evenement_sud.png";
+					$image_messagerie 	= "messagerie_sud.png";
+					$image_em 			= "em_sud2.png";
+				}
 				
 				// récupération du grade du perso 
 				$sql_grade = "SELECT perso_as_grade.id_grade, nom_grade FROM perso_as_grade, grades WHERE perso_as_grade.id_grade = grades.id_grade AND id_perso='$id_perso'";
