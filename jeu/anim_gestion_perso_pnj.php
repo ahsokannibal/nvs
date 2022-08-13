@@ -57,6 +57,7 @@ if($dispo == '1' || $admin){
 				&& isset($_POST['select_type_perso']) && trim($_POST['select_type_perso']) != ""
 				&& isset($_POST['select_grade_perso']) && trim($_POST['select_grade_perso']) != ""
 				&& isset($_POST['select_clan_perso']) && trim($_POST['select_clan_perso']) != ""
+				&& isset($_POST['select_image_perso']) && trim($_POST['select_image_perso']) != ""
 				) {
 				
 				$nom_perso 		= $_POST['pseudo'];
@@ -67,6 +68,7 @@ if($dispo == '1' || $admin){
 				$type_perso		= $_POST['select_type_perso'];
 				$grade_perso	= $_POST['select_grade_perso'];
 				$clan_perso	= (int)$_POST['select_clan_perso'];
+				$image_perso	= $_POST['select_image_perso'];
 				
 				// Récupération pc grade perso
 				$sql = "SELECT pc_grade FROM grades WHERE id_grade = '$grade_perso'";
@@ -182,6 +184,9 @@ if($dispo == '1' || $admin){
 								$image_chef = "outlaw.gif";
 							}
 						}
+
+						if ($image_perso != 'Defaut')
+							$image_chef = $image_perso;
 					
 						$date = time();
 						$dla = $date + DUREE_TOUR; // calcul dla
@@ -871,6 +876,12 @@ if($dispo == '1' || $admin){
 									<option value='1'>Nord</option>
 									<option value='2'>Sud</option>
 									<option value='0'>Neutre</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="select_image_perso">Image du perso</label>
+								<select name='select_image_perso' id='select_image_perso' class="form-control">
+									<option value='Defaut'>Defaut</option>
 								</select>
 							</div>
 							<div class="form-group">

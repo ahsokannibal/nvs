@@ -364,6 +364,16 @@ if(isset($_SESSION["id_perso"])){
 				$sql = "UPDATE perso SET or_perso=$new_or_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 			}
+
+			if (isset($_POST['image_perso']) && trim($_POST['image_perso']) != '') {
+				
+				$new_image_perso = $_POST['image_perso'];
+				
+				$mess = "MAJ IMAGE perso matricule ".$id_perso_select." vers ".$new_image_perso;
+				
+				$sql = "UPDATE perso SET image_perso='$new_image_perso' WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+			}
 			
 			if (isset($_POST['pv_perso']) && trim($_POST['pv_perso']) != '') {
 				
@@ -474,7 +484,7 @@ if(isset($_SESSION["id_perso"])){
 								if (isset($id_perso_select) && $id_perso_select == $id_perso) {
 									echo " selected";
 								}
-								echo ">".$nom_perso." [".$id_perso."] - ".$x_perso."/".$y_perso."</option>";
+								echo ">".$id_perso." - ".$nom_perso." - ".$x_perso."/".$y_perso."</option>";
 							}
 							?>
 						
@@ -510,6 +520,7 @@ if(isset($_SESSION["id_perso"])){
 						$test_b 	= $t['bourre_perso'];
 						$camp_perso	= $t['clan'];
 						$bat_perso	= $t['bataillon'];
+						$image_perso	= $t['image_perso'];
 						
 						if ($camp_perso == 1) {
 							$nom_camp_perso 	= "Nord";
@@ -550,7 +561,9 @@ if(isset($_SESSION["id_perso"])){
 						echo "</form>";
 						echo "	</tr>";
 						echo "	<tr>";
-						echo "		<td></td>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>Image: </b><input type='text' name='image_perso' value='".$image_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
 						echo "		<td><b>Bataillon : </b>".$bat_perso."</td>";
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>PV : </b><input type='text' name='pv_perso' value='".$pv_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
