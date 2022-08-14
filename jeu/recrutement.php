@@ -10,6 +10,27 @@ include ('../nb_online.php');
 $dispo = config_dispo_jeu($mysqli);
 $admin = admin_perso($mysqli, $_SESSION["id_perso"]);
 
+function get_pnj_perso_id($mysqli) {
+	$tab_id_existant = array();
+
+	// récupération de la liste des id de perso libres du 3 au 99
+	$sql = "SELECT id_perso FROM perso WHERE id_perso < 100 AND id_perso > 2";
+	$res = $mysqli->query($sql);
+
+	// Création tableau des id existant pour les perso PNJ
+	while ($t = $res->fetch_assoc()) {
+		array_push($tab_id_existant, $t['id_perso']);
+	}
+
+	for ($i = 3; $i < 100; $i++) {
+		if (!in_array($i, $tab_id_existant)) {
+			return (int)$i;
+		}
+	}
+
+	return 0;
+}
+
 if($dispo == '1' || $admin){
 	
 	if(isset($_SESSION["id_perso"])){
@@ -253,11 +274,19 @@ if($dispo == '1' || $admin){
 											$dla = $date + DUREE_TOUR;
 											
 											$bataillon = addslashes($bataillon);
-											
-											// Créer nouveau Perso et la placer dans ce même batiment
-											$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, paMax_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+
+											$new_pnj_perso_id = get_pnj_perso_id($mysqli);
+											if ($id < 100 && $new_pnj_perso_id) {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (id_perso, IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, paMax_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+													VALUES ('$new_pnj_perso_id', '$id_joueur', $id_unite, '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', $pa_unite, '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
+												$mysqli->query($sql);
+											} else {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, paMax_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
 													VALUES ('$id_joueur', $id_unite, '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', $pa_unite, '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
-											$mysqli->query($sql);
+												$mysqli->query($sql);
+											}
 											
 											// Récupération de l'id du perso créé 
 											$sql = "SELECT MAX(id_perso) as id_perso_cree FROM perso WHERE IDJoueur_perso='$id_joueur'";
@@ -398,10 +427,18 @@ if($dispo == '1' || $admin){
 											
 											$bataillon = addslashes($bataillon);
 											
-											// Créer nouveau Perso et la placer dans ce même batiment
-											$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+											$new_pnj_perso_id = get_pnj_perso_id($mysqli);
+											if ($id < 100 && $new_pnj_perso_id) {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (id_perso, IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+													VALUES ('$new_pnj_perso_id', '$id_joueur', '3', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
+												$mysqli->query($sql);
+											} else {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
 													VALUES ('$id_joueur', '3', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
-											$mysqli->query($sql);
+												$mysqli->query($sql);
+											}
 											
 											// Récupération de l'id du perso créé 
 											$sql = "SELECT MAX(id_perso) as id_perso_cree FROM perso WHERE IDJoueur_perso='$id_joueur'";
@@ -547,10 +584,19 @@ if($dispo == '1' || $admin){
 											
 											$bataillon = addslashes($bataillon);
 											
-											// Créer nouveau Perso et la placer dans ce même batiment
-											$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+											$new_pnj_perso_id = get_pnj_perso_id($mysqli);
+											if ($id < 100 && $new_pnj_perso_id) {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (id_perso, IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+													VALUES ('$new_pnj_perso_id', '$id_joueur', '4', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
+												$mysqli->query($sql);
+
+											} else {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
 													VALUES ('$id_joueur', '4', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
-											$mysqli->query($sql);
+												$mysqli->query($sql);
+											}
 											
 											// Récupération de l'id du perso créé 
 											$sql = "SELECT MAX(id_perso) as id_perso_cree FROM perso WHERE IDJoueur_perso='$id_joueur'";
@@ -691,10 +737,18 @@ if($dispo == '1' || $admin){
 											
 											$bataillon = addslashes($bataillon);
 											
-											// Créer nouveau Perso et la placer dans ce même batiment
-											$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+											$new_pnj_perso_id = get_pnj_perso_id($mysqli);
+											if ($id < 100 && $new_pnj_perso_id) {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (id_perso, IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+													VALUES ('$new_pnj_perso_id', '$id_joueur', '5', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
+												$mysqli->query($sql);
+											} else {
+												// Créer nouveau Perso et la placer dans ce même batiment
+												$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
 													VALUES ('$id_joueur', '5', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
-											$mysqli->query($sql);
+												$mysqli->query($sql);
+											}
 											
 											// Récupération de l'id du perso créé 
 											$sql = "SELECT MAX(id_perso) as id_perso_cree FROM perso WHERE IDJoueur_perso='$id_joueur'";
@@ -834,10 +888,18 @@ if($dispo == '1' || $admin){
 												
 												$bataillon = addslashes($bataillon);
 												
-												// Créer nouveau Perso et la placer dans ce même batiment
-												$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, chargeMax_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+												$new_pnj_perso_id = get_pnj_perso_id($mysqli);
+												if ($id < 100 && $new_pnj_perso_id) {
+													// Créer nouveau Perso et la placer dans ce même batiment
+													$sql = "INSERT INTO perso (id_perso, IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, chargeMax_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
+														VALUES ('$new_pnj_perso_id', '$id_joueur', '6', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '2', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
+													$mysqli->query($sql);
+												} else {
+													// Créer nouveau Perso et la placer dans ce même batiment
+													$sql = "INSERT INTO perso (IDJoueur_perso, type_perso, nom_perso, x_perso, y_perso, pvMax_perso, pv_perso, pm_perso, pmMax_perso, perception_perso, recup_perso, protec_perso, pa_perso, chargeMax_perso, image_perso, dateCreation_perso, DLA_perso, clan, message_perso, chef, bataillon) 
 														VALUES ('$id_joueur', '6', '$nom_perso_cree', '$x_instance', '$y_instance', '$pv_unite', '$pv_unite', '0', '$pm_unite', '$perception_unite', '$recup_unite', '$protection_unite', '0', '2', '$image_perso_cree', NOW(), FROM_UNIXTIME($dla), $clan, '', 0, '$bataillon')";
-												$mysqli->query($sql);
+													$mysqli->query($sql);
+												}
 												
 												// Récupération de l'id du perso créé 
 												$sql = "SELECT MAX(id_perso) as id_perso_cree FROM perso WHERE IDJoueur_perso='$id_joueur'";
