@@ -149,7 +149,7 @@ ob_start();
 			<hr />
 			<a href="jeu/classement.php" class='link-light'>Les classements</b></a>
 			<hr />
-			<a href="jeu/statistiques.php" class='link-light'>Les statistiques</b></a>
+			<a href="jeu/statistiques/statistiques.php" class='link-light'>Les statistiques</b></a>
 			<hr />
 			<a href="credits.php" class='link-light'>Crédits</b></a>
 	</aside>
