@@ -166,22 +166,22 @@ if($dispo == '1' || $admin){
 							$couleur_clan_perso = "black";
 							
 							if ($type_perso == 1 || $type_perso == 2) {
-								$image_chef = "outlaw.gif";
+								$image_chef = "cavalerie_neutre.gif";
 							}
 							else if ($type_perso == 3) {
-								$image_chef = "outlaw.gif";
+								$image_chef = "infanterie_neutre.gif";
 							}
 							else if ($type_perso == 4) {
-								$image_chef = "outlaw.gif";
+								$image_chef = "soigneur_neutre.gif";
 							}
 							else if ($type_perso == 5) {
-								$image_chef = "outlaw.gif";
+								$image_chef = "artillerie_neutre.gif";
 							}
 							else if ($type_perso == 6) {
 								$image_chef = "outlaw.gif";
 							}
 							else if ($type_perso == 7) {
-								$image_chef = "outlaw.gif";
+								$image_chef = "cavalerie_legere_neutre.gif";
 							}
 						}
 
