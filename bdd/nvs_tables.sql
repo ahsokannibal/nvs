@@ -362,6 +362,15 @@ CREATE TABLE `carte3` (
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
+
+CREATE TABLE `carte_historique` (
+ `id_carte_historique` int(11) NOT NULL AUTO_INCREMENT,
+ `clan` int(11) NOT NULL,
+ `carte_date` date NOT NULL,
+ `carte_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`carte_json`)),
+ PRIMARY KEY (`id_carte_historique`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
+
 -- --------------------------------------------------------
 
 --
