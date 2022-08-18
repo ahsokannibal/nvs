@@ -1976,7 +1976,7 @@ if($dispo == '1' || $admin){
 															$case_occupeeB 	= $t_carteB["occupee_carte"];
 															$fondB 			= $t_carteB["fond_carte"];
 															
-															$cout_pmB 		= cout_pm($fondB, $type_perso);
+															$cout_pmB 		= cout_pm($fondB, $type_perso_b);
 															$bonus_visuB 	= get_malus_visu($fondB) + getBonusObjet($mysqli, $id_perso);
 															
 															// Case cible de la bousculade est-elle déjà occupée ?
