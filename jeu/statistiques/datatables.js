@@ -7,9 +7,11 @@ $(document).ready(function () {
 		'rowCallback': function(row, data, index){
 			if(data['camp']== "2"){
 				$(row).find('td:eq(4)').css('color', 'red');
-			}else{
+			}else if (data['camp']== "1"){
 				$(row).find('td:eq(4)').css('color', 'blue');
-			}
+			}else{
+                $(row).find('td:eq(4)').css('color', 'black');
+            }
 		},
         "ajax": {
             "url" : "functions_statistiques.php",
@@ -33,7 +35,12 @@ $(document).ready(function () {
             "targets": 4,
             "data": "camp",
             "render": function (data, type, full, meta){
-                return (data==1)? 'Nord':'Sud';
+                if(data==1){
+                    return 'Nord';
+                }else if (data==2){
+                    return 'Sud';
+                }
+                return 'Autre';
             }
         }]
         
@@ -43,9 +50,11 @@ $(document).ready(function () {
 		'rowCallback': function(row, data, index){
 			if(data['camp']== "2"){
 				$(row).find('td:eq(4)').css('color', 'red');
-			}else{
+			}else if (data['camp']== "1"){
 				$(row).find('td:eq(4)').css('color', 'blue');
-			}
+			}else{
+                $(row).find('td:eq(4)').css('color', 'black');
+            }
 		},
         "ajax": {
             "url" : "functions_statistiques.php",
@@ -79,7 +88,12 @@ $(document).ready(function () {
             "targets": 4,
             "data": "camp",
             "render": function (data, type, full, meta){
-                return (data==1)? 'Nord':'Sud';
+                if(data==1){
+                    return 'Nord';
+                }else if (data==2){
+                    return 'Sud';
+                }
+                return 'Autre';
             }
         }]
         
