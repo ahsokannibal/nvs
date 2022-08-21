@@ -771,12 +771,12 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	
 	while ($t = $res->fetch_assoc()){
 		
-		$date_capture 	= $t['date_capture'];
+		$date_capture_o 	= $t['date_capture'];
 		$id_camp_capt	= $t["clan"];
 		$nom_perso_capt	= $t["nom_perso"];
 		$id_perso_capt	= $t["id_perso"];
 		
-		$date_capture = date('Y-m-d H:i:s', $date_capture);
+		$date_capture = date('Y-m-d H:i:s', $date_capture_o);
 		
 		if($id_camp_capt == "1"){
 			$couleur_camp = "blue";
@@ -792,7 +792,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		else if ($id_grade_perso == 102)
 			$id_grade_perso = "1.2";
 
-		$sql = "SELECT IDActeur_cv, nomActeur_cv FROM cv WHERE IDCible_cv=".$id_perso_capt." ORDER BY date_cv DESC LIMIT 1";
+		$sql = "SELECT IDActeur_cv, nomActeur_cv FROM cv WHERE IDCible_cv=".$id_perso_capt." AND (UNIX_TIMESTAMP(date_cv) - $date_capture_o < 10) ORDER BY date_cv DESC LIMIT 1";
 		$res2 = $mysqli->query($sql);
 		$t2 = $res2->fetch_assoc();
 		$nom_perso_b 	= $t2['nomActeur_cv'];
