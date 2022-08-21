@@ -557,7 +557,10 @@ CREATE TABLE `decorations` (
 
 CREATE TABLE `dernier_tombe` ( 
 	`date_capture` DATETIME NOT NULL , 
-	`id_perso_capture` INT NOT NULL 
+	`id_perso_capture` INT NOT NULL ,
+	`camp_perso_capture` tinyint(4) NOT NULL,
+	`id_perso_captureur` INT NOT NULL,
+	`camp_perso_captureur` tinyint(4) NOT NULL
 ) ENGINE = MyISAM;
 
 -- --------------------------------------------------------

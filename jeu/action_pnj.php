@@ -185,7 +185,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 							$mysqli->query($sql);
 							
 							// maj dernier tombé
-							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 							$mysqli->query($sql);
 						}	
 					}
@@ -337,7 +337,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									$mysqli->query($sql);
 									
 									// maj dernier tombé
-									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 									$mysqli->query($sql);
 								}	
 							}
@@ -465,7 +465,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -598,7 +598,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -744,7 +744,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									$mysqli->query($sql);
 									
 									// maj dernier tombé
-									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 									$mysqli->query($sql);
 								}	
 							}
@@ -871,7 +871,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -1011,7 +1011,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -1158,7 +1158,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											$mysqli->query($sql);
 											
 											// maj dernier tombé
-											$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+											$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 											$mysqli->query($sql);
 										}	
 									}
@@ -1300,7 +1300,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									$mysqli->query($sql);
 									
 									// maj dernier tombé
-									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 									$mysqli->query($sql);
 								}	
 							}
@@ -1448,7 +1448,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}

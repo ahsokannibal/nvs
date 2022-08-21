@@ -1928,7 +1928,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$mysqli->query($sql);
 				
 				// maj dernier tombé
-				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso')";
+				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_perso', $camp, $id_perso, $camp)";
 				$mysqli->query($sql);
 				
 				// Quand un grouillot meurt, il perd tout ses Pi
@@ -4176,7 +4176,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						}
 						
 						// maj dernier tombé
-						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$idPerso_carte')";
+						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$idPerso_carte', $clan_cible, $id_perso, $clan)";
 						$mysqli->query($sql);
 					}
 					else {
