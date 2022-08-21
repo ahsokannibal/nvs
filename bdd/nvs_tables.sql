@@ -1043,7 +1043,8 @@ CREATE TABLE `perso` (
   `bataillon` varchar(250) NOT NULL DEFAULT '',
   `convalescence` INT NOT NULL DEFAULT '0',
   `genie` INT NOT NULL DEFAULT '0',
-  `gain_xp_tour` INT NOT NULL DEFAULT '0'
+  `gain_xp_tour` INT NOT NULL DEFAULT '0',
+  `est_renvoye` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------

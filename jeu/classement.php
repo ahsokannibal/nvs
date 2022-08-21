@@ -338,12 +338,12 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$nbr = $res_nbr->num_rows;
 
 	// Nombre de persos au Nord actifs
-	$sql_nbbact = "SELECT id_perso FROM perso WHERE clan='1' AND est_gele='0'";
+	$sql_nbbact = "SELECT id_perso FROM perso WHERE clan='1' AND est_gele='0' AND est_renvoye=0";
 	$res_nbbact = $mysqli->query($sql_nbbact);
 	$nbbact = $res_nbbact->num_rows;
 
 	// Nombre de persos au Sud actifs
-	$sql_nbract = "SELECT id_perso FROM perso WHERE clan='2' AND est_gele='0'";
+	$sql_nbract = "SELECT id_perso FROM perso WHERE clan='2' AND est_gele='0' AND est_renvoye=0";
 	$res_nbract = $mysqli->query($sql_nbract);
 	$nbract = $res_nbract->num_rows;
 		

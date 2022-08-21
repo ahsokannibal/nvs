@@ -140,6 +140,7 @@ if(isset($_SESSION["id_perso"])){
 					WHERE perso.id_perso = perso_as_grade.id_perso 
 					AND perso_as_grade.id_grade = grades.id_grade
 					AND perso.type_perso = type_unite.id_unite
+					AND perso.est_renvoye=0
 					AND idJoueur_perso='$id_joueur_bat'";
 			$res = $mysqli->query($sql);
 			
