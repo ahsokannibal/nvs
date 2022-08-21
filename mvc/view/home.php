@@ -64,7 +64,7 @@ ob_start();
 					Dernier inscrit :<br/> <?= couleur_nation($clan_last_inscrit, $pseudo_last_inscrit); ?>
 				</p>
 				<p>
-					Persos actifs : <br/><span class='text-primary fw-bold'>nordistes : <?= $nb_persos_nord_actifs; ?></span> / <span class='text-danger fw-bold'>sudistes : <?= $nb_persos_sud_actifs; ?></span>
+					Joueurs actifs : <br/><span class='text-primary fw-bold'>nordistes : <?= $nb_joueurs_nord_actifs; ?></span> / <span class='text-danger fw-bold'>sudistes : <?= $nb_joueurs_sud_actifs; ?></span>
 				</p>
 				<p>
 					Vous voulez en découdre ?<br/>

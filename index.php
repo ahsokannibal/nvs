@@ -28,19 +28,17 @@ $t = $res->fetch_assoc();
 
 $nb_persos_actifs = $t['nb_persos_actifs'];
 
-// Nombre de persos actif nordistes
-$sql = "SELECT count(id_perso) as nb_persos_nord_actifs FROM perso WHERE est_gele='0' AND clan='1'";
+// Nombre de joueurs actif nordistes
+$sql = "SELECT COUNT(id_perso) as nb_joueurs_nord_actifs FROM perso WHERE clan='1' AND chef='1' AND est_gele='0'";
 $res = $mysqli->query($sql);
 $t = $res->fetch_assoc();
+$nb_joueurs_nord_actifs = $t['nb_joueurs_nord_actifs'];
 
-$nb_persos_nord_actifs = $t['nb_persos_nord_actifs'];
-
-// Nombre de persos actif sudistes
-$sql = "SELECT count(id_perso) as nb_persos_sud_actifs FROM perso WHERE est_gele='0' AND clan='2'";
+// Nombre de joueurs actif sudistes
+$sql = "SELECT COUNT(id_perso) as nb_joueurs_sud_actifs FROM perso WHERE clan='2' AND chef='1' AND est_gele='0'";
 $res = $mysqli->query($sql);
 $t = $res->fetch_assoc();
-
-$nb_persos_sud_actifs = $t['nb_persos_sud_actifs'];
+$nb_joueurs_sud_actifs = $t['nb_joueurs_sud_actifs'];
 
 
 // on prépare une requête SQL permettant de compter le nombre de tuples (soit le nombre de clients connectés au site) contenu dans la table
