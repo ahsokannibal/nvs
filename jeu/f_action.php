@@ -1932,7 +1932,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$mysqli->query($sql);
 				
 				// Quand un grouillot meurt, il perd tout ses Pi
-				$sql = "UPDATE perso SET pi_perso = 0 WHERE id_perso='$id_perso'";
+				$sql = "UPDATE perso SET xp_perso=xp_perso-pi_perso, pi_perso=0 WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 				
 				echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
