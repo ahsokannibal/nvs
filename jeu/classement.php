@@ -800,7 +800,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 
 		$grade_b = "";
 		$couleur_camp_b = "black";
-		if ($id_perso_b < 50000) {
+		if ($id_perso_b != 0 && $id_perso_b < 50000) {
 			$sql = "SELECT clan, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades WHERE perso.id_perso = perso_as_grade.id_perso AND perso_as_grade.id_grade = grades.id_grade AND perso.id_perso=".$id_perso_b;
 			$res3 = $mysqli->query($sql);
 			$t3 = $res3->fetch_assoc();
