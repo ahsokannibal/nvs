@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_recrutement.php");
 
 $mysqli = db_connexion();
 
@@ -200,21 +201,7 @@ if($dispo == '1' || $admin){
 									if ($pa_perso >= 3) {
 										
 										// Calculer PG déjà utilisés par le joueur
-										$pg_utilise = 0;
-										
-										$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
-										$res = $mysqli->query($sql);
-										while ($tab = $res->fetch_assoc()) {
-											
-											$type_perso_joueur = $tab["type_perso"];
-											
-											$sql_u = "SELECT cout_pg FROM type_unite WHERE id_unite='$type_perso_joueur'";
-											$res_u = $mysqli->query($sql_u);
-											$t_u = $res_u->fetch_assoc();
-											
-											$pg_utilise += $t_u["cout_pg"];
-											
-										}
+										$pg_utilise = calcul_pg($mysqli, $id_joueur);
 										
 										// Calcul PG restant au joueur
 										$pg_restant = $pg - $pg_utilise;
@@ -352,21 +339,7 @@ if($dispo == '1' || $admin){
 									if ($pa_perso >= 3) {
 										
 										// Calculer PG déjà utilisés par le joueur
-										$pg_utilise = 0;
-										
-										$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
-										$res = $mysqli->query($sql);
-										while ($tab = $res->fetch_assoc()) {
-											
-											$type_perso_joueur = $tab["type_perso"];
-											
-											$sql_u = "SELECT cout_pg FROM type_unite WHERE id_unite='$type_perso_joueur'";
-											$res_u = $mysqli->query($sql_u);
-											$t_u = $res_u->fetch_assoc();
-											
-											$pg_utilise += $t_u["cout_pg"];
-											
-										}
+										$pg_utilise = calcul_pg($mysqli, $id_joueur);
 										
 										// Calcul PG restant au joueur
 										$pg_restant = $pg - $pg_utilise;
@@ -509,21 +482,7 @@ if($dispo == '1' || $admin){
 									if ($pa_perso >= 3) {
 										
 										// Calculer PG déjà utilisés par le joueur
-										$pg_utilise = 0;
-										
-										$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
-										$res = $mysqli->query($sql);
-										while ($tab = $res->fetch_assoc()) {
-											
-											$type_perso_joueur = $tab["type_perso"];
-											
-											$sql_u = "SELECT cout_pg FROM type_unite WHERE id_unite='$type_perso_joueur'";
-											$res_u = $mysqli->query($sql_u);
-											$t_u = $res_u->fetch_assoc();
-											
-											$pg_utilise += $t_u["cout_pg"];
-											
-										}
+										$pg_utilise = calcul_pg($mysqli, $id_joueur);
 										
 										// Calcul PG restant au joueur
 										$pg_restant = $pg - $pg_utilise;
@@ -662,21 +621,7 @@ if($dispo == '1' || $admin){
 									if ($pa_perso >= 3) {
 										
 										// Calculer PG déjà utilisés par le joueur
-										$pg_utilise = 0;
-										
-										$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
-										$res = $mysqli->query($sql);
-										while ($tab = $res->fetch_assoc()) {
-											
-											$type_perso_joueur = $tab["type_perso"];
-											
-											$sql_u = "SELECT cout_pg FROM type_unite WHERE id_unite='$type_perso_joueur'";
-											$res_u = $mysqli->query($sql_u);
-											$t_u = $res_u->fetch_assoc();
-											
-											$pg_utilise += $t_u["cout_pg"];
-											
-										}
+										$pg_utilise = calcul_pg($mysqli, $id_joueur);
 										
 										// Calcul PG restant au joueur
 										$pg_restant = $pg - $pg_utilise;
@@ -803,29 +748,16 @@ if($dispo == '1' || $admin){
 									
 									// Besoin de 3PA pour recruter
 									if ($pa_perso >= 3) {
-										
-										// Calculer PG déjà utilisés par le joueur
-										$pg_utilise = 0;
-										
 										$possede_chien = false;
 										
-										$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
+										// Calculer PG déjà utilisés par le joueur
+										$pg_utilise = calcul_pg($mysqli, $id_joueur);
+										
+										$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur' AND type_perso=6";
 										$res = $mysqli->query($sql);
-										while ($tab = $res->fetch_assoc()) {
-											
-											$type_perso_joueur = $tab["type_perso"];
-											
-											if ($type_perso_joueur == 6) {
-												$possede_chien = true;
-											}
-											
-											$sql_u = "SELECT cout_pg FROM type_unite WHERE id_unite='$type_perso_joueur'";
-											$res_u = $mysqli->query($sql_u);
-											$t_u = $res_u->fetch_assoc();
-											
-											$pg_utilise += $t_u["cout_pg"];
-											
-										}
+										$nb = $res->num_rows;
+										if ($nb)
+											$possede_chien = true;
 										
 										// Calcul PG restant au joueur
 										$pg_restant = $pg - $pg_utilise;
@@ -959,27 +891,13 @@ if($dispo == '1' || $admin){
 								
 								$possede_chien = false;
 								
-								// Calculer PG déjà utilisés par le joueur
-								$pg_utilise = 0;
-								
-								$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur'";
+								$pg_utilise = calcul_pg($mysqli, $id_joueur);
+
+								$sql = "SELECT type_perso FROM perso WHERE idJoueur_perso='$id_joueur' AND type_perso=6";
 								$res = $mysqli->query($sql);
-								
-								while ($tab = $res->fetch_assoc()) {
-									
-									$type_perso_joueur = $tab["type_perso"];
-									
-									if ($type_perso_joueur == 6) {
-										$possede_chien = true;
-									}
-									
-									$sql_u = "SELECT cout_pg FROM type_unite WHERE id_unite='$type_perso_joueur'";
-									$res_u = $mysqli->query($sql_u);
-									$t_u = $res_u->fetch_assoc();
-									
-									$pg_utilise += $t_u["cout_pg"];
-									
-								}
+								$nb = $res->num_rows;
+								if ($nb)
+									$possede_chien = true;
 								
 								// Calcul PG restant au joueur
 								$pg_restant = $pg - $pg_utilise;
@@ -988,6 +906,7 @@ if($dispo == '1' || $admin){
 								
 								<center>Vous avez utilisé <b><?php echo $pg_utilise; ?> PG</b> sur un total de <b><?php echo $pg; ?>PG (PG restant : <?php echo $pg_restant; ?>)</b></center>
 								<center>Le recrutement d'un grouillot coute <b>3PA</b>, il vous reste <b><?php echo $pa_perso; ?> PA</b></center>
+								<center>Les grouillots que vous avez renvoyé par le passé peuvent être réactivés dans la page "Gérer ses grouillots".</center>
 								
 								<?php
 
