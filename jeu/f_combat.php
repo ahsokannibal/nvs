@@ -13,7 +13,7 @@ function combat_pnj($precision_pnj, $bonus_pj){
 	$touche = mt_rand(0,100);
 	$precision_final = $precision_pnj - $bonus_pj;
 	
-	return ($precision_final <= $precision_pnj);
+	return ($touche <= $precision_final);
 }
 
 /**
