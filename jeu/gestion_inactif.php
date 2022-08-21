@@ -237,8 +237,8 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 	//***********************************************
 	// Traitement suppression des inactifs
 	//***********************************************
-	// On supprime les persos et le compte du joueur dont les persos sont gelés depuis 130 jours
-	$sql = "SELECT DISTINCT(joueur.id_joueur) FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 130 DAY) AND est_gele='1' AND id_perso!='1' AND id_perso!='2'";
+	// On supprime les persos et le compte des persos PNJs dont les persos sont gelés depuis 130 jours (désactivé pour les joueurs- on souhaite conserver les CVs)
+	$sql = "SELECT DISTINCT(joueur.id_joueur) FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND date_gele < DATE_SUB(CURRENT_DATE, INTERVAL 130 DAY) AND est_gele='1' AND id_perso!='1' AND id_perso!='2' AND id_perso<100";
 	$res_sup = $mysqli->query($sql);
 
 	while ($t = $res_sup->fetch_assoc()){
