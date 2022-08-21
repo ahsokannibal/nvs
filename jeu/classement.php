@@ -360,61 +360,33 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$nbvictr = $t['points_victoire'];
 	
 	// Nombre de persos du sud capturés par le Nord
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=1";
+	$res_ev_capt = $mysqli->query($sql);
 	$nb_ennemis_capt_nord = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du nord capturés par le Sud
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=2";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_ennemis_capt_sud = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du nord capturés par le Nord
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=1";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_allies_capt_nord = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du sud capturés par le Sud
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=2";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_allies_capt_sud = $res_ev_capt->num_rows;
 	
-	// Nombre de persos du nord capturés par autre chose qu'un perso (pnj / canon)
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement > 50000
-					AND IDCible_evenement < 50000
-					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	// Nombre de persos du nord capturés par autre chose qu'un perso (pnj)
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=0";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_autre_capt_nord = $res_ev_capt->num_rows;
 	
-	// Nombre de persos du sud capturés par autre chose qu'un perso (pnj / canon)
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement > 50000
-					AND IDCible_evenement < 50000
-					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	// Nombre de persos du sud capturés par autre chose qu'un perso (pnj)
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=0";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_autre_capt_sud = $res_ev_capt->num_rows;
 	
 	// Nombre de capture de PNJ
@@ -438,7 +410,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures ennemis</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures alliés</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé par un canon ou un pnj)</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé un pnj ou perso neutre)</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Points de victoires</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";

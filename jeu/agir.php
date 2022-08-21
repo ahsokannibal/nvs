@@ -1820,7 +1820,7 @@ if ($verif_id_perso_session) {
 													}
 													
 													// maj dernier tombé
-													$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_p')";
+													$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_p', $clan_p, $id, $clan_perso)";
 													$mysqli->query($sql);
 													
 												}

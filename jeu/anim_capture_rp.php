@@ -201,7 +201,7 @@ if($dispo == '1' || $admin){
 							}
 							
 							// maj dernier tombé
-							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso_capture')";
+							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_perso_capture', $camp_perso_capture, $id_perso, $camp_perso)";
 							$mysqli->query($sql);
 							
 							// Gain PC 
