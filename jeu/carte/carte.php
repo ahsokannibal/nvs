@@ -19,7 +19,7 @@ $sql = "INSERT INTO acces_log (date_acces, id_perso, page) VALUES (NOW(), '$id',
 $mysqli->query($sql);
 	
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html>
 	<head>
 		<title>Nord VS Sud</title>
@@ -29,194 +29,130 @@ $mysqli->query($sql);
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		
 		<!-- Bootstrap CSS -->
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<style>
+			#page {
+					background-image: url("../../images/background-wood2.jpg");
+					height: 100vh;
+				}
+			.form-check{
+				color :white
+			}
+			h1{
+				color:white
+			}
+		</style>
 
 	</head>
 	
-	<body onload="addMouseChecker('carto', 'idInput', 'xy');">
+	<body id="page">
 		
 		<p align="center"><a href="../jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
-		<div class="row">
-			<div class="col-12" align='center'>
-				<a href='histo_carte.php' class='btn btn-primary'>Afficher l'historique de la carte</a>
-			</div>
-		</div>
 		<?php
-			// Le perso appartient-il à une compagnie 
+			/*// Le perso appartient-il à une compagnie 
 			$sql = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res = $mysqli->query($sql);
 			$nb_compagnie = $res->num_rows;	
+
+			//Le perso appartient-il au génie
+			$sql = "SELECT genie FROM perso where id_perso='$id'";
+			$result = $mysqli->query($sql);
+			
+			$perso = $result->fetch_array(MYSQLI_ASSOC);*/
+			
 		?>
-		<div class="grid">
+		<div class="container">
 			<div class="row">
 				<div class="col d-flex justify-content-center">
-					<h1>Carte Stratégique - Mon perso</h1>
+					<h1>Carte Stratégique</h1>
 				</div>
 			</div>
-			<div class="row">
-				<div class="col d-flex justify-content-center">
-					<input type='text' id='idInput' disabled />
+			<div  class="d-flex justify-content-center">
+				<div id="carouselControls" class="carousel slide" data-bs-ride="carousel">
+					<div class="carousel-inner">
+						<button id="carousel-control-prev" class="carousel-control-prev" type="button" data-bs-target="#carouselControls" data-bs-slide="prev">
+							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Previous</span>
+						</button>
+						<button id="carousel-control-next" class="carousel-control-next" type="button" data-bs-target="#carouselControls" data-bs-slide="next">
+							<span class="carousel-control-next-icon" aria-hidden="true"></span>
+							<span class="visually-hidden">Next</span>
+						</button>
+						<div class="carousel-item active">
+							<canvas id="map"></canvas>
+							<div  class="carousel-caption d-none d-md-block">
+								<h5 id="carouselTitle">First slide label</h5>
+								<!--<p id="carouselContent">Some representative placeholder content for the first slide.</p>-->
+							</div>
+						</div>
+					</div>
 				</div>
-			</div>
-			<div class="row">
-				<div class="col d-flex justify-content-center">
-					<img id='carto' src="<?='image_carte.php?imagename=carte'.$id.'.png';?>">
-				</div>
-			</div>
-			<div class="row">
-				<div class="col d-flex justify-content-center">
-					<form action="carte.php" method="post" name="ss_fond">
-						<input type="submit" name="Submit" value="Retirer la topographie"><br />
-						<input type="submit" name="Submit" value="cercles sur mon bataillon">
-						<?php if ($nb_compagnie) {
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
-						} ?>
+				<div class="p-3">
+					<form class="row">
+						<div class="col">
+							<div class="input-group date" id="datepicker">
+								<input type="text" class="form-control" id="date"/>
+								<span class="input-group-append">
+								<span class="input-group-text bg-light d-block">
+									<i class="fa fa-calendar"></i>
+								</span>
+								</span>
+							</div>
+						</div>
 					</form>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="topographie" checked>
+						<label class="form-check-label" for="topographie">
+							Topographie
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="brouillard" checked>
+						<label class="form-check-label" for="brouillard">
+							Brouillard
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="batiments" checked>
+						<label class="form-check-label" for="batiments">
+							Batiments
+						</label>
+					</div>
+					<?php 
+						//if($perso["genie"] > 0){
+							//require_once("contraintes_batiments.php");
+						//}
+					?>
+					
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="bataillon" checked>
+						<label class="form-check-label" for="bataillon">
+							Mon bataillon
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="compagnie">
+						<label class="form-check-label" for="compagnie">
+							Ma compagnie
+						</label>
+					</div>
+
+					
+					<!-- TODO option réservée ? -->
+					<!--<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="zone_bloquage">
+						<label class="form-check-label" for="zone_bloquage">
+							Zone bloquage
+						</label>
+					</div>-->
 				</div>
 			</div>
 		</div>
-	<!--
-	if(isset($_POST['Submit'])){
-		
-		// Enlever le fond
-		if($_POST['Submit'] == "Retirer la topographie"){
-			
-			echo "<center><h1>Carte Stratégique - sans Topographie</h1></center>";
-			
-			echo "<center><input type='text' id='idInput' disabled /><br />";
-			echo "<img id='carto' src=\"image_carte.php?imagename=perso$id.png\"></center>";
-		
-			echo "<div align=\"center\"><br>";
-			echo "Vous pouvez remettre la topographie si vous le souhaitez<br>";
-			echo "<form action=\"carte.php\" method=\"post\" name=\"avec_fond\">";
-			echo "<input type=\"submit\" name=\"Submit\" value=\"Remettre la topographie\">";
-			echo "</div>";
-			echo "</form>";
-		}
-		else {
-			
-			// Enlever la legende
-			if($_POST['Submit'] == "enlever la legende"){
-				echo "<center><input type='text' id='idInput' disabled /><br />";
-				echo "<img id='carto' src=\"image_carte.php?imagename=carte_sl$id.png\"></center>";
-			
-				echo "<div align=\"center\"><br>";
-				echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
-				echo "<form action=\"carte.php\" method=\"post\" name=\"avec_fond\">";
-				echo "<input type=\"submit\" name=\"Submit\" value=\"remettre la legende\">";
-				echo "</div>";
-				echo "</form>";
-			}
-			else {
-				
-				// Remettre la legende
-				if($_POST['Submit'] == "remettre la legende"){
-					echo "<center><input type='text' id='idInput' disabled /><br />";
-					echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
-				
-					echo "<div align=\"center\"><br>";
-					echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
-					echo "<form action=\"carte.php\" method=\"post\" name=\"avec_fond\">";
-					echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\">";
-					echo "</div>";
-					echo "</form>";
-				}
-				else {
-					
-					if ($_POST['Submit'] == "cercles sur mon bataillon") {
-						
-						echo "<center><h1>Carte Stratégique - Mon bataillon</h1></center>";
-						
-						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte_bataillon_sl$id.png\"></center>";
-					
-						echo "<div align=\"center\"><br>";
-						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
-						if ($nb_compagnie) {
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
-						}
-						echo "</div>";
-						echo "</form>";
-					}
-					else if ($_POST['Submit'] == "cercles sur ma compagnie" && $nb_compagnie) {
-						
-						echo "<center><h1>Carte Stratégique - Ma compagnie</h1></center>";
-						
-						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte_compagnie_sl$id.png\"></center>";
-					
-						echo "<div align=\"center\"><br>";
-						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
-						echo "</div>";
-						echo "</form>";
-					}
-					else if ($_POST['Submit'] == "cercles sur mon perso") {
-						
-						echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";							
-							
-						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
-					
-						echo "<div align=\"center\"><br>";
-						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
-						if ($nb_compagnie) {
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
-						}
-						echo "</div>";
-						echo "</form>";
-					}
-					else {
-						echo "<center><h1>Carte Stratégique</h1></center>";
-						
-						echo "<center><input type='text' id='idInput' disabled /><br />";
-						echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
-					
-						echo "<div align=\"center\"><br>";
-						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
-						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
-						if ($nb_compagnie) {
-							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
-						}
-						echo "</div>";
-						echo "</form>";
-					}
-				}
-			}
-		}
-	}
-	else {			
-		
-		echo "<center><h1>Carte Stratégique - Mon perso</h1></center>";
-	
-		echo "<center><input type='text' id='idInput' disabled /><br />";
-		echo "<img id='carto' src=\"image_carte.php?imagename=carte$id.png\"></center>";
-	
-		echo "<div align=\"center\"><br>";
-		echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-		echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
-		echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
-		echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
-		if ($nb_compagnie) {
-			echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
-		}
-		echo "</div>";
-		echo "</form>";
-		
-	}*/-->
-
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 		<script src="carte.js"></script>
 	</body>
 </html>	

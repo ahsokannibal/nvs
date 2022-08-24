@@ -2653,7 +2653,7 @@ if($dispo == '1' || $admin){
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_profil; ?>" alt="profil"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
 							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php"><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte/carte.php"><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
@@ -2688,7 +2688,7 @@ if($dispo == '1' || $admin){
 							
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php"><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte/carte.php"><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>

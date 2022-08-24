@@ -1,1 +1,2 @@
-RewriteRule ^jeu/carte/$ /jeu/carte/ [L]
+RewriteEngine On
+RewriteRule ^jeu/carte/$ /jeu/map [R=301,L]
