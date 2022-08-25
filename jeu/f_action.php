@@ -1835,16 +1835,16 @@ function action_dormir($mysqli, $id_perso){
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	
-	$nom_perso 		  = $t_p["nom_perso"];
-	$recup_perso 	  = $t_p["recup_perso"];
-	$pa_perso 		  = $t_p["pa_perso"];
-	$paMax_perso 	  = $t_p["paMax_perso"];
-	$pv_perso 		  = $t_p["pv_perso"];
-	$pvMax_perso 	  = $t_p["pvMax_perso"];
-	$pm_perso 		  = $t_p["pm_perso"];
-	$pmMax_perso 	  = $t_p["pmMax_perso"];
+	$nom_perso        = $t_p["nom_perso"];
+	$recup_perso      = $t_p["recup_perso"];
+	$pa_perso         = $t_p["pa_perso"];
+	$paMax_perso      = $t_p["paMax_perso"];
+	$pv_perso         = $t_p["pv_perso"];
+	$pvMax_perso      = $t_p["pvMax_perso"];
+	$pm_perso         = $t_p["pm_perso"];
+	$pmMax_perso      = $t_p["pmMax_perso"];
 	$bonusRecup_perso = $t_p["bonusRecup_perso"];
-	$camp 			  = $t_p["clan"];
+	$camp             = $t_p["clan"];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
