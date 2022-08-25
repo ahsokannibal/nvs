@@ -1843,13 +1843,19 @@ function action_dormir($mysqli, $id_perso){
 	$pvMax_perso 	= $t_p["pvMax_perso"];
 	$pm_perso 		= $t_p["pm_perso"];
 	$pmMax_perso 	= $t_p["pmMax_perso"];
-	$br_p 			= $t_p["bonusRecup_perso"];
-	$camp 			= $t_p["clan"];
+	$bonusRecup_perso = $t_p["bonusRecup_perso"];
+	$camp 			  = $t_p["clan"];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
-	$gain_pv = $recup_perso * 2;
+	$bonus_recup_bat 		= get_bonus_recup_bat_perso($mysqli, $id_perso);
+	$bonus_recup_terrain 	= get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso);
+				
+	$bonusRecup_perso += $bonus_recup_bat;
+	$bonusRecup_perso += $bonus_recup_terrain;
+	
+	$gain_pv = ($recup_perso + $bonusRecup_perso)* 2;
 	
 	// test pa
 	if($pa_perso >= $paMax_perso && $pm_perso >= $pmMax_perso){
