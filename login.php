@@ -19,15 +19,15 @@ $throttle_settings = [
   10 => 'block'		//block
 ];
 
-if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['captcha'])) {
+if(isset($_POST['pseudo'],$_POST['password'],$_POST['captcha'])) {
 	
 	// recuperation des variables post
-	$pseudo 	= trim(filter_input(INPUT_POST, "pseudo", FILTER_SANITIZE_STRING));
-	$mdp 		= $_POST['password'];
-	$captcha	= $_POST['captcha'];
+	$pseudo 	= htmlspecialchars(trim($_POST['pseudo']));
+	$mdp 		= trim($_POST['password']);
+	$captcha	= trim($_POST['captcha']);
 	
 	// test champs vide
-	if ( trim($pseudo) == "" || trim($mdp) == "" || trim($captcha) == "") { 
+	if (empty($pseudo) || empty($mdp) || empty($captcha)) {
 		echo "<center><font color='red'>Merci de remplir tous les champs</font><br />";
 		echo "<a href=\"index.php\" class='btn btn-primary'>retour</a></center>";
 	}
@@ -70,7 +70,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 							// recuperation de l'ip du joueur
 							$ip_joueur = realip();
 							$user_agent = get_user_agent();
-							$cookie_val = filter_input(INPUT_COOKIE, "PHPSESSID", FILTER_SANITIZE_STRING);
+							$cookie_val = htmlspecialchars($_COOKIE['PHPSESSID']);
 							
 							// Est ce que ce joueur est déjà présent avec cette IP
 							$sql = "SELECT * FROM joueur_as_ip WHERE ip_joueur = '$ip_joueur' AND id_joueur='$id_joueur'";
