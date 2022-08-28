@@ -2225,7 +2225,7 @@ if($dispo == '1' || $admin){
 
 	<body>
 				<?php
-				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
+				$date_serveur = new DateTime('now', new DateTimeZone('Europe/Paris'));
 				
 				$date_dla = date('d-m-Y H:i:s', $n_dla);
 				
