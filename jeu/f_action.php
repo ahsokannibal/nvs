@@ -415,11 +415,12 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 	}
 	
 	// Verification Hopital distance < 40 cases avec Fort / Fortin ou Gare
-	// Verification Hopital distance >= 50 cases avec autre hopital
+	// Verification Hopital distance >= 30 cases avec autre hopital
 	$verif_bat_pour_construction_hopital = 1;
 	$verif_hop_pour_construction_hopital = 0;
 	$nb_cases_construction_hopital_bat = 40;
-	$nb_cases_construction_hopital_hop = 50;
+	$nb_cases_construction_hopital_hop = 30;
+	$nb_instance_hopital = 0;
 	
 	if ($id_bat == '7') {
 		
@@ -444,6 +445,14 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 		$t = $res->fetch_assoc();
 		
 		$verif_hop_pour_construction_hopital = $t['nb_hopital'];
+
+		$sql = "SELECT count(id_instanceBat) as nb_hopital FROM instance_batiment WHERE (id_batiment='7') AND camp_instance='$camp_perso'";
+		if ($result = $mysqli->query($sql)) {
+  
+			// Return the number of rows in result set
+			$nb_instance_hopital = mysqli_num_rows( $result );
+		}
+
 	}
 	
 	$verif_berge_pont			= 1;
@@ -531,6 +540,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 				&& $verif_nb_rapats == 0 
 				&& $verif_bat_pour_construction_hopital > 0
 				&& $verif_hop_pour_construction_hopital == 0
+				&& $nb_instance_hopital <= 4
 				&& $verif_distance_tour == 0 
 				&& $verif_distance_pont == 0
 				&& $verif_distance_pont_bat == 0
@@ -1850,7 +1860,10 @@ function action_dormir($mysqli, $id_perso){
 	$couleur_clan_perso = couleur_clan($camp);
 	
 	$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso);
-	$bonus_recup_terrain = get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso);
+	$bonus_recup_terrain = 0;
+	if (!in_bat($mysqli, $id_perso)) {
+		$bonus_recup_terrain = get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso);
+	}
 	
 	$bonusRecup_perso += $bonus_recup_bat;
 	$bonusRecup_perso += $bonus_recup_terrain;

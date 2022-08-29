@@ -320,8 +320,14 @@ function get_bonus_recup_bat_perso($mysqli, $id_perso) {
 		$t = $res->fetch_assoc();
 		
 		$id_bat = $t['id_batiment'];
+
+		$sql = "SELECT  recup_perso FROM perso WHERE id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
 		
-		$bonus_recup_bat = get_bonus_recup_bat($id_bat);
+		$recup_perso = $t['recup_perso'];
+		
+		$bonus_recup_bat = get_bonus_recup_bat($id_bat, $recup_perso);
 	}
 	
 	return $bonus_recup_bat;	
@@ -342,8 +348,9 @@ function get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso) {
 	return $bonus_recup_terrain;
 }
 
-function get_bonus_recup_bat($id_bat) {
+function get_bonus_recup_bat($id_bat,  $recup_perso) {
 	switch($id_bat) {
+		case(7): return $recup_perso*2;
 		case(8): return 10; break;
 		case(9): return 20; break;
 		default: return 0;
@@ -768,7 +775,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 	$txt_log_respawn = "";
 	
 	// Verification si le perso a choisi un Hopital de respawn
-	$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment 
+	/*$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment 
 			WHERE perso_as_respawn.id_instance_bat = instance_batiment.id_instanceBat
 			AND id_perso='$id_perso' AND id_bat='7'
 			AND instance_batiment.camp_instance = '$clan'
@@ -804,7 +811,7 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 		
 		if ($nb_h > 0 && $nb_ennemis_siege7 < 10) {
 			$txt_log_respawn .= "Hopital ".$id_ibat7." (".$x_ibat."/".$y_ibat.") trop proche de la position de capture : ".$x_perso."/".$y_perso.".";
-		}
+		}*/
 		
 		// Verification si le perso a choisi un Fortin de respawn
 		$sql = "SELECT id_instance_bat, x_instance, y_instance FROM perso_as_respawn, instance_batiment, perso 
@@ -926,14 +933,14 @@ function selection_bat_rapat($mysqli, $id_perso, $x_perso, $y_perso, $clan){
 				}
 			}
 		}
-	}
+	
 	
 	$sql = "INSERT INTO log_respawn (id_perso, date_respawn, texte_respawn) VALUES ('$id_perso', NOW(), '$txt_log_respawn')";
 	$mysqli->query($sql);
 	
 	return $min_id_bat;
-}
 
+}
 /**
  * selection du batiment de rapatriement le plus proche du départ de perm
  */

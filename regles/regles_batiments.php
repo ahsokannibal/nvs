@@ -148,14 +148,14 @@
 								<td align='center'><img src='../images_perso/b7b.png' alt='hopital'><img src='../images_perso/b7r.png' alt='hopital'></td>
 								<td align='center'>Hopital</td>
 								<td align='center'>1 case</td>
-								<td align='center'>50</td>
-								<td align='center'>x3</td>
+								<td align='center'>750</td>
+								<td align='center'>Récup de base *3</td>
 								<td align='center'>-2</td>
 								<td align='center'>-25%</td>
 								<td align='center'>-</td>
 								<td align='center'>+15%</td>
 								<td align='center'>50</td>
-								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture uniquement pour les persos capturés à moins (ou égal) de 40 cases de ce dernier. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin. La construction d'un hopital coute 250 thunes. Lorsqu'un Hôpital a effectué 50 soins celui-ci est détruit. La construction/desctruction d'un hopital ne rapporte pas de points de victoire. Un maximum de 4 hopitaux peuvent être construits par camp en même temps. <br /> <br /></td>
+								<td>L'Hopital de campagne est un bâtiment construit afin de permettre de récupérer plus rapidement en triplant la récupération de base du personnage. Sa construction coûte 250 thunes. Il ne peut pas servir de lieu de rapatriement après capture. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin. lorsqu'un hôpital est construit, il possédera entre 100 et 200 PV.</td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b2b.png' alt='tour de guet'></td>
