@@ -1890,8 +1890,8 @@ if ($verif_id_perso_session) {
 												$gain_pvict = 50;
 											}
 											else if ($id_batiment == 7) {
-												// HOPITAL -> 10
-												$gain_pvict = 10;
+												// HOPITAL -> 0
+												$gain_pvict = 0;
 											}
 											else {
 												$gain_pvict = 0;

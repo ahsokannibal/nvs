@@ -1101,8 +1101,8 @@ if($dispo == '1' || $admin){
 																				$nom_b = "GARE";
 																			}
 																			else if ($id_bat == 7) {
-																				// HOPITAL -> 10
-																				$gain_pvict = 10;
+																				// HOPITAL -> 0
+																				$gain_pvict = 0;
 																				$nom_b = "HOPITAL";
 																			}
 																			else {
