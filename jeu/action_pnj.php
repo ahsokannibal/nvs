@@ -24,9 +24,19 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 	$res = $mysqli->query($sql);
 	$numT = $res->num_rows;
 
-	// 1/8 pnj doit se déplacer
-	$nb_a_deplacer = $numT / 8;
+	// 1/7 pnj doit se déplacer
+	$nb_a_deplacer = ceil($numT / 7);
 
+	// Récupération du cycle actuel
+	$sql = "SELECT DISTINCT cycle_mvt FROM instance_pnj";
+	$res = $mysqli->query($sql);
+	$c_id = $res->fetch_assoc()["cycle_mvt"];
+
+	// MAJ du cycle
+	$cycle = $c_id +1;
+
+	$sql = "UPDATE instance_pnj SET cycle_mvt=$cycle";
+	$mysqli->query($sql);
 
 	// recuperation de pnj qui ne se sont pas encore deplacés
 	$sql = "SELECT idInstance_pnj, pv_i FROM instance_pnj WHERE deplace_i='0' ORDER BY idInstance_pnj";
@@ -36,12 +46,12 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 	echo $num."<br>";
 
 	// tout les pnj se sont deplacés
-	if ($num == 0){
+	if ($num == 0 && $cycle >= 8){
 
 		echo "tout les pnj se sont deplacés<br>";
 		
 		// on remet les pnj a l'etat non deplacé
-		$sql = "UPDATE instance_pnj SET deplace_i='0'";
+		$sql = "UPDATE instance_pnj SET deplace_i='0', cycle_mvt='0'";
 		$mysqli->query($sql);
 	}
 
