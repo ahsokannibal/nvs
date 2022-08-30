@@ -7,8 +7,6 @@ require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
-define ("NB_PNJ_A_DEPLACER", 50);
-
 // Récupération de la clef secrete
 $sql = "SELECT valeur_config FROM config_jeu WHERE code_config='clef_secrete'";
 $res = $mysqli->query($sql);
@@ -19,6 +17,16 @@ $clef_secrete = $t['valeur_config'];
 if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 
 	$nb_deplacer = 0;
+	$nb_a_deplacer = 0;
+
+	// recuperation du nombre total de pnj
+	$sql = "SELECT idInstance_pnj, pv_i FROM instance_pnj ORDER BY idInstance_pnj";
+	$res = $mysqli->query($sql);
+	$numT = $res->num_rows;
+
+	// 1/8 pnj doit se déplacer
+	$nb_a_deplacer = $numT / 8;
+
 
 	// recuperation de pnj qui ne se sont pas encore deplacés
 	$sql = "SELECT idInstance_pnj, pv_i FROM instance_pnj WHERE deplace_i='0' ORDER BY idInstance_pnj";
@@ -39,7 +47,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 
 	while ($t_id = $res->fetch_assoc()) {
 		
-		if($nb_deplacer == NB_PNJ_A_DEPLACER || $nb_deplacer == $num){
+		if($nb_deplacer == $nb_a_deplacer || $nb_deplacer == $num){
 			echo "fin deplacement pnj<br>";
 			break;
 		}
