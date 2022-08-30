@@ -139,7 +139,7 @@ if(isset($_GET["top"])){
 	
 	if((isset($verif) && $verif) || !isset($_GET["classement"])){
 	
-		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso > '100' ".($id_type_perso ? "AND type_perso=$id_type_perso" : "")." ORDER BY $class DESC LIMIT 50";
+		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso >= '100' ".($id_type_perso ? "AND type_perso=$id_type_perso" : "")." ORDER BY $class DESC LIMIT 50";
 		$res = $mysqli->query($sql);
 		
 		echo "<div class='table-responsive'>";
@@ -543,7 +543,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso > '100' 
+			WHERE perso.id_perso >= '100' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='1'";
@@ -577,7 +577,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso > '100' 
+			WHERE perso.id_perso >= '100' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='2'";
@@ -867,7 +867,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades 
 			WHERE perso.id_perso = perso_as_grade.id_perso 
 			AND perso_as_grade.id_grade = grades.id_grade
-			AND perso.id_perso > '100'
+			AND perso.id_perso >= '100'
 			".($id_type_perso ? "AND type_perso=$id_type_perso" : "")."
 			ORDER BY ".$order_by." DESC LIMIT ".$limit;
 	$res = $mysqli->query($sql);
