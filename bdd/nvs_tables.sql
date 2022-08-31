@@ -757,7 +757,8 @@ CREATE TABLE `instance_pnj` (
   `dernierAttaquant_i` int(11) NOT NULL DEFAULT '0',
   `x_i` int(11) DEFAULT '0',
   `y_i` int(11) DEFAULT '0',
-  `bonus_i` int(11) DEFAULT '0'
+  `bonus_i` int(11) DEFAULT '0',
+  `cycle_mvt` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1836,9 +1837,4 @@ ALTER TABLE `compagnies`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
-ALTER TABLE `instance_pnj` ADD COLUMN `cycle_mvt` int(11) DEFAULT '0';
---
--- Ajout du cycle de mouvement pour les pnj
---
 
