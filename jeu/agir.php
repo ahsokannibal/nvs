@@ -1878,16 +1878,16 @@ if ($verif_id_perso_session) {
 											
 											// Gain points de victoire
 											if ($id_batiment == 9) {
-												// FORT -> 400
-												$gain_pvict = 400;
+												// FORT -> 500
+												$gain_pvict = 500;
 											}
 											else if ($id_batiment == 8) {
-												// FORTIN -> 100
-												$gain_pvict = 100;
+												// FORTIN -> 250
+												$gain_pvict = 250;
 											}
 											else if ($id_batiment == 11) {
-												// GARE -> 75
-												$gain_pvict = 75;
+												// GARE -> 100
+												$gain_pvict = 100;
 											}
 											else if ($id_batiment == 7) {
 												// HOPITAL -> 10
