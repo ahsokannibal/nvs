@@ -103,7 +103,7 @@
 								<td align='center'>-</td>
 								<td align='center'>+25%</td>
 								<td align='center'>100</td>
-								<td>Le Fort est un bâtiment à défendre coute que coute. Il peut servir de lieu de rapatriement après capture. Il dispose de 6 canons de défense qui vont attaquer tout ennemi qui se rapproche de trop prés. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter armes et objets. Ces bâtiment permettent aussi aux chefs d'engager de nouvelles unités s'ils ont les PG (Points de Grouillot) nécessaire. Lorsqu'un Fort est construit, il possédera entre 5000 et 10000 PV.</td>
+								<td>Le Fort est un bâtiment à défendre coute que coute. Il peut servir de lieu de rapatriement après capture. Il dispose de 6 canons de défense qui vont attaquer tout ennemi qui se rapproche de trop prés. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter armes et objets. Ces bâtiment permettent aussi aux chefs d'engager de nouvelles unités s'ils ont les PG (Points de Grouillot) nécessaire. Lorsqu'un Fort est construit, il possédera entre 5000 et 10000 PV.<br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b8b.png' alt='fortin'><img src='../images_perso/b8r.png' alt='fortin'></td>
@@ -116,7 +116,7 @@
 								<td align='center'>-</td>
 								<td align='center'>+25%</td>
 								<td align='center'>50</td>
-								<td>Le Fortin est le petit frère du Fort. Il est placé afin de défendre une partie de la carte. Il peut servir de lieu de rapatriement après capture. Il dispose de 4 canons de défense qui vont attaquer tout ennemi qui se rapproche de trop prés. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter armes et objets. Ces bâtiment permettent aussi aux chefs d'engager de nouvelles unités s'ils ont les PG (Points de Grouillot) nécessaire. Lorsqu'un Fortin est construit, il possédera entre 300 et 600 PV.</td>
+								<td>Le Fortin est le petit frère du Fort. Il est placé afin de défendre une partie de la carte. Il peut servir de lieu de rapatriement après capture. Il dispose de 4 canons de défense qui vont attaquer tout ennemi qui se rapproche de trop prés. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter armes et objets. Ces bâtiment permettent aussi aux chefs d'engager de nouvelles unités s'ils ont les PG (Points de Grouillot) nécessaire. Lorsqu'un Fortin est construit, il possédera entre 300 et 600 PV.<br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b11b.png' alt='gare'></td>
@@ -129,7 +129,7 @@
 								<td align='center'>-</td>
 								<td align='center'>+25%</td>
 								<td align='center'>50</td>
-								<td>Une Gare permet de se rendre à une autre Gare en achetant un ticket et en prenant le Train. Cela permet de se rendre plus rapidement à différents endroits de la carte. Une gare devient inactive (les trains ne vont plus vers cette gare) si elle est en dessous de 50% de ses PV. Une gare ne peut être construite qu'à proximité de rails (le centre doit être à 2 cases d'un rail pour le bâtiment soit à proximité de rails). Lorsqu'un gare est construite, elle possédera entre 250 et 500 PV.</td>
+								<td>Une Gare permet de se rendre à une autre Gare en achetant un ticket et en prenant le Train. Cela permet de se rendre plus rapidement à différents endroits de la carte. Une gare devient inactive (les trains ne vont plus vers cette gare) si elle est en dessous de 50% de ses PV. Une gare ne peut être construite qu'à proximité de rails (le centre doit être à 2 cases d'un rail pour le bâtiment soit à proximité de rails). Lorsqu'un gare est construite, elle possédera entre 250 et 500 PV.<br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b12b.gif' alt='pont'></td>
@@ -142,20 +142,20 @@
 								<td align='center'>+25%</td>
 								<td align='center'>+25%</td>
 								<td align='center'>50</td>
-								<td>Les trains permettent de voyager d'une gare à une autre en se déplaçant de 10PM par heure. un Train ,lorsqu'il est livré, possède la totalité de ses PV. Si un Train est abimé en arrivant dans une Gare, il sera réparé.</td>
+								<td>Les trains permettent de voyager d'une gare à une autre en se déplaçant de 10PM par heure. un Train ,lorsqu'il est livré, possède la totalité de ses PV. Si un Train est abimé en arrivant dans une Gare, il sera réparé.<br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b7b.png' alt='hopital'><img src='../images_perso/b7r.png' alt='hopital'></td>
 								<td align='center'>Hopital</td>
 								<td align='center'>1 case</td>
-								<td align='center'>1000</td>
-								<td align='center'>-</td>
+								<td align='center'>50</td>
+								<td align='center'>x3</td>
 								<td align='center'>-2</td>
 								<td align='center'>-25%</td>
 								<td align='center'>-</td>
 								<td align='center'>+15%</td>
 								<td align='center'>50</td>
-								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture uniquement pour les persos capturés à moins (ou égal) de 40 cases de ce dernier. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin. lorsqu'un Hôpital est construit, il possédera entre 100 et 200 PV.</td>
+								<td>L'Hopital de campagne est un bâtiment construit afin de revenir au front le plus rapidement possible. Il peut servir de lieu de rapatriement après capture uniquement pour les persos capturés à moins (ou égal) de 40 cases de ce dernier. Aucun respawn aléatoire ne peut se faire dans ces bâtiments. Il n'est pas possible de capturer un Hopital. Dans ces bâtiments, vous trouverez aussi des boutiques pour acheter des objets de soin. La construction d'un hopital coute 250 thunes. Lorsqu'un Hôpital a effectué 50 soins celui-ci est détruit. La construction/desctruction d'un hopital ne rapporte pas de points de victoire. Un maximum de 4 hopitaux peuvent être construits par camp en même temps. <br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b2b.png' alt='tour de guet'></td>
@@ -168,7 +168,7 @@
 								<td align='center'>-</td>
 								<td align='center'>+10%</td>
 								<td align='center'>1</td>
-								<td>Il s'agit d'une tour faiblement défendue, qui permet à la personne à l'intérieur d'augmenter sa perception. Elles ne peuvent être construites qu'en plaine, seulement par les troupes du Génie. Lorsqu'une Tour de guêt est construite, elle possédera entre 50 et 100 PV. Seul les chiens, les soigneurs et les infanteries peuvent entrer dans ce bâtiment.</td>
+								<td>Il s'agit d'une tour faiblement défendue, qui permet à la personne à l'intérieur d'augmenter sa perception. Elles ne peuvent être construites qu'en plaine, seulement par les troupes du Génie. Lorsqu'une Tour de guêt est construite, elle possédera entre 50 et 100 PV. Seul les chiens, les soigneurs et les infanteries peuvent entrer dans ce bâtiment.<br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b1b.png' alt='barricade'></td>
@@ -181,7 +181,7 @@
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
-								<td>Il s'agit d'une espèce de mur de protection permettant de défendre une ligne de front. La barricade suit ces règles : on la construit pour 5PA, elle possède 250 PV au maximum et un personnage ne peut la franchir tant qu'elle n'est pas détruite. Elles ne peuvent être construites qu'en plaine par des infanteries. Lorsqu'une Barricade est construite, elle possédera entre 60 et 120 PV.</td>
+								<td>Il s'agit d'une espèce de mur de protection permettant de défendre une ligne de front. La barricade suit ces règles : on la construit pour 5PA, elle possède 250 PV au maximum et un personnage ne peut la franchir tant qu'elle n'est pas détruite. Elles ne peuvent être construites qu'en plaine par des infanteries. Lorsqu'une Barricade est construite, elle possédera entre 60 et 120 PV.<br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../images_perso/b5b.png' alt='pont'></td>
@@ -194,7 +194,7 @@
 								<td align='center'>-10%</td>
 								<td align='center'>-10%</td>
 								<td align='center'>-</td>
-								<td>Le pont peut être posé sur les case d'eau et d'eau profonde. Il permet aux persos de traverser l'eau pour le cout d'un PM au lieu de 4 ainsi que de traverser l'eau profonde qui est infranchissable sans pont. C'est donc un outil stratégique très important à ne pas négliger ! Les ponts peuvent être sabotés par les persos, il suffit de se trouver à côté d'un pont afin d'avoir la possibilité de le <a href='regles_action_spe.php'>saboter</a> comme de le <a href='regles_action_spe.php'>réparer</a>. On ne peut pour l'instant pas saboter un pont avec un perso dessus. lorsqu'un Pont est construit, il possédera entre 50 et 100 PV.</td>
+								<td>Le pont peut être posé sur les case d'eau et d'eau profonde. Il permet aux persos de traverser l'eau pour le cout d'un PM au lieu de 4 ainsi que de traverser l'eau profonde qui est infranchissable sans pont. C'est donc un outil stratégique très important à ne pas négliger ! Les ponts peuvent être sabotés par les persos, il suffit de se trouver à côté d'un pont afin d'avoir la possibilité de le <a href='regles_action_spe.php'>saboter</a> comme de le <a href='regles_action_spe.php'>réparer</a>. On ne peut pour l'instant pas saboter un pont avec un perso dessus. lorsqu'un Pont est construit, il possédera entre 50 et 100 PV.<br /> <br /></td>
 							</tr>
 							<tr>
 								<td align='center'><img src='../fond_carte/rail.gif' alt='pont'></td>
@@ -207,7 +207,7 @@
 								<td align='center'>-</td>
 								<td align='center'>-</td>
 								<td align='center'>-</td>
-								<td>Il est possible pour le génie de construire des rails mais aussi de les détruire. Le coût de construction d'un rail dépend du terrain sur lequel on souhaite le poser (4PA sur une plaine, 8PA sur une montagne) et demande parfois un cout supplémentaire en PV (50 PV en desert).<br /><b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b></td>
+								<td>Il est possible pour le génie de construire des rails mais aussi de les détruire. Le coût de construction d'un rail dépend du terrain sur lequel on souhaite le poser (4PA sur une plaine, 8PA sur une montagne) et demande parfois un cout supplémentaire en PV (50 PV en desert).<br /><b><font color='red'>Attention</font> : il est interdit de détruire les rails du camp advserse, cet acte sera sévérement puni !</b><br /> <br /></td>
 							</tr>
 						</table>
 					</div>
@@ -228,7 +228,7 @@
 						<li>Respawn aléatoire dans un bâtiment</li>
 					</ul>
 					
-					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelquesoit le bâtiment), si le bâtiment est plein (contenance max atteinte) ou s'il a été capturé à moins de 20 cases strictement (une capture à 20 cases pile du centre du bâtiment de rapatriement permet d'âtre rappatrié dans le bâtiment) de ce dernier (Hors hôpital).</p>
+					<p>Un personnage ne peut pas être rapatrié dans un bâtiment si ce dernier est en état de siège (quelque soit le bâtiment), si le bâtiment est plein (contenance max atteinte) ou s'il a été capturé à moins de 20 cases strictement (une capture à 20 cases pile du centre du bâtiment de rapatriement permet d'âtre rappatrié dans le bâtiment) de ce dernier (Hors hôpital).</p>
 					
 					<p>Pour définir vos choix de rapatriement, allez dans votre profil et cliquez sur le bouton "Choix des rapatriements".</p>
 					
@@ -237,7 +237,7 @@
 					<h4>Etat de siège d'un bâtiment</h4>
 					
 					<p>Un bâtiment est considéré en état de siège s'il descend <b>en dessous de 90% de ses PV maximum</b> ou qu'il y a <b>10 persos ennemi à moins de 15 cases</b> (15eme case inclus).<br />
-					Cet état a pour effet de bloquer immédiatement les rapatriements, incorportations de nouveaux sur ce bâtiment.<br />
+					Cet état a pour effet de bloquer immédiatement les rapatriements et incorportations sur ce bâtiment.<br />
 					Le recrutement de grouillot se trouve aussi bloqué pour ce bâtiment.</p>
 					
 					<p>La réactivation du respawn, des incorporations et recrutements est immédiat lorsque les conditions de siège ne sont plus remplies.</p>
@@ -250,12 +250,10 @@
 					
 					<p>Certains bâtiments peuvent être capturés. Cependant, pour être capturé, un bâtiment doit perdre au moins 20% de ses points de vie (Donc doit posséder moins de <b>80% de ses PV</b>).<br />
 					Toute tentative de capture d'un bâtiment n'ayant pas perdu sufisamment de PV sera un echec.</p>
+
+					<p>Les infanteries <b>uniquement</b> peuvent capturer un bâtiment.</p>
 					
-					<p>Les chiens et les soigneurs ne peuvent pas capturer de bâtiment.</p>
 					
-					<p>Comme seul les chiens, les soigneurs et les infanteries peuvent entrer dans une tour de guêt, cette dernière n'est capturable uniquement par une infanterie.</p>
-					
-					<br />
 					<h2>Les trains</h2>
 					
 					<p>Les trains se déplacent de <b>10 PM par heure</b> et possède 2500PV.<br />
