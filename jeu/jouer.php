@@ -1086,18 +1086,18 @@ if($dispo == '1' || $admin){
 																			
 																			// Gain points de victoire
 																			if ($id_bat == 9) {
-																				// FORT -> 400
-																				$gain_pvict = 400;
+																				// FORT -> 500
+																				$gain_pvict = 500;
 																				$nom_b = "FORT";
 																			}
 																			else if ($id_bat == 8) {
-																				// FORTIN -> 100
-																				$gain_pvict = 100;
+																				// FORTIN -> 250
+																				$gain_pvict = 250;
 																				$nom_b = "FORTIN";
 																			}
 																			else if ($id_bat == 11) {
-																				// GARE -> 75
-																				$gain_pvict = 75;
+																				// GARE -> 100
+																				$gain_pvict = 100;
 																				$nom_b = "GARE";
 																			}
 																			else if ($id_bat == 7) {

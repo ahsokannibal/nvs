@@ -927,6 +927,7 @@ CREATE TABLE IF NOT EXISTS `missions` (
   `recompense_thune` int(11) NOT NULL DEFAULT '0',
   `recompense_xp` int(11) NOT NULL DEFAULT '0',
   `recompense_pc` int(11) NOT NULL DEFAULT '0',
+  `recompense_pvict` int(11) NOT NULL DEFAULT '0',
   `date_debut_mission` datetime DEFAULT NULL,
   `date_fin_mission` datetime DEFAULT NULL,
   `camp_mission` INT NOT NULL,
