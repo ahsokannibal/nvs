@@ -75,64 +75,68 @@
 			
 			<div class="row">
 				<div class="col-12">
-Chaque personnage a des caractéristiques propres : points de vie (PV), points de mouvements (PM), points d' actions (PA), récupération, perception, protection.<br />
-Ces caractéristiques peuvent être modifiées par des tares, des objets, ou de l'investissement d'expérience.<br /><br />
-Chaque personnage a ensuite deux compteurs d'évaluation (ou de comparaison) : points d'expérience (XP) et points de commandement (PC).<br />
-Enfin chaque personnage a trois compteurs de malus : malus de déplacement (malus_dep), malus défensif (malus_def) et malus de perception (malus_perc).
-<br /><br />
-					<h2>XPI</h2>
-Les XPI permettent d'améliorer les caractéristiques de vos personnages. Ils sont le parallèle à votre expérience. Mais tandis que votre expérience est acquise, les points d'investissements peuvent être dépensés en améliorations.<br />
-Si vous gagnez 20 XP , vous pourrez alors dépenser 20 XPI.<br /><br />
-Lorsque vous êtes capturé, votre chef perd 5% de ses XPI tandis que vos grouillots perdent 40% de leurs XPI. Investissez les donc au bon moment !				
-<br /><br />
+
+					<p class="mt-2">Chaque personnage a des caractéristiques propres : points de vie (PV), points de mouvements (PM), points d' actions (PA), récupération, perception, protection. <br />
+					Ces caractéristiques peuvent être modifiées par des tares, des objets, ou de l'investissement d'expérience.</p>
+
+					<p>Chaque personnage a ensuite deux compteurs d'évaluation (ou de comparaison) : points d'expérience (XP) et points de commandement (PC).<br />
+					Enfin chaque personnage a trois compteurs de malus : malus de déplacement (malus_dep), malus défensif (malus_def) et malus de perception (malus_perc).</p>
+
 					<h2>XP</h2>
-L'expérience est la valeur image de votre expérience dans les combats. L'expérience est gagnée en frappant l'ennemi ou des animaux, en construisant des bâtiments, mais également en remplissant des missions et atteignant des objectifs que les officiers supérieurs vous auront assignés.
+					<p>L'expérience est la valeur image de votre expérience dans les combats. L'expérience est gagnée en frappant l'ennemi ou des animaux, en construisant des bâtiments, mais également en remplissant des missions et atteignant des objectifs que les officiers supérieurs vous auront assignés.</p>
+
+					<h2>XPI</h2>
+					<p>Les XPI permettent d'améliorer les caractéristiques de vos personnages. Ils sont le parallèle à votre expérience. Mais tandis que votre expérience est acquise, les points d'investissements peuvent être dépensés en améliorations. Si vous gagnez 20 XP , vous pourrez alors dépenser 20 XPI. <br />
+					Lorsque vous êtes capturé, votre chef perd 5% de ses XPI tandis que vos grouillots perdent 40% de leurs XPI. Investissez les donc au bon moment !</p>
 					
-<br /><br />
+				
 					<h2>PC</h2>
-Les points de commandement sont les points qui vous permettront de monter en grade.<br />
-Plus votre grade est élevé, plus vous pouvez contrôler de troupes.<br />
-Vous gagnez au minimum 1 PC par tour.					
-<br /><br />
+					<p>Les points de commandement sont les points qui vous permettront de monter en grade.<br />
+					Plus votre grade est élevé, plus vous pouvez contrôler de troupes.<br />
+					Vous gagnez au minimum 1 PC par tour.</p>
+					
 					<h2>PV</h2>
-Ceci représente votre état de Santé. Il faut cependant différencier votre maximum, de la valeur à un moment donné (qui sera différente du maximum si vous avez subi des attaques).<br />
-Lorsque vos PV tombent à zéro, vous êtes laissé pour mort et réapparaissez dans un respawn. 
-<br /><br />
+					<p>Les PV sont vos Points de Vie du personnage qui correspond à votre état de santé.<br />
+					Les attaques de vos ennemis font baisser vos PV.<br />
+					Le terrain peut également vous faire perdre des PV.<br />
+					Quand vos PV tombent à zéro, le personnage n'est plus en état de combattre et être rapatrié dans un bâtiment (fort ou fortin), qu'on appelle aussi respawn.<br />
+					Vous pouvez augmentez vos PV grâce à des actions comme la sieste, des soins d'un soigneur ou des objets comme du whisky ou des trousses de soins.</p>
+
 					<h2>Récupération</h2>
-Chaque tour, votre nombre de Points de Vie actuels est augmenté de cette valeur, jusqu'à ce que vous soyez à votre maximum.<br />
-Selon les tares dont le personnage souffre ou le terrain sur lequel il se trouve, sa récupération peut être négative. Il perdra alors des Points de Vie.					
-<br /><br />
+					<p>Chaque tour, votre nombre de Points de Vie actuels est augmenté de cette valeur, jusqu'à ce que vous soyez à votre maximum.<br />
+					Selon les tares dont le personnage souffre ou le terrain sur lequel il se trouve, sa récupération peut être négative. Il perdra alors des Points de Vie.</p>
+					
 					<h2>Perception</h2>
-C'est la distance à laquelle vous voyez les ennemis dans le jeu.					
-<br /><br />
+					<p>C'est la distance à laquelle vous voyez les ennemis dans le jeu.</p>	
+					
 					<h2>PM</h2>
-Ceci représente votre capacité à vous déplacer. Selon les terrains, vos points baisseront différemment car le coût de déplacement varie selon les terrains fréquentés.
-<br /><br />
+					<p>Ceci représente votre capacité à vous déplacer. Selon les terrains, vos points baisseront différemment car le coût de déplacement varie selon les terrains fréquentés.</p>
+					
 					<h2>PA</h2>
-Ceci représente votre capacité à effectuer des actions (Attaquer coûte un certain nombre de points d'actions dépendant de l'arme, tout comme construire ou réparer une barricade par exemple).
-<br /><br />
+					<p>Ceci représente votre capacité à effectuer des actions (Attaquer coûte un certain nombre de points d'actions dépendant de l'arme, tout comme construire ou réparer une barricade par exemple).</p>
+					
 					<h2>Attaque</h2>
-Il existe deux types d'attaques, ayant chacune ses propres spécificités. L'attaque au corps à corps(att_cac) , et l'attaque à distance (att_dist).<br />
-La capacité à toucher un adversaire se calcule en pourcentage. Chaque personnage dispose d'un % de chance de toucher son adversaire.<br />
-Les valeurs de combat subissent des modifications suivant la technique de combat utilisée (distance ou corps à corps), mais aussi les armes que vous utilisez, et des bonus/malus de tous types.<br /><br />
-Exemple: Le défenseur aura de meilleures chances de ne pas se faire toucher en étant en forêt.<br /><br />
-Il est possible d'effectuer des coups critique selon votre score de touché :
+					<p> Il existe deux types d'attaques, ayant chacune ses propres spécificités. L'attaque au corps à corps(att_cac) , et l'attaque à distance (att_dist). La capacité à toucher un adversaire se calcule en pourcentage. Chaque personnage dispose d'un % de chance de toucher son adversaire. Les valeurs de combat subissent des modifications suivant la technique de combat utilisée (distance ou corps à corps), mais aussi les armes que vous utilisez, et des bonus/malus de tous types. </p>
+
+					<p>Exemple: Le défenseur aura de meilleures chances de ne pas se faire toucher en étant en forêt.</p>
+
+					<p> Il est possible d'effectuer des coups critique selon votre score de touché :
 						<ul>
-							<li>Coup Critique Inversé (ou Échec Critique) : Si votre score de combat est supérieur à 98 (ou égale), vous venez de rater lamentablement votre attaque. Le défenseur gagne alors 1 point d'expérience, vous ne gagnez aucun point de commandement, aucun point d'expérience et vous subissez 1 malus de defense.</li>
-							<li>Coup Critique : Si votre score de combat est inférieur à 2 (ou égale), vous venez de réussir un coup critique. Vos dégâts seront multipliés par deux, vous gagnerez plus d'expérience et plus de points de commandement.</li>
+							<li>Coup Critique Inversé (ou Échec Critique) : Si votre score de combat est supérieur ou égal à 98, vous venez de rater lamentablement votre attaque. Le défenseur gagne alors 2 points d'expérience, vous ne gagnez aucun point de commandement, aucun point d'expérience et vous subissez 1 malus de défense. </li>
+							<li>Coup Critique : Si votre score de combat est inférieur ou égal à 2 , vous venez de réussir un coup critique. Vos dégâts seront multipliés par deux, vous gagnerez plus d'expérience et plus de points de commandement.</li>
 						</ul>
-<br /><br />
+					</p>
+
 					<h2>Dégât</h2>
-Il s'agit de la quantité de dommages que votre unité est capable d'infliger à son adversaire.<br />
-La quantité de dégâts se compte en nombre de Dès (20D6 = 20 dès à 6 faces)
-<br /><br />
+					<p>Il s'agit de la quantité de dommages que votre unité est capable d'infliger à son adversaire. La quantité de dégâts se compte en nombre de Dès (20D6 = 20 dès à 6 faces)</p>
+
 					<h2>Protection</h2>
-La valeur de protection est la résistance de votre unité. Plus votre protection est importante, plus les chances que votre adversaire a de vous infliger de gros dégâts est faible.<br />
-La protection effective se calcule ainsi : dégâts (en PV) = résultat du score de dégâts de l'arme - protection du défenseur.					
-<br /><br />
+					<p>La valeur de protection est la résistance de votre unité. Plus votre protection est importante, plus les chances que votre adversaire a de vous infliger de gros dégâts est faible.<br />
+					La protection effective se calcule ainsi : dégâts (en PV) = résultat du score de dégâts de l'arme - protection du défenseur.</p>
+					
 					<h2>Bonus et Malus</h2>
-Vos personnages peuvent subir des bonus ou des malus pour diverses raisons. Ces bonus et malus proviennent d'armes, ou d'attaques subies (si vous êtes attaqué, vous avez des malus en protection), tares etc. etc.<br />
-Les malus non permanents se récupèrent ainsi : malus_def = -5/ tour.
+					<p>Vos personnages peuvent subir des bonus ou des malus pour diverses raisons. Ces bonus et malus proviennent d'armes, d'attaques subies (si vous êtes attaqué, vous avez des malus en défense), tares etc. etc.<br />
+					Les malus non permanents se récupèrent ainsi : malus_def = -5/ tour.</p>
 					
 				</div>
 			</div>
