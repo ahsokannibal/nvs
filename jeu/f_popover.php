@@ -252,12 +252,12 @@ function afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat
 /**
  * affichage des popover pour perso dans un batiment
  */
-function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond_im, $nb_o, $nom_terrain, $id_bat_perso) {
+function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond_im, $nb_o, $nom_terrain, $id_bat_perso,$image_objet) {
 	
 	if($y > $y_perso+$taille_case || $y < $y_perso-$taille_case || $x > $x_perso+$taille_case || $x < $x_perso-$taille_case) {
 		if($nb_o){
 			echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-			echo "	<img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
+			echo "	<img border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
 			echo "</td>";
 		}
 		else {					
@@ -268,14 +268,14 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 		if ($x == $x_perso + $taille_case) {
 			for ($i = -$taille_case; $i <= $taille_case; $i++) {
 				if ($y == $y_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);
 				}
 			}
 		}
 		else if ($x == $x_perso - $taille_case) {
 			for ($i = -$taille_case; $i <= $taille_case; $i++) {
 				if ($y == $y_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);
 				}
 			}
 		}
@@ -283,7 +283,7 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 		
 			for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
 				if ($x == $x_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);
 				}
 			}
 		}
@@ -291,7 +291,7 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 		
 			for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
 				if ($x == $x_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);					
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);					
 				}
 			}
 		}
@@ -301,13 +301,13 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 /**
  * affichage du popover pour les cases se trouvant autour d'un batiment pour un perso se trouvant dans un batiment
  */
-function afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso) {
+function afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet) {
 	
 	$coord_sortie = $x.",".$y;
 					
 	echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 	if($nb_o){
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 ";
+		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 ";
 	}
 	else {
 		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";

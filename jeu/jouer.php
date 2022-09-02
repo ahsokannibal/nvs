@@ -4222,6 +4222,19 @@ if($dispo == '1' || $admin){
 										$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
 										$res_o = $mysqli->query($sql_o);
 										$nb_o = $res_o->num_rows;
+
+										if($nb_o){
+											$objet = $res_o->fetch_assoc()['id_objet'];
+											if($objet == '8'){
+												$image_objet = 'etendard_nord.png';
+											} else if($objet == '9'){
+												$image_objet = 'etendard_sud.png';
+											} else {
+												$image_objet = 'o1.gif';
+											}
+										} else {
+											$image_objet = '';
+										}
 										
 										$sql_case = "SELECT valid_case FROM joueur WHERE id_joueur='$id_joueur_perso'";
 										$res_case = $mysqli->query($sql_case);
@@ -4232,14 +4245,14 @@ if($dispo == '1' || $admin){
 											
 											$taille_case = ceil($taille_bat_perso / 2);
 											
-											afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond_im, $nb_o, $nom_terrain, $id_bat_perso);
+											afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond_im, $nb_o, $nom_terrain, $id_bat_perso, $image_objet);
 										}
 										else {
 										
 											if($y > $y_perso+1 || $y < $y_perso-1 || $x > $x_perso+1 || $x < $x_perso-1) {
 												if($nb_o){
 													echo "<td width=40 height=40 background=\"../fond_carte/".$tab["fond_carte"]."\">";
-													echo "	<img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
+													echo "	<img border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
 													echo "</td>";
 												}
 												else {										
@@ -4250,7 +4263,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso+1 && $x == $x_perso+1){
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {	
@@ -4271,7 +4284,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso-1 && $x == $x_perso+1){
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {
@@ -4290,7 +4303,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso && $x == $x_perso+1){
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {	
@@ -4309,7 +4322,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso && $x == $x_perso-1) {
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {	
@@ -4328,7 +4341,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso+1 && $x == $x_perso-1) {
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {	
@@ -4347,7 +4360,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso-1 && $x == $x_perso-1) {
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {	
@@ -4366,7 +4379,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso+1 && $x == $x_perso) {
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {	
@@ -4385,7 +4398,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso-1 && $x == $x_perso) {
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {	

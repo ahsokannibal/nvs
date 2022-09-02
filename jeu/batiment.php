@@ -32,6 +32,20 @@ if($dispo == '1' || $admin){
 		$pa_perso	= $tpv['pa_perso'];
 		
 		$config = '1';
+
+		// Récupération du role du joueur
+		$sql = "SELECT * FROM perso WHERE id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$j = $res->fetch_assoc();
+
+		$id_joueur = $j["idJoueur_perso"];
+
+		$sql = "SELECT * FROM joueur WHERE id_joueur='$id_joueur'";
+		$res = $mysqli->query($sql );
+		$j2 = $res->fetch_assoc();
+
+		$isAdmin = $j2['admin_perso'];
+		$isAnim = $j2['animateur'];
 		
 		// verification si le perso est encore en vie
 		if ($testpv <= 0) {
@@ -1183,10 +1197,17 @@ if($dispo == '1' || $admin){
 									echo "	<th style='text-align:center'>Achat</th>";
 									echo "</tr>";
 									
-									//possibilité achat objets de base
-									$sql = "SELECT * from objet where type_objet='N' OR type_objet='E'";
-									$res = $mysqli->query($sql);
-									$nb = $res->num_rows;
+									// possibilité achat objets de base
+									// Affichage de l'étendard seulement pour les anims et admins
+									if(($isAdmin || $isAnim) && $type_perso == '1'){
+										$sql = "SELECT * from objet where type_objet='N' OR type_objet='E'";
+										$res = $mysqli->query($sql);
+										$nb = $res->num_rows;
+									} else {
+										$sql = "SELECT * from objet where type_objet='N' OR type_objet='E' AND id_objet!='8' AND id_objet!='9'";
+										$res = $mysqli->query($sql);
+										$nb = $res->num_rows;
+									}									
 									
 									if($nb){
 										while ($t = $res->fetch_assoc()) {
