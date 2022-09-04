@@ -445,8 +445,8 @@ if($dispo == '1' || $admin){
 						$res = $mysqli->query($sql);
 						$t = $res->fetch_assoc();
 
-						$nom_mission 	= htmlentities($t['nom_mission']);
-						$texte_mission	= htmlentities($t['texte_mission']);
+						$nom_mission 	= htmlentities($t['nom_mission'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401);
+						$texte_mission	= htmlentities($t['texte_mission'], ENT_QUOTES | ENT_SUBSTITUTE | ENT_HTML401);
 						$nb_participant	= $t['nombre_participant'];
 						$rec_thune		= $t['recompense_thune'];
 						$rec_xp			= $t['recompense_xp'];
