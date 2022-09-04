@@ -444,9 +444,9 @@ if($dispo == '1' || $admin){
 								WHERE id_mission='$id_mission_modif' AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
 						$t = $res->fetch_assoc();
-						
-						$nom_mission 	= stripslashes($t['nom_mission']);
-						$texte_mission	= stripslashes($t['texte_mission']);
+
+						$nom_mission 	= htmlentities($t['nom_mission']);
+						$texte_mission	= htmlentities($t['texte_mission']);
 						$nb_participant	= $t['nombre_participant'];
 						$rec_thune		= $t['recompense_thune'];
 						$rec_xp			= $t['recompense_xp'];
