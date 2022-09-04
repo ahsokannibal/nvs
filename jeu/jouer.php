@@ -1091,13 +1091,13 @@ if($dispo == '1' || $admin){
 																				$nom_b = "FORT";
 																			}
 																			else if ($id_bat == 8) {
-																				// FORTIN -> 250
-																				$gain_pvict = 250;
+																				// FORTIN -> 100
+																				$gain_pvict = 100;
 																				$nom_b = "FORTIN";
 																			}
 																			else if ($id_bat == 11) {
-																				// GARE -> 100
-																				$gain_pvict = 100;
+																				// GARE -> 50
+																				$gain_pvict = 50;
 																				$nom_b = "GARE";
 																			}
 																			else if ($id_bat == 7) {

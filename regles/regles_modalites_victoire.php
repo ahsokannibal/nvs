@@ -78,9 +78,9 @@
 <p>Pour remporter la victoire, il faut accumuler <b>1000</b> points de victoire pour son camp.</p>
 <u>Voici les gains de points de victoire possible :</u>
 					<ul>
-						<li>La destruction d'un Fort rapporte <b>400</b> points de victoire</li>
+						<li>La destruction d'un Fort rapporte <b>500</b> points de victoire</li>
 						<li>La destruction d'un Fortin rapporte <b>100</b> points de victoire</li>
-						<li>La destruction d'une Gare rapporte <b>75</b> points de victoire</li>
+						<li>La destruction d'une Gare rapporte <b>50</b> points de victoire</li>
 						<li>La destruction d'un Hôpital rapporte <b>10</b> points de victoire</li>
 						<li>La destruction des autres bâtiments / structures (barricades, tour de guêt, rails, ponts, etc..) rapportent <b>0</b> points de victoire</li>
 					</ul>
