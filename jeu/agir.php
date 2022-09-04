@@ -1882,12 +1882,12 @@ if ($verif_id_perso_session) {
 												$gain_pvict = 500;
 											}
 											else if ($id_batiment == 8) {
-												// FORTIN -> 250
-												$gain_pvict = 250;
+												// FORTIN -> 100
+												$gain_pvict = 100;
 											}
 											else if ($id_batiment == 11) {
-												// GARE -> 100
-												$gain_pvict = 100;
+												// GARE -> 50
+												$gain_pvict = 50;
 											}
 											else if ($id_batiment == 7) {
 												// HOPITAL -> 10
