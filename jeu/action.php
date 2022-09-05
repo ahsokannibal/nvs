@@ -651,7 +651,6 @@ if($dispo == '1' || $admin) {
 		
 		// Deposer objet
 		if(isset($_POST['valid_objet_depo']) && isset($_POST['id_objet_depo'])){
-			
 			$t_objet = $_POST['id_objet_depo'];
 			$t2 = explode(',',$t_objet);
 			
@@ -664,6 +663,26 @@ if($dispo == '1' || $admin) {
 			}
 			
 			action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quantite);
+
+			// Changement de l'icone si l'objet déposé est l'étendard
+			// Recup infos perso
+			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_perso2 = $res->fetch_assoc();
+			
+			$type_perso		= $t_perso2['type_perso'];
+			$clan			= $t_perso2['clan'];
+
+			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_perso2 = $res->fetch_assoc();
+			
+			$type_perso		= $t_perso2['type_perso'];
+			$clan			= $t_perso2['clan'];
+
+			if ($id_objet == 8 || $id_objet == 9){
+				changement_icone_porteur_etendard($mysqli, $id_perso, $clan, $type_perso);
+			}
 		}
 		
 		// Don objet apres choix perso
@@ -834,6 +853,30 @@ if($dispo == '1' || $admin) {
 			$id_cible 	= $t2[2];
 			
 			action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $quantite);
+
+			// Changement de l'icone du donneur si l'objet donné est l'étendard
+			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_perso2 = $res->fetch_assoc();
+			
+			$type_perso		= $t_perso2['type_perso'];
+			$clan			= $t_perso2['clan'];
+
+			if ($id_objet == '8' || $id_objet == '9'){
+				changement_icone_porteur_etendard($mysqli, $id_perso, $clan, $type_perso);
+			}
+
+			// Changement de l'icone du receuveur si l'objet donné est l'étendard
+			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_cible'";
+			$res = $mysqli->query($sql);
+			$t_perso_cible = $res->fetch_assoc();
+			
+			$type_perso_cible = $t_perso_cible['type_perso'];
+			$clan_cible = $t_perso_cible['clan'];
+
+			if ($id_objet == '8' || $id_objet == '9'){
+				changement_icone_porteur_etendard($mysqli, $id_cible, $clan_cible, $type_perso_cible);
+			}
 		}
 		
 		/////////////////////////

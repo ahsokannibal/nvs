@@ -661,6 +661,12 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 
 		$test_perte = mt_rand(0,100);
 
+		
+		if ($type_perso_cible == 1){
+			perte_etendard($mysqli, $id_cible, $x_cible, $y_cible);
+			changement_icone_porteur_etendard($mysqli, $id_cible, $clan_perso, $type_perso_cible);
+		}
+
 		if ($id_arme_non_equipee > 0) {
 
 			// 40% de chance de perdre une arme non équipée
@@ -930,6 +936,11 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				}
 
 				$id_arme_non_equipee = id_arme_non_equipee($mysqli, $id_cible_collat);
+
+				if ($type_perso_cible == 1){
+					perte_etendard($mysqli, $id_cible, $x_cible, $y_cible);
+					changement_icone_porteur_etendard($mysqli, $id_cible, $clan_perso, $type_perso_cible);
+				}
 
 				if ($id_arme_non_equipee > 0) {
 
@@ -1220,6 +1231,67 @@ function distance_min_charge_pm($type_perso) {
 	if ($type_perso == 3)
 		return 2;
 	return 4;
+}
+
+/**
+ * Fonction permettant de savoir si un joueur porte l'étendard
+ */
+function id_etendard_joueur($mysqli, $id_perso) {
+	
+	$sql = "SELECT perso_as_objet.id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND (id_objet='8' OR id_objet='9')";
+	$res = $mysqli->query($sql);
+	$num = $res->num_rows;
+	
+	if($num){
+		$t = $res->fetch_assoc();
+		return $t["id_objet"];
+	}
+	
+	return 0;
+}
+
+function perte_etendard($mysqli, $idPerso_carte, $x_cible, $y_cible){
+	$id_etendard = id_etendard_joueur($mysqli, $idPerso_carte);
+	if($id_etendard > 0){
+		// On déséquipe l'étendard
+		$sql = "UPDATE perso_as_objet SET equip_objet='0' WHERE id_perso='$idPerso_carte' AND id_objet='$id_etendard'";
+
+		// Suppression de l'étendard de l'inventaire du perso
+		$sql = "DELETE FROM perso_as_objet WHERE id_perso='$idPerso_carte' AND id_objet='$id_etendard' LIMIT 1";
+		$mysqli->query($sql);
+
+		// Maj charge perso suite perte de l'arme
+		$sql = "UPDATE perso SET charge_perso = charge_perso - (SELECT poids_objet FROM objet WHERE id_objet='$id_etendard') WHERE id_perso='$idPerso_carte'";
+		$mysqli->query($sql);
+
+		// On dépose la perte de l'étendard par terre
+		$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('2','$id_etendard','1','$x_cible','$y_cible')";
+			$mysqli->query($sql);
+
+	}
+}
+
+function changement_icone_porteur_etendard($mysqli, $id_cible, $clan_perso, $type_perso_cible){
+	$id_etendard = id_etendard_joueur($mysqli, $id_cible);
+	if($id_etendard > 0){
+		if($clan_perso == 1){
+			$image_perso = 'cavalerie_nord_etendard.gif';
+		} else if ($clan_perso == 2){
+			$image_perso = 'cavalerie_sud_etendard.gif';
+		}
+		
+	} else {
+		if($clan_perso == 1){
+			$image_perso = 'cavalerie_nord.gif';
+		} else if ($clan_perso == 2){
+			$image_perso = 'cavalerie_sud.gif';
+		} else {
+			$image_perso = 'cavalerie_neutre.gif';
+		}
+	}
+
+	$sql = "UPDATE perso SET image_perso='$image_perso' WHERE id_perso='$id_cible'";
+	$mysqli->query($sql);
 }
 
 ?>

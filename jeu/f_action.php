@@ -3446,6 +3446,18 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 			
 			echo "<center>Vous venez de déposer un objet à terre</center><br />";
 			echo "<center><a class='btn btn-primary' href='jouer.php'>retour</a></center>";
+
+			// Recup infos perso
+			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_perso'";
+			$res = $mysqli->query($sql);
+			$t_perso2 = $res->fetch_assoc();
+			
+			$type_perso		= $t_perso2['type_perso'];
+			$clan			= $t_perso2['clan'];
+			
+			if ($id_objet == '8' || $id_objet == '9'){
+				changement_icone_porteur_etendard($mysqli, $id_perso, $clan, $type_perso);
+			}
 		}
 	}
 	else {
@@ -3465,7 +3477,10 @@ function est_marchand($mysqli, $id_perso){
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
-	return $t['nb_points'];
+	if(isset($t['nb_points'])){
+return $t['nb_points'];
+	}
+	
 }
 
 /** 
@@ -4096,8 +4111,9 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 					if ($idPerso_carte < 50000) {
 						
 						$id_arme_non_equipee = id_arme_non_equipee($mysqli, $idPerso_carte);
-											
 						$test_perte = mt_rand(0,100);
+
+						perte_etendard($mysqli, $idPerso_carte,$x_cible, $y_cible);
 						
 						if ($id_arme_non_equipee > 0 && $test_perte <= 40) {
 														
@@ -4161,6 +4177,8 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 							// Calcul PC
 							$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
 							$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
+
+							changement_icone_porteur_etendard($mysqli, $idPerso_carte, $clan_perso, $type_perso_cible);
 						}
 						else {
 							$pi_perdu 		= floor(($pi_perso_cible * 40) / 100);
