@@ -811,7 +811,7 @@ CREATE TABLE `user_ok_logins` (
   `id_joueur` int(11) NOT NULL DEFAULT '0',
   `ip_joueur` varchar(100) NOT NULL DEFAULT '000.000.000.000',
   `time` datetime NOT NULL,
-  `user_agent` varchar(100) NOT NULL DEFAULT '',
+  `user_agent` varchar(255) NOT NULL DEFAULT '',
   `cookie_val` varchar(300) NOT NULL DEFAULT ''
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
