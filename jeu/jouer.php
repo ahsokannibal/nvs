@@ -207,6 +207,11 @@ if($dispo == '1' || $admin){
 				
 				$dossier_img_joueur = get_dossier_image_joueur($mysqli, $id_joueur_perso);
 				
+				// Changement d'icone si le perso porte l'étendard
+				if ($type_perso == 1){
+					changement_icone_porteur_etendard($mysqli, $id_perso, $clan_p, $type_perso);
+				}
+				
 				// affichage rosace et bousculades
 				$sql = "SELECT afficher_rosace, bousculade_deplacement FROM joueur WHERE id_joueur='$id_joueur_perso'";
 				$res = $mysqli->query($sql);
@@ -1785,6 +1790,11 @@ if($dispo == '1' || $admin){
 						// mise a jour des evenements
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a ramassé des objets par terre ',NULL,'','en $x_persoN/$y_persoN : $liste_ramasse',NOW(),'0')";
 						$mysqli->query($sql);
+
+						// Changement d'icone si le perso porte l'étendard
+						if ($type_perso == 1){
+							changement_icone_porteur_etendard($mysqli, $id_perso, $clan_p, $type_perso);
+						}
 						
 						echo "<center><font colot='blue'>Vous avez rammassé les objets suivants : ". $liste_ramasse ."</font></center><br>";
 					}
@@ -4219,12 +4229,13 @@ if($dispo == '1' || $admin){
 										$cout_pm_terrain 	= cout_pm($fond_im, $type_perso);
 										
 										// verification s'il y a un objet sur cette case
-										$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
+										$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y' ORDER BY id_objet DESC";
 										$res_o = $mysqli->query($sql_o);
-										$nb_o = $res_o->num_rows;
+										$nb_o = $res_o->num_rows;	
 
 										if($nb_o){
 											$objet = $res_o->fetch_assoc()['id_objet'];
+											
 											if($objet == '8'){
 												$image_objet = 'etendard_nord.png';
 											} else if($objet == '9'){
@@ -4284,7 +4295,7 @@ if($dispo == '1' || $admin){
 												if($y == $y_perso-1 && $x == $x_perso+1){
 													if($nb_o){
 														echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-														echo "	<img tabindex='0' border=0 src=\"../fond_carte".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
+														echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' title=\"<div>Objets à ramasser</div>\" data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer</a></div><div><a href='jouer.php?ramasser=voir&x=$x&y=$y'>Voir la liste des objets à terre</a></div>\" >";
 														echo "</td>";
 													}
 													else {

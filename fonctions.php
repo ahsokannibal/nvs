@@ -533,4 +533,10 @@ function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
 	// Envoie du mail
 	mail($destinataire, $titre, $message, $headers);
 }
+
+function console_log( $data ){
+echo '<script>';
+echo 'console.log('. json_encode( $data ) .')';
+echo '</script>';
+};
 ?>
