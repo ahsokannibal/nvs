@@ -40,3 +40,14 @@ body{
 	overflow-y: scroll;
 	text-overflow: "";
 }
+
+.warning-icon-lg {
+	height:2.5rem;
+	width:2.5rem;
+}
+
+.maintenance-icon-lg {
+	height:3.5rem;
+	width:3.5rem;
+	transform:rotate(45deg);
+}

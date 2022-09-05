@@ -355,7 +355,7 @@ if($dispo == '1' || $admin){
 										// Mise à jour de l'inventaire du perso
 										$sql_d = "DELETE FROM perso_as_objet 
 												  WHERE id_perso='$id_perso'
-												  AND id_objet='$id_objet' LIMIT 1";
+												  AND id_objet='$id_objet' AND equip_objet=0 LIMIT 1";
 										$mysqli->query($sql_d);
 										
 										// Mise à jour or et poids perso

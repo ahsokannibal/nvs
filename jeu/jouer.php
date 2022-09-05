@@ -1086,8 +1086,8 @@ if($dispo == '1' || $admin){
 																			
 																			// Gain points de victoire
 																			if ($id_bat == 9) {
-																				// FORT -> 400
-																				$gain_pvict = 400;
+																				// FORT -> 500
+																				$gain_pvict = 500;
 																				$nom_b = "FORT";
 																			}
 																			else if ($id_bat == 8) {
@@ -1096,8 +1096,8 @@ if($dispo == '1' || $admin){
 																				$nom_b = "FORTIN";
 																			}
 																			else if ($id_bat == 11) {
-																				// GARE -> 75
-																				$gain_pvict = 75;
+																				// GARE -> 50
+																				$gain_pvict = 50;
 																				$nom_b = "GARE";
 																			}
 																			else if ($id_bat == 7) {
@@ -2225,7 +2225,7 @@ if($dispo == '1' || $admin){
 
 	<body>
 				<?php
-				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
+				$date_serveur = new DateTime('now', new DateTimeZone('Europe/Paris'));
 				
 				$date_dla = date('d-m-Y H:i:s', $n_dla);
 				
@@ -2315,7 +2315,7 @@ if($dispo == '1' || $admin){
 				}
 				
 				// Ajout Jacklegende du 23/04 - lien Discord et de la visu
-				echo " <a class='btn btn-info' href='https://discord.gg/SpZ87fYZeZ' target='_blank'>Discord Commun</a>";
+				echo " <a class='btn btn-info' href='https://discord.gg/EMqRMzHKjZ' target='_blank'>Discord Commun</a>";
 						
 				$id_joueur_camp 	= $_SESSION["ID_joueur"];
 					
@@ -2327,9 +2327,9 @@ if($dispo == '1' || $admin){
 				$id_joueur_perso_camp 	= $t_perso_camp["clan"];
 						
 				if($id_joueur_perso_camp == 1){
-						echo " <a class='btn btn-info' href='https://discord.gg/95fKNwT8Vh' target='_blank'>Discord nord </a>";
+						echo " <a class='btn btn-info' href='https://discord.gg/xYSyWjbsJf' target='_blank'>Discord nord </a>";
 				} else if ($id_joueur_perso_camp == 2){
-						echo " <a class='btn btn-info' href='https://discord.gg/zE9knsyRGr' target='_blank'>Discord sud</a>";
+						echo " <a class='btn btn-info' href='https://discord.gg/68aCHYuths' target='_blank'>Discord sud</a>";
 				}
 					
 				echo " <a class='btn btn-info' href='visu.php'>Visu</a>";
@@ -4620,6 +4620,6 @@ else {
 	$_SESSION = array(); // On écrase le tableau de session
 	session_destroy(); // On détruit la session
 	
-	header("Location:../index2.php");
+	header("Location:../index.php");
 }
 ?>

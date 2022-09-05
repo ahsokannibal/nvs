@@ -452,6 +452,21 @@ if ($verif_id_perso_session) {
 											if ($distance == $porteeMax_arme_attaque + $bonus_portee)
 												$bonus_precision_distance = -15;
 										}
+
+										//En cas de soin, le soigneur ne bénéficie pas du malus de la cible pour toucher plus facilement
+										//Mais obtien un malus en fonction de l'état de celle-ci.
+										if($id_arme_attaque == 10){
+											$pourc_pv_cible = $pv_cible/$pvM_cible*100;
+											if($pourc_pv_cible <=25){
+												$bonus_cible = 0;
+											}else if ($pourc_pv_cible > 25 && $pourc_pv_cible <= 50){
+												$bonus_cible = 5;
+											}else if ($pourc_pv_cible > 50 && $pourc_pv_cible <= 75){
+												$bonus_cible = 10;
+											}else {
+												$bonus_cible = 15;
+											}
+										}
 										
 										$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet + $bonus_precision_bat + $bonus_precision_distance;
 										
@@ -1820,7 +1835,7 @@ if ($verif_id_perso_session) {
 													}
 													
 													// maj dernier tombé
-													$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_p')";
+													$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_p', $clan_p, $id, $clan_perso)";
 													$mysqli->query($sql);
 													
 												}
@@ -1863,16 +1878,16 @@ if ($verif_id_perso_session) {
 											
 											// Gain points de victoire
 											if ($id_batiment == 9) {
-												// FORT -> 400
-												$gain_pvict = 400;
+												// FORT -> 500
+												$gain_pvict = 500;
 											}
 											else if ($id_batiment == 8) {
 												// FORTIN -> 100
 												$gain_pvict = 100;
 											}
 											else if ($id_batiment == 11) {
-												// GARE -> 75
-												$gain_pvict = 75;
+												// GARE -> 50
+												$gain_pvict = 50;
 											}
 											else if ($id_batiment == 7) {
 												// HOPITAL -> 10

@@ -557,7 +557,10 @@ CREATE TABLE `decorations` (
 
 CREATE TABLE `dernier_tombe` ( 
 	`date_capture` DATETIME NOT NULL , 
-	`id_perso_capture` INT NOT NULL 
+	`id_perso_capture` INT NOT NULL ,
+	`camp_perso_capture` tinyint(4) NOT NULL,
+	`id_perso_captureur` INT NOT NULL,
+	`camp_perso_captureur` tinyint(4) NOT NULL
 ) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
@@ -754,7 +757,8 @@ CREATE TABLE `instance_pnj` (
   `dernierAttaquant_i` int(11) NOT NULL DEFAULT '0',
   `x_i` int(11) DEFAULT '0',
   `y_i` int(11) DEFAULT '0',
-  `bonus_i` int(11) DEFAULT '0'
+  `bonus_i` int(11) DEFAULT '0',
+  `cycle_mvt` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -923,6 +927,7 @@ CREATE TABLE IF NOT EXISTS `missions` (
   `recompense_thune` int(11) NOT NULL DEFAULT '0',
   `recompense_xp` int(11) NOT NULL DEFAULT '0',
   `recompense_pc` int(11) NOT NULL DEFAULT '0',
+  `recompense_pvict` int(11) NOT NULL DEFAULT '0',
   `date_debut_mission` datetime DEFAULT NULL,
   `date_fin_mission` datetime DEFAULT NULL,
   `camp_mission` INT NOT NULL,
@@ -1833,3 +1838,4 @@ ALTER TABLE `compagnies`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

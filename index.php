@@ -3,6 +3,7 @@ session_start();
 require_once("fonctions.php");
 
 $mysqli = db_connexion();
+$dispo = config_dispo_jeu($mysqli);
 
 include ('nb_online.php');
 

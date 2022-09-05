@@ -1835,21 +1835,27 @@ function action_dormir($mysqli, $id_perso){
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	
-	$nom_perso 		= $t_p["nom_perso"];
-	$recup_perso 	= $t_p["recup_perso"];
-	$pa_perso 		= $t_p["pa_perso"];
-	$paMax_perso 	= $t_p["paMax_perso"];
-	$pv_perso 		= $t_p["pv_perso"];
-	$pvMax_perso 	= $t_p["pvMax_perso"];
-	$pm_perso 		= $t_p["pm_perso"];
-	$pmMax_perso 	= $t_p["pmMax_perso"];
-	$br_p 			= $t_p["bonusRecup_perso"];
-	$camp 			= $t_p["clan"];
+	$nom_perso        = $t_p["nom_perso"];
+	$recup_perso      = $t_p["recup_perso"];
+	$pa_perso         = $t_p["pa_perso"];
+	$paMax_perso      = $t_p["paMax_perso"];
+	$pv_perso         = $t_p["pv_perso"];
+	$pvMax_perso      = $t_p["pvMax_perso"];
+	$pm_perso         = $t_p["pm_perso"];
+	$pmMax_perso      = $t_p["pmMax_perso"];
+	$bonusRecup_perso = $t_p["bonusRecup_perso"];
+	$camp             = $t_p["clan"];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
-	$gain_pv = $recup_perso * 2;
+	$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso);
+	$bonus_recup_terrain = get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso);
+	
+	$bonusRecup_perso += $bonus_recup_bat;
+	$bonusRecup_perso += $bonus_recup_terrain;
+	
+	$gain_pv = ($recup_perso + $bonusRecup_perso)* 2;
 	
 	// test pa
 	if($pa_perso >= $paMax_perso && $pm_perso >= $pmMax_perso){
@@ -1928,7 +1934,7 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$mysqli->query($sql);
 				
 				// maj dernier tombé
-				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso')";
+				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_perso', $camp, $id_perso, $camp)";
 				$mysqli->query($sql);
 				
 				// Quand un grouillot meurt, il perd tout ses Pi
@@ -4176,7 +4182,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						}
 						
 						// maj dernier tombé
-						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$idPerso_carte')";
+						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$idPerso_carte', $clan_cible, $id_perso, $clan)";
 						$mysqli->query($sql);
 					}
 					else {

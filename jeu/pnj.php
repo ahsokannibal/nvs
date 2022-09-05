@@ -4,10 +4,10 @@ require_once("../fonctions.php");
 
 $mysqli = db_connexion();
 
-define ("NB_MAX_PNJ", 200); 
+define ("NB_MAX_PNJ", 400); 
 define ("NB_TYPE_PNJ", 9);
 define ("NB_PNJ_A_CREER", 10);
-define ("NB_PNJ_MAX_TYPE", 30);
+define ("NB_PNJ_MAX_TYPE", 50);
 
 // Récupération de la clef secrete
 $sql = "SELECT valeur_config FROM config_jeu WHERE code_config='clef_secrete'";

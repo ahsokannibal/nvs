@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
@@ -138,7 +139,7 @@ if(isset($_GET["top"])){
 	
 	if((isset($verif) && $verif) || !isset($_GET["classement"])){
 	
-		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso > '100' ".($id_type_perso ? "AND type_perso=$id_type_perso" : "")." ORDER BY $class DESC LIMIT 50";
+		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso >= '100' ".($id_type_perso ? "AND type_perso=$id_type_perso" : "")." ORDER BY $class DESC LIMIT 50";
 		$res = $mysqli->query($sql);
 		
 		echo "<div class='table-responsive'>";
@@ -360,61 +361,33 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$nbvictr = $t['points_victoire'];
 	
 	// Nombre de persos du sud capturés par le Nord
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=1";
+	$res_ev_capt = $mysqli->query($sql);
 	$nb_ennemis_capt_nord = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du nord capturés par le Sud
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=2";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_ennemis_capt_sud = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du nord capturés par le Nord
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=1";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_allies_capt_nord = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du sud capturés par le Sud
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=2";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_allies_capt_sud = $res_ev_capt->num_rows;
 	
-	// Nombre de persos du nord capturés par autre chose qu'un perso (pnj / canon)
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement > 50000
-					AND IDCible_evenement < 50000
-					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	// Nombre de persos du nord capturés par autre chose qu'un perso (pnj)
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=0";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_autre_capt_nord = $res_ev_capt->num_rows;
 	
-	// Nombre de persos du sud capturés par autre chose qu'un perso (pnj / canon)
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement > 50000
-					AND IDCible_evenement < 50000
-					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	// Nombre de persos du sud capturés par autre chose qu'un perso (pnj)
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=0";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_autre_capt_sud = $res_ev_capt->num_rows;
 	
 	// Nombre de capture de PNJ
@@ -438,7 +411,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures ennemis</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures alliés</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé par un canon ou un pnj)</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé un pnj ou perso neutre)</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Points de victoires</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
@@ -570,7 +543,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso > '100' 
+			WHERE perso.id_perso >= '100' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='1'";
@@ -604,7 +577,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso > '100' 
+			WHERE perso.id_perso >= '100' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='2'";
@@ -748,10 +721,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	echo "</center>";
 	echo "<br/>";
 	
-	$sql = "SELECT nom_perso, clan, perso.id_perso, UNIX_TIMESTAMP(date_capture) as date_capture, nom_grade, grades.id_grade  FROM perso, perso_as_grade, grades, dernier_tombe
-			WHERE perso.id_perso = perso_as_grade.id_perso 
-			AND perso_as_grade.id_grade = grades.id_grade
-			AND perso.id_perso = dernier_tombe.id_perso_capture
+	$sql = "SELECT UNIX_TIMESTAMP(date_capture) as date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur FROM dernier_tombe
 			ORDER BY date_capture DESC LIMIT 50";
 	$res = $mysqli->query($sql);
 
@@ -772,52 +742,60 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	while ($t = $res->fetch_assoc()){
 		
 		$date_capture_o 	= $t['date_capture'];
-		$id_camp_capt	= $t["clan"];
-		$nom_perso_capt	= $t["nom_perso"];
-		$id_perso_capt	= $t["id_perso"];
+		$id_perso_a	= $t['id_perso_capture'];
+		$camp_perso_a = $t['camp_perso_capture'];
+		$id_perso_b 	= $t['id_perso_captureur'];
+		$camp_perso_b	= $t['camp_perso_captureur'];
 		
 		$date_capture = date('Y-m-d H:i:s', $date_capture_o);
-		
-		if($id_camp_capt == "1"){
-			$couleur_camp = "blue";
-		}
-		if($id_camp_capt == "2"){
-			$couleur_camp = "red";
-		}
 
-		$id_grade_perso = $t['id_grade'];
-		// cas particuliers grouillot
-		if ($id_grade_perso == 101)
-			$id_grade_perso = "1.1";
-		else if ($id_grade_perso == 102)
-			$id_grade_perso = "1.2";
-
-		$sql = "SELECT IDActeur_cv, nomActeur_cv FROM cv WHERE IDCible_cv=".$id_perso_capt." AND (UNIX_TIMESTAMP(date_cv) - $date_capture_o < 10) ORDER BY date_cv DESC LIMIT 1";
+		$sql = "SELECT nom_perso, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades WHERE perso.id_perso = perso_as_grade.id_perso AND perso_as_grade.id_grade = grades.id_grade AND perso.id_perso=".$id_perso_a;
 		$res2 = $mysqli->query($sql);
 		$t2 = $res2->fetch_assoc();
-		$nom_perso_b 	= $t2['nomActeur_cv'];
-		$id_perso_b 	= $t2['IDActeur_cv'];
 
+		$nom_perso_a	= $t2["nom_perso"];
+		$nom_grade_a	= $t["nom_grade"];
+		$id_grade_a	= $t2["id_grade"];
+		$couleur_camp_a = couleur_clan($camp_perso_a);
+
+		// cas particuliers grouillot
+		if ($id_grade_a == 101)
+			$id_grade_a = "1.1";
+		else if ($id_grade_a == 102)
+			$id_grade_a = "1.2";
+
+		$nom_perso_b = "";
 		$grade_b = "";
-		$couleur_camp_b = "black";
+		$couleur_camp_b = couleur_clan($camp_perso_b);
 		if ($id_perso_b != 0 && $id_perso_b < 50000) {
-			$sql = "SELECT clan, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades WHERE perso.id_perso = perso_as_grade.id_perso AND perso_as_grade.id_grade = grades.id_grade AND perso.id_perso=".$id_perso_b;
-			$res3 = $mysqli->query($sql);
-			$t3 = $res3->fetch_assoc();
-			$id_grade_perso_b = $t3['id_grade'];
-			if ($id_grade_perso_b == 101)
-				$id_grade_perso_b = "1.1";
-			else if ($id_grade_perso_b == 102)
-				$id_grade_perso_b = "1.2";
-			$grade_b = '<img src="../images/grades/'.$id_grade_perso_b.'.gif" /> '.$t3['nom_grade'];
+			$sql = "SELECT nom_perso, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades WHERE perso.id_perso = perso_as_grade.id_perso AND perso_as_grade.id_grade = grades.id_grade AND perso.id_perso=".$id_perso_b;
+			$res2 = $mysqli->query($sql);
+			$t2 = $res2->fetch_assoc();
+
+			$nom_perso_b	= $t2["nom_perso"];
+			$nom_grade_b	= $t["nom_grade"];
+			$id_grade_b	= $t2["id_grade"];
+
+			if ($id_grade_b == 101)
+				$id_grade_b = "1.1";
+			else if ($id_grade_b == 102)
+				$id_grade_b = "1.2";
+			$grade_b = '<img src="../images/grades/'.$id_grade_b.'.gif" /> '.$nom_grade_b;
+		} else if ($id_perso_b != 0 && $id_perso_b < 200000) {
+			$nom_perso_b = "Canon";
+		} else if ($id_perso_b != 0) {
+			$sql = "SELECT nom_pnj FROM instance_pnj JOIN pnj ON instance_pnj.id_pnj=pnj.id_pnj WHERE idInstance_pnj=$id_perso_b";
+			$res2 = $mysqli->query($sql);
+			$t2 = $res2->fetch_assoc();
+			$nom_perso_b = $t2['nom_pnj'];
 		} else {
 			$grade_b = "";
 		}
 		
 		echo "			<tr>";
 		echo "				<td align=center>".$date_capture."</td>";
-		echo "				<td align=center><font color=$couleur_camp>".$nom_perso_capt."</font> [<a href=\"evenement.php?infoid=".$id_perso_capt."\">" .$id_perso_capt. "</a>]</td>";
-		echo "				<td align='left'><img src=\"../images/grades/" . $id_grade_perso . ".gif\" /> ".$t['nom_grade']."</td>";
+		echo "				<td align=center><font color=$couleur_camp_a>".$nom_perso_a."</font> [<a href=\"evenement.php?infoid=".$id_perso_a."\">" .$id_perso_a. "</a>]</td>";
+		echo "				<td align='left'><img src=\"../images/grades/" . $id_grade_a . ".gif\" /> ".$t['nom_grade']."</td>";
 		echo "				<td align=center><font color=$couleur_camp_b>".$nom_perso_b."</font> [<a href=\"evenement.php?infoid=".$id_perso_b."\">" .$id_perso_b. "</a>]</td>";
 		echo "				<td align='left'>$grade_b</td>";
 		echo "			</tr>";
@@ -889,7 +867,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades 
 			WHERE perso.id_perso = perso_as_grade.id_perso 
 			AND perso_as_grade.id_grade = grades.id_grade
-			AND perso.id_perso > '100'
+			AND perso.id_perso >= '100'
 			".($id_type_perso ? "AND type_perso=$id_type_perso" : "")."
 			ORDER BY ".$order_by." DESC LIMIT ".$limit;
 	$res = $mysqli->query($sql);

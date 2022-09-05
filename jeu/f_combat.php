@@ -13,7 +13,7 @@ function combat_pnj($precision_pnj, $bonus_pj){
 	$touche = mt_rand(0,100);
 	$precision_final = $precision_pnj - $bonus_pj;
 	
-	return ($precision_final <= $precision_pnj);
+	return ($touche <= $precision_final);
 }
 
 /**
@@ -751,7 +751,7 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 		}
 
 		// maj dernier tombé
-		$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+		$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id, $clan_perso)";
 		$mysqli->query($sql);
 	}
 }
@@ -993,7 +993,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				}
 
 				// maj dernier tombé
-				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible_collat')";
+				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible_collat', $clan_collat, $id, $clan_perso)";
 				$mysqli->query($sql);
 			}
 
