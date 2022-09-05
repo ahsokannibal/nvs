@@ -2315,7 +2315,7 @@ if($dispo == '1' || $admin){
 				}
 				
 				// Ajout Jacklegende du 23/04 - lien Discord et de la visu
-				echo " <a class='btn btn-info' href='https://discord.gg/SpZ87fYZeZ' target='_blank'>Discord Commun</a>";
+				echo " <a class='btn btn-info' href='https://discord.gg/EMqRMzHKjZ' target='_blank'>Discord Commun</a>";
 						
 				$id_joueur_camp 	= $_SESSION["ID_joueur"];
 					
@@ -2327,9 +2327,9 @@ if($dispo == '1' || $admin){
 				$id_joueur_perso_camp 	= $t_perso_camp["clan"];
 						
 				if($id_joueur_perso_camp == 1){
-						echo " <a class='btn btn-info' href='https://discord.gg/95fKNwT8Vh' target='_blank'>Discord nord </a>";
+						echo " <a class='btn btn-info' href='https://discord.gg/xYSyWjbsJf' target='_blank'>Discord nord </a>";
 				} else if ($id_joueur_perso_camp == 2){
-						echo " <a class='btn btn-info' href='https://discord.gg/zE9knsyRGr' target='_blank'>Discord sud</a>";
+						echo " <a class='btn btn-info' href='https://discord.gg/68aCHYuths' target='_blank'>Discord sud</a>";
 				}
 					
 				echo " <a class='btn btn-info' href='visu.php'>Visu</a>";
