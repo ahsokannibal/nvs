@@ -1,4 +1,5 @@
 <?php
+require_once("f_utils_carte.php");
 session_start();
 
 if (@$_SESSION["id_perso"]) {
@@ -27,11 +28,13 @@ if (@$_SESSION["id_perso"]) {
 	
 	// couleurs perso_carte
 	$noir 							= Imagecolorallocate($perso_carte, 0, 0, 0); // noir
+	$brouillard_general				= $noir;
 	$couleur_vert 					= Imagecolorallocate($perso_carte, 10, 254, 10); // vert bien voyant
 	$couleur_perso_clan1 			= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu bien voyant
 	$couleur_perso_clan2 			= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
 	$couleur_bat_clan1 				= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
 	$couleur_bat_clan2 				= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
+	$couleur_bat_neutre				= Imagecolorallocate($perso_carte, 130, 130, 130); // gris batiments
 	$couleur_rail					= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
 	$couleur_brouillard_plaine		= Imagecolorallocate($perso_carte, 208, 192, 122); // Chamois
 	$couleur_brouillard_eau			= Imagecolorallocate($perso_carte, 187, 174, 152); // Grège
@@ -51,6 +54,11 @@ if (@$_SESSION["id_perso"]) {
 	
 	$id_joueur 	= $t2["idJoueur_perso"];
 	$camp_perso	= $t2["clan"];	
+
+	if ($camp_perso != '1' && $camp_perso != '2') {
+		header("Location:afficher_carte.php");
+		exit();
+	}
 	
 	// je vais chercher les rails dans ma table
 	$sql = "SELECT x_carte, y_carte FROM carte 
@@ -115,9 +123,10 @@ if (@$_SESSION["id_perso"]) {
 			imageellipse($perso_carte, 3*$x, 600-3*$y, 20, 20, $noir);
 		}
 	}
+
 	
-	// je vais chercher les batiments dans ma table
-	$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND pv_instance>0";
+	// je vais chercher les batiments dans ma table (autres que entrepots, hopitaux, fort, fortins, gares et points stratégiques)
+	$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND (pv_instance>0 AND (instance_batiment.id_batiment<6 OR instance_batiment.id_batiment>11))";
 	$res = $mysqli->query($sql);
 	
 	while ($t = $res->fetch_assoc()){
@@ -126,25 +135,53 @@ if (@$_SESSION["id_perso"]) {
 		$y 			= $t["y_instance"];
 		$camp 		= $t["camp_instance"];
 		$taille_bat = $t["taille_batiment"];
-		
-		if($camp == '1'){
-			$color = $couleur_bat_clan1;
+		$id_bat 		= $t["id_batiment"];
+
+		switch($camp){
+			case "1":
+				$color = $couleur_bat_clan1;
+				break;
+			case "2":
+				$color = $couleur_bat_clan2;
+				break;
+			default:
+				$color = $couleur_bat_neutre;
 		}
-		if($camp == '2'){
-			$color = $couleur_bat_clan2;
-		}
-		
+
+		// barricade
+		if ($id_bat == 1)
+			$color = $couleur_bat_neutre;
+
 		imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
 	}
 	
 	// J'ajoute le brouillard de guerre
+	// le brouillard est levé a : 
+	// - 20 cases pour les forts et fortins
+	// - 10 cases pour les gares
+	// - 5 cases pour les tours de guet
 	if ($camp_perso == '1') {
-		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte
+			WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib
+			ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = 1)
+			AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2
+			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=11 AND ib2.camp_instance = 1)
+			AND coordonnees NOT IN (SELECT ca3.coordonnees FROM carte ca3 LEFT JOIN instance_batiment ib2
+			ON ((ca3.x_carte BETWEEN(ib2.x_instance -5) AND (ib2.x_instance +5)) AND (ca3.y_carte BETWEEN(ib2.y_instance -5) AND(ib2.y_instance +5))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 1)
+			AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_nord_date))>".BROUILLARD_DE_GUERRE_S;
 	}
 	else if ($camp_perso == '2') {
-		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_sud='0'";
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte
+			WHERE coordonnees NOT IN (SELECT ca.coordonnees FROM carte ca LEFT JOIN instance_batiment ib
+			ON ((ca.x_carte BETWEEN(ib.x_instance -20) AND (ib.x_instance +20)) AND (ca.y_carte BETWEEN(ib.y_instance -20) AND(ib.y_instance +20))) WHERE (ib.id_batiment=8 OR ib.id_batiment=9) AND ib.camp_instance = 2)
+			AND coordonnees NOT IN (SELECT ca2.coordonnees FROM carte ca2 LEFT JOIN instance_batiment ib2
+			ON ((ca2.x_carte BETWEEN(ib2.x_instance -10) AND (ib2.x_instance +10)) AND (ca2.y_carte BETWEEN(ib2.y_instance -10) AND(ib2.y_instance +10))) WHERE ib2.id_batiment=11 AND ib2.camp_instance = 2)
+			AND coordonnees NOT IN (SELECT ca3.coordonnees FROM carte ca3 LEFT JOIN instance_batiment ib2
+			ON ((ca3.x_carte BETWEEN(ib2.x_instance -5) AND (ib2.x_instance +5)) AND (ca3.y_carte BETWEEN(ib2.y_instance -5) AND(ib2.y_instance +5))) WHERE ib2.id_batiment=2 AND ib2.camp_instance = 2)
+			AND TIME_TO_SEC(TIMEDIFF(NOW(), vue_sud_date))>".BROUILLARD_DE_GUERRE_S;
 	}
 	$res = $mysqli->query($sql);
+	echo $res->num_rows;
 	
 	while ($t = $res->fetch_assoc()){
 		
@@ -178,17 +215,56 @@ if (@$_SESSION["id_perso"]) {
 			$couleur_brouillard = $couleur_brouillard_plaine;
 		}
 		
-		/*
-		$rand = mt_rand(1,2);
-		
-		if ($rand == 1) {
-			$couleur_brouillard = $couleur_brouillard1;
-		}
-		else {
-			$couleur_brouillard = $couleur_brouillard2;
-		}*/
-		
 		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $couleur_brouillard);
+	}
+
+	// je vais chercher les batiments dans ma table (entrepots, hopitaux, fort, fortins, gares et points stratégiques)
+	$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND ((pv_instance>0 AND instance_batiment.id_batiment>=6 AND instance_batiment.id_batiment<=11) OR instance_batiment.id_batiment = 13)";
+	$res = $mysqli->query($sql);
+	
+	while ($t = $res->fetch_assoc()){
+		
+		$x 			= $t["x_instance"];
+		$y 			= $t["y_instance"];
+		$camp 		= $t["camp_instance"];
+		$taille_bat = $t["taille_batiment"];
+		$id_bat 		= $t["id_batiment"];
+
+		switch($camp){
+			case "1":
+				$color = $couleur_bat_clan1;
+				break;
+			case "2":
+				$color = $couleur_bat_clan2;
+				break;
+			default:
+				$color = $couleur_bat_neutre;
+		}
+
+		imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
+
+		// Met en évidence les points stratégiques
+		if ($id_bat == 13) {
+			drawStar($perso_carte,3*$x,600-3*$y,10,5,$color);
+		}
+	}
+
+	// J'ajoute les cases non découvertes
+	if ($camp_perso == '1') {
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_nord='0'";
+	}
+	else if ($camp_perso == '2') {
+		$sql = "SELECT x_carte, y_carte, fond_carte FROM carte WHERE vue_sud='0'";
+	}
+	$res = $mysqli->query($sql);
+	
+	while($not_discovered = $res->fetch_assoc()){
+		
+		$x 			= $not_discovered["x_carte"];
+		$y 			= $not_discovered["y_carte"];
+		$fond		= $not_discovered["fond_carte"];
+		
+		imagefilledrectangle ($perso_carte, (($x*3)-1), (((600-($y*3)))-1), (($x*3)+1), (((600-($y*3)))+1), $brouillard_general);
 	}
 
 	// creation de l'image perso

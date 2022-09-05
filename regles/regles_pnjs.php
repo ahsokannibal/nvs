@@ -58,6 +58,9 @@
 						<li class="nav-item">
 							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
 						</li>
+						<li class="nav-item">
+							<a href="../jeu/jouer.php"> <input type="button" value="Retour au jeu"> </a>
+						</li>
 					</ul>
 				</div>
 			</nav>
@@ -72,11 +75,15 @@
 			
 			<div class="row">
 				<div class="col-12">
-Il existe des Personnages Non Joueurs (PNJ), en opposition aux Personnages Joueurs (PJ).<br />
-Ces personnages sont des Intelligences Artificielles (IA). Ils répondent à leurs instincts animaux et agiront en fonction de vos propres actions. Ils peuvent apparaître en noir sur la carte.<br />
-Ainsi vous rencontrerez essentiellement des bêtes sauvages comme les ours, loups, scorpions, bisons, etc..<br />
-Chaque PNJ a son caractère, certains seront aggressifs et attaqueront "à vue", d'autres vaqueront à leurs occupations et ne vous attaqueront que pour se defendre et pour finir certains seront peureux et fuiront les PJ.<br /><br />
-A vous de découvrir les caractèristiques des PNJ !							
+					<p>Il existe des Personnages Non Joueurs (PNJ), en opposition aux Personnages Joueurs (PJ).</p>
+					
+					<p>Ces personnages sont en partie des Intelligences Artificielles (IA). Ils répondent à leurs instincts animaux et agiront en fonction de vos propres actions.<br />
+					Ils peuvent apparaître en noir sur la carte. D'autres seront gérés par les MJ et/ou l'animation.<br />
+					Ainsi vous rencontrerez essentiellement des bêtes sauvages comme les ours, loups, scorpions, bisons, etc..<br />
+					Chaque PNJ a son caractère, certains seront agressifs et attaqueront "à vue", d'autres vaqueront à leurs occupations et ne vous attaqueront que pour se défendre et pour finir certains seront peureux et fuiront les PJ.</p>
+
+					<p> A vous de découvrir les caractéristiques des PNJ !</p>
+						
 				</div>
 			</div>
 		

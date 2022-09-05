@@ -189,6 +189,7 @@ if($dispo == '1' || $admin){
 						}
 						else if ($type_demande_maj == 4) {
 							// Demande de changement de camp
+							$malus = isset($_GET['malus']);
 							
 							// Récupération du camp cible
 							$sql = "SELECT info_demande FROM perso_demande_anim WHERE id_perso='$id_perso_maj' AND type_demande='4'";
@@ -196,49 +197,46 @@ if($dispo == '1' || $admin){
 							$t = $res->fetch_assoc();
 							
 							$camp_cible = $t['info_demande'];
+							if ($camp_cible == 1) {
+								$couleur_clan_p = 'blue';
+								$nom_camp 		= 'Nord';
+								$camp 		= 'nord';
+								$id_group_forum	= 8;
+							}
+							else if ($camp_cible == 2) {
+								$couleur_clan_p = 'red';
+								$nom_camp 		= 'Sud';
+								$camp 		= 'sud';
+								$id_group_forum	= 9;
+							}
+							else if ($camp_cible == 3) {
+								$couleur_clan_p = 'green';
+								$nom_camp 		= 'Indien';
+								$camp 		= 'indien';
+							}
 							
 							// Récupération des grouillots du joueur 
-							$sql = "SELECT id_perso FROM perso WHERE idJoueur_perso='$id_perso_maj' AND chef='0'";
+							$sql = "SELECT id_perso, nom_perso, type_perso, image_unite FROM perso JOIN type_unite ON type_perso = id_unite WHERE idJoueur_perso='$id_perso_maj' AND chef='0'";
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()) {
 								
 								$id_grouillot = $t['id_perso'];
-								
-								// Ok - renvoi du perso						
-								$sql = "DELETE FROM perso WHERE id_perso='$id_grouillot'";
+								$nom_grouillot = $t['nom_perso'];
+								$type_perso = $t['type_perso'];
+								$image_unite = $t['image_unite'];
+
+								$image_perso = $image_unite."_".$camp.".gif";
+
+								// MAJ grouillot
+								$sql = "UPDATE perso SET pv_perso='0', clan='$camp_cible', image_perso='$image_perso' WHERE id_perso='$id_grouillot'";
 								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_grouillot'";
+
+								// Suppression de lieus de rappatriement
+								$sql = "DELETE FROM perso_as_respawn WHERE id_perso='$id_grouillot'";
 								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_armure WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_competence WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_contact WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_dossiers WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_grade WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
-								$sql = "DELETE FROM perso_in_batiment WHERE id_perso='$id_grouillot'";
-								$mysqli->query($sql);
-								
+
+								// Suppression du perso la compagnie si toujours dans une compagnie
 								$sql = "DELETE FROM perso_in_compagnie WHERE id_perso='$id_grouillot'";
 								$mysqli->query($sql);
 								
@@ -252,6 +250,10 @@ if($dispo == '1' || $admin){
 									$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_grouillot'";
 								}
 								$mysqli->query($sql);								
+
+								// Evenement changement de camp
+								$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_grouillot,'<font color=$couleur_clan_p><b>$nom_grouillot</b></font>','a changé de camp, nouveau camp : <font color=$couleur_clan_p><b>$nom_camp</b></font>',NULL,'','',NOW(),'0')";
+								$mysqli->query($sql);
 							}
 							
 							// Récupération infos du chef 
@@ -263,25 +265,16 @@ if($dispo == '1' || $admin){
 							$nom_perso_chef = $t_chef['nom_perso'];
 							$pc_perso_chef	= $t_chef['pc_perso'];
 							
-							$new_pc_chef = floor(($pc_perso_chef * 90) / 100);
+							$new_pc_chef = $malus ? floor(($pc_perso_chef * 90) / 100) : $pc_perso_chef;
 							
 							if ($camp_cible == 1) {
-								$couleur_clan_p = 'blue';
-								$nom_camp 		= 'Nord';
 								$image_perso	= 'cavalerie_nord.gif';
-								$id_group_forum	= 8;
 							}
 							else if ($camp_cible == 2) {
-								$couleur_clan_p = 'red';
-								$nom_camp 		= 'Sud';
 								$image_perso	= 'cavalerie_sud.gif';
-								$id_group_forum	= 9;
 							}
 							else if ($camp_cible == 3) {
-								$couleur_clan_p = 'green';
-								$nom_camp 		= 'Indien';
 								$image_perso	= 'cavalerie_indien.gif';
-								// TODO
 							}
 							
 							// MAJ Chef
@@ -317,19 +310,22 @@ if($dispo == '1' || $admin){
 							$mysqli->query($sql);
 							
 							// ------- FORUM 
-							// Récupération de l'id de l'utilisateur sur le forum 
-							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE id_perso='$id_perso_chef'";
-							$res = $mysqli->query($sql);
-							$t = $res->fetch_assoc();
-							
-							$id_user_forum = $t['user_id'];
-							
-							// MAJ du groupe de l'utilisateur
-							$sql = "UPDATE ".$table_prefix."user_group SET group_id='$id_group_forum' WHERE user_id='$id_user_forum'";
-							$mysqli->query($sql);
-							
-							$texte = addslashes("Demande de changement de camp par le perso matricule $id_perso_maj validé");
-								
+							if (is_dir($phpbb_root_path))
+							{
+								// Récupération de l'id de l'utilisateur sur le forum 
+								$sql = "SELECT user_id FROM ".$table_prefix."users WHERE id_perso='$id_perso_chef'";
+								$res = $mysqli->query($sql);
+								$t = $res->fetch_assoc();
+
+								$id_user_forum = $t['user_id'];
+
+								// MAJ du groupe de l'utilisateur
+								$sql = "UPDATE ".$table_prefix."user_group SET group_id='$id_group_forum' WHERE user_id='$id_user_forum'";
+								$mysqli->query($sql);
+
+								$texte = addslashes("Demande de changement de camp par le perso matricule $id_perso_maj validé");
+
+							}
 							// log_action_animation
 							$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_perso.php', 'Validation demande de changement de camp', '$texte')";
 							$mysqli->query($sql);
@@ -502,7 +498,8 @@ if($dispo == '1' || $admin){
 									echo "	<td align='center'>".$nom_demande."</td>";
 									echo "	<td align='center'>".$info_demande."</td>";
 									echo "	<td align='center'>";
-									echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter</a>";
+									echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok\">Accepter (sans malus)</a>";
+									echo "		<a class='btn btn-success' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=ok&malus\">Accepter (avec malus)</a>";
 									echo "		<a class='btn btn-danger' href=\"anim_perso.php?id_perso=".$id_perso."&type=".$type_demande."&valid=refus\">Refuser</a>";
 									echo "	</td>";
 									echo "</tr>";

@@ -85,7 +85,10 @@ if(isset($_SESSION["id_perso"])){
 				
 				$unlock = "UNLOCK TABLES";
 				$mysqli->query($unlock);
-				
+
+				if (!$id_message) {
+					echo "<div class=\"erreur\">Une erreur s'est produite.</div>";
+				} else {
 				for ($i = 0; $i < $nbdest; $i++) {
 					
 					// recupération du nom du perso destinataire
@@ -132,6 +135,7 @@ if(isset($_SESSION["id_perso"])){
 						
 						header("Location:messagerie.php?envoi=ok");
 					}
+				}
 				}
 			}
 		}
@@ -409,7 +413,7 @@ if(isset($_SESSION["id_perso"])){
 	
 		<div class="container-fluid">
 
-			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 
 			<div class="row justify-content-center">
 				<div class="col-12">

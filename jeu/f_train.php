@@ -1,5 +1,7 @@
 <?php
 
+require_once("f_carte.php");
+
 /**
  * Fonction permettant de déplacer le train sur une case x/y
  */
@@ -25,36 +27,29 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 			// Perso => on lui roule dessus (PV/2) et on l'ejecte
 			
 			// Recherche case libre pour ejection					
-			$trouve = 0;
+
+			$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			$X_MAX = $t['x_max'];
+			$Y_MAX  = $t['y_max'];
+
+			// cherche case libre
+			$verif_occ = 0;
 			$seek = 1;
-			
-			// Tant qu'on a pas trouvé
-			while (!$trouve){
-			
-				// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-				$sql = "SELECT x_carte, y_carte, fond_carte FROM carte 
-						WHERE occupee_carte='0' 
-						AND x_carte >= $x_train - $seek AND x_carte <= $x_train + $seek AND y_carte >= $y_train - $seek AND y_carte <= $y_train + $seek
-						AND x_carte='$x_train' AND y_carte!='$y_train'";
-				$res = $mysqli->query($sql);
-				$nb_libre = $res->num_rows;
-				
-				if ($nb_libre) {
-				
-					$t = $res->fetch_assoc();
-					
-					$x_libre 	= $t["x_carte"];
-					$y_libre 	= $t["y_carte"];
-					$fond_libre	= $t["fond_carte"];
-					
-					$trouve = 1;
-					
-					break;
+			$x_libre = $x_train;
+			$y_libre = $y_train;
+			while (!$verif_occ && $seek <= 5) {
+				while (!$verif_occ) {
+					$x = pos_zone_rand_x($x_train-$seek, $x_train+$seek); 
+					$y = pos_zone_rand_y($y_train-$seek, $y_train+$seek);
+					$verif_occ = verif_position_libre($mysqli, $x, $y, $X_MAX, $Y_MAX);
+					if ($verif_occ) {
+						$x_libre = $x;
+						$y_libre = $y;
+					}
 				}
-				else {
-					// on elargie la recherche
-					$seek++;
-				}
+				$seek++;
 			}
 			
 			// MAJ perso
@@ -95,38 +90,31 @@ function deplacement_train($mysqli, $id_instance_train, $x_train, $y_train, $ima
 			// PNJ => on lui roule dessus (PV/2) et on l'ejecte
 			
 			// Recherche case libre pour ejection					
-			$trouve = 0;
+
+			$sql = "SELECT MAX(x_carte) as x_max, MAX(y_carte) as y_max FROM carte";
+			$res = $mysqli->query($sql);
+			$t = $res->fetch_assoc();
+			$X_MAX = $t['x_max'];
+			$Y_MAX  = $t['y_max'];
+
+			// cherche case libre
+			$verif_occ = 0;
 			$seek = 1;
-			
-			// Tant qu'on a pas trouvé
-			while (!$trouve){
-			
-				// recuperation des coordonnees des cases et de leur etat (occupee ou non)
-				$sql = "SELECT x_carte, y_carte, fond_carte FROM carte 
-						WHERE occupee_carte='0' 
-						AND x_carte >= $x_train - $seek AND x_carte <= $x_train + $seek AND y_carte >= $y_train - $seek AND y_carte <= $y_train + $seek
-						AND x_carte='$x_train' AND y_carte!='$y_train'";
-				$res = $mysqli->query($sql);
-				$nb_libre = $res->num_rows;
-				
-				if ($nb_libre) {
-				
-					$t = $res->fetch_assoc();
-					
-					$x_libre 	= $t["x_carte"];
-					$y_libre 	= $t["y_carte"];
-					$fond_libre	= $t["fond_carte"];
-					
-					$trouve = 1;
-					
-					break;
+			$x_libre = $x_train;
+			$y_libre = $y_train;
+			while (!$verif_occ && $seek <= 5) {
+				while (!$verif_occ) {
+					$x = pos_zone_rand_x($x_train-$seek, $x_train+$seek); 
+					$y = pos_zone_rand_y($y_train-$seek, $y_train+$seek);
+					$verif_occ = verif_position_libre($mysqli, $x, $y, $X_MAX, $Y_MAX);
+					if ($verif_occ) {
+						$x_libre = $x;
+						$y_libre = $y;
+					}
 				}
-				else {
-					// on elargie la recherche
-					$seek++;
-				}
+				$seek++;
 			}
-			
+
 			// MAJ pnj
 			$sql = "UPDATE instance_pnj SET pv_i = pv_i/2, x_i=$x_libre, y_i=$y_libre WHERE idInstance_pnj='$idPerso_carte'";
 			$mysqli->query($sql);

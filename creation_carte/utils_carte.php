@@ -53,7 +53,7 @@ if(isset($_SESSION["id_perso"])){
 {
 					for ($y = 0; $y <= $y_max_new_carte; $y++)
 					{
-						$sql2 = "INSERT INTO $carte VALUES ($x, $y, '0', '1.gif', NULL, NULL, NULL, 0, 0, NULL)";
+						$sql2 = "INSERT INTO $carte (id_carte, x_carte, y_carte, occupee_carte, fond_carte, idPerso_carte, image_carte) VALUES (0, $x, $y, '0', '1.gif', NULL, NULL)";
 						$mysqli->query($sql2);
 					}
 				}

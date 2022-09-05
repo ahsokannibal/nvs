@@ -204,6 +204,17 @@ CREATE TABLE `arme_as_type_unite` (
 -- --------------------------------------------------------
 
 --
+-- Structure de la table `objet_as_type_unite`
+--
+
+CREATE TABLE `objet_as_type_unite` (
+  `id_objet` int(11) NOT NULL,
+  `id_type_unite` int(11) NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
 -- Structure de la table `armure`
 --
 
@@ -299,6 +310,8 @@ CREATE TABLE `carte` (
   `save_info_carte` varchar(255) DEFAULT NULL,
   `vue_nord` tinyint(1) DEFAULT '0',
   `vue_sud` tinyint(1) DEFAULT '0',
+  `vue_nord_date` datetime DEFAULT NULL,
+  `vue_sud_date` datetime DEFAULT NULL,
   `coordonnees` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -320,6 +333,8 @@ CREATE TABLE `carte2` (
   `save_info_carte` varchar(255) DEFAULT NULL,
   `vue_nord` tinyint(1) DEFAULT '0',
   `vue_sud` tinyint(1) DEFAULT '0',
+  `vue_nord_date` datetime DEFAULT NULL,
+  `vue_sud_date` datetime DEFAULT NULL,
   `coordonnees` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -341,6 +356,8 @@ CREATE TABLE `carte3` (
   `save_info_carte` varchar(255) DEFAULT NULL,
   `vue_nord` tinyint(1) DEFAULT '0',
   `vue_sud` tinyint(1) DEFAULT '0',
+  `vue_nord_date` datetime DEFAULT NULL,
+  `vue_sud_date` datetime DEFAULT NULL,
   `coordonnees` varchar(250) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -456,7 +473,7 @@ CREATE TABLE `competence_as_competence` (
 
 CREATE TABLE IF NOT EXISTS `config_jeu` (
   `code_config` varchar(255) NOT NULL,
-  `valeur_config` tinyint(1) NOT NULL DEFAULT '0'
+  `valeur_config` varchar(255) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -540,7 +557,10 @@ CREATE TABLE `decorations` (
 
 CREATE TABLE `dernier_tombe` ( 
 	`date_capture` DATETIME NOT NULL , 
-	`id_perso_capture` INT NOT NULL 
+	`id_perso_capture` INT NOT NULL ,
+	`camp_perso_capture` tinyint(4) NOT NULL,
+	`id_perso_captureur` INT NOT NULL,
+	`camp_perso_captureur` tinyint(4) NOT NULL
 ) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
@@ -737,7 +757,8 @@ CREATE TABLE `instance_pnj` (
   `dernierAttaquant_i` int(11) NOT NULL DEFAULT '0',
   `x_i` int(11) DEFAULT '0',
   `y_i` int(11) DEFAULT '0',
-  `bonus_i` int(11) DEFAULT '0'
+  `bonus_i` int(11) DEFAULT '0',
+  `cycle_mvt` int(11) DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -763,7 +784,8 @@ CREATE TABLE `joueur` (
   `mail_mp` INT NOT NULL DEFAULT '0',
   `valid_case` INT NOT NULL DEFAULT '0',
   `afficher_rosace` INT NOT NULL DEFAULT '1',
-  `bousculade_deplacement` INT NOT NULL DEFAULT '1'
+  `bousculade_deplacement` INT NOT NULL DEFAULT '1',
+  `pendu` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -777,6 +799,30 @@ CREATE TABLE `joueur_as_ip` (
   `ip_joueur` varchar(100) NOT NULL DEFAULT '000.000.000.000',
   `date_premier_releve` datetime NOT NULL,
   `date_dernier_releve` datetime NOT NULL
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+-- --------------------------------------------------------
+
+--
+-- Structure de la table `user_ok_logins`
+--
+
+CREATE TABLE `user_ok_logins` (
+  `id_joueur` int(11) NOT NULL DEFAULT '0',
+  `ip_joueur` varchar(100) NOT NULL DEFAULT '000.000.000.000',
+  `time` datetime NOT NULL,
+  `user_agent` varchar(100) NOT NULL DEFAULT '',
+  `cookie_val` varchar(300) NOT NULL DEFAULT ''
+) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+--
+-- Structure de la table `whitelist_triche`
+--
+
+CREATE TABLE `whitelist_triche` (
+  `id` INT NOT NULL AUTO_INCREMENT , 
+  `id_joueur` int(11) NOT NULL DEFAULT '0',
+   PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -881,6 +927,7 @@ CREATE TABLE IF NOT EXISTS `missions` (
   `recompense_thune` int(11) NOT NULL DEFAULT '0',
   `recompense_xp` int(11) NOT NULL DEFAULT '0',
   `recompense_pc` int(11) NOT NULL DEFAULT '0',
+  `recompense_pvict` int(11) NOT NULL DEFAULT '0',
   `date_debut_mission` datetime DEFAULT NULL,
   `date_fin_mission` datetime DEFAULT NULL,
   `camp_mission` INT NOT NULL,
@@ -1001,7 +1048,8 @@ CREATE TABLE `perso` (
   `bataillon` varchar(250) NOT NULL DEFAULT '',
   `convalescence` INT NOT NULL DEFAULT '0',
   `genie` INT NOT NULL DEFAULT '0',
-  `gain_xp_tour` INT NOT NULL DEFAULT '0'
+  `gain_xp_tour` INT NOT NULL DEFAULT '0',
+  `est_renvoye` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
@@ -1790,3 +1838,4 @@ ALTER TABLE `compagnies`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+

@@ -30,7 +30,9 @@ $mysqli = db_connexion();
 				</div>
 			</div>
 			
-			<p align="center"><a class="btn btn-primary" href="index.php">Retour index</a></p>
+			<p align="center"><a class="btn btn-primary" href="index.php">Retour index</a>
+			<a class="btn btn-primary" href="./jeu/jouer.php">Retour au jeu </a>
+			</p>
 		
 			<div class="accordion" id="accordionExample">
 				<div class="card">

@@ -58,6 +58,9 @@
 						<li class="nav-item">
 							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
 						</li>
+						<li class="nav-item">
+							<a href="../jeu/jouer.php"> <input type="button" value="Retour au jeu"> </a>
+						</li>
 					</ul>
 				</div>
 			</nav>
@@ -77,15 +80,15 @@
 				
 					<h2>Les Bataillons (ou familles)</h2>
 					<p>Lorsque vous vous inscrivez, et après avoir choisi votre camp, vous créez un bataillon. Ce bataillon sera le bataillon de votre personnage principal et de vos grouillots.<br />
-					Vous pourrez donner un nom à votre bataillon lors de sa création.</p>
+					Vous pourrez donner un nom à votre bataillon lors de sa création.</br>
 
 					<h2>Les Compagnies</h2>
-					<p>Les compagnies sont dirigées par les officiers supérieurs et leurs sous-officiers de confiance. Chaque camp possède ses propres compagnies.<br />
-					Elles ont généralement des façons de jouer et un RP différents les unes des autres. Certaines peuvent avoir des fonctions spécifiques (police, génie…) d'autres guerrières (attaque massive, défense…).<br />
-					A vous de vous renseigner auprès des chefs de compagnies, en discutant, pour savoir celle qui vous convient le mieux.<br /><br />
+					<p>Les compagnies sont dirigées par les officiers supérieurs et leurs sous-officiers de confiance. Chaque camp possède ses propres compagnies.
+					Elles ont généralement des façons de jouer et un RP différents les unes des autres. Certaines peuvent avoir des fonctions spécifiques (police, génie…) d'autres guerrières (attaque massive, défense…).<p>
+					<p>A vous de vous renseigner auprès des chefs de compagnies, en discutant, pour savoir celle qui vous convient le mieux.<br />
 					L'intégration dans une compagnie n'est pas obligatoire, mais elle est néanmoins fortement conseillée pour la suite du jeu et le développement de votre personnage, tant du point de vue RP que dans la hiérarchie.</p>
 					
-					<p>Il est bon de noter que chaque compagnie est limitée à 80 membres (60 pour le génie) que ce soit des grouillots et/ou Chef de bataillon cependant n'hésitez pas à contacter une compagnie remplie, le chef de cette dernière trouvera une solution pour vous intégrer si vous correspondez au profil recherché.</p>
+					<p>Il est bon de noter que chaque compagnie est limitée à 15 chefs de bataillon et 60 membres au total. Le nombre total d'unités recrutables dans chaque compagnie sera amené à être modifié selon les cartes.</p>
 					
 					<p>Les Compagnies disposent d'un Trésorier qui peut reverser de l'argent contenu dans la caisse de compagnie à un soldat (pour cela, une demande d'emprunt devra être faite).<br />
 					Le trésorier est nommé par le chef de compagnie.</p>
@@ -94,25 +97,33 @@
 					
 					<p>Votre bataillon peut intégrer en partie ou complètement une compagnie. Pour cela il faut il suffit d'aller sur l'icone Compagnie (l'image dépend de votre camp) :
 					<img src='../images/compagnie_sud2.png'><img src='../images/compagnie_nord2.png'><br />
-					Si vous ne faite parti d'aucune compagnie, vous pourrez voir la liste existante des compagnies avec leurs descriptif RP.<br />
-					Vous pouvez aussi écrire un télégramme de motivation au chef pour appuyer votre candidature. En effet, c'est ce dernier ou le recruteur qui décidera si oui ou non vous méritez d'intégrer sa compagnie.</p>
+					Si vous ne faite parti d'aucune compagnie, vous pourrez voir la liste existante des compagnies avec leurs descriptif RP.</p>
+
+					<p>Vous pouvez aussi écrire un télégramme de motivation au chef pour appuyer votre candidature. En effet, c'est ce dernier ou le recruteur qui décidera si oui ou non vous méritez d'intégrer sa compagnie.</p>
 					
 					<h4>Créer une compagnie</h4>
 					
-					<p>Toujours sur la même page que précédemment, si vous ne faite partie d'aucune compagnie, un lien "Créer une compagnie" sera présent. Il vous suffit de cliquer dessus pour arriver sur un formulaire qui vous demande plusieurs 2 choses : un titre et une description.<br />
-					C'est de cette façon que votre projet sera présenté aux membres de l'EM qui voteront pour ou contre sa création.<br /><br />
-					Quelles sont les conditions à respecter lors de cette création ? <br />
-					Faire une description de sa compagnie en Français, sans fautes.<br />
-					Avoir une idée RP originale. C'est la condition essentielle. Si vous proposez la création de quelque chose qui existe déjà, la réponse sera non.<br />
-					Faire du RP !! Ceci est très important ! Les compagnies et tribus sont des structures devant aider le développement d'un certain type de RP. Ce sont des groupes de joueurs qui ont un caractère propre qui doit être aisément identifiable. Bref montrez à tous qui vous êtes !<br />
-					Enfin, il faut aussi que l’idée soit acceptée par les animateurs.
+					<p>Toujours sur la même page que précédemment, si vous ne faite partie d'aucune compagnie, un lien "Créer une compagnie" sera présent. Il vous suffit de cliquer dessus pour arriver sur un formulaire qui vous demande plusieurs 2 choses : un titre et une description.<br />					
+					C'est de cette façon que votre projet sera présenté aux membres de l'EM qui voteront pour ou contre sa création.</p>
+
+					<p>Quelles sont les conditions à respecter lors de cette création ? </p>
+
+					<p>Faire une description de sa compagnie en Français, sans fautes.<br />
+					Avoir une idée RP originale: c'est la condition essentielle. </p>
+					
+					<p>Si vous proposez la création de quelque chose qui existe déjà, la réponse sera non.</p>
+
+					<p>Faire du RP !! Ceci est très important ! Les compagnies sont des structures devant aider le développement d'un certain type de RP.<br />
+					Ce sont des groupes de joueurs qui ont un caractère propre qui doit être aisément identifiable.<br />
+					Bref montrez à tous qui vous êtes !<br />
+					Enfin, il faut aussi que l’idée soit acceptée par les instances dirigeantes en place. (EM au Sud CS au Nord).
 					</p>
 					
 					<h4>Avantages de la Compagnie</h4>
 					
-					<p>Le fait d'entrer dans une compagnie procure l'avantage d'avoir une assistance par la coopération des membres entre eux, mais aussi pour l'apprentissage de techniques militaires auprès de membres plus expérimentés.<br />
-					Elles possèdent une caisse de Compagnie qui vous permet de faire des dépôts de votre solde en un lieu sécurisé.<br />
-					Ainsi, quand votre personnage sera rapatrié pour de graves blessures, il ne perdra quasiment pas de thunes, seulement une partie de celles que vous transportiez lors de sa capture.</p>
+					<p>Le fait d'entrer dans une compagnie procure l'avantage d'avoir une assistance par la coopération des membres entre eux, mais aussi pour l'apprentissage de techniques militaires auprès de membres plus expérimentés.</p>
+
+					<p>Elles possèdent une caisse de Compagnie qui vous permet de faire des dépôts de votre solde en un lieu sécurisé. Ainsi, quand votre personnage sera rapatrié pour de graves blessures, il ne perdra quasiment pas de thunes, seulement une partie de celles que vous transportiez lors de sa capture.</p>
 					
 					<h4>Désavantages de la Compagnie</h4>
 					
@@ -120,17 +131,17 @@
 					
 					<h4>Quitter une compagnie</h4>
 					
-					<p>Pour quitter une compagnie, il faut simplement le demander au chef de la compagnie (soit via le lien de demande pour quitter la compagnie dans la page de compagnie, soit par MP). On ne peut pas quitter une compagnie sans l’accord de son chef de compagnie.<br />
+					<p>Pour quitter une compagnie, il faut simplement le demander au chef de la compagnie (soit via le lien de demande pour quitter la compagnie dans la page de compagnie, soit par MP).<br />
+					On ne peut pas quitter une compagnie sans l’accord de son chef de compagnie.
 					S' il le faut, un animateur peut intervenir pour libérer le soldat de ses charges.</p>
 					
 					<h2>Les généraux et Officiers Supérieurs</h2>
 					
-					<p>Les généraux et officiers supérieurs sont les plus puissants officiers existants. Ils sont chargés de coordonner les troupes à grande échelle, de commander les régiments, et de les mener au combat. Ils peuvent bien entendu déléguer les tâches à leurs officiers mais ces derniers devront alors répondre de leurs actes…<br />
-					Bons ou mauvais généraux, fins stratèges ou piètres combattants, vous apprendrez vite à les connaître !<br /><br />
-					Plus généralement, ils sont des animateurs du jeu ou membres de l'État Major de votre camp, ils s'occupent de la gestion, de répondre à toutes vos questions et débattent de vos propositions d'évolutions du jeu. Ils proposent des missions et autorisent la création des compagnies.<br />
-					Les chefs de compagnies ne sont pas tous des animateurs.<br />
-					Cependant n'oubliez jamais que ces animateurs, très chargés avec les questions HRP, ne remplaceront jamais les animations que vous pouvez faire et organiser vous même pour le jeu et dans le jeu !
-					</p>
+					<p>Les généraux et officiers supérieurs sont les plus puissants officiers existants. Ils sont chargés de coordonner les troupes à grande échelle, de commander les régiments, et de les mener au combat. Ils peuvent bien entendu déléguer les tâches à leurs officiers mais ces derniers devront alors répondre de leurs actes… Bons ou mauvais généraux, fins stratèges ou piètres combattants, vous apprendrez vite à les connaître !</p>
+
+					<h2>Fonctionnement des Camps</h2>
+
+					<p>Chaque camp peut décider de l'organisation de son armée et des organes de gestion. L'Etat-Major est le terme utilisé pour regrouper les organes de commandement de chaque camp, comme le Mess, la chancellerie, la justice. Selon le camp, le nom donné à ces organes varient.</p>
 				</div>
 			</div>
 		

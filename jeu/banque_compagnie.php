@@ -49,13 +49,14 @@ if($dispo == '1' || $admin){
 		
 	</head>
 	<body>
+		<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 		<div class="container-fluid">
 			
 			<div class="row justify-content-center">
 				<div class="col-12">
 	
 					<div align="center"><h2>Banque de la compagnie</h2></div>
-					<div align="center"><a href="../regles/regles_banque_compagnie.php" class='btn btn-outline-primary' target='_blank'>Règles banque de la compagnie</a></div>
+					<div align="center"><a href="../regles/regles_banque_compagnie.php" class='btn btn-outline-primary'>Règles banque de la compagnie</a></div>
 					
 				</div>
 			</div>

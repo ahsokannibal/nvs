@@ -200,6 +200,9 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 				
 				$sql_lg = "UPDATE liaisons_gare SET direction='$nouvelle_direction' WHERE id_train='$id_instance_train'";
 				$mysqli->query($sql_lg);
+
+				$sql_ld = "INSERT INTO train_last_dep (id_train, x_last_dep, y_last_dep) VALUES ('$id_instance_train', '0', '0')";
+				$mysqli->query($sql_ld);
 				
 				chargement_persos_train($mysqli, $id_instance_train, $x_train, $y_train, $nouvelle_direction, $gare_arrivee, $camp_train);
 			}

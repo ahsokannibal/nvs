@@ -11,7 +11,7 @@
 	</head>
 
 	<body style="background-color:grey;">
-
+	<center><a href="../jeu/jouer.php"> <input type="button" value="Retour au jeu"></a> <a href='../jeu/compagnie.php'><input type="button" value="Retour à la page de compagnie"></a></center>
 		<div class="container-fluid">
 			
 			<div class="row justify-content-center">

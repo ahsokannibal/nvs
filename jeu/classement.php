@@ -1,12 +1,27 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
 date_default_timezone_set('Europe/Paris');
+
+function get_id_type_perso($type_perso) {
+	switch ($type_perso) {
+	case "chef": return 1;
+	case "cav_lourde": return 2;
+	case "infanterie": return 3;
+	case "soigneur": return 4;
+	case "artillerie": return 5;
+	case "chien": return 6;
+	case "cav_legere": return 7;
+	default :
+		return 0;
+	}
+}
 
 if (isset($_POST["choix_class"])){
 	
@@ -52,24 +67,17 @@ if(isset($_GET["top"])){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
+	echo "<br/>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Experience</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
 	echo "</div>";
 	echo "<br/>";
 
-	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
-	echo "</center>";
-	echo "<br/>";
-	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
@@ -85,6 +93,21 @@ if(isset($_GET["top"])){
 	echo "	<a class='btn btn-info' href=\"classement.php?stats=ok\">Les Statistiques de chaque camps</a>";
 	echo "</center>";
 	echo "<br/>";
+
+	$type_perso = isset($_GET["type_perso"]) ? $_GET["type_perso"] : 'tous';
+	$id_type_perso = get_id_type_perso($type_perso);
+	echo '<div align=center><form method="GET">';
+	echo '<input type="hidden" name="top" value="ok"/>';
+	echo '<input type="hidden" name="classement" value="'.(isset($_GET["classement"]) ? $_GET["classement"] : 1).'"/>';
+	echo '<input type="radio" id="tous" name="type_perso" value="tous" onclick="this.form.submit();" '.($type_perso == 'tous' ? 'checked' : '').'> <label for="tous">Tous</label>';
+	echo '<input type="radio" id="chef" name="type_perso" value="chef" onclick="this.form.submit();" '.($type_perso == 'chef' ? 'checked' : '').'> <label for="chef">Chef</label>';
+	echo '<input type="radio" id="cav_lourde" name="type_perso" value="cav_lourde" onclick="this.form.submit();" '.($type_perso == 'cav_lourde' ? 'checked' : '').'> <label for="cav_lourde">Cavalerie lourde</label>';
+	echo '<input type="radio" id="infanterie" name="type_perso" value="infanterie" onclick="this.form.submit();" '.($type_perso == 'infanterie' ? 'checked' : '').'> <label for="infanterie">Infanterie</label>';
+	echo '<input type="radio" id="soigneur" name="type_perso" value="soigneur" onclick="this.form.submit();" '.($type_perso == 'soigneur' ? 'checked' : '').'> <label for="soigneur">Soigneur</label>';
+	echo '<input type="radio" id="artillerie" name="type_perso" value="artillerie" onclick="this.form.submit();" '.($type_perso == 'artillerie' ? 'checked' : '').'> <label for="artillerie">Artillerie</label>';
+	echo '<input type="radio" id="chien" name="type_perso" value="chien" onclick="this.form.submit();" '.($type_perso == 'chien' ? 'checked' : '').'> <label for="chien">Chien</label>';
+	echo '<input type="radio" id="cav_legere" name="type_perso" value="cav_legere" onclick="this.form.submit();" '.($type_perso == 'cav_legere' ? 'checked' : '').'> <label for="cav_legere">Cavalerie légère</label>';
+	echo '</form></div>';
 	
 	if(isset($_GET["classement"])) {
 		$num_c = $_GET["classement"];
@@ -116,7 +139,7 @@ if(isset($_GET["top"])){
 	
 	if((isset($verif) && $verif) || !isset($_GET["classement"])){
 	
-		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso > '100' ORDER BY $class DESC LIMIT 50";
+		$sql = "SELECT id_perso, nom_perso, clan, $class FROM perso WHERE id_perso >= '100' ".($id_type_perso ? "AND type_perso=$id_type_perso" : "")." ORDER BY $class DESC LIMIT 50";
 		$res = $mysqli->query($sql);
 		
 		echo "<div class='table-responsive'>";
@@ -178,24 +201,17 @@ if(isset($_GET["titre"])){
 
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
+	echo "<br/>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Experience</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
 	echo "</div>";
 	echo "<br/>";
 
-	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
-	echo "</center>";
-	echo "<br/>";
-	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
@@ -281,24 +297,17 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
+	echo "<br/>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Experience</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
 	echo "</div>";
 	echo "<br/>";
 
-	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
-	echo "</center>";
-	echo "<br/>";
-	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
@@ -319,23 +328,23 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$sql = "SELECT id_camp, nb_kill FROM stats_camp_kill";
 	$res = $mysqli->query($sql);
 	
-	// Nombre de persos au Nord
-	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1'";
+	// Nombre de joueurs actifs au Nord
+	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND est_gele='0' and chef=1";
 	$res_nbb = $mysqli->query($sql_nbb);
 	$nbb = $res_nbb->num_rows;
 	
-	// Nombre de persos au Sud
-	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2'";
+	// Nombre de joueurs actifs au Sud
+	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND est_gele='0' and chef=1";
 	$res_nbr = $mysqli->query($sql_nbr);
 	$nbr = $res_nbr->num_rows;
 
 	// Nombre de persos au Nord actifs
-	$sql_nbbact = "SELECT id_perso FROM perso WHERE clan='1' AND est_gele='0'";
+	$sql_nbbact = "SELECT id_perso FROM perso WHERE clan='1' AND est_gele='0' AND est_renvoye=0";
 	$res_nbbact = $mysqli->query($sql_nbbact);
 	$nbbact = $res_nbbact->num_rows;
 
 	// Nombre de persos au Sud actifs
-	$sql_nbract = "SELECT id_perso FROM perso WHERE clan='2' AND est_gele='0'";
+	$sql_nbract = "SELECT id_perso FROM perso WHERE clan='2' AND est_gele='0' AND est_renvoye=0";
 	$res_nbract = $mysqli->query($sql_nbract);
 	$nbract = $res_nbract->num_rows;
 		
@@ -352,61 +361,33 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$nbvictr = $t['points_victoire'];
 	
 	// Nombre de persos du sud capturés par le Nord
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=1";
+	$res_ev_capt = $mysqli->query($sql);
 	$nb_ennemis_capt_nord = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du nord capturés par le Sud
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) != (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=2";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_ennemis_capt_sud = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du nord capturés par le Nord
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=1";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_allies_capt_nord = $res_ev_capt->num_rows;
 	
 	// Nombre de persos du sud capturés par le Sud
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(SELECT clan FROM perso WHERE id_perso=IDActeur_evenement) = (SELECT clan FROM perso WHERE id_perso=IDCible_evenement)
-					AND (phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement < 50000
-					AND IDCible_evenement < 50000
-					AND IDActeur_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=2";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_allies_capt_sud = $res_ev_capt->num_rows;
 	
-	// Nombre de persos du nord capturés par autre chose qu'un perso (pnj / canon)
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement > 50000
-					AND IDCible_evenement < 50000
-					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='1')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	// Nombre de persos du nord capturés par autre chose qu'un perso (pnj)
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=0";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_autre_capt_nord = $res_ev_capt->num_rows;
 	
-	// Nombre de persos du sud capturés par autre chose qu'un perso (pnj / canon)
-	$sql_ev_capt = "SELECT * FROM evenement WHERE 
-					(phrase_evenement='a capturé' OR phrase_evenement='<b>a capturé</b>')
-					AND IDActeur_evenement > 50000
-					AND IDCible_evenement < 50000
-					AND IDCible_evenement IN (SELECT id_perso FROM perso WHERE clan='2')";
-	$res_ev_capt =  $mysqli->query($sql_ev_capt);
+	// Nombre de persos du sud capturés par autre chose qu'un perso (pnj)
+	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=0";
+	$res_ev_capt =  $mysqli->query($sql);
 	$nb_autre_capt_sud = $res_ev_capt->num_rows;
 	
 	// Nombre de capture de PNJ
@@ -426,11 +407,11 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "		<thead>";
 	echo "			<tr>";
 	echo "				<th style='text-align:center'><font color=darkred>Camp</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de joueurs actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures ennemis</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures alliés</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé par un canon ou un pnj)</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé un pnj ou perso neutre)</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Points de victoires</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
@@ -524,24 +505,17 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
+	echo "<br/>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Experience</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
 	echo "</div>";
 	echo "<br/>";
 
-	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
-	echo "</center>";
-	echo "<br/>";
-	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
@@ -569,7 +543,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso > '100' 
+			WHERE perso.id_perso >= '100' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='1'";
@@ -603,7 +577,7 @@ if(isset($_GET['super']) && $_GET['super'] == 'ok'){
 					max(nb_kill) as kill_max, 
 					max(nb_pnj) as pnj_max 
 			FROM perso, perso_as_grade
-			WHERE perso.id_perso > '100' 
+			WHERE perso.id_perso >= '100' 
 			AND perso_as_grade.id_perso = perso.id_perso 
 			AND perso_as_grade.id_grade != 1 AND perso_as_grade.id_grade != 101 AND perso_as_grade.id_grade != 102
 			AND clan='2'";
@@ -648,24 +622,17 @@ if(isset($_GET['training']) && $_GET['training'] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
+	echo "<br/>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Experience</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
 	echo "</div>";
 	echo "<br/>";
 
-	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
-	echo "</center>";
-	echo "<br/>";
-	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
@@ -727,24 +694,17 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
+	echo "<br/>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Experience</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
 	echo "</div>";
 	echo "<br/>";
 
-	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
-	echo "</center>";
-	echo "<br/>";
-	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
@@ -761,18 +721,19 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	echo "</center>";
 	echo "<br/>";
 	
-	$sql = "SELECT nom_perso, clan, perso.id_perso, UNIX_TIMESTAMP(date_capture) as date_capture FROM perso, dernier_tombe
-			WHERE perso.id_perso = dernier_tombe.id_perso_capture
+	$sql = "SELECT UNIX_TIMESTAMP(date_capture) as date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur FROM dernier_tombe
 			ORDER BY date_capture DESC LIMIT 50";
 	$res = $mysqli->query($sql);
-	
+
 	echo "<div class='table-responsive'>";
 	echo "	<table class='table table-bordered table-hover sortable' style='width:100%'>";
 	echo "		<thead>";
 	echo "			<tr>";
 	echo "				<th style='text-align:center'><font color=darkred>Date de capture</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nom</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Matricule</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>... a été capturé</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Grade</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>par ...</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Grade</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
 	
@@ -780,24 +741,63 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 	
 	while ($t = $res->fetch_assoc()){
 		
-		$date_capture 	= $t['date_capture'];
-		$id_camp_capt	= $t["clan"];
-		$nom_perso_capt	= $t["nom_perso"];
-		$id_perso_capt	= $t["id_perso"];
+		$date_capture_o 	= $t['date_capture'];
+		$id_perso_a	= $t['id_perso_capture'];
+		$camp_perso_a = $t['camp_perso_capture'];
+		$id_perso_b 	= $t['id_perso_captureur'];
+		$camp_perso_b	= $t['camp_perso_captureur'];
 		
-		$date_capture = date('Y-m-d H:i:s', $date_capture);
-		
-		if($id_camp_capt == "1"){
-			$couleur_camp = "blue";
-		}
-		if($id_camp_capt == "2"){
-			$couleur_camp = "red";
+		$date_capture = date('Y-m-d H:i:s', $date_capture_o);
+
+		$sql = "SELECT nom_perso, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades WHERE perso.id_perso = perso_as_grade.id_perso AND perso_as_grade.id_grade = grades.id_grade AND perso.id_perso=".$id_perso_a;
+		$res2 = $mysqli->query($sql);
+		$t2 = $res2->fetch_assoc();
+
+		$nom_perso_a	= $t2["nom_perso"];
+		$nom_grade_a	= $t["nom_grade"];
+		$id_grade_a	= $t2["id_grade"];
+		$couleur_camp_a = couleur_clan($camp_perso_a);
+
+		// cas particuliers grouillot
+		if ($id_grade_a == 101)
+			$id_grade_a = "1.1";
+		else if ($id_grade_a == 102)
+			$id_grade_a = "1.2";
+
+		$nom_perso_b = "";
+		$grade_b = "";
+		$couleur_camp_b = couleur_clan($camp_perso_b);
+		if ($id_perso_b != 0 && $id_perso_b < 50000) {
+			$sql = "SELECT nom_perso, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades WHERE perso.id_perso = perso_as_grade.id_perso AND perso_as_grade.id_grade = grades.id_grade AND perso.id_perso=".$id_perso_b;
+			$res2 = $mysqli->query($sql);
+			$t2 = $res2->fetch_assoc();
+
+			$nom_perso_b	= $t2["nom_perso"];
+			$nom_grade_b	= $t["nom_grade"];
+			$id_grade_b	= $t2["id_grade"];
+
+			if ($id_grade_b == 101)
+				$id_grade_b = "1.1";
+			else if ($id_grade_b == 102)
+				$id_grade_b = "1.2";
+			$grade_b = '<img src="../images/grades/'.$id_grade_b.'.gif" /> '.$nom_grade_b;
+		} else if ($id_perso_b != 0 && $id_perso_b < 200000) {
+			$nom_perso_b = "Canon";
+		} else if ($id_perso_b != 0) {
+			$sql = "SELECT nom_pnj FROM instance_pnj JOIN pnj ON instance_pnj.id_pnj=pnj.id_pnj WHERE idInstance_pnj=$id_perso_b";
+			$res2 = $mysqli->query($sql);
+			$t2 = $res2->fetch_assoc();
+			$nom_perso_b = $t2['nom_pnj'];
+		} else {
+			$grade_b = "";
 		}
 		
 		echo "			<tr>";
 		echo "				<td align=center>".$date_capture."</td>";
-		echo "				<td align=center><font color=$couleur_camp>".$nom_perso_capt."</font></td>";
-		echo "				<td align='center'><a href=\"evenement.php?infoid=".$id_perso_capt."\">" .$id_perso_capt. "</a></td>";
+		echo "				<td align=center><font color=$couleur_camp_a>".$nom_perso_a."</font> [<a href=\"evenement.php?infoid=".$id_perso_a."\">" .$id_perso_a. "</a>]</td>";
+		echo "				<td align='left'><img src=\"../images/grades/" . $id_grade_a . ".gif\" /> ".$t['nom_grade']."</td>";
+		echo "				<td align=center><font color=$couleur_camp_b>".$nom_perso_b."</font> [<a href=\"evenement.php?infoid=".$id_perso_b."\">" .$id_perso_b. "</a>]</td>";
+		echo "				<td align='left'>$grade_b</td>";
 		echo "			</tr>";
 	}
 	
@@ -813,24 +813,17 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-warning' href=\"index.php\">Retour Accueil</a>";
+	echo "	<a class='btn btn-warning' href=\"jouer.php\">Retour au jeu</a>";
 	echo "</div>";
+	echo "<br/>";
 	
 	echo "<div align=\"center\">";
 	echo "	<a class='btn btn-primary' href=\"classement.php?grade\">Haut gradés</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php\">Chefs</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=cavalerie\">Cavalerie lourde</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=infanterie\">Infanterie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=soigneur\">Soigneur</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=artillerie\">Artillerie</a>";
-	echo "	<a class='btn btn-primary' href=\"classement.php?type_perso=chien\">Chien</a>";
+	echo "	<a class='btn btn-primary' href=\"classement.php\">Experience</a>";
+	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
 	echo "</div>";
 	echo "<br/>";
 
-	echo "<center>";
-	echo "	<a class='btn btn-info' href=\"classement.php?dernier_tombe=ok\">Derniers tombés</a>";
-	echo "</center>";
-	echo "<br/>";
-	
 	echo "<center>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=1\">Machines à tuer</a>";
 	echo "	<a class='btn btn-info' href=\"classement.php?top=ok&classement=2\">Habitués des hopitaux</a>";
@@ -847,42 +840,35 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "</center>";
 	echo "<br/>";
 
-	$type_perso = 1;
-	if (isset($_GET["type_perso"]))
-	{
-		switch($_GET["type_perso"]) {
-		case "cavalerie":
-			$type_perso = 2;
-			break;
-		case "infanterie":
-			$type_perso = 3;
-			break;
-		case "soigneur":
-			$type_perso = 4;
-			break;
-		case "artillerie":
-			$type_perso = 5;
-			break;
-		case "chien":
-			$type_perso = 6;
-			break;
-		}
-	}
-
+	$show_xp = true;
 	$order_by = "xp_perso";
 	$limit = 50;
-	if (isset($_GET["grade"]))
-	{
+	if (!isset($_GET["grade"])) {
+		$type_perso = isset($_GET["type_perso"]) ? $_GET["type_perso"] : 'tous';
+		$id_type_perso = get_id_type_perso($type_perso);
+		echo '<div align=center><form method="GET">';
+		echo '<input type="radio" id="tous" name="type_perso" value="tous" onclick="this.form.submit();" '.($type_perso == 'tous' ? 'checked' : '').'> <label for="tous">Tous</label>';
+		echo '<input type="radio" id="chef" name="type_perso" value="chef" onclick="this.form.submit();" '.($type_perso == 'chef' ? 'checked' : '').'> <label for="chef">Chef</label>';
+		echo '<input type="radio" id="cav_lourde" name="type_perso" value="cav_lourde" onclick="this.form.submit();" '.($type_perso == 'cav_lourde' ? 'checked' : '').'> <label for="cav_lourde">Cavalerie lourde</label>';
+		echo '<input type="radio" id="infanterie" name="type_perso" value="infanterie" onclick="this.form.submit();" '.($type_perso == 'infanterie' ? 'checked' : '').'> <label for="infanterie">Infanterie</label>';
+		echo '<input type="radio" id="soigneur" name="type_perso" value="soigneur" onclick="this.form.submit();" '.($type_perso == 'soigneur' ? 'checked' : '').'> <label for="soigneur">Soigneur</label>';
+		echo '<input type="radio" id="artillerie" name="type_perso" value="artillerie" onclick="this.form.submit();" '.($type_perso == 'artillerie' ? 'checked' : '').'> <label for="artillerie">Artillerie</label>';
+		echo '<input type="radio" id="chien" name="type_perso" value="chien" onclick="this.form.submit();" '.($type_perso == 'chien' ? 'checked' : '').'> <label for="chien">Chien</label>';
+		echo '<input type="radio" id="cav_legere" name="type_perso" value="cav_legere" onclick="this.form.submit();" '.($type_perso == 'cav_legere' ? 'checked' : '').'> <label for="cav_legere">Cavalerie légère</label>';
+		echo '</form></div>';
+	} else {
 		$order_by = "id_grade";
 		$limit = 50000;
+		$show_xp = false;
+		$id_type_perso = 1;
 	}
 	
 	// recuperation des valeurs en excluant les persos pnj
 	$sql = "SELECT perso.id_perso, nom_perso, xp_perso, clan, nom_grade, grades.id_grade FROM perso, perso_as_grade, grades 
 			WHERE perso.id_perso = perso_as_grade.id_perso 
 			AND perso_as_grade.id_grade = grades.id_grade
-			AND perso.id_perso > '100'
-			AND perso.type_perso = ".$type_perso."
+			AND perso.id_perso >= '100'
+			".($id_type_perso ? "AND type_perso=$id_type_perso" : "")."
 			ORDER BY ".$order_by." DESC LIMIT ".$limit;
 	$res = $mysqli->query($sql);
 	
@@ -894,7 +880,8 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "				<th style='text-align:center'><font color=darkred>Position</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nom</font></th>";
 	echo "				<th style='text-align:center' data-defaultsign='_19'><font color=darkred>Matricule</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>XP</font></th>";
+	if ($show_xp)
+		echo "				<th style='text-align:center'><font color=darkred>XP</font></th>";
 	echo "				<th style='text-align:center' data-defaultsign='_19'><font color=darkred>Grade</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
@@ -930,7 +917,8 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 		echo "				<td align=center>$cc</td>";
 		echo "				<td align=center><font color=$couleur_camp>".$t2['nom_perso']."</font></td>";
 		echo "				<td align='center'><a href=\"evenement.php?infoid=".$t2['id_perso']."\">" .$t2['id_perso']. "</a></td>";
-		echo "				<td align=center>".$t2['xp_perso']."</td>";
+		if ($show_xp)
+			echo "				<td align=center>".$t2['xp_perso']."</td>";
 		echo "				<td align='center' data-value='".$id_grade_perso."'><img src=\"../images/grades/" . $id_grade_perso . ".gif\" /> ".$t2['nom_grade']."</td>";
 		echo "			</tr>";
 	}

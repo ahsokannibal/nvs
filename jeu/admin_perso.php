@@ -2,6 +2,7 @@
 session_start();
 require_once("../fonctions.php");
 require_once("f_carte.php");
+require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
@@ -22,9 +23,12 @@ if(isset($_SESSION["id_perso"])){
 		if (isset($_POST['matricule_pendre_hidden'])) {
 			
 			$id_perso_pendre = $_POST['matricule_pendre_hidden'];
+
+			$sql = "UPDATE joueur SET pendu=1 WHERE id_joueur=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
+			$mysqli->query($sql);
 			
 			// Récupération de tous les persos
-			$sql = "SELECT id_perso, nom_perso, type_perso FROM perso WHERE perso.idJoueur_perso = (SELECT perso.idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
+			$sql = "SELECT id_perso, nom_perso, type_perso, clan FROM perso WHERE perso.idJoueur_perso = (SELECT perso.idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
 			$res = $mysqli->query($sql);
 			
 			while ($t = $res->fetch_assoc()) {
@@ -32,6 +36,9 @@ if(isset($_SESSION["id_perso"])){
 				$id_perso_a_pendre 		= $t['id_perso'];
 				$nom_perso_a_pendre		= $t['nom_perso'];
 				$type_perso_a_pendre	= $t['type_perso'];
+				$clan	= $t['clan'];
+
+				$couleur_clan_perso = couleur_clan($clan);
 				
 				if ($type_perso_a_pendre == 1) {
 					
@@ -68,7 +75,8 @@ if(isset($_SESSION["id_perso"])){
 				}
 				
 				// Ok - renvoi du perso						
-				$sql = "DELETE FROM perso WHERE id_perso='$id_perso_a_pendre'";
+				// maj cv
+				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ('$id_perso_a_pendre','Pendaison','', '$id_perso_a_pendre','<font color=$couleur_clan_perso>$nom_perso_a_pendre</font>', '', NOW(), 1)";
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso_a_pendre'";
@@ -90,9 +98,6 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$id_perso_a_pendre'";
-				$mysqli->query($sql);
-				
-				$sql = "DELETE FROM perso_as_grade WHERE id_perso='$id_perso_a_pendre'";
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$id_perso_a_pendre'";
@@ -147,10 +152,14 @@ if(isset($_SESSION["id_perso"])){
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso_a_pendre'";
 				}
 				$mysqli->query($sql);
+
+				// On téléporte le perso hors carte
+				$sql = "UPDATE perso SET x_perso='1000', y_perso='1000' WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_in_mission WHERE id_perso='$id_perso_a_pendre'";
 				$mysqli->query($sql);
-				
+
 				echo "<center><font color='blue'>Le perso $nom_perso_a_pendre avec la matricule $id_perso_a_pendre a bien été pendu.</font></center><br/>";
 			}
 		}
@@ -355,6 +364,16 @@ if(isset($_SESSION["id_perso"])){
 				$sql = "UPDATE perso SET or_perso=$new_or_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 			}
+
+			if (isset($_POST['image_perso']) && trim($_POST['image_perso']) != '') {
+				
+				$new_image_perso = $_POST['image_perso'];
+				
+				$mess = "MAJ IMAGE perso matricule ".$id_perso_select." vers ".$new_image_perso;
+				
+				$sql = "UPDATE perso SET image_perso='$new_image_perso' WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+			}
 			
 			if (isset($_POST['pv_perso']) && trim($_POST['pv_perso']) != '') {
 				
@@ -465,7 +484,7 @@ if(isset($_SESSION["id_perso"])){
 								if (isset($id_perso_select) && $id_perso_select == $id_perso) {
 									echo " selected";
 								}
-								echo ">".$nom_perso." [".$id_perso."] - ".$x_perso."/".$y_perso."</option>";
+								echo ">".$id_perso." - ".$nom_perso." - ".$x_perso."/".$y_perso."</option>";
 							}
 							?>
 						
@@ -501,6 +520,7 @@ if(isset($_SESSION["id_perso"])){
 						$test_b 	= $t['bourre_perso'];
 						$camp_perso	= $t['clan'];
 						$bat_perso	= $t['bataillon'];
+						$image_perso	= $t['image_perso'];
 						
 						if ($camp_perso == 1) {
 							$nom_camp_perso 	= "Nord";
@@ -541,7 +561,9 @@ if(isset($_SESSION["id_perso"])){
 						echo "</form>";
 						echo "	</tr>";
 						echo "	<tr>";
-						echo "		<td></td>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>Image: </b><input type='text' name='image_perso' value='".$image_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
 						echo "		<td><b>Bataillon : </b>".$bat_perso."</td>";
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>PV : </b><input type='text' name='pv_perso' value='".$pv_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";

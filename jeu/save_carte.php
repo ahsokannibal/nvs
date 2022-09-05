@@ -1,4 +1,5 @@
 <?php
+require_once("f_utils_carte.php");
 session_start();
 
 header("Content-type: image/png");//on va commencer par declarer que l'on veut creer une image
@@ -25,6 +26,7 @@ $couleur_perso_clan1 			= Imagecolorallocate($perso_carte, 10, 10, 254); // bleu
 $couleur_perso_clan2 			= Imagecolorallocate($perso_carte, 254, 10, 10); // rouge bien voyant
 $couleur_bat_clan1 				= Imagecolorallocate($perso_carte, 75, 75, 254); // bleu batiments
 $couleur_bat_clan2 				= Imagecolorallocate($perso_carte, 254, 75, 75); // rouge batiments
+$couleur_bat_neutre				= Imagecolorallocate($perso_carte, 130, 130, 130); // gris batiments
 $couleur_rail					= Imagecolorallocate($perso_carte, 200, 200, 200); // gris rails
 $couleur_brouillard_plaine		= Imagecolorallocate($perso_carte, 208, 192, 122); // Chamois
 $couleur_brouillard_eau			= Imagecolorallocate($perso_carte, 187, 174, 152); // Grège
@@ -32,10 +34,6 @@ $couleur_brouillard_montagne	= Imagecolorallocate($perso_carte, 47, 27, 12); // 
 $couleur_brouillard_colinne		= Imagecolorallocate($perso_carte, 133, 109, 77); // Bistre
 $couleur_brouillard_desert		= Imagecolorallocate($perso_carte, 225, 206, 154); // Vanille
 $couleur_brouillard_foret		= Imagecolorallocate($perso_carte, 97, 77, 26); // Vanille
-
-// couleurs image_carte
-$couleur_bataillon		= Imagecolorallocate($image_carte, 0, 0, 0); // noir
-$couleur_compagnie		= Imagecolorallocate($image_carte_compagnie, 0, 0, 0); // noir
 
 // je vais chercher les rails dans ma table
 $sql = "SELECT x_carte, y_carte FROM carte 
@@ -96,7 +94,7 @@ while ($t = $res->fetch_assoc()){
 }
 
 // je vais chercher les batiments dans ma table
-$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND pv_instance>0";
+$sql = "SELECT x_instance, y_instance, camp_instance, taille_batiment, batiment.id_batiment FROM instance_batiment, batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND (pv_instance>0 OR instance_batiment.id_batiment = 13)";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -105,15 +103,29 @@ while ($t = $res->fetch_assoc()){
 	$y 			= $t["y_instance"];
 	$camp 		= $t["camp_instance"];
 	$taille_bat = $t["taille_batiment"];
+	$id_bat 		= $t["id_batiment"];
 	
-	if($camp == '1'){
+	switch($camp){
+	case "1":
 		$color = $couleur_bat_clan1;
-	}
-	if($camp == '2'){
+		break;
+	case "2":
 		$color = $couleur_bat_clan2;
+		break;
+	default:
+		$color = $couleur_bat_neutre;
 	}
+
+	// barricade
+	if ($id_bat == 1)
+		$color = $couleur_bat_neutre;
 	
 	imagefilledrectangle ($perso_carte, (($x*3)-$taille_bat), (((600-($y*3)))-$taille_bat), (($x*3)+$taille_bat), (((600-($y*3)))+$taille_bat), $color);
+
+	// Met en évidence les points stratégiques
+	if ($id_bat == 13) {
+		drawStar($perso_carte,3*$x,600-3*$y,10,5,$color);
+	}
 }
 
 $date = date('Y-m-d-H-i-s');

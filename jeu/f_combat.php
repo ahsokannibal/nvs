@@ -13,7 +13,7 @@ function combat_pnj($precision_pnj, $bonus_pj){
 	$touche = mt_rand(0,100);
 	$precision_final = $precision_pnj - $bonus_pj;
 	
-	return ($precision_final <= $precision_pnj);
+	return ($touche <= $precision_final);
 }
 
 /**
@@ -26,6 +26,9 @@ function is_deja_tue_pnj($mysqli, $id_perso, $id_pnj){
 	
 	$sql = "SELECT nb_pnj FROM perso_as_killpnj WHERE id_perso='$id_perso' and id_pnj='$id_pnj'";
 	$res = $mysqli->query($sql);
+	if($res->num_rows == 0){
+		return 0;
+	}
 	$t_verif_t = $res->fetch_assoc();
 	
 	return $t_verif_t["nb_pnj"];
@@ -107,18 +110,55 @@ function possede_lunette_visee($mysqli, $id_perso) {
   * @return int		: distance
   */
 function get_distance($mysqli, $id_perso, $id_cible){
-	$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_perso'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$x_perso = $t['x_carte'];
-	$y_perso = $t['y_carte'];
+	if(in_bat($mysqli, $id_perso)){
+		$sql = "SELECT x_instance,y_instance from instance_batiment ib LEFT JOIN perso_in_batiment pib ON pib.id_instanceBat =  ib.id_instanceBat WHERE pib.id_perso='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$x_perso = $t['x_instance'];
+		$y_perso = $t['y_instance'];
+	}else{ 
+		$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_perso'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$x_perso = $t['x_carte'];
+		$y_perso = $t['y_carte'];
+	}
+	$x_cible = "";
+	$y_cible = "";
+	//si la cible est un batiment, 
+	if($id_cible >= 50000 && $id_cible < 200000){
+		$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
+		$res = $mysqli->query($sql);
+		$rows = $res->fetch_all(MYSQLI_ASSOC);
+		$first = true;
+		$distance_min;
+		//on va chercher la case la plus proche en distance du batiment
+		foreach ($rows as $row) {
+			//on initialise ainsi pour que les variables aient une première valeur
+			if ($first) {
+				$first = false;
+				$x_cible = $row['x_carte'];
+				$y_cible = $row['y_carte'];
+				$distance_min = max(abs($x_perso-$row['x_carte']), abs($y_perso-$row['y_carte']));
+			}else{
+				$distance = max(abs($x_perso-$row['x_carte']), abs($y_perso-$row['y_carte']));
+				//Si on trouve une case plus proche
+				if($distance < $distance_min){
+					$x_cible = $row['x_carte'];
+					$y_cible = $row['y_carte'];
+					$distance_min=$distance;
+				}				
+			}
+		}
+	}else{
+		$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$x_cible = $t['x_carte'];
+		$y_cible = $t['y_carte'];
 
-	$sql = "SELECT x_carte,y_carte from carte WHERE idPerso_carte='$id_cible'";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-	$x_cible = $t['x_carte'];
-	$y_cible = $t['y_carte'];
-
+	}
+	
 	return max(abs($x_perso - $x_cible), abs($y_perso - $y_cible));
 }
 
@@ -140,6 +180,15 @@ function is_a_portee_attaque($mysqli, $carte, $id_perso, $id_cible, $portee_min,
 		return 0;
 	}
 
+	//bonus de portée du terrain uniquement pour les armes à distance
+	if($portee_max > 1){
+		//On récupère le type de terrain du perso
+		$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
+
+		//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
+		$portee_max += get_bonus_portee($fond_carte);
+	}
+	
 	// On réduit la portée max à la perception du perso
 	if($per_perso < $portee_max){
 		$portee_max = $per_perso;
@@ -209,10 +258,19 @@ function resource_liste_cibles_a_portee_attaque($mysqli, $carte, $id_perso, $por
 	}
 	else {
 	
+		//bonus de portée du terrain uniquement pour les armes à distance
+		if($type_attaque == 'dist'){
+			//On récupère le type de terrain du perso
+			$fond_carte = get_fond_carte_perso($mysqli, $carte, $id_perso);
+
+			//Sur base du terrain sur lequel se trouve le perso, on donne un bonus de portée
+			$portee_max += get_bonus_portee($fond_carte);
+		}
 		// On réduit la portée max à la perception du perso
 		if($per_perso < $portee_max){
 			$portee_max = $per_perso;
 		}
+
 
 		// Requete qui recupere les cases a portee d'attaque
 		$sql = "(
@@ -293,7 +351,12 @@ function est_chanceux($mysqli, $id_perso){
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
-	return $t['nb_points'];
+	if($t){
+		return $t['nb_points'];
+	}else{
+		return false;
+	}
+	
 }
 
 /**
@@ -365,7 +428,7 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 	$verif_anti_zerk = 1;
 						
 	// Verification si enregistrement d'attaque existant
-	$sql = "SELECT * FROM anti_zerk WHERE id_perso='$id_perso'";
+	$sql = "SELECT *, TIME_TO_SEC(TIMEDIFF(NOW(), date_derniere_attaque)) as diff FROM anti_zerk WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$nb_enr_anti_zerk = $res->num_rows;
 	
@@ -376,24 +439,17 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 	
 	$dla_perso = $t_p['DLA_perso'];
 
-	date_default_timezone_set('UTC');
-	
 	if ($nb_enr_anti_zerk > 0) {
 		
 		$t_zerk = $res->fetch_assoc();
 		
 		$date_derniere_attaque 		= $t_zerk['date_derniere_attaque'];
 		$date_nouveau_tour			= $t_zerk['date_nouveau_tour'];
+		$diff				= $t_zerk['diff'];
 		
-		$date_now = time();
-		
-		$diff_date = $date_now - strtotime($date_nouveau_tour);
-		
-		if ($diff_date >= 0) {
+		if ($dla_perso != $date_nouveau_tour) {
 			// Un nouveau tour a été enclenché depuis la dernière attaque
 			// L'attaque respecte t-elle les 8 heures ?
-			$diff = $date_now - strtotime($date_derniere_attaque);
-			
 			if ($diff < DUREE_ANTI_ZERK_S) {
 				// Loi anti-zerk non respectée
 				$verif_anti_zerk = 0;
@@ -417,8 +473,6 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 		$sql = "INSERT INTO anti_zerk(id_perso, date_derniere_attaque, date_nouveau_tour) VALUES ('$id_perso', NOW(), '$dla_perso')";
 		$mysqli->query($sql);
 	}
-
-	date_default_timezone_set('Europe/Paris');
 	
 	return $verif_anti_zerk;
 }
@@ -524,6 +578,12 @@ function calcul_gain_xp($xp_perso, $xp_cible, $id_arme_attaque, $coutPa_arme_att
 
 	// Limit le nombre d'xp gagné par attaque
 	$max_xp_par_attaque = ceil(20 / floor(10 / $coutPa_arme_attaque));
+	// Pour le canon et gatling, reserve respectivement 4 et 2 xp pour collats
+	if ($id_arme_attaque == 13 || $id_arme_attaque == 22) {
+		$max_xp_par_attaque = max(0, $max_xp_par_attaque-4);
+	} else if ($id_arme_attaque == 14) {
+		$max_xp_par_attaque = max(0, $max_xp_par_attaque-2);
+	}
 	if ($gain_xp > $max_xp_par_attaque) {
 		$gain_xp = $max_xp_par_attaque;
 	}
@@ -581,19 +641,18 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 			// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 			// Calcul PI
 			$pi_perdu 		= floor(($pi_cible * 5) / 100);
-			$pi_perso_fin 	= $pi_cible - $pi_perdu;
 
 			// Calcul PC
 			$pc_perdu		= floor(($pc_perso * 5) / 100);
 			$pc_perso_fin	= $pc_perso - $pc_perdu;
 		}
 		else {
-			$pi_perso_fin = floor(($pi_cible * 60) / 100);
+			$pi_perdu 		= floor(($pi_cible * 40) / 100);
 			$pc_perso_fin = $pc_perso;
 		}
 
 		// MAJ perte xp/po/stat cible
-		$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+		$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 		$mysqli->query($sql);
 
 		echo "<div class=\"infoi\">Vous avez capturé votre cible ! <font color=red>Félicitations.</font></div>";
@@ -692,7 +751,7 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 		}
 
 		// maj dernier tombé
-		$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+		$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id, $clan_perso)";
 		$mysqli->query($sql);
 	}
 }
@@ -703,7 +762,13 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 	$res_recherche_collat = $model_carte->recupereVoisins($id_cible, $x_cible, $y_cible)->fetchAll(PDO::FETCH_CLASS,'Carte');;
 
 	$gain_xp_collat_cumul = 0;
+	$max_gain_xp_collat_cumul = 4;
 	$gain_pc_collat_cumul = 0;
+	$model_perso = new Perso();
+
+	// Limite a 2xp le gain max pour collats
+	if ($id_arme_attaque == 14)
+		$max_gain_xp_collat_cumul = 2;
 
 	// On parcours les cibles pour degats collateraux
 	foreach($res_recherche_collat as $t_recherche_collat) {
@@ -749,8 +814,8 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 			$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
 
-			// Limite 3 PC par attaque de Gatling
-			if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 3) {
+			// Limite 2 PC par attaque de Gatling
+			if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 2) {
 				$gain_pc_collat = 0;
 			}
 
@@ -760,28 +825,17 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 			echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à <font color='$couleur_clan_collat'>$nom_collat</font> - Matricule $id_cible_collat.<br>";
 
-			// Limite 3XP par attaque de Gatling
-			if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
+			if ($gain_xp_collat_cumul <= $max_gain_xp_collat_cumul && !$max_xp_tour_atteint) {
 				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
-
-				// Passage grade grouillot
-				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
-			}
-			else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
-				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
-
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
+				$model_perso->perso_gain_xp($id, $gain_xp_collat);
+				$gain_xp_tour_perso += $gain_xp_collat;
 
 				// Passage grade grouillot
 				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 
 			} else {
+				$gain_xp_collat = 0;
 				echo "Vous avez gagné 0 xp";
 				if ($max_xp_tour_atteint) {
 					echo " (maximum de gain d'xp par tour atteint)";
@@ -835,19 +889,18 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 					// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 					// Calcul PI
 					$pi_perdu 		= floor(($pi_collat_fin * 5) / 100);
-					$pi_perso_fin 	= $pi_collat_fin - $pi_perdu;
 
 					// Calcul PC
 					$pc_perdu		= floor(($pc_collat_fin * 5) / 100);
 					$pc_perso_fin	= $pc_collat_fin - $pc_perdu;
 				}
 				else {
-					$pi_perso_fin = floor(($pi_collat_fin * 60) / 100);
+					$pi_perdu 		= floor(($pi_collat_fin * 40) / 100);
 					$pc_perso_fin = $pc_collat_fin;
 				}
 
 				// MAJ perte xp/po/stat cible
-				$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
+				$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
 				$mysqli->query($sql);
 
 				if ($perte_po > 0) {
@@ -940,7 +993,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				}
 
 				// maj dernier tombé
-				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible_collat')";
+				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible_collat', $clan_collat, $id, $clan_perso)";
 				$mysqli->query($sql);
 			}
 
@@ -970,7 +1023,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				$max_xp_tour_atteint = true;
 			}
 
-			$gain_xp_collat_cumul += gain_xp_collat;
+			$gain_xp_collat_cumul += $gain_xp_collat;
 
 			// mise a jour des pv de la cible
 			$sql = "UPDATE instance_pnj SET pv_i=pv_i-$degats_collat, dernierAttaquant_i=$id WHERE idInstance_pnj='$id_cible_collat'";
@@ -978,28 +1031,17 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 			echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_cible_collat<br>";
 
-			// Limite 3XP par attaque de Gatling
-			if ($id_arme_attaque == 14 && $gain_xp_collat_cumul + $gain_xp <= 3 && !$max_xp_tour_atteint) {
+			if ($gain_xp_collat_cumul <= $max_gain_xp_collat_cumul && !$max_xp_tour_atteint) {
 				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
 
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
-
-				// Passage grade grouillot
-				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
-			}
-			else if ($gain_xp_collat_cumul <= 4 && !$max_xp_tour_atteint) {
-				echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
-
-				// mise a jour des xp/pi
-				$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp_collat, pi_perso=pi_perso+$gain_xp_collat, gain_xp_tour=gain_xp_tour+$gain_xp_collat WHERE id_perso='$id'"; 
-				$mysqli->query($sql);
+				$model_perso->perso_gain_xp($id, $gain_xp_collat);
+				$gain_xp_tour_perso += $gain_xp_collat;
 
 				// Passage grade grouillot
 				passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
 
 			} else {
+				$gain_xp_collat = 0;
 				echo "Vous avez gagné 0 xp";
 				if ($max_xp_tour_atteint) {
 					echo " (maximum de gain d'xp par tour atteint)";
@@ -1068,9 +1110,116 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				echo "<br><center><a href=\"jouer.php\">retour</a></center>";
 			}
 		} else {
-			// Batiment => pas de collat sur batiment
+			// recuperation des données du batiment	
+			$sql = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, description, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance 
+					FROM batiment, instance_batiment
+					WHERE batiment.id_batiment=instance_batiment.id_batiment
+					AND id_instanceBat=$id_cible_collat";
+			$res = $mysqli->query($sql);
+			$bat = $res->fetch_assoc();
+			
+			$id_batiment 			= $bat['id_batiment'];
+			$nom_batiment 			= $bat['nom_batiment'];
+			$taille_batiment		= $bat['taille_batiment'];
+			$description_batiment 	= $bat['description'];
+			$nom_instance_batiment 	= $bat['nom_instance'];
+			$pv_instance 			= $bat['pv_instance'];
+			$pvMax_instance 		= $bat['pvMax_instance'];
+			$x_instance 			= $bat['x_instance'];
+			$y_instance 			= $bat['y_instance'];
+			$camp_instance 			= $bat['camp_instance'];
+			$contenance_instance 	= $bat['contenance_instance'];
+
+			if($camp_instance == '1'){
+				$camp_bat 		= 'b';
+				$couleur_bat 	= 'blue';
+				$nom_camp_bat 	= 'Nord';
+			}
+			if($camp_instance == '2'){
+				$camp_bat 		= 'r';
+				$couleur_bat 	= 'red';
+				$nom_camp_bat 	= 'Sud';
+			}
+
+			// inflige seulement degats collat aux barricades
+			if ($id_batiment != 1)
+				continue;
+
+			//la cible est encore en vie
+			if ($pv_instance > 0) {
+				$gain_xp_collat = 1;
+				if ($gain_xp_tour_perso + $gain_xp_collat > 20) {
+					$gain_xp_collat = 0;
+					$max_xp_tour_atteint = true;
+				}
+
+				$gain_xp_collat_cumul += $gain_xp_collat;
+
+				echo "<br>Vous avez infligé $degats_collat dégâts collatéraux à $nom_batiment<br>";
+
+				// mise à jour des pv du batiment
+				$sql = "UPDATE instance_batiment SET pv_instance=pv_instance-$degats_collat WHERE id_instanceBat='$id_cible_collat'";
+				$mysqli->query($sql);
+
+				if ($gain_xp_collat_cumul <= $max_gain_xp_collat_cumul && !$max_xp_tour_atteint) {
+					echo "Vous avez gagné $gain_xp_collat xp.<br><br>";
+
+					$model_perso->perso_gain_xp($id, $gain_xp_collat);
+					$gain_xp_tour_perso += $gain_xp_collat;
+
+					// Passage grade grouillot
+					passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp_collat);
+
+				} else {
+					$gain_xp_collat = 0;
+					echo "Vous avez gagné 0 xp";
+					if ($max_xp_tour_atteint) {
+						echo " (maximum de gain d'xp par tour atteint)";
+					} else {
+						echo " (maximum de gain d'xp par attaque atteint)";
+					}
+					echo ".<br>";
+				}
+
+				// maj evenement
+				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a infligé des dégâts collatéraux ','$id_cible_collat','<b>$nom_batiment</b>',' ( Dégâts : $degats_collat ; Gain XP : $gain_xp_collat ; Gain PC : 0 )',NOW(),'0')";
+				$mysqli->query($sql);
+
+				if ($pv_instance - $degats_collat <= 0) {
+					// on efface le batiment de la carte
+					$sql = "UPDATE $carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_instance' AND y_carte='$y_instance'";
+					$mysqli->query($sql);
+
+					// on delete le bâtiment
+					$sql = "DELETE FROM instance_batiment WHERE id_instanceBat='$id_cible_collat'";
+					$mysqli->query($sql);
+
+					echo "Vous avez détruit votre cible ! <font color=red>Félicitations.</font><br>";
+
+					// maj evenement
+					$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a détruit','$id_cible_collat','<font color=$couleur_bat><b>$nom_batiment $nom_instance_batiment</b></font>','',NOW(),'0')";
+					$mysqli->query($sql);
+
+					// maj cv
+					$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
+					$mysqli->query($sql);
+
+				}
+			}
 		}
 	}
+}
+
+function verif_charge_pm($type_perso, $pm_perso) {
+	if (!($type_perso == 1 || $type_perso == 2 || $type_perso == 7 || $type_perso == 3))
+		return false;
+	return $pm_perso >= distance_min_charge_pm($type_perso);
+}
+
+function distance_min_charge_pm($type_perso) {
+	if ($type_perso == 3)
+		return 2;
+	return 4;
 }
 
 ?>

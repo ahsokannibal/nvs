@@ -135,13 +135,13 @@ function verif_coord_in_perception($x, $y, $x_perso, $y_perso, $perception) {
 }
 
 // Donne le nombre de pm que coute le deplacement suivant le terrain
-function cout_pm($fond) 
+function cout_pm($fond, $type_perso) 
 {
 	switch($fond) {
-		case(I_FORET): return 2; break; 	//foret
+		case(I_FORET): return ($type_perso == 3 || $type_perso == 7) ? 1 : 2; break; 	//foret
 		case(I_EAU): return 4; break; 		//eau
 		case(I_MARECAGE): return 2; break; 	//marecage
-		case(I_DESERT): return 4; break; 	//desert
+		case(I_DESERT): return 1; break; 	//desert
 		case(I_COLLINE): return 2; break; 	//colline
 		case(I_MONTAGNE): return 4; break; 	// montagne
 		case(I_ROUTE_B): return 1; break; 	// route bleu
@@ -152,11 +152,22 @@ function cout_pm($fond)
 		case(I_RAIL1): return 1; break; 	// nouveau rail sur plaine
 		case(I_RAIL2): return 1; break; 	// rail sur coline
 		case(I_RAIL3): return 2; break; 	// rail sur montagne
-		case(I_RAIL4): return 2; break; 	// rail sur desert
+		case(I_RAIL4): return 1; break; 	// rail sur desert
 		case(I_RAIL5): return 1; break; 	// rail sur plaine enneigée
 		case(I_RAIL7): return 1; break; 	// rail sur forêt
 		case(I_RAILP): return 1; break; 	// rail sur pont
 		default: return 1;
+	}
+}
+
+/**
+ * Donne les bonus en portée selon le terrain
+ */
+function get_bonus_portee($fond){
+	switch($fond) {
+		case(I_COLLINE): return 1; break; //colline
+		case(I_MONTAGNE): return 2; break; //montagne
+		default: return 0;
 	}
 }
 
@@ -175,8 +186,8 @@ function get_malus_visu($fond)
 function get_malus_recup($fond) 
 {
 	switch($fond) {
-		case(I_MARECAGE): return -5; break; 
-		case(I_DESERT): return 10; break;
+		case(I_MARECAGE): return -20; break; 
+		case(I_DESERT): return -100; break;
 		default: return 0;
 	}
 }
@@ -274,8 +285,8 @@ function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 			case(I_FORET): return 20; break;
 			case(I_EAU): return 10; break;
 			case(I_DESERT): return -10; break;
-			case(I_COLLINE): return -10; break;
-			case(I_MONTAGNE): return 10; break;
+			case(I_COLLINE): return 10; break;
+			case(I_MONTAGNE): return 20; break;
 			case(I_PONT_B): return -10; break;
 			case(I_PONT_R): return -10; break;
 			default: return 0;
@@ -287,6 +298,8 @@ function get_bonus_defense_terrain($fond, $porteeMax_arme_attaque) {
 			case(I_MARECAGE): return -10; break;
 			case(I_DESERT): return -10; break;
 			case(I_EAU): return 10; break;
+			case(I_COLLINE): return 10; break;
+			case(I_MONTAGNE): return 20; break;
 			case(I_PONT_B): return -10; break;
 			case(I_PONT_R): return -10; break;
 			default: return 0;
@@ -468,7 +481,7 @@ function touche($pourcent)
 
 function gain_po_mort($thune_cible)
 {
-	return floor(10*($thune_cible/100));
+	return floor(30*($thune_cible/100));
 }
 
 function gain_xp_mort($xp_cible, $xp)
@@ -690,7 +703,7 @@ function batiment_pv_capturable($mysqli, $id_bat){
 	$pvMax_instance	= $t['pvMax_instance'];
 	
 	// Calcul pourcentage pv du batiment 
-	$pourc_pv_instance = ($pv_instance / $pvMax_instance) * 100;
+	$pourc_pv_instance = $pvMax_instance == 0 ? 0 : ($pv_instance / $pvMax_instance) * 100;
 	
 	return $pourc_pv_instance <= 80;
 }
@@ -1000,7 +1013,7 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 				// + Le lien est utile pour les batiments autre que barricade et pont 
 				// + Le lien est utile que pour les unités autre que chien et soigneur
 				// + si batiment tour de guet, seul les infanterie peuvent capturer
-				if(batiment_vide($mysqli, $id_bat) && batiment_pv_capturable($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4' && $bat == 2 && $type_perso == 3){
+				if(batiment_vide($mysqli, $id_bat) && batiment_pv_capturable($mysqli, $id_bat) && $bat != 1 && $bat != 5 && $bat != 7 && $bat != 11 && $type_perso != '6' && $type_perso != '4' && $type_perso == 3){
 					$new_mess_bat .= "<center><font color = blue>~~<a href=\"jouer.php?bat=$id_bat&bat2=$bat\" > capturer le batiment $nom_bat $nom_ibat [$id_bat]</a>~~</font></center>";
 				}
 			}
@@ -1018,8 +1031,8 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 				}
 			}
 			
-			// Pont
-			// Les chiens ne peuvent pas saboter les ponts
+			// Pont (neutres)
+			// Les chiens ne peuvent pas réparer ni saboter les ponts
 			if ($bat == 5 && $type_perso != '6') {
 				$new_mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&saboter=ok\" > saboter $nom_bat $nom_ibat [$id_bat] (10 PA)</a>~~</font></center>";
 			}
@@ -1036,9 +1049,9 @@ function afficher_lien_prox_bat($mysqli, $x_persoE, $y_persoE, $id_perso, $type_
 function isTypePersoBousculable($type_perso, $type_perso_b) {
 	
 	// Cavalier
-	if ($type_perso == 1 || $type_perso == 2) {
+	if ($type_perso == 1 || $type_perso == 2 || $type_perso == 7) {
 		// Peut bousculer infanterie et autres cavaliers
-		if ($type_perso_b == 1 || $type_perso_b == 2 || $type_perso_b == 3) {
+		if ($type_perso_b == 1 || $type_perso_b == 2 || $type_perso_b == 3 || $type_perso_b == 7) {
 			return true;
 		} else {
 			return false;
@@ -1250,6 +1263,7 @@ function min_gain_xp_construction($id_bat) {
 	switch($id_bat) {
 		case(1): return 1; break;
 		case(2): return 1; break;
+		case(5): return 3; break;
 		case(7): return 3; break;
 		case(8): return 8; break;
 		case(9): return 10; break;
@@ -1265,10 +1279,18 @@ function max_gain_xp_construction($id_bat) {
 	switch($id_bat) {
 		case(1): return 2; break;
 		case(2): return 3; break;
+		case(5): return 5; break;
 		case(7): return 5; break;
 		case(8): return 10; break;
 		case(9): return 15; break;
 		case(11): return 7; break;
+		default: return 0;
+	}
+}
+
+function gain_pc_construction($id_bat) {
+	switch($id_bat) {
+		case(5): return 1; break;
 		default: return 0;
 	}
 }
@@ -1313,5 +1335,23 @@ function get_image_type_perso($type_p, $camp_perso) {
 	}
 	
 	return $im_type_perso;
+}
+
+/**
+ * Fonction qui récupère le fond_carte d'un perso sur base de son id
+ */
+function get_fond_carte_perso($mysqli,$carte, $id_perso){
+	$sql = "SELECT fond_carte FROM $carte 
+	WHERE idPerso_carte = $id_perso";
+
+	$res = $mysqli->query($sql);
+	$t = $res->fetch_assoc();
+
+	//On teste que la requête retourne bien un résultat
+	if($res->num_rows == 1){
+		return $t["fond_carte"];
+	}
+	return "";
+	
 }
 ?>

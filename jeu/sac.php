@@ -66,7 +66,7 @@ if($dispo == '1' || $admin){
 				$verif = preg_match("#^[0-9]*[0-9]$#i","$id_o");
 				
 				if($verif && $id_o > 0) {
-					
+
 					// On verifie que l'objet soit bien utilisable
 					if($id_o != 1){
 						// ok
@@ -145,82 +145,86 @@ if($dispo == '1' || $admin){
 									$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1, charge_perso=charge_perso-$poids WHERE id_perso='$id'";
 									$mysqli->query($sql_c);
 								}
-								else if ($type_o == 'E' && $type_p != 6) {
-									// Objet équipable - non utilisables sur chien
+								else if ($type_o == 'E') {
 									
-									// On verifie si on est pas déjà équipé de cet objet
-									$sql = "SELECT * FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_o' AND equip_objet='1'";
+									// On verifie si on peut équiper cet obket
+									$sql = "SELECT equip_objet FROM perso_as_objet JOIN objet_as_type_unite ON perso_as_objet.id_objet = objet_as_type_unite.id_objet WHERE id_perso='$id' 
+										AND perso_as_objet.id_objet='$id_o' AND id_type_unite=$type_p";
 									$res = $mysqli->query($sql);
-									$is_equipe = $res->num_rows;
-									
-									if (isset($_GET['desequip']) && $_GET['desequip'] == "ok") {
-										
-										if ($is_equipe) {
-											
-											// On enleve l'objet
-											$sql = "UPDATE perso_as_objet SET equip_objet='0' WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
-											$mysqli->query($sql);
-											
-											// MAJ perso
-											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1";
-											
-											if ($bonusPerception != 0) {
-												$sql_c .= ", bonusPerception_perso=bonusPerception_perso-".$bonusPerception;
-											}
-											
-											if ($bonusPa != 0) {
-												$sql_c .= ", bonusPA_perso=bonusPA_perso-".$bonusPa;
-											}
-											
-											if ($bonusPm != 0) {
-												$sql_c .= ", bonusPM_perso=bonusPM_perso-".$bonusPm;
-											}
+									if ($res->num_rows) {
 
-											$sql_c .= " WHERE id_perso='$id'";
-											$mysqli->query($sql_c);
-											
+										$t = $res->fetch_assoc();
+										$is_equipe = $t["equip_objet"];
+
+										if (isset($_GET['desequip']) && $_GET['desequip'] == "ok") {
+
+											if ($is_equipe) {
+
+												// On enleve l'objet
+												$sql = "UPDATE perso_as_objet SET equip_objet='0' WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
+												$mysqli->query($sql);
+
+												// MAJ perso
+												$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1";
+
+												if ($bonusPerception != 0) {
+													$sql_c .= ", bonusPerception_perso=bonusPerception_perso-".$bonusPerception;
+												}
+
+												if ($bonusPa != 0) {
+													$sql_c .= ", bonusPA_perso=bonusPA_perso-".$bonusPa;
+												}
+
+												if ($bonusPm != 0) {
+													$sql_c .= ", bonusPM_perso=bonusPM_perso-".$bonusPm;
+												}
+
+												$sql_c .= " WHERE id_perso='$id'";
+												$mysqli->query($sql_c);
+
+											}
+											else {
+												// Tentative de triche
+												$text_triche = "Tentative deséquiper objet non équipé !";
+
+												$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+												$mysqli->query($sql);
+											}
 										}
 										else {
-											// Tentative de triche
-											$text_triche = "Tentative deséquiper objet non équipé !";
-			
-											$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
-											$mysqli->query($sql);
-										}
-									}
-									else {
-										
-										if (!$is_equipe) {
-									
-											// On équipe l'objet
-											$sql = "UPDATE perso_as_objet SET equip_objet='1' WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
-											$mysqli->query($sql);
-											
-											// MAJ perso
-											$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1";
-											
-											if ($bonusPerception != 0) {
-												$sql_c .= ", bonusPerception_perso=bonusPerception_perso+".$bonusPerception;
+
+											if (!$is_equipe) {
+
+												// On équipe l'objet
+												$sql = "UPDATE perso_as_objet SET equip_objet='1' WHERE id_perso='$id' AND id_objet='$id_o' LIMIT 1";
+												$mysqli->query($sql);
+
+												// MAJ perso
+												$sql_c = "UPDATE perso SET pa_perso = pa_perso - 1";
+
+												if ($bonusPerception != 0) {
+													$sql_c .= ", bonusPerception_perso=bonusPerception_perso+".$bonusPerception;
+												}
+
+												if ($bonusPa != 0) {
+													$sql_c .= ", bonusPA_perso=bonusPA_perso+".$bonusPa;
+												}
+
+												if ($bonusPm != 0) {
+													$sql_c .= ", bonusPM_perso=bonusPM_perso+".$bonusPm;
+												}
+
+												$sql_c .= " WHERE id_perso='$id'";
+												$mysqli->query($sql_c);
 											}
-											
-											if ($bonusPa != 0) {
-												$sql_c .= ", bonusPA_perso=bonusPA_perso+".$bonusPa;
+											else {
+												// Tentative de triche
+												$text_triche = "Tentative équiper objet déjà équipé !";
+
+												$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
+												$mysqli->query($sql);
+
 											}
-											
-											if ($bonusPm != 0) {
-												$sql_c .= ", bonusPM_perso=bonusPM_perso+".$bonusPm;
-											}
-											
-											$sql_c .= " WHERE id_perso='$id'";
-											$mysqli->query($sql_c);
-										}
-										else {
-											// Tentative de triche
-											$text_triche = "Tentative équiper objet déjà équipé !";
-			
-											$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id', '$text_triche')";
-											$mysqli->query($sql);
-											
 										}
 									}
 								}
@@ -304,7 +308,7 @@ if($dispo == '1' || $admin){
 				<td>
 					<table border=1 class='table'>
 						<tr>
-							<td align=center width=25%><img src="../images/<?php echo $image_sac; ?>"><p align="center"><input type="button" value="Fermer mon sac" onclick="window.open('jouer.php', '_self', ''); window.close();"></p></td>
+							<td align=center width=25%><img src="../images/<?php echo $image_sac; ?>"><p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p></td>
 							<td width=75%>
 								<center><h2>Mon sac</h2>
 								<p>Le sac vous permet de transporter des objets et de les utiliser.<br>Vous possédez <b><?php echo $nb_dans_sac; ?></b> objet<?php if($nb_dans_sac > 1){echo "s";} ?> dans votre sac.</p>
@@ -439,17 +443,20 @@ if($dispo == '1' || $admin){
 				}
 				
 				// Est ce que le perso est déjà équipé de cet objet ?
-				$sql2 = "SELECT * FROM perso_as_objet WHERE id_perso='$id' AND id_objet='$id_obj' AND equip_objet='1'";
+				$sql2 = "SELECT * FROM perso_as_objet JOIN objet_as_type_unite ON perso_as_objet.id_objet = objet_as_type_unite.id_objet WHERE id_perso='$id' AND perso_as_objet.id_objet='$id_obj' AND id_type_unite=$type_p";
 				$res2 = $mysqli->query($sql2);
-				$is_equipe = $res2->num_rows;
-				
-				if($type_o == 'E' && !$is_equipe && $type_p != 6){
-					echo "<br /><a class='btn btn-outline-primary' href=\"sac.php?id_obj=".$id_obj."\">équiper (cout : 1 PA)</a>";
-				}
-				
-				if ($is_equipe) {
-					echo "<br /><b>Vous êtes équipé de cet objet</b>";
-					echo "<br /><a class='btn btn-outline-danger' href=\"sac.php?id_obj=".$id_obj."&desequip=ok\">enlever (cout : 1 PA)</a>";
+				if ($res2->num_rows) {
+					$t2 = $res2->fetch_assoc();
+					$is_equipe = $t2["equip_objet"];
+
+					if($type_o == 'E' && !$is_equipe){
+						echo "<br /><a class='btn btn-outline-primary' href=\"sac.php?id_obj=".$id_obj."\">équiper (cout : 1 PA)</a>";
+					}
+
+					if ($is_equipe) {
+						echo "<br /><b>Vous êtes équipé de cet objet</b>";
+						echo "<br /><a class='btn btn-outline-danger' href=\"sac.php?id_obj=".$id_obj."&desequip=ok\">enlever (cout : 1 PA)</a>";
+					}
 				}
 				
 				echo "<br /><u>Poids total :</u> <b>$poids_total_o</b></td>";

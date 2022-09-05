@@ -628,7 +628,7 @@ if($dispo == '1' || $admin){
 												$ys 	= $t["y_carte"];
 												$fond 	= $t["fond_carte"];
 												
-												$cout_pm = cout_pm($fond);
+												$cout_pm = cout_pm($fond, $type_perso);
 												
 												// verification des pm du perso
 												if($pm_perso + $malus_pm >= $cout_pm){
@@ -669,13 +669,13 @@ if($dispo == '1' || $admin){
 													$perception_final = $perception_perso + $bonus_visu;
 													if ($id_perso >= 100) {
 														if ($clan_p == 1) {
-															$sql = "UPDATE $carte SET vue_nord='1' 
+															$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW()
 																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 															$mysqli->query($sql);
 														}
 														else if ($clan_p == 2) {
-															$sql = "UPDATE $carte SET vue_sud='1' 
+															$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW()
 																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 															$mysqli->query($sql);
@@ -763,7 +763,7 @@ if($dispo == '1' || $admin){
 														// Verification si le perso est de la même nation ou non que le batiment
 														if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
 															
-															$pourc_pv_instance = ($pv_batiment / $pvMax_batiment) * 100;
+															$pourc_pv_instance = $pvMax_batiment == 0 ? 0 : ($pv_batiment / $pvMax_batiment) * 100;
 													
 															if ($pourc_pv_instance <= 80) {
 															
@@ -979,7 +979,7 @@ if($dispo == '1' || $admin){
 														// verification si le perso est de la même nation que le batiment
 														if(!nation_perso_bat($mysqli, $id_perso, $id_inst_bat)) {
 															
-															$pourc_pv_instance = ($pv_batiment / $pvMax_batiment) * 100;
+															$pourc_pv_instance = $pvMax_batiment == 0 ? 0 : ($pv_batiment / $pvMax_batiment) * 100;
 													
 															if ($pourc_pv_instance <= 80) {
 																
@@ -1086,8 +1086,8 @@ if($dispo == '1' || $admin){
 																			
 																			// Gain points de victoire
 																			if ($id_bat == 9) {
-																				// FORT -> 400
-																				$gain_pvict = 400;
+																				// FORT -> 500
+																				$gain_pvict = 500;
 																				$nom_b = "FORT";
 																			}
 																			else if ($id_bat == 8) {
@@ -1096,8 +1096,8 @@ if($dispo == '1' || $admin){
 																				$nom_b = "FORTIN";
 																			}
 																			else if ($id_bat == 11) {
-																				// GARE -> 75
-																				$gain_pvict = 75;
+																				// GARE -> 50
+																				$gain_pvict = 50;
 																				$nom_b = "GARE";
 																			}
 																			else if ($id_bat == 7) {
@@ -1358,7 +1358,7 @@ if($dispo == '1' || $admin){
 												// On vérifie que la case n'est pas déjà occupée
 												if (!$oc_c) {
 													
-													$cout_pm = cout_pm($fond);
+													$cout_pm = cout_pm($fond, $type_perso);
 													
 													if ($pm_perso + $malus_pm >= $cout_pm) {
 													
@@ -1398,13 +1398,13 @@ if($dispo == '1' || $admin){
 														$perception_final = $perception_perso + $bonus_visu;
 														if ($id_perso >= 100) {
 															if ($clan_p == 1) {
-																$sql = "UPDATE $carte SET vue_nord='1' 
+																$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 																		WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																		AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																$mysqli->query($sql);
 															}
 															else if ($clan_p == 2) {
-																$sql = "UPDATE $carte SET vue_sud='1' 
+																$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW()
 																		WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																		AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																$mysqli->query($sql);
@@ -1536,6 +1536,9 @@ if($dispo == '1' || $admin){
 					// mise a jour du bonus de perception du perso
 					$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
 					
+				} else if (in_train($mysqli, $id_perso)) {
+					$bonus_perc = -1;
+					$bonus_visu = $bonus_perc + getBonusObjet($mysqli, $id_perso);
 				} else {
 					
 					$sql = "SELECT fond_carte FROM $carte WHERE x_carte=$x_persoN AND y_carte=$y_persoN";
@@ -1662,13 +1665,13 @@ if($dispo == '1' || $admin){
 									$perception_final = $perception_perso + $bonus_visu;
 									if ($id_perso >= 100) {
 										if ($clan_p == 1) {
-											$sql = "UPDATE $carte SET vue_nord='1' 
+											$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 													WHERE x_carte >= $xs - $perception_final AND x_carte <= $xs + $perception_final
 													AND y_carte >= $ys - $perception_final AND y_carte <= $ys + $perception_final";
 											$mysqli->query($sql);
 										}
 										else if ($clan_p == 2) {
-											$sql = "UPDATE $carte SET vue_sud='1' 
+											$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 													WHERE x_carte >= $xs - $perception_final AND x_carte <= $xs + $perception_final
 													AND y_carte >= $ys - $perception_final AND y_carte <= $ys + $perception_final";
 											$mysqli->query($sql);
@@ -1826,7 +1829,7 @@ if($dispo == '1' || $admin){
 								$case_occupee 	= $t_carte1["occupee_carte"];
 								$fond 			= $t_carte1["fond_carte"];
 								
-								$cout_pm 	= cout_pm($fond);
+								$cout_pm 	= cout_pm($fond, $type_perso);
 		
 								if (!is_eau_p($fond)) {
 									
@@ -1868,13 +1871,13 @@ if($dispo == '1' || $admin){
 												$perception_final = $perception_perso + $bonus_visu;
 												if ($id_perso >= 100) {
 													if ($clan_p == 1) {
-														$sql = "UPDATE $carte SET vue_nord='1' 
+														$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW()
 																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 														$mysqli->query($sql);
 													}
 													else if ($clan_p == 2) {
-														$sql = "UPDATE $carte SET vue_sud='1' 
+														$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 														$mysqli->query($sql);
@@ -1973,7 +1976,7 @@ if($dispo == '1' || $admin){
 															$case_occupeeB 	= $t_carteB["occupee_carte"];
 															$fondB 			= $t_carteB["fond_carte"];
 															
-															$cout_pmB 		= cout_pm($fondB);
+															$cout_pmB 		= cout_pm($fondB, $type_perso_b);
 															$bonus_visuB 	= get_malus_visu($fondB) + getBonusObjet($mysqli, $id_perso);
 															
 															// Case cible de la bousculade est-elle déjà occupée ?
@@ -2025,13 +2028,13 @@ if($dispo == '1' || $admin){
 																			$perception_final = $perception_perso + $bonus_visu;
 																			if ($id_perso >= 100) {
 																				if ($clan_p == 1) {
-																					$sql = "UPDATE $carte SET vue_nord='1' 
+																					$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 																							WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																							AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																					$mysqli->query($sql);
 																				}
 																				else if ($clan_p == 2) {
-																					$sql = "UPDATE $carte SET vue_sud='1' 
+																					$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 																							WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																							AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																					$mysqli->query($sql);
@@ -2106,13 +2109,13 @@ if($dispo == '1' || $admin){
 																				$perception_final = $perception_perso + $bonus_visu;
 																				if ($id_perso >= 100) {
 																					if ($clan_p == 1) {
-																						$sql = "UPDATE $carte SET vue_nord='1' 
+																						$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 																								WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																								AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																						$mysqli->query($sql);
 																					}
 																					else if ($clan_p == 2) {
-																						$sql = "UPDATE $carte SET vue_sud='1' 
+																						$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 																								WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
 																								AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
 																						$mysqli->query($sql);
@@ -2222,7 +2225,7 @@ if($dispo == '1' || $admin){
 
 	<body>
 				<?php
-				$date_serveur = new DateTime(null, new DateTimeZone('Europe/Paris'));
+				$date_serveur = new DateTime('now', new DateTimeZone('Europe/Paris'));
 				
 				$date_dla = date('d-m-Y H:i:s', $n_dla);
 				
@@ -2279,14 +2282,14 @@ if($dispo == '1' || $admin){
 				echo "<tr>";
 				echo "	<td>Prochain tour :  ".$date_dla."</td>";
 				echo "	<td align=right>";
-				echo "		<a class='btn btn-info' href=\"../regles/regles.php\" target='_blank'><b>Règles</b></a>";
-				echo "		<a class='btn btn-info' href=\"../faq.php\" target='_blank'><b>FAQ</b></a>";
+				echo "		<a class='btn btn-info' href=\"../regles/regles.php\"><b>Règles</b></a>";
+				echo "		<a class='btn btn-info' href=\"../faq.php\"><b>FAQ</b></a>";
 				echo "		<a class='btn btn-primary' href=\"http://www.forum.persee.ovh/\" target='_blank'><b>Forum</b></a>";
 				if ($type_perso != 6) {
-					echo "		<a class='btn btn-primary' href=\"question_anim.php\" target='_blank'><b>Questions Anim</b></a>";
-					echo "		<a class='btn btn-primary' href=\"capture.php\" target='_blank'><b>Déclarer une capture</b></a>";
+					echo "		<a class='btn btn-primary' href=\"question_anim.php\"><b>Questions Anim</b></a>";
+					echo "		<a class='btn btn-primary' href=\"capture.php\"><b>Déclarer une capture</b></a>";
 				}
-				echo "		<a class='btn btn-warning' href=\"missions.php\" target='_blank'><b>Missions ";
+				echo "		<a class='btn btn-warning' href=\"missions.php\"><b>Missions ";
 				if ($nb_missions_actives > 0) {
 					echo "<span class='badge badge-success'>".$nb_missions_actives."</span>";
 				}
@@ -2312,7 +2315,7 @@ if($dispo == '1' || $admin){
 				}
 				
 				// Ajout Jacklegende du 23/04 - lien Discord et de la visu
-				echo " <a class='btn btn-info' href='https://discord.gg/SpZ87fYZeZ' target='_blank'>Discord Commun</a>";
+				echo " <a class='btn btn-info' href='https://discord.gg/EMqRMzHKjZ' target='_blank'>Discord Commun</a>";
 						
 				$id_joueur_camp 	= $_SESSION["ID_joueur"];
 					
@@ -2324,12 +2327,12 @@ if($dispo == '1' || $admin){
 				$id_joueur_perso_camp 	= $t_perso_camp["clan"];
 						
 				if($id_joueur_perso_camp == 1){
-						echo " <a class='btn btn-info' href='https://discord.gg/95fKNwT8Vh' target='_blank'>Discord nord </a>";
+						echo " <a class='btn btn-info' href='https://discord.gg/xYSyWjbsJf' target='_blank'>Discord nord </a>";
 				} else if ($id_joueur_perso_camp == 2){
-						echo " <a class='btn btn-info' href='https://discord.gg/zE9knsyRGr' target='_blank'>Discord sud</a>";
+						echo " <a class='btn btn-info' href='https://discord.gg/68aCHYuths' target='_blank'>Discord sud</a>";
 				}
 					
-				echo " <a class='btn btn-info' href='visu.php' target='_blank'>Visu</a>";
+				echo " <a class='btn btn-info' href='visu.php'>Visu</a>";
 				//fin d'ajout lien Discord et de la visu
 				
 				echo "	</td>";
@@ -2433,7 +2436,7 @@ if($dispo == '1' || $admin){
 					$image_em 			= "em_nord2.png";
 					
 					if ($id_perso >= 100) {
-						$sql = "UPDATE $carte SET vue_nord='1' 
+						$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
 								WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
 								AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
 						$mysqli->query($sql);
@@ -2451,11 +2454,22 @@ if($dispo == '1' || $admin){
 					$image_em 			= "em_sud2.png";
 					
 					if ($id_perso >= 100) {
-						$sql = "UPDATE $carte SET vue_sud='1' 
+						$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
 								WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
 								AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
 						$mysqli->query($sql);
 					}
+				}
+				if($clan_perso == 0){
+					$clan = 'rond_r.png';
+					$couleur_clan_perso = 'black';
+					
+					$image_profil 		= "profil_sud4.png";
+					$image_sac 			= "sac_sud2.png";
+					$image_compagnie 	= "compagnie_sud2.png";
+					$image_evenement 	= "evenement_sud.png";
+					$image_messagerie 	= "messagerie_sud.png";
+					$image_em 			= "em_sud2.png";
 				}
 				
 				// récupération du grade du perso 
@@ -2571,7 +2585,7 @@ if($dispo == '1' || $admin){
 				}
 				
 				// Récupération de tous les persos du joueur
-				$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso' ORDER BY id_perso";
+				$sql = "SELECT id_perso, nom_perso, chef FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND est_renvoye=0 ORDER BY id_perso";
 				$res = $mysqli->query($sql);
 				
 				// init vide
@@ -2616,14 +2630,14 @@ if($dispo == '1' || $admin){
 								<input type='submit' name='select_perso' value='ok' />
 							</form>
 						</td>
-						<td align=center><b>Grade : <a href="grades.php" target='_blank'></b><?php echo $nom_grade_perso; ?>
+						<td align=center><b>Grade : <a href="grades.php"></b><?php echo $nom_grade_perso; ?>
 							<img alt="<?php echo $nom_grade_perso; ?>" title="<?php echo $nom_grade_perso; ?>" src="../images/grades/<?php echo $id_grade_perso . ".gif";?>" width=40 height=40></a>
 						</td>
 					</tr>
 					<tr>
 						<td align=center><b>Chef : </b><?php echo $nom_perso_chef; ?></td>
-						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\" target='_blank'>" . $bataillon_perso . "</a>"; ?></td>
-						<td align=center><b>Compagnie : </b><?php echo "<a href=\"compagnie.php\" target='_blank'>" . stripslashes($nom_compagnie_perso) . "</a>"; ?></td>
+						<td align=center><b>Bataillon : </b><?php echo "<a href=\"bataillon.php?id_bataillon=$id_joueur_perso\">" . $bataillon_perso . "</a>"; ?></td>
+						<td align=center><b>Compagnie : </b><?php echo "<a href=\"compagnie.php\">" . stripslashes($nom_compagnie_perso) . "</a>"; ?></td>
 					</tr>
 				</table>
 				<!--Fin du tableau d'information-->
@@ -2631,37 +2645,37 @@ if($dispo == '1' || $admin){
 				<center>
 					<table border=0 align="center" width=100%>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_profil; ?>" alt="profil"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_profil; ?>" alt="profil"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_evenement; ?>" alt="evenement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_sac; ?>" alt="sac"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php"><img width=88 height=92 border=0 src="../images/carte2.png" alt="mini map"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_messagerie; ?>" alt="messagerie"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="messagerie.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_messagerie; ?>" alt="messagerie"></a></td>
 							<?php
 							}
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=88 height=92 border=0 src="../images/classement2.png" alt="classement"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php"><img width=88 height=92 border=0 src="../images/classement2.png" alt="classement"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="compagnie.php" target='_blank'><img width=88 height=92 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a>
+								<a href="compagnie.php"><img width=88 height=92 border=0 src="../images/<?php echo $image_compagnie; ?>" alt="compagnie"></a>
 							</td>
 							<?php
 							}
 							if ($nb_em) {
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php" target='_blank'><img width=117 height=89 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="etat_major.php"><img width=117 height=89 border=0 src="../images/<?php echo $image_em; ?>" alt="etat major"></a></td>
 							<?php	
 							}
 							?>
 						</tr>
 						<tr>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php" target='_blank'><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<span class='badge badge-pill badge-danger' title='malus de défense dû aux attaques'>$bonus_perso</span>";} ?></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php" target='_blank'><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php" target='_blank'><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="profil.php"><img width=83 height=16 border=0 src="../images/profil_titrev2.png"></a> <?php if($bonus_perso < 0){ echo "<span class='badge badge-pill badge-danger' title='malus de défense dû aux attaques'>$bonus_perso</span>";} ?></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="evenement.php"><img width=83 height=16 border=0 src="../images/evenement_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="sac.php"><img width=83 height=16 border=0 src="../images/sac_titrev2.png"></a></td>
 							<?php 
 							$sql_mes = "SELECT count(id_message) as nb_mes from message_perso where id_perso='$id_perso' and lu_message='0' AND supprime_message='0'";
 							$res_mes = $mysqli->query($sql_mes);
@@ -2669,12 +2683,12 @@ if($dispo == '1' || $admin){
 							
 							$nb_nouveaux_mes = $t_mes["nb_mes"];
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php" target='_blank'><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="carte2.php"><img width=83 height=16 border=0 src="../images/carte_titrev2.png"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="messagerie.php" target='_blank'><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a>
+								<a href="messagerie.php"><img width=83 height=16 border=0 src="../images/messagerie_titrev2.png"></a>
 								<?php 
 								if($nb_nouveaux_mes) { 
 									echo "<span class='badge badge-pill badge-danger'>$nb_nouveaux_mes</span>"; 
@@ -2684,12 +2698,12 @@ if($dispo == '1' || $admin){
 							<?php
 							}
 							?>
-							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php" target='_blank'><img width=83 height=16 border=0 src="../images/classement_titrev2.png"></a></td>
+							<td align="center" width=<?php echo $pourc_icone; ?>><a href="classement.php"><img width=83 height=16 border=0 src="../images/classement_titrev2.png"></a></td>
 							<?php
 							if ($type_perso != 6) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="compagnie.php" target='_blank'><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a>
+								<a href="compagnie.php"><img width=83 height=16 border=0 src="../images/compagnie_titrev2.png"></a>
 								<?php
 								if ($nb_demandes_adhesion_compagnie) {
 									echo "<span class='badge badge-pill badge-success'>$nb_demandes_adhesion_compagnie</span>";
@@ -2709,7 +2723,7 @@ if($dispo == '1' || $admin){
 							if ($nb_em) {
 							?>
 							<td align="center" width=<?php echo $pourc_icone; ?>>
-								<a href="etat_major.php" target='_blank'><img width=83 height=16 border=0 src="../images/em_titrev2.png" alt="etat major"></a>
+								<a href="etat_major.php"><img width=83 height=16 border=0 src="../images/em_titrev2.png" alt="etat major"></a>
 								<?php
 								if ($nb_compagnie_attente_em) {
 									echo "<br/><font color=red><b>$nb_compagnie_attente_em</b> compagnie(s) en attente de validation</font>";
@@ -2830,7 +2844,7 @@ if($dispo == '1' || $admin){
 						WHERE arme.id_arme = perso_as_arme.id_arme
 						AND porteeMax_arme = 1
 						AND perso_as_arme.est_portee = '1'
-						AND id_perso = '$id_perso'";
+						AND id_perso = '$id_perso' ORDER BY arme.id_arme DESC";
 				$res = $mysqli->query($sql);
 				$nb_cac = $res->num_rows;
 				
@@ -3232,7 +3246,7 @@ if($dispo == '1' || $admin){
 									
 									if ($type_perso != 6 && $type_perso != 4) { 
 									?>
-									<td align='center'><?php echo $porteeMax_arme_dist; ?></td>
+									<td align='center'><?php if(!in_bat($mysqli, $id_perso)) echo $porteeMax_arme_dist + get_bonus_portee($fond); else echo $porteeMax_arme_dist?></td>
 									<?php 
 									}
 									else if ($type_perso == 4) {
@@ -3398,7 +3412,7 @@ if($dispo == '1' || $admin){
 														} else {
 															
 															// Un Batiment
-															$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+															$sql = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
 															$res = $mysqli->query($sql);
 															$tab = $res->fetch_assoc();
 															
@@ -3410,6 +3424,9 @@ if($dispo == '1' || $admin){
 															$camp_cible_cac	= $tab["camp_instance"];
 															
 															$couleur_clan_cible = couleur_clan($camp_cible_cac);
+															$pv_instance	= $tab["pv_instance"];
+															if ($pv_instance <= 0)
+																continue;
 														}
 														
 														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
@@ -3462,7 +3479,7 @@ if($dispo == '1' || $admin){
 														} else {
 														
 															// Un Batiment
-															$sql = "SELECT nom_batiment, nom_instance, camp_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
+															$sql = "SELECT nom_batiment, nom_instance, camp_instance, pv_instance FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_dist'";
 															$res = $mysqli->query($sql);
 															$tab = $res->fetch_assoc();
 															
@@ -3474,6 +3491,9 @@ if($dispo == '1' || $admin){
 															$camp_cible_dist	= $tab["camp_instance"];
 														
 															$couleur_clan_cible = couleur_clan($camp_cible_dist);
+															$pv_instance	= $tab["pv_instance"];
+															if ($pv_instance <= 0)
+																continue;
 														}
 														
 														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_dist.",".$id_arme_dist."'>".$nom_cible_dist." (mat. ".$id_cible_dist.")</option>";
@@ -3580,13 +3600,16 @@ if($dispo == '1' || $admin){
 														} else {
 															
 															// Un Batiment
-															$sql = "SELECT nom_batiment FROM batiment, instance_batiment WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
+															$sql = "SELECT nom_batiment FROM batiment, instance_batiment, pv_instance WHERE batiment.id_batiment = instance_batiment.id_batiment AND id_instanceBat = '$id_cible_cac'";
 															$res = $mysqli->query($sql);
 															$tab = $res->fetch_assoc();
 															
 															$nom_cible_cac = $tab["nom_batiment"];
 															
 															$couleur_clan_cible = "black";
+															$pv_instance	= $tab["pv_instance"];
+															if ($pv_instance <= 0)
+																continue;
 														}
 														
 														echo "<option style=\"color:". $couleur_clan_cible ."\" value='".$id_cible_cac.",".$id_arme_cac."'>".$nom_cible_cac." (mat. ".$id_cible_cac.")</option>";
@@ -3933,13 +3956,17 @@ if($dispo == '1' || $admin){
 											$nom_i_bat	= $t_im["nom_instance"];
 											$nom_bat	= $t_im["nom_batiment"];
 											
-											if($camp_bat == '1'){
-												$camp_bat2 		= 'bleu';
-												$image_profil 	= "Nord.gif";
-											}
-											if($camp_bat == '2'){
-												$camp_bat2 		= 'rouge';
-												$image_profil 	= "Sud.gif";
+											switch($camp_bat){
+												case '1':
+													$camp_bat2 		= 'bleu';
+													$image_profil 	= "Nord.gif";
+													break;
+												case '2':
+													$camp_bat2 		= 'rouge';
+													$image_profil 	= "Sud.gif";
+												default:
+													$camp_bat2 		= 'neutre';
+													$image_profil 	= "neutre.gif";
 											}
 											
 											$blason="mini_blason_".$camp_bat2.".gif";
@@ -3967,7 +3994,7 @@ if($dispo == '1' || $admin){
 												echo "<div><a href='action.php?bat=".$idI_bat."&reparer=ok'>Réparer ce bâtiment (5PA)</a></div> ";
 												
 												if (!nation_perso_bat($mysqli, $id_perso, $idI_bat)) {
-													if(batiment_vide($mysqli, $idI_bat) && batiment_pv_capturable($mysqli, $idI_bat) && $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 10 && $type_bat != 11 && $type_bat == 2 && $type_perso == 3){
+													if(batiment_vide($mysqli, $idI_bat) && batiment_pv_capturable($mysqli, $idI_bat)&& $type_bat != 1 && $type_bat != 5 && $type_bat != 7 && $type_bat != 10 && $type_bat != 11 && $type_perso == 3){
 														echo "<div><a href='jouer.php?bat=".$idI_bat."&bat2=".$type_bat."'>Capturer ce bâtiment</a></div>";
 													}
 												}
@@ -3994,7 +4021,7 @@ if($dispo == '1' || $admin){
 												$fond_im 		= $tab["fond_carte"];
 												
 												$nom_terrain 	= get_nom_terrain($fond_im);
-												$cout_pm 		= cout_pm($fond_im);
+												$cout_pm 		= cout_pm($fond_im, $type_perso);
 												
 												//recuperation du type de perso (image)
 												$sql_perso_im = "SELECT * FROM perso WHERE id_perso='$id_perso_im'";
@@ -4180,16 +4207,16 @@ if($dispo == '1' || $admin){
 										
 										$fond_carte = $tab["fond_carte"];
 										
-										$cout_pm = cout_pm($fond_carte);
+										$cout_pm = cout_pm($fond_carte, $type_perso);
 										
-										afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat, $nom_bat, $cout_pm);
+										afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat, $nom_bat, $cout_pm, $type_perso);
 									}
 									else {
 										
 										$fond_im 			= $tab["fond_carte"];
 												
 										$nom_terrain 		= get_nom_terrain($fond_im);
-										$cout_pm_terrain 	= cout_pm($fond_im);
+										$cout_pm_terrain 	= cout_pm($fond_im, $type_perso);
 										
 										// verification s'il y a un objet sur cette case
 										$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y'";
@@ -4428,7 +4455,7 @@ if($dispo == '1' || $admin){
 													// Actions selon le type d'unité
 													
 													// Cavalerie et cavalerie lourde
-													if (($type_perso == 1 || $type_perso == 2 || $type_perso == 7) && $pm_perso >= 4 && !in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
+													if (verif_charge_pm($type_perso, $pm_perso) && !in_train($mysqli, $id_perso) && !in_bat($mysqli, $id_perso)) {
 														// Charge = 999
 														echo '<option value="999">Charger (tous les PA)</option>';
 													}
@@ -4531,8 +4558,8 @@ if($dispo == '1' || $admin){
 									<tr>
 										<td background='../images/background.jpg' align='left' colspan='3'>
 											<?php 
-											echo "<div><a href=\"nouveau_message.php?visu=ok&camp=".$clan_perso."\" target='_blank'><img class='img-fluid' src='../images/Ecrire.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message aux persos de son camp dans sa visu' border=0 /><font face='Playball' size='5'><b>Envoyer un MP à sa visu</b></font></a></div>";
-											echo "<div><a href=\"nouveau_message.php?visu=ok\" target='_blank'><img class='img-fluid' src='../images/porte_voix.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message à tous les persos dans sa visu' border=0 width='100' height='80' /><font face='Playball' size='5'><b>Crier très fort</b></font></a></div>";
+											echo "<div><a href=\"nouveau_message.php?visu=ok&camp=".$clan_perso."\"><img class='img-fluid' src='../images/Ecrire.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message aux persos de son camp dans sa visu' border=0 /><font face='Playball' size='5'><b>Envoyer un MP à sa visu</b></font></a></div>";
+											echo "<div><a href=\"nouveau_message.php?visu=ok\"><img class='img-fluid' src='../images/porte_voix.png' data-toggle='tooltip' data-placement='top' title='Envoyer un message à tous les persos dans sa visu' border=0 width='100' height='80' /><font face='Playball' size='5'><b>Crier très fort</b></font></a></div>";
 											?>
 										</td>
 									</tr>
@@ -4593,6 +4620,6 @@ else {
 	$_SESSION = array(); // On écrase le tableau de session
 	session_destroy(); // On détruit la session
 	
-	header("Location:../index2.php");
+	header("Location:../index.php");
 }
 ?>

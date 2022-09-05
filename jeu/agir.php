@@ -164,6 +164,7 @@ if ($verif_id_perso_session) {
 					
 					$nom_perso 		= $t_perso["nom_perso"];
 					$image_perso 	= $t_perso["image_perso"];
+					$perc 			= $t_perso["perception_perso"] + $t_perso["bonusPerception_perso"];
 					$xp_perso 		= $t_perso["xp_perso"];
 					$x_perso 		= $t_perso["x_perso"];
 					$y_perso 		= $t_perso["y_perso"];
@@ -201,7 +202,7 @@ if ($verif_id_perso_session) {
 						$couleur_clan_perso = couleur_clan($clan_perso);
 						
 						// verification si le perso est bien a portée d'attaque			
-						if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
+						if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $perc)) {
 							
 							// recuperation des données du perso cible
 							$t_cible = get_cible($mysqli, $id_cible);
@@ -440,11 +441,31 @@ if ($verif_id_perso_session) {
 										// Bonus defense objets cible 
 										$bonus_defense_objet = get_bonus_defense_objet($mysqli, $id_cible);
 
+										//attaque avec arme 4+ de portée, baisse de précision sur max distance
 										$bonus_precision_distance = 0;
 										if ($porteeMax_arme_attaque > 3) {
 											$distance = get_distance($mysqli, $id, $id_cible);
-											if ($distance == $porteeMax_arme_attaque)
+											//on récupère le bonus de portée si le joueur n'est pas dans un batiment
+											$fond = get_fond_carte_perso($mysqli, $carte, $id);
+											$bonus_portee = in_bat($mysqli, $id)||empty($fond)?0:get_bonus_portee($fond);
+
+											if ($distance == $porteeMax_arme_attaque + $bonus_portee)
 												$bonus_precision_distance = -15;
+										}
+
+										//En cas de soin, le soigneur ne bénéficie pas du malus de la cible pour toucher plus facilement
+										//Mais obtien un malus en fonction de l'état de celle-ci.
+										if($id_arme_attaque == 10){
+											$pourc_pv_cible = $pv_cible/$pvM_cible*100;
+											if($pourc_pv_cible <=25){
+												$bonus_cible = 0;
+											}else if ($pourc_pv_cible > 25 && $pourc_pv_cible <= 50){
+												$bonus_cible = 5;
+											}else if ($pourc_pv_cible > 50 && $pourc_pv_cible <= 75){
+												$bonus_cible = 10;
+											}else {
+												$bonus_cible = 15;
+											}
 										}
 										
 										$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain - $bonus_defense_objet + $bonus_precision_bat + $bonus_precision_distance;
@@ -536,6 +557,7 @@ if ($verif_id_perso_session) {
 											
 											// mise a jour des xp/pi
 											$model_perso->perso_gain_xp($id, $gain_xp);
+											$gain_xp_tour_perso += $gain_xp;
 											
 											// Passage grade grouillot
 											passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
@@ -646,6 +668,7 @@ if ($verif_id_perso_session) {
 														}
 														$model_perso->infligeDegats($id_voisin, $degats_final);
 														$model_perso->perso_gain_xp($id, $gain_xp);
+														$gain_xp_tour_perso += $gain_xp;
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 
 														$gain_pc = calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible);
@@ -818,6 +841,7 @@ if ($verif_id_perso_session) {
 				
 				$nom_perso 		= $t_perso["nom_perso"];
 				$image_perso 	= $t_perso["image_perso"];
+				$perc 			= $t_perso["perception_perso"] + $t_perso["bonusPerception_perso"];
 				$xp_perso 		= $t_perso["xp_perso"];
 				$x_perso 		= $t_perso["x_perso"];
 				$y_perso 		= $t_perso["y_perso"];
@@ -853,7 +877,7 @@ if ($verif_id_perso_session) {
 					// Récupération de la couleur associée au clan du perso
 					$couleur_clan_perso = couleur_clan($clan_perso);
 					
-					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
+					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $perc)) {
 							
 						// recuperation des données du pnj		
 						$sql = "SELECT pnj.id_pnj, nom_pnj, degatMin_pnj, degatMax_pnj, pv_i, x_i, y_i, bonus_i, pm_pnj, pv_i, pvMax_pnj, protec_pnj 
@@ -1010,7 +1034,19 @@ if ($verif_id_perso_session) {
 										$bonus_precision_bat = -30;
 									}
 
-									$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain + $bonus_precision_bat;
+									//attaque avec arme 4+ de portée, baisse de précision sur max distance
+									$bonus_precision_distance = 0;
+									if ($porteeMax_arme_attaque > 3) {
+										$distance = get_distance($mysqli, $id, $id_cible);
+										//on récupère le bonus de portée si le joueur n'est pas dans un batiment
+										$fond = get_fond_carte_perso($mysqli, $carte, $id);
+										$bonus_portee = in_bat($mysqli, $id)||empty($fond)?0:get_bonus_portee($fond);
+
+										if ($distance == $porteeMax_arme_attaque + $bonus_portee)
+											$bonus_precision_distance = -15;
+									}
+
+									$precision_final = $precision_arme_attaque - $bonus_cible - $bonus_defense_terrain + $bonus_precision_bat + $bonus_precision_distance;
 
 									$bonus_precision_objet = 0;
 									if ($porteeMax_arme_attaque == 1) {
@@ -1023,7 +1059,7 @@ if ($verif_id_perso_session) {
 									$precision_final += $bonus_precision_objet;
 
 									echo "Votre score de touche : ".$touche."<br>";
-									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque;
+									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque."  -- Bonus precision distance : ".$bonus_precision_distance;
 									if ($bonus_precision_bat != 0) {
 										echo " -- Bonus du batiment : ".$bonus_precision_bat;
 									}
@@ -1351,6 +1387,7 @@ if ($verif_id_perso_session) {
 				
 				$nom_perso 		= $t_perso["nom_perso"];
 				$image_perso 	= $t_perso["image_perso"];
+				$perc 			= $t_perso["perception_perso"] + $t_perso["bonusPerception_perso"];
 				$xp_perso 		= $t_perso["xp_perso"];
 				$x_perso 		= $t_perso["x_perso"];
 				$y_perso 		= $t_perso["y_perso"];
@@ -1385,7 +1422,7 @@ if ($verif_id_perso_session) {
 					// Récupération de la couleur associée au clan du perso
 					$couleur_clan_perso = couleur_clan($clan_perso);
 					
-					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $per_perso)) {
+					if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $perc)) {
 					
 						$coutPa_attaque=$coutPa_arme_attaque;
 								
@@ -1532,7 +1569,9 @@ if ($verif_id_perso_session) {
 								
 									echo "Vous avez lancé une attaque sur <b>$nom_batiment [$id_cible]</b>.<br>";
 									
-									$gain_xp = mt_rand(1,3);
+									$gain_xp = 1;
+									if ($camp_instance != $clan_perso)
+										$gain_xp = mt_rand(1,3);
 									
 									if ($gain_xp_tour_perso + $gain_xp > 20) {
 										$gain_xp = 20 - $gain_xp_tour_perso;
@@ -1561,7 +1600,19 @@ if ($verif_id_perso_session) {
 										$bonus_precision_bat = -30;
 									}							
 									
-									$precision_final = $precision_arme_attaque + $bonus_precision_bat;
+									//attaque avec arme 4+ de portée, baisse de précision sur max distance
+									$bonus_precision_distance = 0;
+									if ($porteeMax_arme_attaque > 3) {
+										$distance = get_distance($mysqli, $id, $id_cible);
+										//on récupère le bonus de portée si le joueur n'est pas dans un batiment
+										$fond = get_fond_carte_perso($mysqli, $carte, $id);
+										$bonus_portee = in_bat($mysqli, $id)||empty($fond)?0:get_bonus_portee($fond);
+										print($distance.' '.($porteeMax_arme_attaque + $bonus_portee));
+										if ($distance == $porteeMax_arme_attaque + $bonus_portee)
+											$bonus_precision_distance = -15;
+									}
+
+									$precision_final = $precision_arme_attaque + $bonus_precision_bat + $bonus_precision_distance;
 									
 									$bonus_precision_objet = 0;
 									if ($porteeMax_arme_attaque == 1) {
@@ -1574,7 +1625,7 @@ if ($verif_id_perso_session) {
 									$precision_final += $bonus_precision_objet;
 									
 									echo "Votre score de touche : ".$touche."<br>";
-									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Bonus Précision objet : ".$bonus_precision_objet."";
+									echo "Précision : ".$precision_final. " (Base arme : ".$precision_arme_attaque." -- Bonus Précision objet : ".$bonus_precision_objet."  -- Bonus precision distance : ".$bonus_precision_distance;
 									if ($bonus_precision_bat != 0) {
 										echo " -- Bonus du batiment : ".$bonus_precision_bat."";
 									}
@@ -1602,6 +1653,7 @@ if ($verif_id_perso_session) {
 										}
 										
 										// Canon d'artillerie
+										$bonus_degats_canon = 0;
 										if ($id_arme_attaque == 13 || $id_arme_attaque == 22) {
 											// Bonus dégats 20D10
 											$bonus_degats_canon = calcul_des_attaque(20, 10);
@@ -1627,7 +1679,7 @@ if ($verif_id_perso_session) {
 											// Passage grade grouillot
 											passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 										}
-											
+
 										// maj evenement
 										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";
 										$mysqli->query($sql);					
@@ -1641,6 +1693,10 @@ if ($verif_id_perso_session) {
 										$x_cible 		= $tab["x_instance"];
 										$y_cible 		= $tab["y_instance"];
 										$id_batiment 	= $tab["id_batiment"];
+
+										// Gain pc sur attaque d'une tour de guet d'un autre camp
+										if ($camp_instance != $clan_perso && $id_batiment == 2)
+											gain_pc_chef($mysqli, $id, 1);
 										
 										/* Début du traitement de la destruction du batiment*/
 										// il est detruit
@@ -1779,7 +1835,7 @@ if ($verif_id_perso_session) {
 													}
 													
 													// maj dernier tombé
-													$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_p')";
+													$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_p', $clan_p, $id, $clan_perso)";
 													$mysqli->query($sql);
 													
 												}
@@ -1822,16 +1878,16 @@ if ($verif_id_perso_session) {
 											
 											// Gain points de victoire
 											if ($id_batiment == 9) {
-												// FORT -> 400
-												$gain_pvict = 400;
+												// FORT -> 500
+												$gain_pvict = 500;
 											}
 											else if ($id_batiment == 8) {
 												// FORTIN -> 100
 												$gain_pvict = 100;
 											}
 											else if ($id_batiment == 11) {
-												// GARE -> 75
-												$gain_pvict = 75;
+												// GARE -> 50
+												$gain_pvict = 50;
 											}
 											else if ($id_batiment == 7) {
 												// HOPITAL -> 10
@@ -1864,6 +1920,13 @@ if ($verif_id_perso_session) {
 												$mysqli->query($sql);
 												
 											}
+
+											// L'arme fait des dégats de zone
+											if ($degatZone_arme_attaque) {
+												$degats_collat = floor(($degats_final - $bonus_degats_canon) / 3);
+												check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+											}
+
 												
 											echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 										}

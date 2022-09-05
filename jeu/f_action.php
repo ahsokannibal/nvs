@@ -56,7 +56,12 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 		$t_rail2 = explode(',',$t_rail);
 		$x_rail = $t_rail2[0];
 		$y_rail = $t_rail2[1];
-		$fond_rail = $t_rail2[2];
+
+		// récupération du rail à détruire
+		$sql = "SELECT fond_carte FROM carte WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
+		$res = $mysqli->query($sql);
+		$t = $res->fetch_assoc();
+		$fond_rail = $t['fond_carte'];
 		
 		// verification possibilité construction rail
 		$verif_construction_rail = verification_construction_rail($mysqli, $x_rail, $y_rail);
@@ -91,6 +96,12 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 				$cout_pv = 0;
 				$image_rail = "rail_".$num_rail.".gif";
 			}
+			else if ($num_rail == '8') {
+				// eau peu profonde
+				$cout_pa = 8;
+				$cout_pv = 0;
+				$image_rail = "railP.gif";
+			}
 			else {
 				// plaine
 				$cout_pa = 4;
@@ -104,11 +115,13 @@ function construire_rail($mysqli, $t_rail, $id_perso, $carte){
 				$sql = "UPDATE $carte SET fond_carte='$image_rail' WHERE x_carte='$x_rail' AND y_carte='$y_rail'";
 				$mysqli->query($sql);
 				
-				$gain_xp = rand(1,3);
+				$gain_xp = rand(3,5);
 				
 				// maj pa perso 
 				$sql = "UPDATE perso SET pa_perso = pa_perso - $cout_pa, pv_perso = pv_perso - $cout_pv, xp_perso = xp_perso + $gain_xp, pi_perso = pi_perso + $gain_xp WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
+
+				gain_pc_chef($mysqli, $id_perso, 1);
 				
 				//mise a jour de la table evenement
 				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a construit <b>rail</b>',NULL,'',' - gain de $gain_xp XP/PI',NOW(),'0')";
@@ -492,7 +505,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 					AND x_carte <= $x_bat + $distance_min_pont
 					AND y_carte >= $y_bat - $distance_min_pont
 					AND y_carte <= $y_bat + $distance_min_pont
-					AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
+					AND (fond_carte='b5b.png' OR fond_carte='b5r.png' OR fond_carte='b5g.png')
 					AND save_info_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
 		$res = $mysqli->query($sql);
 		$verif_distance_pont = $res->num_rows;
@@ -507,6 +520,7 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 					AND y_carte <= $y_bat + $distance_min_bat
 					AND fond_carte!='b5b.png'
 					AND fond_carte!='b5r.png'
+					AND fond_carte!='b5g.png'
 					AND idPerso_carte >= 50000 AND idPerso_carte < 200000";
 		$res = $mysqli->query($sql);
 		$verif_distance_pont_bat = $res->num_rows;
@@ -535,7 +549,7 @@ function get_cases_pont($mysqli, $x_pont, $y_pont, $ban_id_pont) {
 				AND x_carte <= $x_pont + 1
 				AND y_carte >= $y_pont - 1
 				AND y_carte <= $y_pont + 1
-				AND (fond_carte='b5b.png' OR fond_carte='b5r.png')
+				AND (fond_carte='b5b.png' OR fond_carte='b5r.png'  OR fond_carte='b5g.png')
 				AND coordonnees NOT IN (SELECT coordonnees FROM carte WHERE x_carte=$x_pont AND y_carte=$y_pont)
 				AND save_info_carte NOT IN ( '" . implode( "', '" , $ban_id_pont ) . "' )";
 	$res = $mysqli->query($sql);
@@ -627,6 +641,10 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 			$bat_camp = "g";
 		}
 		
+		if($id_bat == '5'){
+			$bat_camp = "g";
+		}
+		
 		$verif_genie = false;
 		if ($id_bat == 1) {
 			$verif_genie = true;
@@ -697,7 +715,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 								
 								if ($verif_fond_carte) {								
 								
-									$gain_xp = $gain_xp = rand(min_gain_xp_construction($id_bat), max_gain_xp_construction($id_bat));
+									$gain_xp = rand(min_gain_xp_construction($id_bat), max_gain_xp_construction($id_bat));
+									$gain_pc = gain_pc_construction($id_bat);
 									
 									if ($gain_xp_tour_perso + $gain_xp > 20) {
 										$gain_xp = 0;
@@ -749,6 +768,8 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 														$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa , or_perso=or_perso-$coutOr, xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id_perso'";
 														$mysqli->query($sql);
 													}
+
+													gain_pc_chef($mysqli, $id_perso, $gain_pc);
 													
 													$pv_bat = rand($pvMin, $pvMin * 2);
 													$img_bat = "b".$id_bat."".$bat_camp.".png";
@@ -766,6 +787,10 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 														$t = $res->fetch_assoc();
 														
 														$fond_carte_construction = $t['fond_carte'];
+														
+														if ($id_bat == 5) {// neutralité du pont
+															$camp_perso = 0;
+														}
 														
 														// mise a jour de la table instance_bat
 														$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, camp_origine_instance, contenance_instance, terrain_instance) 
@@ -1290,7 +1315,11 @@ function action_reparer_bat($mysqli, $id_perso, $id_cible, $id_action){
 			
 				// calcul gain xp
 				$gain_xp = rand(1,3);
-				
+
+				if ($verif_gc && $genie_perso == 1) {
+					$gain_xp = $gain_xp *2;
+				}
+
 				if($camp_bat != $camp_perso){
 					$gain_xp = 1;
 				}
@@ -1806,21 +1835,27 @@ function action_dormir($mysqli, $id_perso){
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	
-	$nom_perso 		= $t_p["nom_perso"];
-	$recup_perso 	= $t_p["recup_perso"];
-	$pa_perso 		= $t_p["pa_perso"];
-	$paMax_perso 	= $t_p["paMax_perso"];
-	$pv_perso 		= $t_p["pv_perso"];
-	$pvMax_perso 	= $t_p["pvMax_perso"];
-	$pm_perso 		= $t_p["pm_perso"];
-	$pmMax_perso 	= $t_p["pmMax_perso"];
-	$br_p 			= $t_p["bonusRecup_perso"];
-	$camp 			= $t_p["clan"];
+	$nom_perso        = $t_p["nom_perso"];
+	$recup_perso      = $t_p["recup_perso"];
+	$pa_perso         = $t_p["pa_perso"];
+	$paMax_perso      = $t_p["paMax_perso"];
+	$pv_perso         = $t_p["pv_perso"];
+	$pvMax_perso      = $t_p["pvMax_perso"];
+	$pm_perso         = $t_p["pm_perso"];
+	$pmMax_perso      = $t_p["pmMax_perso"];
+	$bonusRecup_perso = $t_p["bonusRecup_perso"];
+	$camp             = $t_p["clan"];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
 	
-	$gain_pv = $recup_perso * 2;
+	$bonus_recup_bat = get_bonus_recup_bat_perso($mysqli, $id_perso);
+	$bonus_recup_terrain = get_bonus_recup_terrain_perso($mysqli, $x_perso, $y_perso);
+	
+	$bonusRecup_perso += $bonus_recup_bat;
+	$bonusRecup_perso += $bonus_recup_terrain;
+	
+	$gain_pv = ($recup_perso + $bonusRecup_perso)* 2;
 	
 	// test pa
 	if($pa_perso >= $paMax_perso && $pm_perso >= $pmMax_perso){
@@ -1899,11 +1934,11 @@ function action_marcheForcee($mysqli, $id_perso, $nb_points_action, $coutPa_acti
 				$mysqli->query($sql);
 				
 				// maj dernier tombé
-				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso')";
+				$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_perso', $camp, $id_perso, $camp)";
 				$mysqli->query($sql);
 				
 				// Quand un grouillot meurt, il perd tout ses Pi
-				$sql = "UPDATE perso SET pi_perso = 0 WHERE id_perso='$id_perso'";
+				$sql = "UPDATE perso SET xp_perso=xp_perso-pi_perso, pi_perso=0 WHERE id_perso='$id_perso'";
 				$mysqli->query($sql);
 				
 				echo "<br /><center>En tentant de puiser dans vos dernières resources pour continuer d'avancer, les forces vous lachent et vous vous effondrez...</center><br />";
@@ -3344,7 +3379,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 		$poid_objet = $t["poids_arme"];
 	}
 	
-	if($nb){
+	if($nb && intval($nb)>=intval($quantite)){
 		
 		$coutPa = 1;
 		
@@ -3740,8 +3775,13 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 
 	// Bonus charge 30 pour cav lourde, 20 pour cav légère
 	$base_bonus_degats_charge = 30;
+	$diminution_bonus_degats_charge = 10;
 	if ($type_perso == 7)
 		$base_bonus_degats_charge = 20;
+	else if ($type_perso == 3) {
+		$base_bonus_degats_charge = 20;
+		$diminution_bonus_degats_charge = 5;
+	}
 	
 	// Mise à jour du perso
 	$sql = "UPDATE perso SET pm_perso = pm_perso - $nb_deplacements, x_perso = $x_perso_final, y_perso = $y_perso_final WHERE id_perso='$id_perso'";
@@ -3809,6 +3849,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		$couleur_clan_cible = 'black';
 		
 		$gain_pc_cible = 0;
+
+		// maj dernierAttaquant_i
+		$sql = "UPDATE instance_pnj SET dernierAttaquant_i = $id_perso WHERE idInstance_pnj = '$idPerso_carte'";
+		$mysqli->query($sql);
 		
 	} else {
 	
@@ -3906,7 +3950,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 				// Le perso touche sa cible
 				
 				// calcul des dégats
-				$bonus_degats_charge = max(0, $base_bonus_degats_charge - $nb_attaque*10);
+				$bonus_degats_charge = max(0, $base_bonus_degats_charge - $nb_attaque*$diminution_bonus_degats_charge);
 				$degats = calcul_des_attaque($degats_arme, $valeur_des_arme) - $protec_cible + $bonus_degats_charge;
 				
 				$degats_tmp = calcul_des_attaque($degats_arme, $valeur_des_arme);
@@ -4007,7 +4051,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 					
 					if ($idPerso_carte < 50000) {
 						// Perte or 
-						$calcul_perte_or = floor(($or_cible * 30) / 100);
+						$calcul_perte_or = gain_po_mort($or_cible);
 						
 						// MAJ perte thunes cible
 						$sql = "UPDATE perso SET or_perso = or_perso - $calcul_perte_or WHERE id_perso='$idPerso_carte'";
@@ -4113,19 +4157,18 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 							// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
 							// Calcul PI
 							$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);
-							$pi_perso_fin 	= $pi_perso_cible - $pi_perdu;
 							
 							// Calcul PC
 							$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
 							$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
 						}
 						else {
-							$pi_perso_fin = floor(($pi_perso_cible * 60) / 100);
+							$pi_perdu 		= floor(($pi_perso_cible * 40) / 100);
 							$pc_perso_fin = $pc_perso_cible;
 						}
 						
 						// maj stats / XP / PI / PC de la cible
-						$sql = "UPDATE perso SET pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
+						$sql = "UPDATE perso SET xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$idPerso_carte'";
 						$mysqli->query($sql);
 						
 						// maj stats du perso
@@ -4139,12 +4182,12 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						}
 						
 						// maj dernier tombé
-						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$idPerso_carte')";
+						$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$idPerso_carte', $clan_cible, $id_perso, $clan)";
 						$mysqli->query($sql);
 					}
 					else {
 						// evenement perso capture
-						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
+						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a tué</b>','$idPerso_carte','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
 						$mysqli->query($sql);
 						
 						// maj cv
@@ -4229,9 +4272,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
  * Fonction permettant d'effectuer une charge vers le haut
  * y + 1
  */
-function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_haut($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4245,11 +4289,11 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4267,7 +4311,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4334,9 +4378,10 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_per
  * Fonction de charge vers la direction haut gauche
  * x - 1 et y + 1
  */
-function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4350,11 +4395,11 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4372,7 +4417,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4439,9 +4484,10 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
  * Fonction de charge vers la direction gauche
  * x - 1
  */
-function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4455,11 +4501,11 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4477,7 +4523,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4544,9 +4590,10 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
  * Fonction de charge vers la direction bas gauche
  * x - 1 et y - 1
  */
-function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4560,11 +4607,11 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4582,7 +4629,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4648,9 +4695,10 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
  * Fonction de charge vers la direction bas
  * y - 1 
  */
-function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_bas($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4664,11 +4712,11 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4686,7 +4734,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4752,9 +4800,10 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_pers
  * Fonction de charge vers la direction bas droite
  * x + 1 et y - 1
  */
-function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_bas_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4768,11 +4817,11 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4790,7 +4839,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4856,9 +4905,10 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $
  * Fonction de charge vers la direction droite
  * x + 1
  */
-function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4872,11 +4922,11 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4894,7 +4944,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -4960,9 +5010,10 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_p
  * Fonction de charge vers la direction haut droite
  * x + 1 et y + 1
  */
-function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
+function charge_haut_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
+	$distance_charge_min = distance_min_charge_pm($type_perso);
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4976,11 +5027,11 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 		$occupee_carte	= $t_charge['occupee_carte'];
 		$idPerso_carte	= $t_charge['idPerso_carte'];
 		
-		if ($occupee_carte || ($fond_carte != '1.gif' && strpos($fond_carte, 'rail'))) {
+		if ($occupee_carte || ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail'))) {
 			
 			// Charge terminée
 			
-			if ($i <= 3) {
+			if ($i < $distance_charge_min) {
 				
 				// Mise à jour position perso sur carte
 				$nb_deplacements = $i - 1;
@@ -4998,7 +5049,7 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 				$mysqli->query($sql);
 					
 				// Charge complète mais cible pas sur plaine => pas d'attaques
-				if ($fond_carte != '1.gif') {
+				if ($fond_carte != '1.gif' && false === strpos($fond_carte, 'rail')) {
 					
 					// Mise à jour position perso sur carte
 					$nb_deplacements = $i - 1;
@@ -5059,4 +5110,5 @@ function charge_haut_droite($mysqli, $id_perso, $nom_perso, $x_perso, $y_perso, 
 		}
 	}
 }
+
 ?>

@@ -7,8 +7,6 @@ require_once("f_combat.php");
 
 $mysqli = db_connexion();
 
-define ("NB_PNJ_A_DEPLACER", 50);
-
 // Récupération de la clef secrete
 $sql = "SELECT valeur_config FROM config_jeu WHERE code_config='clef_secrete'";
 $res = $mysqli->query($sql);
@@ -19,6 +17,26 @@ $clef_secrete = $t['valeur_config'];
 if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 
 	$nb_deplacer = 0;
+	$nb_a_deplacer = 0;
+
+	// recuperation du nombre total de pnj
+	$sql = "SELECT idInstance_pnj, pv_i FROM instance_pnj ORDER BY idInstance_pnj";
+	$res = $mysqli->query($sql);
+	$numT = $res->num_rows;
+
+	// 1/7 pnj doit se déplacer
+	$nb_a_deplacer = ceil($numT / 7);
+
+	// Récupération du cycle actuel
+	$sql = "SELECT DISTINCT cycle_mvt FROM instance_pnj";
+	$res = $mysqli->query($sql);
+	$c_id = $res->fetch_assoc()["cycle_mvt"];
+
+	// MAJ du cycle
+	$cycle = $c_id +1;
+
+	$sql = "UPDATE instance_pnj SET cycle_mvt=$cycle";
+	$mysqli->query($sql);
 
 	// recuperation de pnj qui ne se sont pas encore deplacés
 	$sql = "SELECT idInstance_pnj, pv_i FROM instance_pnj WHERE deplace_i='0' ORDER BY idInstance_pnj";
@@ -28,18 +46,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 	echo $num."<br>";
 
 	// tout les pnj se sont deplacés
-	if ($num == 0){
+	if ($num == 0 && $cycle >= 8){
 
 		echo "tout les pnj se sont deplacés<br>";
 		
 		// on remet les pnj a l'etat non deplacé
-		$sql = "UPDATE instance_pnj SET deplace_i='0'";
+		$sql = "UPDATE instance_pnj SET deplace_i='0', cycle_mvt='0'";
 		$mysqli->query($sql);
 	}
 
 	while ($t_id = $res->fetch_assoc()) {
 		
-		if($nb_deplacer == NB_PNJ_A_DEPLACER || $nb_deplacer == $num){
+		if($nb_deplacer == $nb_a_deplacer || $nb_deplacer == $num){
 			echo "fin deplacement pnj<br>";
 			break;
 		}
@@ -75,10 +93,15 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			$sql = "UPDATE instance_pnj SET pv_i=pv_i+$recup WHERE idInstance_pnj=$id_i_pnj";
 			$mysqli->query($sql);
 		}
-		else {
+		else if ($pv_i < $pvMax) {
 			$sql = "UPDATE instance_pnj SET pv_i=$pvMax WHERE idInstance_pnj=$id_i_pnj";
 			$mysqli->query($sql);
 		}
+		else {
+			$sql = "UPDATE instance_pnj SET dernierAttaquant_i=0 WHERE idInstance_pnj=$id_i_pnj";
+			$mysqli->query($sql);
+		}
+
 		
 		// on recupere les infos de l'instance
 		$sql = "SELECT pv_i, pm_i, x_i, y_i, dernierAttaquant_i FROM instance_pnj WHERE idInstance_pnj=$id_i_pnj";
@@ -153,19 +176,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 								// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 								// Calcul PI
 								$pi_perdu 		= floor(($pi_cible * 5) / 100);
-								$pi_perso_fin 	= $pi_cible - $pi_perdu;
 								
 								// Calcul PC
 								$pc_perdu		= floor(($pc_cible * 5) / 100);
 								$pc_perso_fin	= $pc_cible - $pc_perdu;
 							}
 							else {
-								$pi_perso_fin = floor(($pi_cible * 60) / 100);
+								$pi_perdu 		= floor(($pi_cible * 40) / 100);
 								$pc_perso_fin = $pc_cible;
 							}
 		
 							// MAJ perte xp/po/stat cible
-							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 							$mysqli->query($sql);
 							
 							// maj carte
@@ -181,7 +203,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 							$mysqli->query($sql);
 							
 							// maj dernier tombé
-							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 							$mysqli->query($sql);
 						}	
 					}
@@ -306,19 +328,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_cible * 5) / 100);
-										$pi_perso_fin 	= $pi_cible - $pi_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_cible * 5) / 100);
 										$pc_perso_fin	= $pc_cible - $pc_perdu;
 									}
 									else {
-										$pi_perso_fin = floor(($pi_cible * 60) / 100);
+										$pi_perdu 		= floor(($pi_cible * 40) / 100);
 										$pc_perso_fin = $pc_cible;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 									
 									// maj carte
@@ -334,7 +355,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									$mysqli->query($sql);
 									
 									// maj dernier tombé
-									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 									$mysqli->query($sql);
 								}	
 							}
@@ -435,19 +456,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -463,7 +483,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -569,19 +589,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -597,7 +616,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -716,19 +735,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_cible * 5) / 100);
-										$pi_perso_fin 	= $pi_cible - $pi_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_cible * 5) / 100);
 										$pc_perso_fin	= $pc_cible - $pc_perdu;
 									}
 									else {
-										$pi_perso_fin = floor(($pi_cible * 60) / 100);
+										$pi_perdu 		= floor(($pi_cible * 40) / 100);
 										$pc_perso_fin = $pc_cible;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 									
 									// maj carte
@@ -744,7 +762,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									$mysqli->query($sql);
 									
 									// maj dernier tombé
-									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 									$mysqli->query($sql);
 								}	
 							}
@@ -844,19 +862,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -872,7 +889,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -985,19 +1002,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -1013,7 +1029,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}
@@ -1133,19 +1149,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 												// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 												// Calcul PI
 												$pi_perdu 		= floor(($pi_cible * 5) / 100);
-												$pi_perso_fin 	= $pi_cible - $pi_perdu;
 												
 												// Calcul PC
 												$pc_perdu		= floor(($pc_cible * 5) / 100);
 												$pc_perso_fin	= $pc_cible - $pc_perdu;
 											}
 											else {
-												$pi_perso_fin = floor(($pi_cible * 60) / 100);
+												$pi_perdu 		= floor(($pi_cible * 40) / 100);
 												$pc_perso_fin = $pc_cible;
 											}
 						
 											// MAJ perte xp/po/stat cible
-											$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+											$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 											$mysqli->query($sql);
 											
 											// maj carte
@@ -1161,7 +1176,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											$mysqli->query($sql);
 											
 											// maj dernier tombé
-											$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+											$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 											$mysqli->query($sql);
 										}	
 									}
@@ -1276,19 +1291,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_cible * 5) / 100);
-										$pi_perso_fin 	= $pi_cible - $pi_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_cible * 5) / 100);
 										$pc_perso_fin	= $pc_cible - $pc_perdu;
 									}
 									else {
-										$pi_perso_fin = floor(($pi_cible * 60) / 100);
+										$pi_perdu 		= floor(($pi_cible * 40) / 100);
 										$pc_perso_fin = $pc_cible;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 									$mysqli->query($sql);
 									
 									// maj carte
@@ -1304,7 +1318,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									$mysqli->query($sql);
 									
 									// maj dernier tombé
-									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 									$mysqli->query($sql);
 								}	
 							}
@@ -1425,19 +1439,18 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 											// Calcul PI
 											$pi_perdu 		= floor(($pi_cible * 5) / 100);
-											$pi_perso_fin 	= $pi_cible - $pi_perdu;
 											
 											// Calcul PC
 											$pc_perdu		= floor(($pc_cible * 5) / 100);
 											$pc_perso_fin	= $pc_cible - $pc_perdu;
 										}
 										else {
-											$pi_perso_fin = floor(($pi_cible * 60) / 100);
+											$pi_perdu 		= floor(($pi_cible * 40) / 100);
 											$pc_perso_fin = $pc_cible;
 										}
 					
 										// MAJ perte xp/po/stat cible
-										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
+										$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible'";
 										$mysqli->query($sql);
 										
 										// maj carte
@@ -1453,7 +1466,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$mysqli->query($sql);
 										
 										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible')";
+										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible', $clan_cible, $id_i_pnj, 0)";
 										$mysqli->query($sql);
 									}	
 								}

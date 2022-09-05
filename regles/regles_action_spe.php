@@ -58,6 +58,9 @@
 						<li class="nav-item">
 							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
 						</li>
+						<li class="nav-item">
+							<a href="../jeu/jouer.php"> <input type="button" value="Retour au jeu"> </a>
+						</li>
 					</ul>
 				</div>
 			</nav>
@@ -73,91 +76,108 @@
 			<div class="row">
 				<div class="col-12">
 					<div id="bousculade">
-					<h2>La bousculade</h2>
-La bousculade utilise 3 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculez (2 PM si celui que vous bousculez se trouvait dans une forêt, 4 PM si dans la montagne, etc..).<br />
-Le bousculé recevra un malus de déplacement correspondant à la valeur du terrain sur laquel il est bousculé. S'il est à 0 PM, le malus se reportera quand même sur le tour suivant <i>(ceci ne s'applique pas pour les bousculades entre personnages du même camp)</i>.<br />
-<b><u>Attention ! Les chances de réussir une bousculade sur un ennemi sont de 66% !</u></b><br /> 
-<b><u>Attention ! Tout le monde ne peut pas bousculer n'importe qui :</u></b> 
-					<ul>
-						<li>Une infanterie peut bousculer une infanterie, un soigneur et pousser une artillerie.</li>
-						<li>Un soigneur ne peut pousser qu'une infanterie ou un autre soigneur.</li>
-						<li>Une cavalerie peut bousculer une infanterie ou une cavalerie.</li>
-						<li>Un canon peut bousculer une infanterie ou un soigneur.</li>
-					</ul>
-<b>Les bousculades sur les unités alliés leur coûtent 1 PA à chaque fois mais ne provoque pas de malus en PM.</b><br />
-Pour bousculer une unité, il vous suffit de vous déplacer sur elle (avec les flèches seulement pour l'instant) et si les conditions sont réuni, alors la bousculade se fera automatiquement.
-<br /><br />
+						<h2>La bousculade</h2>
+						<p>LLa bousculade utilise 3 PA plus les PM de mouvement du terrain où se trouvait le personnage que vous bousculez (2 PM si celui que vous bousculez se trouvait dans une forêt, 4 PM si dans la montagne, etc..). <br />
+						Le bousculé recevra un malus de déplacement correspondant à la valeur du terrain sur laquel il est bousculé. S'il est à 0 PM, le malus se reportera quand même sur le tour suivant <i>(ceci ne s'applique pas pour les bousculades entre personnages du même camp)</i>.<br />
+						<b><u>Attention ! Les chances de réussir une bousculade sur un ennemi sont de 66% !</u></b><br /> 
+						<b><u>Attention ! Tout le monde ne peut pas bousculer n'importe qui :</u></b> 
+						<ul>
+							<li>Une infanterie peut bousculer une infanterie, un soigneur et pousser une artillerie.</li>
+							<li>Un soigneur ne peut pousser qu'une infanterie ou un autre soigneur.</li>
+							<li>Une cavalerie peut bousculer une infanterie ou une cavalerie.</li>
+							<li>Un canon peut bousculer une infanterie ou un soigneur.</li>
+						</ul>
+						</p>
+
+						<p><b>Les bousculades sur les unités alliés leur coûtent 1 PA à chaque fois mais ne provoque pas de malus en PM.</b><br />
+						Pour bousculer une unité, il vous suffit de vous déplacer sur elle (avec les flèches seulement pour l'instant) et si les conditions sont réuni, alors la bousculade se fera automatiquement.
+						</p>
 					</div>
+
 					<div id="charge">
 					<h2>Charger</h2>
-La charge est une option de combat disponible uniquement pour les cavaleries. Celles ci s'élancent dans la plaine et vont enfoncer les lignes adverses infligeant par la même occasion de terribles dégâts.<br />
-<b>Pour charger, il faut avoir tous ses PA et au moins 4 PM.</b><br />
-La charge s'effectue sur une distance max de 5 cases et avec <b>3 cases d'élan minimum</b>.<br />
-Une fois au contact et dans la limite de vos PA, vos attaques au corps-à-corps seront automatiquement effectuées avec un bonus de +30 dégâts pour la première attaque, de +20 dégâts pour la seconde, de +10 dégât pour la troisième et de +0 pour la quatrième et les suivantes.<br />
-A la fin de la charge, les PA non utilisés pour les attaques ne sont pas supprimés (exemple : un cavalier avec 10PA qui charge au sabre, fera 2 attaques à 4PA et il lui restera 2 PA à la fin de la charge).<br />
-Une cavalerie qui charge un bâtiment perd 40 PV et ne fait aucun dégât.<br />
-Une cavalerie ne peut charger qu'en plaine ou dans les steppes, et AUCUN obstacle (les routes et rails ne sont pas considéré comme un obstacle) ne doit se trouver sur sa route, la cible doit aussi se trouver en plaine ou sur une steppe.<br />
-Lors d'une charge complète de cavalerie, si toutes les attaques réussissent, un bonus de 1PC sera accordé.
-<br /><br />
+						<p>La charge est une option de combat disponible pour les cavaleries et les infanteries. Celles ci s'élancent dans la plaine et vont enfoncer les lignes adverses infligeant par la même occasion de terribles dégâts.<br />
+
+						<ul>
+							<li><b>Pour les cavaleries:</b> (Lourde et chef de bataillons), tous ses PA et au moins 4 PM;  La charge s'effectue sur une distance max de 5 cases et avec 3 cases d'élan minimum.</li>
+							<li><b>Pour les infanteries:</b> tous ses PA et au moins 2 PM; La charge s'effectue sur une distance max de 5 cases et avec 1 cases d'élan minimum.</li>
+						</ul>
+
+						Une fois au contact et dans la limite de vos PA, vos attaques au corps-à-corps seront automatiquement effectuées avec un bonus de :<br /><br />
+
+						<ul>
+							<li><b>Pour les cavaleries:</b> +30 dégâts pour la première attaque, de +20 dégâts pour la seconde, de +10 dégât pour la troisième et de +0 pour la quatrième et les suivantes.</li>
+							<li><b>Pour les infanteries:</b> +20 dégâts pour la première attaque, de +15 dégâts pour la seconde, de +10 dégât pour la troisième et de +0 pour la quatrième et les suivantes.</li>
+						</ul>
+						
+						A la fin de la charge, les PA non utilisés pour les attaques ne sont pas supprimés (exemple : un cavalier avec 10PA qui charge au sabre, fera 2 attaques à 4PA et il lui restera 2 PA à la fin de la charge).<br />
+						Une cavalerie qui charge un bâtiment perd 40 PV et ne fait aucun dégât.<br />
+						Une unité ne peut charger qu'en plaine ou dans les steppes, et AUCUN obstacle (les rails ne sont pas considéré comme un obstacle) ne doit se trouver sur sa route, la cible doit aussi se trouver en plaine ou sur une steppe.<br />
+						Lors d'une charge complète de <b>cavalerie</b>, si toutes les attaques réussissent, un bonus de 1PC sera accordé.
+						</p>
 					</div>
+
 					<div id="sieste">
-					<h2>La sieste</h2>
-Un personnage blessé peut décider d'aller se reposer. Cette action n'est disponible que lorsque vous avez tous vos PA et tous vos PM. En échange de toutes ces caractéristiques, votre personnage gagne immédiatement un nombre de PV égal au double de votre récupération.<br />
-<b>Attention, la sieste prend en compte votre récupération, et donc ne prend pas en compte les effets des objets de soins.</b>
-<br /><br />
+						<h2>La sieste</h2>
+						<p>Un personnage blessé peut décider d'aller se reposer. Cette action n'est disponible que lorsque vous avez tous vos PA et tous vos PM. En échange de toutes ces caractéristiques, votre personnage gagne immédiatement un nombre de PV égal au triple de votre récupération.<br />
+						<b>Attention, la sieste prend en compte votre récupération, et donc ne prend pas en compte les effets des objets de soins.</b></p>
 					</div>
+
 					<div id="barricader">
-					<h2>Barricader</h2>
-Les unités d'infanterie peuvent mettre en place des barricades qui sont des structures défensives puissantes et capables d'empêcher les cavaleries de charger.<br />
-Pour ce faire, elles doivent disposer de tous leurs PA, car la construction d'une barricade coûte 10 PA et ne peut être effectuée que sur une case "plaine".<br />
-Les barricades apparaissent sur la carte avec 25pv/250. Il est possible de les réparer pour 5PA. 
-<br /><br />
+						<h2>Barricader</h2>
+						<p>Les unités d'infanterie peuvent mettre en place des barricades qui sont des structures défensives puissantes et capables d'empêcher les cavaleries de charger.<br />
+						Pour ce faire, elles doivent disposer de tous leurs PA, car la construction d'une barricade coûte 10 PA et ne peut être effectuée que sur une case "plaine".<br />
+						Les barricades apparaissent sur la carte avec 25pv/250. Il est possible de les réparer pour 5PA.</p>
 					</div>
+
 					<div id="saboter">
-					<h2>Saboter</h2>
-Lorsqu'on se trouve à proximité d'une case de pont, une action "Saboter" apparait (accéssible pour toutes les unités).<br />
-Pour 10PA, cette action, ayant 80% de chance de réussite, sabotera le pont pour entre 50 et 200PV.<br />
-Les unités du génie étant plus efficaces pour saboter un pont, elles feront le double de dégâts ! 
-<br /><br />
+						<h2>Saboter</h2>
+						<p>Lorsqu'on se trouve à proximité d'une case de pont, une action "Saboter" apparait (accessible pour toutes les unités).<br />
+						Pour 10PA, cette action, ayant 80% de chance de réussite, sabotera le pont pour entre 50 et 200PV.<br />
+						Les unités du génie étant plus efficaces pour saboter un pont, elles feront le double de dégâts !</p>
 					</div>
+
 					<div id="reparer">
-					<h2>Réparer</h2>
-Lorsqu'on se trouve à proximité d'un bâtiment ou d'un pont, une action "Réparer" apparait (accéssible pour toutes les unités).<br />
-Pour 5PA, cette action, ayant 100% de chance de réussite, réparera le bâtiment ou le pont pour entre 20 et 120PV.<br />
-Les unités du génie étant plus efficaces pour réparer un bâtiment ou un pont, les points de réparation seront doublés ! 
-<br /><br />
+						<h2>Réparer</h2>
+						<p>Lorsqu'on se trouve à proximité d'un bâtiment ou d'un pont, une action "Réparer" apparait (accessible pour toutes les unités).<br />
+						Pour 5PA, cette action, ayant 100% de chance de réussite, réparera le bâtiment ou le pont pour entre 20 et 120PV.<br />
+						Les unités du génie étant plus efficaces pour réparer un bâtiment ou un pont, les points de réparation seront doublés !</p>
 					</div>
+
 					<div id="marche">
-					<h2>La marche forcée</h2>
-Les infanteries, guerriers et guerriers du feu peuvent à chaque tour effectuer une marche forcée, leur permettant au prix d'un certain effort de parcourir une plus grande distance.<br />
-Cette action coûte 4 PA et 10 PV, et vous rajoute 1 PM.<br /><br />
-<b>Il n'est pas possible de faire des marches forcées dans les bâtiments (ou grottes, ou stèles).</b>				
-<br /><br />
+						<h2>La marche forcée</h2>
+						<p>Les infanteries, guerriers et guerriers du feu peuvent à chaque tour effectuer une marche forcée, leur permettant au prix d'un certain effort de parcourir une plus grande distance.<br />
+						Cette action coûte 4 PA et 10 PV, et vous rajoute 1 PM.</p>
+						<p><b>Il n'est pas possible de faire des marches forcées dans les bâtiments .</b></p>
+
 					</div>
+
 					<div id="don">
-					<h2>Donner</h2>
-Dans Nord versus Sud, il est possible de donner un objet, une arme ou des thunes a un autre personnage.<br />
-Chaque type de chose donnée obéit à des règles spécifiques.<br />
-On peut donner une arme ou un objet directement à un personnage de son camp.
-<br /><br />
+						<h2>Donner</h2>
+						<p>Dans Nord versus Sud, il est possible de donner un objet, une arme ou des thunes a un autre personnage.<br />
+						Chaque type de chose donnée obéit à des règles spécifiques.<br />
+						On peut donner une arme ou un objet directement à un personnage de son camp.</p>
 					</div>
+
 					<div id="capture">
-					<h2>Capturer un personnage</h2>	
-Il est possible de capturer un perso sans pour autant baisser ses PV à 0. Il existe 2 manières de le faire :<br />
-<ul>
-	<li><b>De façon purement RP</b> : un des persos négocie la réddition d'un ennemi. Si durant les échanges, l'ennemi accepte la réddition, celui qui a négocié la capture doit alors avertir l'animation, preuves à l'appui, afin que l'animation valide ou non cette capture. Dans ce cas, le perso capturé n'a aucune perte d'XP/PI, uniquement une perte classique de PC et une ligne spéciale apparaitra dans le CV pour signifier la capture RP. Pour celui ayant effectué la capture, il gagnera 4PC pour sa capture ainsi qu'une ligne spéciale dans son CV pour signifier la capture RP. <b>Le perso qui accepte de se faire capturer doit arrêter toute action (attaques ou soins) hors déplacements jusqu'à ce que l'animation valide ou refuse la capture !</b></li>
-	<li><b>Par un encerclement pendant 12h</b> : c'est une capture "forcée", un des persos qui effectue l'encerclement doit penser à prendre un screen de l'encerclement au début (avec l'heure bien visible) ainsi qu'un screen <b>12h</b> après (toujours avec l'heure bien visible) et envoyer ça à l'animation pour validation de la capture par encerclement. Pour que la capure soit valide, il ne faut pas que celui qui se fait encerclé ait réussi à s'échapper durant ces 12h bien évidemment. Le capturé subit les malus d'une capture classique hors Thunes (en PI/PC) ainsi qu'un rappatriement classique et une ligne spéciale dans le CV pour signifier sa capture par encerclement. Ceux qui ont participés à la capture ne gagnent pas d'XP/PI/PC ni de ligne dans le CV mais ont pu conserver leurs PA pour d'autres actions. <b><font color='red'>Attention : </font>Un perso n'a le droit de participer qu'à une seule capture par encerclement par tour de jeu !</b></li>
-</ul>
-<p>Les demandes de capture (RP ou par encerclement) doivent obligatoirement passer par l'outil prévu à cet effet, sans quoi les animateurs ne pourront pas valider ces captures.</p>
-<br />
+						<h2>Capturer un personnage</h2>	
+						<p>Il est possible de capturer un perso sans pour autant baisser ses PV à 0. Il existe 2 manières de le faire :
+							<ul>
+								<li><b>De façon purement RP</b> : un des persos négocie la reddition d'un ennemi. Si durant les échanges, l'ennemi accepte la reddition, celui qui a négocié la capture doit alors avertir l'animation, preuves à l'appui, afin que l'animation valide ou non cette capture. Dans ce cas, le perso capturé n'a aucune perte d'XP/PI, uniquement une perte classique de PC et une ligne spéciale apparaitra dans le CV pour signifier la capture RP. Pour celui ayant effectué la capture, il gagnera 4PC pour sa capture ainsi qu'une ligne spéciale dans son CV pour signifier la capture RP. <b>Le perso qui accepte de se faire capturer doit arrêter toute action (attaques ou soins) hors déplacements jusqu'à ce que l'animation valide ou refuse la capture !</b></li>
+								<li><b>Par un encerclement pendant 12h</b> : c'est une capture "forcée", un des persos qui effectue l'encerclement doit penser à prendre un screen de l'encerclement au début (avec l'heure bien visible) ainsi qu'un screen 12h après (toujours avec l'heure bien visible) et envoyer ça à l'animation pour validation de la capture par encerclement. Pour que la capure soit valide, il ne faut pas que celui qui se fait encerclé ait réussi à s'échapper durant ces 12h bien évidemment. Le capturé subit les malus d'une capture classique hors Thunes (en PI/PC) ainsi qu'un rappatriement classique et une ligne spéciale dans le CV pour signifier sa capture par encerclement. Ceux qui ont participés à la capture ne gagnent pas d'XP/PI/PC ni de ligne dans le CV mais ont pu conserver leurs PA pour d'autres actions. <b><font color='red'>Attention</font> : Un perso n'a le droit de participer qu'à une seule capture par encerclement par tour de jeu !</b></li>
+							</ul>
+						</p>
+
+						<p>Les demandes de capture (RP ou par encerclement) doivent obligatoirement passer par l'outil prévu à cet effet, sans quoi les animateurs ne pourront pas valider ces captures.</p>
 					</div>
+
 					<div id="perm">
-					<h2>Partir en permission</h2>	
-lorsque vous êtes amenés à ne plus pouvoir vous connecter au jeu pendant un certain temps, vous pouvez partir en permission. Vos personnages seront alors retirés de la carte à minuit 3 jours après votre demande et ne pourront plus faire l'objet d'attaques d'aucune sorte.<br />
-Ils seront entièrement gelés et reviendront quand vous l'aurez décidé dans un Fort, Fortin ou Gare (conditions de rapatriement identiques à un rapatriement normal). La durée minimum de la permission est de 5 jours.<br />
-Les personnages en permission depuis plus de 30 jours sont définitivement effacés (vous recevrez un mail 10 jours avant que cela n'arrive afin de vous avertir).<br />
-<i>Vous contrôlez normalement votre personnage avant son départ prévu en permission.</i>
-<br /><br />
+						<h2>Partir en permission</h2>
+						<p>Lorsque vous êtes amenés à ne plus pouvoir vous connecter au jeu pendant un certain temps, vous pouvez partir en permission.<br />
+						Vos personnages seront alors retirés de la carte à minuit 3 jours après votre demande et ne pourront plus faire l'objet d'attaques d'aucune sorte.<br />
+						Ils seront entièrement gelés et reviendront quand vous l'aurez décidé dans un Fort, Fortin ou Gare (conditions de rapatriement identiques à un rapatriement normal).La durée minimum de la permission est de 5 jours.<br />
+						Les personnages en permission depuis plus de <b>180</b> jours sont définitivement effacés (vous recevrez un mail 10 jours avant que cela n'arrive afin de vous avertir).<br />
+						Vous contrôlez normalement votre personnage avant son départ prévu en permission.</p>
 					</div>
 				</div>
 			</div>

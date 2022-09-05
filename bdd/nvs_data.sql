@@ -30,7 +30,7 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 (1, 'Sieste', 1, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (4, 'Marche forc&eacute;e', 1, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -10, -10, 0, 0, 0, 0, 1, 1, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (11, 'Soins', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures', 1, 0, 0, 0, 0, 20, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(33, 'Construire - Barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 15, 250, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(33, 'Construire - Barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 60, 250, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (38, 'Construire - Pont', 1, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 50, 200, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (43, 'Construire - Tour de guet', 1, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 50, 250, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (54, 'Construire - Hopital', 1, 'Permet de construire un hôpital', 1, 0, 0, 100, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
@@ -49,7 +49,8 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 (140, 'Apaiser', 1, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 2, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
 (145, 'Bousculer', 1, 'Permet de bouculer quelqu\'un', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (146, 'Construire - Gare', 1, 'Permet de construire une gare.', 1, 0, 0, 250, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(147, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+(147, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(148, 'Construire - Point stratégique', 1, 'Permet de construire un point stratégique.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -64,7 +65,8 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 (54, 7, 50),
 (59, 8, 50),
 (64, 9, 100),
-(146, 11, 50);
+(146, 11, 50),
+(148, 13, 1);
 
 
 -- --------------------------------------------------------
@@ -87,7 +89,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (11, 'Bandages', 1, 1, 3, 50, 0, 0, 0, 0, 2, 2, 10, 35, '0', 0, '0.2', 0, 'Bandages permettant de récupérer des malus de defense', 0, 1, 'bandage.jpg'),
 (12, 'Griffes', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'griffe.png'),
 (13, 'Canon', 2, 6, 6, 0, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
-(14, 'Gatling', 1, 5, 3, 200, 0, 0, 0, 0, 2, 2, 90, 70, '1', 2, '0.0', 0, '', 0, 1, 'gatling.png'),
+(14, 'Gatling', 2, 5, 3, 200, 0, 0, 0, 0, 8, 8, 22, 70, '1', 2, '0.0', 0, '', 0, 1, 'gatling.png'),
 (15, 'Magnum', '1', '2', '3', '150', '0', '0', '0', '0', '16', '16', '8', '40', '0', '0', '2.0', '0', '', '0', '1', 'magnum.jpg'),
 (16, 'Couteau', '1', '1', '3', '10', '0', '0', '0', '0', '15', '15', '4', '35', '0', '0', '0.0', '0', '', '0', '1', 'couteau.png'),
 (17, 'Canon double', '1', '3', '5', '225', '0', '0', '0', '0', '20', '20', '8', '75', '0', '0', '3.0', '0', '', '0', '1', 'canon_double.png'),
@@ -96,7 +98,8 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
 (21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
 (22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
-(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.jpg');
+(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.jpg'),
+(24, 'Sabre léger', '1', '1', '4', '0', '0', '0', '0', '0', '16', '16', '6', '80', '0', '0', '0.0', '0', '', '0', '1', 'sabre.png');
 
 
 -- --------------------------------------------------------
@@ -108,10 +111,8 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (1, 1),
 (1, 2),
-(1, 7),
 (2, 1),
 (2, 2),
-(2, 7),
 (3, 1),
 (3, 2),
 (3, 7),
@@ -139,7 +140,6 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (17, 3),
 (18, 1),
 (18, 2),
-(18, 7),
 (19, 1),
 (19, 2),
 (19, 7),
@@ -147,9 +147,31 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (21, 3),
 (22, 5),
 (23, 1),
-(23, 2);
-(23, 7);
+(23, 2),
+(24, 7);
 
+-- --------------------------------------------------------
+
+--
+-- Contenu de la table `objet_as_type_unite`
+--
+
+INSERT INTO `objet_as_type_unite` (`id_objet`, `id_type_unite`) VALUES
+(5, 3),
+(5, 4),
+(5, 5),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5),
+(6, 7),
+(7, 1),
+(7, 2),
+(7, 3),
+(7, 4),
+(7, 5),
+(7, 7);
 -- --------------------------------------------------------
 
 --
@@ -166,7 +188,8 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 (9, 'Fort', 10000, 'Un fort, à defendre coute que coute', 5),
 (10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels', 3),
 (11, 'Gare', 5000, 'Une gare', 3),
-(12, 'Train', 2500, 'Un train', 1);
+(12, 'Train', 2500, 'Un train', 1),
+(13, 'Point stratégique', 100000, 'Point stratégique dont le controle rapporte des points de victoire', 1);
 
 -- --------------------------------------------------------
 
@@ -362,9 +385,9 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 (2, 'Caporal', 10, 2),
 (3, 'Sergent', 80, 4),
 (4, '1er Sergent', 180, 6),
-(5, 'Sergent d\'ordonnance', 300, 7),
-(6, 'Sergent Quartier Maitre de Compagnie', 440, 8),
-(7, 'Sergent Quartier Maitre de Régiment', 700, 9),
+(5, 'Sergent d\\\'ordonnance', 300, 7),
+(6, 'Quartier Maitre de Compagnie', 440, 8),
+(7, 'Quartier Maitre de Régiment', 700, 9),
 (8, 'Sergent Major', 950, 10),
 (9, 'Sous-Lieutenant', 1350, 11),
 (10, 'Lieutenant', 1800, 12),
@@ -374,7 +397,7 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 (14, 'Colonel', 4800, 16),
 (15, 'Général de Brigade', 6500, 17),
 (16, 'Général de Division', 8200, 18),
-(17, 'Général de Corps d\'armée', 11000, 19),
+(17, 'Général de Corps d\\\'armée', 11000, 19),
 (18, 'Général des armées', 999999999, 100),
 (1, 'Grouillot 2nd classe', 0, 0),
 (101, 'Grouillot 1ere classe', 0, 0),
@@ -483,7 +506,7 @@ INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES
 -- Contenu de la table `pnj`
 --
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`,`aggressivite_pnj`, `description_pnj`) VALUES ('1', 'Sangsue', '40', '8', '40', '4', '10', '0', '2', '80', '2', 'Petit animal suceur de sang, très gênant et particulièrement peu ragoutant, la sangsue se trouve dans le marais. Attention à leurs tares !');
-INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('2', 'Loup', '300', '20', '120', '8', '30', '0', '4', '70', '1', 'Chasseur des forêts, cousin éloigné du coyote, le loup n\'est plus à présenter.');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('2', 'Loup', '300', '20', '120', '8', '30', '0', '5', '70', '2', 'Chasseur des forêts, cousin éloigné du coyote, le loup n\'est plus à présenter.');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('3', 'Crotale', '100', '20', '160', '5', '20', '0', '3', '70', '0', 'Les crotales sont des animaux qui peuvent s\'avérer très dangereux de par leurs terribles morsures infligeant des tares... Attention à na pas les sous estimer, tout comme les serpents !');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('4', 'Caïman', '500', '30', '150', '5', '40', '20', '3', '70', '2', 'Redoutable prédateur des rivières, le caïman est synonyme d\'effroi pour beaucoup');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('5', 'Bison', '1500', '48', '280', '5', '50', '20', '3', '70', '1', 'Noble herbivore des plaines, le bison n\'en demeure pas moins un animal extrêmement résistant. Attention à ne pas trop les énerver...');
@@ -531,8 +554,8 @@ INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `percept
 (3, 'Infanterie', 'Il s\'agit du plus courant des grouillots présents dans les armées nordistes et sudistes. Les infanteries représentent la masse de ces armées. Leur réputation n\'est pas toujours la meilleure et leur faible mobilité amène bien souvent des à priori négatifs à leur encontre. Pourtant les infanteries, lorsqu\'elles sont coordonnées et regroupées sont extrèmement redoutables et peuvent faire des ravages dans les rangs énnemis. Ce sont avant tout des unités de tir.', 4, 10, 30, 500, 10, 5, 'infanterie', 2),
 (4, 'Soigneur', 'Les soigneurs sont des unités nordistes/sudistes non combattantes dont le rôle est uniquement de soigner les troupes parties sur le front. Plus rapides que des infanteries classiques, elles doivent malgré tout rester prudentes sur le front.', 4, 0, 30, 400, 10, 6, 'soigneur', 3),
 (5, 'Artillerie', 'La plus puissante de toutes les unités combattantes. L\'artillerie est tout simplement extrèmement puissante, pouvant réduire en miette tout un bataillon en très peu de temps. Mais c\'est une unité extrèmement peu mobile et qui ne peut se battre au corps à corps et donc qui nécessite beaucoup d\'attention et de protection.', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
-(6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 0, 20, 125, 10, 12, 'toutou', 1);
-(7, 'Cavalerie légère', 'La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d'ennemis.', 6, 5, 60, 400, 8, 12, 'cavalerie', 3),
+(6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 0, 20, 125, 10, 14, 'toutou', 1),
+(7, 'Cavalerie légère', 'La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d\'ennemis.', 5, 5, 60, 400, 10, 12, 'cavalerie_legere', 3);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

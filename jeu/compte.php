@@ -409,7 +409,7 @@ if($dispo == '1' || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
+					<div align=center><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></div>
 				</div>
 			</div>
 			
@@ -653,6 +653,9 @@ if($dispo == '1' || $admin){
 					</tr>
 					<tr>
 						<td>Chien</td><td><img src="../images_perso/v1/toutou_nord.gif"> <img src="../images_perso/v1/toutou_sud.gif"></td><td><img src="../images_perso/v2/toutou_nord.gif"> <img src="../images_perso/v2/toutou_sud.gif"></td>
+					</tr>
+					<tr>
+						<td>Cavalerie légère</td><td><img src="../images_perso/v1/cavalerie_legere_nord.gif"> <img src="../images_perso/v1/cavalerie_legere_sud.gif"></td><td><img src="../images_perso/v2/cavalerie_legere_nord.gif"> <img src="../images_perso/v2/cavalerie_legere_sud.gif"></td>
 					</tr>
 				</table>
 				

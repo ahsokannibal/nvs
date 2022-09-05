@@ -189,7 +189,7 @@ if($dispo == '1' || $admin){
 		
 			<br /><br /><center><h1>Profil</h1></center><br /><br />
 			
-			<div align=center><input type="button" value="Fermer le profil" onclick="window.close()"></div>
+			<div align=center><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></div>
 			
 			<table border=0 width=100%>
 			
