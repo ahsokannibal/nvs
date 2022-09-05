@@ -417,7 +417,7 @@ if(config_dispo_jeu($mysqli) == '1'){
 									$objet = "Lettre prioritaire !";
 									$message = "[center][b]bienvenue dans cette nouvelle version de NvS ".$nom_perso.".
 									".$nom_camp.", je suis fier de t\'accueillir dans nos rangs. [/b][/center]";
-									$message .= "[center][img]http://nord-vs-sud.com/images/".$nom_img."[/img][/center]";
+									$message .= "[center][img]http://nord-vs-sud.fr/images/".$nom_img."[/img][/center]";
 									$message .= "
 									
 									Bon Jeu !
