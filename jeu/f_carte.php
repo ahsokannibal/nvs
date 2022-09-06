@@ -1354,4 +1354,19 @@ function get_fond_carte_perso($mysqli,$carte, $id_perso){
 	return "";
 	
 }
+
+/**
+ * Fonction qui affiche une pastille si le perso porte l'étendard
+ */
+function affichage_pastille_etendard($clan){
+	echo "		<img tabindex='0' 
+	style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;font-weight: bold;\" 
+	src='../images_perso/".$clan."' width='40' height='40' 
+	title='etendard'
+	alt='Porte-Etendard' 
+	data-toggle='popover' 
+	data-trigger='focus' 
+	data-html='true' 
+	data-placement='bottom'/>";
+}
 ?>

@@ -206,12 +206,7 @@ if($dispo == '1' || $admin){
 				$couleur_clan_p = couleur_clan($clan_p);
 				
 				$dossier_img_joueur = get_dossier_image_joueur($mysqli, $id_joueur_perso);
-				
-				// Changement d'icone si le perso porte l'étendard
-				if ($type_perso == 1){
-					changement_icone_porteur_etendard($mysqli, $id_perso, $clan_p, $type_perso);
-				}
-				
+								
 				// affichage rosace et bousculades
 				$sql = "SELECT afficher_rosace, bousculade_deplacement FROM joueur WHERE id_joueur='$id_joueur_perso'";
 				$res = $mysqli->query($sql);
@@ -1790,11 +1785,6 @@ if($dispo == '1' || $admin){
 						// mise a jour des evenements
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a ramassé des objets par terre ',NULL,'','en $x_persoN/$y_persoN : $liste_ramasse',NOW(),'0')";
 						$mysqli->query($sql);
-
-						// Changement d'icone si le perso porte l'étendard
-						if ($type_perso == 1){
-							changement_icone_porteur_etendard($mysqli, $id_perso, $clan_p, $type_perso);
-						}
 						
 						echo "<center><font colot='blue'>Vous avez rammassé les objets suivants : ". $liste_ramasse ."</font></center><br>";
 					}
@@ -3866,6 +3856,12 @@ if($dispo == '1' || $admin){
 									
 								}
 								echo "\" >" . $id_perso . "</div>";
+
+								// Affichage pastille étendard
+								$id_etendard = id_etendard_joueur($mysqli, $id_perso);
+								if($id_etendard > 0){
+									affichage_pastille_etendard($clan);
+								};
 								
 								echo "		<img tabindex='0' class=\"\" border=0 src=\"../images_perso/$dossier_img_joueur/$image_perso\" width=40 height=40 
 													data-toggle='popover'
@@ -4176,6 +4172,12 @@ if($dispo == '1' || $admin){
 													
 													echo "			\" ";
 													echo "		>" . $id_ennemi . "</div>";
+
+													// Affichage pastille étendard
+													$id_etendard = id_etendard_joueur($mysqli, $id_ennemi);
+													if($id_etendard > 0){
+														affichage_pastille_etendard($clan_ennemi);
+													};													
 													
 													//--- Image perso
 													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
