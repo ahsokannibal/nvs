@@ -680,9 +680,6 @@ if($dispo == '1' || $admin) {
 			$type_perso		= $t_perso2['type_perso'];
 			$clan			= $t_perso2['clan'];
 
-			if ($id_objet == 8 || $id_objet == 9){
-				changement_icone_porteur_etendard($mysqli, $id_perso, $clan, $type_perso);
-			}
 		}
 		
 		// Don objet apres choix perso
@@ -862,10 +859,7 @@ if($dispo == '1' || $admin) {
 			$type_perso		= $t_perso2['type_perso'];
 			$clan			= $t_perso2['clan'];
 
-			if ($id_objet == '8' || $id_objet == '9'){
-				changement_icone_porteur_etendard($mysqli, $id_perso, $clan, $type_perso);
-			}
-
+			
 			// Changement de l'icone du receuveur si l'objet donné est l'étendard
 			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_cible'";
 			$res = $mysqli->query($sql);
@@ -873,10 +867,6 @@ if($dispo == '1' || $admin) {
 			
 			$type_perso_cible = $t_perso_cible['type_perso'];
 			$clan_cible = $t_perso_cible['clan'];
-
-			if ($id_objet == '8' || $id_objet == '9'){
-				changement_icone_porteur_etendard($mysqli, $id_cible, $clan_cible, $type_perso_cible);
-			}
 		}
 		
 		/////////////////////////

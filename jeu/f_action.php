@@ -3467,10 +3467,6 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 			
 			$type_perso		= $t_perso2['type_perso'];
 			$clan			= $t_perso2['clan'];
-			
-			if ($id_objet == '8' || $id_objet == '9'){
-				changement_icone_porteur_etendard($mysqli, $id_perso, $clan, $type_perso);
-			}
 		}
 	}
 	else {
@@ -4190,8 +4186,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 							// Calcul PC
 							$pc_perdu		= floor(($pc_perso_cible * 5) / 100);
 							$pc_perso_fin	= $pc_perso_cible - $pc_perdu;
-
-							changement_icone_porteur_etendard($mysqli, $idPerso_carte, $clan_perso, $type_perso_cible);
 						}
 						else {
 							$pi_perdu 		= floor(($pi_perso_cible * 40) / 100);

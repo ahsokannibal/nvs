@@ -664,7 +664,6 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 		
 		if ($type_perso_cible == 1){
 			perte_etendard($mysqli, $id_cible, $x_cible, $y_cible);
-			changement_icone_porteur_etendard($mysqli, $id_cible, $clan_perso, $type_perso_cible);
 		}
 
 		if ($id_arme_non_equipee > 0) {
@@ -939,7 +938,6 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 				if ($type_perso_cible == 1){
 					perte_etendard($mysqli, $id_cible, $x_cible, $y_cible);
-					changement_icone_porteur_etendard($mysqli, $id_cible, $clan_perso, $type_perso_cible);
 				}
 
 				if ($id_arme_non_equipee > 0) {
@@ -1269,29 +1267,6 @@ function perte_etendard($mysqli, $idPerso_carte, $x_cible, $y_cible){
 			$mysqli->query($sql);
 
 	}
-}
-
-function changement_icone_porteur_etendard($mysqli, $id_cible, $clan_perso, $type_perso_cible){
-	$id_etendard = id_etendard_joueur($mysqli, $id_cible);
-	if($id_etendard > 0){
-		if($clan_perso == 1){
-			$image_perso = 'cavalerie_nord_etendard.gif';
-		} else if ($clan_perso == 2){
-			$image_perso = 'cavalerie_sud_etendard.gif';
-		}
-		
-	} else {
-		if($clan_perso == 1){
-			$image_perso = 'cavalerie_nord.gif';
-		} else if ($clan_perso == 2){
-			$image_perso = 'cavalerie_sud.gif';
-		} else {
-			$image_perso = 'cavalerie_neutre.gif';
-		}
-	}
-
-	$sql = "UPDATE perso SET image_perso='$image_perso' WHERE id_perso='$id_cible'";
-	$mysqli->query($sql);
 }
 
 ?>
