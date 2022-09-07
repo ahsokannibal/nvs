@@ -75,8 +75,6 @@ if($dispo == '1' || $admin){
 				
 				if($exist){
 					
-					// vérification que le perso est bien du meme camp que la compagnie				
-					if($clan_perso == $clan_compagnie){
 						
 						if (isset($_GET["rejoindre"])) {
 						
@@ -341,10 +339,7 @@ if($dispo == '1' || $admin){
 							}
 							echo "</center>";
 						}
-					}
-					else {
-						echo "<center><center><font color = 'red'>Vous n'avez pas accés aux informations de cette compagnie</font></center>";
-					}
+					
 				}
 				else {
 					echo "<center><center><font color = 'red'>La compagnie demandé n'existe pas</font></center>";

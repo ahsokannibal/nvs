@@ -98,7 +98,7 @@ if($dispo == '1' || $admin){
 	<body>
 		<div class="container">
 		
-			<p align="center"><input type="button" value="Fermer la fenêtre de création de compagnie" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 			
 			<?php
 			if ($verif_creer_comp > 0) {
