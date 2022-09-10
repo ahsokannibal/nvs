@@ -54,7 +54,8 @@
 			
 			<!-- Page Footer -->
 			<footer class='container-xxl text-center my-3'>
-				Nord vs Sud - Le jeu au tour par tour sur la guerre civile américaine
+				Nord vs Sud - Le jeu au tour par tour sur la guerre civile américaine</br>
+				<a href ='../CGU.pdf'>Conditions générales d'utilisation</a> - <a href ='../CUDP.pdf'>charte d'utilisation des données personnelles</a>
 			</footer>
         </div>
     </body>
