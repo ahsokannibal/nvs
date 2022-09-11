@@ -20,19 +20,26 @@ if (is_dir($phpbb_root_path))
 }
 
 if(config_dispo_jeu($mysqli) == '1'){
+	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND chef='1' AND est_gele='0'";
+	$res_nbb = $mysqli->query($sql_nbb);
+	$nbb = $res_nbb->num_rows;
+	
+	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND chef='1' AND est_gele='0'";
+	$res_nbr = $mysqli->query($sql_nbr);
+	$nbr = $res_nbr->num_rows;
 
 	if(isset($_POST['creer'])) {
 		$_SESSION['old_input'] = $_POST;
 		
 		if (isset($_POST['cgu']) && $_POST['cgu']=="on" && isset($_POST['charte']) && $_POST['charte']=="on") {
+			$camp 			= $_POST['camp_perso'];
 			
-			if ($_POST['camp_perso'] != '0') {
+			if ($_POST['camp_perso'] != '0' && (($camp == 1 && $nbb < $nbr + MAX_NB_JOUEUR_DIFF) || ($camp == 2 && $nbr < $nbb + MAX_NB_JOUEUR_DIFF))) {
 		
 				$nom_perso 	= trim(filter_input(INPUT_POST, "nom_perso", FILTER_SANITIZE_STRING));
 				$email_joueur 	= $_POST['email_joueur'];
 				$nom_bataillon	= $_POST['nom_bataillon'];
 				$mdp_joueur 	= $_POST['mdp_joueur'];
-				$camp 			= $_POST['camp_perso'];
 			
 				if (strlen($nom_perso) < 2 || strlen($nom_perso) > 25 ||ctype_digit($nom_perso) || strpos($nom_perso,'--') !== false){
 					$error = "Erreur : Le Pseudo est incorrect ! Veuillez en choisir un autre (taille entre 1 et 25, pas de quote, pas que des chiffres, pas la chaîne --, etc..)";
@@ -461,20 +468,17 @@ if(config_dispo_jeu($mysqli) == '1'){
 				}
 			}
 			else {
-				$error =  "Erreur: Veuillez choisir un camp !";
+				if ($_POST['camp_perso'] == '0') {
+					$error =  "Erreur: Veuillez choisir un camp !";
+				} else {
+					$error =  "Erreur: Veuillez choisir le camp qui a le moins de joueurs actifs pour ne pas créer un déséquilibre ! <br/> Il est formellement interdit de créer de faux comptes pour tromper le mécanisme qui veille à l'équilibre des camps. Soyez fair-play.";
+				}
 			}
 		}
 		else {
 			$error =  "Erreur : Veuillez valider les CGU et la charte !";
 		}
 	}
-	$sql_nbb = "SELECT id_perso FROM perso WHERE clan='1' AND chef='1' AND est_gele='0'";
-	$res_nbb = $mysqli->query($sql_nbb);
-	$nbb = $res_nbb->num_rows;
-	
-	$sql_nbr = "SELECT id_perso FROM perso WHERE clan='2' AND chef='1' AND est_gele='0'";
-	$res_nbr = $mysqli->query($sql_nbr);
-	$nbr = $res_nbr->num_rows;
 	
 	require_once('mvc/view/register.php');
 }
