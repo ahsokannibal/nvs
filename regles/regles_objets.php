@@ -18,58 +18,9 @@ $mysqli = db_connexion();
 	<body style="background-color:grey;">
 
 		<div class="container-fluid">
-		
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<a class="navbar-brand" href="#">Règles</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
 
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="../index.php">Accueil</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_introduction.php">Introduction</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_caracs.php">Les caractéristiques</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_armees.php">Les Armées</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_unites.php">Les unités</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="regles_objets.php">Les objets, armes et thunes</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_carte.php">La carte et les terrains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_batiments.php">Les Bâtiments et trains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_pnjs.php">Les PNJ</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_action_spe.php">Actions spéciales</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_modalites_victoire.php">Les modalités de victoire</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
-						</li>
-						<li class="nav-item">
-							<a href="../jeu/jouer.php"> <input type="button" value="Retour au jeu"> </a>
-						</li>
-					</ul>
-				</div>
-			</nav>
-			
+		<?php require 'regles_header.php' ?>
+					
 			<div class="row justify-content-center">
 				<div class="col-12">
 	
@@ -204,6 +155,10 @@ $mysqli = db_connexion();
 								$nom_arme		= $t_arme_dist['nom_arme'];
 								$portee_arme	= $t_arme_dist['porteeMin_arme'] . " - " . $t_arme_dist['porteeMax_arme'];
 								$nom_unite		= "";
+
+								if($id_arme == '8' || $id_arme == '14' || $id_arme == '13'){
+									$perte_precision = $precision_arme - 15;
+								}
 								
 								$sql_unite = "SELECT nom_unite
 												FROM arme_as_type_unite, type_unite 
@@ -221,7 +176,11 @@ $mysqli = db_connexion();
 								echo "	<td style='text-align:center'><img src='../images/armes/".$image_arme."' style='max-width: 100px; height: auto;' alt=''></td>";
 								echo "	<td style='text-align:center'>".$nom_arme."</td>";
 								echo "	<td style='text-align:center'>".$degats_arme."</td>";
-								echo "	<td style='text-align:center'>".$precision_arme."%</td>";
+								if($id_arme == '8' || $id_arme == '14' || $id_arme == '13'){
+									echo "	<td style='text-align:center'>".$perte_precision."/".$precision_arme."%</td>";
+								} else {
+									echo "	<td style='text-align:center'>".$precision_arme."%</td>";
+								}
 								echo "	<td style='text-align:center'>".$portee_arme."</td>";
 								echo "	<td style='text-align:center'>".$coutPa_arme."</td>";
 								echo "	<td style='text-align:center'>".$nom_unite."</td>";
@@ -234,7 +193,7 @@ $mysqli = db_connexion();
 							?>
 						</table>
 					</div>
-					Les canons, gatling et fusil de précision ont 15% de précision de moins lors de leurs attaques en limite de portée.
+					<b>Les canons, gatling et fusil de précision ont 15% de précision de moins lors de leurs attaques en limite de portée.</b>
 					
 					<br /><br />
 					
@@ -292,7 +251,7 @@ $mysqli = db_connexion();
 								<td align='center'>+50 en récupération</td>
 								<td align='center'>+1 au compteur "Bourré" du perso. Chaque point à ce compteur donne -3 en perception. Ce compteur descend de 1 par tour (et remis à 0 si rapatriement)</td>
 								<td align='center'>0.5kg</td>
-								<td align='center'>1 thune</td>
+								<td align='center'>3 thunes</td>
 								<td align='center'>Fort / Fortin</td>
 							</tr>
 							<tr>
