@@ -14,56 +14,7 @@
 
 		<div class="container-fluid">
 		
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<a class="navbar-brand" href="#">Règles</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="../index.php">Accueil</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_introduction.php">Introduction</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_caracs.php">Les caractéristiques</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="regles_armees.php">Les armées</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_unites.php">Les unités</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_objets.php">Les objets, armes et thunes</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_carte.php">La carte et les terrains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_batiments.php">Les Bâtiments et trains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_pnjs.php">Les PNJ</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_action_spe.php">Les actions spéciales</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_modalites_victoire.php">Les modalités de victoire</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
-						</li>
-						<li class="nav-item">
-							<a href="../jeu/jouer.php"> <input type="button" value="Retour au jeu"> </a>
-						</li>
-					</ul>
-				</div>
-			</nav>
+			<?php require 'regles_header.php' ?>
 			
 			<div class="row justify-content-center">
 				<div class="col-12">
@@ -106,18 +57,27 @@
 					<p>Toujours sur la même page que précédemment, si vous ne faite partie d'aucune compagnie, un lien "Créer une compagnie" sera présent. Il vous suffit de cliquer dessus pour arriver sur un formulaire qui vous demande plusieurs 2 choses : un titre et une description.<br />					
 					C'est de cette façon que votre projet sera présenté aux membres de l'EM qui voteront pour ou contre sa création.</p>
 
-					<p>Quelles sont les conditions à respecter lors de cette création ? </p>
+					<p><b>Quelles sont les conditions à respecter lors de cette création ? </b></p>
 
-					<p>Faire une description de sa compagnie en Français, sans fautes.<br />
-					Avoir une idée RP originale: c'est la condition essentielle. </p>
-					
-					<p>Si vous proposez la création de quelque chose qui existe déjà, la réponse sera non.</p>
+					<p>a compagnie que vous voulez créer doit avoir un RP original, c'est la condition essentielle.<br />
+					Pour le type de compagnie (cavalerie, compagnie de ligne,...), c'est une discussion que vous devez avoir avec l’État-major de votre camp.</p>
 
-					<p>Faire du RP !! Ceci est très important ! Les compagnies sont des structures devant aider le développement d'un certain type de RP.<br />
-					Ce sont des groupes de joueurs qui ont un caractère propre qui doit être aisément identifiable.<br />
-					Bref montrez à tous qui vous êtes !<br />
-					Enfin, il faut aussi que l’idée soit acceptée par les instances dirigeantes en place. (EM au Sud CS au Nord).
+					<p>Si vous proposez la création d'une compagnie qui existe déjà (génie, police, transport, ou un RP exactement similaire à une autre compagnie), la création sera refusée.</p>
+
+					<p>Concrètement pour la création, vous devez :
+						<ul>
+							<li>Préparer une description claire en Français et sans fautes.</li>
+							<li>Faire du RP. C'est important pour contribuer à faire vivre l'environnement NVS.</li>
+							<li>Soumettre le projet à votre État-major, en parler également avec l'équipe des admins si nécessaire.</li>
+						</ul>
 					</p>
+
+					<p>Lorsque la compagnie est acceptée par l’État-major et remplie les conditions, les admins feront le nécessaire pour créer la compagnie dans le jeu et le Discord.</p>
+
+					<p>Une compagnie regroupe des joueurs qui ont un caractère propre qui doit être aisément identifiable.<br />
+					Bref, montrez à tous qui vous êtes.</p>
+
+					<p>Il est bon de noter que chaque compagnie est limitée à 15 chefs de bataillon et 60 membres au total. Le nombre total d'unités recrutables dans chaque compagnie sera amené à être modifié selon les cartes.</p>
 					
 					<h4>Avantages de la Compagnie</h4>
 					

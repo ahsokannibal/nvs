@@ -1,8 +1,3 @@
-<?php
-require_once("../fonctions.php");
-
-$mysqli = db_connexion();
-?>
 <html>
 	<head>
 		<title>Nord VS Sud</title>
@@ -15,93 +10,79 @@ $mysqli = db_connexion();
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 
-	<body style="background-image:url('../images/background_html.jpg'); color:#FFFFFF">
+	<body style="background-color:grey;">
 
 		<div class="container-fluid">
+
+			<?php require 'regles_header.php' ?>		
 			
 			<div class="row justify-content-center">
 				<div class="col-12">
 	
-					<div align="center"><h2>L'animation</h2></div>
+					<div align="center"><h2>MJ & Animateurs</h2></div>
 					
 				</div>
 			</div>
-			
-			<div class="row justify-content-center">
-				<div class="col-12" align="center">
-				
-<p><b><i><font color='red'>Cette page est très importante !!! Veuillez prendre connaissance de ce qui suit !!!</font></i></b></p><br />
-					
-				</div>
-			</div>
-			
-			<br /><br/ ><br /><br />
 			
 			<div class="row">
 				<div class="col-12">
-					<h2>Liste des animateurs</h2>
-					<h4>Animateurs du Nord</h4>
-					<?php
-					$sql = "SELECT nom_perso, id_perso FROM perso, joueur 
-							WHERE perso.idJoueur_perso = joueur.id_joueur
-							AND clan='1'
-							AND chef='1'
-							AND animateur='1'";
-					$res = $mysqli->query($sql);
-					while ($t = $res->fetch_assoc()) {
-						
-						$id_perso 	= $t['id_perso'];
-						$nom_perso 	= $t['nom_perso'];
-						
-						echo "<b>- <font color='#2288FF'>".$nom_perso."</b></font> [".$id_perso."]<br />";
-						
-					}
-					?>
-					<br />
-					<h4>Animateurs du Sud</h4>
-					<?php
-					$sql = "SELECT nom_perso, id_perso FROM perso, joueur 
-							WHERE perso.idJoueur_perso = joueur.id_joueur
-							AND clan='2'
-							AND chef='1'
-							AND animateur='1'";
-					$res = $mysqli->query($sql);
-					while ($t = $res->fetch_assoc()) {
-						
-						$id_perso 	= $t['id_perso'];
-						$nom_perso 	= $t['nom_perso'];
-						
-						echo "<b>- <font color='#FF4444'>".$nom_perso."</b></font> [".$id_perso."]<br />";
-						
-					}
-					?>
-					<br />
-					<h2>Rôles de l'animation</h2>
-					<h4>Support de premier niveau</h4>
-<p>Les animateurs ont un rôle de support de premier niveau et doivent être capable de rèpondre aux questions des joueurs, si besoin en utilisant la console d'animation à leur disposition pour trouver les informations qu'ils ont besoin (état d'un bâtiment, événements détaillé du perso, etc..) mais doit faire attention à le faire sans révéler d'informations stratégiques.</p>
-<p></p>
+					<p>Voici quelques explications sur la gestion du jeu.</p>
 
-					<h4>Gérer l'administratif de leur camp</h4>
-<p>
-Une compagnie souhaite changer de nom : c'est un animateur qui doit valider / refuser.<br />
-Une compagnie souhaite être dissoute : c'est un animateur qui doit valider / refuser.<br />
-Un joueur souhaite changer le nom de son chef : c'est un animateur qui doit valider / refuser.<br />
-Un joueur souhaite changer le nom de son bataillon : c'est un animateur qui doit valider / refuser.<br />
-Un joueur souhaite changer de camp : c'est un animateur qui doit valider / refuser.</p>
-<p>Les validations / refus doivent se faire en bonne intelligence. L'animateur doit vérifier si les demandes sont bien motivées par du RP, par une erreur à l'inscription ou par un besoin utile. <br />
-Toute demande non motivée se doit d'être refusée.</p>
-<p>Il est amené à pouvoir nommer / renommer les bâtiments de son camp en étant en cohérence avec les besoins des joueurs de son camp.</p>
-<p>Il doit aussi veiller au respect des règles et du fairplay par les joueurs de son camp et pourra si necessaire punir des persos en appliquant amendes et/ou envoi au pénitencier.</p>
-					<h2>Règles de l'animation</h2>
-<p>Un animateur se doit de rester neutre, il ne doit en <b>AUCUN CAS</b>, de par ses actions d'animateur, hors proposition de missions / récompenses RP, participer à faire gagner son camp.</p>
-<p>Si cela devait arriver, l'animateur serait renvoyé, ses persos pourraient être supprimés et un malus de point de victoire pourrait être appliqué à son camp selon (selon le jugement)</p>
-<p>De même, toute information découverte grâce à la console Anim ne doit en aucun cas être utilisée dans le jeu.<br />Par exemple, si l'animateur découvre qu'un bâtiment important de son camp se trouve en état de siège alors que ses PV sont au dessus de 90% (et donc que c'est qu'il y a des ennemis proches), il ne doit pas avertir les persos/EM de son camp que c'est le cas ou prendre des mesures pour contrer l'infiltration / l'attaque ennemie !</p>
-					<h2>Limites du rôle d'animateur</h2>
-<p>Le rôle de l'animateur se limite dans les structures offertes par le jeu. Ainsi, un animateur <b>doit être respecté dans le jeu ET sur le forum du jeu</b> (quand il s'exprime en tant qu'animateur).<br />
-Si un animateur n'est pas respecté au sein de ces structures, des sanctions peuvent être appliquées.<br />
-En dehors de ces structures, il n'a aucun pouvoir.</p>
-<p>Des exceptions peuvent être faite dans certains cas, par exemple des channels Discord dédiés pour les réponses anim de chaque camp et où, il est donc explicitement demandé à la personne de répondre en tant qu'animateur.</p>
-<p>Un animateur se doit aussi d'être diplomate. Il ne sera pas toléré qu'un animateur insulte ou envenime une situation (son rôle pourrait lui être retiré pour ces raisons). Il se doit d'essayer de calmer toute situation qui peut déborder, apaiser les conflits et communiquer au mieux avec les joueurs pour les faire patienter.</p>
+					<p>NVS est un jeu géré par une équipe d'admins, qu'on appelle aussi les Maîtres du Jeu (MJ). Leur objectif est de garantir le bon déroulement et la bonne ambiance du jeu dans le temps.</p>
+
+					<p><b>Concrètement, le rôle de cette équipe est :</b></p>
+					<ul>
+						<li>Suivre le déroulement du jeu</li>
+						<li>Faire évoluer le jeu, adapter les règles quand c'est nécessaire</li>
+						<li>Gérer l'ambiance au sein de la communauté</li>
+						<li>Suivre l'équilibre du jeu et prendre éventuellement des actions pour garantir le plaisir de jouer dans le temps</li>
+						<li>Aider l'équipe d'animation qui gère les scénarios qui sont proposés aux joueurs</li>
+						<li>Gestion de la triche et du respect des règles</li>
+						<li>Remonter les points et sujets des joueurs qui nécessitent une discussion</li>
+					</ul>
+
+					<p>L'équipe d'MJ est composée notamment de développeurs qui mettent en place les évolutions et réparent les bugs.<br />
+					La taille de l'équipe n'est pas fixe, et sera amenée à évoluer dans le temps selon les besoins et candidatures.</p>
+
+					<p><b>Rôle des admins dans le jeu :</b></p>
+					<p>Les MJ ne sont pas attachés à un camp. Leur intérêt est le jeu et pas de représenter un camp.</p>
+
+					<p>Ils peuvent jouer comme  des joueurs normaux, avec le respect de certaines règles :
+						<ul>
+							<li>Pas d'implication dans la gestion stratégique d'un camp (EM), ni dans la gestion d'une compagnie (chef de compagnie)</li>
+							<li>Le MJ n'a pas d'avantage au niveau de son grade, PC ou XP. Il peut jouer comme un joueur normal, tout en faisant preuve de fairplay.</li>
+							<li>Un MJ peut être amené à changer de camp selon les besoins du jeu (équilibre)</li>
+							<li>Si un MJ a accès aux informations des divers camps, il s’assurera de ne pas transmettre des informations à l'autre camp</li>
+						</ul>
+					</p>
+
+					<p><b>Vous voulez contribuer au jeu ?</b></p>
+
+					<p>C'est une équipe totalement bénévole.</p>
+
+					<p>Nous sommes toujours à la recherche d'aide pour faire évoluer le jeu :
+						<ul>
+							<li>Développeurs et designers</li>
+							<li>Aide pour la promo du jeu</li>
+							<li>Animateurs</li>
+						</ul>
+					</p>
+
+					<p>Dans l'équipe qui gère le jeu, vous avez également des animateurs. Leur objectif est d’animer le jeu en donnant un cadre RP (role-play) au wargamme et créer un univers autour du jeu.</p>
+ 
+					<p><b>Concrètement, le rôle des anims est :</b></p>
+					<ul>
+						<li>Donner un cadre RP aux campagnes (carte)</li>
+						<li>Créer un cadre RP aux objectifs  fixés par les admins</li>
+						<li>Créer des scénarios </li>
+						<li>Animer et assurer suivi des scénarios </li>
+					</ul>
+
+					<p>Contrèrement aux anciennes versions du jeu, les anims n'ont plus de rôle de modération des camps et des joueurs.<br />
+					Les anims ne sont pas non plus rattachés à un camp, et les maîtres du jeu (MJ) veillent à leur neutralité.</p>
+
+					<p>Certains anims ne sont pas nécessairement des joueurs pour se concentrer sur les scénarios.</p>
+
 				</div>
 			</div>
 		
