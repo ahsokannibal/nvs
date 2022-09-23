@@ -3080,7 +3080,7 @@ function action_entrainement($mysqli, $id_perso){
  * @param $id_objet	: L'identifiant de l'objet a donner
  * @param $quantite	: La quantite
  */
-function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $quantite){
+function action_don_objet($mysqli, $id_perso, $id_cible, $type_cible, $type_objet, $id_objet, $quantite){
 	
 	// On verifie que l'id du perso est correct
 	$verif_idPerso = preg_match("#^[0-9]*[0-9]$#i","$id_perso");
@@ -3192,8 +3192,12 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 							$t_vo = $res_vo->fetch_assoc();
 								
 							$q_obj = $t_vo['q_obj'];
-							
-							if($q_obj >= $quantite && $quantite > 0){
+
+							// Si l'objet est un étendard on ne peut le donner qu'à un chef
+							if ($type_cible != 1 && ($id_objet == 8 || $id_objet == 9)){
+								echo "<font color='red'>Vous ne pouvez pas donner un étendard à ce type d'unité.</font>";								
+							} else {
+								if($q_obj >= $quantite && $quantite > 0){
 									
 								// On supprime l'objet de l'inventaire du perso
 								$sql_d = "DELETE FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='$id_objet' AND equip_objet='0' LIMIT $quantite";
@@ -3237,10 +3241,13 @@ function action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet,
 								$mysqli->query($sql);
 									
 								echo "<center>Vous avez donné $quantite <b>$nom_objet</b> à <font color='$couleur_clan_cible'><b>$nom_cible</b></font></center>";
+								}
+								else {
+									echo "<font color='red'>Vous ne possédez pas l'objet que vous souhaitiez donner.</font>";
+								}
+								
 							}
-							else {
-								echo "<font color='red'>Vous ne possédez pas l'objet que vous souhaitiez donner.</font>";
-							}
+							
 							echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 						}
 								
@@ -3472,10 +3479,9 @@ function est_marchand($mysqli, $id_perso){
 	$sql = "SELECT nb_points FROM perso_as_competence WHERE id_perso='$id_perso' AND id_competence='50'";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
+		
+	return $t['nb_points'];
 	
-	if(isset($t['nb_points'])){
-return $t['nb_points'];
-	}
 	
 }
 
@@ -4109,7 +4115,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						$id_arme_non_equipee = id_arme_non_equipee($mysqli, $idPerso_carte);
 						$test_perte = mt_rand(0,100);
 
-						perte_etendard($mysqli, $idPerso_carte,$x_cible, $y_cible);
 						
 						if ($id_arme_non_equipee > 0 && $test_perte <= 40) {
 														
@@ -4166,6 +4171,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 						
 						// Chef
 						if ($type_perso_cible == 1) {
+							perte_etendard($mysqli, $idPerso_carte,$x_cible, $y_cible);
 							// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
 							// Calcul PI
 							$pi_perdu 		= floor(($pi_perso_cible * 5) / 100);

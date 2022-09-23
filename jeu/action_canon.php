@@ -158,6 +158,9 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 							
 							// Chef
 							if ($type_cible == 1) {
+								
+								perte_etendard($mysqli, $idJoueur_cible, $x_cible, $y_cible);
+				
 								// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
 								// Calcul PI
 								$pi_perdu 		= floor(($pi_cible * 5) / 100);
@@ -283,6 +286,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									
 									// Chef
 									if ($type_cible == 1) {
+										perte_etendard($mysqli, $id_joueur_collat, $x_collat, $y_collat);
 										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_collat * 5) / 100);
