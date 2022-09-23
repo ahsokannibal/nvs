@@ -663,23 +663,6 @@ if($dispo == '1' || $admin) {
 			}
 			
 			action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quantite);
-
-			// Changement de l'icone si l'objet déposé est l'étendard
-			// Recup infos perso
-			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_perso'";
-			$res = $mysqli->query($sql);
-			$t_perso2 = $res->fetch_assoc();
-			
-			$type_perso		= $t_perso2['type_perso'];
-			$clan			= $t_perso2['clan'];
-
-			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_perso'";
-			$res = $mysqli->query($sql);
-			$t_perso2 = $res->fetch_assoc();
-			
-			$type_perso		= $t_perso2['type_perso'];
-			$clan			= $t_perso2['clan'];
-
 		}
 		
 		// Don objet apres choix perso
@@ -848,25 +831,14 @@ if($dispo == '1' || $admin) {
 			$id_objet 	= $t2[0];
 			$type_objet = $t2[1];
 			$id_cible 	= $t2[2];
-			
-			action_don_objet($mysqli, $id_perso, $id_cible, $type_objet, $id_objet, $quantite);
 
-			// Changement de l'icone du donneur si l'objet donné est l'étendard
-			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_perso'";
-			$res = $mysqli->query($sql);
-			$t_perso2 = $res->fetch_assoc();
+			$sql_cible = "SELECT type_perso FROM perso WHERE id_perso='$id_cible'";
+			$res_cible = $mysqli->query($sql_cible);
+			$t_cible = $res_cible->fetch_assoc();
 			
-			$type_perso		= $t_perso2['type_perso'];
-			$clan			= $t_perso2['clan'];
-
+			$type_cible = $t_cible['type_perso'];
 			
-			// Changement de l'icone du receuveur si l'objet donné est l'étendard
-			$sql = "SELECT type_perso, clan FROM perso WHERE perso.id_perso='$id_cible'";
-			$res = $mysqli->query($sql);
-			$t_perso_cible = $res->fetch_assoc();
-			
-			$type_perso_cible = $t_perso_cible['type_perso'];
-			$clan_cible = $t_perso_cible['clan'];
+			action_don_objet($mysqli, $id_perso, $id_cible, $type_cible,  $type_objet, $id_objet, $quantite);
 		}
 		
 		/////////////////////////

@@ -1712,73 +1712,78 @@ if($dispo == '1' || $admin){
 							$id_objet	= $t['id_objet'];
 							$nb_objet	= $t['nb_objet'];
 							
-							// Suppression de l'objet par terre
-							$sql_d = "DELETE FROM objet_in_carte WHERE type_objet='$type_objet' AND id_objet='$id_objet' AND x_carte='$x_persoN' AND y_carte='$y_persoN'";
-							$mysqli->query($sql_d);
-							
-							// Récupération poid objet
-							// Thunes
-							if ($type_objet == 1) {
-								$poid_objet = 0;
+							// Si perso n'est pas un chef on empeche de ramasser un étendard
+							if($type_perso != 1 && ($id_objet == 8 || $id_objet == 9)){
+								$erreur .= "Vous n'avez pas le droit de ramasser un étendard.";
+							} else {
+								// Suppression de l'objet par terre
+								$sql_d = "DELETE FROM objet_in_carte WHERE type_objet='$type_objet' AND id_objet='$id_objet' AND x_carte='$x_persoN' AND y_carte='$y_persoN'";
+								$mysqli->query($sql_d);
 								
-								// Ajout de la thune au perso 
-								$sql_t = "UPDATE perso SET or_perso=or_perso+$nb_objet WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_t);
-								
-								$liste_ramasse .= $nb_objet . " Thune";
-								if ($nb_objet > 1) {
-									$liste_ramasse .= "s";
+								// Récupération poid objet
+								// Thunes
+								if ($type_objet == 1) {
+									$poid_objet = 0;
+									
+									// Ajout de la thune au perso 
+									$sql_t = "UPDATE perso SET or_perso=or_perso+$nb_objet WHERE id_perso='$id_perso'";
+									$mysqli->query($sql_t);
+									
+									$liste_ramasse .= $nb_objet . " Thune";
+									if ($nb_objet > 1) {
+										$liste_ramasse .= "s";
+									}
 								}
-							}
-							
-							// Objet
-							if ($type_objet == 2) {
-								$sql_obj = "SELECT nom_objet, poids_objet FROM objet WHERE id_objet='$id_objet'";
-								$res_obj = $mysqli->query($sql_obj);
-								$t_obj = $res_obj->fetch_assoc();
 								
-								$nom_objet	= $t_obj['nom_objet'];
-								$poid_objet = $t_obj['poids_objet'];
-								
-								for ($i = 0; $i < $nb_objet; $i++) {
+								// Objet
+								if ($type_objet == 2) {
+									$sql_obj = "SELECT nom_objet, poids_objet FROM objet WHERE id_objet='$id_objet'";
+									$res_obj = $mysqli->query($sql_obj);
+									$t_obj = $res_obj->fetch_assoc();
+									
+									$nom_objet	= $t_obj['nom_objet'];
+									$poid_objet = $t_obj['poids_objet'];
+									
+									for ($i = 0; $i < $nb_objet; $i++) {
 									// Ajout de l'objet dans l'inventaire du perso
 									$sql_o = "INSERT INTO perso_as_objet (id_perso, id_objet) VALUES ('$id_perso', '$id_objet')";
 									$mysqli->query($sql_o);								
+									}
+									
+									// calcul charge objets
+									$charge_objets_total = $poid_objet * $nb_objet;
+									
+									// MAJ charge perso 
+									$sql_c = "UPDATE perso SET charge_perso = charge_perso + $charge_objets_total WHERE id_perso='$id_perso'";
+									$mysqli->query($sql_c);
+									
+									$liste_ramasse .= " -- ". $nb_objet . " " . $nom_objet;
 								}
 								
-								// calcul charge objets
-								$charge_objets_total = $poid_objet * $nb_objet;
-								
-								// MAJ charge perso 
-								$sql_c = "UPDATE perso SET charge_perso = charge_perso + $charge_objets_total WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_c);
-								
-								$liste_ramasse .= " -- ". $nb_objet . " " . $nom_objet;
-							}
-							
-							// Arme 
-							if ($type_objet == 3) {
-								$sql_obj = "SELECT nom_arme, poids_arme FROM arme WHERE id_arme='$id_objet'";
-								$res_obj = $mysqli->query($sql_obj);
-								$t_obj = $res_obj->fetch_assoc();
-								
-								$nom_arme	= $t_obj['nom_arme'];
-								$poid_objet = $t_obj['poids_arme'];
-								
-								for ($i = 0; $i < $nb_objet; $i++) {
-									// Ajout de l'arme dans l'inventaire du perso
-									$sql_a = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso', '$id_objet', '0')";
-									$mysqli->query($sql_a);								
+								// Arme 
+								if ($type_objet == 3) {
+									$sql_obj = "SELECT nom_arme, poids_arme FROM arme WHERE id_arme='$id_objet'";
+									$res_obj = $mysqli->query($sql_obj);
+									$t_obj = $res_obj->fetch_assoc();
+									
+									$nom_arme	= $t_obj['nom_arme'];
+									$poid_objet = $t_obj['poids_arme'];
+									
+									for ($i = 0; $i < $nb_objet; $i++) {
+										// Ajout de l'arme dans l'inventaire du perso
+										$sql_a = "INSERT INTO perso_as_arme (id_perso, id_arme, est_portee) VALUES ('$id_perso', '$id_objet', '0')";
+										$mysqli->query($sql_a);								
+									}
+									
+									// calcul charge armes
+									$charge_objets_total = $poid_objet * $nb_objet;
+									
+									// MAJ charge perso 
+									$sql_c = "UPDATE perso SET charge_perso = charge_perso + $charge_objets_total WHERE id_perso='$id_perso'";
+									$mysqli->query($sql_c);
+									
+									$liste_ramasse .= " -- ". $nb_objet . " " . $nom_arme;
 								}
-								
-								// calcul charge armes
-								$charge_objets_total = $poid_objet * $nb_objet;
-								
-								// MAJ charge perso 
-								$sql_c = "UPDATE perso SET charge_perso = charge_perso + $charge_objets_total WHERE id_perso='$id_perso'";
-								$mysqli->query($sql_c);
-								
-								$liste_ramasse .= " -- ". $nb_objet . " " . $nom_arme;
 							}
 						}
 						
@@ -3855,13 +3860,16 @@ if($dispo == '1' || $admin){
 									afficher_liens_prox_bat($mysqli, $id_perso, $x_perso, $y_perso, $type_perso);
 									
 								}
-								echo "\" >" . $id_perso . "</div>";
+								echo "\" >" ;
 
 								// Affichage pastille étendard
 								$id_etendard = id_etendard_joueur($mysqli, $id_perso);
+								$id_etendard == 8 ? $pastille = 'rond_b.png' : $pastille = 'rond_r.png';								
 								if($id_etendard > 0){
-									affichage_pastille_etendard($clan);
+									affichage_pastille_etendard($pastille);
 								};
+
+								echo  $id_perso . "</div>";
 								
 								echo "		<img tabindex='0' class=\"\" border=0 src=\"../images_perso/$dossier_img_joueur/$image_perso\" width=40 height=40 
 													data-toggle='popover'
@@ -4171,13 +4179,14 @@ if($dispo == '1' || $admin){
 													afficher_lien_bouculade($x, $x_perso, $y, $y_perso, $cout_pm);
 													
 													echo "			\" ";
-													echo "		>" . $id_ennemi . "</div>";
-
+													echo "		>";
 													// Affichage pastille étendard
 													$id_etendard = id_etendard_joueur($mysqli, $id_ennemi);
+													$id_etendard == 8 ? $pastille = 'rond_b.png' : $pastille = 'rond_r.png';
 													if($id_etendard > 0){
-														affichage_pastille_etendard($clan_ennemi);
-													};													
+														affichage_pastille_etendard($pastille);
+													}
+													echo  $id_ennemi . "</div>";					
 													
 													//--- Image perso
 													echo "		<img tabindex='0' border=0 src=\"../images_perso/$dossier_img_joueur/".$tab["image_carte"]."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
@@ -4190,6 +4199,7 @@ if($dispo == '1' || $admin){
 													
 													echo "			\" />";
 													echo "	</div>";
+													
 													echo "</td>";
 												}
 											}

@@ -638,6 +638,7 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 
 		// Chef
 		if ($tp_perso == 1) {
+			perte_etendard($mysqli, $id_cible, $x_cible, $y_cible);
 			// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 			// Calcul PI
 			$pi_perdu 		= floor(($pi_cible * 5) / 100);
@@ -660,11 +661,6 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 		$id_arme_non_equipee = id_arme_non_equipee($mysqli, $id_cible);
 
 		$test_perte = mt_rand(0,100);
-
-		
-		if ($type_perso_cible == 1){
-			perte_etendard($mysqli, $id_cible, $x_cible, $y_cible);
-		}
 
 		if ($id_arme_non_equipee > 0) {
 
@@ -891,6 +887,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 
 				// Chef
 				if ($tp_collat_fin == 1) {
+					perte_etendard($mysqli, $id_cible_collat, $x_collat_fin , $y_collat_fin);
 					// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 					// Calcul PI
 					$pi_perdu 		= floor(($pi_collat_fin * 5) / 100);
@@ -935,10 +932,6 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				}
 
 				$id_arme_non_equipee = id_arme_non_equipee($mysqli, $id_cible_collat);
-
-				if ($type_perso_cible == 1){
-					perte_etendard($mysqli, $id_cible, $x_cible, $y_cible);
-				}
 
 				if ($id_arme_non_equipee > 0) {
 
@@ -1251,9 +1244,6 @@ function id_etendard_joueur($mysqli, $id_perso) {
 function perte_etendard($mysqli, $idPerso_carte, $x_cible, $y_cible){
 	$id_etendard = id_etendard_joueur($mysqli, $idPerso_carte);
 	if($id_etendard > 0){
-		// On déséquipe l'étendard
-		$sql = "UPDATE perso_as_objet SET equip_objet='0' WHERE id_perso='$idPerso_carte' AND id_objet='$id_etendard'";
-
 		// Suppression de l'étendard de l'inventaire du perso
 		$sql = "DELETE FROM perso_as_objet WHERE id_perso='$idPerso_carte' AND id_objet='$id_etendard' LIMIT 1";
 		$mysqli->query($sql);
@@ -1264,8 +1254,7 @@ function perte_etendard($mysqli, $idPerso_carte, $x_cible, $y_cible){
 
 		// On dépose la perte de l'étendard par terre
 		$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('2','$id_etendard','1','$x_cible','$y_cible')";
-			$mysqli->query($sql);
-
+		$mysqli->query($sql);
 	}
 }
 

@@ -272,6 +272,7 @@ if($dispo == '1' || $admin){
 							
 							// Chef
 							if ($type_perso_capture == 1) {
+								perte_etendard($mysqli, $id_perso_capture, $x_perso_capture, $y_perso_capture);
 								// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 								// Calcul PI
 								$pi_perdu 		= floor(($pi_perso_capture * 5) / 100);
