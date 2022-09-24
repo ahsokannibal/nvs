@@ -1206,7 +1206,7 @@ if($dispo == '1' || $admin){
 															if ($type_perso == 1 && ($id_bat == 8 || $id_bat == 9)) {
 																
 																// recup grade / pc chef
-																$sql = "SELECT pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
+																$sql = "SELECT pc_perso, perso_as_grade.id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND perso.id_perso='$id_perso'";
 																$res = $mysqli->query($sql);
 																$t_chef = $res->fetch_assoc();
 																

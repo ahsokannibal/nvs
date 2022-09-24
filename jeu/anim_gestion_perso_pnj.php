@@ -87,7 +87,7 @@ if($dispo == '1' || $admin){
 					echo "<center><font color='red'>Erreur: Le pseudo est déjà choisi ou interdit ! Veuillez en choisir un autre</font></center><br /><br />";
 				}
 				elseif ($resultat_user2->num_rows != 0) {
-					echo "<center><font color='red'>Erreur: Vous avez déjà creer un perso avec cet email, un seul perso par joueur</font></center><br /><br />";
+					echo "<center><font color='red'>Erreur: Vous avez déjà créé un perso avec cet email, un seul perso par joueur</font></center><br /><br />";
 				}
 				elseif (!filtremail($email_joueur)) {
 					echo "<center><font color='red'>Erreur: Email incorrect</font></center><br /><br />";

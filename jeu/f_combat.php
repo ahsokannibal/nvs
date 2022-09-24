@@ -388,6 +388,10 @@ function calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $
 		$gain_pc = 1;
 	}
 	
+	if($clan_cible==0){
+		$gain_pc = 0;
+	}
+	
 	return $gain_pc;
 }
 
@@ -399,7 +403,7 @@ function passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp
 	if ($grade_perso == 1) {
 													
 		if ($xp_perso + $gain_xp >= 500) {
-			// On le passage 1ere classe
+			// On le passe 1ere classe
 			$sql = "UPDATE perso_as_grade SET id_grade='101' WHERE id_perso='$id'";
 			$mysqli->query($sql);
 			
