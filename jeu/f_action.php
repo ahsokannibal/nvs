@@ -3853,7 +3853,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 	
 	$id_j_perso = $t_j["idJoueur_perso"];
 	
-	$sql = "SELECT perso.id_perso, pc_perso, id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+	$sql = "SELECT perso.id_perso, pc_perso, perso_as_grade.id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
 	$res = $mysqli->query($sql);
 	$t_chef = $res->fetch_assoc();
 	
@@ -3927,6 +3927,10 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 			
 			$gain_pc_cible = 1;
 		} else {
+			$gain_pc_cible = 0;
+		}
+		
+		if($clan_cible==0){
 			$gain_pc_cible = 0;
 		}
 	

@@ -94,7 +94,7 @@ if($dispo == '1' || $admin) {
 			$direction_charge = $_POST['action_charge'];
 			
 			// Recup infos perso
-			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, type_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+			$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, type_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, perso_as_grade.id_grade FROM perso, perso_as_grade
 					WHERE perso_as_grade.id_perso = perso.id_perso
 					AND perso.id_perso='$id_perso'";
 			$res = $mysqli->query($sql);
@@ -172,7 +172,7 @@ if($dispo == '1' || $admin) {
 				$direction_charge = $_POST['hid_action_charge'];
 				
 				// Recup infos perso
-				$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, type_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, id_grade FROM perso, perso_as_grade
+				$sql = "SELECT x_perso, y_perso, nom_perso, pa_perso, pm_perso, pv_perso, xp_perso, type_perso, paMax_perso, bonusPM_perso, bonusPA_perso, image_perso, clan, perso_as_grade.id_grade FROM perso, perso_as_grade
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso.id_perso='$id_perso'";
 				$res = $mysqli->query($sql);
