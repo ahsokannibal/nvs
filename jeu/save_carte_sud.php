@@ -76,6 +76,7 @@ while ($t = $res->fetch_assoc()){
 	$id_p	= $t["id_perso"];
 	$clan 	= $t["clan"];
 	
+	$color = $noir;
 	if($clan == '1'){
 		$color = $couleur_perso_clan1;
 	}
