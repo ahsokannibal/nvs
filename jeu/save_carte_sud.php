@@ -223,7 +223,7 @@ $date = date('Y-m-d-H-i-s');
 imagecopymerge ($image_carte, $perso_carte, 0, 0, 0, 0, 603, 603, 100);
 
 // creation de l'image carte
-imagepng($image_carte, "histo_carte/carte_sud-$date.png");
+imagepng($image_carte, "carte/histo_carte/carte_sud-$date.png");
 
 ImageDestroy ($perso_carte);
 ImageDestroy ($image_carte);

@@ -5,7 +5,7 @@ if (isset($_SESSION["id_perso"])) {
 	
 	$id = $_SESSION["id_perso"];
 
-	require_once "../fonctions.php";
+	require_once "../../../fonctions.php";
 	
 	$mysqli = db_connexion();
 	
@@ -33,15 +33,15 @@ if (isset($_SESSION["id_perso"])) {
 		
 			<div class="row">
 				<div class="col-12" align='center'>
-					<a href='afficher_carte.php' class='btn btn-primary'>retour carte stratégique</a>
-					<a href='jouer.php' class='btn btn-primary'>retour jeu</a>
+					<a href='carte.php' class='btn btn-primary'>retour carte stratégique</a>
+					<a href='../jouer.php' class='btn btn-primary'>retour jeu</a>
 					<a href='../index.php' class='btn btn-danger'>retour accueil</a>
 				</div>
 			</div>
 		
 			<?php	
 			//nom du répertoire contenant les images à afficher 
-			$nom_repertoire = './histo_carte/';
+			$nom_repertoire = '/histo_carte/';
 			
 			//ouvre le repertoire
 			$pointeur = opendir($nom_repertoire); 

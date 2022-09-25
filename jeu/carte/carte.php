@@ -1,19 +1,22 @@
 <?php
 session_start();
 
-if (isset($_SESSION["id_perso"])) {
+//Pas de session en cours, on redirige vers l'accueil
+if (!isset($_SESSION["id_perso"])) {
+	header("location:../../index.php");
+}
 	
-	$id = $_SESSION["id_perso"];
+$id = $_SESSION["id_perso"];
 
-	require_once "../fonctions.php";
+require_once "../../fonctions.php";
+
+$mysqli = db_connexion();
+
+$page_acces = 'carte.php';
 	
-	$mysqli = db_connexion();
-	
-	$page_acces = 'afficher_carte.php';
-		
-	// acces_log
-	$sql = "INSERT INTO acces_log (date_acces, id_perso, page) VALUES (NOW(), '$id', '$page_acces')";
-	$mysqli->query($sql);
+// acces_log
+$sql = "INSERT INTO acces_log (date_acces, id_perso, page) VALUES (NOW(), '$id', '$page_acces')";
+$mysqli->query($sql);
 	
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -26,50 +29,53 @@ if (isset($_SESSION["id_perso"])) {
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		
 		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-		
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
 	</head>
 	
 	<body onload="addMouseChecker('carto', 'idInput', 'xy');">
-		<script>		
-		function addMouseChecker(imgId, inputId, valueToShow) {
-			
-			imgId 	= document.getElementById(imgId);
-			inputId = document.getElementById(inputId);
-			   
-			if (imgId.addEventListener) {
-				imgId.addEventListener('mousemove', function(e){checkMousePos(imgId, inputId, valueToShow, e);}, false);
-			} else if (imgId.attachEvent) {
-				imgId.attachEvent('onclick', function(e){checkMousePos(imgId, inputId, valueToShow, e);});
-			}
-		}
 		
-		function checkMousePos(imgId, inputId, valueToShow, e) {
-			
-			var ih=imgId.naturalHeight;
-			
-			var pos = [];
-			
-			pos['x'] 	= Math.floor((e.pageX - imgId.offsetLeft) / 3);
-			pos['y'] 	= Math.floor((ih - (e.pageY - imgId.offsetTop)) / 3);
-			pos['xy'] 	= pos['x'] +','+ pos['y'];
-		   
-			inputId.value = pos[valueToShow];
-		}
-		</script>
-		<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
+		<p align="center"><a href="../jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 		<div class="row">
 			<div class="col-12" align='center'>
 				<a href='histo_carte.php' class='btn btn-primary'>Afficher l'historique de la carte</a>
 			</div>
 		</div>
 		<?php
-		
-	// Le perso appartient-il à une compagnie 
-	$sql = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
-	$res = $mysqli->query($sql);
-	$nb_compagnie = $res->num_rows;		
-	
+			// Le perso appartient-il à une compagnie 
+			$sql = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
+			$res = $mysqli->query($sql);
+			$nb_compagnie = $res->num_rows;	
+		?>
+		<div class="grid">
+			<div class="row">
+				<div class="col d-flex justify-content-center">
+					<h1>Carte Stratégique - Mon perso</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col d-flex justify-content-center">
+					<input type='text' id='idInput' disabled />
+				</div>
+			</div>
+			<div class="row">
+				<div class="col d-flex justify-content-center">
+					<img id='carto' src="<?='image_carte.php?imagename=carte'.$id.'.png';?>">
+				</div>
+			</div>
+			<div class="row">
+				<div class="col d-flex justify-content-center">
+					<form action="carte.php" method="post" name="ss_fond">
+						<input type="submit" name="Submit" value="Retirer la topographie"><br />
+						<input type="submit" name="Submit" value="cercles sur mon bataillon">
+						<?php if ($nb_compagnie) {
+							echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur ma compagnie\">";
+						} ?>
+					</form>
+				</div>
+			</div>
+		</div>
+	<!--
 	if(isset($_POST['Submit'])){
 		
 		// Enlever le fond
@@ -82,7 +88,7 @@ if (isset($_SESSION["id_perso"])) {
 		
 			echo "<div align=\"center\"><br>";
 			echo "Vous pouvez remettre la topographie si vous le souhaitez<br>";
-			echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"avec_fond\">";
+			echo "<form action=\"carte.php\" method=\"post\" name=\"avec_fond\">";
 			echo "<input type=\"submit\" name=\"Submit\" value=\"Remettre la topographie\">";
 			echo "</div>";
 			echo "</form>";
@@ -96,7 +102,7 @@ if (isset($_SESSION["id_perso"])) {
 			
 				echo "<div align=\"center\"><br>";
 				echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
-				echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"avec_fond\">";
+				echo "<form action=\"carte.php\" method=\"post\" name=\"avec_fond\">";
 				echo "<input type=\"submit\" name=\"Submit\" value=\"remettre la legende\">";
 				echo "</div>";
 				echo "</form>";
@@ -110,7 +116,7 @@ if (isset($_SESSION["id_perso"])) {
 				
 					echo "<div align=\"center\"><br>";
 					echo "Vous pouvez remettre la legende si vous le souhaitez<br>";
-					echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"avec_fond\">";
+					echo "<form action=\"carte.php\" method=\"post\" name=\"avec_fond\">";
 					echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\">";
 					echo "</div>";
 					echo "</form>";
@@ -126,7 +132,7 @@ if (isset($_SESSION["id_perso"])) {
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
 						if ($nb_compagnie) {
@@ -144,7 +150,7 @@ if (isset($_SESSION["id_perso"])) {
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon perso\">";
@@ -160,7 +166,7 @@ if (isset($_SESSION["id_perso"])) {
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 						if ($nb_compagnie) {
@@ -177,7 +183,7 @@ if (isset($_SESSION["id_perso"])) {
 					
 						echo "<div align=\"center\"><br>";
 						echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-						echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+						echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 						echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 						if ($nb_compagnie) {
@@ -199,7 +205,7 @@ if (isset($_SESSION["id_perso"])) {
 	
 		echo "<div align=\"center\"><br>";
 		echo "Vous pouvez enlever la topographie si vous le souhaitez<br>";
-		echo "<form action=\"afficher_carte.php\" method=\"post\" name=\"ss_fond\">";
+		echo "<form action=\"carte.php\" method=\"post\" name=\"ss_fond\">";
 		echo "<input type=\"submit\" name=\"Submit\" value=\"Retirer la topographie\"><br />";
 		echo "<input type=\"submit\" name=\"Submit\" value=\"cercles sur mon bataillon\">";
 		if ($nb_compagnie) {
@@ -208,11 +214,9 @@ if (isset($_SESSION["id_perso"])) {
 		echo "</div>";
 		echo "</form>";
 		
-	}
-}
-else {
-	echo "Veuillez vous connecter";	
-}
-		?>
+	}*/-->
+
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+		<script src="carte.js"></script>
 	</body>
 </html>	

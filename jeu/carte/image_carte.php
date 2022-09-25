@@ -13,20 +13,19 @@ if (isset($_SESSION["id_perso"])) {
 		
 		if ($id_img == $id) {
 		
-			$path = "carte";
-
-			$fd = fopen ("$path/$imagename", "rb", 1);
-			$data = fread($fd, filesize("$path/$imagename"));
+			$fd = fopen ("joueur_carte/$imagename", "rb", 1);
+			
+			$data = fread($fd, filesize("joueur_carte/$imagename"));
 			fclose ($fd);
 			print $data;
 			
 		} else {
-			header("location:../index.php");
+			header("location:../../index.php");
 		}
 	} else {
-		header("location:../index.php");
+		header("location:../../index.php");
 	}
 } else {
-	header("location:../index.php");
+	header("location:../../index.php");
 }
 ?>
