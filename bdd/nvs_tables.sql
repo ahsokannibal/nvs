@@ -369,7 +369,7 @@ CREATE TABLE `carte_historique` (
  `carte_date` date NOT NULL,
  `carte_json` longtext CHARACTER SET utf8mb4 COLLATE utf8mb4_bin NOT NULL CHECK (json_valid(`carte_json`)),
  PRIMARY KEY (`id_carte_historique`)
-) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
