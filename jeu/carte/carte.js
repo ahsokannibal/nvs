@@ -117,7 +117,16 @@ var histoMaps = new Map();
 
 $( document ).ready(function(){
     
+    get_map();
     canvas.addEventListener('mousemove', function(e){checkMousePos(canvas, e);}, false);
+    /*canvas.addEventListener("touchmove", function (e) {
+        var touch = e.touches[0];
+        var mouseEvent = new MouseEvent("mousemove", {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        });
+        canvas.dispatchEvent(mouseEvent);
+      }, false);*/
 
     let startDate='20/09/2022';
     $(canvas).hover(function(){
@@ -354,10 +363,8 @@ class Case{
 
 
 
-get_map();
 
 function drawMap(data){
-    console.log(data)
     canvas.width = map_size * pixel_size + (map_size - 2) * pixel_distance;
     canvas.height = map_size * pixel_size + (map_size - 2) * pixel_distance;
 
@@ -469,8 +476,10 @@ function checkMousePos(canvas,  e) {
 
 function adjustPixelSizeOnScreenSize(){
     let width = window.innerWidth;
-
-    if(width<1100){
+    console.log(width)
+    if(width<800){
+        return 2;
+    }else if(width<1100){
         return 3;
     }else if(width<1600){
         return 4;
