@@ -43,6 +43,21 @@ $mysqli->query($sql);
 			h1{
 				color:white
 			}
+			/*@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
+				html {
+					transform: rotate(-90deg);
+					transform-origin: left top;
+					width: 100vh;
+					height: 100vw;
+					overflow-x: hidden;
+					position: absolute;
+					top: 100%;
+					left: 0;
+				}
+			}*/
+			#map {
+				width:100%;
+			}
 		</style>
 
 	</head>
@@ -69,27 +84,29 @@ $mysqli->query($sql);
 					<h1>Carte Stratégique</h1>
 				</div>
 			</div>
-			<div  class="d-flex justify-content-center">
-				<div id="carouselControls" class="carousel slide" data-bs-ride="carousel">
-					<div class="carousel-inner">
-						<button id="carousel-control-prev" class="carousel-control-prev" type="button" data-bs-target="#carouselControls" data-bs-slide="prev">
-							<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Previous</span>
-						</button>
-						<button id="carousel-control-next" class="carousel-control-next" type="button" data-bs-target="#carouselControls" data-bs-slide="next">
-							<span class="carousel-control-next-icon" aria-hidden="true"></span>
-							<span class="visually-hidden">Next</span>
-						</button>
-						<div class="carousel-item active">
-							<canvas id="map"></canvas>
-							<div  class="carousel-caption d-none d-md-block">
-								<h5 id="carouselTitle">First slide label</h5>
-								<!--<p id="carouselContent">Some representative placeholder content for the first slide.</p>-->
+			<div  class="row">
+				<div  class="col-12 col-lg-10">
+					<div id="carouselControls" class="carousel slide" data-bs-ride="carousel">
+						<div class="carousel-inner">
+							<button id="carousel-control-prev" class="carousel-control-prev" type="button" data-bs-target="#carouselControls" data-bs-slide="prev">
+								<span class="carousel-control-prev-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Previous</span>
+							</button>
+							<button id="carousel-control-next" class="carousel-control-next" type="button" data-bs-target="#carouselControls" data-bs-slide="next">
+								<span class="carousel-control-next-icon" aria-hidden="true"></span>
+								<span class="visually-hidden">Next</span>
+							</button>
+							<div class="carousel-item active">
+								<canvas id="map"></canvas>
+								<div  class="carousel-caption d-none d-md-block">
+									<h5 id="carouselTitle">First slide label</h5>
+									<!--<p id="carouselContent">Some representative placeholder content for the first slide.</p>-->
+								</div>
 							</div>
 						</div>
 					</div>
 				</div>
-				<div class="p-3">
+				<div class="col p-3">
 					<form class="row">
 						<div class="col">
 							<div class="input-group date" id="datepicker">
