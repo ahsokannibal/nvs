@@ -459,8 +459,11 @@ function get_historique_map(historique_date){
 
 function checkMousePos(canvas,  e) {
     
-    var x = e.offsetX;
-    var y = e.offsetY;
+    let difX = canvas.offsetWidth / canvas.width;
+    let difY = canvas.offsetHeight / canvas.height;
+
+    var x = e.offsetX / difX;
+    var y = e.offsetY / difY;
     var pos = [];
     pos['x'] 	= Math.floor(x/(pixel_size + pixel_distance));
     pos['y'] 	= Math.floor((canvas.width-y)/(pixel_size + pixel_distance));
