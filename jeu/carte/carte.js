@@ -118,6 +118,7 @@ var histoMaps = new Map();
 $( document ).ready(function(){
     
     get_map();
+    
     canvas.addEventListener('mousemove', function(e){checkMousePos(canvas, e);}, false);
     /*canvas.addEventListener("touchmove", function (e) {
         var touch = e.touches[0];
@@ -384,6 +385,7 @@ function drawMap(data){
     });
     mapTiles = toMap(tiles, toKey);
     map="";
+    
 }
 
 function drawBackground(){
@@ -458,9 +460,14 @@ function get_historique_map(historique_date){
 
 
 function checkMousePos(canvas,  e) {
-    
-    var x = e.offsetX;
-    var y = e.offsetY;
+   // console.log(canvas, pixel_size, pixel_distance)
+   // console.log(e)
+   var difX = canvas.offsetWidth / canvas.width;
+   var difY = canvas.offsetHeight / canvas.height;
+
+    var x = e.offsetX/difX;
+    var y = e.offsetY/difY;
+
     var pos = [];
     pos['x'] 	= Math.floor(x/(pixel_size + pixel_distance));
     pos['y'] 	= Math.floor((canvas.width-y)/(pixel_size + pixel_distance));
