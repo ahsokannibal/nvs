@@ -32,6 +32,7 @@ $mysqli->query($sql);
 		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.1/dist/leaflet.css" integrity="sha256-sA+zWATbFveLLNqWO2gtiw3HL/lh1giY/Inf1BJ0z14=" crossorigin="" />
 		<style>
 			#page {
 					background-image: url("../../images/background-wood2.jpg");
@@ -42,6 +43,12 @@ $mysqli->query($sql);
 			}
 			h1{
 				color:white
+			}
+			#wrapper {
+				position: relative;
+				border: 1px solid #9C9898;
+				width: 100%;
+				height: 100%;
 			}
 			/*@media screen and (min-width: 320px) and (max-width: 767px) and (orientation: portrait) {
 				html {
@@ -57,7 +64,11 @@ $mysqli->query($sql);
 			}*/
 			#map {
 				width:100%;
+				touch-action: none;
+				/*width:690px;
+				height : 690px;*/
 			}
+			
 		</style>
 
 	</head>
@@ -97,10 +108,11 @@ $mysqli->query($sql);
 								<span class="visually-hidden">Next</span>
 							</button>
 							<div class="carousel-item active">
-								<canvas id="map"></canvas>
-								<div  class="carousel-caption d-none d-md-block">
-									<h5 id="carouselTitle">First slide label</h5>
-									<!--<p id="carouselContent">Some representative placeholder content for the first slide.</p>-->
+								<div id="wrapper">
+									<canvas id="map"></canvas>
+									<!--<div id="carousel-caption" class="carousel-caption d-none d-md-block">
+										<h5 id="carouselTitle"></h5>
+									</div>-->
 								</div>
 							</div>
 						</div>
@@ -129,6 +141,12 @@ $mysqli->query($sql);
 						<input class="form-check-input" type="checkbox" value="" id="brouillard" checked>
 						<label class="form-check-label" for="brouillard">
 							Brouillard
+						</label>
+					</div>
+					<div class="form-check">
+						<input class="form-check-input" type="checkbox" value="" id="joueurs" checked>
+						<label class="form-check-label" for="joueurs">
+							Joueurs
 						</label>
 					</div>
 					<div class="form-check">
@@ -170,6 +188,9 @@ $mysqli->query($sql);
 		<script type="text/javascript" src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
+		
 		<script src="carte.js"></script>
+		<script src="Case.js"></script>
+		
 	</body>
 </html>	

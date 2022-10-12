@@ -47,36 +47,37 @@
 					<div id="table_terrain" class="table-responsive">
 						<table border='1' align="center" width=100%>
 							<tr>
-								<th style="text-align:center">case</th><th style="text-align:center">nom</th><th style="text-align:center">coût PM</th><th style="text-align:center">Défense à distance (1)</th><th style="text-align:center">Défense au CàC</th><th style="text-align:center">Perception</th><th style="text-align:center">Récupération</th>
+								<th style="text-align:center">case</th><th style="text-align:center">nom</th><th style="text-align:center">coût PM</th><th style="text-align:center">Défense à distance (1)</th><th style="text-align:center">Défense au CàC</th><th style="text-align:center">Bonus portée armes à distance (2)</th><th style="text-align:center">Perception</th><th style="text-align:center">Récupération</th>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/1.gif' /></td><td align='center'>Plaine</td><td align='center'>1</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td>
+								<td align='center'><img src='../fond_carte/1.gif' /></td><td align='center'>Plaine</td><td align='center'>1</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/2.gif' /></td><td align='center'>Coline</td><td align='center'>2</td><td align='center'>+10%</td><td align='center'>+10%</td><td align='center'>+1</td><td align='center'> - </td>
+								<td align='center'><img src='../fond_carte/2.gif' /></td><td align='center'>Coline</td><td align='center'>2</td><td align='center'>+10%</td><td align='center'>+10%</td><td align='center'> +1 </td><td align='center'>+1</td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/3.gif' /></td><td align='center'>Montagne</td><td align='center'>4</td><td align='center'>+20%</td><td align='center'>+20%</td><td align='center'>+2</td><td align='center'> - </td>
+								<td align='center'><img src='../fond_carte/3.gif' /></td><td align='center'>Montagne</td><td align='center'>4</td><td align='center'>+20%</td><td align='center'>+20%</td><td align='center'> +2 </td><td align='center'>+2</td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/4.gif' /></td><td align='center'>Desert</td><td align='center'>1</td><td align='center'>-10%</td><td align='center'>-10%</td><td align='center'> - </td><td align='center'>-100</td>
+								<td align='center'><img src='../fond_carte/4.gif' /></td><td align='center'>Desert</td><td align='center'>1</td><td align='center'>-10%</td><td align='center'>-10%</td><td align='center'> - </td><td align='center'> - </td><td align='center'>-100</td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/6.gif' /></td><td align='center'>Marécage</td><td align='center'>2</td><td align='center'> - </td><td align='center'>-10%</td><td align='center'> - </td><td align='center'>-20</td>
+								<td align='center'><img src='../fond_carte/6.gif' /></td><td align='center'>Marécage</td><td align='center'>2</td><td align='center'> - </td><td align='center'>-10%</td><td align='center'> - </td><td align='center'> - </td><td align='center'>-20</td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/7.gif' /></td><td align='center'>Forêt</td><td align='center'>2</td><td align='center'>+20%</td><td align='center'> - </td><td align='center'>-2</td><td align='center'> - </td>
+								<td align='center'><img src='../fond_carte/7.gif' /></td><td align='center'>Forêt</td><td align='center'>2</td><td align='center'>+20%</td><td align='center'> - </td><td align='center'> - </td><td align='center'>-2</td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/8.gif' /></td><td align='center'>Eau / Rivière</td><td align='center'>4</td><td align='center'>+10%</td><td align='center'>+10%</td><td align='center'> - </td><td align='center'> - </td>
+								<td align='center'><img src='../fond_carte/8.gif' /></td><td align='center'>Eau / Rivière</td><td align='center'>4</td><td align='center'>+10%</td><td align='center'>+10%</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../fond_carte/9.gif' /></td><td align='center'>Eau profonde</td><td align='center'>Infranchissable</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td>
+								<td align='center'><img src='../fond_carte/9.gif' /></td><td align='center'>Eau profonde</td><td align='center'>Infranchissable</td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td><td align='center'> - </td>
 							</tr>
 						</table>
 					</div>
 
 					<p><b>(1) Se référer à cette colonne lorsqu'on attaque avec une arme pour les attaques à distance (exemple : pistolet, fusil, etc..), même si l'attaque se fait au contact.</b></p>
+					<p><b>(2) Le malus de précision pour les attaques à 4 cases et plus ne s'applique pas si la portée hors bonus de l'arme n'est pas de minimum 4.</b></p>
 
 					<h2>Les Points Stratégiques</h2>
 					<p>Sur la carte, il y a des points stratégiques répartis à différents endroits, symbolisés par des étoiles sur la carte quand ils ont été repérés. Ce sont des bâtiments indestructibles et capturables. Lorsqu'un camp capture un point stratégique, il peut gagner des points de victoire.</p>
