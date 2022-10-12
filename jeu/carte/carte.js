@@ -1,3 +1,4 @@
+
 Date.prototype.yyyymmdd = function() {
     var mm = this.getMonth() + 1; // getMonth() is zero-based
     var dd = this.getDate();
@@ -11,6 +12,8 @@ Date.prototype.yyyymmdd = function() {
 const pixel_size = adjustPixelSizeOnScreenSize();
 const pixel_distance = 1;
 const map_size = 201;
+const maxScale = 13;
+const images = [];
 
 // couleurs perso_carte brouillard
 const gris_brouillard 				= 'rgb(80, 80, 80)'; // noir
@@ -48,14 +51,20 @@ const couleur_eau_p 		        = 'rgb(39, 141, 227)'; // bleu foncé
 
 const topographie_checkbox = document.getElementById('topographie');
 topographie_checkbox.addEventListener('change', (event)=>{
-    mapTiles.forEach(tile =>{
-        tile.draw(canvas, ctx);
-    });
+    drawMap(currentMap);
 });
 const brouillard_checkbox = document.getElementById('brouillard');
 brouillard_checkbox.addEventListener('change', (event)=>{
     mapTiles.forEach(tile =>{
         if(tile.brouillard!=undefined){
+            tile.draw(canvas, ctx);
+        }
+    });
+});
+const joueurs_checkbox = document.getElementById('joueurs');
+joueurs_checkbox.addEventListener('change', (event)=>{
+    mapTiles.forEach(tile =>{
+        if(tile.joueur!=undefined){
             tile.draw(canvas, ctx);
         }
     });
@@ -76,28 +85,38 @@ contraintes_batiments_checkbox.addEventListener('change', (event)=>{
 });*/
 const bataillon_checkbox = document.getElementById('bataillon');
 bataillon_checkbox.addEventListener('change', (event)=>{
-    //comme le stroke déborde, on redessine le background
-    drawBackground();
-    mapTiles.forEach(tile =>{
-        tile.draw(canvas, ctx);
-    });
+    drawMap(currentMap);
 });
 const compagnie_checkbox = document.getElementById('compagnie');
-compagnie_checkbox.addEventListener('change', (event)=>{
-    //comme le stroke déborde, on redessine le background
-    drawBackground();
-    mapTiles.forEach(tile =>{
-        tile.draw(canvas, ctx);
-    });
+compagnie_checkbox.addEventListener('change', (event)=>{    
+    drawMap(currentMap);
 });
 
 const canvas = document.getElementById('map');
 const ctx = canvas.getContext('2d');
+const evCache = [];
+var prevDiff = -1;
+
 
 
 var mapTiles;
-var upToDateMap;
 var histoMaps = new Map();
+var currentMap;
+
+var currentTile;
+
+var translatePos = {
+    x: 0,
+    y: 0
+};
+
+var scale = 1.0;
+var scaleWheelMultiplier = 0.4;
+var scalePinchMultiplier = 0.1;
+var startDragOffset = {};
+var mouseDown = false;
+var originx = 0;
+var originy = 0;
 
 //datepicker en français
 ;(function($){
@@ -118,7 +137,12 @@ var histoMaps = new Map();
 $( document ).ready(function(){
     
     get_map();
-    canvas.addEventListener('mousemove', function(e){checkMousePos(canvas, e);}, false);
+    canvas.addEventListener('mousemove', function(e){
+        let tile = getTilePointerPos(canvas, e);
+        
+        //je mets à jour le tooltip si la case existe
+        tile != undefined ? tile.setTooltipContent():'';
+    }, false);
     /*canvas.addEventListener("touchmove", function (e) {
         var touch = e.touches[0];
         var mouseEvent = new MouseEvent("mousemove", {
@@ -148,8 +172,8 @@ $( document ).ready(function(){
         if(e.date == undefined || e.date.valueOf() === today.valueOf()){
             $('#carousel-control-next').hide();
             $('#carousel-control-prev').hide();
-            $('#carouselTitle').hide();
-            drawMap(upToDateMap);
+           // $('#carousel-caption').hide();
+            drawMap(currentMap);
         }else{
             get_historique_map($('#datepicker').datepicker('getDate').yyyymmdd());
             $('#carousel-control-next').show();
@@ -158,7 +182,7 @@ $( document ).ready(function(){
             }else{
                 $('#carousel-control-prev').hide();
             }
-            $('#carouselTitle').text("Map du " + $('#datepicker').datepicker('getDate').toLocaleDateString('fr-FR')).show();
+           // $('#carouselTitle').text("Map du " + $('#datepicker').datepicker('getDate').toLocaleDateString('fr-FR')).show();
         }
     });
     
@@ -174,216 +198,182 @@ $( document ).ready(function(){
     });
     $('#carousel-control-next').hide();
     $('#carousel-control-prev').hide();
-    $('#carouselTitle').hide();
+   // $('#carousel-caption').hide();
+
+    
+    // add event listeners to handle screen drag
+    canvas.addEventListener("pointerdown", handleStart);
+    canvas.addEventListener("pointerup", handleEnd);
+    canvas.addEventListener("pointerout", handleEnd);
+    canvas.addEventListener("pointerleave", handleEnd);
+    canvas.addEventListener("pointercancel", handleEnd);
+    canvas.addEventListener("pointermove", handleMove);
+
+    canvas.addEventListener("wheel", handleWheel);
+
 });
 
+function handleWheel(event){
+    /*event.preventDefault();
 
-class Case{
-    couleur;
-    couleur_brouillard;
-    constructor(options={}){
-        Object.assign(this, options);
-        this.setCouleur();
-    }
+scale += event.deltaY * -0.01;
 
-    setTooltipContent(){
-       $(canvas).attr('title', this.x + " - " + this.y).css('font-weight', 'bold');;
-    }
+// Restrict scale
+scale = Math.min(Math.max(.125, scale), 4);*/
 
-    draw(canvas, ctx){
-        this.setCouleur();
-        if(batiments_checkbox.checked && this.batiment != undefined){
-            //on utilise l'image
-            if(this.batiment.nom == 'Fort' || this.batiment.nom == 'Fortin' || this.batiment.nom == 'Gare' || this.batiment.nom == 'Hopital' || this.batiment.nom == 'Pont'|| this.batiment.nom == 'Train' || this.batiment.nom == 'Pénitencier' || this.batiment.nom == 'Point stratégique'){
-                
-                let me = this;
-                if(this.batiment.nom == 'Point stratégique'){
-                    
-                    if(this.batiment.camp == 1){
-                        this.couleur = couleur_bat_clan1;
-                    }else if(this.batiment.camp == 2){
-                        this.couleur = couleur_bat_clan2;
-                    }else {
-                        this.couleur = noir;
-                    }
-                    ctx.strokeStyle = this.couleur;
-                    ctx.lineWidth = pixel_size/2;
-                    ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-                }
-                var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
-                img.src = '../../images_perso/'+this.batiment.image;
-                img.onload = function(){
-                    ctx.drawImage(img, me.getX(canvas), me.getY(canvas), pixel_size, pixel_size);
-                };
-            }else{
-                //on utilise une couleur
-                if(this.batiment.camp == 1){
-                    this.couleur = couleur_bat_clan1;
-                }else if(this.batiment.camp == 2){
-                    this.couleur = couleur_bat_clan2;
-                }else {
-                    this.couleur = couleur_bat_neutre;
-                }
-                ctx.fillStyle = this.couleur;
-                ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-            }
-            
-            if(this.joueur != undefined && compagnie_checkbox.checked){
-                if (this.joueur.some(e => e.compagnie != undefined)) {
-                    /* this.joueur contains the element we're looking for */
-                    ctx.strokeStyle = blanc;
-                    ctx.lineWidth = pixel_size/2;
-                    ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-                }
-            }
-            if(this.joueur != undefined && bataillon_checkbox.checked){
-                if (this.joueur.some(e => e.bataillon != undefined)) {
-                    /* this.joueur contains the element we're looking for */
-                    ctx.strokeStyle = 'orange';
-                    ctx.lineWidth = pixel_size/2;
-                    ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-                }
-            }
-        }else if(this.joueur != undefined && !Array.isArray(this.joueur)){
-            if(this.joueur.camp == 1){
-                this.couleur = couleur_perso_clan1;
-            }else if(this.joueur.camp == 2){
-                this.couleur = couleur_perso_clan2;
-            }else {
-                this.couleur = couleur_perso_defaut;
-            }
-            if(compagnie_checkbox.checked && this.joueur.compagnie != undefined){
-                
-                ctx.strokeStyle = blanc;
-                ctx.lineWidth = pixel_size/2;
-                ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-            }
-            if(bataillon_checkbox.checked && this.joueur.bataillon != undefined){
-                ctx.strokeStyle = 'orange';
-                ctx.lineWidth = pixel_size/2;
-                ctx.strokeRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-            }
-            ctx.fillStyle = this.couleur;
-            ctx.lineWidth = pixel_size/2;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-            /*var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
-            img.src = '../../images_perso/'+this.joueur.image;
-            let x=this.x;
-            let y=this.y;
-            img.onload = function(){
-                ctx.drawImage(img, this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-            };*/
-            
-        }else if(this.pnj != undefined){
-            /*var img = new Image(pixel_size, pixel_size); //  Constructeur HTML5
-            img.src = '../../images/pnj/'+this.pnj.image;
-            let x=this.x;
-            let y=this.y;
-            img.onload = function(){
-                ctx.drawImage(img, this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-            };*/
-            ctx.fillStyle = noir;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-        }else if(this.brouillard != undefined && this.brouillard.valeur == 1 && brouillard_checkbox.checked){
-            if(topographie.checked){
-                ctx.fillStyle = this.couleur_brouillard;
-            }else{
-                ctx.fillStyle = couleur_brouillard_plaine;
-            }
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-        }else if(topographie_checkbox.checked){
-            ctx.fillStyle = this.couleur;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-        }/*else if(contraintes_batiments_checkbox.checked){
-            
-        }*/else{
-            ctx.fillStyle = grey;
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
-        }
+    event.preventDefault();
+    
+    // Normalize mouse wheel movement to +1 or -1 to avoid unusual jumps.
+    const wheel = event.deltaY < 0 ? 1 : -1;
+    zoomedtile = getTilePointerPos(canvas, event);
+    
+    
+    // Compute zoom factor.
+    const zoom = Math.exp(wheel * scaleWheelMultiplier);
+    
+    // Update scale and others.
+    scale *= zoom;
 
-    }
+    //On ne descend pas sous un certains seuil de dezoom (pour eviter des problemes de calcul de case survolée)
+    scale = (scale < 1) ? 1 : scale;
+    scale = (scale > maxScale) ? maxScale : scale;
 
-    getX(canvas){
-        return (this.x*(pixel_size + pixel_distance)+pixel_distance);
-    }
+    zoomMap(zoomedtile);
+    
+    
+}
 
-    getY(canvas){
-        return (canvas.width-this.y*(pixel_size + pixel_distance)-pixel_size);
-    }
+function zoomMap(zoomedtile){
 
-    setCouleur(){
-        if (this.fond == '3.gif') {
-			// Montagne
-            this.couleur             = couleur_montagne;
-            this.couleur_brouillard  = couleur_brouillard_montagne;
-		}
-		else if (this.fond == '2.gif') {
-			// Colinne
-            this.couleur             = couleur_colline;
-			this.couleur_brouillard  = couleur_brouillard_colinne;
-		}
-		else if (this.fond == '4.gif') {
-			// Desert
-            this.couleur             = couleur_desert;
-			this.couleur_brouillard  = couleur_brouillard_desert;
-		}
-		else if (this.fond == '6.gif') {
-			// marécage
-            this.couleur             = couleur_marecage;
-			this.couleur_brouillard  = couleur_brouillard_marecage;
-		}
-		else if (this.fond == '7.gif') {
-			// Foret
-            this.couleur             = couleur_foret;
-			this.couleur_brouillard  = couleur_brouillard_foret;
-		}
-        else if (this.fond == 'b5b.png' || this.fond == 'b5r.png' || this.fond == 'b5g.png') {
-			// pont
-			this.couleur             = couleur_bat_neutre;
-            this.couleur_brouillard  = couleur_brouillard_eau;
-		}
-		else if (this.fond == '8.gif') {
-			// eau 
-			this.couleur             = couleur_eau;
-            this.couleur_brouillard  = couleur_brouillard_eau;
-		}else if(this.fond == '9.gif'){
-            this.couleur             = couleur_eau_p;
-            this.couleur_brouillard  = couleur_brouillard_eau;
-        }else if(this.fond.includes('rail')){
-            this.couleur             = couleur_rail;
-            this.couleur_brouillard  = couleur_brouillard_plaine;
-        }else {
-			// plaine et autres
-			this.couleur             = couleur_plaine;
-            this.couleur_brouillard  = couleur_brouillard_plaine;
-		}
-    }
+
+    //const zoom =  Math.min(Math.max(.125, wheel), 4);
+    let zommedTileRapportX = zoomedtile.x / map_size;
+    let zommedTileRapportY = (map_size - zoomedtile.y) / map_size;
+
+    //let newTransX =  (translatePos.x - map_size) * difX * scale  *  zommedTileRapport ;
+    let newTransX = -(canvas.width * scale - canvas.width)  * zommedTileRapportX;
+    let newTransY = -(canvas.height * scale - canvas.height)  * zommedTileRapportY;
+        
+
+    //console.log(newTransX, newTransY, canvas.offsetWidth, canvas.width, zommedTileRapportX, scale);
+    adjustedTranslatePos(newTransX, newTransY);
+    drawMap(currentMap);
 }
 
 
 
+function handleStart(e){
+    evCache.push(e);
 
-function drawMap(data){
-    canvas.width = map_size * pixel_size + (map_size - 2) * pixel_distance + pixel_size/2+pixel_distance;
+    if(evCache.length === 2){
+        zoomedtile = getTilePointerPos(canvas, {offsetX:(evCache[0].offsetX + evCache[1].offsetX)/2, offsetY: (evCache[0].offsetY + evCache[1].offsetY)/2});
+      //  console.log(evCache[0].offsetX, evCache[1].offsetX)
+    }else if (evCache.length === 1 ){
+        
+        startDragOffset.x = e.clientX - translatePos.x;
+        startDragOffset.y = e.clientY - translatePos.y;
+    }
+
+   /* startDragOffset.x = e.changedTouches[0].clientX - translatePos.x;
+    startDragOffset.y = e.changedTouches[0].clientY - translatePos.y;*/
+}
+function handleMove(e){
+
+    console.log("move : " + evCache.length)
+    //zoomedtile = getTilePointerPos(canvas, evCache[0]);
+    // Find this event in the cache and update its record with this event
+    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === e.pointerId);
+    evCache[index] = e;
+    // If two pointers are down, check for pinch gestures
+    if (evCache.length === 2) {
+    // Calculate the distance between the two pointers
+        const curDiffX = Math.abs(evCache[0].clientX - evCache[1].clientX);
+        const curdiffY = Math.abs(evCache[0].clientY - evCache[1].clientY)
+        let curDiff = (curDiffX > curdiffY) ? curDiffX : curdiffY;
+
+        if (prevDiff > 0) {
+            const zoomOrDezoom = (curDiff > prevDiff) ? 1 : -1;
+            
+            
+            
+            // Compute zoom factor.
+            const zoom = Math.exp(zoomOrDezoom * scalePinchMultiplier);
+            
+            // Update scale and others.
+            scale *= zoom;
+        
+            //On ne descend pas sous un certains seuil de dezoom (pour eviter des problemes de calcul de case survolée)
+            scale = (scale < 1) ? 1 : scale;
+            scale = (scale > maxScale) ? maxScale : scale;
+            
+            zoomMap(zoomedtile);
+        }
+
+        // Cache the distance for the next move event
+        prevDiff = curDiff;
+    }else if (evCache.length === 1) {
+        let newTransX = e.clientX - startDragOffset.x;
+        let newTransY = e.clientY - startDragOffset.y;
+        
+        adjustedTranslatePos(newTransX, newTransY);
+        drawMap(currentMap);
+        evCache.splice(index, 1, e);  // swap in the new touch record
+    }else if (evCache.length === 0) {
+        if(currentTile != undefined){
+            currentTile.draw(canvas, ctx);
+        }
+        currentTile = getTilePointerPos(canvas, e);
+        if(currentTile != undefined){
+            currentTile.drawMouseOver(canvas, ctx);
+        }
+    }
+}
+
+function handleEnd(e){
+    removeEvent(e);
+    console.log(evCache.length)
+    if(evCache.length === 0){
+        startDragOffset.x = 0;
+        startDragOffset.y = 0;
+    }
+    // If the number of pointers down is less than two then reset diff tracker
+    if (evCache.length < 2) {
+        prevDiff = -1;
+    }
+    if(currentTile != undefined){
+        currentTile.draw(canvas, ctx);
+    }
+}
+
+
+function drawMap(mapTiles){
+
+    let startX = Math.floor(Math.abs(translatePos.x) / ((pixel_size + pixel_distance)*scale)) - 2;
+    let lengthX = translatePos.x / ((pixel_size + pixel_distance)*scale) + map_size  + 4;
+    let endY = Math.floor( translatePos.y / ((pixel_size + pixel_distance)*scale)) + map_size + 2;
+    let startY = endY - map_size / scale - 4;
+
+    //nettoyage de la map
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    canvas.width = map_size * pixel_size + (map_size - 2) * pixel_distance + pixel_size / 2 + pixel_distance;
     canvas.height = map_size * pixel_size + (map_size - 2) * pixel_distance + pixel_size;
 
+    if(translatePos.x <= 0 && translatePos.y <= 0 && (canvas.width * scale + translatePos.x) >= canvas.width && (canvas.height * scale + translatePos.y) >= canvas.height){
+        ctx.translate(translatePos.x, translatePos.y);
+    }
+    
+    ctx.scale(scale, scale);
 
     drawBackground();
-    
-    
-    //affichage
-    let tiles = [];
-    Object.keys(data).forEach(function(k){
 
-        let tile = new Case(data[k]);
-        tiles.push(tile);
-
-
-		tile.draw(canvas, ctx);
+    mapTiles.forEach(function(value, key, map){
+        let tile = mapTiles.get(key);
+        if(tile.x > startX && tile.x < (startX+lengthX) && tile.y > startY && tile.y < endY){
+            tile.draw(canvas, ctx);
+        }
         
     });
-    mapTiles = toMap(tiles, toKey);
-    map="";
 }
 
 function drawBackground(){
@@ -421,8 +411,21 @@ function get_map(){
             "function":"get_map"
         },
         success: function(data){
-            upToDateMap = data;
-            drawMap(data);
+             
+            //affichage
+            let tiles = [];
+            Object.keys(data).forEach(function(k){
+
+                let tile = new Case(data[k]);
+                tiles.push(tile);
+
+
+                tile.draw(canvas, ctx);
+                
+            });
+            mapTiles = toMap(tiles, toKey);
+            currentMap = mapTiles;
+            drawMap(currentMap);
         },
         error: function(error_data){
             console.log("Endpoint request error");
@@ -444,8 +447,23 @@ function get_historique_map(historique_date){
                 "date":historique_date
             },
             success:function(data){
-                histoMaps.set(historique_date, data);
-                drawMap(data);
+                 
+                //affichage
+                let tiles = [];
+                Object.keys(data).forEach(function(k){
+
+                    let tile = new Case(data[k]);
+                    tiles.push(tile);
+
+
+                    tile.draw(canvas, ctx);
+                    
+                });
+                let histoMapTiles = toMap(tiles, toKey);
+
+                histoMaps.set(historique_date, histoMapTiles);
+                currentMap = histoMapTiles;
+                drawMap(currentMap);
             },
             error:function(error_data){
                 console.log("Endpoint request error");
@@ -457,33 +475,16 @@ function get_historique_map(historique_date){
 }
 
 
-function checkMousePos(canvas,  e) {
-    
-    let difX = canvas.offsetWidth / canvas.width;
-    let difY = canvas.offsetHeight / canvas.height;
 
-    var x = e.offsetX / difX;
-    var y = e.offsetY / difY;
-    var pos = [];
-    pos['x'] 	= Math.floor(x/(pixel_size + pixel_distance));
-    pos['y'] 	= Math.floor((canvas.width-y)/(pixel_size + pixel_distance));
-    pos['xy'] 	= pos['x'] +'-'+ pos['y'];
-    
-    //inputId.value = pos['xy'];
-    var tile = mapTiles.get(pos['xy']);
-    
-    //je mets à jour le tooltip si la case existe
-    tile != undefined ? tile.setTooltipContent():'';
-}
 
 function adjustPixelSizeOnScreenSize(){
     let width = window.innerWidth;
     if(width<800){
-        return 2;
+        return 5;
     }else if(width<1100){
-        return 3;
+        return 5;
     }else if(width<1600){
-        return 4;
+        return 5;
     }
     return 5;   
 }
@@ -498,4 +499,55 @@ function toMap(list, toKey){
     return new Map(keyValuePairs);
 }
 
-//fonction to histo map
+function removeEvent(e) {
+    console.log(e.pointerId)
+    // Remove this event from the target's cache
+    const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === e.pointerId);
+    evCache.splice(index, 1);
+}
+
+function adjustedTranslatePos(newTranslatePosX, newTranslatePosY){
+    
+    if(newTranslatePosX > 0){
+        newTranslatePosX = 0;
+    }
+
+    if(newTranslatePosY > 0){
+        newTranslatePosY = 0;
+    }
+    if((canvas.width * scale + newTranslatePosX) < canvas.width){
+        newTranslatePosX =  canvas.width - canvas.width * scale;
+    }
+    if((canvas.height * scale + newTranslatePosY) < canvas.height){
+        newTranslatePosY =  canvas.height - canvas.height * scale;
+    }
+    if(canvas.width == canvas.width * scale){
+        newTranslatePosX = 0;
+    }
+    if(canvas.height == canvas.height * scale){
+        newTranslatePosY = 0;
+    }
+    
+    translatePos.x = newTranslatePosX;
+    translatePos.y = newTranslatePosY;
+}
+
+function getTilePointerPos(canvas,  e) {
+    
+    let difX = canvas.offsetWidth / canvas.width;
+    let difY = canvas.offsetHeight / canvas.height;
+
+    var x = (e.offsetX/ difX) - translatePos.x;
+    var y = (e.offsetY/ difY) - translatePos.y;
+
+   // console.log(x, x/((pixel_size + pixel_distance)*scale), difX,  e.offsetX, scale, translatePos.x, (pixel_size + pixel_distance), canvas.offsetWidth, canvas.width);
+    var pos = [];
+    pos['x'] 	= Math.floor(x/((pixel_size + pixel_distance)*scale));
+    pos['y'] 	= Math.floor((canvas.height*scale-y)/((pixel_size + pixel_distance)*scale));
+    pos['xy'] 	= pos['x'] +'-'+ pos['y'];
+    
+    var tile = currentMap.get(pos['xy']);
+    
+    return tile;
+}
+

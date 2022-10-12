@@ -120,8 +120,8 @@ function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
     $visible = get_visibles($sql_clan, $joueur->clan);
     foreach ($visible as $case) {
         //visible si le perso n'est pas en foret 
-        if ($case["idPerso_carte"] < 50000 && $case["idPerso_carte"] > 0 && ($case["fond_carte"] != '7.gif' || $case["idJoueur_perso"] == $joueur->id_joueur)){
-            if($joueur->clan == $case["clan"]){
+        if ($case["idPerso_carte"] < 50000 && $case["idPerso_carte"] > 0 && ($case["fond_carte"] != '7.gif' || $case["idJoueur_perso"] == $joueur->id_joueur || $joueur->compagnie == $case["nom_compagnie"])){
+            //if($joueur->clan == $case["clan"]){
                 $carte_array[$case['id']]['joueur']=array(
                     'id'        => $case["idPerso_carte"],
                     'image'     => $case["image_carte"],
@@ -133,11 +133,11 @@ function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
                 if(!$isHistorique && isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
                     $carte_array[$case['id']]['joueur']['compagnie'] = trim($case["nom_compagnie"]);
                 }
-            }else{
+           /* }else{
                 $carte_array[$case['id']]['joueur']=array(
                     'camp'  =>  $case["clan"]
                 );
-            }
+            }*/
         }else if ($case["idPerso_carte"] >= 200000){
             $carte_array[$case['id']]['pnj']=array(
                 'id'    =>  $case["idPerso_carte"],
