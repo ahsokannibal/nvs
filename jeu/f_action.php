@@ -1841,7 +1841,7 @@ function action_soin($mysqli, $id_perso, $id_cible, $id_action, $id_objet_soin){
 function action_dormir($mysqli, $id_perso){
 
 	// recuperation des infos du perso
-	$sql = "SELECT nom_perso, clan, recup_perso, bonusRecup_perso, pa_perso, paMax_perso, pv_perso, pvMax_perso, pm_perso, pmMax_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT nom_perso, clan, recup_perso, bonusRecup_perso, pa_perso, paMax_perso, pv_perso, pvMax_perso, pm_perso, pmMax_perso, x_perso, y_perso FROM perso WHERE id_perso='$id_perso'";
 	$res = $mysqli->query($sql);
 	$t_p = $res->fetch_assoc();
 	
@@ -1855,6 +1855,8 @@ function action_dormir($mysqli, $id_perso){
 	$pmMax_perso      = $t_p["pmMax_perso"];
 	$bonusRecup_perso = $t_p["bonusRecup_perso"];
 	$camp             = $t_p["clan"];
+	$x_perso          = $t_p["x_perso"];
+	$y_perso          = $t_p["y_perso"];
 	
 	// recuperation de la couleur du camp du perso
 	$couleur_clan_perso = couleur_clan($camp);
