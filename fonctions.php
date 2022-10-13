@@ -525,7 +525,7 @@ function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
 	// Titre du mail
 	$titre = 'Mot de passe perdu';
 	
-	$lien_activation = "http://loka.zd.fr/nvs/mdp_perdu.php?code=".$code_activation;
+	$lien_activation = "https://nord-vs-sud.fr/mdp_perdu.php?code=".$code_activation;
 	
 	// Contenu du mail
 	$message = "Votre nouveau mot de passe est $new_mdp \r\nAfin d'activer ce nouveau mot de passe, veuillez cliquer sur ce lien : $lien_activation \r\nLe nouveau mot de passe ne sera actif qu'après activation. \r\nSi vous n'avez pas demandé à réinitailiser votre mot de passe, veuillez ne pas prendre en compte ce mail.";
