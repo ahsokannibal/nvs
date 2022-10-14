@@ -132,7 +132,7 @@ if($dispo == '1' || $admin){
 										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_punition,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','Pénitencier','',NOW())";
 										$mysqli->query($sql);
 										
-										$mess = "Le perso ".$nom_perso." [".$id_perso_punition."] a bien été envoyé dans le Pénitencier";
+										$mess = "Envoi de ".$nom_perso." [".$id_perso_punition."] au Pénitencier";
 										
 										$texte = addslashes($mess);
 									
