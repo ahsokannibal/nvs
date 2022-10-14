@@ -86,7 +86,7 @@ if($dispo == '1' || $admin){
 						$occupee_carte 	= $t["occupee_carte"];
 						$fond_carte 	= $t["fond_carte"];
 						
-						if ($occupee_carte || $fond_carte != '1.gif') {
+						if ($occupee_carte) {
 							$autorisation_construction_taille = false;
 						}
 					}
@@ -196,7 +196,7 @@ if($dispo == '1' || $admin){
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement) VALUES ($id_perso_envoi_penitencier,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a été envoyé au Pénitencier </b>','$id_penitencier','Pénitencier','',NOW())";
 						$mysqli->query($sql);
 						
-						$mess = "Le perso ".$nom_perso." [".$id_perso_envoi_penitencier."] a bien été envoyé dans le Pénitencier";
+						$mess = "Perso ".$nom_perso." [".$id_perso_envoi_penitencier."] envoyé au Pénitencier";
 						
 						
 						$texte = addslashes($mess);
@@ -237,7 +237,7 @@ if($dispo == '1' || $admin){
 						$sql = "UPDATE perso SET pv_perso=0 WHERE id_perso='$id_perso_relacher'";
 						$mysqli->query($sql);
 						
-						$mess .= "Le perso matricule ".$id_perso_relacher." a été relaché du pénitencier";
+						$mess .= "Perso ".$id_perso_relacher." relaché du pénitencier";
 						
 						$texte = addslashes($mess);
 									
@@ -282,7 +282,7 @@ if($dispo == '1' || $admin){
 						}
 						$mysqli->query($sql);
 						
-						$mess .= "La peine du perso matricule ".$id_perso." a été renforcé de 1 jour";
+						$mess .= "Peine de ".$id_perso." augmentée de 1 jour";
 						
 						$texte = addslashes($mess);
 									
@@ -317,7 +317,7 @@ if($dispo == '1' || $admin){
 						$sql = "UPDATE perso_bagne SET duree = duree - 1 WHERE id_perso='$id_perso'";
 						$mysqli->query($sql);
 						
-						$mess .= "La peine du perso matricule ".$id_perso." a été réduite de 1 jour";
+						$mess .= "Peine de ".$id_perso." réduite de 1 jour";
 						
 						$texte = addslashes($mess);
 									
