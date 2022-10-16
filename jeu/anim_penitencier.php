@@ -86,7 +86,7 @@ if($dispo == '1' || $admin){
 						$occupee_carte 	= $t["occupee_carte"];
 						$fond_carte 	= $t["fond_carte"];
 						
-						if ($occupee_carte || $fond_carte != '1.gif') {
+						if ($occupee_carte) {
 							$autorisation_construction_taille = false;
 						}
 					}
