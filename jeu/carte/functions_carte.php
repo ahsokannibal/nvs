@@ -6,8 +6,8 @@ $sqlPropertiesObj;
 
 if(isset($_SESSION["id_perso"])){
     
-   $perso = get_perso($_SESSION["id_perso"]);
-
+    $perso = get_perso($_SESSION["id_perso"]);
+    
     
 }else{
 //gerer non connecte    
@@ -43,6 +43,10 @@ if(isset($_POST['function'])){
     switch($_POST['function']){
         case 'get_map':{
             header('Content-Type: application/json');
+            if($perso->clan == 0){
+                echo  json_encode(array());
+                exit();
+            }
             $json_map = get_json_map($sqlPropertiesObj, $perso, false);
             echo $json_map;
             break;
@@ -61,6 +65,11 @@ if(isset($_POST['function'])){
         case 'get_historique':{
             if(isset($_POST['date'])){
                 header('Content-Type: application/json');
+                if($perso->clan == 0){
+
+                    echo  json_encode(array());
+                    exit();
+                }
                 //$davis = get_perso(2); //uncomment to test
                 $json_map = get_json_historique_map($sqlPropertiesObj, $perso, $_POST['date']);
                 echo $json_map;
