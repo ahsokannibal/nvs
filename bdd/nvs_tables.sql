@@ -1464,7 +1464,7 @@ CREATE TABLE IF NOT EXISTS `log_action_animation` (
   `id_perso` int(11) NOT NULL,
   `page` varchar(50) NOT NULL,
   `action` varchar(50) NOT NULL,
-  `texte` varchar(50) NOT NULL
+  `texte` varchar(250) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 --
