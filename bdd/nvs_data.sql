@@ -23,6 +23,11 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Création par défaut de la zone de respawn du camp neutre. Adapté à une carte de 200x200
+--
+insert into zone_respawn_camp (id_camp, x_min_zone, x_max_zone, y_min_zone, y_max_zone) VALUES (0, 190, 200, 0, 10);
+
+--
 -- Contenu de la table `action`
 --
 
