@@ -841,7 +841,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "<br/>";
 
 	$show_xp = true;
-	$order_by = "xp_perso";
+	$order_by = "xp_perso DESC";
 	$limit = 50;
 	if (!isset($_GET["grade"])) {
 		$type_perso = isset($_GET["type_perso"]) ? $_GET["type_perso"] : 'tous';
@@ -857,7 +857,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 		echo '<input type="radio" id="cav_legere" name="type_perso" value="cav_legere" onclick="this.form.submit();" '.($type_perso == 'cav_legere' ? 'checked' : '').'> <label for="cav_legere">Cavalerie légère</label>';
 		echo '</form></div>';
 	} else {
-		$order_by = "id_grade";
+		$order_by = "id_grade DESC, pc_perso DESC";
 		$limit = 50000;
 		$show_xp = false;
 		$id_type_perso = 1;
@@ -869,7 +869,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 			AND perso_as_grade.id_grade = grades.id_grade
 			AND perso.id_perso >= '100'
 			".($id_type_perso ? "AND type_perso=$id_type_perso" : "")."
-			ORDER BY ".$order_by." DESC LIMIT ".$limit;
+			ORDER BY ".$order_by." LIMIT ".$limit;
 	$res = $mysqli->query($sql);
 	
 	
