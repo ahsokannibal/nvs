@@ -92,12 +92,13 @@ if(isset($_SESSION["id_perso"])){
 				for ($i = 0; $i < $nbdest; $i++) {
 					
 					// recupération du nom du perso destinataire
-					$sql_d = "SELECT nom_perso FROM perso WHERE id_perso='".addslashes($dest[$i])."' OR nom_perso='".addslashes($dest[$i])."'";
+					$nom = filter_var($dest[$i], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+					$sql_d = "SELECT nom_perso FROM perso WHERE id_perso='".$nom."' OR nom_perso='".$nom."'";
 					$res_d = $mysqli->query($sql_d);
-					
+
 					if( $res_d->num_rows == 0 ){
 						echo "<div class=\"erreur\">Le destinataire n'existe pas !</div>";
-						
+
 						if(isset($_SESSION['destinataires'])){
 							$_SESSION['destinataires'] .= ";".$dest[$i];
 						}
@@ -108,13 +109,13 @@ if(isset($_SESSION["id_perso"])){
 						$_SESSION['objet'] = $_POST["objet"];
 					}
 					else {
-						$sql_p = "SELECT id_perso, idJoueur_perso FROM perso WHERE nom_perso='".addslashes($dest[$i])."' OR id_perso='".addslashes($dest[$i])."'";
+						$sql_p = "SELECT id_perso, idJoueur_perso FROM perso WHERE nom_perso='".$nom."' OR id_perso='".$nom."'";
 						$res_p = $mysqli->query($sql_p);
 						$t_p = $res_p->fetch_assoc();
 						
 						$id_p = $t_p['id_perso'];
 						$id_j = $t_p['idJoueur_perso'];
-					
+
 						// assignation du message au perso
 						$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
 						$mysqli->query($sql);
@@ -592,7 +593,8 @@ if(isset($_SESSION["id_perso"])){
 					// remove the current input
 					terms.pop();
 					// add the selected item
-					terms.push(ui.item.label);
+					var nm =  $('<textarea />').html(ui.item.label).text();
+					terms.push(nm);
 					// add placeholder to get the comma-and-space at the end
 					terms.push("");
 					this.value = terms.join(";");
