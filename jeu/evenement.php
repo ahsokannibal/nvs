@@ -375,7 +375,7 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "<b>a été envoyé au Pénitencier </b>") {
 						$phrase_evenement = "<b>a reçu un nouveau prisonnier :</b> ";
 					}
-					else if ($phrase_evenement == "a tué") {
+					else if ($phrase_evenement == "a tué" || $phrase_evenement == "<b>a tué</b>") {
 						$phrase_evenement = "a été tué par";
 					}
 					else if ($phrase_evenement == "<b>a négocié la capture</b>") {
