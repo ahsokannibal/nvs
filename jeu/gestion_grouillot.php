@@ -179,7 +179,7 @@ if($dispo == '1' || $admin){
 
 							if ($nb) {
 
-								if (verif_perso_est_dans_fort_ou_fortin($mysqli, $id)) {
+								if (verif_perso_est_dans_fort_ou_fortin($mysqli, $id) && verif_perso_est_dans_fort_ou_fortin($mysqli, $matricule_grouillot_renvoi)) {
 									
 									// On regarde si le perso n'est pas chef d'une compagnie 
 									$sql = "SELECT count(id_perso) as is_chef FROM perso_in_compagnie WHERE id_perso='$matricule_grouillot_renvoi' AND poste_compagnie='1'";
@@ -287,7 +287,7 @@ if($dispo == '1' || $admin){
 										echo "<center><font color='red'>Impossible de renvoyer un grouillot qui est chef d'une compagnie, merci de passer son rôle de chef à un autre avant de le virer.</font></center><br/>";
 									}
 								} else {
-									echo "<center><font color='red'>Le perso doit être dans un fort ou fortin pour renvoyer une unité.</font></center><br/>";
+									echo "<center><font color='red'>Le chef et le perso à renvoyer doivent être dans un fort ou fortin.</font></center><br/>";
 								}
 							} else {
 								// Tentative de triche ?!
