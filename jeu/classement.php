@@ -754,7 +754,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		$t2 = $res2->fetch_assoc();
 
 		$nom_perso_a	= $t2["nom_perso"];
-		$nom_grade_a	= $t["nom_grade"];
+		$nom_grade_a	= $t2["nom_grade"];
 		$id_grade_a	= $t2["id_grade"];
 		$couleur_camp_a = couleur_clan($camp_perso_a);
 
@@ -773,7 +773,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 			$t2 = $res2->fetch_assoc();
 
 			$nom_perso_b	= $t2["nom_perso"];
-			$nom_grade_b	= $t["nom_grade"];
+			$nom_grade_b	= $t2["nom_grade"];
 			$id_grade_b	= $t2["id_grade"];
 
 			if ($id_grade_b == 101)
@@ -795,7 +795,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		echo "			<tr>";
 		echo "				<td align=center>".$date_capture."</td>";
 		echo "				<td align=center><font color=$couleur_camp_a>".$nom_perso_a."</font> [<a href=\"evenement.php?infoid=".$id_perso_a."\">" .$id_perso_a. "</a>]</td>";
-		echo "				<td align='left'><img src=\"../images/grades/" . $id_grade_a . ".gif\" /> ".$t['nom_grade']."</td>";
+		echo "				<td align='left'><img src=\"../images/grades/" . $id_grade_a . ".gif\" /> ".$nom_grade_a."</td>";
 		echo "				<td align=center><font color=$couleur_camp_b>".$nom_perso_b."</font> [<a href=\"evenement.php?infoid=".$id_perso_b."\">" .$id_perso_b. "</a>]</td>";
 		echo "				<td align='left'>$grade_b</td>";
 		echo "			</tr>";
@@ -841,7 +841,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 	echo "<br/>";
 
 	$show_xp = true;
-	$order_by = "xp_perso";
+	$order_by = "xp_perso DESC";
 	$limit = 50;
 	if (!isset($_GET["grade"])) {
 		$type_perso = isset($_GET["type_perso"]) ? $_GET["type_perso"] : 'tous';
@@ -857,7 +857,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 		echo '<input type="radio" id="cav_legere" name="type_perso" value="cav_legere" onclick="this.form.submit();" '.($type_perso == 'cav_legere' ? 'checked' : '').'> <label for="cav_legere">Cavalerie légère</label>';
 		echo '</form></div>';
 	} else {
-		$order_by = "id_grade";
+		$order_by = "id_grade DESC, pc_perso DESC";
 		$limit = 50000;
 		$show_xp = false;
 		$id_type_perso = 1;
@@ -869,7 +869,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 			AND perso_as_grade.id_grade = grades.id_grade
 			AND perso.id_perso >= '100'
 			".($id_type_perso ? "AND type_perso=$id_type_perso" : "")."
-			ORDER BY ".$order_by." DESC LIMIT ".$limit;
+			ORDER BY ".$order_by." LIMIT ".$limit;
 	$res = $mysqli->query($sql);
 	
 	
