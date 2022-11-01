@@ -278,7 +278,7 @@ if(isset($_SESSION["id_perso"])){
 							<?php
 							$ip_tmp = "";
 							
-							$sql = "SELECT DISTINCT r1.ip_joueur, r1.id_joueur, r1.time FROM user_ok_logins as r1 JOIN user_ok_logins as r2 ON r1.ip_joueur = r2.ip_joueur AND r1.id_joueur <> r2.id_joueur AND ABS(TIMEDIFF(r1.time, r2.time)) < 86400 AND (r1.id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche) AND r2.id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) ORDER BY r1.ip_joueur, time";
+							$sql = "SELECT DISTINCT r1.ip_joueur, r1.id_joueur, r1.time FROM user_ok_logins as r1 JOIN user_ok_logins as r2 ON r1.ip_joueur = r2.ip_joueur AND r1.id_joueur <> r2.id_joueur AND ABS(TIMEDIFF(r1.time, r2.time)) < 86400 AND (r1.id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche) AND r2.id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) AND r1.est_acquitte=0 AND r2.est_acquitte=0 ORDER BY r1.ip_joueur, time";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
 								
@@ -406,6 +406,11 @@ if(isset($_SESSION["id_perso"])){
 			<?php
 			}
 			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "cookie")) {
+				if (isset($_GET['acquitter'])) {
+					$acquitter = filter_input(INPUT_GET, "acquitter", FILTER_SANITIZE_STRING);
+					$sql = "UPDATE user_ok_logins SET est_acquitte=1 WHERE cookie_val='$acquitter'";
+					$res = $mysqli->query($sql);
+				}
 			?>
 			<div class="row">
 				<div class="col-12">
@@ -420,7 +425,7 @@ if(isset($_SESSION["id_perso"])){
 							<?php
 							$ip_tmp = "";
 
-							$sql = "SELECT cookie_val, COUNT(distinct id_joueur) as count FROM user_ok_logins WHERE id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche) GROUP BY cookie_val HAVING COUNT(distinct id_joueur) > 1";
+							$sql = "SELECT cookie_val, COUNT(distinct id_joueur) as count FROM user_ok_logins WHERE est_acquitte=0 AND id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche) GROUP BY cookie_val HAVING COUNT(distinct id_joueur) > 1";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
 								$cookie_val 	= $t["cookie_val"];
@@ -459,6 +464,11 @@ if(isset($_SESSION["id_perso"])){
 									echo ", ip : ".$ip_joueur.", user-agent : '".$user_agent."' <br />";
 								}
 								echo "<br />";
+								echo "<form action='admin_triche.php' method='GET'>";
+								echo "	<input type='hidden' id='affiche' name='affiche' value='cookie'>";
+								echo "  <input name='acquitter' id='acquitter' type='hidden' value='$cookie_val'>";
+								echo "	<td> <button>Acquitter</button> </td>";
+								echo "</form>";
 							}
 							?>
 								</td>
