@@ -339,6 +339,9 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "a capturé") {
 						$phrase_evenement = "<b>a été capturé par</b>";
 					}					
+					else if ($phrase_evenement == "a capturé le batiment") {
+						$phrase_evenement = "<b>a été capturé par</b>";
+					}					
 					else if ($phrase_evenement == " a raté son soin sur") {
 						$phrase_evenement = "a trop remué pour recevoir le soin de";
 					}
