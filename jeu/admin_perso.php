@@ -3,6 +3,7 @@ session_start();
 require_once("../fonctions.php");
 require_once("f_carte.php");
 require_once("f_combat.php");
+require_once("f_action.php");
 
 $mysqli = db_connexion();
 
@@ -209,9 +210,26 @@ if(isset($_SESSION["id_perso"])){
 					
 					if (isset($_GET['desequip'])) {
 						// On desequip l'objet
+						$sql = "UPDATE perso_as_objet SET equip_objet=0 WHERE id_perso='$id_perso_select' AND id_objet='$id_o'";
+						$mysqli->query($sql);
+
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement inventaire déséquiper', 'perso $id_perso_select objet $id_o')";
+						$mysqli->query($sql);
 					}
 					elseif (isset($_GET['equip'])) {
 						// On equip l'objet
+						$sql = "UPDATE perso_as_objet SET equip_objet=1 WHERE id_perso='$id_perso_select' AND id_objet='$id_o'";
+						$mysqli->query($sql);
+
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement inventaire équiper', 'perso $id_perso_select objet $id_o')";
+						$mysqli->query($sql);
+					}
+					elseif (isset($_GET['deposer'])) {
+						// On dépose l'objet
+						action_deposerObjet($mysqli, $id_perso_select, 2, $id_o, 1);
+
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement inventaire déposer', 'perso $id_perso_select objet $id_o')";
+						$mysqli->query($sql);
 					}
 					elseif (isset($_GET['use'])) {
 						// On utilise l'objet
@@ -333,6 +351,9 @@ if(isset($_SESSION["id_perso"])){
 				
 				$sql = "UPDATE perso SET xp_perso=$new_xp_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XP', 'perso $id_perso_select vers $new_xp_perso')";
+				$mysqli->query($sql);
 			}
 			
 			if (isset($_POST['pi_perso']) && trim($_POST['pi_perso']) != '') {
@@ -342,6 +363,9 @@ if(isset($_SESSION["id_perso"])){
 				$mess = "MAJ PI perso matricule ".$id_perso_select." vers ".$new_pi_perso;
 				
 				$sql = "UPDATE perso SET pi_perso=$new_pi_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XPI', 'perso $id_perso_select vers $new_pi_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -353,6 +377,9 @@ if(isset($_SESSION["id_perso"])){
 				
 				$sql = "UPDATE perso SET pc_perso=$new_pc_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PC', 'perso $id_perso_select vers $new_pc_perso')";
+				$mysqli->query($sql);
 			}
 			
 			if (isset($_POST['or_perso']) && trim($_POST['or_perso']) != '') {
@@ -362,6 +389,9 @@ if(isset($_SESSION["id_perso"])){
 				$mess = "MAJ THUNE perso matricule ".$id_perso_select." vers ".$new_or_perso;
 				
 				$sql = "UPDATE perso SET or_perso=$new_or_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement OR', 'perso $id_perso_select vers $new_or_perso')";
 				$mysqli->query($sql);
 			}
 
@@ -373,6 +403,9 @@ if(isset($_SESSION["id_perso"])){
 				
 				$sql = "UPDATE perso SET image_perso='$new_image_perso' WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement IMAGE', 'perso $id_perso_select vers $new_image_perso')";
+				$mysqli->query($sql);
 			}
 			
 			if (isset($_POST['pv_perso']) && trim($_POST['pv_perso']) != '') {
@@ -382,6 +415,9 @@ if(isset($_SESSION["id_perso"])){
 				$mess = "MAJ PV perso matricule ".$id_perso_select." vers ".$new_pv_perso;
 				
 				$sql = "UPDATE perso SET pv_perso=$new_pv_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PV', 'perso $id_perso_select vers $new_pv_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -393,6 +429,9 @@ if(isset($_SESSION["id_perso"])){
 				
 				$sql = "UPDATE perso SET pm_perso=$new_pm_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PM', 'perso $id_perso_select vers $new_pm_perso')";
+				$mysqli->query($sql);
 			}
 			
 			if (isset($_POST['pa_perso']) && trim($_POST['pa_perso']) != '') {
@@ -402,6 +441,9 @@ if(isset($_SESSION["id_perso"])){
 				$mess = "MAJ PA perso matricule ".$id_perso_select." vers ".$new_pa_perso;
 				
 				$sql = "UPDATE perso SET pa_perso=$new_pa_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PA', 'perso $id_perso_select vers $new_pa_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -424,7 +466,6 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 				
 				$mess = "Changement du mot de passe du perso matricule ".$id_perso_select." vers ".$new_password ;
-				
 			}
 		}
 		
@@ -734,6 +775,8 @@ if(isset($_SESSION["id_perso"])){
 								}
 								if ($is_equipe) {
 									echo "			<a class='btn btn-outline-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&desequip=ok\">Déséquipper</a>";
+								} else {
+									echo "			<a class='btn btn-outline-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&deposer=ok\">Déposer</a>";
 								}
 								
 								// Tickets de train
