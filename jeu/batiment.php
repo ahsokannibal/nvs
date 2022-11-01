@@ -561,7 +561,7 @@ if($dispo == '1' || $admin){
 									
 									if ($nb_ticket > 1) {
 										
-										$thune_necessaire = 5 * $nb_ticket;
+										$thune_necessaire = 3 * $nb_ticket;
 										
 										if ($or >= $thune_necessaire) {
 											
@@ -576,7 +576,7 @@ if($dispo == '1' || $admin){
 												$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $ticket_dest . "]";
 													
 												// MAJ thune perso
-												$sql = "UPDATE perso SET or_perso=or_perso-5 WHERE id_perso='$id_perso'";
+												$sql = "UPDATE perso SET or_perso=or_perso-3 WHERE id_perso='$id_perso'";
 												$mysqli->query($sql);
 												
 												// Ajout de l'objet ticket de train dans l'inventaire du perso
@@ -584,7 +584,7 @@ if($dispo == '1' || $admin){
 												$mysqli->query($sql);
 												
 												// Maj thune pour affichage 
-												$or = $or - 5;
+												$or = $or - 3;
 												
 												echo "<center><font color='blue'>Vous avez acheté un ticket de train en destination de $nom_destination</font></center>";
 											}
@@ -603,8 +603,8 @@ if($dispo == '1' || $admin){
 										
 										$nom_destination = "Gare " . $t_dest['nom_instance'] . "[" . $ticket_dest . "]";
 										
-										// On vérifie que le perso possède bien 5 thunes 
-										if ($or >= 5) {
+										// On vérifie que le perso possède bien 3 thunes 
+										if ($or >= 3) {
 											
 											// On vérifie si le perso n'a pas déjà un ticket pour la même destination
 											$sql = "SELECT count(*) as nb_ticket FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet='1' AND capacite_objet='$ticket_dest'";
@@ -616,7 +616,7 @@ if($dispo == '1' || $admin){
 											if ($possede_deja_ticket == 0) {
 												
 												// MAJ thune perso
-												$sql = "UPDATE perso SET or_perso=or_perso-5 WHERE id_perso='$id_perso'";
+												$sql = "UPDATE perso SET or_perso=or_perso-3 WHERE id_perso='$id_perso'";
 												$mysqli->query($sql);
 												
 												// Ajout de l'objet ticket de train dans l'inventaire du perso
@@ -624,7 +624,7 @@ if($dispo == '1' || $admin){
 												$mysqli->query($sql);
 												
 												// Maj thune pour affichage 
-												$or = $or - 5;
+												$or = $or - 3;
 												
 												echo "<center><font color='blue'>Vous avez acheté un ticket de train en destination de $nom_destination</font></center>";
 											}
@@ -1570,7 +1570,7 @@ if($dispo == '1' || $admin){
 											
 											$nom_destination = "Gare " . $nom_dest . "[<a href='evenement.php?infoid=".$destination."' target='_blank'>".$destination."</a>]";
 											
-											$cout_thune = $profondeur * 5;
+											$cout_thune = $profondeur * 3;
 											
 											if ($profondeur == 1) {
 												$value_dest = $destination;
