@@ -298,7 +298,7 @@ else{
 function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan_p) {
 	
 	// Récupération de tous les perso du joueur
-	$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, bourre_perso, chef, genie, convalescence 
+	$sql = "SELECT id_perso, nom_perso, x_perso, y_perso, pm_perso, pmMax_perso, paMax_perso, pv_perso, pvMax_perso, recup_perso, bonusRecup_perso, bonus_perso, bonusPM_perso, image_perso, type_perso, bourre_perso, chef, genie, convalescence, est_renvoye
 			FROM perso WHERE idJoueur_perso='$id_joueur'";
 	$res = $mysqli->query($sql);
 	
@@ -322,6 +322,7 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 		$bourre_perso_nouveau_tour	= $t_persos["bourre_perso"];
 		$genie_nouveau_tour 		= $t_persos["genie"];
 		$convalescence_nouveau_tour	= $t_persos["convalescence"];
+		$est_renvoye			= $t_persos["est_renvoye"];
 		
 		// Calcul bonus perso
 		$new_bonus_perso = 0;
@@ -337,7 +338,9 @@ function nouveau_tour_joueur($mysqli, $id_joueur, $new_dla, $clan, $couleur_clan
 				
 		} else {
 			
-			$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
+			$gain_or = 0;
+			if (!$est_renvoye)
+				$gain_or = gain_or_grouillot($type_perso_nouveau_tour);
 			$gain_pc = 0;
 		}
 		
