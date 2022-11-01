@@ -754,7 +754,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		$t2 = $res2->fetch_assoc();
 
 		$nom_perso_a	= $t2["nom_perso"];
-		$nom_grade_a	= $t["nom_grade"];
+		$nom_grade_a	= $t2["nom_grade"];
 		$id_grade_a	= $t2["id_grade"];
 		$couleur_camp_a = couleur_clan($camp_perso_a);
 
@@ -773,7 +773,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 			$t2 = $res2->fetch_assoc();
 
 			$nom_perso_b	= $t2["nom_perso"];
-			$nom_grade_b	= $t["nom_grade"];
+			$nom_grade_b	= $t2["nom_grade"];
 			$id_grade_b	= $t2["id_grade"];
 
 			if ($id_grade_b == 101)
@@ -795,7 +795,7 @@ if(isset($_GET['dernier_tombe']) && $_GET['dernier_tombe'] == 'ok'){
 		echo "			<tr>";
 		echo "				<td align=center>".$date_capture."</td>";
 		echo "				<td align=center><font color=$couleur_camp_a>".$nom_perso_a."</font> [<a href=\"evenement.php?infoid=".$id_perso_a."\">" .$id_perso_a. "</a>]</td>";
-		echo "				<td align='left'><img src=\"../images/grades/" . $id_grade_a . ".gif\" /> ".$t['nom_grade']."</td>";
+		echo "				<td align='left'><img src=\"../images/grades/" . $id_grade_a . ".gif\" /> ".$nom_grade_a."</td>";
 		echo "				<td align=center><font color=$couleur_camp_b>".$nom_perso_b."</font> [<a href=\"evenement.php?infoid=".$id_perso_b."\">" .$id_perso_b. "</a>]</td>";
 		echo "				<td align='left'>$grade_b</td>";
 		echo "			</tr>";
