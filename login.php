@@ -88,7 +88,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 							}
 
 
-							$sql = "INSERT INTO user_ok_logins VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),'$user_agent','$cookie_val')";
+							$sql = "INSERT INTO user_ok_logins VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),'$user_agent','$cookie_val', 0)";
 							$mysqli->query($sql);
 							
 							header("location:jeu/jouer.php?login=ok");
