@@ -1835,7 +1835,7 @@ if($dispo == '1' || $admin){
 								$fond 			= $t_carte1["fond_carte"];
 								
 								$cout_pm 	= cout_pm($fond, $type_perso);
-		
+
 								if (!is_eau_p($fond)) {
 									
 									if (!$case_occupee){
@@ -3149,7 +3149,7 @@ if($dispo == '1' || $admin){
 								<tr>
 									<td width='20%'></td>
 									<?php 
-									if ($type_perso != 5) { 
+									if ($type_perso != 5 && $type_perso != 8) { 
 									?>
 									<td width='40%' align='center'><b>Rapproché</b></td>
 									<?php 
@@ -3170,7 +3170,7 @@ if($dispo == '1' || $admin){
 								<tr>
 									<td><b>Armes</b></td>
 									<?php 
-									if ($type_perso != 5) { 
+									if ($type_perso != 5 && $type_perso != 8) { 
 									?>
 									<td align='center' nowrap="nowrap"><?php echo $nom_arme_cac; ?></td>
 									<?php 
@@ -3191,7 +3191,7 @@ if($dispo == '1' || $admin){
 								<tr>
 									<td nowrap="nowrap"><b>Coût en PA</b></td>
 									<?php 
-									if ($type_perso != 5) { 
+									if ($type_perso != 5 && $type_perso != 8) { 
 									?>
 									<td align='center'><?php echo $coutPa_arme_cac; ?></td>
 									<?php 
@@ -3222,7 +3222,7 @@ if($dispo == '1' || $admin){
 									}
 									?>
 									<?php 
-									if ($type_perso != 5) { 
+									if ($type_perso != 5 && $type_perso != 8) { 
 									?>
 									<td align='center'><?php echo $degats_arme_cac; ?></td>
 									<?php 
@@ -3243,7 +3243,7 @@ if($dispo == '1' || $admin){
 								<tr>
 									<td><b>Portée</b></td>
 									<?php 
-									if ($type_perso != 5) { 
+									if ($type_perso != 5 && $type_perso != 8) { 
 									?>
 									<td align='center'><?php echo $porteeMax_arme_cac; ?></td>
 									<?php 
@@ -3264,7 +3264,7 @@ if($dispo == '1' || $admin){
 								<tr>
 									<td><b>Précision</b></td>
 									<?php 
-									if ($type_perso != 5) { 
+									if ($type_perso != 5 && $type_perso != 8) { 
 									?>
 									<td align='center'><?php echo $precision_arme_cac . "%"; ?></td>
 									<?php 
@@ -3294,14 +3294,14 @@ if($dispo == '1' || $admin){
 									?>
 								</tr>
 								<?php 
-								if ($type_perso == 5 && $degatZone_arme_dist) { 
+								if (($type_perso == 5 || $type_perso == 8) && $degatZone_arme_dist) { 
 								?>
 								<tr>
 									<td><b>Spécial</b></td>
 									<td colspan='2'>
 										<center>Dégâts de zone
 										<?php 
-										if ($id_arme_dist == 13) {
+										if ($id_arme_dist == 13 || $id_arme_dist == 14) {
 											echo "<br>Bonus de dégâts sur bâtiments";
 										}
 										?>
@@ -3323,7 +3323,7 @@ if($dispo == '1' || $admin){
 									<td><input type="submit" value="Soigner"></td>
 									<?php 
 									}
-									if ($type_perso != 5) { 
+									if ($type_perso != 5 && $type_perso != 8) { 
 									?>
 									<td>
 										<select name='id_attaque_cac' style="width: -moz-available;">
