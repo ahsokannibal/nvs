@@ -127,6 +127,8 @@ if($dispo == '1' || $admin){
 							}
 							else if ($type_perso == 7) {
 								$image_chef = "cavalerie_legere_nord.gif";
+							}else if ($type_perso == 8) {
+								$image_chef = "artillerie_nord.gif";
 							}
 						}
 						
@@ -156,6 +158,9 @@ if($dispo == '1' || $admin){
 							else if ($type_perso == 7) {
 								$image_chef = "cavalerie_legere_sud.gif";
 							}
+							else if ($type_perso == 5) {
+								$image_chef = "artillerie_sud.gif";
+							}
 						}
 					
 						if($clan_perso == 0){
@@ -182,6 +187,8 @@ if($dispo == '1' || $admin){
 							}
 							else if ($type_perso == 7) {
 								$image_chef = "cavalerie_legere_neutre.gif";
+							}else if ($type_perso == 5) {
+								$image_chef = "artillerie_neutre.gif";
 							}
 						}
 

@@ -1068,7 +1068,7 @@ function isTypePersoBousculable($type_perso, $type_perso_b) {
 	// Infanterie
 	else if ($type_perso == 3) {
 		// Peut bousculer infanterie, soigneur et artillerie
-		if ($type_perso_b == 3 || $type_perso_b == 4 || $type_perso_b == 5) {
+		if ($type_perso_b == 3 || $type_perso_b == 4 || $type_perso_b == 5 || $type_perso_b == 8) {
 			return true;
 		} else {
 			return false;
@@ -1088,13 +1088,22 @@ function isTypePersoBousculable($type_perso, $type_perso_b) {
 	// Artillerie
 	else if ($type_perso == 5) {
 		// Peut bousculer infanterie et soigneur
-		if ($type_perso_b == 3 || $type_perso_b == 4) {
+		if ($type_perso_b == 3 || $type_perso_b == 4 || $type_perso_b == 8) {
 			return true;
 		} else {
 			return false;
 		}
 	}
 	
+	//gatling
+	else if ($type_perso == 8) {
+		// Peut bousculer infanterie et soigneur
+		if ($type_perso_b == 3 || $type_perso_b == 4) {
+			return true;
+		} else {
+			return false;
+		}
+	}
 	else {
 		// les autres type de perso (toutou par exemple) ne peuvent pas bousculer
 		return false;
