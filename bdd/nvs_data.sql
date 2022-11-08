@@ -94,7 +94,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (11, 'Bandages', 1, 1, 3, 50, 0, 0, 0, 0, 2, 2, 10, 35, '0', 0, '0.2', 0, 'Bandages permettant de récupérer des malus de defense', 0, 1, 'bandage.png'),
 (12, 'Griffes', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'griffe.png'),
 (13, 'Canon', 2, 6, 6, 0, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.png'),
-(14, 'Gatling', 2, 6, 4, 0, 0, 0, 0, 0, 77, 77, 6, 75, '1', 0, '4.0', 0, 'Gatling, faucheuse moderne', 0, 1, 'gatling.png'),
+(14, 'Gatling', 2, 6, 4, 0, 0, 0, 0, 0, 10, 10, 22, 75, '1', 0, '4.0', 0, 'Gatling, faucheuse moderne', 0, 1, 'gatling.png'),
 (15, 'Magnum', '1', '2', '3', '150', '0', '0', '0', '0', '16', '16', '8', '40', '0', '0', '2.0', '0', '', '0', '1', 'magnum.png'),
 (16, 'Couteau', '1', '1', '3', '10', '0', '0', '0', '0', '15', '15', '4', '35', '0', '0', '0.0', '0', '', '0', '1', 'couteau.png'),
 (17, 'Canon double', '1', '3', '5', '225', '0', '0', '0', '0', '20', '20', '8', '75', '0', '0', '3.0', '0', '', '0', '1', 'canon_double.png'),
@@ -568,7 +568,7 @@ INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `percept
 (5, 'Artillerie', 'La plus puissante de toutes les unités combattantes. L\'artillerie est tout simplement extrèmement puissante, pouvant réduire en miette tout un bataillon en très peu de temps. Mais c\'est une unité extrèmement peu mobile et qui ne peut se battre au corps à corps et donc qui nécessite beaucoup d\'attention et de protection.', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
 (6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 0, 20, 125, 10, 14, 'toutou', 1),
 (7, 'Cavalerie légère', 'La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d\'ennemis.', 5, 5, 60, 400, 10, 12, 'cavalerie_legere', 3),
-(8, 'Gatling', 'Une gatling faucheuse d\'ames..', 5, 10, 30, 500, 10, 5, 'artillerie', 5);
+(8, 'Gatling', 'Une gatling faucheuse d\'ames..', 5, 10, 30, 500, 10, 5, 'artillerie', 4);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
