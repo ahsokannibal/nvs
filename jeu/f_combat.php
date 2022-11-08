@@ -556,7 +556,7 @@ function calcul_degats($id_arme_attaque, $degatMin_arme_attaque, $valeur_des_arm
 	}
 
 	// Canon d'artillerie et cible autre artillerie
-	if (($id_arme_attaque == 13 || $id_arme_attaque == 22) && $type_perso_cible == 5) {
+	if (($id_arme_attaque == 13 || $id_arme_attaque == 14 || $id_arme_attaque == 22) && ($type_perso_cible == 5 || $type_perso_cible == 8)) {
 		// Bonus dégats 13D10
 		$bonus_degats_canon = calcul_des_attaque(13, 10);
 		$degats_final = $degats_final + $bonus_degats_canon;
@@ -769,12 +769,14 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 	$gain_xp_collat_cumul = 0;
 	$max_gain_xp_collat_cumul = 4;
 	$gain_pc_collat_cumul = 0;
+	$max_gain_pc_collat_cumul = 2;
 	$model_perso = new Perso();
 
 	// Limite a 2xp le gain max pour collats
-	if ($id_arme_attaque == 14)
+	if ($id_arme_attaque == 14){
 		$max_gain_xp_collat_cumul = 2;
-
+		$max_gain_pc_collat_cumul = 3;
+	}
 	// On parcours les cibles pour degats collateraux
 	foreach($res_recherche_collat as $t_recherche_collat) {
 
@@ -820,7 +822,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 			$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
 
 			// Limite 2 PC par attaque de Gatling
-			if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > 2) {
+			if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > $max_gain_pc_collat_cumul) {
 				$gain_pc_collat = 0;
 			}
 

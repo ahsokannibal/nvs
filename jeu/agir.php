@@ -201,7 +201,7 @@ if ($verif_id_perso_session) {
 						// Récupération de la couleur associée au clan du perso
 						$couleur_clan_perso = couleur_clan($clan_perso);
 						
-						// verification si le perso est bien a portée d'attaque			
+						// verification si le perso est bien a portée d'attaque
 						if(is_a_portee_attaque($mysqli, $carte, $id, $id_cible, $porteeMin_arme_attaque, $porteeMax_arme_attaque, $perc)) {
 							
 							// recuperation des données du perso cible
@@ -324,11 +324,11 @@ if ($verif_id_perso_session) {
 												</table>
 											</td>
 											<td width=50%>	
-												<table border=1 height=100% width=100%>		
+												<table border=1 height=100% width=100%>
 													<tr>
-														<td width=25%>	
+														<td width=25%>
 															<table border=0 width=100%>
-																<tr>												
+																<tr>
 																	<td align="center">
 																		<div width=40 height=40 style="position: relative;">
 																			<div style="position: absolute;bottom: 0;text-align: center; width: 100%;font-weight: bold;"><?php echo $id_cible; ?></div>

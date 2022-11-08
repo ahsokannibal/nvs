@@ -123,7 +123,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 						$degats_final = calcul_des_attaque($nb_des_canon, $valeur_des_canon) - $protec_cible;
 						
 						// Cible autre artillerie
-						if ($type_cible == 5) {
+						if ($type_cible == 5 || $type_cible == 8) {
 							// Bonus dégats 13D10
 							$bonus_degats_canon = mt_rand(13, 130);
 							$degats_final = $degats_final + $bonus_degats_canon;

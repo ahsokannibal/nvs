@@ -1262,7 +1262,7 @@ function gain_or_grouillot($type_grouillot) {
 	else if ($type_grouillot == 4) {
 		$gain_or = 2;
 	}
-	else if ($type_grouillot == 5) {
+	else if ($type_grouillot == 5 || $type_grouillot == 8) {
 		$gain_or = 3;
 	}
 	else {
@@ -1349,7 +1349,9 @@ function get_image_type_perso($type_p, $camp_perso) {
 	elseif ($type_p == 6) {
 		$im_type_perso = "toutou_".$nom_camp_perso.".gif";
 	}
-	
+	elseif ($type_p == 8) {
+		$im_type_perso = "gatling".$nom_camp_perso.".gif";
+	}
 	return $im_type_perso;
 }
 
