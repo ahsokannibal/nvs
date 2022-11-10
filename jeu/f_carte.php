@@ -1350,7 +1350,7 @@ function get_image_type_perso($type_p, $camp_perso) {
 		$im_type_perso = "toutou_".$nom_camp_perso.".gif";
 	}
 	elseif ($type_p == 8) {
-		$im_type_perso = "gatling".$nom_camp_perso.".gif";
+		$im_type_perso = "gatling_".$nom_camp_perso.".gif";
 	}
 	return $im_type_perso;
 }
