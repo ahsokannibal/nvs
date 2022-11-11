@@ -13,7 +13,7 @@ ob_start();
 			<path stroke-linecap="round" stroke-linejoin="round" d="m 13.822851,8.942861 v 3.443154 L 12,13.246804 10.177149,12.386015 V 8.942861 c -3.6457021,0.860788 -3.6457021,6.02552 0,7.747097 v 1.721577 c 1.822851,0.86079 1.822851,0.86079 3.645702,0 v -1.721577 c 3.645702,-1.721577 3.645702,-6.886309 0,-7.747097 z" />
 		</svg>
 		<div class='w-50 m-auto'>
-			Bienvenue soldat ! Le site est en maintenance.</br>Réactivation prévue le 05 Septembre 2022
+			Bienvenue soldat ! Le site est en maintenance.</br>
 		</div>
 	</div>
 </div>
