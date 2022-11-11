@@ -1370,6 +1370,7 @@ CREATE TABLE `stats_camp_pv` (
 --
 CREATE TABLE `tentative_triche` ( 
 	`id_tentative` INT NOT NULL AUTO_INCREMENT , 
+	`date` DATETIME DEFAULT NOW(),
 	`id_perso` INT NULL , 
 	`texte_tentative` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL , 
 	PRIMARY KEY (`id_tentative`)
