@@ -568,7 +568,7 @@ INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `percept
 (5, 'Artillerie', 'La plus puissante de toutes les unités combattantes. L\'artillerie est tout simplement extrèmement puissante, pouvant réduire en miette tout un bataillon en très peu de temps. Mais c\'est une unité extrèmement peu mobile et qui ne peut se battre au corps à corps et donc qui nécessite beaucoup d\'attention et de protection.', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
 (6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 0, 20, 125, 10, 14, 'toutou', 1),
 (7, 'Cavalerie légère', 'La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d\'ennemis.', 5, 5, 60, 400, 10, 12, 'cavalerie_legere', 3),
-(8, 'Gatling', 'Une gatling faucheuse d\'ames..', 5, 10, 30, 500, 10, 5, 'artillerie', 4);
+(8, 'Gatling', 'Une gatling faucheuse d\'ames..', 5, 10, 30, 500, 10, 5, 'gatling', 4);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
