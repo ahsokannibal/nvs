@@ -987,7 +987,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				$mysqli->query($sql);
 
 				// maj cv
-				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>', '$nom_grade_collat', NOW())";
+				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_collat', '$id_cible_collat','<font color=$couleur_clan_collat>$nom_collat</font>', '$nom_grade_collat', NOW())";
 				$mysqli->query($sql);
 
 				// maj stats de la cible
@@ -1112,7 +1112,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				$mysqli->query($sql);
 
 				// maj cv
-				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','$nom_cible_collat',NOW())";
+				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '', '$id_cible_collat','$nom_cible_collat',NOW())";
 				$mysqli->query($sql);
 
 				echo "<br><center><a href=\"jouer.php\">retour</a></center>";
@@ -1209,7 +1209,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 					$mysqli->query($sql);
 
 					// maj cv
-					$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '$nom_grade_perso', '$id_cible_collat','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
+					$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, date_cv) VALUES ($id,'<font color=$couleur_clan_perso>$nom_perso</font>', '', '$id_cible_collat','<font color=$couleur_bat>$nom_batiment $nom_instance_batiment</font>',NOW())"; 
 					$mysqli->query($sql);
 
 				}

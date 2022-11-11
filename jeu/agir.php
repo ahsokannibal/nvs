@@ -1377,7 +1377,7 @@ if ($verif_id_perso_session) {
 			if ($verif_arme) {
 			
 				// recup des données du perso
-				$sql = "SELECT type_perso, nom_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, gain_xp_tour, perso_as_grade.id_grade, nom_grade
+				$sql = "SELECT type_perso, nom_perso, idJoueur_perso, image_perso, xp_perso, x_perso, y_perso, pm_perso, pi_perso, pv_perso, pvMax_perso, pmMax_perso, pa_perso, paMax_perso, recup_perso, bonusRecup_perso, bonusPM_perso, perception_perso, bonusPerception_perso, dateCreation_perso, clan, gain_xp_tour, perso_as_grade.id_grade, nom_grade
 						FROM perso, perso_as_grade, grades
 						WHERE perso_as_grade.id_perso = perso.id_perso
 						AND perso_as_grade.id_grade = grades.id_grade
@@ -1404,6 +1404,7 @@ if ($verif_id_perso_session) {
 				$per_perso 		= $t_perso["perception_perso"];
 				$bp_perso 		= $t_perso["bonusPerception_perso"];
 				$dc_perso 		= $t_perso["dateCreation_perso"];
+				$id_j_perso		= $t_perso["idJoueur_perso"];
 				$clan_perso 	= $t_perso["clan"];
 				$grade_perso 	= $t_perso["id_grade"];
 				$type_perso		= $t_perso["type_perso"];
@@ -1920,17 +1921,16 @@ if ($verif_id_perso_session) {
 												$mysqli->query($sql);
 												
 											}
-
-											// L'arme fait des dégats de zone
-											if ($degatZone_arme_attaque) {
-												$degats_collat = floor(($degats_final - $bonus_degats_canon) / 3);
-												check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
-											}
-
 												
 											echo "<br><center><a class='btn btn-primary' href=\"jouer.php\">retour</a></center>";
 										}
 										/* Fin du traitement de la destruction du bâtiment*/
+
+										// L'arme fait des dégats de zone
+										if ($degatZone_arme_attaque) {
+											$degats_collat = floor(($degats_final - $bonus_degats_canon) / 3);
+											check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+										}
 										
 										//mise à jour des pa
 										$sql = "UPDATE perso SET pa_perso=pa_perso-$coutPa_attaque WHERE id_perso='$id'";
