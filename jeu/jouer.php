@@ -667,20 +667,7 @@ if($dispo == '1' || $admin){
 													
 													// maj carte brouillard de guerre
 													$perception_final = $perception_perso + $bonus_visu;
-													if ($id_perso >= 100) {
-														if ($clan_p == 1) {
-															$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW()
-																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-															$mysqli->query($sql);
-														}
-														else if ($clan_p == 2) {
-															$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW()
-																	WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																	AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-															$mysqli->query($sql);
-														}
-													}
+													//maj_visu($mysqli, $clan_p, $carte, $x_persoN, $y_persoN, $perception_final, $id_perso);
 												}
 												else {
 													$erreur .= "Il faut posséder au moins ".$cout_pm." pm pour sortir de ce bâtiment dans cette direction";
@@ -1396,20 +1383,8 @@ if($dispo == '1' || $admin){
 														
 														// maj carte brouillard de guerre
 														$perception_final = $perception_perso + $bonus_visu;
-														if ($id_perso >= 100) {
-															if ($clan_p == 1) {
-																$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
-																		WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																		AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																$mysqli->query($sql);
-															}
-															else if ($clan_p == 2) {
-																$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW()
-																		WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																		AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																$mysqli->query($sql);
-															}
-														}
+														//maj_visu($mysqli, $clan_p, $carte, $x_persoN, $y_persoN, $perception_final, $id_perso);
+													
 													}
 													else {
 														$erreur .= "Vous n'avez pas assez de PM pour sortir du bâtiment sur cette case !";
@@ -1663,20 +1638,8 @@ if($dispo == '1' || $admin){
 									
 									// maj carte brouillard de guerre
 									$perception_final = $perception_perso + $bonus_visu;
-									if ($id_perso >= 100) {
-										if ($clan_p == 1) {
-											$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
-													WHERE x_carte >= $xs - $perception_final AND x_carte <= $xs + $perception_final
-													AND y_carte >= $ys - $perception_final AND y_carte <= $ys + $perception_final";
-											$mysqli->query($sql);
-										}
-										else if ($clan_p == 2) {
-											$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
-													WHERE x_carte >= $xs - $perception_final AND x_carte <= $xs + $perception_final
-													AND y_carte >= $ys - $perception_final AND y_carte <= $ys + $perception_final";
-											$mysqli->query($sql);
-										}
-									}
+									//maj_visu($mysqli, $clan_p, $carte, $xs, $ys, $perception_final, $id_perso);
+
 								}
 								else {
 									// On ne peux pas sauter
@@ -1874,20 +1837,8 @@ if($dispo == '1' || $admin){
 												
 												// maj carte brouillard de guerre
 												$perception_final = $perception_perso + $bonus_visu;
-												if ($id_perso >= 100) {
-													if ($clan_p == 1) {
-														$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW()
-																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-														$mysqli->query($sql);
-													}
-													else if ($clan_p == 2) {
-														$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
-																WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-														$mysqli->query($sql);
-													}
-												}
+
+												//maj_visu($mysqli, $clan_p, $carte, $x_persoN, $y_persoN, $perception_final, $id_perso);
 												
 												// maj evenement
 												$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','s\'est deplacé',NULL,'','en $x_persoN/$y_persoN',NOW(),'0')";
@@ -2031,21 +1982,8 @@ if($dispo == '1' || $admin){
 																			
 																			// maj carte brouillard de guerre
 																			$perception_final = $perception_perso + $bonus_visu;
-																			if ($id_perso >= 100) {
-																				if ($clan_p == 1) {
-																					$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
-																							WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																							AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																					$mysqli->query($sql);
-																				}
-																				else if ($clan_p == 2) {
-																					$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
-																							WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																							AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																					$mysqli->query($sql);
-																				}
-																			}
-																			
+																			//maj_visu($mysqli, $clan_p, $carte, $x_persoN, $y_persoN, $perception_final, $id_perso);
+																																						
 																			// maj evenement
 																			$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','a bousculé ',$id_perso_b,'<font color=$couleur_clan_p_b><b>$nom_perso_b</b></font>','en $x_persoB/$y_persoB',NOW(),'0')";
 																			$mysqli->query($sql);
@@ -2112,21 +2050,8 @@ if($dispo == '1' || $admin){
 																				
 																				// maj carte brouillard de guerre
 																				$perception_final = $perception_perso + $bonus_visu;
-																				if ($id_perso >= 100) {
-																					if ($clan_p == 1) {
-																						$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
-																								WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																								AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																						$mysqli->query($sql);
-																					}
-																					else if ($clan_p == 2) {
-																						$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
-																								WHERE x_carte >= $x_persoN - $perception_final AND x_carte <= $x_persoN + $perception_final
-																								AND y_carte >= $y_persoN - $perception_final AND y_carte <= $y_persoN + $perception_final";
-																						$mysqli->query($sql);
-																					}
-																				}
-																				
+																				//maj_visu($mysqli, $clan_p, $carte, $x_persoN, $y_persoN, $perception_final, $id_perso);
+																																							
 																				// maj evenement
 																				$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id_perso,'<font color=$couleur_clan_p><b>$nom_perso</b></font>','a bousculé ',$id_perso_b,'<font color=$couleur_clan_p_b><b>$nom_perso_b</b></font>','en $x_persoB/$y_persoB',NOW(),'0')";
 																				$mysqli->query($sql);
@@ -2382,22 +2307,7 @@ if($dispo == '1' || $admin){
 				$bonusRecup_perso += $bonus_recup_bat;
 				$bonusRecup_perso += $bonus_recup_terrain;
 				
-				// Si perso chien
-				if ($type_perso == 6) {
-					
-					// Récupération des coordonnées du chef
-					$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
-					$res = $mysqli->query($sql);
-					$t_coord_chef = $res->fetch_assoc();
-					
-					$x_perso_chef = $t_coord_chef['x_perso'];
-					$y_perso_chef = $t_coord_chef['y_perso'];
-					
-					if (abs($x_perso_chef - $x_perso) > 15 || abs($y_perso_chef - $y_perso) > 15) {
-						$bonusPerception_perso -= 3;
-						$perc -= 3;
-					}					
-				}
+				
 				
 				if (in_bat($mysqli, $id_perso)) {
 											
@@ -2414,7 +2324,13 @@ if($dispo == '1' || $admin){
 					$taille_bat_perso		= $t_b['taille_batiment'];
 					$nom_instance_bat_perso	= $t_b['nom_instance'];
 				}
-				
+				// Si perso chien
+				if ($type_perso == 6) {
+					if(is_chien_eloigne_chef($mysqli, $id_joueur_perso, $x_perso, $y_perso )){
+						$bonusPerception_perso -= 3;
+						$perc -= 3;
+					}
+				}
 				// calcul malus pm
 				$malus_pm_charge = getMalusCharge($charge_perso, $chargeMax_perso);
 				if ($malus_pm_charge == 100) {
@@ -2440,14 +2356,7 @@ if($dispo == '1' || $admin){
 					$image_messagerie 	= "messagerie_nord.png";
 					$image_em 			= "em_nord2.png";
 					
-					if ($id_perso >= 100) {
-						$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW() 
-								WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
-								AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
-						$mysqli->query($sql);
-					}
-				}
-				if($clan_perso == 2){
+				}else if($clan_perso == 2){
 					$clan = 'rond_r.png';
 					$couleur_clan_perso = 'red';
 					
@@ -2458,14 +2367,7 @@ if($dispo == '1' || $admin){
 					$image_messagerie 	= "messagerie_sud.png";
 					$image_em 			= "em_sud2.png";
 					
-					if ($id_perso >= 100) {
-						$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW() 
-								WHERE x_carte >= $x_perso - $perc AND x_carte <= $x_perso + $perc
-								AND y_carte >= $y_perso - $perc AND y_carte <= $y_perso + $perc";
-						$mysqli->query($sql);
-					}
-				}
-				if($clan_perso == 0){
+				}else if($clan_perso == 0){
 					$clan = 'rond_r.png';
 					$couleur_clan_perso = 'black';
 					
@@ -2476,6 +2378,8 @@ if($dispo == '1' || $admin){
 					$image_messagerie 	= "messagerie_sud.png";
 					$image_em 			= "em_sud2.png";
 				}
+				
+				maj_visu($mysqli, $clan_p, $carte, $x_perso, $y_perso, $perc, $id_perso, $type_perso, $id_joueur_perso);
 				
 				// récupération du grade du perso 
 				$sql_grade = "SELECT perso_as_grade.id_grade, nom_grade FROM perso_as_grade, grades WHERE perso_as_grade.id_grade = grades.id_grade AND id_perso='$id_perso'";

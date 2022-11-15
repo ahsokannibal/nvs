@@ -1381,4 +1381,43 @@ function affichage_pastille_etendard($pastille){
 		src='../images_perso/".$pastille."' width='40' height='40' title='etendard'alt='Porte-Etendard' />";
 }
 
+
+//fonction qui met à jour la vision d'un personnage
+function maj_visu($mysqli, $clan, $carte, $x, $y, $perception, $id_perso ){
+
+	
+
+	if ($id_perso >= 100) {
+		if ($clan == 1) {
+			$sql = "UPDATE $carte SET vue_nord='1', vue_nord_date=NOW()
+					WHERE x_carte >= $x - $perception AND x_carte <= $x + $perception
+					AND y_carte >= $y - $perception AND y_carte <= $y + $perception";
+			$mysqli->query($sql);
+		}
+		else if ($clan == 2) {
+			$sql = "UPDATE $carte SET vue_sud='1', vue_sud_date=NOW()
+					WHERE x_carte >= $x - $perception AND x_carte <= $x + $perception
+					AND y_carte >= $y - $perception AND y_carte <= $y + $perception";
+			$mysqli->query($sql);
+		}
+	}
+}
+
+function is_chien_eloigne_chef($mysqli, $id_joueur_perso, $x, $y){
+	// Récupération des coordonnées du chef
+	$sql = "SELECT x_perso, y_perso FROM perso WHERE idJoueur_perso='$id_joueur_perso' AND chef=1";
+	$res = $mysqli->query($sql);
+	$t_coord_chef = $res->fetch_assoc();
+
+	$x_perso_chef = $t_coord_chef['x_perso'];
+	$y_perso_chef = $t_coord_chef['y_perso'];
+
+
+	if (abs($x_perso_chef - $x) > 15 || abs($y_perso_chef - $y) > 15) {
+		return true;
+	}		
+}
+
+
+
 ?>
