@@ -539,4 +539,10 @@ echo '<script>';
 echo 'console.log('. json_encode( $data ) .')';
 echo '</script>';
 };
+
+function log_message($message){
+	$log  = date("F j, Y, g:i a").' - '.$message."\n";
+        "-------------------------".PHP_EOL;
+	file_put_contents('./log_'.date("j.n.Y").'.log', $log, FILE_APPEND);
+}
 ?>

@@ -257,7 +257,9 @@ function zoomMap(zoomedtile){
 
     //console.log(newTransX, newTransY, canvas.offsetWidth, canvas.width, zommedTileRapportX, scale);
     adjustedTranslatePos(newTransX, newTransY);
+    
     drawMap(currentMap);
+    
 }
 
 
@@ -279,7 +281,6 @@ function handleStart(e){
 }
 function handleMove(e){
 
-    console.log("move : " + evCache.length)
     //zoomedtile = getTilePointerPos(canvas, evCache[0]);
     // Find this event in the cache and update its record with this event
     const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === e.pointerId);
@@ -292,6 +293,9 @@ function handleMove(e){
         let curDiff = (curDiffX > curdiffY) ? curDiffX : curdiffY;
 
         if (prevDiff > 0) {
+            if(curDiff == prevDiff){
+                return
+            }
             const zoomOrDezoom = (curDiff > prevDiff) ? 1 : -1;
             
             
@@ -331,7 +335,6 @@ function handleMove(e){
 
 function handleEnd(e){
     removeEvent(e);
-    console.log(evCache.length)
     if(evCache.length === 0){
         startDragOffset.x = 0;
         startDragOffset.y = 0;
@@ -500,7 +503,6 @@ function toMap(list, toKey){
 }
 
 function removeEvent(e) {
-    console.log(e.pointerId)
     // Remove this event from the target's cache
     const index = evCache.findIndex((cachedEv) => cachedEv.pointerId === e.pointerId);
     evCache.splice(index, 1);
