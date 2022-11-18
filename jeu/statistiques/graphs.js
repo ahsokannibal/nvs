@@ -71,7 +71,7 @@ function getBarChartData(labels, dataNord, dataSud){
 	};
 }
 
-var listTypes = ['Chef', 'Infanterie', 'Cavalerie lourde', 'Soigneur', 'Artillerie', 'Toutou', 'Cavalerie légère'];
+var listTypes = ['Chef', 'Infanterie', 'Cavalerie lourde', 'Soigneur', 'Artillerie', 'Gatling', 'Toutou', 'Cavalerie légère'];
 
 
 function createGrouillotBarChartDatas(labels, dataNord, dataSud){
