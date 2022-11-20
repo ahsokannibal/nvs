@@ -1259,10 +1259,10 @@ function gain_or_grouillot($type_grouillot) {
 	if ($type_grouillot == 2) {
 		$gain_or = 2;
 	}
-	else if ($type_grouillot == 4) {
+	else if ($type_grouillot == 4 || $type_grouillot == 8) {
 		$gain_or = 2;
 	}
-	else if ($type_grouillot == 5 || $type_grouillot == 8) {
+	else if ($type_grouillot == 5) {
 		$gain_or = 3;
 	}
 	else {
