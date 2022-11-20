@@ -9,8 +9,8 @@ $mysqli = db_connexion();
 function mail_gel_persos($nom_perso, $email_joueur, $titre, $message){
 
 	// Headers mail
-	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
-	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+	$headers ='From: Nord vs Sud<no-reply@nord-vs-sud.fr>'."\n";
+	$headers .='Reply-To: no-reply@nord-vs-sud.fr'."\n";
 	$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	

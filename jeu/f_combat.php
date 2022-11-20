@@ -507,8 +507,8 @@ function mail_attaque($mysqli, $nom_attaquant, $id_cible){
 	$t = $res->fetch_assoc();
 
 	// Headers mail
-	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
-	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+	$headers ='From: Nord vs Sud<no-reply@nord-vs-sud.fr>'."\n";
+	$headers .='Reply-To: no-reply@nord-vs-sud.fr'."\n";
 	$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	

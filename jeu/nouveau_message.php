@@ -43,8 +43,8 @@ if(isset($_SESSION["id_perso"])){
 			$headers[] = 'MIME-Version: 1.0';
 			$headers[] = 'Content-type: text/html; charset=utf-8';
 			$headers[] = 'To: '.$nom_perso.' <'.$destinataire.'>';
-			$headers[] = 'From: Nord VS Sud"<nordvssud@no-reply.fr>';
-			$headers[] = 'Reply-To: nordvssud@no-reply.fr';
+			$headers[] = 'From: Nord vs Sud<no-reply@nord-vs-sud.fr>';
+			$headers[] = 'Reply-To: no-reply@nord-vs-sud.fr';
 			
 			// Titre du mail
 			$titre = "Votre personnage $nom_perso a reçu un MP de $expediteur";
