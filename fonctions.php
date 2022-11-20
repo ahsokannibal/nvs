@@ -479,8 +479,8 @@ function mail_gele_zombie($id_perso){
 	$t = $res->fetch_assoc();
 
 	// Headers mail
-	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
-	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+	$headers ='From: Nord vs Sud<no-reply@nord-vs-sud.fr>'."\n";
+	$headers .='Reply-To: no-reply@nord-vs-sud.fr'."\n";
 	$headers .='Content-Type: text/plain; charset="iso-8859-1"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	
@@ -514,8 +514,8 @@ function genererChaineAleatoire($taille) {
 function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
 
 	// Headers mail
-	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
-	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+	$headers ='From: Nord vs Sud<no-reply@nord-vs-sud.fr>'."\n";
+	$headers .='Reply-To: no-reply@nord-vs-sud.fr'."\n";
 	$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	
