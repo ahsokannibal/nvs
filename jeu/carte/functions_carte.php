@@ -108,6 +108,7 @@ function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
     
     $sql_clan = get_sql_clan($joueur, getJsonProperty($sqlPropertiesObj, 'brouillard'));
 
+    //On récupère toutes les cases brouillard
     $brouillard = get_brouillard($sql_clan, $joueur->clan);
     foreach ($brouillard as $case) {
         $carte_array[$case['id']]['brouillard']=array(
@@ -119,9 +120,9 @@ function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
     $sql_clan = get_sql_clan($joueur, getJsonProperty($sqlPropertiesObj, 'visible'));
     $visible = get_visibles($sql_clan, $joueur->clan);
     foreach ($visible as $case) {
-        //visible si le perso n'est pas en foret 
-        if ($case["idPerso_carte"] < 50000 && $case["idPerso_carte"] > 0 && ($case["fond_carte"] != '7.gif' || $case["idJoueur_perso"] == $joueur->id_joueur || $joueur->compagnie == $case["nom_compagnie"])){
-            //if($joueur->clan == $case["clan"]){
+        //visible si le perso n'est pas en foret et qu'il n'est pas du même camp
+        if ($case["idPerso_carte"] < 50000 && $case["idPerso_carte"] > 0){
+            if(!isset($carte_array[$case['id']]['brouillard'])){
                 $carte_array[$case['id']]['joueur']=array(
                     'id'        => $case["idPerso_carte"],
                     'image'     => $case["image_carte"],
@@ -133,7 +134,7 @@ function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
                 if(!$isHistorique && isSet($case["nom_compagnie"]) && $joueur->compagnie == $case["nom_compagnie"]){
                     $carte_array[$case['id']]['joueur']['compagnie'] = trim($case["nom_compagnie"]);
                 }
-           /* }else{
+            }/*else{
                 $carte_array[$case['id']]['joueur']=array(
                     'camp'  =>  $case["clan"]
                 );
