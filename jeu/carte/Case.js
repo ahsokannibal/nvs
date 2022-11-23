@@ -39,8 +39,7 @@ class Case{
             }else{
 
                 if(scale===maxScale){
-                    this.drawFondCase(ctx);
-                    this.drawImageIfLoaded(canvas, '../../images_perso/'+this.batiment.image);
+                    this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond, function(canvas, ctx, me){me.drawImageIfLoaded(canvas, '../../images_perso/'+me.batiment.image);});
                 }else{
                     //on utilise une couleur
                     if(this.batiment.camp == 1){
@@ -120,19 +119,25 @@ class Case{
         }else if(this.pnj != undefined){
             if(scale === maxScale){
                 this.drawFondCase(ctx);
-                this.drawImageIfLoaded(canvas, '../../images/pnj/'+this.pnj.image);
+                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond, function(canvas, ctx, me){me.drawImageIfLoaded(canvas, '../../images/pnj/'+me.pnj.image);});
+                
             }else{
                 this.couleur = noir;
                 this.drawFondCase(ctx);
             }
             
         }else if(this.brouillard != undefined && this.brouillard.valeur == 1 && brouillard_checkbox.checked){
-            if(topographie.checked){
-                ctx.fillStyle = this.couleur_brouillard;
+            if(scale === maxScale){
+                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond, this.drawBrouillardOver);
             }else{
-                ctx.fillStyle = couleur_brouillard_plaine;
+                if(topographie.checked){
+                    ctx.fillStyle = this.couleur_brouillard;
+                }else{
+                    ctx.fillStyle = couleur_brouillard_plaine;
+                }
+                ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
             }
-            ctx.fillRect(this.getX(canvas), this.getY(canvas), pixel_size, pixel_size);
+
         }else if(topographie_checkbox.checked){
             if(scale === maxScale){
                 this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond);
@@ -155,6 +160,11 @@ class Case{
         ctx.fillStyle= noir;
         ctx.textAlign = "center";
         ctx.fillText(me.joueur.id, me.getX(canvas) + pixel_size / 2, me.getY(canvas) + pixel_size - 0.5);
+    }
+
+    drawBrouillardOver(canvas, ctx, me){
+        ctx.fillStyle = couleur_brouillard_image;
+        ctx.fillRect(me.getX(canvas), me.getY(canvas), pixel_size, pixel_size);
     }
 
     drawImageIfLoaded(canvas, src, onImageDrawned = null){

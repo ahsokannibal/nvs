@@ -36,6 +36,7 @@ const couleur_brouillard_montagne	= 'rgb(47, 27, 12)'; // Cachou
 const couleur_brouillard_colinne	= 'rgb(133, 109, 77)'; // Bistre
 const couleur_brouillard_desert		= 'rgb(225, 206, 154)'; // Vanille
 const couleur_brouillard_foret		= 'rgb(97, 77, 26)'; // Vanille
+const couleur_brouillard_image	    = 'rgba(208, 192, 122, 0.5)'; // translucide
 
 // couleurs hors brouillard
 const couleur_plaine 	            = 'rgb(129, 156, 84)'; // vert clair
