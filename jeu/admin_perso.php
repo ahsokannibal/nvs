@@ -348,11 +348,16 @@ if(isset($_SESSION["id_perso"])){
 				$new_xp_perso = $_POST['xp_perso'];
 				
 				$mess = "MAJ XP perso matricule ".$id_perso_select." vers ".$new_xp_perso;
+
+				$sql = "SELECT xp_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_xp_perso = $t['xp_perso'];
 				
 				$sql = "UPDATE perso SET xp_perso=$new_xp_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 
-				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XP', 'perso $id_perso_select vers $new_xp_perso')";
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XP', 'perso $id_perso_select $old_xp_perso vers $new_xp_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -361,11 +366,16 @@ if(isset($_SESSION["id_perso"])){
 				$new_pi_perso = $_POST['pi_perso'];
 				
 				$mess = "MAJ PI perso matricule ".$id_perso_select." vers ".$new_pi_perso;
+
+				$sql = "SELECT pi_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pi_perso = $t['pi_perso'];
 				
 				$sql = "UPDATE perso SET pi_perso=$new_pi_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 
-				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XPI', 'perso $id_perso_select vers $new_pi_perso')";
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XPI', 'perso $id_perso_select $old_pi_perso vers $new_pi_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -375,10 +385,15 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ PC perso matricule ".$id_perso_select." vers ".$new_pc_perso;
 				
+				$sql = "SELECT pc_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pc_perso = $t['pc_perso'];
+				
 				$sql = "UPDATE perso SET pc_perso=$new_pc_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 
-				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PC', 'perso $id_perso_select vers $new_pc_perso')";
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PC', 'perso $id_perso_select $old_pc_perso vers $new_pc_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -388,10 +403,15 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ THUNE perso matricule ".$id_perso_select." vers ".$new_or_perso;
 				
+				$sql = "SELECT or_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_or_perso = $t['or_perso'];
+				
 				$sql = "UPDATE perso SET or_perso=$new_or_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 
-				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement OR', 'perso $id_perso_select vers $new_or_perso')";
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement OR', 'perso $id_perso_select $old_or_perso vers $new_or_perso')";
 				$mysqli->query($sql);
 			}
 
@@ -413,11 +433,16 @@ if(isset($_SESSION["id_perso"])){
 				$new_pv_perso = $_POST['pv_perso'];
 				
 				$mess = "MAJ PV perso matricule ".$id_perso_select." vers ".$new_pv_perso;
+
+				$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pv_perso = $t['pv_perso'];
 				
 				$sql = "UPDATE perso SET pv_perso=$new_pv_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 
-				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PV', 'perso $id_perso_select vers $new_pv_perso')";
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PV', 'perso $id_perso_select $old_pv_perso vers $new_pv_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -427,10 +452,15 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ PM perso matricule ".$id_perso_select." vers ".$new_pm_perso;
 				
+				$sql = "SELECT pm_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pm_perso = $t['pm_perso'];
+				
 				$sql = "UPDATE perso SET pm_perso=$new_pm_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 
-				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PM', 'perso $id_perso_select vers $new_pm_perso')";
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PM', 'perso $id_perso_select $old_pm_perso vers $new_pm_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -440,10 +470,15 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ PA perso matricule ".$id_perso_select." vers ".$new_pa_perso;
 				
+				$sql = "SELECT pa_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pa_perso = $t['pa_perso'];
+				
 				$sql = "UPDATE perso SET pa_perso=$new_pa_perso WHERE id_perso='$id_perso_select'";
 				$mysqli->query($sql);
 
-				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PA', 'perso $id_perso_select vers $new_pa_perso')";
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PA', 'perso $id_perso_select $old_pa_perso vers $new_pa_perso')";
 				$mysqli->query($sql);
 			}
 			
