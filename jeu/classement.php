@@ -18,6 +18,7 @@ function get_id_type_perso($type_perso) {
 	case "artillerie": return 5;
 	case "chien": return 6;
 	case "cav_legere": return 7;
+	case "gatling": return 8;
 	default :
 		return 0;
 	}
@@ -107,6 +108,7 @@ if(isset($_GET["top"])){
 	echo '<input type="radio" id="artillerie" name="type_perso" value="artillerie" onclick="this.form.submit();" '.($type_perso == 'artillerie' ? 'checked' : '').'> <label for="artillerie">Artillerie</label>';
 	echo '<input type="radio" id="chien" name="type_perso" value="chien" onclick="this.form.submit();" '.($type_perso == 'chien' ? 'checked' : '').'> <label for="chien">Chien</label>';
 	echo '<input type="radio" id="cav_legere" name="type_perso" value="cav_legere" onclick="this.form.submit();" '.($type_perso == 'cav_legere' ? 'checked' : '').'> <label for="cav_legere">Cavalerie légère</label>';
+	echo '<input type="radio" id="gatling" name="type_perso" value="gatling" onclick="this.form.submit();" '.($type_perso == 'gatling' ? 'checked' : '').'> <label for="gatling">Gatling</label>';
 	echo '</form></div>';
 	
 	if(isset($_GET["classement"])) {
@@ -855,6 +857,7 @@ if(!isset($_GET["top"]) && !isset($_GET["titre"]) && !isset($_GET["stats"]) && !
 		echo '<input type="radio" id="artillerie" name="type_perso" value="artillerie" onclick="this.form.submit();" '.($type_perso == 'artillerie' ? 'checked' : '').'> <label for="artillerie">Artillerie</label>';
 		echo '<input type="radio" id="chien" name="type_perso" value="chien" onclick="this.form.submit();" '.($type_perso == 'chien' ? 'checked' : '').'> <label for="chien">Chien</label>';
 		echo '<input type="radio" id="cav_legere" name="type_perso" value="cav_legere" onclick="this.form.submit();" '.($type_perso == 'cav_legere' ? 'checked' : '').'> <label for="cav_legere">Cavalerie légère</label>';
+		echo '<input type="radio" id="gatling" name="type_perso" value="gatling" onclick="this.form.submit();" '.($type_perso == 'gatling' ? 'checked' : '').'> <label for="gatling">Gatling</label>';
 		echo '</form></div>';
 	} else {
 		$order_by = "id_grade DESC, pc_perso DESC";
