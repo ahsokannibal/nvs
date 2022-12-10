@@ -1681,8 +1681,13 @@ if ($verif_id_perso_session) {
 											passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 										}
 
+										$gain_pc=0;
+										// Gain pc sur attaque d'un fort, fortin, gare, train ou tour de guet d'un autre camp
+										if ($camp_instance != $clan_perso && ($id_batiment == 8 || $id_batiment == 9 || $id_batiment == 11 || $id_batiment == 12 || $id_batiment == 2))
+											$gain_pc = 1;
+
 										// maj evenement
-										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : 0 )',NOW(),'0')";
+										$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','a attaqué ','$id_cible','<font color=$couleur_bat><b>$nom_batiment</b></font>',' ( Précision : $touche / $precision_final ; Dégâts : $degats_final ; Gain XP : $gain_xp ; Gain PC : $gain_pc )',NOW(),'0')";
 										$mysqli->query($sql);					
 											
 										// recuperation des données du batiment aprés attaque
@@ -1695,8 +1700,7 @@ if ($verif_id_perso_session) {
 										$y_cible 		= $tab["y_instance"];
 										$id_batiment 	= $tab["id_batiment"];
 
-										// Gain pc sur attaque d'une tour de guet d'un autre camp
-										if ($camp_instance != $clan_perso && $id_batiment == 2)
+										if ($gain_pc)
 											gain_pc_chef($mysqli, $id, 1);
 										
 										/* Début du traitement de la destruction du batiment*/
