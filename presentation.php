@@ -25,7 +25,7 @@
 				<div class="col-12">
 					<div align='center'>
 						<a href='index.php' class='btn btn-danger'>Retour Accueil</a>
-						<a href='regles/regles.php' class='btn btn-info'>Regles</a>
+						<a href='https://encyclopedie.nord-vs-sud.fr' class='btn btn-info'>Regles</a>
 						<a href='inscription.php' class='btn btn-success'>S'inscrire</a>
 					</div>
 				</div>

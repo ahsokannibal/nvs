@@ -2212,7 +2212,7 @@ if($dispo == '1' || $admin){
 				echo "<tr>";
 				echo "	<td>Prochain tour :  ".$date_dla."</td>";
 				echo "	<td align=right>";
-				echo "		<a class='btn btn-info' href=\"../regles/regles.php\"><b>Règles</b></a>";
+				echo "		<a class='btn btn-info' href=\"https://encyclopedie.nord-vs-sud.fr\"><b>Règles</b></a>";
 				echo "		<a class='btn btn-info' href=\"../faq.php\"><b>FAQ</b></a>";
 				echo "		<a class='btn btn-primary' href=\"http://www.forum.persee.ovh/\" target='_blank'><b>Forum</b></a>";
 				if ($type_perso != 6) {
