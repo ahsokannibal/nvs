@@ -135,7 +135,7 @@
 								<td align='center'>Les chiens sont des animaux domestiques entraînés à traquer l'ennemi grâce à leur flair très développé.</td>
 							</tr>
 							<tr>
-								<td align='center'><img src='../images_perso/v1/artillerie_nord.gif' alt='artillerie'><img src='../images_perso/v1/artillerie_sud.gif' alt='artillerie'></td>
+								<td align='center'><img src='../images_perso/v1/gatling_nord.gif' alt='gatling'><img src='../images_perso/v1/gatling_sud.gif' alt='gatling'></td>
 								<td align='center'>Gatling</td>
 								<td align='center'>500</td>
 								<td align='center'>10</td>
