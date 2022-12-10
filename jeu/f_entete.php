@@ -68,9 +68,6 @@ function entete($mysqli, $id) {
 							<td width=\"60%\"><b>Pseudo :</b> <font color=\"$couleur_clan_perso\">$nom_perso</font> [$id]</td>
 						</tr>
 						<tr>
-							<td width=\"60%\"><b>XP :</b> ".$xp."</td>
-						</tr>
-						<tr>
 							<td><b>Grade : </b><img src=\"../images/grades/" . $id_grade_perso . ".gif\" width=\"40\" height=\"40\">  " . $nom_grade_perso . "</td>
 						</tr>";
 			echo "<tr><td><b>Camp :</b> <font color=\"$couleur_clan_perso\">$nom_clan</font></td></tr>";
