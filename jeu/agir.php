@@ -1572,7 +1572,7 @@ if ($verif_id_perso_session) {
 									
 									$gain_xp = 1;
 									if ($camp_instance != $clan_perso)
-										$gain_xp = mt_rand(1,3);
+										$gain_xp = mt_rand(2,4);
 									
 									if ($gain_xp_tour_perso + $gain_xp > 20) {
 										$gain_xp = 20 - $gain_xp_tour_perso;
