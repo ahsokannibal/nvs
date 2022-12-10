@@ -4310,7 +4310,7 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 function charge_haut($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4416,7 +4416,7 @@ function charge_haut($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_p
 function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4522,7 +4522,7 @@ function charge_haut_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_pers
 function charge_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4628,7 +4628,7 @@ function charge_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y
 function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4733,7 +4733,7 @@ function charge_bas_gauche($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso
 function charge_bas($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4838,7 +4838,7 @@ function charge_bas($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_pe
 function charge_bas_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -4943,7 +4943,7 @@ function charge_bas_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso
 function charge_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					
@@ -5048,7 +5048,7 @@ function charge_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y
 function charge_haut_droite($mysqli, $id_perso, $nom_perso, $type_perso, $x_perso, $y_perso, $pa_perso, $pv_perso, $xp_perso, $image_perso, $clan, $grade_perso) {
 		
 	$couleur_clan_perso = couleur_clan($clan);
-	$distance_charge_min = distance_min_charge_pm($type_perso);
+	$distance_charge_min = distance_min_charge_pm($type_perso) +1;
 	
 	for ($i = 1; $i <= 5; $i++) {
 					

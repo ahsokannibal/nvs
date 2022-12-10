@@ -1227,7 +1227,7 @@ function verif_charge_pm($type_perso, $pm_perso) {
 function distance_min_charge_pm($type_perso) {
 	if ($type_perso == 3)
 		return 2;
-	return 4;
+	return 3;
 }
 
 /**
