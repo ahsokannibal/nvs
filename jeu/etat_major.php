@@ -106,6 +106,8 @@ if($dispo == '1' || $admin){
 				$mysqli->query($sql);
 				$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '7')";
 				$mysqli->query($sql);
+				$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '8')";
+				$mysqli->query($sql);
 				
 				// Insertion de perso dans la compagnie en tant que chef
 				$sql = "INSERT INTO perso_in_compagnie (id_perso, id_compagnie, poste_compagnie, attenteValidation_compagnie) VALUES ('$id_perso_comp', '$id_new_comp', '1', '0')";

@@ -114,6 +114,8 @@ if (@$_SESSION["id_perso"]) {
 												$mysqli->query($sql);
 												$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '7')";
 												$mysqli->query($sql);
+												$sql = "INSERT INTO compagnie_as_contraintes VALUES ('$id_new_comp', '8')";
+												$mysqli->query($sql);
 												
 												// Le perso passe de la compagnie mère à chef de la nouvelle section
 												$sql = "UPDATE perso_in_compagnie SET id_compagnie='$id_new_comp', poste_compagnie='1' WHERE id_perso='$id_chef_nouvelle_section'";
