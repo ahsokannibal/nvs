@@ -155,7 +155,7 @@ ob_start();
 	<aside class='col-12 col-sm px-3'>
 			<a href="presentation.php" class='link-light'>Présentation du jeu</b></a>
 			<hr />
-			<a href="regles/regles.php" class='link-light'>Règles</b></a>
+			<a href="https://encyclopedie.nord-vs-sud.fr" class='link-light'>Règles</b></a>
 			<hr />
 			<a href="faq.php" class='link-light'>FAQ</b></a>
 			<hr />

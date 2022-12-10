@@ -86,7 +86,7 @@ $count_online = $res->fetch_array();
 						<div class="col-sm-4">
 							<font color='red'><b>Jeu en cours de mise à jour, veuillez patienter</b></font>
 							<hr />
-							<a href="regles/regles.php" style="color: white;">Règles</b></a>
+							<a href="https://encyclopedie.nord-vs-sud.fr" style="color: white;">Règles</b></a>
 							<hr />
 							<a href="./forum/" style="color: white;">Le Forum</b></a>
 							<hr />
