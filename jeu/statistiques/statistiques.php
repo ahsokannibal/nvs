@@ -71,6 +71,50 @@ include("functions_statistiques.php");
 				</div>
 			</div>
 		</div>
+		<div class="row py-2">
+			<div class="col-md-6 py-1">
+				<div >
+					<h6>Répartition de l'xp</h6>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<canvas id="xpPieChart"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 py-1">
+				<div>
+					<h6>XP par grades</h6>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<canvas id="xpGradesChart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="row py-2">
+			<div class="col-md-6 py-1">
+				<div >
+					<h6>Compagnies nord</h6>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<canvas id="nordCompaPieChart"></canvas>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6 py-1">
+				<div>
+					<h6>Compagnies sud</h6>
+				</div>
+				<div class="card">
+					<div class="card-body">
+						<canvas id="sudCompaPieChart"></canvas>
+					</div>
+				</div>
+			</div>
+		</div>
 		<div class="row  my-5 white-bg">
 			<div class="col">
 				<div>
@@ -80,6 +124,9 @@ include("functions_statistiques.php");
 						</li>
 						<li class="nav-item">
 							<a class="nav-link" href="#tab-table2" data-toggle="tab" role="tab" aria-controls="home" aria-selected="false">Armes</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="#tab-table3" data-toggle="tab" role="tab" aria-controls="home" aria-selected="false">Compagnies</a>
 						</li>
 					</ul>
 					<div class="tab-content">
@@ -93,6 +140,8 @@ include("functions_statistiques.php");
 								<th>Grade</th>
 								<th>Camp</th>
 								<th>Bataillon</th>
+								<th>XP</th>
+								<th>Compagnie</th>
 							</tr>
 							</thead>
 							<tfoot>
@@ -103,6 +152,8 @@ include("functions_statistiques.php");
 								<th>Grade</th>
 								<th>Camp</th>
 								<th>Bataillon</th>
+								<th>XP</th>
+								<th>Compagnie</th>
 							</tr>
 							</tfoot>
 						</table>
@@ -124,6 +175,24 @@ include("functions_statistiques.php");
 									<th>Nombre d'attaques</th>
 									<th>Précision moyenne</th>
 									<th>Dégat moyen</th>
+									<th>Camp</th>
+								</tr>
+								</tfoot>
+							</table>
+						</div>
+						<div class="tab-pane" id="tab-table3">
+							<table id="compagniesData" class="display nowrap" style="width:100%">
+								<thead>
+								<tr>
+									<th>Nom</th> 
+									<th>Membres</th>
+									<th>Camp</th>
+								</tr>
+								</thead>
+								<tfoot>
+								<tr>
+									<th>Nom</th> 
+									<th>Membres</th>
 									<th>Camp</th>
 								</tr>
 								</tfoot>
