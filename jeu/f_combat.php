@@ -775,7 +775,6 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 	// Limite a 2xp le gain max pour collats
 	if ($id_arme_attaque == 14){
 		$max_gain_xp_collat_cumul = 2;
-		$max_gain_pc_collat_cumul = 3;
 	}
 	// On parcours les cibles pour degats collateraux
 	foreach($res_recherche_collat as $t_recherche_collat) {
@@ -1118,6 +1117,9 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 				echo "<br><center><a href=\"jouer.php\">retour</a></center>";
 			}
 		} else {
+			// la gatling ne fait pas de collats sur batiments
+			if ($id_arme_attaque == 14)
+				continue;
 			// recuperation des données du batiment	
 			$sql = "SELECT batiment.id_batiment, nom_batiment, taille_batiment, description, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance 
 					FROM batiment, instance_batiment
