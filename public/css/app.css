@@ -4,6 +4,10 @@ body{
 	background:#828282;
 }
 
+.game{
+	background:#fff;
+}
+
 .bg-gray-300 {
 	background:#969696;
 }
@@ -20,6 +24,7 @@ body{
 	transform: rotate(-20deg);
 }
 
+/* heights and width custom */
 .h-20 {
 	height:20rem;
 }
@@ -36,11 +41,27 @@ body{
 	width:100%;
 }
 
+/* news */
 .news {
 	overflow-y: scroll;
 	text-overflow: "";
 }
 
+/* sac */
+.background-img {
+	position:fixed;
+	top:0;
+	left:0;
+	width:100%;
+	height:100%;
+}
+
+.sac {
+	z-index:-1;
+	background:no-repeat url("../img/backgrounds/sac_optimized-transp.png"), url("../img/backgrounds/wood.png");
+}
+
+/* icons custom */
 .warning-icon-lg {
 	height:2.5rem;
 	width:2.5rem;
