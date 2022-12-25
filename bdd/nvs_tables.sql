@@ -978,6 +978,7 @@ CREATE TABLE `news` (
 CREATE TABLE `objet` (
   `id_objet` int(11) NOT NULL,
   `nom_objet` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `description_objet` text NOT NULL,
   `portee_objet` int(11) NOT NULL DEFAULT '0',
   `bonusPerception_objet` int(11) NOT NULL DEFAULT '0',
   `bonusRecup_objet` int(11) NOT NULL DEFAULT '0',
@@ -990,7 +991,9 @@ CREATE TABLE `objet` (
   `coutPa_objet` int(11) NOT NULL DEFAULT '0',
   `coutOr_objet` int(11) NOT NULL DEFAULT '0',
   `poids_objet` decimal(10,1) NOT NULL DEFAULT '0.0',
-  `description_objet` text NOT NULL,
+  `contient_alcool`	tinyint [0] NOT NULL DEFAULT '0',
+  `echangeable`	tinyint [0] NOT NULL DEFAULT '1',
+  `deposable` tinyint [0] NOT NULL DEFAULT '1',
   `type_objet` varchar(3) NOT NULL DEFAULT 'N'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 

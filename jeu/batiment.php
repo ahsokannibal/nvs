@@ -223,7 +223,7 @@ if($dispo == '1' || $admin){
 										if ($pa_perso >= 2) {
 									
 											// recuperation des données de l'objet
-											$sql = "SELECT nom_objet, poids_objet, coutOr_objet FROM objet WHERE id_objet='$id_o'";
+											$sql = "SELECT nom_objet, poids_objet, coutOr_objet, echangeable FROM objet WHERE id_objet='$id_o'";
 											$res = $mysqli->query($sql);
 											$t_o = $res->fetch_assoc();
 											
@@ -354,7 +354,7 @@ if($dispo == '1' || $admin){
 									if($nb_res_v > 0){
 										
 										// recuperation des infos sur l'objet
-										$sql_o = "SELECT nom_objet, coutOr_objet, poids_objet, type_objet FROM objet WHERE id_objet='$id_objet'";
+										$sql_o = "SELECT nom_objet, coutOr_objet, poids_objet, type_objet FROM objet WHERE id_objet='$id_objet' AND echangeable=1";
 										$res_o = $mysqli->query($sql_o);
 										$t_o = $res_o->fetch_assoc();
 										
@@ -672,7 +672,8 @@ if($dispo == '1' || $admin){
 												AND type_objet!='M' AND type_objet!='MSP'
 												AND type_objet!='S' AND type_objet!='SP' AND type_objet!='SSP'
 												AND objet.id_objet != '1'
-												AND perso_as_objet.equip_objet = '0'";
+												AND perso_as_objet.equip_objet = '0'
+												AND objet.echangeable = 1";
 									}
 									
 									$res_resources = $mysqli->query($sql_ressources);
@@ -1200,11 +1201,11 @@ if($dispo == '1' || $admin){
 									// possibilité achat objets de base
 									// Affichage de l'étendard seulement pour les anims et admins
 									if(($isAdmin || $isAnim) && $type_perso == '1'){
-										$sql = "SELECT * from objet where type_objet='N' OR type_objet='E'";
+										$sql = "SELECT * from objet where (type_objet='N' OR type_objet='E') AND echangeable=1";
 										$res = $mysqli->query($sql);
 										$nb = $res->num_rows;
 									} else {
-										$sql = "SELECT * from objet where type_objet='N' OR type_objet='E' AND id_objet!='8' AND id_objet!='9'";
+										$sql = "SELECT * from objet where (type_objet='N' OR type_objet='E') AND echangeable=1 AND id_objet!='8' AND id_objet!='9'";
 										$res = $mysqli->query($sql);
 										$nb = $res->num_rows;
 									}									
