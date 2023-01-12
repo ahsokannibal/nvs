@@ -96,14 +96,14 @@ CREATE TABLE `action_as_batiment` (
 -- Structure de la table `alerte_anim`
 --
 
-CREATE TABLE `alerte_anim` ( 
-	`id_alerte` INT NOT NULL AUTO_INCREMENT , 
-	`type_alerte` INT NOT NULL , 
-	`id_perso` INT NOT NULL , 
+CREATE TABLE `alerte_anim` (
+	`id_alerte` INT NOT NULL AUTO_INCREMENT ,
+	`type_alerte` INT NOT NULL ,
+	`id_perso` INT NOT NULL ,
 	`raison_alerte` TEXT NOT NULL ,
-	`date_alerte` DATETIME NOT NULL , 
+	`date_alerte` DATETIME NOT NULL ,
 	PRIMARY KEY (`id_alerte`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci; 
+) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 -- --------------------------------------------------------
 
@@ -111,16 +111,16 @@ CREATE TABLE `alerte_anim` (
 -- Structure de la table `anim_capture`
 --
 
-CREATE TABLE `anim_capture` ( 
-	`id` INT NOT NULL AUTO_INCREMENT , 
-	`id_perso` INT NOT NULL , 
-	`id_perso_capture` INT NOT NULL , 
+CREATE TABLE `anim_capture` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`id_perso` INT NOT NULL ,
+	`id_perso_capture` INT NOT NULL ,
 	`titre` VARCHAR(255) NOT NULL ,
-	`message` TEXT NOT NULL , 
-	`date_capture` DATETIME NOT NULL , 
+	`message` TEXT NOT NULL ,
+	`date_capture` DATETIME NOT NULL ,
 	`statut` INT NOT NULL DEFAULT '0' ,
 	PRIMARY KEY (`id`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -128,17 +128,17 @@ CREATE TABLE `anim_capture` (
 -- Structure de la table `anim_question`
 --
 
-CREATE TABLE `anim_question` ( 
+CREATE TABLE `anim_question` (
 	`id` INT NOT NULL AUTO_INCREMENT ,
 	`date_question` DATETIME NOT NULL ,
-	`id_perso` INT NOT NULL , 
-	`titre` TEXT NOT NULL , 
+	`id_perso` INT NOT NULL ,
+	`titre` TEXT NOT NULL ,
 	`question` TEXT NOT NULL ,
-	`id_camp` INT NOT NULL , 
+	`id_camp` INT NOT NULL ,
 	`status` INT NOT NULL DEFAULT '0' ,
 	`id_parent` INT DEFAULT NULL ,
 	PRIMARY KEY (`id`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -146,8 +146,8 @@ CREATE TABLE `anim_question` (
 -- Structure de la tables `anti_zerk`
 --
 
-CREATE TABLE `anti_zerk` ( 
-	`id_perso` INT NOT NULL, 
+CREATE TABLE `anti_zerk` (
+	`id_perso` INT NOT NULL,
 	`date_derniere_attaque` DATETIME NOT NULL,
 	`date_nouveau_tour` DATETIME NOT NULL
 ) ENGINE = MyISAM;
@@ -257,9 +257,9 @@ CREATE TABLE `batiment` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Structure de la table `banque_as_compagnie`
--- 
+--
 
 CREATE TABLE `banque_as_compagnie` (
   `id_compagnie` int(11) NOT NULL default '0',
@@ -268,9 +268,9 @@ CREATE TABLE `banque_as_compagnie` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Structure de la table `banque_compagnie`
--- 
+--
 
 CREATE TABLE `banque_compagnie` (
   `id_perso` int(11) NOT NULL default '0',
@@ -282,12 +282,12 @@ CREATE TABLE `banque_compagnie` (
 -- --------------------------------------------------------
 
 
-CREATE TABLE `banque_log` ( 
-	`id_log` INT NOT NULL AUTO_INCREMENT, 
-	`date_log` DATETIME NOT NULL , 
-	`id_compagnie` INT NOT NULL , 
-	`id_perso` INT NOT NULL , 
-	`montant_transfert` INT NOT NULL , 
+CREATE TABLE `banque_log` (
+	`id_log` INT NOT NULL AUTO_INCREMENT,
+	`date_log` DATETIME NOT NULL ,
+	`id_compagnie` INT NOT NULL ,
+	`id_perso` INT NOT NULL ,
+	`montant_transfert` INT NOT NULL ,
 	`montant_final` INT NOT NULL,
 	PRIMARY KEY (`id_log`)
 ) ENGINE = MyISAM;
@@ -387,10 +387,10 @@ CREATE TABLE `carte_time` (
 -- Structure de la table `choix_carte_suivante`
 --
 
-CREATE TABLE `choix_carte_suivante` ( 
-	`id_choix` INT NOT NULL AUTO_INCREMENT, 
-	`id_camp` INT NOT NULL , 
-	`carte` VARCHAR(255) NOT NULL , 
+CREATE TABLE `choix_carte_suivante` (
+	`id_choix` INT NOT NULL AUTO_INCREMENT,
+	`id_camp` INT NOT NULL ,
+	`carte` VARCHAR(255) NOT NULL ,
 	`date_choix` DATETIME NOT NULL ,
 	PRIMARY KEY (`id_choix`)
 ) ENGINE = MyISAM;
@@ -429,11 +429,11 @@ CREATE TABLE `compagnie_as_contraintes` (
 -- Structure de la table `compagnie_demande_anim`
 --
 
-CREATE TABLE `compagnie_demande_anim` ( 
-	`id_compagnie` INT NOT NULL , 
-	`type_demande` INT NOT NULL , 
-	`info_demande` TEXT NOT NULL 
-) ENGINE = MyISAM; 
+CREATE TABLE `compagnie_demande_anim` (
+	`id_compagnie` INT NOT NULL ,
+	`type_demande` INT NOT NULL ,
+	`info_demande` TEXT NOT NULL
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -523,10 +523,10 @@ CREATE TABLE `cv` (
 
 CREATE TABLE `declaration_babysitte` (
 	`id_declaration` int(11) NOT NULL,
-	`id_perso` INT NOT NULL , 
-	`id_baby` INT NOT NULL , 
-	`date_debut` DATETIME NOT NULL , 
-	`date_fin` DATETIME NOT NULL 
+	`id_perso` INT NOT NULL ,
+	`id_baby` INT NOT NULL ,
+	`date_debut` DATETIME NOT NULL ,
+	`date_fin` DATETIME NOT NULL
 ) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
@@ -535,14 +535,14 @@ CREATE TABLE `declaration_babysitte` (
 -- Structure de la table `declaration_multi`
 --
 
-CREATE TABLE `declaration_multi` ( 
-	`id_declaration` INT NOT NULL AUTO_INCREMENT , 
-	`id_perso` INT NOT NULL , 
-	`id_multi` INT NOT NULL , 
-	`situation` TEXT NOT NULL , 
+CREATE TABLE `declaration_multi` (
+	`id_declaration` INT NOT NULL AUTO_INCREMENT ,
+	`id_perso` INT NOT NULL ,
+	`id_multi` INT NOT NULL ,
+	`situation` TEXT NOT NULL ,
 	`date_declaration` DATETIME DEFAULT NULL ,
 	PRIMARY KEY (`id_declaration`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -550,13 +550,13 @@ CREATE TABLE `declaration_multi` (
 -- Structure de la table `decorations`
 --
 
-CREATE TABLE `decorations` ( 
-	`id_decoration` INT NOT NULL AUTO_INCREMENT , 
-	`description_decoration` TEXT NULL , 
+CREATE TABLE `decorations` (
+	`id_decoration` INT NOT NULL AUTO_INCREMENT ,
+	`description_decoration` TEXT NULL ,
 	`camp_decoration` INT NOT NULL ,
 	`image_decoration` TEXT NOT NULL ,
 	PRIMARY KEY (`id_decoration`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -564,8 +564,8 @@ CREATE TABLE `decorations` (
 -- Structure de la table `dernier_tombe`
 --
 
-CREATE TABLE `dernier_tombe` ( 
-	`date_capture` DATETIME NOT NULL , 
+CREATE TABLE `dernier_tombe` (
+	`date_capture` DATETIME NOT NULL ,
 	`id_perso_capture` INT NOT NULL ,
 	`camp_perso_capture` tinyint(4) NOT NULL,
 	`id_perso_captureur` INT NOT NULL,
@@ -619,13 +619,13 @@ CREATE TABLE IF NOT EXISTS `em_position_infra_carte_suivante` (
 -- Structure de la table `em_vote_choix_carte`
 --
 
-CREATE TABLE `em_vote_choix_carte` ( 
-	`id_vote` INT NOT NULL AUTO_INCREMENT, 
-	`id_em_perso` INT NOT NULL , 
-	`vote` VARCHAR(255) NOT NULL , 
-	`date_vote` DATETIME NOT NULL , 
+CREATE TABLE `em_vote_choix_carte` (
+	`id_vote` INT NOT NULL AUTO_INCREMENT,
+	`id_em_perso` INT NOT NULL ,
+	`vote` VARCHAR(255) NOT NULL ,
+	`date_vote` DATETIME NOT NULL ,
 	PRIMARY KEY (`id_vote`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -672,9 +672,9 @@ CREATE TABLE `grades` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Structure de la table `histobanque_compagnie`
--- 
+--
 
 CREATE TABLE `histobanque_compagnie` (
   `id_histo` int(11) NOT NULL default '0',
@@ -689,31 +689,31 @@ CREATE TABLE `histobanque_compagnie` (
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Structure de la table `histobanque_compagnie`
--- 
+--
 
-CREATE TABLE `histo_stats_camp_pv` ( 
-	`date_pvict` DATETIME NOT NULL , 
-	`id_camp` INT NOT NULL , 
-	`gain_pvict` INT NOT NULL , 
+CREATE TABLE `histo_stats_camp_pv` (
+	`date_pvict` DATETIME NOT NULL ,
+	`id_camp` INT NOT NULL ,
+	`gain_pvict` INT NOT NULL ,
 	`texte` TEXT NOT NULL
 ) ENGINE=MyISAM;
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Structure de la table `historique_punitions`
--- 
+--
 
-CREATE TABLE `historique_punitions` ( 
-	`id` INT NOT NULL AUTO_INCREMENT , 
-	`date_punition` DATETIME NOT NULL , 
-	`id_perso_puni` INT NOT NULL , 
-	`id_perso_anim` INT NOT NULL , 
-	`description_punition` TEXT NOT NULL , 
+CREATE TABLE `historique_punitions` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`date_punition` DATETIME NOT NULL ,
+	`id_perso_puni` INT NOT NULL ,
+	`id_perso_anim` INT NOT NULL ,
+	`description_punition` TEXT NOT NULL ,
 	PRIMARY KEY (`id`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -830,7 +830,7 @@ CREATE TABLE `user_ok_logins` (
 --
 
 CREATE TABLE `whitelist_triche` (
-  `id` INT NOT NULL AUTO_INCREMENT , 
+  `id` INT NOT NULL AUTO_INCREMENT ,
   `id_joueur` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
@@ -867,23 +867,23 @@ CREATE TABLE `liens_activation` (
 -- Structure de la table `log`
 --
 
-CREATE TABLE `log` ( 
-	`id_log` INT NOT NULL AUTO_INCREMENT , 
-	`date_log` DATETIME NOT NULL , 
-	`id_perso` INT NOT NULL , 
+CREATE TABLE `log` (
+	`id_log` INT NOT NULL AUTO_INCREMENT ,
+	`date_log` DATETIME NOT NULL ,
+	`id_perso` INT NOT NULL ,
 	`type_action` VARCHAR(255) NOT NULL,
 	`id_arme` INT NULL,
 	`degats` INT NULL,
 	`pourcentage` INT NULL,
-	`message_log` TEXT NOT NULL , 
+	`message_log` TEXT NOT NULL ,
 	PRIMARY KEY (`id_log`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
-CREATE TABLE `log_respawn` ( 
-	`id_log_respawn` INT NOT NULL AUTO_INCREMENT , 
-	`id_perso` INT NOT NULL , 
-	`date_respawn` DATETIME NOT NULL , 
-	`texte_respawn` TEXT NOT NULL , 
+CREATE TABLE `log_respawn` (
+	`id_log_respawn` INT NOT NULL AUTO_INCREMENT ,
+	`id_perso` INT NOT NULL ,
+	`date_respawn` DATETIME NOT NULL ,
+	`texte_respawn` TEXT NOT NULL ,
 	PRIMARY KEY (`id_log_respawn`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -978,6 +978,7 @@ CREATE TABLE `news` (
 CREATE TABLE `objet` (
   `id_objet` int(11) NOT NULL,
   `nom_objet` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `description_objet` text NOT NULL,
   `portee_objet` int(11) NOT NULL DEFAULT '0',
   `bonusPerception_objet` int(11) NOT NULL DEFAULT '0',
   `bonusRecup_objet` int(11) NOT NULL DEFAULT '0',
@@ -990,7 +991,9 @@ CREATE TABLE `objet` (
   `coutPa_objet` int(11) NOT NULL DEFAULT '0',
   `coutOr_objet` int(11) NOT NULL DEFAULT '0',
   `poids_objet` decimal(10,1) NOT NULL DEFAULT '0.0',
-  `description_objet` text NOT NULL,
+  `contient_alcool`	tinyint [0] NOT NULL DEFAULT '0',
+  `echangeable`	tinyint [0] NOT NULL DEFAULT '1',
+  `deposable` tinyint [0] NOT NULL DEFAULT '1',
   `type_objet` varchar(3) NOT NULL DEFAULT 'N'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -1115,14 +1118,14 @@ CREATE TABLE `perso_as_contact` (
 -- Structure de la table `perso_as_decoration`
 --
 
-CREATE TABLE `perso_as_decoration` ( 
-	`id` INT NOT NULL AUTO_INCREMENT , 
-	`id_perso` INT NOT NULL , 
-	`id_decoration` INT NOT NULL , 
+CREATE TABLE `perso_as_decoration` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`id_perso` INT NOT NULL ,
+	`id_decoration` INT NOT NULL ,
 	`date_decoration` DATETIME NOT NULL ,
-	`raison_decoration` TEXT NULL , 
+	`raison_decoration` TEXT NULL ,
 	PRIMARY KEY (`id`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1201,12 +1204,12 @@ CREATE TABLE `perso_as_respawn` (
 -- Structure de la table `perso_bagne`
 --
 
-CREATE TABLE `perso_bagne` ( 
-	`id` INT NOT NULL AUTO_INCREMENT , 
-	`id_perso` INT NOT NULL , 
-	`date_debut` DATETIME NOT NULL , 
+CREATE TABLE `perso_bagne` (
+	`id` INT NOT NULL AUTO_INCREMENT ,
+	`id_perso` INT NOT NULL ,
+	`date_debut` DATETIME NOT NULL ,
 	`duree` INT NULL , PRIMARY KEY (`id`)
-) ENGINE = MyISAM; 
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1214,11 +1217,11 @@ CREATE TABLE `perso_bagne` (
 -- Structure de la table `perso_demande_anim`
 --
 
-CREATE TABLE `perso_demande_anim` ( 
-	`id_perso` INT NOT NULL , 
-	`type_demande` INT NOT NULL , 
-	`info_demande` TEXT NOT NULL 
-) ENGINE = MyISAM; 
+CREATE TABLE `perso_demande_anim` (
+	`id_perso` INT NOT NULL ,
+	`type_demande` INT NOT NULL ,
+	`info_demande` TEXT NOT NULL
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1368,11 +1371,11 @@ CREATE TABLE `stats_camp_pv` (
 --
 -- Structure de la table `tentative_triche`
 --
-CREATE TABLE `tentative_triche` ( 
-	`id_tentative` INT NOT NULL AUTO_INCREMENT , 
+CREATE TABLE `tentative_triche` (
+	`id_tentative` INT NOT NULL AUTO_INCREMENT ,
 	`date` DATETIME DEFAULT NOW(),
-	`id_perso` INT NULL , 
-	`texte_tentative` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL , 
+	`id_perso` INT NULL ,
+	`texte_tentative` TEXT CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL ,
 	PRIMARY KEY (`id_tentative`)
 ) ENGINE = MyISAM;
 
@@ -1392,11 +1395,11 @@ CREATE TABLE IF NOT EXISTS `train_compteur_blocage` (
 -- Structure de la table `train_last_dep`
 --
 
-CREATE TABLE `train_last_dep` ( 
-	`id_train` INT NOT NULL , 
-	`x_last_dep` INT NOT NULL , 
-	`y_last_dep` INT NOT NULL 
-) ENGINE = MyISAM; 
+CREATE TABLE `train_last_dep` (
+	`id_train` INT NOT NULL ,
+	`x_last_dep` INT NOT NULL ,
+	`y_last_dep` INT NOT NULL
+) ENGINE = MyISAM;
 
 -- --------------------------------------------------------
 
@@ -1522,7 +1525,7 @@ ALTER TABLE `carte`
 --
 ALTER TABLE `compagnies`
   ADD PRIMARY KEY (`id_compagnie`);
-  
+
 --
 -- Index pour la table `competence`
 --
@@ -1561,7 +1564,7 @@ ALTER TABLE `dossier`
 
 --
 -- Index pour la table `declaration_babysitte`
---  
+--
 ALTER TABLE `declaration_babysitte`
   ADD PRIMARY KEY (`id_declaration`);
 
@@ -1569,8 +1572,8 @@ ALTER TABLE `declaration_babysitte`
 -- Index pour la table `em_creer_compagnie`
 --
 ALTER TABLE `em_creer_compagnie`
-  ADD PRIMARY KEY (`id_em_creer_compagnie`);  
-  
+  ADD PRIMARY KEY (`id_em_creer_compagnie`);
+
 --
 -- Index pour la table `evenement`
 --
@@ -1581,20 +1584,20 @@ ALTER TABLE `evenement`
 -- Index pour la table `grades`
 --
 ALTER TABLE `grades`
-  ADD PRIMARY KEY (`id_grade`); 
-  
+  ADD PRIMARY KEY (`id_grade`);
+
 --
 -- Index pour la table `histobanque_compagnie`
 --
 ALTER TABLE `histobanque_compagnie`
   ADD PRIMARY KEY (`id_histo`);
-  
+
 --
 -- Index pour la table `instance_batiment`
 --
 ALTER TABLE `instance_batiment`
   ADD PRIMARY KEY (`id_instanceBat`);
-  
+
 --
 -- Index pour la table `instance_batiment_canon`
 --
@@ -1618,8 +1621,8 @@ ALTER TABLE `joueur`
 -- Index pour la table `liens_activation`
 --
 ALTER TABLE `liens_activation`
-  ADD UNIQUE KEY `unique_id_lien` (`id_lien`);  
-  
+  ADD UNIQUE KEY `unique_id_lien` (`id_lien`);
+
 --
 -- Index pour la table `message`
 --
@@ -1667,12 +1670,12 @@ ALTER TABLE `perso_as_contact`
 --
 ALTER TABLE `perso_as_entrainement`
   ADD PRIMARY KEY (`id_perso`);
-  
+
 --
 -- Index pour la table `perso_as_grade`
 --
 ALTER TABLE `perso_as_grade`
-  ADD PRIMARY KEY (`id_perso`,`id_grade`); 
+  ADD PRIMARY KEY (`id_perso`,`id_grade`);
 
 --
 -- Index pour la table `perso_as_killpnj`
@@ -1703,7 +1706,7 @@ ALTER TABLE `pnj_in_zone`
 --
 ALTER TABLE `ressources_entrepot`
   ADD UNIQUE KEY `id_entrepot` (`id_entrepot`,`id_ressource`);
-  
+
 --
 -- Index pour la table `type_unite`
 --
@@ -1835,7 +1838,7 @@ ALTER TABLE `perso`
 --
 ALTER TABLE `pnj`
   MODIFY `id_pnj` int(11) NOT NULL AUTO_INCREMENT;
-  
+
   --
 -- AUTO_INCREMENT pour la table `zones`
 --
@@ -1849,4 +1852,3 @@ ALTER TABLE `compagnies`
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
