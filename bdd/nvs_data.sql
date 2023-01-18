@@ -207,8 +207,8 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 -- Contenu de la table `banque_as_compagnie`
 --
 
-INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES
-('1', '0'),
+INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES 
+('1', '0'), 
 ('2', '0');
 
 -- --------------------------------------------------------
@@ -217,8 +217,8 @@ INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES
 -- Contenu de la table `banque_compagnie`
 --
 
-INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES
-('1', '0', '0', '0'),
+INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES 
+('1', '0', '0', '0'), 
 ('2', '0', '0', '0');
 
 -- --------------------------------------------------------
@@ -233,10 +233,10 @@ INSERT INTO `carte_time` (`timerefresh`) VALUES ('0');
 -- Contenu de la table `compagnies`
 --
 
-INSERT INTO `compagnies` (`id_compagnie`, `nom_compagnie`, `image_compagnie`, `resume_compagnie`, `description_compagnie`, `id_clan`, `genie_civil`) VALUES
+INSERT INTO `compagnies` (`id_compagnie`, `nom_compagnie`, `image_compagnie`, `resume_compagnie`, `description_compagnie`, `id_clan`, `genie_civil`) VALUES 
 ('1', 'Génie et Infrastructures Nordistes ', '', 'Compagnie GIN : : construction des infrastructures des nordistes', 'La compagnie du GIN a une double vocation.
 Elle existe pour permettre la construction des nouveaux bâtiments nordistes qui assureront la conquête définitive des territoires gagnés ou nettoyés. Elle est aussi chargé de la surveillance des infrastructures existantes.
-Ses membres sont formés à des techniques spécifiques de construction et de surveillance. ', '1', '1'),
+Ses membres sont formés à des techniques spécifiques de construction et de surveillance. ', '1', '1'), 
 ('2', 'TIG-RES ', '', 'Compagnie TIG-RES : construction des infrastructures des confédérés', 'Réparation des anciens bâtiments et supervision de la construction des nouveaux.
 Même et surtout en situation de crise quand les troupes du génie conventionnel seront dépassées et qu\'il faudra oeuvrer sous le feu de l\'ennemi. ', '2', '1');
 
@@ -247,8 +247,8 @@ Même et surtout en situation de crise quand les troupes du génie conventionnel
 --
 
 
-INSERT INTO `compagnie_as_contraintes` (`id_compagnie`, `contrainte_type_perso`) VALUES
-('1', '3'),
+INSERT INTO `compagnie_as_contraintes` (`id_compagnie`, `contrainte_type_perso`) VALUES 
+('1', '3'), 
 ('2', '3');
 
 -- --------------------------------------------------------
@@ -377,9 +377,9 @@ INSERT INTO `decorations` (`id_decoration`, `description_decoration`, `camp_deco
 (16, 'Médaille commémorative de Faifax Stone (Beta)', 1, 'beta.png'),
 (17, 'Médaille commémorative de Faifax Stone (Beta)', 2, 'beta.png');
 
---
+-- 
 -- Contenu de la table `dossier`
---
+-- 
 INSERT INTO `dossier` ( `id_dossier` , `nom_dossier` )
 VALUES (
 '1', 'courant'
@@ -419,7 +419,7 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 --
 -- Contenu de la table `joueur`
 --
-INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES
+INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES 
 ('1', NULL, 'admin1@example.com', '4fded1464736e77865df232cbcb4cd19', NULL, NULL, NULL, NULL, '0', '1'),
 ('2', NULL, 'admin2@example.com', '4fded1464736e77865df232cbcb4cd19', NULL, NULL, NULL, NULL, '0', '1');
 
@@ -435,17 +435,16 @@ INSERT INTO `news` (`id_news`, `id_admin`, `date`, `contenu`) VALUES
 -- Contenu de la table `objet`
 --
 
-INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `bonusPrecisionCac_objet`, `bonusPrecisionDist_objet`, `bonusPA_objet`, `bonusDefense_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `contient_alcool`, `echangeable`, `deposable`, `type_objet`) VALUES
-(1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 0, 0, 0, 'T'),
-(2, 'Gourde d\'eau', 0, 0, 30, 0, 0, 0, 0, 0, 0, 1, 3, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 0, 1, 1, 'N'),
-(3, 'Whisky', 0, -3, 50, 0, 0, 0, 0, 0, 0, 1, 3, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 1, 1, 1, 'N'),
-(4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 1, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 0, 1, 1, 'N'),
-(5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 1, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 0, 1, 1, 'E'),
-(6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 1, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 0, 1, 1, 'E'),
-(7, 'Lunette de visée', 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Coût attaque à distance +2, Bonus Précision à distance +15)', 0, 1, 1, 'E'),
-(8, 'Etendard des armées du nord', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '9', "L'étendard de l'union", 0, 0, 0, 'E'),
-(9, 'Etendard des armées du sud', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '9', "L'étendard des armées du sud", 0, 0, 0, 'E'),
-(10, 'Orange', 0, 0, 60, 0, 0, 0, 0, 0, 0, 1, 9999, '0.0', 'Une orange fraîchement cueillie et pleine d\'énergie. Permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 0, 0, 0, 'N');
+INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `bonusPrecisionCac_objet`, `bonusPrecisionDist_objet`, `bonusPA_objet`, `bonusDefense_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `type_objet`) VALUES
+(1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 'T'),
+(2, 'Gourde d\'eau bien fraiche', 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 3, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 'N'),
+(3, 'Whisky', 0, -3, 50, 0, 0, 0, 0, 0, 0, 0, 3, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 'N'),
+(4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 'N'),
+(5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 0, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 'E'),
+(6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 'E'),
+(7, 'Lunette de visée', 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Coût attaque à distance +2, Bonus Précision à distance +15)', 'E'),
+(8, 'Etendard des armées du nord', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '9', "L'étendard de l'union", 'E'),
+(9, 'Etendard des armées du sud', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '9', "L'étendard des armées du sud", 'E');
 
 --
 -- Contenu de la table `perso`
@@ -478,19 +477,19 @@ INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '2');
 -- perso_as_competence
 --
 
-INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VALUES
-('1', '4', '1'),
-('1', '22', '1'),
-('1', '23', '1'),
+INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VALUES 
+('1', '4', '1'), 
+('1', '22', '1'), 
+('1', '23', '1'), 
 ('1', '24', '1'),
 ('1', '27', '1'),
 ('1', '28', '1'),
 ('1', '29', '1'),
 ('1', '63', '1'),
 ('1', '64', '1'),
-('2', '4', '1'),
-('2', '22', '1'),
-('2', '23', '1'),
+('2', '4', '1'), 
+('2', '22', '1'), 
+('2', '23', '1'), 
 ('2', '24', '1'),
 ('2', '27', '1'),
 ('2', '28', '1'),
@@ -507,8 +506,8 @@ INSERT INTO `perso_in_compagnie` (`id_perso`, `id_compagnie`, `poste_compagnie`,
 --
 -- Contenu de la table `perso_in_em`
 --
-INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES
-('1', '1'),
+INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES 
+('1', '1'), 
 ('2', '2');
 
 
@@ -530,9 +529,9 @@ INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_p
 
 -- --------------------------------------------------------
 
---
+-- 
 -- Contenu de la table `poste`
---
+-- 
 
 INSERT INTO `poste` VALUES (1, 'chef');
 INSERT INTO `poste` VALUES (2, 'sous-chef');

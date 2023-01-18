@@ -1754,7 +1754,7 @@ if($dispo == '1' || $admin){
 						$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ('$id_perso','<font color=$couleur_clan_p><b>$nom_perso</b></font>','a ramassé des objets par terre ',NULL,'','en $x_persoN/$y_persoN : $liste_ramasse',NOW(),'0')";
 						$mysqli->query($sql);
 						
-						echo "<center><font colot='blue'>Vous avez ramassé les objets suivants : ". $liste_ramasse ."</font></center><br>";
+						echo "<center><font colot='blue'>Vous avez rammassé les objets suivants : ". $liste_ramasse ."</font></center><br>";
 					}
 					else {
 						$erreur .= "Vous n'avez pas assez de PA pour rammasser les objets à terre.";
