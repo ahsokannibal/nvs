@@ -1,5 +1,6 @@
 <?php
 require_once("Model.php");
+
 class Perso extends Model
 {
 	public $id_perso;
@@ -46,21 +47,23 @@ class Perso extends Model
 	public $convalescence;
 	public $genie;
 	public $gain_xp_tour;
+
 	public function __set($name, $value) {}
-	
+
 	public function __get($name){
 		return $this->$name;
 	}
+
 	public function persoExist($id){
 		$db = $this->dbConnectPDO();
-		
+
 		$query = 'SELECT COUNT(*) FROM perso WHERE id_perso=:id';
-		
+
 		$request = $db->prepare($query);
 		$request->bindParam('id', $id, PDO::PARAM_INT);
 		$request->execute();
 		$result = (boolean) $request->fetchColumn();
-		
+
 		return $result;
 	}
 
@@ -78,14 +81,15 @@ class Perso extends Model
 		}else{
 			$attributs = "*";
 		}
-		
+
 		$query = 'SELECT '.$attributs.' FROM perso WHERE id_perso=:id';
-		
+
 		$request = $db->prepare($query);
 		$request->bindParam('id', $id, PDO::PARAM_INT);
 		$request->execute();
 		$request->setFetchMode(PDO::FETCH_CLASS,get_class($this));
 		$result = $request->fetch();
+
 		return $result;
 	}
 
@@ -154,8 +158,8 @@ class Perso extends Model
 		}
 
 		$bonusPv = checkMax($pv_perso,$bonusPv,$pvMax_perso);
-		$bonusPm = checkMax($pm_perso,$bonusPm,$pmMax_perso);
-		$bonusPa = checkMax($pa_perso,$bonusPa,$paMax_perso);
+		// $bonusPm = checkMax($pm_perso,$bonusPm,$pmMax_perso);
+		// $bonusPa = checkMax($pa_perso,$bonusPa,$paMax_perso);
 
 
 		if($type_objet == 'N'){
@@ -259,11 +263,11 @@ class Perso extends Model
 		$request = $db->prepare($sql);
 		$request->execute();
 	}
+
 	public function perso_gain_xp($id, $gain_xp){
 		$db = $this->dbConnectPDO();
-		$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'"; 
+		$sql = "UPDATE perso SET xp_perso=xp_perso+$gain_xp, pi_perso=pi_perso+$gain_xp, gain_xp_tour=gain_xp_tour+$gain_xp WHERE id_perso='$id'";
 		$request = $db->prepare($sql);
 		$request->execute();
 	}
 }
-?>
