@@ -1676,7 +1676,7 @@ if($dispo == '1' || $admin){
 							$nb_objet	= $t['nb_objet'];
 							
 							// Si perso n'est pas un chef on empeche de ramasser un étendard
-							if($type_perso != 1 && ($id_objet == 8 || $id_objet == 9)){
+							if($type_perso != 1 && $type_objet == 2 && ($id_objet == 8 || $id_objet == 9)){
 								$erreur .= "Vous n'avez pas le droit de ramasser un étendard.";
 							} else {
 								// Suppression de l'objet par terre
@@ -4145,16 +4145,18 @@ if($dispo == '1' || $admin){
 										$cout_pm_terrain 	= cout_pm($fond_im, $type_perso);
 										
 										// verification s'il y a un objet sur cette case
-										$sql_o = "SELECT id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y' ORDER BY id_objet DESC";
+										$sql_o = "SELECT type_objet, id_objet FROM objet_in_carte WHERE x_carte='$x' AND y_carte='$y' ORDER BY id_objet DESC";
 										$res_o = $mysqli->query($sql_o);
 										$nb_o = $res_o->num_rows;	
 
 										if($nb_o){
-											$objet = $res_o->fetch_assoc()['id_objet'];
+											$t = $res_o->fetch_assoc();
+											$type_objet = $t['type_objet'];
+											$objet = $t['id_objet'];
 											
-											if($objet == '8'){
+											if($type_objet == 2 && $objet == '8'){
 												$image_objet = 'etendard_nord.png';
-											} else if($objet == '9'){
+											} else if($type_objet == 2 && $objet == '9'){
 												$image_objet = 'etendard_sud.png';
 											} else {
 												$image_objet = 'o1.gif';
