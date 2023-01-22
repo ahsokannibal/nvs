@@ -556,10 +556,17 @@ function calcul_degats($id_arme_attaque, $degatMin_arme_attaque, $valeur_des_arm
 	}
 
 	// Canon d'artillerie et cible autre artillerie
-	if (($id_arme_attaque == 13 || $id_arme_attaque == 14 || $id_arme_attaque == 22) && ($type_perso_cible == 5 || $type_perso_cible == 8)) {
+	if (($id_arme_attaque == 13 || $id_arme_attaque == 22) && ($type_perso_cible == 5 || $type_perso_cible == 8)) {
 		// Bonus dégats 13D10
 		$bonus_degats_canon = calcul_des_attaque(13, 10);
 		$degats_final = $degats_final + $bonus_degats_canon;
+	}
+	// Gatling et cible autre artillerie
+	else if ($id_arme_attaque == 14 && ($type_perso_cible == 5 || $type_perso_cible == 8)) {
+		// Bonus dégats 6D10
+		$bonus_degats_canon = calcul_des_attaque(6, 10);
+		$degats_final = $degats_final + $bonus_degats_canon;
+
 	}
 
 	if($degats_final < 0) {
