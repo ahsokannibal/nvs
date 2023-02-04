@@ -1868,7 +1868,7 @@ function action_dormir($mysqli, $id_perso){
 	$bonusRecup_perso += $bonus_recup_bat;
 	$bonusRecup_perso += $bonus_recup_terrain;
 	
-	$gain_pv = ($recup_perso + $bonusRecup_perso)* 2;
+	$gain_pv = ($recup_perso + $bonusRecup_perso)* 3;
 	
 	// test pa
 	if($pa_perso >= $paMax_perso && $pm_perso >= $pmMax_perso){
