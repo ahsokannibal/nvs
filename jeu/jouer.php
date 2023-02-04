@@ -3205,7 +3205,7 @@ if($dispo == '1' || $admin){
 									<td colspan='2'>
 										<center>Dégâts de zone
 										<?php 
-										if ($id_arme_dist == 13 || $id_arme_dist == 14) {
+										if ($id_arme_dist == 13) {
 											echo "<br>Bonus de dégâts sur bâtiments";
 										}
 										?>
