@@ -215,8 +215,8 @@ if(isset($_SESSION["id_perso"])){
 				
 					<div align='center'><h3>Joueurs ayant la même IP</h3></div>
 					<?php
-						$prev = max(0, $offset-100);
-						$next = $offset+100;
+						$prev = max(0, $offset-1);
+						$next = $offset+1;
 						echo "<a href='admin_triche.php?affiche=ip2&offset=$prev'>prev</a>  ";
 						echo "<a href='admin_triche.php?affiche=ip2&offset=$next'>next</a>  ";
 					?>
@@ -229,7 +229,7 @@ if(isset($_SESSION["id_perso"])){
 							</tr>
 							<?php
 
-							$sql = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) ORDER BY time DESC limit 100 offset $offset";
+							$sql = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) AND DATEDIFF(CURTIME(), time) >= $offset AND DATEDIFF(CURTIME(), time) < $offset+1 ORDER BY time DESC";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
 								$id_joueur 	= $t["id_joueur"];
