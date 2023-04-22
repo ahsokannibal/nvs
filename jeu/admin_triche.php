@@ -6,6 +6,26 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+function echo_chef($mysqli, $id_joueur){
+	// récupération du perso chef du joueur 
+	$sql_p = "SELECT id_perso, nom_perso, clan FROM perso WHERE idJoueur_perso='$id_joueur' AND chef='1'";
+	$res_p = $mysqli->query($sql_p);
+	$t_p = $res_p->fetch_assoc();
+
+	$id_p 	= $t_p["id_perso"];
+	$nom_p	= $t_p["nom_perso"];
+	$camp_p	= $t_p["clan"];
+
+	if ($camp_p == 1) {
+		$color_p = "blue";
+	} else if ($camp_p == 2) {
+		$color_p = "red";
+	} else {
+		$color_p = "black";
+	}
+	echo "<font color='$color_p'>".$nom_p." [".$id_p."]</font>";
+}
+
 if(isset($_SESSION["id_perso"])){
 	
 	$id_perso = $_SESSION['id_perso'];
@@ -50,8 +70,7 @@ if(isset($_SESSION["id_perso"])){
 						<a href='admin_triche.php?affiche=all' class='btn btn-warning'>Tout afficher</a>
 						<a href='admin_triche.php?affiche=pwd' class='btn btn-warning'>Tableau mot de passe identifiques</a>
 						<a href='admin_triche.php?affiche=email' class='btn btn-warning'>Tableau emails proches</a>
-						<a href='admin_triche.php?affiche=ip' class='btn btn-warning'>Tableau connexions même IP</a>
-						<a href='admin_triche.php?affiche=ip2' class='btn btn-warning'>Tableau connexions même IP 2</a>
+						<a href='admin_triche.php?affiche=ip2' class='btn btn-warning'>Tableau connexions même IP</a>
 						<a href='admin_triche.php?affiche=connexions' class='btn btn-warning'>Connexions</a>
 						<a href='admin_triche.php?affiche=cookie' class='btn btn-warning'>Tableau connexions même cookie</a>
 						<a href='admin_triche.php?affiche=whitelist' class='btn btn-warning'>Whiteliste</a>
@@ -186,145 +205,63 @@ if(isset($_SESSION["id_perso"])){
 			
 			<?php
 			}
-			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "ip")) {
-			?>
-			<div class="row">
-				<div class="col-12">
-				
-					<div align='center'><h3>Joueurs ayant la même IP le même jour</h3></div>
-					
-					<div id="table_ip" class="table-responsive">
-						<table border="1" width='100%'>
-							<tr>
-								<th style='text-align:center'>IP</th><th style='text-align:center'>Liste des joueurs se connectant le même jour sur la même IP</th>
-							</tr>
-							<?php
-							$ip_tmp = "";
-							
-							$sql = "SELECT DISTINCT j1.ip_joueur, j1.id_joueur, j1.date_premier_releve, j1.date_dernier_releve
-									FROM joueur_as_ip j1
-									JOIN joueur_as_ip j2 ON j1.ip_joueur = j2.ip_joueur AND j1.id_joueur <> j2.id_joueur
-									AND j1.id_joueur > 4 AND j2.id_joueur > 4
-									AND (DATEDIFF(j1.date_premier_releve, j2.date_premier_releve) = 0 
-											OR DATEDIFF(j1.date_dernier_releve, j2.date_dernier_releve) = 0
-											OR DATEDIFF(j1.date_premier_releve, j2.date_dernier_releve) = 0
-											OR DATEDIFF(j1.date_dernier_releve, j2.date_premier_releve) = 0)
-									ORDER BY j1.ip_joueur, j1.id_joueur";
-							$res = $mysqli->query($sql);
-							while ($t = $res->fetch_assoc()) {
-								
-								$id_joueur 	= $t["id_joueur"];
-								$ip_joueur	= $t["ip_joueur"];
-								$date_pr 	= $t["date_premier_releve"];
-								$date_dr 	= $t["date_dernier_releve"];
-								
-								if ($ip_tmp != $ip_joueur) {
-									
-									if ($ip_tmp != "") {
-										echo "</tr>";
-									}
-									
-									echo "<tr>";
-									echo "	<td align='center'>".$ip_joueur."</td><td>";
-									
-									$ip_tmp = $ip_joueur;
-								}
-								
-								echo "Joueur id : ".$id_joueur." - ";
-								
-								// récupération du perso chef du joueur 
-								$sql_p = "SELECT id_perso, nom_perso, clan FROM perso WHERE idJoueur_perso='$id_joueur' AND chef='1'";
-								$res_p = $mysqli->query($sql_p);
-								$t_p = $res_p->fetch_assoc();
-									
-								$id_p 	= $t_p["id_perso"];
-								$nom_p	= $t_p["nom_perso"];
-								$camp_p	= $t_p["clan"];
-								
-								if ($camp_p == 1) {
-									$color_p = "blue";
-								} else if ($camp_p == 2) {
-									$color_p = "red";
-								} else {
-									$color_p = "black";
-								}
-									
-								echo "<font color='$color_p'>".$nom_p." [".$id_p."]</font>";
-								echo " - Date premier relevé : ".$date_pr." - Date dernier relevé : ".$date_dr; 
-								echo "<br />";
-							}				
-									 
-							?>
-								</td>
-							</tr>
-						</table>
-					</div>
-				</div>
-			</div>
-			<?php
-			}
 			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "ip2")) {
+				$offset = 0;
+				if (isset($_GET["offset"]))
+					$offset = $_GET["offset"];
 			?>
 			<div class="row">
 				<div class="col-12">
 				
-					<div align='center'><h3>Joueurs ayant la même IP le même jour</h3></div>
-					
+					<div align='center'><h3>Joueurs ayant la même IP</h3></div>
+					<?php
+						$prev = max(0, $offset-100);
+						$next = $offset+100;
+						echo "<a href='admin_triche.php?affiche=ip2&offset=$prev'>prev</a>  ";
+						echo "<a href='admin_triche.php?affiche=ip2&offset=$next'>next</a>  ";
+					?>
 					<div id="table_ip" class="table-responsive">
 						<table border="1" width='100%'>
+
+
 							<tr>
 								<th style='text-align:center'>IP</th><th style='text-align:center'>Liste des joueurs se connectant le même jour sur la même IP</th>
 							</tr>
 							<?php
-							$ip_tmp = "";
-							
-							$sql = "SELECT DISTINCT r1.ip_joueur, r1.id_joueur, r1.time FROM user_ok_logins as r1 JOIN user_ok_logins as r2 ON r1.ip_joueur = r2.ip_joueur AND r1.id_joueur <> r2.id_joueur AND ABS(TIMEDIFF(r1.time, r2.time)) < 86400 AND (r1.id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche) AND r2.id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) AND r1.est_acquitte=0 AND r2.est_acquitte=0 ORDER BY r1.ip_joueur, time";
+
+							$sql = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) ORDER BY time DESC limit 100 offset $offset";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
-								
 								$id_joueur 	= $t["id_joueur"];
 								$ip_joueur	= $t["ip_joueur"];
 								$time		= $t["time"];
-								
-								if ($ip_tmp != $ip_joueur) {
-									
-									if ($ip_tmp != "") {
-										echo "</tr>";
+
+								$disp = False;
+								$sql2 = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE ip_joueur='$ip_joueur' AND id_joueur!=$id_joueur AND (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) ORDER BY time DESC limit 10";
+								$res2 = $mysqli->query($sql2);
+								while ($t2 = $res2->fetch_assoc()) {
+									if (!$disp) {
+										$disp = True;
+										echo "<tr><td>$ip_joueur</td><td>";
+										echo "$time - ";
+										echo_chef($mysqli, $id_joueur);
+										echo "<br />";
 									}
-									
-									echo "<tr>";
-									echo "	<td align='center'>".$ip_joueur."</td><td>";
-									
-									$ip_tmp = $ip_joueur;
+									$id_joueur2 	= $t2["id_joueur"];
+									$ip_joueur2	= $t2["ip_joueur"];
+									$time2		= $t2["time"];
+									echo "$time2 - ";
+									echo_chef($mysqli, $id_joueur2);
+									echo "<br />";
 								}
-								
-								echo "Joueur id : ".$id_joueur." - ";
-								
-								// récupération du perso chef du joueur 
-								$sql_p = "SELECT id_perso, nom_perso, clan FROM perso WHERE idJoueur_perso='$id_joueur' AND chef='1'";
-								$res_p = $mysqli->query($sql_p);
-								$t_p = $res_p->fetch_assoc();
-									
-								$id_p 	= $t_p["id_perso"];
-								$nom_p	= $t_p["nom_perso"];
-								$camp_p	= $t_p["clan"];
-								
-								if ($camp_p == 1) {
-									$color_p = "blue";
-								} else if ($camp_p == 2) {
-									$color_p = "red";
-								} else {
-									$color_p = "black";
+
+
+								if ($disp) {
+									echo "</td></tr>";
 								}
-									
-								echo "<font color='$color_p'>".$nom_p." [".$id_p."]</font>";
-								echo " - Time : ".$time; 
-								echo "<br />";
-							}				
-									 
+							}
+
 							?>
-								</td>
-							</tr>
 						</table>
 					</div>
 				</div>
