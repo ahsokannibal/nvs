@@ -237,7 +237,7 @@ if(isset($_SESSION["id_perso"])){
 								$time		= $t["time"];
 
 								$disp = False;
-								$sql2 = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE ip_joueur='$ip_joueur' AND id_joueur!=$id_joueur AND (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) ORDER BY time DESC limit 10";
+								$sql2 = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE ip_joueur='$ip_joueur' AND id_joueur!=$id_joueur AND (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) AND ABS(TIMEDIFF(time, '$time')) < 86400 ORDER BY time DESC";
 								$res2 = $mysqli->query($sql2);
 								while ($t2 = $res2->fetch_assoc()) {
 									if (!$disp) {
