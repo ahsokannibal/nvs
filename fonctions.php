@@ -545,4 +545,12 @@ function log_message($message){
         "-------------------------".PHP_EOL;
 	file_put_contents('./log_'.date("j.n.Y").'.log', $log, FILE_APPEND);
 }
+
+function get_user_agent() {
+   if (isSet($_SERVER))
+	return $_SERVER['HTTP_USER_AGENT'];
+   else
+     return getenv('HTTP_USER_AGENT');
+}
+
 ?>

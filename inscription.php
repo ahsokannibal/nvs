@@ -455,6 +455,17 @@ if(config_dispo_jeu($mysqli) == '1'){
 									$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
 											VALUES ($id_g,'<font color=$couleur_clan_perso>$nom_g</font>',' a rejoint le bataillon $nom_bataillon',NULL,'','',NOW(),'0')";
 									$mysqli->query($sql);
+
+
+
+									// recuperation de l'ip du joueur
+									$ip_joueur = realip();
+									$user_agent = get_user_agent();
+									$cookie_val = filter_input(INPUT_COOKIE, "PHPSESSID", FILTER_SANITIZE_STRING);
+
+									$sql = "INSERT INTO user_ok_logins VALUES ('$IDJoueur_perso','$ip_joueur',FROM_UNIXTIME($date),'$user_agent','$cookie_val', 0)";
+									$mysqli->query($sql);
+
 									
 									header("location:index.php?creation=ok");
 								}

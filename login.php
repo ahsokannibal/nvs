@@ -4,13 +4,6 @@ session_start();
 require_once("fonctions.php");
 require_once("f_login.php");
 
-function get_user_agent() {
-   if (isSet($_SERVER))
-	return $_SERVER['HTTP_USER_AGENT'];
-   else
-     return getenv('HTTP_USER_AGENT');
-}
-
 $mysqli = db_connexion();
 
 $throttle_settings = [

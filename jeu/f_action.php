@@ -1148,7 +1148,6 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 											}	
 											else {
 												echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte sur la distance avec un autre batiment n'a pas été respecté<br />";
-												echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 												echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 												
 												return 0;
@@ -1156,7 +1155,6 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 										}
 										else {
 											echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'ennemis présent autour de la zone de construction n'a pas été respecté. Veuillez nettoyer la zone !<br />";
-											echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 											echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 											
 											return 0;
@@ -1164,7 +1162,6 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 									}
 									else {
 										echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'unités de Génie Civil qui doit être présente n'a pas été respecté<br />";
-										echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 										echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 										
 										return 0;
@@ -1868,7 +1865,7 @@ function action_dormir($mysqli, $id_perso){
 	$bonusRecup_perso += $bonus_recup_bat;
 	$bonusRecup_perso += $bonus_recup_terrain;
 	
-	$gain_pv = ($recup_perso + $bonusRecup_perso)* 2;
+	$gain_pv = ($recup_perso + $bonusRecup_perso)* 3;
 	
 	// test pa
 	if($pa_perso >= $paMax_perso && $pm_perso >= $pmMax_perso){
