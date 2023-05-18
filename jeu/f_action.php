@@ -3369,9 +3369,12 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 		$poid_objet = 0;
 		
 		if($or_perso >= $quantite && $quantite > 0){
-			$nb = true;
+			$nb = $or_perso;
+		}else{
+			$nb = false;
 		}
 	}
+
 	// Objet
 	if($type_objet == 2){
 		$sql = "SELECT perso_as_objet.id_objet, poids_objet FROM perso_as_objet, objet WHERE id_perso='$id_perso' 
@@ -3475,6 +3478,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 	}
 	else {
 		// Triche ?
+		echo "<center>Vous ne possédez pas le nombre requis</center><br>";
 		echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }

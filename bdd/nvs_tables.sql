@@ -960,7 +960,6 @@ ALTER TABLE `histobanque_compagnie`
 
 -- --------------------------------------------------------
 
-
 --
 -- Structure de la table `historique_punitions`
 --
@@ -1164,7 +1163,7 @@ ALTER TABLE `joueur_as_ip`
 
 -- --------------------------------------------------------
 
---
+-- 
 -- Structure de la table `liaisons_gare`
 --
 
@@ -1406,6 +1405,7 @@ ALTER TABLE `news`
 CREATE TABLE `objet` (
   `id_objet` int(11) NOT NULL,
   `nom_objet` varchar(100) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL DEFAULT '',
+  `description_objet` text NOT NULL,
   `portee_objet` int(11) NOT NULL DEFAULT '0',
   `bonusPerception_objet` int(11) NOT NULL DEFAULT '0',
   `bonusRecup_objet` int(11) NOT NULL DEFAULT '0',
@@ -1418,7 +1418,9 @@ CREATE TABLE `objet` (
   `coutPa_objet` int(11) NOT NULL DEFAULT '0',
   `coutOr_objet` int(11) NOT NULL DEFAULT '0',
   `poids_objet` decimal(10,1) NOT NULL DEFAULT '0.0',
-  `description_objet` text NOT NULL,
+  `contient_alcool`	tinyint [0] NOT NULL DEFAULT '0',
+  `echangeable`	tinyint [0] NOT NULL DEFAULT '1',
+  `deposable` tinyint [0] NOT NULL DEFAULT '1',
   `type_objet` varchar(3) NOT NULL DEFAULT 'N'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
@@ -2097,7 +2099,6 @@ CREATE TABLE `user_ok_logins` (
   `est_acquitte` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
 ALTER TABLE `user_ok_logins`
   ADD KEY `index_veriftriche` (`id_joueur`,`ip_joueur`,`time`,`est_acquitte`),
   ADD KEY `index_valeur_cookie` (`cookie_val`),
@@ -2105,7 +2106,6 @@ ALTER TABLE `user_ok_logins`
   ADD KEY `index_cookie_id` (`id_joueur`,`cookie_val`),
   ADD KEY `index_time_ipID` (`id_joueur`,`ip_joueur`,`time`),
   ADD KEY `index_cookie_time_id` (`id_joueur`,`cookie_val`,`time`);
-
 
 -- --------------------------------------------------------
 
@@ -2118,7 +2118,6 @@ CREATE TABLE `whitelist_triche` (
   `id_joueur` int(11) NOT NULL DEFAULT '0',
    PRIMARY KEY (`id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
 
 ALTER TABLE `whitelist_triche`
   ADD PRIMARY KEY (`id`);
@@ -2137,11 +2136,9 @@ CREATE TABLE `zones` (
   `yMax_zone` int(11) NOT NULL DEFAULT '0'
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
-
 ALTER TABLE `zones`
   ADD PRIMARY KEY (`id_zone`),
   ADD KEY `index_cron_pnj_zone` (`id_zone`);
-
   --
 -- AUTO_INCREMENT pour la table `zones`
 --
