@@ -1163,7 +1163,7 @@ ALTER TABLE `joueur_as_ip`
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Structure de la table `liaisons_gare`
 --
 
@@ -1426,9 +1426,12 @@ CREATE TABLE `objet` (
 
 ALTER TABLE `objet`
   ADD PRIMARY KEY (`id_objet`),
+  ADD UNIQUE KEY `index_echangeableTypeObj` (`id_objet`,`type_objet`,`echangeable`),
   ADD KEY `index_typeObjet` (`type_objet`),
   ADD KEY `index_verif_typeObjet` (`id_objet`,`type_objet`),
-  ADD KEY `index_ordreOr` (`id_objet`,`type_objet`,`coutOr_objet`);
+  ADD KEY `index_ordreOr` (`id_objet`,`type_objet`,`coutOr_objet`),
+  ADD KEY `index_echangeable` (`id_objet`,`echangeable`),
+  ADD KEY `index_typeObjEchange` (`type_objet`,`echangeable`);
 
   --
   -- AUTO_INCREMENT pour la table `objet`
@@ -1446,6 +1449,10 @@ CREATE TABLE `objet_as_type_unite` (
   `id_objet` int(11) NOT NULL,
   `id_type_unite` int(11) NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+
+ALTER TABLE `objet_as_type_unite`
+  ADD KEY `index_test_idobjtyp` (`id_objet`,`id_type_unite`);
+COMMIT;
 
 -- --------------------------------------------------------
 
