@@ -498,8 +498,9 @@ if($dispo == '1' || $admin){
 					$sql = "SELECT ordre FROM compagnie_ordre WHERE id_compagnie='$id_compagnie'";
 					$res = $mysqli->query($sql);
 					$t = $res->fetch_assoc();
-					
-					$ordre_compagnie = stripslashes($t['ordre']);
+
+					if ($res->num_rows)
+						$ordre_compagnie = stripslashes($t['ordre']);
 					
 					if ($genie_compagnie) {
 						$nb_persos_compagnie_max = 60;
