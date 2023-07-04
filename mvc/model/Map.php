@@ -2,7 +2,7 @@
 require_once("Model.php");
 // require_once("../creation_carte/f_analyse.php");
 
-class Carte extends Model
+class Map extends Model
 {
 	public $x_carte;
 	public $y_carte;
@@ -17,8 +17,8 @@ class Carte extends Model
 	public $vue_sud_date;
 	protected $xMax;
 	protected $yMax;
-	protected $terrains = [
-		// id => [nom,rouge,vert,bleu]. Propriété à tabler, un jour...
+	protected $grounds = [
+		// id => [nom,rouge,vert,bleu]. Propriété à tabler
 		1=>['plaine',129,156,84],
 		2=>['colline',96,110,70],
 		3=>['montagne',134,118,89],
@@ -29,7 +29,7 @@ class Carte extends Model
 		8=>['eau',92,191,207],
 		9=>['eau_profonde',39,141,227]
 	];
-	protected $carteTables = ['CARTE' => 1,'CARTE2' => 2,'CARTE3' => 3];// à refactoriser, un jour...
+	protected $mapTables = ['CARTE' => 1,'CARTE2' => 2,'CARTE3' => 3];// à refactoriser
 
 	public function __set($name, $value) {}
 	
@@ -45,13 +45,17 @@ class Carte extends Model
 	public function carteExist($id){
 		$db = $this->dbConnectPDO();
 		
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		
-		$query = "SELECT COUNT(*) FROM $carte";
-		
-		$request = $db->prepare($query);
-		$request->execute();
-		$result = (boolean) $request->fetchColumn();
+		if($map){
+			$query = "SELECT COUNT(*) FROM $map";
+			
+			$request = $db->prepare($query);
+			$request->execute();
+			$result = (boolean) $request->fetchColumn();
+		}else{
+			$result = false;
+		}
 		
 		return $result;
 	}
@@ -62,14 +66,14 @@ class Carte extends Model
      * @return bool
      */
 	public function couleurEstTerrain($colors){
-		$terrains = $this->terrains;
+		$grounds = $this->grounds;
 		
 		$red = $colors['red'];
 		$green = $colors['green'];
 		$blue = $colors['blue'];
 		$alpha = $colors['alpha'];
 		
-		foreach($terrains as $id => $composants){
+		foreach($grounds as $id => $composants){
 			if($composants[1]==$red && $composants[2]==$green && $composants[3]==$blue){
 				return $id;
 				break;
@@ -87,7 +91,7 @@ class Carte extends Model
 	public function createFromScratch($id,$x_max,$y_max,$fond=1,$desc=false){
 		$db = $this->dbConnectPDO();
 		
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		
 		$lines = 0;
 		$result = 0;
@@ -96,15 +100,15 @@ class Carte extends Model
 		
 		// return [$carte,$x_max,$y_max,$fond];
 
-		for ($x_pixel = 0; $x_pixel <= $x_max; $x_pixel++)
+		for ($x_pixel = 0; $x_pixel < $x_max; $x_pixel++)
 		{
-			for ($y_pixel = 0; $y_pixel <= $y_max; $y_pixel++)
+			for ($y_pixel = 0; $y_pixel < $y_max; $y_pixel++)
 			{
 				$x = $x_pixel;
-				$y = $y_max-1 - $y_pixel;
+				$y = $y_max - $y_pixel;
 				
 				$coordo = $x.';'.$y;
-				$query = "INSERT INTO $carte (id_carte,x_carte,y_carte,occupee_carte,fond_carte,idPerso_carte,image_carte,save_info_carte,vue_nord,vue_sud,coordonnees,vue_nord_date,vue_sud_date) VALUES (:id,:x,:y,'0',:fond,NULL,NULL,NULL,0,0,:coordo,NULL,NULL)";
+				$query = "INSERT INTO $map (id_carte,x_carte,y_carte,occupee_carte,fond_carte,idPerso_carte,image_carte,save_info_carte,vue_nord,vue_sud,coordonnees,vue_nord_date,vue_sud_date) VALUES (:id,:x,:y,'0',:fond,NULL,NULL,NULL,0,0,:coordo,NULL,NULL)";
 				$request = $db->prepare($query);
 				$request->bindParam('id', $id, PDO::PARAM_INT);
 				$request->bindParam('x', $x, PDO::PARAM_INT);
@@ -134,8 +138,8 @@ class Carte extends Model
 	public function createFromPng($id,$file,$desc=false){
 		$db = $this->dbConnectPDO();
 		
-		$x_max = 201;
-		$y_max = 201;
+		$x_max = 200;
+		$y_max = 200;
 
 		$origin_img = $file['tmp_name'];
 		$dimensions = getimagesize($origin_img);
@@ -146,7 +150,7 @@ class Carte extends Model
 			$y_max = $dimensions[1];
 		}
 		
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		
 		$lines = 0;
 		$result = 0;
@@ -155,6 +159,8 @@ class Carte extends Model
 
 		for ($x_pixel = 0; $x_pixel < $x_max; $x_pixel++)
 		{
+			$x = $x_pixel;
+			
 			for ($y_pixel = 0; $y_pixel < $y_max; $y_pixel++)
 			{
 				$pixelrgb = imagecolorat($image, $x_pixel, $y_pixel);
@@ -168,12 +174,11 @@ class Carte extends Model
 					$fond = '1.gif';
 				}
 				
-				$x = $x_pixel;
-				// $y = $y_max-1 - $y_pixel;
-				$y = $y_pixel;
+				$y = $y_max-1 - $y_pixel;
+				// $y = $y_pixel;
 				
 				$coordo = $x.';'.$y;
-				$query = "INSERT INTO $carte (id_carte,x_carte,y_carte,occupee_carte,fond_carte,idPerso_carte,image_carte,save_info_carte,vue_nord,vue_sud,coordonnees) VALUES (:id,:x,:y,'0',:fond,NULL,NULL,NULL,0,0,:coordo)";
+				$query = "INSERT INTO $map (id_carte,x_carte,y_carte,occupee_carte,fond_carte,idPerso_carte,image_carte,save_info_carte,vue_nord,vue_sud,coordonnees) VALUES (:id,:x,:y,'0',:fond,NULL,NULL,NULL,0,0,:coordo)";
 				$request = $db->prepare($query);
 				$request->bindParam('id', $id, PDO::PARAM_INT);
 				$request->bindParam('x', $x, PDO::PARAM_INT);
@@ -204,10 +209,10 @@ class Carte extends Model
 	public function createGroundArea(int $id,int $x_min,int $x_max,int $y_min,int $y_max,int $fond=1){
 		$db = $this->dbConnectPDO();
 		
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		$fond = $fond.'.gif';
 		
-		$query = "UPDATE $carte SET fond_carte=:fond WHERE x_carte>=:x_min AND x_carte<=:x_max AND y_carte>=:y_min AND y_carte<=:y_max";
+		$query = "UPDATE $map SET fond_carte=:fond WHERE x_carte>=:x_min AND x_carte<=:x_max AND y_carte>=:y_min AND y_carte<=:y_max";
 		
 		$request = $db->prepare($query);
 		$request->bindParam('x_min', $x_min, PDO::PARAM_INT);
@@ -231,9 +236,9 @@ class Carte extends Model
 	public function dimensions($id){
 		$db = $this->dbConnectPDO();
 		
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		
-		$query = "SELECT MAX(x_carte) as xMax, MAX(y_carte) as yMax FROM $carte";
+		$query = "SELECT MAX(x_carte) as xMax, MAX(y_carte) as yMax FROM $map";
 		
 		$request = $db->prepare($query);
 		$request->execute();
@@ -264,9 +269,9 @@ class Carte extends Model
 			$y_min = 0;
 		}
 		
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		
-		$query = "SELECT id,x_carte, y_carte, fond_carte, idPerso_carte, image_carte, occupee_carte FROM $carte WHERE (x_carte BETWEEN $x_min AND $x_max) AND (y_carte BETWEEN $y_min AND $y_max) ORDER BY y_carte, x_carte";//DESC
+		$query = "SELECT id,x_carte, y_carte, fond_carte, idPerso_carte, image_carte, occupee_carte FROM $map WHERE (x_carte BETWEEN $x_min AND $x_max) AND (y_carte BETWEEN $y_min AND $y_max) ORDER BY y_carte, x_carte";//DESC
 		
 		$request = $db->prepare($query);
 		$request->execute();
@@ -286,9 +291,9 @@ class Carte extends Model
 	public function getMap($id,$desc=false){
 		$db = $this->dbConnectPDO();
 		
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		
-		$query = "SELECT id,x_carte, y_carte, fond_carte, idPerso_carte, image_carte, occupee_carte FROM $carte ORDER BY y_carte, x_carte";//DESC
+		$query = "SELECT id,x_carte, y_carte, fond_carte, idPerso_carte, image_carte, occupee_carte FROM $map ORDER BY y_carte, x_carte";//DESC
 		
 		$request = $db->prepare($query);
 		$request->execute();
@@ -306,16 +311,58 @@ class Carte extends Model
      */
 	public function destroy($id){
 		$db = $this->dbConnectPDO();
-		$carte = array_search($id,$this->carteTables);
+		$map = array_search($id,$this->mapTables);
 		
-		$query = "TRUNCATE TABLE $carte";
+		// Vider table histo_stats_camp_pv (après affichage sur forum)
+		$query = "DELETE FROM histo_stats_camp_pv";
+		$db->query($query);
+		
+		// Vider table perso_in_batiment
+		$query = "DELETE FROM perso_in_batiment";
+		$db->query($query);
+		
+		// Vider table perso_in_train
+		$query = "DELETE FROM perso_in_train";
+		$db->query($query);
+		
+		// Vider table instance_batiment_canon
+		$query = "DELETE FROM instance_batiment_canon";
+		$db->query($query);
+
+		// Vider table instance_batiment
+		$query = "DELETE FROM instance_batiment";
+		$db->query($query);
+		
+		// Vider table pnj_in_zone (à redéfinir après installation carte)
+		$query = "DELETE FROM pnj_in_zone";
+		$db->query($query);
+		
+		// Vider table instance_pnj
+		$query = "DELETE FROM instance_pnj";
+		$db->query($query);
+		
+		// Vider table zones (à redéfinir après installation carte)
+		$query = "DELETE FROM zones";
+		$db->query($query);
+		
+		// Vider table liaisons_gare
+		$query = "DELETE FROM liaisons_gare";
+		$db->query($query);
+		
+		// Vider table objet_in_carte
+		$query = "DELETE FROM objet_in_carte";
+		$db->query($query);
+		
+		// Vider table perso_as_respawn
+		$query = "DELETE FROM perso_as_respawn";
+		$db->query($query);
+		
+		// réinitialiser la table Carte
+		$query = "TRUNCATE TABLE $map";
 		$request = $db->prepare($query);
 		$request->execute();
 		
 		return $request;
-		
-		// on peut imaginer dans cette fonction qu'on réinitialise aussi les persos, bât, pnj etc.
-		// Je crois que ça se fait lors du changement de carte.
 	}
 	
 	/**

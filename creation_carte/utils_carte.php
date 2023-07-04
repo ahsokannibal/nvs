@@ -127,7 +127,15 @@ if(isset($_SESSION["id_perso"])){
 	<body>
 	
 		<div class="container-fluid">
-
+			<div class="row justify-content-center text-center">
+				<div class="col col-md-6">
+					<h2 class='mb-3'>Administration - cartes</h2>
+					<nav>
+						<a class="btn btn-primary me-2" href="../jeu/admin_nvs.php">Retour à l'administration</a>
+						<a class="btn btn-primary" href="../jeu/jouer.php">Retour au jeu</a>
+					</nav>
+				</div>
+			</div>
 			<div class="row">
 				<div class="col-12">
 					<div align='center'>
@@ -147,7 +155,6 @@ if(isset($_SESSION["id_perso"])){
 						
 						<?php
 						if (isset($X_MAXD) && isset($Y_MAXD)) {
-							echo "<a href='utils_carte.php?delete_carte=ok' class='btn btn-danger'>Supprimer la carte</a>";
 							if (isset($_SESSION['choix_carte'])) {
 								$carte = $_SESSION['choix_carte'];
 								
