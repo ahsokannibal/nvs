@@ -1148,7 +1148,6 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 											}	
 											else {
 												echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte sur la distance avec un autre batiment n'a pas été respecté<br />";
-												echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 												echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 												
 												return 0;
@@ -1156,7 +1155,6 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 										}
 										else {
 											echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'ennemis présent autour de la zone de construction n'a pas été respecté. Veuillez nettoyer la zone !<br />";
-											echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 											echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 											
 											return 0;
@@ -1164,7 +1162,6 @@ function construire_bat($mysqli, $t_bat, $id_perso, $carte, $nom_instance){
 									}
 									else {
 										echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'unités de Génie Civil qui doit être présente n'a pas été respecté<br />";
-										echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 										echo "<a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 										
 										return 0;
@@ -3372,9 +3369,12 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 		$poid_objet = 0;
 		
 		if($or_perso >= $quantite && $quantite > 0){
-			$nb = true;
+			$nb = $or_perso;
+		}else{
+			$nb = false;
 		}
 	}
+
 	// Objet
 	if($type_objet == 2){
 		$sql = "SELECT perso_as_objet.id_objet, poids_objet FROM perso_as_objet, objet WHERE id_perso='$id_perso' 
@@ -3478,6 +3478,7 @@ function action_deposerObjet($mysqli, $id_perso, $type_objet, $id_objet, $quanti
 	}
 	else {
 		// Triche ?
+		echo "<center>Vous ne possédez pas le nombre requis</center><br>";
 		echo "<center><a href='jouer.php' class='btn btn-primary'>retour</a></center>";
 	}
 }

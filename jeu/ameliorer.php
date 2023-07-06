@@ -218,7 +218,7 @@ if($dispo == '1' || $admin){
 						<td>
 							<input type="text" size="3" maxlength="3" value="<?php echo $pm; ?>" disabled>&nbsp;
 							<?php
-							if ($type == 5 && $pm >= 6) {
+							if (($type == 5 && $pm >= 6) || ($type == 8 && $pm >= 7)) {
 								echo "<b>Maximum atteint</b>";
 							}
 							else {

@@ -513,19 +513,16 @@ if(isset($_SESSION["id_perso"])){
 							}
 							else {
 								echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte sur la distance avec un autre batiment n'a pas été respecté<br />";
-								echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 								echo "<a href='anim_creer_batiment.php' class='btn btn-primary'>retour</a></center>";
 							}
 						}
 						else {
 							echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'ennemis présent autour de la zone de construction n'a pas été respecté. Veuillez nettoyer la zone !<br />";
-							echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 							echo "<a href='anim_creer_batiment.php' class='btn btn-primary'>retour</a></center>";
 						}
 					}
 					else {
 						echo "<center>Vous ne pouvez pas construire ce bâtiment car la contrainte du nombre d'unités de Génie Civil qui doit être présente n'a pas été respecté<br />";
-						echo "<a href='contraintes_construction.php' target='_blank'>Voir page des contraintes de construction</a><br />";
 						echo "<a href='anim_creer_batiment.php' class='btn btn-primary'>retour</a></center>";
 					}
 				}

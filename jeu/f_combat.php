@@ -586,13 +586,18 @@ function calcul_gain_xp($xp_perso, $xp_cible, $id_arme_attaque, $coutPa_arme_att
 	}
 
 	$gain_xp = ceil(($degats_final / 20) + $valeur_des_xp);
-
-	// Limit le nombre d'xp gagné par attaque
 	$max_xp_par_attaque = ceil(20 / floor(10 / $coutPa_arme_attaque));
+
 	// Pour le canon et gatling, reserve respectivement 4 et 2 xp pour collats
 	if ($id_arme_attaque == 13 || $id_arme_attaque == 22) {
+		// le seuil est là pour ne pas pénaliser les unités qui débutent après la mise en place du bridage
+		if ($xp_perso >= 175)
+			$gain_xp = ceil(($degats_final / 45) + $valeur_des_xp);
 		$max_xp_par_attaque = max(0, $max_xp_par_attaque-4);
 	} else if ($id_arme_attaque == 14) {
+		// le seuil est là pour ne pas pénaliser les unités qui débutent après la mise en place du bridage
+		if ($xp_perso >= 500)
+			$gain_xp = ceil(($degats_final / 40) + $valeur_des_xp);
 		$max_xp_par_attaque = max(0, $max_xp_par_attaque-2);
 	}
 	if ($gain_xp > $max_xp_par_attaque) {
