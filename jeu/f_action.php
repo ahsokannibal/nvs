@@ -202,12 +202,12 @@ function verif_contraintes_construction($mysqli, $id_bat, $camp_perso, $x_bat, $
 	}
 	else if ($id_bat == '8') {
 		// Fortin => 10 Génie civil présent à 10 cases autour du point de construction
-		$nb_genie_civil 	= 10;
+		$nb_genie_civil 	= 1;
 		$nb_soigneur		= 0;
 	}
 	else if ($id_bat == '11') {
 		// Gare => 6 Génie civil présent à 10 cases autour du point de construction
-		$nb_genie_civil 	= 6;
+		$nb_genie_civil 	= 1;
 		$nb_soigneur		= 0;
 	}
 	else if ($id_bat == '7') {
@@ -334,22 +334,22 @@ function verif_contraintes_construction_bat($mysqli, $id_bat, $camp_perso, $x_ba
 	else if ($id_bat == '8') {
 		// Fortin
 		$nb_cases_bat 	= 2;
-		$nb_cases_gare	= 20;
-		$nb_cases_rapat = 40;
+		$nb_cases_gare	= 2;
+		$nb_cases_rapat = 4;
 		$nb_cases_tour	= 0;
 	}
 	else if ($id_bat == '9') {
 		// Fort
 		$nb_cases_bat 	= 2;
-		$nb_cases_gare	= 20;
-		$nb_cases_rapat = 40;
+		$nb_cases_gare	= 2;
+		$nb_cases_rapat = 4;
 		$nb_cases_tour	= 0;
 	}
 	else if ($id_bat == '11') {
 		// Gare
 		$nb_cases_bat 	= 2;
-		$nb_cases_gare	= 40;
-		$nb_cases_rapat = 20;
+		$nb_cases_gare	= 1;
+		$nb_cases_rapat = 2;
 		$nb_cases_tour	= 0;
 	}
 	else {

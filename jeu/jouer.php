@@ -3941,6 +3941,8 @@ if($dispo == '1' || $admin){
 												$nom_terrain 	= get_nom_terrain($fond_im);
 												$cout_pm 		= cout_pm($fond_im, $type_perso);
 												
+												//ECHO "Issue with :". var_dump($tab). " - ". $nom_terrain . " " . $id_perso_im;
+												
 												//recuperation du type de perso (image)
 												$sql_perso_im = "SELECT * FROM perso WHERE id_perso='$id_perso_im'";
 												$res_perso_im = $mysqli->query($sql_perso_im);
