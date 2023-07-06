@@ -80,12 +80,15 @@ if(isset($_SESSION["id_perso"])){
 			
 			$nom_compagnie		= addslashes($sec["nom_compagnie"]);
 			
-			// Récupération de l'id du group de la compagnie sur le forum
-			$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
-			$res = $mysqli->query($sql);
-			$t = $res->fetch_assoc();
-			
-			$id_group_forum = $t['group_id'];
+			if (is_dir($phpbb_root_path))
+			{
+				// Récupération de l'id du group de la compagnie sur le forum
+				$sql = "SELECT group_id FROM ".$table_prefix."groups WHERE group_name='$nom_compagnie'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+
+				$id_group_forum = $t['group_id'];
+			}
 			
 			// récupération des persos dans la compagnie 
 			$sql = "SELECT id_perso FROM perso_in_compagnie WHERE id_compagnie='$id_compagnie_to_delete'";

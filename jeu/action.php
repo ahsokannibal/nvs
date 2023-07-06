@@ -723,15 +723,16 @@ if($dispo == '1' || $admin) {
 					$id_objet = $t_o["id_objet"];
 						
 					// recuperation des carac de l'objet
-					$sql1_o = "SELECT nom_objet, poids_objet, type_objet FROM objet WHERE id_objet='$id_objet'";
+					$sql1_o = "SELECT nom_objet, poids_objet, type_objet, echangeable FROM objet WHERE id_objet='$id_objet'";
 					$res1_o = $mysqli->query($sql1_o);
 					$t1_o = $res1_o->fetch_assoc();
 					
 					$nom_o 		= $t1_o["nom_objet"];
 					$poids_o 	= $t1_o["poids_objet"];
 					$type_o		= $t1_o["type_objet"];
+					$echangeable = $t1_o["echangeable"];
 					
-					if ($type_o != 'T') {
+					if ($echangeable != 0) {
 						
 						$compteur = 1;
 						
@@ -1911,7 +1912,9 @@ if($dispo == '1' || $admin) {
 										echo "</tr>";
 										
 										// Objets (sauf ticket de train qui sont nomminatifs)
-										$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND id_objet != '1' AND equip_objet='0' ORDER BY id_objet";
+
+$sql_o = "SELECT DISTINCT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND equip_objet='0' ORDER BY id_objet";
+
 										$res_o = $mysqli->query($sql_o);
 										
 										while($t_o = $res_o->fetch_assoc()){
@@ -1921,11 +1924,14 @@ if($dispo == '1' || $admin) {
 											$id_objet = $t_o["id_objet"];
 											
 											// recuperation des carac de l'objet
-											$sql1_o = "SELECT nom_objet, poids_objet FROM objet WHERE id_objet='$id_objet'";
+											$sql1_o = "SELECT nom_objet, poids_objet, deposable FROM objet WHERE id_objet='$id_objet'";
 											$res1_o = $mysqli->query($sql1_o);
 											$t1_o = $res1_o->fetch_assoc();
 											$nom_o = $t1_o["nom_objet"];
 											$poids_o = $t1_o["poids_objet"];
+											$deposable = $t1_o["deposable"];
+
+											if ($deposable != 0) {
 											
 											// recuperation du nombre d'objet de ce type que possede le perso
 											$sql2_o = "SELECT id_objet FROM perso_as_objet WHERE id_perso='$id_perso' AND equip_objet='0' AND id_objet='$id_objet'";
@@ -1952,6 +1958,7 @@ if($dispo == '1' || $admin) {
 											echo "	<td align='center'><input type='submit' name='valid_objet_depo' value='oui' class='btn btn-warning' /><input type='hidden' name='id_objet_depo' value='$id_objet,2,0' /></td>";
 											echo "</form>";
 											echo "</tr>";
+											}
 										}
 										
 										// Armes non portes

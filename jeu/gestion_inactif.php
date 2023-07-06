@@ -362,9 +362,6 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 		// Suppression du joueur 
 		$sql = "DELETE FROM joueur WHERE id_joueur='$id_joueur'";
 		$mysqli->query($sql);
-		
-		$sql = "DELETE FROM joueur_as_ip WHERE id_joueur='$id_joueur'";
-		$mysqli->query($sql);
 	}
 }
 ?>

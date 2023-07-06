@@ -363,14 +363,30 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	$nbvictr = $t['points_victoire'];
 	
 	// Nombre de persos du sud capturés par le Nord
-	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=2 AND camp_perso_captureur=1";
+	$sql = "SELECT type_perso, COUNT(*) AS kills FROM dernier_tombe LEFT JOIN perso ON dernier_tombe.id_perso_capture = perso.id_perso WHERE camp_perso_capture=2 AND camp_perso_captureur=1 GROUP BY type_perso ORDER BY type_perso ASC";
 	$res_ev_capt = $mysqli->query($sql);
-	$nb_ennemis_capt_nord = $res_ev_capt->num_rows;
+	$nb_ennemis_capt_nord = 0;
+	$nb_ennemis_capt_nord_array = array(0, 0, 0, 0, 0, 0, 0, 0);
+	while ($t = $res_ev_capt->fetch_assoc()){
+		$type_perso = $t['type_perso'];
+		$kills = $t['kills'];
+		if ($type_perso <= 8 && $type_perso != 0)
+			$nb_ennemis_capt_nord_array[$type_perso - 1] = $kills;
+		$nb_ennemis_capt_nord += $kills;
+	}
 	
 	// Nombre de persos du nord capturés par le Sud
-	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=2";
+	$sql = "SELECT type_perso, COUNT(*) AS kills FROM dernier_tombe LEFT JOIN perso ON dernier_tombe.id_perso_capture = perso.id_perso WHERE camp_perso_capture=1 AND camp_perso_captureur=2 GROUP BY type_perso ORDER BY type_perso ASC";
 	$res_ev_capt =  $mysqli->query($sql);
-	$nb_ennemis_capt_sud = $res_ev_capt->num_rows;
+	$nb_ennemis_capt_sud = 0;
+	$nb_ennemis_capt_sud_array = array(0, 0, 0, 0, 0, 0, 0, 0);
+	while ($t = $res_ev_capt->fetch_assoc()){
+		$type_perso = $t['type_perso'];
+		$kills = $t['kills'];
+		if ($type_perso <= 8 && $type_perso != 0)
+			$nb_ennemis_capt_sud_array[$type_perso - 1] = $kills;
+		$nb_ennemis_capt_sud += $kills;
+	}
 	
 	// Nombre de persos du nord capturés par le Nord
 	$sql = "SELECT * FROM dernier_tombe WHERE camp_perso_capture=1 AND camp_perso_captureur=1";
@@ -411,9 +427,9 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 	echo "				<th style='text-align:center'><font color=darkred>Camp</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de joueurs actifs</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Nombre de persos actifs</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures ennemis</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures alliés</font></th>";
-	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures autres <br />(capturé un pnj ou perso neutre)</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures d'ennemis</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures d'alliés</font></th>";
+	echo "				<th style='text-align:center'><font color=darkred>Nombre de captures subies par un pnj ou perso neutre</font></th>";
 	echo "				<th style='text-align:center'><font color=darkred>Points de victoires</font></th>";
 	echo "			</tr>";
 	echo "		</thead>";
@@ -430,6 +446,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$nbact 			= $nbbact;
 			$pvict 			= $nbvictb;
 			$nb_kill		= $nb_ennemis_capt_nord;
+			$nb_kill_array		= $nb_ennemis_capt_nord_array;
 			$meutre 		= $nb_allies_capt_nord;
 			$autres			= $nb_autre_capt_nord;
 		}
@@ -440,6 +457,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 			$nbact 			= $nbract;
 			$pvict 			= $nbvictr;
 			$nb_kill		= $nb_ennemis_capt_sud;
+			$nb_kill_array		= $nb_ennemis_capt_sud_array;
 			$meutre 		= $nb_allies_capt_sud;
 			$autres			= $nb_autre_capt_sud;
 		}
@@ -451,7 +469,7 @@ if(isset($_GET["stats"]) && $_GET["stats"] == 'ok'){
 		echo "				<td align=center><font color=\"$couleur_camp\">".$nom_camp."</font></td>";
 		echo "				<td align=center>$nb</td>";
 		echo "				<td align=center>$nbact</td>";
-		echo "				<td align=center>$nb_kill</td>";
+		echo "				<td <ul><li>total : $nb_kill</li><li>chef : $nb_kill_array[0]</li><li>cavalerie lourde : $nb_kill_array[1]</li><li>infanterie : $nb_kill_array[2]</li><li>soigneur : $nb_kill_array[3]</li><li>canon : $nb_kill_array[4]</li><li>chien : $nb_kill_array[5]</li><li>cavalerie légère : $nb_kill_array[6]</li><li>gatling : $nb_kill_array[7]</li></ul></td>";
 		echo "				<td align=center>$meutre</td>";
 		echo "				<td align=center>$autres</td>";
 		echo "				<td align='center'>".$pvict." <a href='classement.php?stats=ok&histo=".$id_camp."' class='btn btn-primary'>Consulter l'historique</a></td>";
