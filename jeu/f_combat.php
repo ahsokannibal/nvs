@@ -705,9 +705,7 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 				$res = $mysqli->query($sql);
 				$to = $res->fetch_assoc();
 
-				$nb_o = $to["nb_objet"];
-
-				if($nb_o){
+				if($to){
 					// On met a jour le nombre
 					$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
 						WHERE type_objet='1' AND id_objet='0'
@@ -719,6 +717,7 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 					$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_cible','$y_cible')";
 					$mysqli->query($sql);
 				}
+				
 			}
 
 			if ($id_arme_non_equipee > 0 && $test_perte <= 40) {
@@ -731,10 +730,8 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 					AND type_objet = '3' AND id_objet = '$id_arme_non_equipee'";
 				$res = $mysqli->query($sql);
 				$to = $res->fetch_assoc();
-
-				$nb_o = $to["nb_objet"];
-
-				if($nb_o){
+				
+				if($to["nb_objet"]){
 					// On met a jour le nombre
 					$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
 						WHERE type_objet='3' AND id_objet='$id_arme_non_equipee'
@@ -747,10 +744,64 @@ function check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_p
 					$mysqli->query($sql);
 				}
 			}
+			
+			/*
+			Ajout 6/7/2023 - Matt
+			Possibilite de perdre objet transporte dans le sac, avec probabilite determinee dans la base
+			*/
+			
+			$sql = "SELECT * FROM objet 
+					INNER JOIN perso_as_objet ON perso_as_objet.id_objet = objet.id_objet AND perso_as_objet.id_perso = '$id_cible' 
+					WHERE objet.Perte_Proba > 0; ";
+			$res = $mysqli->query($sql);
+			
+			foreach($res as $row){
+				// pour chaque objet qui peut etre perdu avec une proba non nulle
+				if(mt_rand(0,100) < $row["Perte_Proba"]){
+					// Si l'objet est perdu
+					// 1) Retirer l'objet de l'inventaire
+					// Suppression de l'arme de l'inventaire du perso
+					$sql = "DELETE FROM perso_as_objet WHERE id_perso='$id_cible' AND id_objet=". $row["id_objet"] . " LIMIT 1";
+					$mysqli->query($sql);
+
+				
+					// 2) Modifier le poids de l'inventaire
+					// Maj charge perso suite perte de l'arme
+					$sql = "UPDATE perso SET charge_perso = charge_perso - ". $row["poids_objet"] . " WHERE id_perso='$id_cible'";
+					$mysqli->query($sql);
+					
+					// 3) AJouter l'objet a terre
+					// On dépose la perte de l'arme par terre
+					// Verification si l'objet existe deja sur cette case
+					$sql = "SELECT nb_objet FROM objet_in_carte 
+						WHERE objet_in_carte.x_carte = $x_cible 
+						AND objet_in_carte.y_carte = $y_cible 
+						AND id_objet = ". $row["id_objet"];
+					$res2 = $mysqli->query($sql);
+					$to2 = $res2->fetch_assoc();
+						
+					if($to2){
+						// On met a jour le nombre
+						$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + 1 
+							WHERE id_objet=". $row["id_objet"] . "
+							AND x_carte='$x_cible' AND y_carte='$y_cible'";
+						$mysqli->query($sql);
+					}
+					else {
+						// Insertion dans la table objet_in_carte : On cree le premier enregistrement
+						$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('2',". $row["id_objet"] . ",1,'$x_cible','$y_cible')";
+						$mysqli->query($sql);
+					}
+					
+					
+					
+				}
+			}
+			
 		}
 
 		// maj evenements
-		$sql = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
+		$sql = "INSERT INTO evenement (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) VALUES ($id,'<font color=$couleur_clan_perso><b>$nom_perso</b></font>','<b>a capturé</b>','$id_cible','<font color=$couleur_clan_cible><b>$nom_cible</b></font>','',NOW(),'0')";
 		$mysqli->query($sql);
 
 		// maj cv
