@@ -27,8 +27,12 @@ $couleur_sud 	= Imagecolorallocate($gare_carte, 254, 10, 10); // rouge bien voya
 $couleur_rail	= Imagecolorallocate($gare_carte, 200, 200, 200); // gris rails
 
 // je vais chercher les rails dans ma table
-$sql = "SELECT x_carte, y_carte FROM carte 
-		WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif')";
+// $sql = "SELECT x_carte, y_carte FROM carte 
+		// WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif')";
+$sql =	"SELECT DISTINCT train_last_dep.x_last_dep as x_carte, train_last_dep.y_last_dep as y_carte
+		FROM instance_batiment 
+		inner join train_last_dep ON train_last_dep.id_train = instance_batiment.id_instanceBat
+		WHERE instance_batiment.id_batiment = 12 and instance_batiment.camp_instance = 2 and train_last_dep.DeplacementDate > DATE_SUB(CURDATE(), INTERVAL 2 day)";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
@@ -44,7 +48,8 @@ while ($t = $res->fetch_assoc()){
 $sql = "SELECT x_instance, y_instance, nom_instance, taille_batiment, camp_instance FROM instance_batiment, batiment 
 		WHERE batiment.id_batiment = instance_batiment.id_batiment 
 		AND pv_instance>0
-		AND instance_batiment.id_batiment='11'";
+		AND instance_batiment.id_batiment='11' 
+		and instance_batiment.camp_instance = 2 ";
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){

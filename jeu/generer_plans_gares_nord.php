@@ -34,9 +34,16 @@ $couleur_brouillard_desert		= Imagecolorallocate($gare_carte, 225, 206, 154); //
 $couleur_brouillard_foret		= Imagecolorallocate($gare_carte, 97, 77, 26); // 
 
 // je vais chercher les rails dans ma table
-$sql = "SELECT x_carte, y_carte FROM carte 
+/* $sql = "SELECT x_carte, y_carte FROM carte 
 		WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif')
-		AND vue_nord='1'";
+		AND vue_nord='1'"; */
+		
+// Recently used rails
+$sql =	"SELECT DISTINCT train_last_dep.x_last_dep as x_carte, train_last_dep.y_last_dep as y_carte
+		FROM instance_batiment 
+		inner join train_last_dep ON train_last_dep.id_train = instance_batiment.id_instanceBat
+		WHERE instance_batiment.id_batiment = 12 and instance_batiment.camp_instance = 1 and train_last_dep.DeplacementDate > DATE_SUB(CURDATE(), INTERVAL 2 day)";
+		
 $res = $mysqli->query($sql);
 
 while ($t = $res->fetch_assoc()){
