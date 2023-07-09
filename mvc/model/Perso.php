@@ -92,6 +92,30 @@ class Perso extends Model
 
 		return $result;
 	}
+	
+public function getAllPerso($attributs = [],$camp=null){
+		$db = $this->dbConnectPDO();
+
+		if($attributs){
+			$attributs = implode(', ',$attributs);
+		}else{
+			$attributs = "*";
+		}
+		
+		if($camp){
+			$query = 'SELECT '.$attributs.' FROM perso WHERE clan=:camp';
+			$request = $db->prepare($query);
+			$request->bindParam('camp', $camp, PDO::PARAM_INT);
+		}else{
+			$query = 'SELECT '.$attributs.' FROM perso';
+			$request = $db->prepare($query);
+		}
+
+		$request->execute();
+		$result = $request->fetchAll();
+
+		return $result;
+	}
 
 	/**
 	* Récupère tous les objets/armes détenus par le perso
