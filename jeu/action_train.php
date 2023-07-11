@@ -58,9 +58,6 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 		$t_g = $res_g->fetch_assoc();
 		$nb_g = $res_g->num_rows;
 		
-		//####
-		// echo($sql_g );
-		// var_dump($t_g);
 		
 		if ($nb_g) {
 		
@@ -79,11 +76,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			$sql_ld = "SELECT x_last_dep, y_last_dep, DeplacementDate FROM train_last_dep WHERE id_train='$id_instance_train' ORDER BY DeplacementDate DESC LIMIT 1;";
 			$res_ld = $mysqli->query($sql_ld);
 			$t_ld = $res_ld->fetch_assoc();
-			
-			//####
-			// echo($sql_ld);
-			// var_dump($t_ld);
-				
+
 			$x_last_dep = $t_ld['x_last_dep'];
 			$y_last_dep = $t_ld['y_last_dep'];
 			
@@ -118,9 +111,6 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 				$res_r = $mysqli->query($sql_r);
 				$nb_r = $res_r->num_rows;
 				
-				//####
-				// echo($sql_r);
-				//var_dump($res_r->fetch_assoc());
 				
 				if ($nb_r) {
 					// rail trouvé
@@ -137,8 +127,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					$idPerso_carte	= $t_c['idPerso_carte'];
 					
 					if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
-						//###
-						// echo("train bloque par ". var_dump($t_c));
+
 						// Compteur blocage
 						gestion_blocage_train($mysqli, $id_instance_train, $idPerso_carte, $x_r, $y_r);
 						
