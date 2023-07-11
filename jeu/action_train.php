@@ -58,6 +58,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 		$t_g = $res_g->fetch_assoc();
 		$nb_g = $res_g->num_rows;
 		
+		
 		if ($nb_g) {
 		
 			$x_gare_arrivee 	= $t_g['x_instance'];
@@ -72,10 +73,10 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			echo "Déplacement du train ". $id_instance_train ." ($x_train / $y_train) vers la gare ". $gare_arrivee ." ($x_gare_arrivee / $y_gare_arrivee)<br />";
 			
 			// récupération derniere case dep train avant sa position actuelle
-			$sql_ld = "SELECT x_last_dep, y_last_dep FROM train_last_dep WHERE id_train='$id_instance_train'";
+			$sql_ld = "SELECT x_last_dep, y_last_dep, DeplacementDate FROM train_last_dep WHERE id_train='$id_instance_train' ORDER BY DeplacementDate DESC LIMIT 1;";
 			$res_ld = $mysqli->query($sql_ld);
 			$t_ld = $res_ld->fetch_assoc();
-			
+
 			$x_last_dep = $t_ld['x_last_dep'];
 			$y_last_dep = $t_ld['y_last_dep'];
 			
@@ -109,7 +110,8 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 							AND coordonnees NOT IN ( '" . implode( "', '" , $tab_dep_train ) . "' )";
 				$res_r = $mysqli->query($sql_r);
 				$nb_r = $res_r->num_rows;
-
+				
+				
 				if ($nb_r) {
 					// rail trouvé
 					$t_r = $res_r->fetch_assoc();
@@ -125,7 +127,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					$idPerso_carte	= $t_c['idPerso_carte'];
 					
 					if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
-						
+
 						// Compteur blocage
 						gestion_blocage_train($mysqli, $id_instance_train, $idPerso_carte, $x_r, $y_r);
 						
@@ -145,9 +147,14 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 						$x_tmp_dep = $x_train;
 						$y_tmp_dep = $y_train;
 						
+						echo "Train a bouge en ". $x_r . "/ ". $y_r . " pm restant ". $dep_restant;
+						
 						// Modification coordonnées instance train
 						$sql_t = "UPDATE instance_batiment set x_instance='$x_r', y_instance='$y_r' WHERE id_instanceBat='$id_instance_train'";
 						$mysqli->query($sql_t);
+						
+						$sql_ld = "INSERT INTO train_last_dep (id_train, x_last_dep, y_last_dep) VALUES ('$id_instance_train', '$x_r', '$y_r')";
+						$mysqli->query($sql_ld);
 						
 						$x_train = $x_r;
 						$y_train = $y_r;
@@ -170,8 +177,12 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			
 			if (est_arrivee($mysqli, $x_train, $y_train, $gare_arrivee)) {
 				
-				$sql_ld = "DELETE FROM train_last_dep WHERE id_train='$id_instance_train'";
+				// $sql_ld = "DELETE FROM train_last_dep WHERE id_train='$id_instance_train' and DeplacementDate <= DATE_SUB(CURDATE(), INTERVAL 2 DAY)";
+				$sql_ld = "DELETE FROM train_last_dep WHERE DeplacementDate <= DATE_SUB(CURDATE(), INTERVAL 2 DAY)";
 				$mysqli->query($sql_ld);
+				
+				//DELETE FROM `train_last_dep` where id_train NOT IN (SELECT instance_batiment.id_instanceBat from instance_batiment where instance_batiment.id_batiment = 12)
+				// SUpprimer tous les deplacements de trains qui ne sont pas lie a des batiments (trains detruits, reliques...)
 				
 				// evenement arrivée
 				$sql_e = "INSERT INTO `evenement` (IDActeur_evenement, nomActeur_evenement, phrase_evenement, IDCible_evenement, nomCible_evenement, effet_evenement, date_evenement, special) 
@@ -183,6 +194,9 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 				$mysqli->query($sql_pv);
 				
 				dechargement_persos_train($mysqli, $id_instance_train, $gare_arrivee, $x_gare_arrivee, $y_gare_arrivee);
+				
+				$sql_ld = "INSERT INTO train_last_dep (id_train, x_last_dep, y_last_dep) VALUES ('$id_instance_train', '$x_train', '$y_train')";
+				$mysqli->query($sql_ld);
 				
 				// On change la destination du train
 				$sql_dt = "SELECT id_gare1, id_gare2 FROM liaisons_gare WHERE id_train='$id_instance_train'";
@@ -201,16 +215,16 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 				$sql_lg = "UPDATE liaisons_gare SET direction='$nouvelle_direction' WHERE id_train='$id_instance_train'";
 				$mysqli->query($sql_lg);
 
-				$sql_ld = "INSERT INTO train_last_dep (id_train, x_last_dep, y_last_dep) VALUES ('$id_instance_train', '0', '0')";
-				$mysqli->query($sql_ld);
+				//$sql_ld = "INSERT INTO train_last_dep (id_train, x_last_dep, y_last_dep) VALUES ('$id_instance_train', '0', '0')";
+				//$mysqli->query($sql_ld);
 				
 				chargement_persos_train($mysqli, $id_instance_train, $x_train, $y_train, $nouvelle_direction, $gare_arrivee, $camp_train);
 			}
 			else {
 				
 				if ($x_tmp_dep!= '' && $y_tmp_dep != '') {
-					$sql_ld = "DELETE FROM train_last_dep WHERE id_train='$id_instance_train'";
-					$mysqli->query($sql_ld);
+					//$sql_ld = "DELETE FROM train_last_dep WHERE id_train='$id_instance_train'";
+					//$mysqli->query($sql_ld);
 					
 					// On enregistre la dernière case déplacée
 					$sql_ld = "INSERT INTO train_last_dep (id_train, x_last_dep, y_last_dep) VALUES ('$id_instance_train', '$x_tmp_dep', '$y_tmp_dep')";
