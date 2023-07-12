@@ -4,16 +4,16 @@ $title = "";
 /* ---Content--- */
 ob_start();
 ?>
-<?php if($dispo!=1): ?>
+<?php if($maintenance_mode['valeur_config']!=1): ?>
 <div class="row justify-content-center">
 	<div class='alert alert-warning fw-bold text-center col'>
-		<svg xmlns="http://www.w3.org/2000/svg" class="me-2 maintenance-icon-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
+		<svg xmlns="http://www.w3.org/2000/svg" class="me-2 mb-2 maintenance-icon-lg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1">
 			<circle cx="12" cy="12" r="7.2490396"/>
 			<path stroke-linecap="round" stroke-linejoin="round" d="M 11.076105,0.45483854 10.198151,2.9797418 7.4122271,4.322478 4.489785,3.182112 3.1821151,4.4897818 4.3482005,6.8963676 3.3356861,9.8157842 0.45484167,11.076102 v 1.847795 l 2.52490323,0.877955 1.3427363,2.785919 -1.1403661,2.922447 1.3076699,1.30767 2.4070084,-1.165729 2.9189942,1.012158 1.2603134,2.880845 h 1.849572 l 0.877042,-2.524829 2.785013,-1.341268 2.922487,1.138823 1.30767,-1.30767 -1.165729,-2.407009 1.012364,-2.919037 2.880638,-1.260272 V 11.076106 L 21.020266,10.198211 19.687882,7.4068314 20.817891,4.4897818 19.510221,3.182112 17.104916,4.3477781 14.188302,3.3175139 12.925676,0.45483854 Z" />
 			<path stroke-linecap="round" stroke-linejoin="round" d="m 13.822851,8.942861 v 3.443154 L 12,13.246804 10.177149,12.386015 V 8.942861 c -3.6457021,0.860788 -3.6457021,6.02552 0,7.747097 v 1.721577 c 1.822851,0.86079 1.822851,0.86079 3.645702,0 v -1.721577 c 3.645702,-1.721577 3.645702,-6.886309 0,-7.747097 z" />
 		</svg>
-		<div class='w-50 m-auto'>
-			Bienvenue soldat ! Le site est en maintenance.</br>
+		<div class='w-75 m-auto pb-3 maintenance-msg'>
+			<?= $maintenance_mode['msg'] ?>
 		</div>
 	</div>
 </div>

@@ -1,6 +1,5 @@
 <?php
-
-require_once("jeu/config.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/jeu/config.php");
 
 class Db extends PDO
 {

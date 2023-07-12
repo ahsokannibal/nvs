@@ -631,7 +631,8 @@ ALTER TABLE `competence_as_competence`
 
 CREATE TABLE IF NOT EXISTS `config_jeu` (
   `code_config` varchar(255) NOT NULL,
-  `valeur_config` varchar(255) NOT NULL
+  `valeur_config` varchar(255) NOT NULL,
+  `msg` TEXT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `config_jeu`

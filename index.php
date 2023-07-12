@@ -1,9 +1,12 @@
 <?php
 session_start();
 require_once("fonctions.php");
+require_once('mvc/model/Administration.php');
 
 $mysqli = db_connexion();
-$dispo = config_dispo_jeu($mysqli);
+
+$administration = new Administration();
+$maintenance_mode = $administration->getMaintenanceMode();
 
 include ('nb_online.php');
 
