@@ -1,5 +1,5 @@
 <?php
-require_once("mvc/Db/Db.php");
+require_once($_SERVER['DOCUMENT_ROOT']."/mvc/Db/Db.php");
 
 abstract class Model extends Db
 {

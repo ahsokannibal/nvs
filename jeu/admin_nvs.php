@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once("../fonctions.php");
+require_once('../mvc/model/Administration.php');
 
 $mysqli = db_connexion();
 
@@ -15,6 +16,9 @@ if(isset($_SESSION["id_perso"])){
 	
 	if($admin){
 		
+		$administration = new Administration();
+		$maintenance_mode = $administration->getMaintenanceMode();
+		
 		if (isset($_GET['mode_jeu']) && $_GET['mode_jeu']=='close') {
 			$sql = "UPDATE config_jeu SET valeur_config='0' WHERE code_config='disponible'";
 			$mysqli->query($sql);
@@ -25,9 +29,21 @@ if(isset($_SESSION["id_perso"])){
 			$mysqli->query($sql);
 		}
 		
-		$dispo = config_dispo_jeu($mysqli);
+		if(isset($_POST['maintenance_msg'])){
+			$msg = htmlspecialchars($_POST['maintenance_msg']);
+			$result = $administration->updateMaintenanceMsg($msg);
+			
+			if($result){
+				$_SESSION['flash'] = ['class'=>'success','message'=>'Message mis à jour'];
+			}else{
+				$_SESSION['flash'] = ['class'=>'danger','message'=>"Une erreur est survenue. Si le problème persiste, contacter l'administrateur"];
+			}
+			
+			header('location:../jeu/admin_nvs.php');
+			die();
+		}
 
-	require_once('../mvc/view/admin/index.php');
+		require_once('../mvc/view/admin/index.php');
 	}
 	else {
 		// logout
