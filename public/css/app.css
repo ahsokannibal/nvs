@@ -41,13 +41,6 @@ body{
 	width:100%;
 }
 
-/* messages and notifications */
-
-.maintenance-msg{
-	white-space:pre-line;
-}
-
-
 /* news */
 .news {
 	overflow-y: scroll;

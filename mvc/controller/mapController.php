@@ -14,7 +14,7 @@ class MapController extends Controller
     public function index()
     {
 		$admin = new Administration();
-		$dispo = $admin->getMaintenanceMode();
+		$dispo = $admin->checkMaintenanceMode();
 		
 		$map = new Map();
 		$mapTablesInDatabase = $map->mapTables;
