@@ -73,7 +73,7 @@ class PlanGareImage{
 			$fond		= $t["fond_carte"];
 			
 			// cacher les elements de carte non decouverts
-			Imagefilledrectangle ($this->gare_carte, (($x*$this->imageSize["brushSize"])-1), ((($this->imageSize["height"]-($y*$this->imageSize["brushSize"])))-1), (($x*$this->imageSize["brushSize"])+1), ((($this->imageSize["height"]-($y*$this->imageSize["brushSize"])))+1), $this->noir);
+			Imagefilledrectangle ($this->gare_carte, (($x*$this->imageSize["brushSize"])-1), ((($this->imageSize["height"]-$this->imageSize["brushSize"]-($y*$this->imageSize["brushSize"])))-1), (($x*$this->imageSize["brushSize"])+1), ((($this->imageSize["height"]-$this->imageSize["brushSize"]-($y*$this->imageSize["brushSize"])))+1), $this->noir);
 		}
 		
 	}
