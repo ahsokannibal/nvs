@@ -20,7 +20,7 @@ class PlanGareImage{
 	
 	//CONST
 	private $imageBackground_path = "carte/carte.png";
-	private $imageSize = array("width"=> 603, "height" =>603, "brushSize"=>3); //doivent etre multiples de 3
+	private $imageSize = array("width"=> 600, "height" =>600, "brushSize"=>3); //doivent etre multiples de 3
 	//COLOR SPACE 
 	// couleurs perso_carte
 	private $noir; 							
