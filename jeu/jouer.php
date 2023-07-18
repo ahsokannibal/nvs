@@ -1479,18 +1479,8 @@ if($dispo == '1' || $admin){
 						$mess_bat .= "<center><font color = blue>~~<a href=\"action.php?bat=$id_bat&reparer=ok\" > reparer $nom_bat $nom_ibat [$id_bat] (5 PA)</a>~~</font></center>";
 					}
 					
-					// cas particulier gare
-					if ($bat == '11') {
-						if ($clan_p == 1) {
-							$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_nord.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
-						}
-						else if ($clan_p == 2) {
-							$mess_bat .= "<center><font color = blue>~~<a href=\"generer_plans_gares_sud.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
-						}
-					}
-					else {
-						$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
-					}
+					$mess_bat .= "<center><font color = blue>~~<a href=\"batiment.php?bat=$id_bat\" target='_blank'> accéder à la page du bâtiment $nom_bat $nom_ibat</a>~~</font></center>";
+					
 					
 					$bonus_perc = 0;
 					
