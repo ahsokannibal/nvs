@@ -73,7 +73,7 @@ class PlanGareImage{
 			$fond		= $t["fond_carte"];
 			
 			// cacher les elements de carte non decouverts
-			Imagefilledrectangle ($this->gare_carte, (($x*$this->imageSize["brushSize"])-1), ((($this->imageSize["height"]-$this->imageSize["brushSize"]-($y*$this->imageSize["brushSize"])))-1), (($x*$this->imageSize["brushSize"])+1), ((($this->imageSize["height"]-$this->imageSize["brushSize"]-($y*$this->imageSize["brushSize"])))+1), $this->noir);
+			Imagefilledrectangle ($this->gare_carte, (($x*$this->imageSize["brushSize"])-1), ((($this->imageSize["height"]-($y*$this->imageSize["brushSize"])))-1), (($x*$this->imageSize["brushSize"])+1), ((($this->imageSize["height"]-($y*$this->imageSize["brushSize"])))+1), $this->noir);
 		}
 		
 	}
@@ -131,7 +131,7 @@ class PlanGareImage{
 					$color = $this->couleur_sud;
 				}
 				
-				imagefilledrectangle ($this->gare_carte, (($x*3)-$taille_bat), ((($this->imageSize["height"]-($y*3)))-$taille_bat), (($x*3)+$taille_bat), ((($this->imageSize["height"]-($y*3)))+$taille_bat), $color);
+				imagefilledrectangle ($this->gare_carte, (($x*3)-$taille_bat), ($this->imageSize["height"]-($y*3))-($taille_bat), (($x*3)+$taille_bat), ((($this->imageSize["height"]-($y*3)))+$taille_bat), $color);
 				
 				ImageString($this->gare_carte, 12, ($x*3)-($taille_text*3), (($this->imageSize["height"]-($y*3))) + 3, $nom_bat, $this->noir);
 			}
