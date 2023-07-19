@@ -13,7 +13,7 @@ class Case{
 
     draw(canvas, ctx){
         let me = this;
-        this.cleanTile(ctx);
+        //this.cleanTile(ctx);
 
         this.setCouleur();
         if(batiments_checkbox.checked && this.batiment != undefined){
