@@ -35,12 +35,12 @@ function get_perso($id_perso){
     return $perso;
 }
 
-if(isset($_POST['function'])){
+if(isset($_GET['function'])){
 
     $json_data = file_get_contents('carte_sql.json');
     $sqlPropertiesObj = json_decode($json_data);
 
-    switch($_POST['function']){
+    switch($_GET['function']){
         case 'get_map':{
             header('Content-Type: application/json');
             if($perso->clan == 0){
