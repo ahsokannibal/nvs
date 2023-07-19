@@ -351,9 +351,10 @@ function handleEnd(e){
 
 
 function drawMap(mapTiles){
-
+	var i = 0;
     let startX = Math.floor(Math.abs(translatePos.x) / ((pixel_size + pixel_distance)*scale)) - 2;
-    let lengthX = translatePos.x / ((pixel_size + pixel_distance)*scale) + map_size  + 4;
+    // let lengthX = translatePos.x / ((pixel_size + pixel_distance)*scale) + map_size  + 4;
+    let lengthX = (map_size / scale)+3;
     let endY = Math.floor( translatePos.y / ((pixel_size + pixel_distance)*scale)) + map_size + 2;
     let startY = endY - map_size / scale - 4;
 
@@ -372,12 +373,15 @@ function drawMap(mapTiles){
     drawBackground();
 
     mapTiles.forEach(function(value, key, map){
-        let tile = mapTiles.get(key);
+        let tile = value;
+        //let tile = mapTiles.get(key);
         if(tile.x > startX && tile.x < (startX+lengthX) && tile.y > startY && tile.y < endY){
             tile.draw(canvas, ctx);
+			i=i+1;
         }
         
     });
+	console.log("Drawn "+i + " cases")
 }
 
 function drawBackground(){
@@ -409,7 +413,7 @@ function drawStar(ctx, centerX,centerY,arms,innerRadius,outerRadius,startAngle,f
 */
 function get_map(){
     $.ajax({
-        method: "POST",
+        method: "GET",
         url: "functions_carte.php",
         data:{
             "function":"get_map"
