@@ -26,7 +26,7 @@ if(isset($_SESSION["id_perso"])){
 		$perso = new Perso();
 		
 		$administration = new Administration();
-		$dispo = $administration->checkMaintenanceMode();
+		$dispo = $administration->getMaintenanceMode();
 
 		$forts_North = $building->getByType(9,1);
 		$forts_South = $building->getByType(9,2);
