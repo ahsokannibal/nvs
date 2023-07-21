@@ -22,11 +22,17 @@ if(isset($_SESSION["id_perso"])){
 		if (isset($_GET['mode_jeu']) && $_GET['mode_jeu']=='close') {
 			$sql = "UPDATE config_jeu SET valeur_config='0' WHERE code_config='disponible'";
 			$mysqli->query($sql);
+			
+			header('location:../jeu/admin_nvs.php');
+			die();
 		}
 		
 		if (isset($_GET['mode_jeu']) && $_GET['mode_jeu']=='open') {
 			$sql = "UPDATE config_jeu SET valeur_config='1' WHERE code_config='disponible'";
 			$mysqli->query($sql);
+			
+			header('location:../jeu/admin_nvs.php');
+			die();
 		}
 		
 		if(isset($_POST['maintenance_msg'])){
