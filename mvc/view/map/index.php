@@ -52,7 +52,8 @@ ob_start();
 						<div class='me-4'>carte n°<?= $id ?></div>
 						<!--<img class='me-4' src="" width="34" height="34" alt='miniature carte n°{{$id}}'>-->
 						<a href='../creation_carte/utils_carte.php?id=<?= $id ?>' class='mx-3 btn btn-primary'>Editer</a>
-						<?php if($id==1 && $dispo==1): ?>
+
+						<?php if($id==1 && $dispo['valeur_config']==1): ?>
 							<button class='btn btn-danger' disabled>Supprimer</button>
 							<small class='mt-2'>vous devez mettre le jeu en maintenance pour supprimer la carte principale.<br>Attention, toute suppression de la carte n°1 réinitialise le jeu (sauf les persos)</small>
 						<?php else: ?>

@@ -29,7 +29,7 @@ class Map extends Model
 		8=>['eau',92,191,207],
 		9=>['eau_profonde',39,141,227]
 	];
-	protected $mapTables = ['CARTE' => 1,'CARTE2' => 2,'CARTE3' => 3];// à refactoriser
+	protected $mapTables = ['carte' => 1,'carte2' => 2,'carte3' => 3];// à refactoriser
 
 	public function __set($name, $value) {}
 	
@@ -313,49 +313,51 @@ class Map extends Model
 		$db = $this->dbConnectPDO();
 		$map = array_search($id,$this->mapTables);
 		
-		// Vider table histo_stats_camp_pv (après affichage sur forum)
-		$query = "DELETE FROM histo_stats_camp_pv";
-		$db->query($query);
-		
-		// Vider table perso_in_batiment
-		$query = "DELETE FROM perso_in_batiment";
-		$db->query($query);
-		
-		// Vider table perso_in_train
-		$query = "DELETE FROM perso_in_train";
-		$db->query($query);
-		
-		// Vider table instance_batiment_canon
-		$query = "DELETE FROM instance_batiment_canon";
-		$db->query($query);
+		if($map=='carte'){
+			// Vider table histo_stats_camp_pv (après affichage sur forum)
+			$query = "DELETE FROM histo_stats_camp_pv";
+			$db->query($query);
+			
+			// Vider table perso_in_batiment
+			$query = "DELETE FROM perso_in_batiment";
+			$db->query($query);
+			
+			// Vider table perso_in_train
+			$query = "DELETE FROM perso_in_train";
+			$db->query($query);
+			
+			// Vider table instance_batiment_canon
+			$query = "DELETE FROM instance_batiment_canon";
+			$db->query($query);
 
-		// Vider table instance_batiment
-		$query = "DELETE FROM instance_batiment";
-		$db->query($query);
-		
-		// Vider table pnj_in_zone (à redéfinir après installation carte)
-		$query = "DELETE FROM pnj_in_zone";
-		$db->query($query);
-		
-		// Vider table instance_pnj
-		$query = "DELETE FROM instance_pnj";
-		$db->query($query);
-		
-		// Vider table zones (à redéfinir après installation carte)
-		$query = "DELETE FROM zones";
-		$db->query($query);
-		
-		// Vider table liaisons_gare
-		$query = "DELETE FROM liaisons_gare";
-		$db->query($query);
-		
-		// Vider table objet_in_carte
-		$query = "DELETE FROM objet_in_carte";
-		$db->query($query);
-		
-		// Vider table perso_as_respawn
-		$query = "DELETE FROM perso_as_respawn";
-		$db->query($query);
+			// Vider table instance_batiment
+			$query = "DELETE FROM instance_batiment";
+			$db->query($query);
+			
+			// Vider table pnj_in_zone (à redéfinir après installation carte)
+			$query = "DELETE FROM pnj_in_zone";
+			$db->query($query);
+			
+			// Vider table instance_pnj
+			$query = "DELETE FROM instance_pnj";
+			$db->query($query);
+			
+			// Vider table zones (à redéfinir après installation carte)
+			$query = "DELETE FROM zones";
+			$db->query($query);
+			
+			// Vider table liaisons_gare
+			$query = "DELETE FROM liaisons_gare";
+			$db->query($query);
+			
+			// Vider table objet_in_carte
+			$query = "DELETE FROM objet_in_carte";
+			$db->query($query);
+			
+			// Vider table perso_as_respawn
+			$query = "DELETE FROM perso_as_respawn";
+			$db->query($query);
+		}
 		
 		// réinitialiser la table Carte
 		$query = "TRUNCATE TABLE $map";

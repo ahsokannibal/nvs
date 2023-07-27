@@ -35,10 +35,15 @@ if(isset($_SESSION["id_perso"])){
 			$terrain_choix = $_SESSION['terrain_choix'] = $_POST['liste_terrain'];
 		}
 
-		if(isset($_POST['choix_carte']) || isset($_SESSION['choix_carte'])){
+		if(isset($_GET['id']) || isset($_SESSION['choix_carte'])){
 			
-			if (isset($_POST['choix_carte'])) {
-				$carte = $_SESSION['choix_carte'] = $_POST['choix_carte'];
+			if (isset($_GET['id'])) {
+				if($_GET['id']==1){
+					$map = 'carte';
+				}else{
+					$map = 'carte'.$_GET['id'];
+				}
+				$carte = $_SESSION['choix_carte'] = $map;
 			}
 			else {
 				$carte = $_SESSION['choix_carte'];
@@ -171,34 +176,26 @@ if(isset($_SESSION["id_perso"])){
 				</div>
 			</div>
 			
-			<form method="post" action="utils_carte.php">
-				<u>Choix de la carte à modifier :</u><br>
-				<select name="choix_carte" onchange="this.form.submit()">
-					<OPTION value="carte" <?php if( isset($_SESSION['choix_carte']) && $_SESSION['choix_carte'] == "carte") { echo "selected"; } ?>>carte de jeu</option>
-					<OPTION value="carte2" <?php if( isset($_SESSION['choix_carte']) && $_SESSION['choix_carte'] == "carte2") { echo "selected"; } ?>>carte de jeu 2</option>
-					<OPTION value="carte3" <?php if( isset($_SESSION['choix_carte']) && $_SESSION['choix_carte'] == "carte3") { echo "selected"; } ?>>carte de jeu 3</option>
-				</select>
-				<input type="submit" name="eval_choix_carte" value="ok" class='btn btn-primary'>
-			</form>
-			
 			<?php
 			if (!isset($X_MAXD) && !isset($Y_MAXD)) {
-				echo "<h3>Création de la carte</h3>";
-				echo "<form method='post' action='utils_carte.php'>";
-				echo "	<div class='form-row'>";
-				echo "		<div class='form-group col-md-4'>";
-				echo "			<label for='creation_x_max'>X Max carte : </label>";
-				echo "			<input type='text' name='creation_x_max' id='creation_x_max' value=''>";
-				echo "		</div>";
-				echo "		<div class='form-group col-md-4'>";
-				echo "			<label for='creation_y_max'>Y Max carte : </label>";
-				echo "			<input type='text' name='creation_y_max' id='creation_y_max' value=''>";
-				echo "		</div>";
-				echo "		<div class='form-group col-md-4'>";
-				echo "			<input type='submit' class='btn btn-primary' value='Créer la carte'>";
-				echo "		</div>";
-				echo "	</div>";
-				echo "</form>";
+			?>
+				<h3>Création de la carte</h3>
+				<form method='post' action='utils_carte.php'>
+					<div class='form-row'>
+						<div class='form-group col-md-4'>
+							<label for='creation_x_max'>X Max carte : </label>
+							<input type='text' name='creation_x_max' id='creation_x_max' value=''>
+						</div>
+						<div class='form-group col-md-4'>
+							<label for='creation_y_max'>Y Max carte : </label>
+							<input type='text' name='creation_y_max' id='creation_y_max' value=''>
+						</div>
+						<div class='form-group col-md-4'>
+							<input type='submit' class='btn btn-primary' value='Créer la carte'>
+						</div>
+					</div>
+				</form>
+			<?php
 			}			
 			?>
 

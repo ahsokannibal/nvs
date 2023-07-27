@@ -1,7 +1,7 @@
 <?php
 require_once("../mvc/model/Map.php");
 require_once("../mvc/model/Administration.php");
-require_once('controller.php');
+require_once("controller.php");
 require_once("../app/validator/formValidator.php");
 
 class MapController extends Controller
@@ -304,13 +304,20 @@ class MapController extends Controller
      */
     public function destroy($id)
     {
-		$map = new Map();
-		$result = $map->destroy($id);
+		$admin = new Administration();
+		$dispo = $admin->getMaintenanceMode();
 		
-		if($result){
-			$_SESSION['flash'] = ["class"=>"success","message"=>"La carte n°$id a été supprimée"];
+		if($id==1 && $dispo['valeur_config']==1){
+			$_SESSION['flash'] = ["class"=>"danger","message"=>"Attention ! La carte n°$id ne peut pas être supprimée si le jeu n'est pas en maintenance"];
 		}else{
-			$_SESSION['flash'] = ["class" => "warning","message"=>"Une erreur inconnue est survenue, veuillez recommencer. Si le problème persiste, contactez l'administrateur."];
+			$map = new Map();
+			$result = $map->destroy($id);
+			
+			if($result){
+				$_SESSION['flash'] = ["class"=>"success","message"=>"La carte n°$id a été supprimée"];
+			}else{
+				$_SESSION['flash'] = ["class" => "warning","message"=>"Une erreur inconnue est survenue, veuillez recommencer. Si le problème persiste, contactez l'administrateur."];
+			}
 		}
 		
 		header('location:?');
