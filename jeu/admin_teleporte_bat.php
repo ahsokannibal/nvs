@@ -36,14 +36,14 @@ if(isset($_SESSION["id_perso"])){
 				switch($_POST['id']){
 					case 1:
 						if(isset($_POST['teleport_bat_north']) && (!empty($_POST['teleport_bat_north']) OR $_POST['teleport_bat_north']==0)){
-							$fort = $building->getById($_POST['teleport_bat_north']);
-							$allPerso = $perso->getAllPerso(['id_perso'],$_POST['id']);
+							$fort = $building->getById($_POST['teleport_bat_north']);//fonction obsolète à changer avec la DAO
+							$allPerso = $perso->getAllPerso(['id_perso'],$_POST['id']);//fonction obsolète à changer avec la DAO
 						}
 					break;
 					case 2:
 						if(isset($_POST['teleport_bat_south']) && (!empty($_POST['teleport_bat_south']) OR $_POST['teleport_bat_south']==0)){
-							$fort = $building->getById($_POST['teleport_bat_south']);
-							$allPerso = $perso->getAllPerso(['id_perso'],$_POST['id']);
+							$fort = $building->getById($_POST['teleport_bat_south']);//fonction obsolète à changer avec la DAO
+							$allPerso = $perso->getAllPerso(['id_perso'],$_POST['id']);//fonction obsolète à changer avec la DAO
 						}
 					break;
 					default:
@@ -56,6 +56,16 @@ if(isset($_SESSION["id_perso"])){
 
 				//insérer tous les persos dans le fort
 				foreach($allPerso as $perso){
+					
+					//Vide la carte des persos si certains ont bougés entre la création de la carte et le placement des forts.
+					if((isset($perso['x_perso'])&&!empty($perso['x_perso']))&&(isset($perso['y_perso'])&&!empty($perso['y_perso']))){
+						$x_perso = $perso['x_perso'];
+						$y_perso = $perso['y_perso'];
+						
+						$query = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE x_carte='$x_perso' AND y_carte='$y_perso'";
+						$mysqli->query($query);
+					}
+					
 					$id = $perso['id_perso'];
 					$query = "INSERT INTO `perso_in_batiment` VALUES ('$id','$id_fort')";
 					$mysqli->query($query);
@@ -148,20 +158,20 @@ if(isset($_SESSION["id_perso"])){
 				<div class='col'>
 					<div class="card shadow">
 						<div class='card-header'>
-							<h3 class='mt-2'>Téléportation de tous les persos après réinitialisation de la carte</h3>
+							<h3 class='mt-2 fs-4'>Téléportation de tous les persos après réinitialisation de la carte</h3>
 							<p class='fst-italic fs-5 mt-4'>
-								Expérimental. A n'utiliser que si la carte a été changée et les forts de chaque camp créés.<br>
-								remet au maximum les caractéristiques des persos.
+								Expérimental.<br>A n'utiliser qu'une fois et si la carte a été changée et les forts de chaque camp créés.<br>
+								remet au maximum les caractéristiques des persos.<br>
 							</p>
 						</div>
 						<div class="card-body">
-							<?php if($dispo==0):?>
+							<?php if($dispo['valeur_config']==0):?>
 							<ul class='list-group'>
-								<li class='list-group-item p'>
-									<form class='row row-cols-md-auto g-3 align-items-center"' name='teleport_north' method='post' action='?action=teleport'>
+								<li class='list-group-item'>
+									<form class='row align-items-center"' name='teleport_north' method='post' action='?action=teleport'>
 										<input type="hidden" name="id" value="1">
-										<div class='col-12'>Nord</div>
-										<div class='col-12'>
+										<div class='col-2 pt-2 text-center fw-bold'>Nord</div>
+										<div class='col'>
 											<select class="form-select" aria-label="Sélection du bâtiment Nord" name="teleport_bat_north">
 												<option value="0" disabled selected>Choix du fort</option>
 												<?php foreach($forts_North as $fort): ?>
@@ -169,7 +179,7 @@ if(isset($_SESSION["id_perso"])){
 												<?php endforeach; ?>
 											</select>
 										</div>
-										<div class='col-12'>
+										<div class='col'>
 											<button type='submit' class='btn btn-success'>
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 me-2 align-bottom">
 											  <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
@@ -179,11 +189,11 @@ if(isset($_SESSION["id_perso"])){
 										</div>
 									</form>
 								</li>
-								<li class='list-group-item d-flex flex-wrap'>
-									<form class='row row-cols-md-auto g-3 align-items-center"' name='teleport_south' method='post' action='?action=teleport'>
+								<li class='list-group-item'>
+									<form class='row align-items-center"' name='teleport_south' method='post' action='?action=teleport'>
 										<input type="hidden" name="id" value="2">
-										<div class='col-12'>Sud</div>
-										<div class='col-12'>
+										<div class='col-2 pt-2 text-center fw-bold'>Sud</div>
+										<div class='col'>
 											<select class="form-select" aria-label="Sélection du bâtiment Sud" name="teleport_bat_south">
 												<option value="0" disabled selected>Choix du fort</option>
 												<?php foreach($forts_South as $fort): ?>
@@ -191,7 +201,7 @@ if(isset($_SESSION["id_perso"])){
 												<?php endforeach; ?>
 											</select>
 										</div>
-										<div class='col-12'>
+										<div class='col'>
 											<button type='submit' class='btn btn-success'>
 											<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 me-2 align-bottom">
 											  <path stroke-linecap="round" stroke-linejoin="round" d="M9 9V4.5M9 9H4.5M9 9L3.75 3.75M9 15v4.5M9 15H4.5M9 15l-5.25 5.25M15 9h4.5M15 9V4.5M15 9l5.25-5.25M15 15h4.5M15 15v4.5m0-4.5l5.25 5.25" />
@@ -211,7 +221,7 @@ if(isset($_SESSION["id_perso"])){
 				<div class="col">
 					<div class="card shadow">
 						<div class='card-header'>
-							<h3>Téléportation d'un perso dans un bâtiment</h3>
+							<h3 class='fs-4 mt-2'>Téléportation d'un perso dans un bâtiment</h3>
 							<center><font color='red'><?php echo $mess_err; ?></font></center>
 							<center><font color='blue'><?php echo $mess; ?></font></center>
 						</div>
