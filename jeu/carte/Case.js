@@ -262,10 +262,10 @@ class Case{
 		}else if(this.f == '9.gif'){
             this.couleur             = couleur_eau_p;
             this.couleur_brouillard  = couleur_brouillard_eau;
-        }else /*if(this.f.includes('rail')){
+        }else if(this.f.includes('rail')){
             this.couleur             = couleur_rail;
             this.couleur_brouillard  = couleur_brouillard_plaine;
-        }else*/ {
+        }else {
 			// plaine et autres
 			this.couleur             = couleur_plaine;
             this.couleur_brouillard  = couleur_brouillard_plaine;
