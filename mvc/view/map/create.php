@@ -1,5 +1,5 @@
 <?php
-$title = "Créer une carte - Administration";
+$title = "Administration - Créer une carte";
 
 /* ---Header--- */
 ob_start();

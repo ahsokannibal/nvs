@@ -1,5 +1,5 @@
 <?php
-$title = "";
+$title = "Accueil";
 
 /* ---Content--- */
 ob_start();

@@ -1,5 +1,5 @@
 <?php
-$title = "Cartes - Administration";
+$title = "Administration - Cartes";
 
 /* ---Header--- */
 ob_start();
