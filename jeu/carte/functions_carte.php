@@ -35,12 +35,12 @@ function get_perso($id_perso){
     return $perso;
 }
 
-if(isset($_POST['function'])){
+if(isset($_GET['function'])){
 
     $json_data = file_get_contents('carte_sql.json');
     $sqlPropertiesObj = json_decode($json_data);
 
-    switch($_POST['function']){
+    switch($_GET['function']){
         case 'get_map':{
             header('Content-Type: application/json');
             if($perso->clan == 0){
@@ -95,14 +95,15 @@ function get_json_map($sqlPropertiesObj, $joueur, $isHistorique){
     $sql_clan = get_sql_clan($joueur, getJsonProperty($sqlPropertiesObj, 'cases_deja_vues'));
     $carte_array = array();
     $cases_deja_vues = get_cases_deja_vues($sql_clan);
-    
+    $i=0;
     foreach ($cases_deja_vues as $case) {
         
-        $carte_array[$case['id']]=array(
+        $carte_array[$i]=array(
             'x'     =>  $case["x_carte"],
             'y'     =>  $case["y_carte"],
-            'fond'  =>  $case["fond_carte"]
+            'f'  =>  $case["fond_carte"]
         );
+		$i++;
     }
     
     

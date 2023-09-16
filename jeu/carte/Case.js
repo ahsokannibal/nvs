@@ -13,7 +13,7 @@ class Case{
 
     draw(canvas, ctx){
         let me = this;
-        this.cleanTile(ctx);
+        //this.cleanTile(ctx);
 
         this.setCouleur();
         if(batiments_checkbox.checked && this.batiment != undefined){
@@ -39,7 +39,7 @@ class Case{
             }else{
 
                 if(scale===maxScale){
-                    this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond, function(canvas, ctx, me){me.drawImageIfLoaded(canvas, '../../images_perso/'+me.batiment.image);});
+                    this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.f, function(canvas, ctx, me){me.drawImageIfLoaded(canvas, '../../images_perso/'+me.batiment.image);});
                 }else{
                     //on utilise une couleur
                     if(this.batiment.camp == 1){
@@ -119,7 +119,7 @@ class Case{
         }else if(this.pnj != undefined){
             if(scale === maxScale){
                 this.drawFondCase(ctx);
-                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond, function(canvas, ctx, me){me.drawImageIfLoaded(canvas, '../../images/pnj/'+me.pnj.image);});
+                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.f, function(canvas, ctx, me){me.drawImageIfLoaded(canvas, '../../images/pnj/'+me.pnj.image);});
                 
             }else{
                 this.couleur = noir;
@@ -128,7 +128,7 @@ class Case{
             
         }else if(this.brouillard != undefined && this.brouillard.valeur == 1 && brouillard_checkbox.checked){
             if(scale === maxScale){
-                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond, this.drawBrouillardOver);
+                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.f, this.drawBrouillardOver);
             }else{
                 if(topographie.checked){
                     ctx.fillStyle = this.couleur_brouillard;
@@ -140,7 +140,7 @@ class Case{
 
         }else if(topographie_checkbox.checked){
             if(scale === maxScale){
-                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.fond);
+                this.drawImageIfLoaded(canvas, '../../fond_carte/'+this.f);
                 
             }else{
                 this.drawFondCase(ctx);
@@ -225,44 +225,44 @@ class Case{
     }
 
     setCouleur(){
-        if (this.fond == '3.gif') {
+        if (this.f == '3.gif') {
 			// Montagne
             this.couleur             = couleur_montagne;
             this.couleur_brouillard  = couleur_brouillard_montagne;
 		}
-		else if (this.fond == '2.gif') {
+		else if (this.f == '2.gif') {
 			// Colinne
             this.couleur             = couleur_colline;
 			this.couleur_brouillard  = couleur_brouillard_colinne;
 		}
-		else if (this.fond == '4.gif') {
+		else if (this.f == '4.gif') {
 			// Desert
             this.couleur             = couleur_desert;
 			this.couleur_brouillard  = couleur_brouillard_desert;
 		}
-		else if (this.fond == '6.gif') {
+		else if (this.f == '6.gif') {
 			// marécage
             this.couleur             = couleur_marecage;
 			this.couleur_brouillard  = couleur_brouillard_marecage;
 		}
-		else if (this.fond == '7.gif') {
+		else if (this.f == '7.gif') {
 			// Foret
             this.couleur             = couleur_foret;
 			this.couleur_brouillard  = couleur_brouillard_foret;
 		}
-        else if (this.fond == 'b5b.png' || this.fond == 'b5r.png' || this.fond == 'b5g.png') {
+        else if (this.f == 'b5b.png' || this.f == 'b5r.png' || this.f == 'b5g.png') {
 			// pont
 			this.couleur             = couleur_bat_neutre;
             this.couleur_brouillard  = couleur_brouillard_eau;
 		}
-		else if (this.fond == '8.gif') {
+		else if (this.f == '8.gif') {
 			// eau 
 			this.couleur             = couleur_eau;
             this.couleur_brouillard  = couleur_brouillard_eau;
-		}else if(this.fond == '9.gif'){
+		}else if(this.f == '9.gif'){
             this.couleur             = couleur_eau_p;
             this.couleur_brouillard  = couleur_brouillard_eau;
-        }else if(this.fond.includes('rail')){
+        }else if(this.f.includes('rail')){
             this.couleur             = couleur_rail;
             this.couleur_brouillard  = couleur_brouillard_plaine;
         }else {
