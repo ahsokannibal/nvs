@@ -2,10 +2,23 @@
 //session_start();
 //Commme d'ab
 require_once "../fonctions.php";
+session_start();
+$mysqli = db_connexion();
 
-// $mysqli = db_connexion();
-// $imageOutput = new PlanGareImage(1, $mysqli);
-// $imageOutput->ShowImage();
+if(isset($_SESSION["id_perso"])){
+
+		$id_perso = $_SESSION['id_perso'];
+		$sql = "SELECT clan FROM perso WHERE id_perso='$id_perso'";
+		$res = $mysqli->query($sql );
+		$tpv = $res->fetch_assoc();
+		$camp		= $tpv['clan'];
+
+}else{
+	exit("Unable to generate image due to incorrect inputs");
+}
+	
+$imageOutput = new PlanGareImage($camp, $mysqli);
+$imageOutput->ShowImage("final");
 
 class PlanGareImage{
 	//SET VARIABLES
@@ -143,7 +156,7 @@ Imagefilledrectangle ($this->gare_carte, (($x*$this->imageSize["brushSize"])-1),
 
 	public function ShowImage($step = "final"){
 		imagecopymerge($this->image_p, $this->gare_carte, 0, 0, 0, 0, $this->imageSize["width"], $this->imageSize["height"], 100);
-		//header("Content-type: image/png");//on va commencer par declarer que l'on veut creer une image
+		header("Content-type: image/png");//on va commencer par declarer que l'on veut creer une image
 		// on affiche l'image
 
 		switch($step){
@@ -181,4 +194,7 @@ Imagefilledrectangle ($this->gare_carte, (($x*$this->imageSize["brushSize"])-1),
 		ImageDestroy ($this->image_background);
 	}
 }
+
+
+
 ?>

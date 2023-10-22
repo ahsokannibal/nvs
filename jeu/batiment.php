@@ -1498,11 +1498,12 @@ if($dispo == '1' || $admin){
 								}
 								echo "<center>";
 								echo "<img src='../images/".$image_plan_sans_terrain."' class=\"img-fluid\" alt='blason gares' width='200' >";
+								
 								echo "</center><br />";
 
 								echo "<center>";
 								if (isset($_GET['afficher_plan'])) {
-										echo "<img src='./carte/" . $image_plan . "' class=\"img-fluid\" alt='plan gares'/><br />";
+									echo "<img src='generer_plan_gare.php' class=\"img-fluid\" alt='plan gares'/><br />";
 									echo "<a href='batiment.php?bat=".$id_i_bat."' class='btn btn-info'>Cacher le plan du reseau ferré</a>";
 								}
 								else {

@@ -103,21 +103,23 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 				&& $camp_gare_arrivee == $camp_train) {
 					
 				// Récupération des rails autours du train
-				$sql_r = "SELECT x_carte, y_carte, fond_carte FROM carte 
+				$sql_r = "SELECT x_carte, y_carte, fond_carte, CONCAT(x_carte, ';', y_carte) as coordonnees FROM carte 
 							WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif')
 							AND x_carte >= $x_train-1 AND x_carte <= $x_train+1
 							AND y_carte >= $y_train-1 AND y_carte <= $y_train+1
-							AND coordonnees NOT IN ( '" . implode( "', '" , $tab_dep_train ) . "' )";
+							HAVING  coordonnees NOT IN ( '" . implode( "', '" , $tab_dep_train ) . "' )";
+				
 				$res_r = $mysqli->query($sql_r);
 				$nb_r = $res_r->num_rows;
 				
 				
 				if ($nb_r) {
+					
 					// rail trouvé
 					$t_r = $res_r->fetch_assoc();
 					$x_r = $t_r['x_carte'];
 					$y_r = $t_r['y_carte'];
-					
+					echo("<br/>Prochain rail : $x_r / $y_r " );
 					// Y a t-il un obstacle sur les rails ?
 					$sql_c = "SELECT occupee_carte, idPerso_carte FROM carte WHERE x_carte='$x_r' AND y_carte='$y_r'";
 					$res_c = $mysqli->query($sql_c);
@@ -127,7 +129,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					$idPerso_carte	= $t_c['idPerso_carte'];
 					
 					if ($occupee_carte && $idPerso_carte >= 50000 && $idPerso_carte < 200000) {
-
+						echo("Mais cette case est occupee");
 						// Compteur blocage
 						gestion_blocage_train($mysqli, $id_instance_train, $idPerso_carte, $x_r, $y_r);
 						
