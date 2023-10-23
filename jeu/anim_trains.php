@@ -45,132 +45,49 @@ if($dispo == '1' || $admin){
 			$mess = "";
 			$mess_erreur = "";
 			
-			if (isset($_GET['creer_train_liaison']) && trim($_GET['creer_train_liaison']) != "") {
+			if (isset($_GET['creer_train_liaison']) && trim($_GET['creer_train_liaison']) != "" && isset($_GET['creer_train_pos']) && trim($_GET['creer_train_pos']) != "") {
 				
 				$id_gares_liaison = $_GET['creer_train_liaison'];
+				$pos = $_GET['creer_train_pos'];
 				
 				$t_gares = explode(',',$id_gares_liaison);
 				$id_gare1_liaison = $t_gares[0];
 				$id_gare2_liaison = $t_gares[1];
+				$t_pos = explode(',',$pos);
+				$x_respawn_train = (int)$t_pos[0];
+				$y_respawn_train = (int)$t_pos[1];
 				
 				// On vérifie que id_gare1_liaison et id_gare2_liaison sont bien des numeriques
 				$verif_id_g1 = preg_match("#^[0-9]*[0-9]$#i","$id_gare1_liaison");
 				$verif_id_g2 = preg_match("#^[0-9]*[0-9]$#i","$id_gare2_liaison");
 				
 				if ($verif_id_g1 && $verif_id_g2) {
-				
-					$sql = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_gare1_liaison'";
+					// Verif que la case est bien un rail
+					$sql = "SELECT * FROM carte WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif') AND x_carte=$x_respawn_train AND y_carte=$y_respawn_train";
 					$res = $mysqli->query($sql);
-					$t = $res->fetch_assoc();
-					
-					$x_gare1 = $t['x_instance'];
-					$y_gare1 = $t['y_instance'];
-					
-					$sql = "SELECT x_instance, y_instance FROM instance_batiment WHERE id_instanceBat='$id_gare2_liaison'";
-					$res = $mysqli->query($sql);
-					$t = $res->fetch_assoc();
-					
-					$x_gare2 = $t['x_instance'];
-					$y_gare2 = $t['y_instance'];
-					
-					// Est ce que la gare 1 est dans une autre liaison ?
-					$sql = "SELECT * FROM liaisons_gare WHERE id_gare1='$id_gare1_liaison' OR id_gare2='$id_gare1_liaison'";
-					$res = $mysqli->query($sql);
-					$num_liaisons_g1 = $res->num_rows;
-					
-					if ($num_liaisons_g1 > 1) {
-						
-						// Est ce que la gare 2 est dans une autre liaison ?
-						$sql = "SELECT * FROM liaisons_gare WHERE id_gare1='$id_gare2_liaison' OR id_gare2='$id_gare2_liaison'";
-						$res = $mysqli->query($sql);
-						$num_liaisons_g2 = $res->num_rows;
-						
-						if ($num_liaisons_g2 > 1) {
-							$x_gare_respaw_train = $x_gare1;
-							$y_gare_respaw_train = $y_gare1;
-						}
-						else {
-							$x_gare_respaw_train = $x_gare2;
-							$y_gare_respaw_train = $y_gare2;
-						}
-					}
-					else {
-						$x_gare_respaw_train = $x_gare1;
-						$y_gare_respaw_train = $y_gare1;
-					}
-					
-					if (isset($x_gare_respaw_train) && $x_gare_respaw_train != NULL && $x_gare_respaw_train != 0) {
-					
-						// On cherches les rails autours de la gare 1
-						$sql = "SELECT x_carte, y_carte FROM carte 
-								WHERE (fond_carte='rail.gif' OR fond_carte='rail_1.gif' OR fond_carte='rail_2.gif' OR fond_carte='rail_3.gif' OR fond_carte='rail_4.gif' OR fond_carte='rail_5.gif' OR fond_carte='rail_7.gif' OR fond_carte='railP.gif')
-								AND x_carte >= $x_gare_respaw_train - 2 AND x_carte <= $x_gare_respaw_train +2 AND y_carte >= $y_gare_respaw_train - 2 AND y_carte <= $y_gare_respaw_train + 2";
-						$res = $mysqli->query($sql);
-						
-						if ($num_liaisons_g1 > 1 && $num_liaisons_g2 > 1) {
-							// Il faut prendre le rail le plus en direction g1 -> g2
-							
-							$x_tmp = -1;
-							$y_tmp = -1;
-							
-							while ($t = $res->fetch_assoc()) {
-								
-								$x_rail = $t['x_carte'];
-								$y_rail = $t['y_carte'];
-								
-								echo "rail : ".$x_rail."/".$y_rail."<br />";
-								
-								if ($x_tmp == -1) {
-									
-									$x_tmp = $x_rail;
-									$y_tmp = $y_rail;
-									
-								}
-								
-								if ($x_gare1 < $x_gare2 && $x_tmp <= $x_rail) {
-									$x_respawn_train = $x_tmp;
-									$y_respawn_train = $y_tmp;
-								}
-								else if ($x_gare1 > $x_gare2 && $x_tmp >= $x_rail) {
-									$x_respawn_train = $x_tmp;
-									$y_respawn_train = $y_tmp;
-								}
-								else if ($y_gare1 < $y_gare2 && $y_tmp <= $y_rail) {
-									$x_respawn_train = $x_tmp;
-									$y_respawn_train = $y_tmp;
-								}
-								else if ($y_gare1 > $y_gare2 && $y_tmp >= $y_rail) {
-									$x_respawn_train = $x_tmp;
-									$y_respawn_train = $y_tmp;
-								}
-							}
-						}
-						else {
-							
-							// un seul rail
-							$t = $res->fetch_assoc();
-							
-							$x_respawn_train = $t['x_carte'];
-							$y_respawn_train = $t['y_carte'];
-							
-						}
-						
-						// Creation train
-						$lock = "LOCK TABLE instance_batiment WRITE";
+					if (!$res->num_rows) {
+						$mess_erreur .= "Il faut ajouter le train sur une case rail.";
+					} else {
+						$lock = "LOCK TABLE instance_batiment WRITE, liaisons_gare WRITE";
 						$mysqli->query($lock);
-						
+
+						// Suppression train
+						$sql = "DELETE FROM instance_batiment WHERE id_batiment=(SELECT id_train FROM liaisons_gare WHERE id_gare1='$id_gare1_liaison' AND id_gare2='$id_gare2_liaison')";
+						$mysqli->query($sql);
+
+						// Creation train
 						$sql = "INSERT INTO instance_batiment (niveau_instance, id_batiment, nom_instance, pv_instance, pvMax_instance, x_instance, y_instance, camp_instance, contenance_instance) 
-								VALUES ('1', '12', '', '2500', '2500', '".$x_respawn_train."', '".$y_respawn_train."', '".$camp."', '50')";
+							VALUES ('1', '12', '', '2500', '2500', '".$x_respawn_train."', '".$y_respawn_train."', '".$camp."', '50')";
 						$mysqli->query($sql);
 						$id_new_train = $mysqli->insert_id;
-						
+
 						$unlock = "UNLOCK TABLES";
 						$mysqli->query($unlock);
-						
+
 						// MAJ liaison
 						$sql = "UPDATE liaisons_gare SET id_train='$id_new_train' WHERE id_gare1='$id_gare1_liaison' AND id_gare2='$id_gare2_liaison'";
 						$mysqli->query($sql);
-						
+
 						$image_train = 'b12';
 						if ($camp == '1') {
 							$image_train .= 'b.gif';
@@ -178,21 +95,19 @@ if($dispo == '1' || $admin){
 						else {
 							$image_train .= 'r.gif';
 						}
-						
+
 						// update carte
 						$sql = "UPDATE carte SET idPerso_carte='$id_new_train', occupee_carte='1', image_carte='$image_train' WHERE x_carte='$x_respawn_train' AND y_carte='$y_respawn_train'";
 						$mysqli->query($sql);
-						
-						$mess .= "Création du train ".$id_new_train." en position ".$x_respawn_train."/".$y_respawn_train." entre les gare $id_gare1_liaison et $id_gare2_liaison terminé";
-						
+
+						$mess .= "Création train ".$id_new_train." ".$x_respawn_train."/".$y_respawn_train." - gares $id_gare1_liaison - $id_gare2_liaison";
+
 						$texte = addslashes($mess);
-									
+						echo $texte;
+
 						// log_action_animation
 						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id', 'anim_train.php', 'Création train', '$texte')";
 						$mysqli->query($sql);
-					}
-					else {
-						$mess_erreur .= "Impossible de rajouter un train pour ces liaisons";
 					}
 				}
 				else {
@@ -290,11 +205,11 @@ if($dispo == '1' || $admin){
 				}
 			}
 			
-			if (isset($_POST['hid_gare1_liaison']) && trim($_POST['hid_gare1_liaison']) != ""
-				&& isset($_POST['select_liaison_gare']) && trim($_POST['select_liaison_gare']) != "") {
+			if (isset($_GET['select_liaison_gare1']) && trim($_GET['select_liaison_gare1']) != ""
+				&& isset($_GET['select_liaison_gare2']) && trim($_GET['select_liaison_gare2']) != "") {
 				
-				$gare1_liaison = $_POST['hid_gare1_liaison'];
-				$gare2_liaison = $_POST['select_liaison_gare'];
+				$gare1_liaison = $_GET['select_liaison_gare1'];
+				$gare2_liaison = $_GET['select_liaison_gare2'];
 				
 				$verif_id_gare1 = preg_match("#^[0-9]*[0-9]$#i","$gare1_liaison");
 				$verif_id_gare2 = preg_match("#^[0-9]*[0-9]$#i","$gare2_liaison");
@@ -316,7 +231,7 @@ if($dispo == '1' || $admin){
 						$sql = "INSERT INTO liaisons_gare (id_gare1, id_gare2, id_train, direction) VALUES ('$gare1_liaison', '$gare2_liaison', NULL, '$gare2_liaison')";
 						$mysqli->query($sql);
 						
-						$mess .= "Liaison entre la gare [".$gare1_liaison."] et la gare [".$gare2_liaison."] créée";
+						$mess .= "Liaison gare [".$gare1_liaison."] - gare [".$gare2_liaison."] créée";
 						
 						$texte = addslashes($mess);
 									
@@ -386,8 +301,8 @@ if($dispo == '1' || $admin){
 									<th style='text-align:center'>Actions</th>
 								</tr>
 								<?php
-								$sql = "SELECT id_gare1, id_gare2, id_train, direction FROM liaisons_gare, instance_batiment 
-										WHERE liaisons_gare.id_gare1 = instance_batiment.id_instanceBat
+								$sql = "SELECT DISTINCT id_gare1, id_gare2, id_train, direction FROM liaisons_gare, instance_batiment 
+										WHERE (liaisons_gare.id_gare1 = instance_batiment.id_instanceBat OR liaisons_gare.id_gare2 = instance_batiment.id_instanceBat) 
 										AND instance_batiment.camp_instance='$camp'";
 								$res = $mysqli->query($sql);
 								
@@ -449,7 +364,7 @@ if($dispo == '1' || $admin){
 									$pvMax_gare1	= $t_g1['pvMax_instance'];
 									
 									// Calcul pourcentage pv du batiment 
-									$pourc_pv_gare1 = ($pv_gare1 / $pvMax_gare1) * 100;
+									$pourc_pv_gare1 = $pvMax_gare1 ? ($pv_gare1 / $pvMax_gare1) * 100 : 0;
 									
 									// Récupération infos gare 2
 									$sql_g2 = "SELECT nom_instance, pv_instance, pvMax_instance FROM instance_batiment WHERE id_instanceBat='$id_gare2'";
@@ -461,7 +376,7 @@ if($dispo == '1' || $admin){
 									$pvMax_gare2	= $t_g2['pvMax_instance'];
 									
 									// Calcul pourcentage pv du batiment 
-									$pourc_pv_gare2 = ($pv_gare2 / $pvMax_gare2) * 100;
+									$pourc_pv_gare2 = $pvMax_gare2 ? ($pv_gare2 / $pvMax_gare2) * 100 : 0;
 									
 									if ($gare_direction == $id_gare1) {
 										$nom_gare_direction = $nom_gare1;
@@ -531,7 +446,11 @@ if($dispo == '1' || $admin){
 									
 									echo "	<td>";
 									if ($id_train == NULL || $id_train == '' || $id_train == 0) {
-										echo "<a href='anim_trains.php?creer_train_liaison=".$id_gare1.",".$id_gare2."' class='btn btn-primary'>Ajouter un train sur cette liaison</a>";
+										echo '	<form action="anim_trains.php" method="get">';
+										echo '	<input type="hidden" name="creer_train_liaison" value="'.$id_gare1.','.$id_gare2.'">';
+										echo '	<input type="text" name="creer_train_pos" value="1,1">';
+										echo '<input type="submit" class="btn btn-primary">Ajouter un train sur cette liaison</input>';
+										echo '	</form>';
 									}
 									if ($obstacle_train) {
 										echo "<a href='anim_trains.php?detruire_obstacle=".$id_obstacle."' class='btn btn-warning'>Détruire l'obstacle</a>";
@@ -557,91 +476,52 @@ if($dispo == '1' || $admin){
 					<div align="center">
 						<h2>Liaisons manquantes</h2>
 						<?php
-						// Liste des gares dans liaisons_gare
+						// Liste des liaisons
 						$array_gares_liaison = array();
-						$sql = "SELECT DISTINCT(id_gare) FROM (
-								SELECT DISTINCT(id_gare1) as id_gare FROM liaisons_gare ,instance_batiment 
-								WHERE liaisons_gare.id_gare1 = instance_batiment.id_instanceBat
-								AND instance_batiment.camp_instance='$camp'
-								UNION
-								SELECT DISTINCT(id_gare2) as id_gare FROM liaisons_gare ,instance_batiment 
-								WHERE liaisons_gare.id_gare1 = instance_batiment.id_instanceBat
-								AND instance_batiment.camp_instance='$camp'
-								) tb ORDER BY id_gare ASC";
+						$sql = "SELECT id_gare1, id_gare2 FROM liaisons_gare JOIN instance_batiment ON liaisons_gare.id_gare1 = instance_batiment.id_instanceBat WHERE instance_batiment.camp_instance='$camp';";
 						$res = $mysqli->query($sql);
 						$nb_gares_liaisons = $res->num_rows;
 						while ($t = $res->fetch_assoc()) {
 							
-							$id_gare_liaison = $t['id_gare'];
+							$id_gare1 = $t['id_gare1'];
+							$id_gare2 = $t['id_gare2'];
 							
-							array_push($array_gares_liaison, $id_gare_liaison);
-							
+							array_push($array_gares_liaison, array($id_gare1, $id_gare2));
 						}
 						
-						// Liste des gares dans instance batiment
+						// Liste des liaisons possibles
 						$array_gares = array();
-						$sql_i = "SELECT id_instanceBat FROM instance_batiment WHERE camp_instance='$camp' AND id_batiment='11' ORDER BY id_instanceBat ASC";
+						$sql_i = "SELECT i1.id_instanceBat as j1, i2.id_instanceBat as j2 FROM instance_batiment as i1 JOIN instance_batiment as i2 ON i1.id_instanceBat < i2.id_instanceBat
+							WHERE i1.camp_instance='$camp' AND i2.camp_instance='$camp' AND i1.id_batiment='11' AND i2.id_batiment='11' ORDER BY i1.id_instanceBat ASC";
 						$res_i = $mysqli->query($sql_i);
 						$nb_gares = $res_i->num_rows;
 						while ($t_i = $res_i->fetch_assoc()) {
 							
-							$id_gare = $t_i['id_instanceBat'];
+							$id_gare1 = $t_i['j1'];
+							$id_gare2 = $t_i['j2'];
 							
-							array_push($array_gares, $id_gare);
+							array_push($array_gares, array($id_gare1, $id_gare2));
 							
 						}
 						
-						$diff_gares = array_diff($array_gares, $array_gares_liaison);
+						$diff = false;
+						foreach ($array_gares as $liaison_possible) {
+							$found = false;
+							foreach ($array_gares_liaison as $liaison) {
+								if ($liaison_possible == $liaison || array_reverse($liaison_possible) == $liaison) {
+									$found = true;
+									break;
+								}
+							}
+							if (!$found) {
+								$diff = true;
+								echo "Gare [<a href='evenement.php?infoid=".$liaison_possible[0]."' target='_blank'>".$liaison_possible[0]."</a>] vers Gare [<a href='evenement.php?infoid=".$liaison_possible[1]."' target='_blank'>".$liaison_possible[1]."</a>] <a href='anim_trains.php?select_liaison_gare1=".$liaison_possible[0]."&select_liaison_gare2=".$liaison_possible[1]."' class='btn btn-warning'>Créer la liaison</a><br />";
+							}
+
+						}
 						
-						if (empty($diff_gares)) {
+						if (!$diff) {
 							echo "<b>Toutes les gares du $nom_camp possèdent bien une liaison</b><br />";
-						}
-						else {							
-							if (isset($_GET['creer_liaison']) && trim($_GET['creer_liaison']) != "") {
-								
-								$id_gare_creer_liaison = $_GET['creer_liaison'];
-								
-								echo "<b>Création de la liaison pour la gare [<a href='evenement.php?infoid=".$id_gare_creer_liaison."' target='_blank'>".$id_gare_creer_liaison."</a>]</b><br />";
-								
-								$sql_gares = "SELECT id_instanceBat, nom_instance FROM instance_batiment 
-										WHERE camp_instance='$camp' AND id_batiment='11' AND id_instanceBat != '$id_gare_creer_liaison' 
-										ORDER BY id_instanceBat ASC";
-								$res_gares = $mysqli->query($sql_gares);
-								
-								echo "<form method='POST' action='anim_trains.php'>";
-								echo "	<select name='select_liaison_gare'>";
-								while ($t_gares = $res_gares->fetch_assoc()) {
-									
-									$id_gare_liaison 	= $t_gares['id_instanceBat'];
-									$nom_gare_liasion	= $t_gares['nom_instance'];
-									
-									echo "		<option value='".$id_gare_liaison."'>Gare ".$nom_gare_liasion." [".$id_gare_liaison."]</option>";
-									
-								}
-								echo "	</select>";
-								echo "	<input type='hidden' value='".$id_gare_creer_liaison."' name='hid_gare1_liaison' class='btn btn-success'>";
-								echo "	<input type='submit' value='Créer' class='btn btn-success'>";
-								echo "</form>";
-								
-								echo "<a href='anim_trains.php' class='btn btn-danger'>Annuler</a>";
-							}
-							else {
-								echo "<b>Les gares suivantes ne possèdent pas de liaison</b><br />";
-								
-								foreach ($diff_gares as $gare){								
-									echo "Gare [<a href='evenement.php?infoid=".$gare."' target='_blank'>".$gare."</a>] <a href='anim_trains.php?creer_liaison=".$gare."' class='btn btn-warning'>Créer la liaison</a><br />";
-								}
-							}
-						}
-						
-						$diff_gares2 = array_diff($array_gares_liaison, $array_gares);
-						
-						if ($nb_gares_liaisons > $nb_gares || !empty($diff_gares2)) {
-							echo "<b>Des gares ont été détruites sur certaines liaisons : </b><br />";
-							
-							foreach ($diff_gares2 as $gare){
-								echo "Gare id : ".$gare."<br />";
-							}
 						}
 						?>
 					</div>

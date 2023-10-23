@@ -139,7 +139,7 @@ if($dispo == '1' || $admin){
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	<body>
-		<p align="center"><input type="button" value="Fermer la fenêtre de missions" onclick="window.close()"></p>
+		<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 		
 		<div class="container-fluid">
 			
@@ -192,7 +192,7 @@ if($dispo == '1' || $admin){
 						<h2>Liste des missions actives</h2>
 						<?php
 						// Récupération de la liste des missions actives
-						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission 
+						$sql = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, recompense_pvict, nombre_participant, date_debut_mission, date_fin_mission 
 								FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission >= CURDATE())
 								AND camp_mission='$camp'";
 						$res = $mysqli->query($sql);
@@ -210,6 +210,7 @@ if($dispo == '1' || $admin){
 							echo "				<th style='text-align:center'>Récompense Thune</th>";
 							echo "				<th style='text-align:center'>Récompense XP/XPI</th>";
 							echo "				<th style='text-align:center'>Récompense PC</th>";
+							echo "				<th style='text-align:center'>Récompense Points de victoire</th>";
 							echo "				<th style='text-align:center'>Nombre participant Max</th>";
 							echo "				<th style='text-align:center'>Liste des participants à la mission</th>";
 							echo "				<th style='text-align:center'>Actions</th>";
@@ -225,6 +226,7 @@ if($dispo == '1' || $admin){
 								$rec_thune		= $t['recompense_thune'];
 								$rec_xp			= $t['recompense_xp'];
 								$rec_pc			= $t['recompense_pc'];
+								$rec_pvict		= $t['recompense_pvict'];
 								$nb_participant	= $t['nombre_participant'];
 								$date_debut		= $t['date_debut_mission'];
 								$date_fin		= $t['date_fin_mission'];
@@ -247,6 +249,7 @@ if($dispo == '1' || $admin){
 								echo "					<td align='center'>".$rec_thune."</td>";
 								echo "					<td align='center'>".$rec_xp."</td>";
 								echo "					<td align='center'>".$rec_pc."</td>";
+								echo "					<td align='center'>".$rec_pvict."</td>";
 								echo "					<td align='center'>".$nb_participant."</td>";
 								echo "					<td align='center'>";
 								while ($t_p = $res_p->fetch_assoc()) {

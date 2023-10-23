@@ -1,1 +1,6 @@
-deny from all
+RewriteRule ^jeu/carte/$ /jeu/carte/ [L]
+
+<FilesMatch ".(png)$">
+Order allow,deny
+Deny from all
+</FilesMatch>

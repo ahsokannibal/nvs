@@ -6,7 +6,6 @@ function entete($mysqli, $id) {
 		
 		// Perso
 		if($id < 50000) {
-			
 			$sql = "SELECT nom_perso, xp_perso, idJoueur_perso, image_perso, bataillon, clan FROM perso WHERE id_perso ='$id'";
 			$result = $mysqli->query($sql);
 			$tabAttr = $result->fetch_assoc();
@@ -21,10 +20,12 @@ function entete($mysqli, $id) {
 			if($clan_perso == '1'){
 				$couleur_clan_perso = 'blue';
 				$nom_clan = 'Nord';
-			}
-			if($clan_perso == '2'){
+			} else if($clan_perso == '2'){
 				$couleur_clan_perso = 'red';
 				$nom_clan = 'Sud';
+			} else if($clan_perso == '0'){
+				$couleur_clan_perso = 'black';
+				$nom_clan = 'Neutre';
 			}
 			
 			// récupération du grade du perso 
@@ -47,7 +48,7 @@ function entete($mysqli, $id) {
 			$sql_groupe = "SELECT id_compagnie from perso_in_compagnie where id_perso='$id' AND (attenteValidation_compagnie='0' OR attenteValidation_compagnie='2')";
 			$res_groupe = $mysqli->query($sql_groupe);
 			$t_groupe = $res_groupe->fetch_assoc();
-			$id_groupe = $t_groupe['id_compagnie'];
+			$id_groupe = isset($t_groupe['id_compagnie']) ? $t_groupe['id_compagnie'] : '';
 												
 			if(isset($id_groupe) && $id_groupe != ''){
 				// recuperation des infos sur la compagnie (dont le nom)
@@ -65,6 +66,9 @@ function entete($mysqli, $id) {
 					<table border=\"1\">
 						<tr>
 							<td width=\"60%\"><b>Pseudo :</b> <font color=\"$couleur_clan_perso\">$nom_perso</font> [$id]</td>
+						</tr>
+						<tr>
+							<td width=\"60%\"><b>XP :</b> ".$xp."</td>
 						</tr>
 						<tr>
 							<td><b>Grade : </b><img src=\"../images/grades/" . $id_grade_perso . ".gif\" width=\"40\" height=\"40\">  " . $nom_grade_perso . "</td>
@@ -127,17 +131,22 @@ function entete($mysqli, $id) {
 				$camp_instance 			= $bat['camp_instance'];
 				$contenance_instance 	= $bat['contenance_instance'];
 				
-				if($camp_instance == '1'){
-					$couleur_camp_instance = 'blue';
-					$nom_clan = 'Nord';
-				}
-				if($camp_instance == '2'){
-					$couleur_camp_instance = 'red';
+				switch($camp_instance){
+					case "1":
+						$couleur_camp_instance = 'blue';
+						$nom_clan = 'Nord';
+						break;
+					case "2":
+						$couleur_camp_instance = 'red';
 					$nom_clan = 'Sud';
-				}
-				if($camp_instance == '3'){
-					$couleur_camp_instance = 'purple';
-					$nom_clan = 'Violets';
+						break;
+					case "3":
+						$couleur_camp_instance = 'purple';
+						$nom_clan = 'Violets';
+						break;
+					default:
+						$couleur_camp_instance = 'grey';
+						$nom_clan = 'Neutre';
 				}
 				
 				$image_bat = "b".$id_batiment."".$couleur_camp_instance[0].".png";
@@ -157,7 +166,7 @@ function entete($mysqli, $id) {
 				echo "  <tr><td width=\"60%\" align='center'>Batiment : $nom_batiment $nom_instance_batiment [$id]</td></tr>";
 				echo "  <tr><td align='center'>Camp : <font color=\"$couleur_camp_instance\">$nom_clan</font></td></tr>";
 				
-				if($camp_perso == $camp_instance){
+				if($camp_perso == $camp_instance OR $camp_instance == 0){
 					echo "<tr><td align='center'>";
 					$pourc = affiche_jauge($pv_instance, $pvMax_instance); 
 					echo "".round($pourc)."% ou $pv_instance/$pvMax_instance PV</td></tr>";
@@ -188,17 +197,6 @@ function entete($mysqli, $id) {
 function entete_mort($mysqli, $id) {
 	
 	if ($id) {
-		
-		// Perso ou PNJ
-		if($id < 50000 || $id >= 200000) {
-			
-			echo "<div align='center'>";
-			echo "	<a class='btn btn-primary' href='evenement.php?infoid=$id'>Évènement</a>&nbsp;&nbsp;";
-			echo "	<a class='btn btn-primary' href='cv.php?infoid=$id'>CV</a>&nbsp;&nbsp;";
-			echo "</div>";
-			
-		}
-		
 		echo "<font color='red'><b>";
 		if($id < 50000){
 			echo "<center>Ce perso n'existe pas ou a été viré</center>";

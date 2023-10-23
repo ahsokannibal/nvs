@@ -44,7 +44,7 @@ if($dispo == '1' || $admin){
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	</head>
 	<body>
-		<p align="center"><input type="button" value="Fermer la fenêtre de compagnie" onclick="window.close()"></p>
+		<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 	<?php
 	if ($type_p != 6) {
 	
@@ -75,8 +75,6 @@ if($dispo == '1' || $admin){
 				
 				if($exist){
 					
-					// vérification que le perso est bien du meme camp que la compagnie				
-					if($clan_perso == $clan_compagnie){
 						
 						if (isset($_GET["rejoindre"])) {
 						
@@ -341,10 +339,7 @@ if($dispo == '1' || $admin){
 							}
 							echo "</center>";
 						}
-					}
-					else {
-						echo "<center><center><font color = 'red'>Vous n'avez pas accés aux informations de cette compagnie</font></center>";
-					}
+					
 				}
 				else {
 					echo "<center><center><font color = 'red'>La compagnie demandé n'existe pas</font></center>";
@@ -503,13 +498,12 @@ if($dispo == '1' || $admin){
 					$sql = "SELECT ordre FROM compagnie_ordre WHERE id_compagnie='$id_compagnie'";
 					$res = $mysqli->query($sql);
 					$t = $res->fetch_assoc();
-					
-					$ordre_compagnie = stripslashes($t['ordre']);
+
+					if ($res->num_rows)
+						$ordre_compagnie = stripslashes($t['ordre']);
 					
 					if ($genie_compagnie) {
 						$nb_persos_compagnie_max = 60;
-						
-						echo "<center><a class='btn btn-outline-info' href='contraintes_construction.php' target='_blank'>Voir les contraintes des constructions</a></center>";
 					} else if(isset($id_parent)) {
 						$nb_persos_compagnie_max = 40;
 					} else {

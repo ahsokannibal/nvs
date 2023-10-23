@@ -124,7 +124,7 @@ function afficher_liens_in_bat($mysqli, $id_perso) {
 function afficher_liens_prox_bat($mysqli, $id_perso, $x_perso, $y_perso, $type_perso) {
 	
 	// recuperation des id et noms des batiments dans lesquels le perso peut entrer
-	$res_bat = id_prox_bat($mysqli, $x_perso, $y_perso); 
+	$res_bat = id_prox_bat($mysqli, $x_perso, $y_perso);
 	
 	while ($bat1 = $res_bat->fetch_assoc()) {
 		
@@ -169,6 +169,9 @@ function afficher_liens_prox_bat($mysqli, $id_perso, $x_perso, $y_perso, $type_p
 		// Pont
 		// Les chiens ne peuvent pas saboter les ponts
 		if ($bat == 5 && $type_perso != '6') {
+			if ($pv_instance < $pvMax_instance) {
+				echo "		<div><a href='action.php?bat=".$id_bat."&reparer=ok' > Reparer ".$nom_bat." ".$nom_ibat." [".$id_bat."] (5 PA)</a></div>";
+			}
 			echo "		<div><a href='action.php?bat=".$id_bat."&saboter=ok' > Saboter ".$nom_bat." ".$nom_ibat." [".$id_bat."] (10 PA)</a></div>";
 		}
 	}
@@ -207,7 +210,7 @@ function afficher_lien_bouculade($x, $x_perso, $y, $y_perso, $cout_pm) {
 /**
  * affichage du popover pour les cases de type pont (batiments sur lesquels on peut se déplacer)
  */
-function afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat, $nom_bat, $cout_pm) {
+function afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat, $nom_bat, $cout_pm, $type_perso) {
 	
 	if($y > $y_perso+1 || $y < $y_perso-1 || $x > $x_perso+1 || $x < $x_perso-1) {
 		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
@@ -216,89 +219,45 @@ function afficher_popover_pont($x, $x_perso, $y, $y_perso, $fond_carte, $idI_bat
 		echo "			data-content=\"<div></div>\" >";
 		echo "</td>";
 	}
-	if($y == $y_perso+1 && $x == $x_perso+1){
+	else {
 		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
 		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
 		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
-	}
-	else if($y == $y_perso-1 && $x == $x_perso+1){
-		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
-	}
-	else if($y == $y_perso && $x == $x_perso+1){
-		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
-	}
-	else if($y == $y_perso && $x == $x_perso-1) {
-		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
-	}
-	else if($y == $y_perso+1 && $x == $x_perso-1) {
-		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
-	}
-	else if($y == $y_perso-1 && $x == $x_perso-1) {
-		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
-	}
-	else if($y == $y_perso+1 && $x == $x_perso) {
-		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
-	}
-	else if($y == $y_perso-1 && $x == $x_perso) {
-		echo "<td width=40 height=40 background=\"../fond_carte/".$fond_carte."\">";
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_carte."\" width=40 height=40 data-toggle='popover' data-trigger='focus' data-html='true' data-placement='bottom' ";
-		echo "			title=\"<div><img src='../fond_carte/".$fond_carte."' width='20' height='20'><a href='evenement.php?infoid=".$idI_bat."' target='_blank'> ".$nom_bat." [".$idI_bat."]</a></div>\" ";
-		echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer (".$cout_pm." PM)</a></div>
-										<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>
-										<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>\" >";
-		echo "</td>";
+		if($y == $y_perso+1 && $x == $x_perso+1){
+			echo "			data-content=\"<div><a href='jouer.php?mouv=3'>Se déplacer (".$cout_pm." PM)</a></div>";
+		} else if($y == $y_perso-1 && $x == $x_perso+1){
+			echo "			data-content=\"<div><a href='jouer.php?mouv=8'>Se déplacer (".$cout_pm." PM)</a></div>";
+		} else if($y == $y_perso && $x == $x_perso+1){
+			echo "			data-content=\"<div><a href='jouer.php?mouv=5'>Se déplacer (".$cout_pm." PM)</a></div>";
+		} else if($y == $y_perso && $x == $x_perso-1) {
+			echo "			data-content=\"<div><a href='jouer.php?mouv=4'>Se déplacer (".$cout_pm." PM)</a></div>";
+		} else if($y == $y_perso+1 && $x == $x_perso-1) {
+			echo "			data-content=\"<div><a href='jouer.php?mouv=1'>Se déplacer (".$cout_pm." PM)</a></div>";
+		} else if($y == $y_perso-1 && $x == $x_perso-1) {
+			echo "			data-content=\"<div><a href='jouer.php?mouv=6'>Se déplacer (".$cout_pm." PM)</a></div>";
+		} else if($y == $y_perso+1 && $x == $x_perso) {
+			echo "			data-content=\"<div><a href='jouer.php?mouv=2'>Se déplacer (".$cout_pm." PM)</a></div>";
+		} else if($y == $y_perso-1 && $x == $x_perso) {
+			echo "			data-content=\"<div><a href='jouer.php?mouv=7'>Se déplacer (".$cout_pm." PM)</a></div>";
+		}
+
+		echo "	<div><a href='evenement.php?infoid=".$idI_bat."' target='_blank'>Voir ses événéments</a></div>";
+		// les chiens ne peuvent pas saboter
+		if ($type_perso != 6)
+				echo "<div><a href='action.php?bat=".$idI_bat."&saboter=ok' >Saboter (10 PA)</a></div>";
+		echo "\" ></td>";
 	}
 }
 
 /**
  * affichage des popover pour perso dans un batiment
  */
-function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond_im, $nb_o, $nom_terrain, $id_bat_perso) {
+function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond_im, $nb_o, $nom_terrain, $id_bat_perso,$image_objet) {
 	
 	if($y > $y_perso+$taille_case || $y < $y_perso-$taille_case || $x > $x_perso+$taille_case || $x < $x_perso-$taille_case) {
 		if($nb_o){
 			echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
-			echo "	<img border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
+			echo "	<img border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 data-toggle='tooltip' data-placement='top' title='objets à ramasser'/>";
 			echo "</td>";
 		}
 		else {					
@@ -309,14 +268,14 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 		if ($x == $x_perso + $taille_case) {
 			for ($i = -$taille_case; $i <= $taille_case; $i++) {
 				if ($y == $y_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);
 				}
 			}
 		}
 		else if ($x == $x_perso - $taille_case) {
 			for ($i = -$taille_case; $i <= $taille_case; $i++) {
 				if ($y == $y_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);
 				}
 			}
 		}
@@ -324,7 +283,7 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 		
 			for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
 				if ($x == $x_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);
 				}
 			}
 		}
@@ -332,7 +291,7 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 		
 			for ($i = -$taille_case + 1; $i <= $taille_case - 1; $i++) {
 				if ($x == $x_perso + $i) {
-					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso);					
+					afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet);					
 				}
 			}
 		}
@@ -342,13 +301,13 @@ function afficher_popover_in_bat($x, $x_perso, $y, $y_perso, $taille_case, $fond
 /**
  * affichage du popover pour les cases se trouvant autour d'un batiment pour un perso se trouvant dans un batiment
  */
-function afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso) {
+function afficher_popover_autour_bat($fond_im, $nom_terrain, $x, $y, $nb_o, $id_bat_perso,$image_objet) {
 	
 	$coord_sortie = $x.",".$y;
 					
 	echo "<td width=40 height=40 background=\"../fond_carte/".$fond_im."\">";
 	if($nb_o){
-		echo "	<img tabindex='0' border=0 src=\"../fond_carte/o1.gif\" width=40 height=40 ";
+		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$image_objet."\" width=40 height=40 ";
 	}
 	else {
 		echo "	<img tabindex='0' border=0 src=\"../fond_carte/".$fond_im."\" width=40 height=40 ";

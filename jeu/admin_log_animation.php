@@ -67,7 +67,7 @@ if(isset($_SESSION["id_perso"])){
 						</thead>
 						<tbody>
 						<?php
-						$sql = "SELECT * FROM log_action_animation ORDER BY id_acces DESC";
+						$sql = "SELECT * FROM log_action_animation ORDER BY date_acces DESC";
 						$res = $mysqli->query($sql);
 						
 						while ($t = $res->fetch_assoc()) {

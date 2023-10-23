@@ -82,7 +82,7 @@ if($dispo == '1' || $admin){
 				</div>
 			</div>
 			
-			<p align="center"><input type="button" value="Fermer la fenêtre de question / remontée aux animateurs" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 			
 			<br />
 			

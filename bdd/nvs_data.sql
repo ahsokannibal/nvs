@@ -23,6 +23,11 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Création par défaut de la zone de respawn du camp neutre. Adapté à une carte de 200x200
+--
+insert into zone_respawn_camp (id_camp, x_min_zone, x_max_zone, y_min_zone, y_max_zone) VALUES (0, 190, 200, 0, 10);
+
+--
 -- Contenu de la table `action`
 --
 
@@ -30,10 +35,10 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 (1, 'Sieste', 1, 'Permet de se reposer n\'importe ou et monter sa r&eacute;cup&eacute;ration pour le prochain tour - utilise la totalit&eacute; de ses PA', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (4, 'Marche forc&eacute;e', 1, 'Permet de se d&eacute;passer afin de gagner un PM', 0, 0, 0, -10, -10, 0, 0, 0, 0, 1, 1, 0, 0, 4, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
 (11, 'Soins', 1, 'Permet de se soigner ou de soigner une personne ayant des blessures', 1, 0, 0, 0, 0, 20, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
-(33, 'Construire - Barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 15, 250, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(38, 'Construire - Pont', 1, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 50, 750, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(33, 'Construire - Barricade', 1, 'Permet de construire une barricade qui occupe une case', 1, 0, 0, 60, 250, 0, 0, 0, 0, 0, 0, 0, 0, 5, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(38, 'Construire - Pont', 1, 'Permet de construire un pont sur une case d\'eau. Le pont ne peut se construire qu\'à proximit&eacute; d\'une case de terre ou d\'une autre case de pont', 1, 0, 0, 50, 200, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (43, 'Construire - Tour de guet', 1, 'Permet de construire une tour de visu, occupe une case et peut contenir un perso', 1, 0, 0, 50, 250, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(54, 'Construire - Hopital', 1, 'Permet de construire un hôpital', 1, 0, 0, 100, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(54, 'Construire - Hopital', 1, 'Permet de construire un hôpital', 1, 0, 0, 100, 1000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 250, 0, 0, 0, 0, 1, 0, 0),
 (59, 'Construire - Fortin', 1, 'Permet de construire un fortin. Les persos peuvent respawn dedans', 1, 0, 0, 300, 6000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (64, 'Construire - Fort', 1, 'Permet de construire un fort. Les persos peuvent respawn dedans. Accessible seulement aux anims', 1, 0, 0, 5000, 10000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
 (65, 'Entrainement', 1, 'Permet de s\'entrainer', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0),
@@ -49,7 +54,8 @@ INSERT INTO `action` (`id_action`, `nom_action`, `nb_points`, `description_actio
 (140, 'Apaiser', 1, 'Permet de soigner les malus d\'une personne', 1, 0, 0, 0, 0, 2, 6, 0, 0, 0, 0, 0, 0, 6, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0),
 (145, 'Bousculer', 1, 'Permet de bouculer quelqu\'un', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
 (146, 'Construire - Gare', 1, 'Permet de construire une gare.', 1, 0, 0, 250, 5000, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
-(147, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
+(147, 'Construire - Rail', 1, 'Permet de construire une portion de rail.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0),
+(148, 'Construire - Point stratégique', 1, 'Permet de construire un point stratégique.', 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0);
 
 -- --------------------------------------------------------
 
@@ -64,7 +70,8 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 (54, 7, 50),
 (59, 8, 50),
 (64, 9, 100),
-(146, 11, 50);
+(146, 11, 50),
+(148, 13, 1);
 
 
 -- --------------------------------------------------------
@@ -74,29 +81,30 @@ INSERT INTO `action_as_batiment` (`id_action`, `id_batiment`, `contenance`) VALU
 --
 
 INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `coutPa_arme`, `coutOr_arme`, `additionMin_degats`, `additionMax_degats`, `multiplicateurMin_degats`, `multiplicateurMax_degats`, `degatMin_arme`, `degatMax_arme`, `valeur_des_arme`, `precision_arme`, `degatZone_arme`, `bonusPM_arme`, `poids_arme`, `pvMax_arme`, `description_arme`, `qualite_arme`, `main`, `image_arme`) VALUES
-(1, 'Sabre', 1, 1, 4, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.jpg'),
-(2, 'Sabre lourd', 1, 1, 5, 250, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '2.5', 0, '', 0, 1, 'sabre_lourd.jpg'),
-(3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.gif'),
-(4, 'Pistolet', 1, 2, 3, 0, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
-(5, 'Pistolet Canon Long', 1, 2, 3, 100, 0, 0, 0, 0, 16, 16, 6, 60, '0', 0, '2.0', 0, '', 0, 1, 'pistolet_canon_long.jpg'),
-(6, 'Baïonnette', 1, 1, 3, 0, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
-(7, 'Fusil', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
-(8, 'Fusil Précision', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.jpg'),
-(9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'cannine.jpg'),
-(10, 'Seringue', 1, 1, 5, 50, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '0.1', 0, 'Seringue pour soigner', 0, 1, 'seringue.jpg'),
-(11, 'Bandages', 1, 1, 3, 50, 0, 0, 0, 0, 2, 2, 10, 35, '0', 0, '0.2', 0, 'Bandages permettant de récupérer des malus de defense', 0, 1, 'bandage.jpg'),
+(1, 'Sabre', 1, 1, 4, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.png'),
+(2, 'Sabre lourd', 1, 1, 5, 250, 0, 0, 0, 0, 25, 25, 6, 80, '0', 0, '2.5', 0, '', 0, 1, 'sabre_lourd.png'),
+(3, 'Cailloux', 1, 2, 3, 0, 0, 0, 0, 0, 5, 5, 6, 25, '0', 0, '0.0', 0, '', 0, 1, 'cailloux.png'),
+(4, 'Pistolet', 1, 2, 3, 0, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.png'),
+(5, 'Pistolet Canon Long', 1, 2, 3, 100, 0, 0, 0, 0, 16, 16, 6, 60, '0', 0, '2.0', 0, '', 0, 1, 'pistolet_canon_long.png'),
+(6, 'Baïonnette', 1, 1, 3, 0, 0, 0, 0, 0, 14, 14, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionnette.png'),
+(7, 'Fusil', 1, 3, 5, 0, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.png'),
+(8, 'Fusil Précision', 1, 4, 5, 250, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '1.6', 0, '', 0, 1, 'fusil_precision.png'),
+(9, 'Canines', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'morsure.png'),
+(10, 'Seringue', 1, 1, 5, 50, 0, 0, 0, 0, 20, 20, 6, 90, '0', 0, '0.1', 0, 'Seringue pour soigner', 0, 1, 'seringue.png'),
+(11, 'Bandages', 1, 1, 3, 50, 0, 0, 0, 0, 2, 2, 10, 35, '0', 0, '0.2', 0, 'Bandages permettant de récupérer des malus de defense', 0, 1, 'bandage.png'),
 (12, 'Griffes', 1, 1, 10, 0, 0, 0, 0, 0, 15, 15, 4, 90, '0', 0, '0.0', 0, '', 0, 1, 'griffe.png'),
-(13, 'Canon', 2, 6, 6, 0, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
-(14, 'Gatling', 1, 5, 3, 200, 0, 0, 0, 0, 2, 2, 90, 70, '1', 2, '0.0', 0, '', 0, 1, 'gatling.png'),
-(15, 'Magnum', '1', '2', '3', '150', '0', '0', '0', '0', '16', '16', '8', '40', '0', '0', '2.0', '0', '', '0', '1', 'magnum.jpg'),
+(13, 'Canon', 2, 6, 6, 0, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.png'),
+(14, 'Gatling', 2, 5, 5, 0, 0, 0, 0, 0, 10, 10, 22, 75, '1', 0, '4.0', 0, 'Gatling, faucheuse moderne', 0, 1, 'gatling.png'),
+(15, 'Magnum', '1', '2', '3', '150', '0', '0', '0', '0', '16', '16', '8', '40', '0', '0', '2.0', '0', '', '0', '1', 'magnum.png'),
 (16, 'Couteau', '1', '1', '3', '10', '0', '0', '0', '0', '15', '15', '4', '35', '0', '0', '0.0', '0', '', '0', '1', 'couteau.png'),
 (17, 'Canon double', '1', '3', '5', '225', '0', '0', '0', '0', '20', '20', '8', '75', '0', '0', '3.0', '0', '', '0', '1', 'canon_double.png'),
-(18, 'Sabre normal', 1, 1, 4, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.jpg'),
-(19, 'Pistolet normal', 1, 2, 3, 50, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.jpg'),
-(20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 15, 15, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionette.jpg'),
-(21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.jpg'),
-(22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.jpg'),
-(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.jpg');
+(18, 'Sabre normal', 1, 1, 4, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '2.0', 0, '', 0, 1, 'sabre.png'),
+(19, 'Pistolet normal', 1, 2, 3, 50, 0, 0, 0, 0, 15, 15, 6, 40, '0', 0, '1.5', 0, '', 0, 1, 'pistolet.png'),
+(20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 14, 14, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionnette.png'),
+(21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.png'),
+(22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.png'),
+(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.png'),
+(24, 'Sabre léger', '1', '1', '4', '0', '0', '0', '0', '0', '16', '16', '6', '80', '0', '0', '0.0', '0', '', '0', '1', 'sabre_leger.png');
 
 
 -- --------------------------------------------------------
@@ -112,10 +120,13 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (2, 2),
 (3, 1),
 (3, 2),
+(3, 7),
 (4, 1),
 (4, 2),
+(4, 7),
 (5, 1),
 (5, 2),
+(5, 7),
 (6, 3),
 (7, 3),
 (8, 3),
@@ -124,22 +135,53 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 (9, 6),
 (12, 6),
 (13, 5),
-(14, 5),
+(14, 8),
 (15, 1),
 (15, 2),
+(15, 7),
 (16, 1),
 (16, 2),
+(16, 7),
 (17, 3),
 (18, 1),
 (18, 2),
 (19, 1),
 (19, 2),
+(19, 7),
 (20, 3),
 (21, 3),
 (22, 5),
 (23, 1),
-(23, 2);
+(23, 2),
+(24, 7);
 
+-- --------------------------------------------------------
+
+--
+-- Contenu de la table `objet_as_type_unite`
+--
+
+INSERT INTO `objet_as_type_unite` (`id_objet`, `id_type_unite`) VALUES
+(5, 3),
+(5, 4),
+(5, 5),
+(5, 8),
+(6, 1),
+(6, 2),
+(6, 3),
+(6, 4),
+(6, 5),
+(6, 8),
+(6, 7),
+(7, 1),
+(7, 2),
+(7, 3),
+(7, 4),
+(7, 5),
+(7, 8),
+(7, 7),
+(8, 1),
+(9, 1);
 -- --------------------------------------------------------
 
 --
@@ -149,14 +191,15 @@ INSERT INTO `arme_as_type_unite` (`id_arme`, `id_type_unite`) VALUES
 INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `description`, `taille_batiment`) VALUES
 (1, 'Barricade', 250, 'Une barricade permet de tenir des positions defensives', 1),
 (2, 'Tour de guet', 250, 'Une tour de visu permet de mieux rep&eacute;rer le terrain et les positions ennemis', 1),
-(5, 'Pont', 750, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau', 1),
+(5, 'Pont', 200, 'Un pont permet de traverser facilement des &eacute;tendues d\'eau', 1),
 (6, 'Entrepot', 1000, 'Un entrepot permet de stocker et vendre du mat&eacute;riel', 1),
-(7, 'Hopital', 1000, 'Un hopital de campagne permet de soigner des blessers', 1),
+(7, 'Hopital', 750, 'Un hopital de campagne permet de soigner des blessés', 1),
 (8, 'Fortin', 6000, 'Un fortin permet de prendre position sur une partie de la carte', 3),
 (9, 'Fort', 10000, 'Un fort, à defendre coute que coute', 5),
 (10, 'Pénitencier', 15000, 'La prison est un batiment ou sont enferm&eacute;s les criminels', 3),
 (11, 'Gare', 5000, 'Une gare', 3),
-(12, 'Train', 2500, 'Un train', 1);
+(12, 'Train', 2500, 'Un train', 1),
+(13, 'Point stratégique', 100000, 'Point stratégique dont le controle rapporte des points de victoire', 1);
 
 -- --------------------------------------------------------
 
@@ -164,8 +207,8 @@ INSERT INTO `batiment` (`id_batiment`, `nom_batiment`, `pvMax_batiment`, `descri
 -- Contenu de la table `banque_as_compagnie`
 --
 
-INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES 
-('1', '0'), 
+INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES
+('1', '0'),
 ('2', '0');
 
 -- --------------------------------------------------------
@@ -174,8 +217,8 @@ INSERT INTO `banque_as_compagnie` (`id_compagnie`, `montant`) VALUES
 -- Contenu de la table `banque_compagnie`
 --
 
-INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES 
-('1', '0', '0', '0'), 
+INSERT INTO `banque_compagnie` (`id_perso`, `montant`, `demande_emprunt`, `montant_emprunt`) VALUES
+('1', '0', '0', '0'),
 ('2', '0', '0', '0');
 
 -- --------------------------------------------------------
@@ -190,10 +233,10 @@ INSERT INTO `carte_time` (`timerefresh`) VALUES ('0');
 -- Contenu de la table `compagnies`
 --
 
-INSERT INTO `compagnies` (`id_compagnie`, `nom_compagnie`, `image_compagnie`, `resume_compagnie`, `description_compagnie`, `id_clan`, `genie_civil`) VALUES 
+INSERT INTO `compagnies` (`id_compagnie`, `nom_compagnie`, `image_compagnie`, `resume_compagnie`, `description_compagnie`, `id_clan`, `genie_civil`) VALUES
 ('1', 'Génie et Infrastructures Nordistes ', '', 'Compagnie GIN : : construction des infrastructures des nordistes', 'La compagnie du GIN a une double vocation.
 Elle existe pour permettre la construction des nouveaux bâtiments nordistes qui assureront la conquête définitive des territoires gagnés ou nettoyés. Elle est aussi chargé de la surveillance des infrastructures existantes.
-Ses membres sont formés à des techniques spécifiques de construction et de surveillance. ', '1', '1'), 
+Ses membres sont formés à des techniques spécifiques de construction et de surveillance. ', '1', '1'),
 ('2', 'TIG-RES ', '', 'Compagnie TIG-RES : construction des infrastructures des confédérés', 'Réparation des anciens bâtiments et supervision de la construction des nouveaux.
 Même et surtout en situation de crise quand les troupes du génie conventionnel seront dépassées et qu\'il faudra oeuvrer sous le feu de l\'ennemi. ', '2', '1');
 
@@ -204,8 +247,8 @@ Même et surtout en situation de crise quand les troupes du génie conventionnel
 --
 
 
-INSERT INTO `compagnie_as_contraintes` (`id_compagnie`, `contrainte_type_perso`) VALUES 
-('1', '3'), 
+INSERT INTO `compagnie_as_contraintes` (`id_compagnie`, `contrainte_type_perso`) VALUES
+('1', '3'),
 ('2', '3');
 
 -- --------------------------------------------------------
@@ -334,9 +377,9 @@ INSERT INTO `decorations` (`id_decoration`, `description_decoration`, `camp_deco
 (16, 'Médaille commémorative de Faifax Stone (Beta)', 1, 'beta.png'),
 (17, 'Médaille commémorative de Faifax Stone (Beta)', 2, 'beta.png');
 
--- 
+--
 -- Contenu de la table `dossier`
--- 
+--
 INSERT INTO `dossier` ( `id_dossier` , `nom_dossier` )
 VALUES (
 '1', 'courant'
@@ -352,9 +395,9 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 (2, 'Caporal', 10, 2),
 (3, 'Sergent', 80, 4),
 (4, '1er Sergent', 180, 6),
-(5, 'Sergent d\'ordonnance', 300, 7),
-(6, 'Sergent Quartier Maitre de Compagnie', 440, 8),
-(7, 'Sergent Quartier Maitre de Régiment', 700, 9),
+(5, 'Sergent d&apos;ordonnance', 300, 7),
+(6, 'Quartier Maitre de Compagnie', 440, 8),
+(7, 'Quartier Maitre de Régiment', 700, 9),
 (8, 'Sergent Major', 950, 10),
 (9, 'Sous-Lieutenant', 1350, 11),
 (10, 'Lieutenant', 1800, 12),
@@ -364,7 +407,7 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 (14, 'Colonel', 4800, 16),
 (15, 'Général de Brigade', 6500, 17),
 (16, 'Général de Division', 8200, 18),
-(17, 'Général de Corps d\'armée', 11000, 19),
+(17, 'Général de Corps d&apos;armée', 11000, 19),
 (18, 'Général des armées', 999999999, 100),
 (1, 'Grouillot 2nd classe', 0, 0),
 (101, 'Grouillot 1ere classe', 0, 0),
@@ -376,7 +419,7 @@ INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) 
 --
 -- Contenu de la table `joueur`
 --
-INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES 
+INSERT INTO `joueur` (`id_joueur`, `nom_joueur`, `email_joueur`, `mdp_joueur`, `age_joueur`, `pays_joueur`, `region_joueur`, `description_joueur`, `mail_info`, `admin_perso`) VALUES
 ('1', NULL, 'admin1@example.com', '4fded1464736e77865df232cbcb4cd19', NULL, NULL, NULL, NULL, '0', '1'),
 ('2', NULL, 'admin2@example.com', '4fded1464736e77865df232cbcb4cd19', NULL, NULL, NULL, NULL, '0', '1');
 
@@ -392,14 +435,17 @@ INSERT INTO `news` (`id_news`, `id_admin`, `date`, `contenu`) VALUES
 -- Contenu de la table `objet`
 --
 
-INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `bonusPrecisionCac_objet`, `bonusPrecisionDist_objet`, `bonusPA_objet`, `bonusDefense_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `type_objet`) VALUES
-(1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 5, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 'T'),
-(2, 'Gourde d\'eau bien fraiche', 0, 0, 30, 0, 0, 0, 0, 0, 0, 0, 3, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 'N'),
-(3, 'Whisky', 0, -3, 50, 0, 0, 0, 0, 0, 0, 0, 3, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 'N'),
-(4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 0, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 'N'),
-(5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 0, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 'E'),
-(6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 0, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 'E'),
-(7, 'Lunette de visée', 0, 0, 0, 0, 0, 0, 15, 0, 0, 0, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Coût attaque à distance +2, Bonus Précision à distance +15)', 'E');
+INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `bonusPrecisionCac_objet`, `bonusPrecisionDist_objet`, `bonusPA_objet`, `bonusDefense_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `contient_alcool`, `echangeable`, `deposable`, `type_objet`) VALUES
+(1, 'Ticket de train', 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 3, '0.0', 'Un ticket de train permettant de monter dans un train pour aller vers une gare', 0, 0, 0, 'T'),
+(2, 'Gourde d\'eau', 0, 0, 30, 0, 0, 0, 0, 0, 0, 1, 3, '0.5', 'Une gourde d\'eau bien fraiche permettant d\'augmenter sa récupération (Bonus Récup +30)', 0, 1, 1, 'N'),
+(3, 'Whisky', 0, -3, 50, 0, 0, 0, 0, 0, 0, 1, 3, '0.5', 'Whisky, augmente la récupération mais attention aux effets secondaires ! (Bonus Récup +50, Bonus Perception -3)', 1, 1, 1, 'N'),
+(4, 'Trousse de soin', 0, 0, 60, 0, 0, 0, 0, 0, 0, 1, 50, '2.0', 'Une trousse de soin, permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 0, 1, 1, 'N'),
+(5, 'Bottes légères', 0, 0, 0, 0, 1, 0, 0, 0, -5, 1, 50, '2.5', 'Des bottes légères pour monter plus rapidement au front mais dont la protection proposée est plus faible (Bonus PM +1, Bonus Defense -5)', 0, 1, 1, 'E'),
+(6, 'Longue vue', 0, 2, 0, 0, 0, 0, 0, -1, 0, 1, 200, '0.2', 'Une longue vue permettant d\augmenter la perception de celui qui l\utilise (Bonus Perception +2, Bonus PA -1)', 0, 1, 1, 'E'),
+(7, 'Lunette de visée', 0, 0, 0, 0, 0, 0, 15, 0, 0, 1, 200, '0.2', 'Une lunette de tir pour augmenter la précision des tirs à courte et longue distance (Coût attaque à distance +2, Bonus Précision à distance +15)', 0, 1, 1, 'E'),
+(8, 'Etendard des armées du nord', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '9', "L'étendard de l'union", 0, 0, 0, 'E'),
+(9, 'Etendard des armées du sud', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '9', "L'étendard des armées du sud", 0, 0, 0, 'E'),
+(10, 'Orange', 0, 0, 60, 0, 0, 0, 0, 0, 0, 1, 9999, '0.0', 'Une orange fraîchement cueillie et pleine d\'énergie. Permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 0, 0, 0, 'N');
 
 --
 -- Contenu de la table `perso`
@@ -432,19 +478,19 @@ INSERT INTO `perso_as_dossiers` (`id_perso`, `id_dossier`) VALUES ('2', '2');
 -- perso_as_competence
 --
 
-INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VALUES 
-('1', '4', '1'), 
-('1', '22', '1'), 
-('1', '23', '1'), 
+INSERT INTO `perso_as_competence` (`id_perso`, `id_competence`, `nb_points`) VALUES
+('1', '4', '1'),
+('1', '22', '1'),
+('1', '23', '1'),
 ('1', '24', '1'),
 ('1', '27', '1'),
 ('1', '28', '1'),
 ('1', '29', '1'),
 ('1', '63', '1'),
 ('1', '64', '1'),
-('2', '4', '1'), 
-('2', '22', '1'), 
-('2', '23', '1'), 
+('2', '4', '1'),
+('2', '22', '1'),
+('2', '23', '1'),
 ('2', '24', '1'),
 ('2', '27', '1'),
 ('2', '28', '1'),
@@ -461,8 +507,8 @@ INSERT INTO `perso_in_compagnie` (`id_perso`, `id_compagnie`, `poste_compagnie`,
 --
 -- Contenu de la table `perso_in_em`
 --
-INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES 
-('1', '1'), 
+INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES
+('1', '1'),
 ('2', '2');
 
 
@@ -473,7 +519,7 @@ INSERT INTO `perso_in_em` (`id_perso`, `camp_em`) VALUES
 -- Contenu de la table `pnj`
 --
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`,`aggressivite_pnj`, `description_pnj`) VALUES ('1', 'Sangsue', '40', '8', '40', '4', '10', '0', '2', '80', '2', 'Petit animal suceur de sang, très gênant et particulièrement peu ragoutant, la sangsue se trouve dans le marais. Attention à leurs tares !');
-INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('2', 'Loup', '300', '20', '120', '8', '30', '0', '4', '70', '1', 'Chasseur des forêts, cousin éloigné du coyote, le loup n\'est plus à présenter.');
+INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('2', 'Loup', '300', '20', '120', '8', '30', '0', '5', '70', '2', 'Chasseur des forêts, cousin éloigné du coyote, le loup n\'est plus à présenter.');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('3', 'Crotale', '100', '20', '160', '5', '20', '0', '3', '70', '0', 'Les crotales sont des animaux qui peuvent s\'avérer très dangereux de par leurs terribles morsures infligeant des tares... Attention à na pas les sous estimer, tout comme les serpents !');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('4', 'Caïman', '500', '30', '150', '5', '40', '20', '3', '70', '2', 'Redoutable prédateur des rivières, le caïman est synonyme d\'effroi pour beaucoup');
 INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_pnj`, `pm_pnj`, `recup_pnj`, `protec_pnj`, `perception_pnj`, `precision_pnj`, `aggressivite_pnj`, `description_pnj`) VALUES ('5', 'Bison', '1500', '48', '280', '5', '50', '20', '3', '70', '1', 'Noble herbivore des plaines, le bison n\'en demeure pas moins un animal extrêmement résistant. Attention à ne pas trop les énerver...');
@@ -484,9 +530,9 @@ INSERT INTO `pnj` (`id_pnj`, `nom_pnj`, `pvMax_pnj`, `degatMin_pnj`, `degatMax_p
 
 -- --------------------------------------------------------
 
--- 
+--
 -- Contenu de la table `poste`
--- 
+--
 
 INSERT INTO `poste` VALUES (1, 'chef');
 INSERT INTO `poste` VALUES (2, 'sous-chef');
@@ -519,24 +565,12 @@ INSERT INTO `type_unite` (`id_unite`, `nom_unite`, `description_unite`, `percept
 (1, 'Chef', 'Chef d\'unité, cavalier', 5, 20, 40, 850, 10, 10, 'cavalerie', 0),
 (2, 'Cavalerie lourde', 'La cavalerie lourde est sans doute l\'unité nordiste/sudiste courante la plus redoutée sur les champs de bataille. Comparables aux chef en tout point excpeté sa résistance, la cavalerie lourde peut faire de véritables saignées dans les rangs adverses notament grâce à leurs charges.', 5, 15, 30, 700, 10, 10, 'cavalerie', 4),
 (3, 'Infanterie', 'Il s\'agit du plus courant des grouillots présents dans les armées nordistes et sudistes. Les infanteries représentent la masse de ces armées. Leur réputation n\'est pas toujours la meilleure et leur faible mobilité amène bien souvent des à priori négatifs à leur encontre. Pourtant les infanteries, lorsqu\'elles sont coordonnées et regroupées sont extrèmement redoutables et peuvent faire des ravages dans les rangs énnemis. Ce sont avant tout des unités de tir.', 4, 10, 30, 500, 10, 5, 'infanterie', 2),
-(4, 'Soigneur', 'Les soigneurs sont des unités nordistes/sudistes non combattantes dont le rôle est uniquement de soigner les troupes parties sur le front. Plus rapides que des infanteries classiques, elles doivent malgré tout rester prudentes sur le front.', 4, 10, 30, 400, 10, 6, 'soigneur', 3),
+(4, 'Soigneur', 'Les soigneurs sont des unités nordistes/sudistes non combattantes dont le rôle est uniquement de soigner les troupes parties sur le front. Plus rapides que des infanteries classiques, elles doivent malgré tout rester prudentes sur le front.', 4, 0, 30, 400, 10, 6, 'soigneur', 3),
 (5, 'Artillerie', 'La plus puissante de toutes les unités combattantes. L\'artillerie est tout simplement extrèmement puissante, pouvant réduire en miette tout un bataillon en très peu de temps. Mais c\'est une unité extrèmement peu mobile et qui ne peut se battre au corps à corps et donc qui nécessite beaucoup d\'attention et de protection.', 6, 10, 30, 500, 10, 3, 'artillerie', 5),
-(6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 10, 20, 200, 10, 20, 'toutou', 1);
+(6, 'Toutou', 'Unité extrémement mobile, et bien que très fragile, le toutou sera le meilleur ami de votre bataillon afin d\étudier les positions ennemis. Ne peut effectuer que des attaques au Corps à corps', 5, 0, 20, 125, 10, 14, 'toutou', 1),
+(7, 'Cavalerie légère', 'La cavalerie légère est typiquement utilisée pour la reconnaissance, le fourrageage et la poursuite d\'ennemis.', 5, 5, 60, 400, 10, 12, 'cavalerie_legere', 3),
+(8, 'Gatling', 'Une gatling faucheuse d\'ames..', 5, 10, 30, 500, 10, 5, 'gatling', 4);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
----
---- Ajout de l'auto inscrement pour commencer les perso à 101.
----
-ALTER TABLE perso AUTO_INCREMENT=101;
-ALTER TABLE joueur AUTO_INCREMENT=101;
-
--------
-------- Table permettant de gérer les ordres données à la compagnie
--------
-CREATE TABLE `compagnie_ordre` (
-  `id_compagnie` int(11) NOT NULL,
-  `ordre` varchar(2000) NOT NULL
-);

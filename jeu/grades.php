@@ -28,7 +28,7 @@ include ('../nb_online.php');
 			<div class="row">
 				<div class="col-12">
 				
-					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
+					<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 
 					<div align="center">
 						<h2>Grades</h2>

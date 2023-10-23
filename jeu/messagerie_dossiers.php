@@ -44,7 +44,7 @@ if(isset($_SESSION["id_perso"])){
 	<body>
 		<div class="container-fluid">
 	
-			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 <?php
 	$id = $_SESSION["id_perso"];
 	

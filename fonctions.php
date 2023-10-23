@@ -6,7 +6,7 @@ require_once("jeu/config.php");
 //%%%%%%%%%%%%%%%%%%//
 function db_connexion() //CONNEXION A LA DB
 {
-	$connexion = mysqli_connect("localhost","root","yolo","nvs");
+	$connexion = mysqli_connect("localhost",BDD_LOGIN,BDD_PASSWORD,BDD_NAME);
 	//$connexion = mysqli_connect("localhost","root","yolo","nvs_db");
 	//$connexion = mysqli_connect("localhost","lokarugp_loka","archimede2891","lokarugp_nvs");
 	//$connexion = mysqli_connect("localhost","root","eptm","nvs");
@@ -479,8 +479,8 @@ function mail_gele_zombie($id_perso){
 	$t = $res->fetch_assoc();
 
 	// Headers mail
-	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
-	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+	$headers ='From: Nord vs Sud<no-reply@nord-vs-sud.fr>'."\n";
+	$headers .='Reply-To: no-reply@nord-vs-sud.fr'."\n";
 	$headers .='Content-Type: text/plain; charset="iso-8859-1"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	
@@ -514,8 +514,8 @@ function genererChaineAleatoire($taille) {
 function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
 
 	// Headers mail
-	$headers ='From: "Nord VS Sud"<nordvssud@no-reply.fr>'."\n";
-	$headers .='Reply-To: nordvssud@no-reply.fr'."\n";
+	$headers ='From: Nord vs Sud<no-reply@nord-vs-sud.fr>'."\n";
+	$headers .='Reply-To: no-reply@nord-vs-sud.fr'."\n";
 	$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
 	$headers .='Content-Transfer-Encoding: 8bit';
 	
@@ -525,7 +525,7 @@ function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
 	// Titre du mail
 	$titre = 'Mot de passe perdu';
 	
-	$lien_activation = "http://loka.zd.fr/nvs/mdp_perdu.php?code=".$code_activation;
+	$lien_activation = "https://nord-vs-sud.fr/mdp_perdu.php?code=".$code_activation;
 	
 	// Contenu du mail
 	$message = "Votre nouveau mot de passe est $new_mdp \r\nAfin d'activer ce nouveau mot de passe, veuillez cliquer sur ce lien : $lien_activation \r\nLe nouveau mot de passe ne sera actif qu'après activation. \r\nSi vous n'avez pas demandé à réinitailiser votre mot de passe, veuillez ne pas prendre en compte ce mail.";
@@ -533,4 +533,24 @@ function envoi_mail_mdp($mysqli, $mail, $new_mdp, $code_activation) {
 	// Envoie du mail
 	mail($destinataire, $titre, $message, $headers);
 }
+
+function console_log( $data ){
+echo '<script>';
+echo 'console.log('. json_encode( $data ) .')';
+echo '</script>';
+};
+
+function log_message($message){
+	$log  = date("F j, Y, g:i a").' - '.$message."\n";
+        "-------------------------".PHP_EOL;
+	file_put_contents('./log_'.date("j.n.Y").'.log', $log, FILE_APPEND);
+}
+
+function get_user_agent() {
+   if (isSet($_SERVER))
+	return $_SERVER['HTTP_USER_AGENT'];
+   else
+     return getenv('HTTP_USER_AGENT');
+}
+
 ?>

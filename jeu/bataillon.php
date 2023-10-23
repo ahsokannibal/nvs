@@ -104,7 +104,7 @@ if(isset($_SESSION["id_perso"])){
 						?>
 					</div>
 					
-					<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close();"></p>
+					<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 					
 					<div align='center'>
 						
@@ -140,6 +140,7 @@ if(isset($_SESSION["id_perso"])){
 					WHERE perso.id_perso = perso_as_grade.id_perso 
 					AND perso_as_grade.id_grade = grades.id_grade
 					AND perso.type_perso = type_unite.id_unite
+					AND perso.est_renvoye=0
 					AND idJoueur_perso='$id_joueur_bat'";
 			$res = $mysqli->query($sql);
 			

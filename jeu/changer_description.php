@@ -36,8 +36,9 @@ if(@$_SESSION["id_perso"]){
 		
 		$desc = stripslashes($tab[0]);
 	?>
-		<div align="center">Sur cette page vous avez la possibilité de changer la description de votre perso :<br>
-			<a href="profil.php">Retour</a></center><br><br> 
+		<div align="center"><a href="profil.php"><input type="button" value="Retour au profil"></a> <br> </center>
+		<div align="center">Sur cette page vous avez la possibilité de changer la description de votre perso :</center><br><br> 
+
 
 			<form method="post" action="">
 			

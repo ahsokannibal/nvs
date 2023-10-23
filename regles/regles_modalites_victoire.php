@@ -13,54 +13,8 @@
 	<body style="background-color:grey;">
 
 		<div class="container-fluid">
-		
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<a class="navbar-brand" href="#">Règles</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
 
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="../index.php">Accueil</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_introduction.php">Introduction</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_caracs.php">Les caractéristiques</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_armees.php">Les armées</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_unites.php">Les unités</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_objets.php">Les objets, armes et thunes</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_carte.php">La carte et les terrains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_batiments.php">Les bâtiments et trains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_pnjs.php">Les PNJ</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_action_spe.php">Les actions spéciales</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="regles_modalites_victoire.php">Les modalités de victoire</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
+			<?php require 'regles_header.php' ?>		
 			
 			<div class="row justify-content-center">
 				<div class="col-12">
@@ -72,18 +26,53 @@
 			
 			<div class="row">
 				<div class="col-12">
-<p>Pour remporter la victoire, il faut accumuler <b>1000</b> points de victoire pour son camp.</p>
-<u>Voici les gains de points de victoire possible :</u>
+					<p>Désormais vous aurez différents types de conditions de victoire. Chaque mission ou conditions de victoire remplie et réalisée permettra d’engranger des points de victoire, PV.<br />
+					Pour gagner une carte, chaque camp aura pour objectif final de gagner en premier 1200 PV.</p>
+
+					<p><a class='btn btn-primary' href='../jeu/classement.php?stats=ok'>Les points de victoire sont visibles ici</a></p>
+
+					<p>Les conditions de victoire classée par type sont : </p>
+
+					<h3>CONSTRUCTION</h3>
+					<p>Vous devrez en 3 mois construire 3 gares et 2 fortins. Tous les bâtiments construit en plus ne donneront pas de PV supplémentaires.<br/>
 					<ul>
-						<li>La destruction d'un Fort rapporte <b>400</b> points de victoire</li>
-						<li>La destruction d'un Fortin rapporte <b>100</b> points de victoire</li>
-						<li>La destruction d'une Gare rapporte <b>75</b> points de victoire</li>
-						<li>La destruction d'un Hôpital rapporte <b>10</b> points de victoire</li>
-						<li>La destruction des autres bâtiments / structures (barricades, tour de guêt, rails, ponts, etc..) rapportent <b>0</b> points de victoire</li>
+						<li>Gain par gare : 25PV par gare (pour max 3 gares)</li>
+						<li>Gain par fortin : 50PV par camp</li>
 					</ul>
-<p>Certains bâtiments sont capturable (Fort, Fortin, Tour de guêt). <b>La capture d'un bâtiment multiplie par 1.5 ces points</b>.<br />
-Une fois la victoire acquise, un changement de carte sera opéré.</p>
-<p><a class='btn btn-primary' href='../jeu/classement.php?stats=ok'>Les points de victoire sont visibles ici</a></p>	
+
+					Attention après la limite de 3 mois, il ne sera plus possible de gagner de PV de construction
+					</p>
+
+					<h3>Mission Bonus CONSTRUCTION </h3>
+					<p>Suivant la localisation de vos constructions, un bonus pourra être appliqué au gain de construction. Les détails des localisations vous seront données ingame.</p>
+					<p>Bonus bâtiment 1 : 25PV <br />
+					Bonus bâtiment 2 : 50PV </p>
+					<p>Uniquement valable dans les délais des 3 premiers mois.</p>
+
+					<h3>POINTS STRATEGIQUES</h3>
+					<p>5 zones seront réparties sur la carte, elles seront matérialisées par un bâtiment neutre que vous découvrirez. Lors de la capture de ce bâtiment par un camp, elle déclenchera un compteur de gain de PV.<br /> 
+					Le gain de PV sera calculé selon la différence du nombre de zones contrôlées par les camps et sera de 1 PV/jour de contrôle. Donc plus vous en contrôlerez plus vous vous assurerez un gain régulier de PV.<br />
+					Les gains sont déclenchés lors de la capture du premier bâtiment.</p>
+
+					<p>Ex : Si le nord possède 2 zones et que le Sud en possède 3, alors le gain de PV est calculé selon cette soustraction : 3-2 = 1 PV/ jour de contrôle.<br />  
+					Si le sud ne possède pas de zone mais que le nord en possède 3 alors le gain sera de : 
+					3-0= 3 PV/jour de contrôle.
+					</p>
+
+					<h3>DESTRUCTION / CAPTURE</h3>
+					<p>La prise ou la destruction de bâtiment restera une des conditions majeures du jeu.</p>
+					<ul>
+						<li>Gain pour une gare : 50PV</li>
+						<li>Gain pour un fortin : 100PV</li>
+						<li>Gain pour le fort : 500PV</li>
+					</ul>
+
+					<h3>MISSION SPECIALE</h3>
+					<p>L’équipe de Maître de jeu et d’animation, pourront selon les cartes mettre en place des objectifs supplémentaires. Dans ce cas les conditions de réussite vous seront exposées ingame et sur les Discord.</p>
+
+					<p>Elles pourront être « de camp » mais aussi individuelles.</p>
+
+					<p>Les gains seront également diffusés lors de la présentation de cette mission.</p>
 				</div>
 			</div>
 		

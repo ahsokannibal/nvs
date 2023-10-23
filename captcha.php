@@ -15,7 +15,7 @@ $matrix_blur = array(
 
 $mot				= motListe();
 $tab_mot			= str_split($mot);
-$largeur 			= 140;
+$largeur 			= 180;
 $hauteur 			= 24;
 $milieuHauteur 		= ($hauteur / 2) - 8;
 $_SESSION["code"]	= $mot;

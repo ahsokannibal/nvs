@@ -146,19 +146,22 @@ if($dispo == '1' || $admin){
 						$sql = "UPDATE joueur SET mdp_joueur='$mdp_hash' WHERE id_joueur ='".$id_joueur."'";
 						$mysqli->query($sql);
 						
-						$new_mdp_forum = phpbb_hash($mdp);
-						
-						// Récupération de l'id de l'utilisateur sur le forum 
-						$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
-									(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
-										(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1')";
-						$res = $mysqli->query($sql);
-						$t = $res->fetch_assoc();
-						
-						$id_user_forum = $t['user_id'];
-						
-						$sql = "UPDATE ".$table_prefix."users SET user_password='$new_mdp_forum' WHERE user_id='$id_user_forum'";
-						$mysqli->query($sql);
+						if (is_dir($phpbb_root_path))
+						{
+							$new_mdp_forum = phpbb_hash($mdp);
+
+							// Récupération de l'id de l'utilisateur sur le forum 
+							$sql = "SELECT user_id FROM ".$table_prefix."users WHERE username IN 
+								(SELECT nom_perso FROM perso WHERE idJoueur_perso IN 
+								(SELECT idJoueur_perso FROM perso WHERE id_perso='$id') AND chef='1')";
+							$res = $mysqli->query($sql);
+							$t = $res->fetch_assoc();
+
+							$id_user_forum = $t['user_id'];
+
+							$sql = "UPDATE ".$table_prefix."users SET user_password='$new_mdp_forum' WHERE user_id='$id_user_forum'";
+							$mysqli->query($sql);
+						}
 						
 						$mess .=  "Mot de passe chang&eacute;";
 					}
@@ -406,7 +409,7 @@ if($dispo == '1' || $admin){
 			
 			<div class="row">
 				<div class="col-12">
-					<div align=center><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></div>
+					<div align=center><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></div>
 				</div>
 			</div>
 			
@@ -650,6 +653,12 @@ if($dispo == '1' || $admin){
 					</tr>
 					<tr>
 						<td>Chien</td><td><img src="../images_perso/v1/toutou_nord.gif"> <img src="../images_perso/v1/toutou_sud.gif"></td><td><img src="../images_perso/v2/toutou_nord.gif"> <img src="../images_perso/v2/toutou_sud.gif"></td>
+					</tr>
+					<tr>
+						<td>Cavalerie légère</td><td><img src="../images_perso/v1/cavalerie_legere_nord.gif"> <img src="../images_perso/v1/cavalerie_legere_sud.gif"></td><td><img src="../images_perso/v2/cavalerie_legere_nord.gif"> <img src="../images_perso/v2/cavalerie_legere_sud.gif"></td>
+					</tr>
+					<tr>
+						<td>Gatling</td><td><img src="../images_perso/v1/gatling_nord.gif"> <img src="../images_perso/v1/gatling_sud.gif"></td><td><img src="../images_perso/v2/gatling_nord.gif"> <img src="../images_perso/v2/gatling_sud.gif"></td>
 					</tr>
 				</table>
 				

@@ -14,53 +14,7 @@
 
 		<div class="container-fluid">
 		
-			<nav class="navbar navbar-expand-lg navbar-light bg-light">
-				<a class="navbar-brand" href="#">Règles</a>
-				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span class="navbar-toggler-icon"></span>
-				</button>
-
-				<div class="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul class="navbar-nav mr-auto">
-						<li class="nav-item">
-							<a class="nav-link" href="../index.php">Accueil</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_introduction.php">Introduction</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_caracs.php">Les caractéristiques</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_armees.php">Les armées</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_unites.php">Les unités</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_objets.php">Les objets, armes et thunes</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_carte.php">La carte et les terrains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_batiments.php">Les bâtiments et trains</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link active" href="regles_pnjs.php">Les PNJ</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_action_spe.php">Les actions spéciales</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_modalites_victoire.php">Les modalités de victoire</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="regles_conduite.php">Règles de conduite</a>
-						</li>
-					</ul>
-				</div>
-			</nav>
+			<?php require 'regles_header.php' ?>
 			
 			<div class="row justify-content-center">
 				<div class="col-12">
@@ -72,11 +26,15 @@
 			
 			<div class="row">
 				<div class="col-12">
-Il existe des Personnages Non Joueurs (PNJ), en opposition aux Personnages Joueurs (PJ).<br />
-Ces personnages sont des Intelligences Artificielles (IA). Ils répondent à leurs instincts animaux et agiront en fonction de vos propres actions. Ils peuvent apparaître en noir sur la carte.<br />
-Ainsi vous rencontrerez essentiellement des bêtes sauvages comme les ours, loups, scorpions, bisons, etc..<br />
-Chaque PNJ a son caractère, certains seront aggressifs et attaqueront "à vue", d'autres vaqueront à leurs occupations et ne vous attaqueront que pour se defendre et pour finir certains seront peureux et fuiront les PJ.<br /><br />
-A vous de découvrir les caractèristiques des PNJ !							
+					<p>Il existe des Personnages Non Joueurs (PNJ), en opposition aux Personnages Joueurs (PJ).</p>
+					
+					<p>Ces personnages sont en partie des Intelligences Artificielles (IA). Ils répondent à leurs instincts animaux et agiront en fonction de vos propres actions.<br />
+					Ils peuvent apparaître en noir sur la carte. D'autres seront gérés par les MJ et/ou l'animation.<br />
+					Ainsi vous rencontrerez essentiellement des bêtes sauvages comme les ours, loups, scorpions, bisons, etc..<br />
+					Chaque PNJ a son caractère, certains seront agressifs et attaqueront "à vue", d'autres vaqueront à leurs occupations et ne vous attaqueront que pour se défendre et pour finir certains seront peureux et fuiront les PJ.</p>
+
+					<p> A vous de découvrir les caractéristiques des PNJ !</p>
+						
 				</div>
 			</div>
 		

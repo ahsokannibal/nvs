@@ -46,6 +46,9 @@ if(isset($_SESSION["id_perso"])){
 			else if ($type_acces == 'redac') {
 				$sql = "UPDATE joueur SET redacteur='1' WHERE id_joueur='$id_joueur'";
 			}
+			else if ($type_acces == 'admin') {
+				$sql = "UPDATE joueur SET admin_perso='1' WHERE id_joueur='$id_joueur'";
+			}
 			
 			$mysqli->query($sql);
 		}
@@ -63,6 +66,9 @@ if(isset($_SESSION["id_perso"])){
 			}
 			else if ($action == "delete_redac") {
 				$sql = "UPDATE joueur SET redacteur='0' WHERE id_joueur=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso')";
+			}
+			else if ($action == "delete_admin") {
+				$sql = "UPDATE joueur SET admin_perso='0' WHERE id_joueur=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso')";
 			}
 			
 			$mysqli->query($sql);
@@ -144,6 +150,7 @@ if(isset($_SESSION["id_perso"])){
 						echo "		<option value='em'>Etat Major</option>";
 						echo "		<option value='anim'>Animation</option>";
 						echo "		<option value='redac'>Redacteur</option>";
+						echo "		<option value='admin'>Admin</option>";
 						echo "	</select>";
 						echo "	<input type='submit' value='Donner acces'>";
 						echo "</form>";
@@ -213,6 +220,24 @@ if(isset($_SESSION["id_perso"])){
 										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_redac."</font></b> [".$id_perso_redac."]</td>";
 										echo "	<td>Redacteur</td>";
 										echo "	<td><a href='admin_acces.php?id_perso=".$id_perso_redac."&action=delete_redac' class='btn btn-danger'>Supprimer</a></td>";
+										echo "</tr>";
+									}
+
+									$sql = "SELECT perso.nom_perso, perso.id_perso, perso.clan FROM perso, joueur WHERE perso.idJoueur_perso = joueur.id_joueur AND joueur.admin_perso='1' AND chef='1' AND id_joueur!=1 and id_joueur!=2 ORDER BY clan ASC";
+									$res = $mysqli->query($sql);
+									
+									while ($t = $res->fetch_assoc()) {
+										
+										$nom_perso_admin 	= $t['nom_perso'];
+										$id_perso_admin 		= $t['id_perso'];
+										$camp_perso_admin	= $t['clan'];
+										
+										$couleur_clan_perso = couleur_clan($camp_perso_admin);
+										
+										echo "<tr>";
+										echo "	<td><font color='".$couleur_clan_perso."'><b>".$nom_perso_admin."</font></b> [".$id_perso_admin."]</td>";
+										echo "	<td>Admin</td>";
+										echo "	<td><a href='admin_acces.php?id_perso=".$id_perso_admin."&action=delete_admin' class='btn btn-danger'>Supprimer</a></td>";
 										echo "</tr>";
 									}
 									?>

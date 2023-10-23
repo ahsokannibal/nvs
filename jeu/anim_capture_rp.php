@@ -201,7 +201,7 @@ if($dispo == '1' || $admin){
 							}
 							
 							// maj dernier tombé
-							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso_capture')";
+							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_perso_capture', $camp_perso_capture, $id_perso, $camp_perso)";
 							$mysqli->query($sql);
 							
 							// Gain PC 
@@ -272,23 +272,22 @@ if($dispo == '1' || $admin){
 							
 							// Chef
 							if ($type_perso_capture == 1) {
+								perte_etendard($mysqli, $id_perso_capture, $x_perso_capture, $y_perso_capture);
 								// Quand un chef meurt, il perd 5% de ses XPi et de ses PC
 								// Calcul PI
 								$pi_perdu 		= floor(($pi_perso_capture * 5) / 100);
-								$pi_perso_fin 	= $pi_perso_capture - $pi_perdu;
 								
 								// Calcul PC
 								$pc_perdu		= floor(($pc_perso_capture * 5) / 100);
 								$pc_perso_fin	= $pc_perso_capture - $pc_perdu;
 							}
 							else {
-								// Quand un grouillot meurt, il perd tout ses Pi
-								$pi_perso_fin = 0;
+								$pi_perdu 		= floor(($pi_perso_capture * 40) / 100);
 								$pc_perso_fin = $pc_perso_capture;
 							}
 		
 							// MAJ perte xp/po/stat perso capturé
-							$sql = "UPDATE perso SET pv_perso=0, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_perso_capture'";
+							$sql = "UPDATE perso SET pv_perso=0, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_perso_capture'";
 							$mysqli->query($sql);
 							
 							if (in_bat($mysqli, $id_perso_capture)) {

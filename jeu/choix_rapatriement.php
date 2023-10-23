@@ -25,7 +25,8 @@ if(isset($_SESSION["id_perso"])){
 		
 		$mess = "";
 		$mess_err = "";
-		
+		/* Décommenter pour autoriser de nouveau le respawn dans un hopital.
+
 		if (isset($_POST['selectHopital']) && trim($_POST['selectHopital']) != "") {
 			
 			$id_respawn_hopital = $_POST['selectHopital'];
@@ -96,7 +97,7 @@ if(isset($_SESSION["id_perso"])){
 					}
 				}
 			}
-		}
+		}*/
 		
 		if (isset($_POST['selectFortin']) && trim($_POST['selectFortin']) != "") {
 			
@@ -288,13 +289,14 @@ if(isset($_SESSION["id_perso"])){
 				<div class="col-12">
 					
 					<form method='POST' action='choix_rapatriement.php'>
-						<div class="form-group">
+						<!-- Il était anciennement possible de respawn dans un hopital
+							<div class="form-group">
 							<label for="selectHopital">Hôpital</label>
 							<select name="selectHopital" class="form-control" id="selectHopital">
 								<option value='supHopital'>Aucun choix</option>
 							<?php					
 							// Récupération de la liste des Hôpitaux 
-							$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_batiment='7' AND camp_instance='$camp_perso'";
+							/*$sql = "SELECT id_instanceBat, nom_instance, x_instance, y_instance FROM instance_batiment WHERE id_batiment='7' AND camp_instance='$camp_perso'";
 							$res = $mysqli->query($sql);
 							
 							while ($t = $res->fetch_assoc()) {
@@ -316,10 +318,10 @@ if(isset($_SESSION["id_perso"])){
 									echo "selected";
 								}
 								echo " >Hopital ".$nom_instance." [".$id_instance."] (".$x_instance."/".$y_instance.")</option>";
-							}
+							}*/
 							?>
 							</select>
-						</div>
+						</div>-->
 						<div class="form-group">
 							<label for="selectFortin">Fortin</label>
 							<select name="selectFortin" class="form-control" id="selectFortin">

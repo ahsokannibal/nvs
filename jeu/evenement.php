@@ -86,7 +86,7 @@ if(@$_SESSION["id_perso"]){
 			<h2>Evènements</h2>
 		</div>
 			
-		<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+		<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 	<?php
 	
 	if(isset($_POST["id_info"])){
@@ -312,6 +312,12 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "a attaqué ") {
 						$phrase_evenement = "a été attaqué par";
 					}
+					else if ($phrase_evenement == "a bombardé ") {
+						$phrase_evenement = "a été bombardé par";
+					}
+					else if ($phrase_evenement == "a atteint ") {
+						$phrase_evenement = "a été atteint par";
+					}
 					else if ($phrase_evenement == " a raté son attaque contre") {
 						$phrase_evenement = "a esquivé l'attaque de";
 					}
@@ -331,6 +337,9 @@ if(@$_SESSION["id_perso"]){
 						$phrase_evenement = "<b>a été capturé par</b>";
 					}
 					else if ($phrase_evenement == "a capturé") {
+						$phrase_evenement = "<b>a été capturé par</b>";
+					}					
+					else if ($phrase_evenement == "a capturé le batiment") {
 						$phrase_evenement = "<b>a été capturé par</b>";
 					}					
 					else if ($phrase_evenement == " a raté son soin sur") {
@@ -369,7 +378,7 @@ if(@$_SESSION["id_perso"]){
 					else if ($phrase_evenement == "<b>a été envoyé au Pénitencier </b>") {
 						$phrase_evenement = "<b>a reçu un nouveau prisonnier :</b> ";
 					}
-					else if ($phrase_evenement == "a tué") {
+					else if ($phrase_evenement == "a tué" || $phrase_evenement == "<b>a tué</b>") {
 						$phrase_evenement = "a été tué par";
 					}
 					else if ($phrase_evenement == "<b>a négocié la capture</b>") {

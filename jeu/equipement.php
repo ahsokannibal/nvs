@@ -101,7 +101,7 @@ if($dispo == '1' || $admin){
 		
 			<br /><br /><center><h1>Equipement</h1></center><br />
 			
-			<div align=center><input type="button" value="Fermer la page équipement" onclick="window.close()"></div>
+			<div align=center><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></div>
 			
 			<br />
 

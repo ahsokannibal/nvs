@@ -6,6 +6,26 @@ $mysqli = db_connexion();
 
 include ('../nb_online.php');
 
+function echo_chef($mysqli, $id_joueur){
+	// récupération du perso chef du joueur 
+	$sql_p = "SELECT id_perso, nom_perso, clan FROM perso WHERE idJoueur_perso='$id_joueur' AND chef='1'";
+	$res_p = $mysqli->query($sql_p);
+	$t_p = $res_p->fetch_assoc();
+
+	$id_p 	= $t_p["id_perso"];
+	$nom_p	= $t_p["nom_perso"];
+	$camp_p	= $t_p["clan"];
+
+	if ($camp_p == 1) {
+		$color_p = "blue";
+	} else if ($camp_p == 2) {
+		$color_p = "red";
+	} else {
+		$color_p = "black";
+	}
+	echo "<font color='$color_p'>".$nom_p." [".$id_p."]</font>";
+}
+
 if(isset($_SESSION["id_perso"])){
 	
 	$id_perso = $_SESSION['id_perso'];
@@ -37,7 +57,7 @@ if(isset($_SESSION["id_perso"])){
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
-						<h2>Adminstration</h2>
+						<h2>Administration</h2>
 					</div>
 				</div>
 			</div>
@@ -50,7 +70,10 @@ if(isset($_SESSION["id_perso"])){
 						<a href='admin_triche.php?affiche=all' class='btn btn-warning'>Tout afficher</a>
 						<a href='admin_triche.php?affiche=pwd' class='btn btn-warning'>Tableau mot de passe identifiques</a>
 						<a href='admin_triche.php?affiche=email' class='btn btn-warning'>Tableau emails proches</a>
-						<a href='admin_triche.php?affiche=ip' class='btn btn-warning'>Tableau connexions même IP</a>
+						<a href='admin_triche.php?affiche=ip2' class='btn btn-warning'>Tableau connexions même IP</a>
+						<a href='admin_triche.php?affiche=connexions' class='btn btn-warning'>Connexions</a>
+						<a href='admin_triche.php?affiche=cookie' class='btn btn-warning'>Tableau connexions même cookie</a>
+						<a href='admin_triche.php?affiche=whitelist' class='btn btn-warning'>Whiteliste</a>
 					</div>
 				</div>
 			</div>
@@ -182,77 +205,278 @@ if(isset($_SESSION["id_perso"])){
 			
 			<?php
 			}
-			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "ip")) {
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "ip2")) {
+				$offset = 0;
+				if (isset($_GET["offset"]))
+					$offset = $_GET["offset"];
 			?>
 			<div class="row">
 				<div class="col-12">
 				
-					<div align='center'><h3>Joueurs ayant la même IP le même jour</h3></div>
-					
+					<div align='center'><h3>Joueurs ayant la même IP</h3></div>
+					<?php
+						$prev = max(0, $offset-1);
+						$next = $offset+1;
+						echo "<a href='admin_triche.php?affiche=ip2&offset=$prev'>prev</a>  ";
+						echo "<a href='admin_triche.php?affiche=ip2&offset=$next'>next</a>  ";
+					?>
 					<div id="table_ip" class="table-responsive">
 						<table border="1" width='100%'>
+
+
 							<tr>
 								<th style='text-align:center'>IP</th><th style='text-align:center'>Liste des joueurs se connectant le même jour sur la même IP</th>
 							</tr>
 							<?php
-							$ip_tmp = "";
-							
-							$sql = "SELECT DISTINCT j1.ip_joueur, j1.id_joueur, j1.date_premier_releve, j1.date_dernier_releve
-									FROM joueur_as_ip j1
-									JOIN joueur_as_ip j2 ON j1.ip_joueur = j2.ip_joueur AND j1.id_joueur <> j2.id_joueur
-									AND j1.id_joueur > 4 AND j2.id_joueur > 4
-									AND (DATEDIFF(j1.date_premier_releve, j2.date_premier_releve) = 0 
-											OR DATEDIFF(j1.date_dernier_releve, j2.date_dernier_releve) = 0
-											OR DATEDIFF(j1.date_premier_releve, j2.date_dernier_releve) = 0
-											OR DATEDIFF(j1.date_dernier_releve, j2.date_premier_releve) = 0)
-									ORDER BY j1.ip_joueur, j1.id_joueur";
+
+							$sql = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) AND DATEDIFF(CURTIME(), time) >= $offset AND DATEDIFF(CURTIME(), time) < $offset+1 ORDER BY time DESC";
 							$res = $mysqli->query($sql);
 							while ($t = $res->fetch_assoc()) {
-								
 								$id_joueur 	= $t["id_joueur"];
 								$ip_joueur	= $t["ip_joueur"];
-								$date_pr 	= $t["date_premier_releve"];
-								$date_dr 	= $t["date_dernier_releve"];
-								
-								if ($ip_tmp != $ip_joueur) {
-									
+								$time		= $t["time"];
+
+								$disp = False;
+								$sql2 = "SELECT ip_joueur, id_joueur, time FROM user_ok_logins WHERE ip_joueur='$ip_joueur' AND id_joueur!=$id_joueur AND (id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche)) AND ABS(TIMEDIFF(time, '$time')) < 86400 ORDER BY time DESC";
+								$res2 = $mysqli->query($sql2);
+								while ($t2 = $res2->fetch_assoc()) {
+									if (!$disp) {
+										$disp = True;
+										echo "<tr><td>$ip_joueur</td><td>";
+										echo "$time - ";
+										echo_chef($mysqli, $id_joueur);
+										echo "<br />";
+									}
+									$id_joueur2 	= $t2["id_joueur"];
+									$ip_joueur2	= $t2["ip_joueur"];
+									$time2		= $t2["time"];
+									echo "$time2 - ";
+									echo_chef($mysqli, $id_joueur2);
+									echo "<br />";
+								}
+
+
+								if ($disp) {
+									echo "</td></tr>";
+								}
+							}
+
+							?>
+						</table>
+					</div>
+				</div>
+			</div>
+			<?php
+			}
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "connexions")) {
+			?>
+			<div class="row">
+				<div class="col-12">
+
+					<div align='center'><h3>Connexions</h3></div>
+
+					<?php
+					if(isset($_GET['select_perso']) && $_GET['select_perso'] != '') {
+						$id_perso_select = $_GET['select_perso'];
+					}
+					?>
+
+					<form method='GET' action='admin_triche.php'>
+						<input type="hidden" id="affiche" name="affiche" value="connexions">
+						<select name="select_perso">
+							<?php
+							$sql = "SELECT id_perso, nom_perso FROM perso WHERE chef=1 ORDER BY id_perso ASC";
+							$res = $mysqli->query($sql);
+							while ($t = $res->fetch_assoc()) {
+								$id_perso 	= $t["id_perso"];
+								$nom_perso 	= $t["nom_perso"];
+								echo "<option value='".$id_perso."'";
+								if (isset($id_perso_select) && $id_perso_select == $id_perso) {
+									echo " selected";
+								}
+								echo ">".$nom_perso." [".$id_perso."] </option>";
+							}
+							?>
+						</select>
+						<button>Selectionner</button>
+					</form>
+
+					<div id="table_ip" class="table-responsive">
+						<table border="1" width='100%'>
+							<tr>
+								<th style='text-align:center'>Connexions</th><th style='text-align:center'>VPN</th>
+							</tr>
+							<?php
+
+							if (isset($id_perso_select) && $id_perso_select != 0) {
+								$sql = "SELECT ip_joueur, id_joueur, time, user_agent, cookie_val, nom_perso, id_perso, clan FROM user_ok_logins JOIN perso ON id_joueur=idJoueur_perso WHERE id_perso='$id_perso_select' ORDER BY time DESC";
+								$res = $mysqli->query($sql);
+								while ($t = $res->fetch_assoc()) {
+									echo "<tr> <td>";
+									$time 		= $t["time"];
+									$cookie_val 	= $t["cookie_val"];
+									$nom_perso 	= $t["nom_perso"];
+									$id_perso 	= $t["id_perso"];
+									$clan 		= $t["clan"];
+									$ip_joueur 	= $t["ip_joueur"];
+									$id_joueur 	= $t["id_joueur"];
+									$user_agent 		= $t["user_agent"];
+									$color_p = "black";
+									if ($clan == 1) {
+										$color_p = "blue";
+									} else if ($clan == 2) {
+										$color_p = "red";
+									}
+									echo "".$time.", id_joueur : $id_joueur";
+									echo ", <font color='$color_p'>".$nom_perso." [".$id_perso."]</font>";
+									echo ", ip : ".$ip_joueur.", user-agent : '".$user_agent."' <br />";
+									echo "</td><td>";
+									echo "<a href='https://www.ipqualityscore.com/vpn-ip-address-check/lookup/$ip_joueur'>check</a>";
+									echo "</td></tr>";
+								}
+							}
+							?>
+						</table>
+					</div>
+				</div>
+			</div>
+			<?php
+			}
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "cookie")) {
+				if (isset($_GET['acquitter'])) {
+					$acquitter = filter_input(INPUT_GET, "acquitter", FILTER_SANITIZE_STRING);
+					$sql = "UPDATE user_ok_logins SET est_acquitte=1 WHERE cookie_val='$acquitter'";
+					$res = $mysqli->query($sql);
+				}
+			?>
+			<div class="row">
+				<div class="col-12">
+
+					<div align='center'><h3>Joueurs ayant la même valeur de cookie</h3></div>
+
+					<div id="table_ip" class="table-responsive">
+						<table border="1" width='100%'>
+							<tr>
+								<th style='text-align:center'>Cookie</th><th style='text-align:center'>Liste des joueurs se connectant avec la même valeur de cookie</th>
+							</tr>
+							<?php
+							$ip_tmp = "";
+
+							$sql = "SELECT cookie_val, COUNT(distinct id_joueur) as count FROM user_ok_logins WHERE est_acquitte=0 AND id_joueur NOT IN (SELECT id_joueur FROM whitelist_triche) GROUP BY cookie_val HAVING COUNT(distinct id_joueur) > 1";
+							$res = $mysqli->query($sql);
+							while ($t = $res->fetch_assoc()) {
+								$cookie_val 	= $t["cookie_val"];
+								$count 	        = $t["count"];
+
+								if ($ip_tmp != $cookie_val) {
+
 									if ($ip_tmp != "") {
 										echo "</tr>";
 									}
-									
+
 									echo "<tr>";
-									echo "	<td align='center'>".$ip_joueur."</td><td>";
-									
-									$ip_tmp = $ip_joueur;
+									echo "	<td align='center'>".$cookie_val."</td><td>";
+
+									$ip_tmp = $cookie_val;
 								}
-								
-								echo "Joueur id : ".$id_joueur." - ";
-								
-								// récupération du perso chef du joueur 
-								$sql_p = "SELECT id_perso, nom_perso, clan FROM perso WHERE idJoueur_perso='$id_joueur' AND chef='1'";
-								$res_p = $mysqli->query($sql_p);
-								$t_p = $res_p->fetch_assoc();
-									
-								$id_p 	= $t_p["id_perso"];
-								$nom_p	= $t_p["nom_perso"];
-								$camp_p	= $t_p["clan"];
-								
-								if ($camp_p == 1) {
-									$color_p = "blue";
-								} else if ($camp_p == 2) {
-									$color_p = "red";
-								} else {
+
+								$sql = "SELECT ip_joueur, id_joueur, time, user_agent, cookie_val, nom_perso, id_perso, clan FROM user_ok_logins JOIN perso ON id_joueur=idJoueur_perso WHERE chef='1' AND cookie_val='$cookie_val' ORDER BY time DESC";
+								$res2 = $mysqli->query($sql);
+								while ($t = $res2->fetch_assoc()) {
+									$time 		= $t["time"];
+									$nom_perso 	= $t["nom_perso"];
+									$id_perso 	= $t["id_perso"];
+									$clan 		= $t["clan"];
+									$ip_joueur 	= $t["ip_joueur"];
+									$id_joueur 	= $t["id_joueur"];
+									$user_agent 		= $t["user_agent"];
 									$color_p = "black";
+									if ($clan == 1) {
+										$color_p = "blue";
+									} else if ($clan == 2) {
+										$color_p = "red";
+									}
+									echo "".$time.", id_joueur : $id_joueur";
+									echo ", <font color='$color_p'>".$nom_perso." [".$id_perso."]</font>";
+									echo ", ip : ".$ip_joueur.", user-agent : '".$user_agent."' <br />";
 								}
-									
-								echo "<font color='$color_p'>".$nom_p." [".$id_p."]</font>";
-								echo " - Date premier relevé : ".$date_pr." - Date dernier relevé : ".$date_dr; 
 								echo "<br />";
-							}				
-									 
+								echo "<form action='admin_triche.php' method='GET'>";
+								echo "	<input type='hidden' id='affiche' name='affiche' value='cookie'>";
+								echo "  <input name='acquitter' id='acquitter' type='hidden' value='$cookie_val'>";
+								echo "	<td> <button>Acquitter</button> </td>";
+								echo "</form>";
+							}
 							?>
 								</td>
 							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+			<?php
+			}
+			if (isset($_GET["affiche"]) && ($_GET["affiche"] == "all" || $_GET["affiche"] == "whitelist")) {
+				if (isset($_GET['del_whitelist'])) {
+					$del_whitelist = filter_input(INPUT_GET, "del_whitelist", FILTER_SANITIZE_STRING);
+					$sql = "DELETE FROM whitelist_triche WHERE id=$del_whitelist";
+					$res = $mysqli->query($sql);
+				}
+				if (isset($_GET['add_whitelist'])) {
+					$add_whitelist = filter_input(INPUT_GET, "add_whitelist", FILTER_SANITIZE_STRING);
+					$sql = "INSERT INTO whitelist_triche VALUES (0, $add_whitelist)";
+					$res = $mysqli->query($sql);
+				}
+			?>
+			<div class="row">
+				<div class="col-12">
+
+					<div align='center'><h3>Whiteliste</h3></div>
+
+					<div id="table_ip" class="table-responsive">
+						<table border="1" width='100%'>
+							<tr>
+								<th style='text-align:center'>joueur 1</th>
+							</tr>
+							<?php
+							$sql = "SELECT * FROM whitelist_triche";
+							$res = $mysqli->query($sql);
+							while ($t = $res->fetch_assoc()) {
+								$id 	= $t["id"];
+								$id_joueur1 	= $t["id_joueur"];
+
+								$sql = "SELECT nom_perso, id_perso, clan FROM perso WHERE idJoueur_perso=$id_joueur1 AND chef='1'";
+								$res2 = $mysqli->query($sql);
+								$t = $res2->fetch_assoc();
+								$nom_perso 	= $t["nom_perso"];
+								$id_perso 	= $t["id_perso"];
+								$clan 		= $t["clan"];
+
+								$color_p = "black";
+								if ($clan == 1) {
+									$color_p = "blue";
+								} else if ($clan == 2) {
+									$color_p = "red";
+								}
+
+								echo "<tr>";
+								echo "	<td align='center'>".$id_joueur1." <font color='$color_p'>".$nom_perso." [".$id_perso."]</font></td>";
+								echo "<form action='admin_triche.php' method='GET'>";
+								echo "	<input type='hidden' id='affiche' name='affiche' value='whitelist'>";
+								echo "	<input name='del_whitelist' id='del_whitelist' type='hidden' value='$id'>";
+								echo "	<td> <button>Supprimer</button> </td>";
+								echo "</form>";
+								echo "</tr>";
+							}
+							?>
+
+							<form action="admin_triche.php" method="GET">
+ 							<input type="hidden" id="affiche" name="affiche" value="whitelist">
+							<tr>
+							<td align='center'><input name='add_whitelist' id='add_whitelist' type='number'></td>
+							<td> <button>Ajouter</button> </td>
+							<tr>
+							</form>
 						</table>
 					</div>
 				</div>

@@ -2,6 +2,8 @@
 session_start();
 require_once("../fonctions.php");
 require_once("f_carte.php");
+require_once("f_combat.php");
+require_once("f_action.php");
 
 $mysqli = db_connexion();
 
@@ -22,9 +24,12 @@ if(isset($_SESSION["id_perso"])){
 		if (isset($_POST['matricule_pendre_hidden'])) {
 			
 			$id_perso_pendre = $_POST['matricule_pendre_hidden'];
+
+			$sql = "UPDATE joueur SET pendu=1 WHERE id_joueur=(SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
+			$mysqli->query($sql);
 			
 			// Récupération de tous les persos
-			$sql = "SELECT id_perso, nom_perso, type_perso FROM perso WHERE perso.idJoueur_perso = (SELECT perso.idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
+			$sql = "SELECT id_perso, nom_perso, type_perso, clan FROM perso WHERE perso.idJoueur_perso = (SELECT perso.idJoueur_perso FROM perso WHERE id_perso='$id_perso_pendre')";
 			$res = $mysqli->query($sql);
 			
 			while ($t = $res->fetch_assoc()) {
@@ -32,6 +37,9 @@ if(isset($_SESSION["id_perso"])){
 				$id_perso_a_pendre 		= $t['id_perso'];
 				$nom_perso_a_pendre		= $t['nom_perso'];
 				$type_perso_a_pendre	= $t['type_perso'];
+				$clan	= $t['clan'];
+
+				$couleur_clan_perso = couleur_clan($clan);
 				
 				if ($type_perso_a_pendre == 1) {
 					
@@ -68,7 +76,8 @@ if(isset($_SESSION["id_perso"])){
 				}
 				
 				// Ok - renvoi du perso						
-				$sql = "DELETE FROM perso WHERE id_perso='$id_perso_a_pendre'";
+				// maj cv
+				$sql = "INSERT INTO `cv` (IDActeur_cv, nomActeur_cv, gradeActeur_cv, IDCible_cv, nomCible_cv, gradeCible_cv, date_cv, special) VALUES ('$id_perso_a_pendre','Pendaison','', '$id_perso_a_pendre','<font color=$couleur_clan_perso>$nom_perso_a_pendre</font>', '', NOW(), 1)";
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_arme WHERE id_perso='$id_perso_a_pendre'";
@@ -90,9 +99,6 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_entrainement WHERE id_perso='$id_perso_a_pendre'";
-				$mysqli->query($sql);
-				
-				$sql = "DELETE FROM perso_as_grade WHERE id_perso='$id_perso_a_pendre'";
 				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_as_killpnj WHERE id_perso='$id_perso_a_pendre'";
@@ -147,10 +153,14 @@ if(isset($_SESSION["id_perso"])){
 					$sql = "UPDATE carte SET occupee_carte='0', idPerso_carte=NULL, image_carte=NULL WHERE idPerso_carte='$id_perso_a_pendre'";
 				}
 				$mysqli->query($sql);
+
+				// On téléporte le perso hors carte
+				$sql = "UPDATE perso SET x_perso='1000', y_perso='1000' WHERE id_perso='$id_perso_a_pendre'";
+				$mysqli->query($sql);
 				
 				$sql = "DELETE FROM perso_in_mission WHERE id_perso='$id_perso_a_pendre'";
 				$mysqli->query($sql);
-				
+
 				echo "<center><font color='blue'>Le perso $nom_perso_a_pendre avec la matricule $id_perso_a_pendre a bien été pendu.</font></center><br/>";
 			}
 		}
@@ -200,9 +210,26 @@ if(isset($_SESSION["id_perso"])){
 					
 					if (isset($_GET['desequip'])) {
 						// On desequip l'objet
+						$sql = "UPDATE perso_as_objet SET equip_objet=0 WHERE id_perso='$id_perso_select' AND id_objet='$id_o'";
+						$mysqli->query($sql);
+
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement inventaire déséquiper', 'perso $id_perso_select objet $id_o')";
+						$mysqli->query($sql);
 					}
 					elseif (isset($_GET['equip'])) {
 						// On equip l'objet
+						$sql = "UPDATE perso_as_objet SET equip_objet=1 WHERE id_perso='$id_perso_select' AND id_objet='$id_o'";
+						$mysqli->query($sql);
+
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement inventaire équiper', 'perso $id_perso_select objet $id_o')";
+						$mysqli->query($sql);
+					}
+					elseif (isset($_GET['deposer'])) {
+						// On dépose l'objet
+						action_deposerObjet($mysqli, $id_perso_select, 2, $id_o, 1);
+
+						$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement inventaire déposer', 'perso $id_perso_select objet $id_o')";
+						$mysqli->query($sql);
 					}
 					elseif (isset($_GET['use'])) {
 						// On utilise l'objet
@@ -321,8 +348,16 @@ if(isset($_SESSION["id_perso"])){
 				$new_xp_perso = $_POST['xp_perso'];
 				
 				$mess = "MAJ XP perso matricule ".$id_perso_select." vers ".$new_xp_perso;
+
+				$sql = "SELECT xp_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_xp_perso = $t['xp_perso'];
 				
 				$sql = "UPDATE perso SET xp_perso=$new_xp_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XP', 'perso $id_perso_select $old_xp_perso vers $new_xp_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -331,8 +366,16 @@ if(isset($_SESSION["id_perso"])){
 				$new_pi_perso = $_POST['pi_perso'];
 				
 				$mess = "MAJ PI perso matricule ".$id_perso_select." vers ".$new_pi_perso;
+
+				$sql = "SELECT pi_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pi_perso = $t['pi_perso'];
 				
 				$sql = "UPDATE perso SET pi_perso=$new_pi_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement XPI', 'perso $id_perso_select $old_pi_perso vers $new_pi_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -342,7 +385,15 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ PC perso matricule ".$id_perso_select." vers ".$new_pc_perso;
 				
+				$sql = "SELECT pc_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pc_perso = $t['pc_perso'];
+				
 				$sql = "UPDATE perso SET pc_perso=$new_pc_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PC', 'perso $id_perso_select $old_pc_perso vers $new_pc_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -352,7 +403,28 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ THUNE perso matricule ".$id_perso_select." vers ".$new_or_perso;
 				
+				$sql = "SELECT or_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_or_perso = $t['or_perso'];
+				
 				$sql = "UPDATE perso SET or_perso=$new_or_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement OR', 'perso $id_perso_select $old_or_perso vers $new_or_perso')";
+				$mysqli->query($sql);
+			}
+
+			if (isset($_POST['image_perso']) && trim($_POST['image_perso']) != '') {
+				
+				$new_image_perso = $_POST['image_perso'];
+				
+				$mess = "MAJ IMAGE perso matricule ".$id_perso_select." vers ".$new_image_perso;
+				
+				$sql = "UPDATE perso SET image_perso='$new_image_perso' WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement IMAGE', 'perso $id_perso_select vers $new_image_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -361,8 +433,16 @@ if(isset($_SESSION["id_perso"])){
 				$new_pv_perso = $_POST['pv_perso'];
 				
 				$mess = "MAJ PV perso matricule ".$id_perso_select." vers ".$new_pv_perso;
+
+				$sql = "SELECT pv_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pv_perso = $t['pv_perso'];
 				
 				$sql = "UPDATE perso SET pv_perso=$new_pv_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PV', 'perso $id_perso_select $old_pv_perso vers $new_pv_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -372,7 +452,15 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ PM perso matricule ".$id_perso_select." vers ".$new_pm_perso;
 				
+				$sql = "SELECT pm_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pm_perso = $t['pm_perso'];
+				
 				$sql = "UPDATE perso SET pm_perso=$new_pm_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PM', 'perso $id_perso_select $old_pm_perso vers $new_pm_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -382,7 +470,15 @@ if(isset($_SESSION["id_perso"])){
 				
 				$mess = "MAJ PA perso matricule ".$id_perso_select." vers ".$new_pa_perso;
 				
+				$sql = "SELECT pa_perso FROM perso WHERE id_perso='$id_perso_select'";
+				$res = $mysqli->query($sql);
+				$t = $res->fetch_assoc();
+				$old_pa_perso = $t['pa_perso'];
+				
 				$sql = "UPDATE perso SET pa_perso=$new_pa_perso WHERE id_perso='$id_perso_select'";
+				$mysqli->query($sql);
+
+				$sql = "INSERT INTO log_action_animation(date_acces, id_perso, page, action, texte) VALUES (NOW(), '$id_perso', 'admim_perso.php', 'Changement PA', 'perso $id_perso_select $old_pa_perso vers $new_pa_perso')";
 				$mysqli->query($sql);
 			}
 			
@@ -405,7 +501,6 @@ if(isset($_SESSION["id_perso"])){
 				$mysqli->query($sql);
 				
 				$mess = "Changement du mot de passe du perso matricule ".$id_perso_select." vers ".$new_password ;
-				
 			}
 		}
 		
@@ -465,7 +560,7 @@ if(isset($_SESSION["id_perso"])){
 								if (isset($id_perso_select) && $id_perso_select == $id_perso) {
 									echo " selected";
 								}
-								echo ">".$nom_perso." [".$id_perso."] - ".$x_perso."/".$y_perso."</option>";
+								echo ">".$id_perso." - ".$nom_perso." - ".$x_perso."/".$y_perso."</option>";
 							}
 							?>
 						
@@ -501,6 +596,7 @@ if(isset($_SESSION["id_perso"])){
 						$test_b 	= $t['bourre_perso'];
 						$camp_perso	= $t['clan'];
 						$bat_perso	= $t['bataillon'];
+						$image_perso	= $t['image_perso'];
 						
 						if ($camp_perso == 1) {
 							$nom_camp_perso 	= "Nord";
@@ -541,7 +637,9 @@ if(isset($_SESSION["id_perso"])){
 						echo "</form>";
 						echo "	</tr>";
 						echo "	<tr>";
-						echo "		<td></td>";
+						echo "<form method='POST' action='admin_perso.php'>";
+						echo "		<td align='center'><b>Image: </b><input type='text' name='image_perso' value='".$image_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
+						echo "</form>";
 						echo "		<td><b>Bataillon : </b>".$bat_perso."</td>";
 						echo "<form method='POST' action='admin_perso.php'>";
 						echo "		<td align='center'><b>PV : </b><input type='text' name='pv_perso' value='".$pv_perso."' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'><input type='submit' value='modifier'></td>";
@@ -712,6 +810,8 @@ if(isset($_SESSION["id_perso"])){
 								}
 								if ($is_equipe) {
 									echo "			<a class='btn btn-outline-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&desequip=ok\">Déséquipper</a>";
+								} else {
+									echo "			<a class='btn btn-outline-danger' href=\"admin_perso.php?voir_inventaire=".$id_perso_select."&id_obj=".$id_obj."&deposer=ok\">Déposer</a>";
 								}
 								
 								// Tickets de train
@@ -846,7 +946,7 @@ if(isset($_SESSION["id_perso"])){
 			<div class='row'>
 				<?php
 				if (isset($_GET['modifier_mdp'])) {
-					echo "	<div class='col-12>";
+					echo "	<div class='col-12'>";
 					echo "	<form method='POST' action='admin_perso.php'>";
 					echo "		<label for='mdp_perso'>Nouveau Mot de passe : </label>";
 					echo "		<input type='text' id='mdp_perso' name='mdp_perso' value='' ><input type='hidden' value='".$id_perso_select."' name='id_perso_select'>";

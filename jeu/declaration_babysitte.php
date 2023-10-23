@@ -220,7 +220,11 @@ if($dispo == '1' || $admin){
 					</div>
 				</div>
 			</div>
+
+			<p>A des fins de transparence, les babysittes sont à déclarer sur le salon dédié du discord commun.</p>
+			<p>Les babysittes sauvages sont formellement interdits et seront sévèrement sanctionnés.</p>
 			
+<!---
 			<div class="row">
 				<div class="col-12">
 					<div align="center">
@@ -390,6 +394,7 @@ if($dispo == '1' || $admin){
 					</div>
 				</div>
 			</div>
+-->
 			
 		</div>
 		

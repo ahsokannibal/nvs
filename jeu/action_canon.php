@@ -30,7 +30,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					WHERE id_instance_bat='$id_instance_bat'
 					AND (date_activation is NULL OR date_activation < NOW())";
 		$res_canon = $mysqli->query($sql_canon);
-		
+
 		while ($t_canon = $res_canon->fetch_assoc()) {
 			
 			$id_instance_canon 	= $t_canon['id_instance_canon'];
@@ -38,15 +38,6 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			$y_canon 			= $t_canon['y_canon'];
 			$camp_canon 		= $t_canon['camp_canon'];
 			$dla_canon			= $t_canon['date_activation'];
-			
-			// Calcul nouvelle date activation canon
-			$date = time();
-			
-			$new_dla = $date + DUREE_TOUR;
-			
-			// MAJ date_activation canon 
-			$sql = "UPDATE instance_batiment_canon SET date_activation=FROM_UNIXTIME($new_dla) WHERE id_instance_canon='$id_instance_canon'";
-			$mysqli->query($sql);
 			
 			$couleur_clan_canon = couleur_clan($camp_canon);
 			
@@ -75,6 +66,12 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			}
 			
 			if (!empty($tableau_cibles)) {
+				// Calcul nouvelle date activation canon
+				$date = time();
+				$new_dla = $date + DUREE_TOUR;
+				// MAJ date_activation canon
+				$sql = "UPDATE instance_batiment_canon SET date_activation=FROM_UNIXTIME($new_dla) WHERE id_instance_canon='$id_instance_canon'";
+				$mysqli->query($sql);
 			
 				$id_perso_cible = $tableau_cibles[array_rand($tableau_cibles)];
 				
@@ -126,7 +123,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 						$degats_final = calcul_des_attaque($nb_des_canon, $valeur_des_canon) - $protec_cible;
 						
 						// Cible autre artillerie
-						if ($type_cible == 5) {
+						if ($type_cible == 5 || $type_cible == 8) {
 							// Bonus dégats 13D10
 							$bonus_degats_canon = mt_rand(13, 130);
 							$degats_final = $degats_final + $bonus_degats_canon;
@@ -161,28 +158,25 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 							
 							// Chef
 							if ($type_cible == 1) {
+								
+								perte_etendard($mysqli, $idJoueur_cible, $x_cible, $y_cible);
+				
 								// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
 								// Calcul PI
 								$pi_perdu 		= floor(($pi_cible * 5) / 100);
-								$pi_perso_fin 	= $pi_cible - $pi_perdu;
-								
-								// Calcul XP
-								$xp_perdu		= floor(($xp_cible * 5) / 100);
-								$xp_perso_fin	= $xp_cible - $xp_perdu;
 								
 								// Calcul PC
 								$pc_perdu		= floor(($pc_cible * 5) / 100);
 								$pc_perso_fin	= $pc_cible - $pc_perdu;
 							}
 							else {
-								// Quand un grouillot meurt, il perd tout ses Pi
-								$pi_perso_fin = 0;
+								$pi_perdu 		= floor(($pi_cible * 40) / 100);
 								$xp_perso_fin = $xp_cible;
 								$pc_perso_fin = $pc_cible;
 							}
 
 							// MAJ perte xp/po/stat cible
-							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_perso_cible'";
+							$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_perso_cible'";
 							$mysqli->query($sql);
 							
 							if ($perte_po > 0) {
@@ -226,7 +220,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 							}
 							
 							// maj dernier tombé
-							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_perso_cible')";
+							$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), $id_perso_cible, $camp_cible, $id_instance_bat, $camp_canon)";
 							$mysqli->query($sql);
 						}
 						
@@ -292,36 +286,31 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 									
 									// Chef
 									if ($type_cible == 1) {
+										perte_etendard($mysqli, $id_joueur_collat, $x_collat, $y_collat);
 										// Quand un chef meurt, il perd 5% de ses XP,XPi et de ses PC
 										// Calcul PI
 										$pi_perdu 		= floor(($pi_collat * 5) / 100);
-										$pi_perso_fin 	= $pi_collat - $pi_perdu;
-										
-										// Calcul XP
-										$xp_perdu		= floor(($xp_collat * 5) / 100);
-										$xp_perso_fin	= $xp_collat - $xp_perdu;
 										
 										// Calcul PC
 										$pc_perdu		= floor(($pc_collat * 5) / 100);
 										$pc_perso_fin	= $pc_collat - $pc_perdu;
 									}
 									else {
-										// Quand un grouillot meurt, il perd tout ses Pi
-										$pi_perso_fin = 0;
+										$pi_perdu 		= floor(($pi_collat * 40) / 100);
 										$xp_perso_fin = $xp_collat;
 										$pc_perso_fin = $pc_collat;
 									}
 				
 									// MAJ perte xp/po/stat cible
-									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=$xp_perso_fin, pi_perso=$pi_perso_fin, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
+									$sql = "UPDATE perso SET or_perso=or_perso-$perte_po, xp_perso=xp_perso-$pi_perdu, pi_perso=pi_perso-$pi_perdu, pc_perso=$pc_perso_fin, nb_mort=nb_mort+1 WHERE id_perso='$id_cible_collat'";
 									$mysqli->query($sql);
 									
 									if ($perte_po > 0) {
 										// On dépose la perte de PO par terre
 										// Verification si l'objet existe deja sur cette case
 										$sql = "SELECT nb_objet FROM objet_in_carte 
-												WHERE objet_in_carte.x_carte = $x_collat_fin 
-												AND objet_in_carte.y_carte = $y_collat_fin 
+												WHERE objet_in_carte.x_carte = $x_collat 
+												AND objet_in_carte.y_carte = $y_collat 
 												AND type_objet = '1' AND id_objet = '0'";
 										$res = $mysqli->query($sql);
 										$to = $res->fetch_assoc();
@@ -332,18 +321,14 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 											// On met a jour le nombre
 											$sql = "UPDATE objet_in_carte SET nb_objet = nb_objet + $perte_po 
 													WHERE type_objet='1' AND id_objet='0'
-													AND x_carte='$x_collat_fin' AND y_carte='$y_collat_fin'";
+													AND x_carte='$x_collat_fin' AND y_carte='$y_collat'";
 											$mysqli->query($sql);
 										}
 										else {
 											// Insertion dans la table objet_in_carte : On cree le premier enregistrement
-											$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat_fin','$y_collat_fin')";
+											$sql = "INSERT INTO objet_in_carte (type_objet, id_objet, nb_objet, x_carte, y_carte) VALUES ('1','0','$perte_po','$x_collat','$y_collat')";
 											$mysqli->query($sql);
 										}
-										
-										// maj dernier tombé
-										$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture) VALUES (NOW(), '$id_cible_collat')";
-										$mysqli->query($sql);
 									}
 									
 									// maj evenements
@@ -359,6 +344,10 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 										$sql = "UPDATE stats_camp_kill SET nb_kill=nb_kill+1 WHERE id_camp=$camp_canon";
 										$mysqli->query($sql);
 									}
+
+									// maj dernier tombé
+									$sql = "INSERT INTO dernier_tombe (date_capture, id_perso_capture, camp_perso_capture, id_perso_captureur, camp_perso_captureur) VALUES (NOW(), '$id_cible_collat', $clan_collat, $id_instance_bat, $camp_canon)";
+									$mysqli->query($sql);
 								}
 							}
 						}

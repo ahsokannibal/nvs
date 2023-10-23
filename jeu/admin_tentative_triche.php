@@ -68,19 +68,20 @@ if(isset($_SESSION["id_perso"])){
 						<div id="table_batiments" class="table-responsive">	
 					
 							<?php
-							$sql = "SELECT id_perso, texte_tentative FROM tentative_triche ORDER BY id_tentative";
+							$sql = "SELECT date, id_perso, texte_tentative FROM tentative_triche ORDER BY id_tentative DESC";
 							$res = $mysqli->query($sql);
 							
 							echo "<table class='table'>";
 							echo "	<thead>";
 							echo "		<tr>";
-							echo "			<th>Perso / Joueur</th><th>Texte tentative de triche</th>";
+							echo "			<th>Date</th><th>Perso / Joueur</th><th>Texte tentative de triche</th>";
 							echo "		</tr>";
 							echo "	</thead>";
 							echo "	<tbody>";
 							
 							while ($t = $res->fetch_assoc()) {
 								
+								$date 		= $t['date'];
 								$id_tricheur 		= $t['id_perso'];
 								$texte_tentative	= htmlentities($t['texte_tentative'],ENT_QUOTES);
 								
@@ -91,6 +92,7 @@ if(isset($_SESSION["id_perso"])){
 								$nom_perso = $t_p['nom_perso'];
 								
 								echo "		<tr>";
+								echo "			<td>".$date."</td>";
 								echo "			<td>".$nom_perso." [".$id_tricheur."]</td>";
 								echo "			<td>".$texte_tentative."</td>";
 								echo "		</tr>";

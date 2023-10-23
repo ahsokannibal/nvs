@@ -97,7 +97,7 @@ if(isset($_SESSION["id_perso"])){
 					$y_carte	= $t_carte['y_carte'];
 					$fond_carte	= $t_carte['fond_carte'];
 					
-					$sql = "INSERT INTO carte VALUES ($x_carte, $y_carte, '0', '$fond_carte', NULL, NULL, NULL, 0, 0, NULL)";
+					$sql = "INSERT INTO carte (id_carte, x_carte, y_carte, occupee_carte, fond_carte, idPerso_carte, image_carte) VALUES (0, $x_carte, $y_carte, '0', '$fond_carte', NULL, NULL)";
 					$mysqli->query($sql);
 				}
 				

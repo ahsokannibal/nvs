@@ -91,7 +91,7 @@ if($dispo == '1' || $admin){
 			
 			<br /><br />
 				
-			<p align="center"><input type="button" value="Fermer cette fenêtre" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 			<center><font color='red'>Attention, tout clic sur <b>>> monter</b> entraine une amélioration immédiate et irréversible</font></center>
 			
 			<?php
@@ -218,7 +218,7 @@ if($dispo == '1' || $admin){
 						<td>
 							<input type="text" size="3" maxlength="3" value="<?php echo $pm; ?>" disabled>&nbsp;
 							<?php
-							if ($type == 5 && $pm >= 6) {
+							if (($type == 5 && $pm >= 6) || ($type == 8 && $pm >= 7)) {
 								echo "<b>Maximum atteint</b>";
 							}
 							else {

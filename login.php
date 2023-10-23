@@ -37,7 +37,7 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 				
 				$pseudo = $mysqli->real_escape_string($pseudo);
 				// recuperation de l'id du joueur et log du joueur
-				$sql = "SELECT id_joueur, mdp_joueur, id_perso FROM joueur,perso WHERE joueur.id_joueur=perso.idJoueur_perso and nom_perso='$pseudo' and chef='1'";		
+				$sql = "SELECT id_joueur, mdp_joueur, id_perso FROM joueur,perso WHERE joueur.id_joueur=perso.idJoueur_perso and nom_perso='$pseudo' and chef='1' and pendu=0";
 				$res = $mysqli->query($sql);
 				$t_user = $res->fetch_assoc();
 				
@@ -62,21 +62,11 @@ if(isset ($_POST['pseudo']) && isset ($_POST['password']) && isset ($_POST['capt
 							
 							// recuperation de l'ip du joueur
 							$ip_joueur = realip();
+							$user_agent = get_user_agent();
+							$cookie_val = filter_input(INPUT_COOKIE, "PHPSESSID", FILTER_SANITIZE_STRING);
 							
-							// Est ce que ce joueur est déjà présent avec cette IP
-							$sql = "SELECT * FROM joueur_as_ip WHERE ip_joueur = '$ip_joueur' AND id_joueur='$id_joueur'";
-							$res = $mysqli->query($sql);
-							$nb_ip = $res->num_rows;
-							
-							if ($nb_ip > 0) {
-								// Maj date dernier releve sur enregistrement existant
-								$sql = "UPDATE joueur_as_ip SET date_dernier_releve = FROM_UNIXTIME($date) WHERE id_joueur = '$id_joueur' AND ip_joueur = '$ip_joueur'";
-								$mysqli->query($sql);
-							} else {
-								// nouvel enregistrement
-								$sql = "INSERT INTO joueur_as_ip VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),FROM_UNIXTIME($date))";
-								$mysqli->query($sql);
-							}
+							$sql = "INSERT INTO user_ok_logins VALUES ('$id_joueur','$ip_joueur',FROM_UNIXTIME($date),'$user_agent','$cookie_val', 0)";
+							$mysqli->query($sql);
 							
 							header("location:jeu/jouer.php?login=ok");
 						}

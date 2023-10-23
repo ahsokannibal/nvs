@@ -12,13 +12,14 @@ if(isset($_SESSION["id_perso"])){
 	$id_perso = $_SESSION["id_perso"];
 
 	// recuperation du nom du perso
-	$sql = "SELECT nom_perso, type_perso, idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+	$sql = "SELECT p1.nom_perso, p1.type_perso, p1.idJoueur_perso, DATEDIFF(NOW(), p2.dateCreation_perso) AS temps_depuis_creation FROM perso as p1 LEFT JOIN perso as p2 ON p1.idJoueur_perso = p2.idJoueur_perso WHERE p1.id_perso='$id_perso' and p2.chef=1";
 	$res = $mysqli->query($sql);
 	$t = $res->fetch_assoc();
 	
 	$pseudo 		= $t["nom_perso"];
 	$type_p 		= $t["type_perso"];
 	$id_joueur_p	= $t["idJoueur_perso"];
+	$temps_depuis_creation	= $t["temps_depuis_creation"];
 	
 	if ($type_p != 6) {
 
@@ -42,8 +43,8 @@ if(isset($_SESSION["id_perso"])){
 			$headers[] = 'MIME-Version: 1.0';
 			$headers[] = 'Content-type: text/html; charset=utf-8';
 			$headers[] = 'To: '.$nom_perso.' <'.$destinataire.'>';
-			$headers[] = 'From: Nord VS Sud"<nordvssud@no-reply.fr>';
-			$headers[] = 'Reply-To: nordvssud@no-reply.fr';
+			$headers[] = 'From: Nord vs Sud<no-reply@nord-vs-sud.fr>';
+			$headers[] = 'Reply-To: no-reply@nord-vs-sud.fr';
 			
 			// Titre du mail
 			$titre = "Votre personnage $nom_perso a reçu un MP de $expediteur";
@@ -85,52 +86,65 @@ if(isset($_SESSION["id_perso"])){
 				
 				$unlock = "UNLOCK TABLES";
 				$mysqli->query($unlock);
-				
-				for ($i = 0; $i < $nbdest; $i++) {
-					
-					// recupération du nom du perso destinataire
-					$sql_d = "SELECT nom_perso FROM perso WHERE id_perso='".addslashes($dest[$i])."' OR nom_perso='".addslashes($dest[$i])."'";
-					$res_d = $mysqli->query($sql_d);
-					
-					if( $res_d->num_rows == 0 ){
-						echo "<div class=\"erreur\">Le destinataire n'existe pas !</div>";
-						
-						if(isset($_SESSION['destinataires'])){
-							$_SESSION['destinataires'] .= ";".$dest[$i];
-						}
-						else {
-							$_SESSION['destinataires'] = $dest[$i];
-						}
-						$_SESSION['message'] = $_POST["message"];
-						$_SESSION['objet'] = $_POST["objet"];
-					}
-					else {
-						$sql_p = "SELECT id_perso, idJoueur_perso FROM perso WHERE nom_perso='".addslashes($dest[$i])."' OR id_perso='".addslashes($dest[$i])."'";
-						$res_p = $mysqli->query($sql_p);
-						$t_p = $res_p->fetch_assoc();
-						
-						$id_p = $t_p['id_perso'];
-						$id_j = $t_p['idJoueur_perso'];
-					
-						// assignation du message au perso
-						$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
+
+				if (!$id_message) {
+					echo "<div class=\"erreur\">Une erreur s'est produite.</div>";
+				} else {
+					// Limitation introduite pour empecher l'envoi d'un message a plein de personnes par un nouveau joueur
+					if ($nbdest > 3 && $temps_depuis_creation < 5) {
+						$text_triche = "Un nouveau perso $pseudo [$id_perso] a tenté d envoyer un message [$id_message] a $nbdest destinataires";
+			
+						$sql = "INSERT INTO tentative_triche (id_perso, texte_tentative) VALUES ('$id_perso', '$text_triche')";
 						$mysqli->query($sql);
-						
-						// On récupère la config envoi_mail_mp du joueur 
-						$sql = "SELECT mail_mp FROM joueur WHERE id_joueur='$id_j'";
-						$res = $mysqli->query($sql);
-						$t_j = $res->fetch_assoc();
-						
-						$envoi_mail_mp = $t_j['mail_mp'];
-						
-						if ($envoi_mail_mp) {
-							
-							// Envoi d'une copie du message par mail 
-							mail_mp($mysqli, $expediteur, $objet, $message, $id_p);
-							
+					} else {
+						for ($i = 0; $i < $nbdest; $i++) {
+
+							// recupération du nom du perso destinataire
+							$nom = filter_var($dest[$i], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_HIGH);
+							$sql_d = "SELECT nom_perso FROM perso WHERE id_perso='".$nom."' OR nom_perso='".$nom."'";
+							$res_d = $mysqli->query($sql_d);
+
+							if( $res_d->num_rows == 0 ){
+								echo "<div class=\"erreur\">Le destinataire n'existe pas !</div>";
+
+								if(isset($_SESSION['destinataires'])){
+									$_SESSION['destinataires'] .= ";".$dest[$i];
+								}
+								else {
+									$_SESSION['destinataires'] = $dest[$i];
+								}
+								$_SESSION['message'] = $_POST["message"];
+								$_SESSION['objet'] = $_POST["objet"];
+							}
+							else {
+								$sql_p = "SELECT id_perso, idJoueur_perso FROM perso WHERE nom_perso='".$nom."' OR id_perso='".$nom."'";
+								$res_p = $mysqli->query($sql_p);
+								$t_p = $res_p->fetch_assoc();
+
+								$id_p = $t_p['id_perso'];
+								$id_j = $t_p['idJoueur_perso'];
+
+								// assignation du message au perso
+								$sql = "INSERT INTO message_perso VALUES ('$id_message', '$id_p', '1', '0', '0', '0')";
+								$mysqli->query($sql);
+
+								// On récupère la config envoi_mail_mp du joueur 
+								$sql = "SELECT mail_mp FROM joueur WHERE id_joueur='$id_j'";
+								$res = $mysqli->query($sql);
+								$t_j = $res->fetch_assoc();
+
+								$envoi_mail_mp = $t_j['mail_mp'];
+
+								if ($envoi_mail_mp) {
+
+									// Envoi d'une copie du message par mail 
+									mail_mp($mysqli, $expediteur, $objet, $message, $id_p);
+
+								}
+
+								header("Location:messagerie.php?envoi=ok");
+							}
 						}
-						
-						header("Location:messagerie.php?envoi=ok");
 					}
 				}
 			}
@@ -409,7 +423,7 @@ if(isset($_SESSION["id_perso"])){
 	
 		<div class="container-fluid">
 
-			<p align="center"><input type="button" value="Fermer la messagerie" onclick="window.close()"></p>
+			<p align="center"><a href="jouer.php"> <input type="button" value="Retour au jeu"> </a></p>
 
 			<div class="row justify-content-center">
 				<div class="col-12">
@@ -588,7 +602,8 @@ if(isset($_SESSION["id_perso"])){
 					// remove the current input
 					terms.pop();
 					// add the selected item
-					terms.push(ui.item.label);
+					var nm =  $('<textarea />').html(ui.item.label).text();
+					terms.push(nm);
 					// add placeholder to get the comma-and-space at the end
 					terms.push("");
 					this.value = terms.join(";");
