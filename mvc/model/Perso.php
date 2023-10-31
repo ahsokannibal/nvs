@@ -128,7 +128,7 @@ public function getAllPerso($attributs = [],$camp=null){
 
 		switch($type){
 			case 'item':
-				$query = "SELECT objet.id_objet, nom_objet, poids_objet, description_objet, type_objet, contient_alcool, echangeable, deposable, GROUP_CONCAT(perso_as_objet.capacite_objet SEPARATOR ',') as destinations, COUNT(*) AS quantity, SUM(poids_objet) as poids_total, SUM(perso_as_objet.equip_objet) as equiped FROM objet INNER JOIN perso_as_objet ON perso_as_objet.id_perso=:id_perso AND perso_as_objet.id_objet=objet.id_objet GROUP BY perso_as_objet.id_objet";
+				$query = "SELECT objet.id_objet, nom_objet, poids_objet, description_objet, type_objet, image_objet, contient_alcool, echangeable, deposable, GROUP_CONCAT(perso_as_objet.capacite_objet SEPARATOR ',') as destinations, COUNT(*) AS quantity, SUM(poids_objet) as poids_total, SUM(perso_as_objet.equip_objet) as equiped FROM objet INNER JOIN perso_as_objet ON perso_as_objet.id_perso=:id_perso AND perso_as_objet.id_objet=objet.id_objet GROUP BY perso_as_objet.id_objet";
 				break;
 			case 'weapon':
 				$query = "SELECT arme.id_arme, nom_arme, poids_arme, description_arme, image_arme, COUNT(*) AS quantity, SUM(poids_arme) as poids_total FROM arme INNER JOIN perso_as_arme ON perso_as_arme.id_perso=:id_perso AND perso_as_arme.id_arme=arme.id_arme AND perso_as_arme.est_portee='0' GROUP BY id_arme";
