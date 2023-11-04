@@ -1,1 +1,0 @@
-ALTER TABLE `train_last_dep` ADD `DeplacementDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP AFTER `y_last_dep`; 

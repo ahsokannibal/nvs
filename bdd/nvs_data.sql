@@ -447,6 +447,8 @@ INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_o
 (9, 'Etendard des armées du sud', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, '9', "L'étendard des armées du sud", 0, 0, 0, 'E'),
 (10, 'Orange', 0, 0, 60, 0, 0, 0, 0, 0, 0, 1, 9999, '0.0', 'Une orange fraîchement cueillie et pleine d\'énergie. Permet de récupérer plus rapidement de ses blessures (Bonus Récup +60)', 0, 0, 0, 'N');
 
+INSERT INTO `objet` (`id_objet`, `nom_objet`, `portee_objet`, `bonusPerception_objet`, `bonusRecup_objet`, `bonusPv_objet`, `bonusPm_objet`, `bonusDefense_objet`, `bonusPrecisionCac_objet`, `bonusPrecisionDist_objet`, `bonusPA_objet`, `coutPa_objet`, `coutOr_objet`, `poids_objet`, `description_objet`, `type_objet`, `contient_alcool`, `echangeable`, `deposable`, `Perte_Proba`) VALUES (NULL, 'Pépite d\'or', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '0', '3.5', 'Une pépite d\'or sacrément grosse!', 'RP', '0', '0', '1', '100') 
+
 --
 -- Contenu de la table `perso`
 --
