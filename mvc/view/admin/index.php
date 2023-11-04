@@ -64,6 +64,11 @@ ob_start();
 				<ul class="list-group list-group-flush">
 					<li class="list-group-item"><a class='btn btn-primary' href='admin_batiments.php'>Administration des bâtiments</a></li>
 				</ul>
+				</ul>
+				<h5 class="card-title mt-4">Objets</h5>
+				<ul class="list-group list-group-flush">
+					<li class="list-group-item"><a class='btn btn-primary' href='admin_items.php'>Gestion des objets</a></li>
+				</ul>
 			</div>
 		</div>
 	</div>
