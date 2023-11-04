@@ -696,7 +696,7 @@ if($dispo == '1' || $admin){
 										$nb_obj = $t_nb['nb_obj'];
 
 										// Récupération des informations sur l'objet
-										$sql_o = "SELECT nom_objet, description_objet, poids_objet, coutOr_objet FROM objet WHERE id_objet='$id_objet'";
+										$sql_o = "SELECT nom_objet, description_objet, poids_objet, coutOr_objet, image_objet FROM objet WHERE id_objet='$id_objet'";
 										$res_o = $mysqli->query($sql_o);
 										$t_o = $res_o->fetch_assoc();
 
@@ -704,11 +704,12 @@ if($dispo == '1' || $admin){
 										$description_objet = $t_o["description_objet"];
 										$poids_objet = $t_o["poids_objet"];
 										$coutOr_objet = $t_o["coutOr_objet"];
+										$image_objet = $t_o["image_objet"];
 
 										// Calcul du prix de vente
 										$prix_vente_max = round ($coutOr_objet / 2);
 
-										echo "<tr><td align='center'><img src='../images/objets/objet".$id_objet.".png' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_obj</td><td align='center'>$prix_vente_max</td>";
+										echo "<tr><td align='center'><img src='../public/img/items/".$image_objet."' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_obj</td><td align='center'>$prix_vente_max</td>";
 										echo "<td align=\"center\"><input type='submit' name='vente_objet' value='Vendre' />";
 										echo "<input type='hidden' name='hid_vente_objet' value='".$id_objet."' />";
 										echo "</td></tr>";
@@ -792,17 +793,18 @@ if($dispo == '1' || $admin){
 										$nb_obj = $t_nb['nb_obj'];
 
 										// Récupération des informations sur l'objet
-										$sql_o = "SELECT nom_objet, description_objet, poids_objet FROM objet WHERE id_objet='$id_objet'";
+										$sql_o = "SELECT nom_objet, description_objet, poids_objet, image_objet FROM objet WHERE id_objet='$id_objet'";
 										$res_o = $mysqli->query($sql_o);
 										$t_o = $res_o->fetch_assoc();
 
 										$nom_objet = $t_o["nom_objet"];
 										$description_objet = $t_o["description_objet"];
 										$poids_objet = $t_o["poids_objet"];
+										$image_objet = $t_o["image_objet"];
 
 										$compteur_obj = 1;
 
-										echo "<tr><td align='center'><img src='../images/objet".$id_objet.".png' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_obj</td>";
+										echo "<tr><td align='center'><img src='../public/img/items/".$image_objet."' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_obj</td>";
 										echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 										echo "<td align='center'>";
 										echo "<select name=\"select_ressources\">";
@@ -843,17 +845,18 @@ if($dispo == '1' || $admin){
 										$nb_ressource = $t_res['nb_ressource'];
 
 										// Récupération des informations sur l'objet
-										$sql_o = "SELECT nom_objet, description_objet, poids_objet FROM objet WHERE id_objet='$id_ressource'";
+										$sql_o = "SELECT nom_objet, description_objet, poids_objet, image_objet FROM objet WHERE id_objet='$id_ressource'";
 										$res_o = $mysqli->query($sql_o);
 										$t_o = $res_o->fetch_assoc();
 
 										$nom_objet = $t_o["nom_objet"];
 										$description_objet = $t_o["description_objet"];
 										$poids_objet = $t_o["poids_objet"];
+										$image_objet = $t_o["image_objet"];
 
 										$compteur_res = 1;
 
-										echo "<tr><td align='center'><img src='../images/objet".$id_ressource.".png' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_ressource</td>";
+										echo "<tr><td align='center'><img src='../public/img/items/".$image_objet."' /><br /><b>$nom_objet</b></td><td align='center'>$poids_objet</td><td align='center'>$nb_ressource</td>";
 										echo "<form method=\"post\" action=\"batiment.php?bat=$id_i_bat\">";
 										echo "<td align='center'>";
 										echo "<select name=\"select_recup_ressources\">";
@@ -1102,7 +1105,7 @@ if($dispo == '1' || $admin){
 
 										$id_o 			= $t["id_objet"];
 										$nom_o 			= $t["nom_objet"];
-										$image_o 		= "objet".$id_o.".png";
+										$image_o 		= $t["image_objet"];
 										$description_o 	= $t["description_objet"];
 										$poid_o 		= $t["poids_objet"];
 										$cout_o 		= $t["coutOr_objet"];
@@ -1112,7 +1115,7 @@ if($dispo == '1' || $admin){
 
 										echo "<tr>";
 										echo "	<td><center>$nom_o</center></td>";
-										echo "	<td align='center'><img src=\"../images/objets/$image_o\" width=\"40\" height=\"40\"></td>";
+										echo "	<td align='center'><img src=\"../public/img/items/$image_o\" width=\"40\" height=\"40\"></td>";
 										echo "	<td><center>$description_o</center></td>";
 										echo "	<td><center>$poid_o</center></td>";
 										echo "	<td align='center'>";
@@ -1201,11 +1204,11 @@ if($dispo == '1' || $admin){
 									// possibilité achat objets de base
 									// Affichage de l'étendard seulement pour les anims et admins
 									if(($isAdmin || $isAnim) && $type_perso == '1'){
-										$sql = "SELECT * from objet where (type_objet='N' OR type_objet='E') AND echangeable=1";
+										$sql = "SELECT * from objet where (type_objet='N' OR type_objet='E' OR type_objet='RP') AND achetable=1";
 										$res = $mysqli->query($sql);
 										$nb = $res->num_rows;
 									} else {
-										$sql = "SELECT * from objet where (type_objet='N' OR type_objet='E') AND echangeable=1 AND id_objet!='8' AND id_objet!='9'";
+										$sql = "SELECT * from objet where (type_objet='N' OR type_objet='E') AND achetable=1 AND id_objet!='8' AND id_objet!='9'";
 										$res = $mysqli->query($sql);
 										$nb = $res->num_rows;
 									}
@@ -1221,7 +1224,7 @@ if($dispo == '1' || $admin){
 											$coutOr_objet 		= $t["coutOr_objet"];
 											$description_objet 	= $t["description_objet"];
 
-											$image_objet = "objet".$id_objet.".png";
+											$image_objet = $t["image_objet"];;
 
 											// rabais
 											$rabais = floor(($coutOr_objet * $pourcentage_rabais)/100);
@@ -1229,7 +1232,7 @@ if($dispo == '1' || $admin){
 											echo "<tr>";
 											echo "	<td align='center'>$nom_objet</td>";
 											echo "	<td align='center'>$poids_objet</td>";
-											echo "	<td align='center'><img src=\"../images/objets/$image_objet\" width=\"40\" height=\"40\" ></td>";
+											echo "	<td align='center'><img src=\"../public/img/items/$image_objet\" width=\"40\" height=\"40\" ></td>";
 											echo "	<td>$description_objet</td>";
 											echo "	<td align='center'>";
 											echo "		<select name='quantite_objet'>";

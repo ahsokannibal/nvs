@@ -3,6 +3,11 @@ require_once("Model.php");
 
 class Item extends Model
 {
+	protected $table = "objet";
+	protected $primaryKey = "id_objet";
+	// protected $fillable = [];
+	protected $guarded = [];
+	
 	/**
 	* Fonction qui permet de supprimer un ticket de train
 	* @param $id_perso : L'identifiant du personnage qui possède le billet

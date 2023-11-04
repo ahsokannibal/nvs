@@ -79,6 +79,7 @@ ob_start();
 				$nom_o 			= $item["nom_objet"];
 				$poids_o 		= $item["poids_objet"];
 				$description_o 	= $item["description_objet"];
+				$image_objet	= $item["image_objet"];
 				$type_o			= $item["type_objet"];
 				$contient_alcool= $item["contient_alcool"];
 				$quantity		= $item["quantity"];
@@ -89,7 +90,7 @@ ob_start();
 			    <tr>
 					<td class='text-center py-4'>
 						<span class='text-success fw-bold'><?= $nom_o ?></span><br>
-						<img class='img-fluid' src="../images/objets/objet<?=$id_obj?>.png">
+						<img class='img-fluid' src="../public/img/items/<?=$image_objet?>">
 					</td>
 					<td class='w-25 d-none d-sm-table-cell py-4'>
 						<?= stripslashes($description_o) ?>
