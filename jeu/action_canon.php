@@ -47,7 +47,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 			$perception_canon	= 5;
 			
 			// y a t-il un ennemi en visu
-			$sql_v = "SELECT idPerso_carte FROM carte, perso  
+			$sql_v = "SELECT idPerso_carte, perso.type_perso FROM carte, perso  
 						WHERE perso.id_perso = carte.idPerso_carte 
 						AND occupee_carte='1' 
 						AND x_carte >= $x_canon - $perception_canon
@@ -55,6 +55,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 						AND y_carte >= $y_canon - $perception_canon
 						AND y_carte <= $y_canon + $perception_canon
 						AND idPerso_carte > 0 AND idPerso_carte < 50000
+						AND perso.type_perso !=6
 						AND clan != '$camp_canon'";
 			$res_v = $mysqli->query($sql_v);
 			
@@ -241,7 +242,7 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 								
 								// Perso
 								// Récupération des infos du perso
-								$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, pi_perso, pc_perso, x_perso, y_perso, pv_perso, pvMax_perso, or_perso, type_perso, clan, id_grade
+								$sql = "SELECT idJoueur_perso, nom_perso, image_perso, xp_perso, pi_perso, pc_perso, x_perso, y_perso, pv_perso, pvMax_perso, or_perso, type_perso, clan, perso_as_grade.id_grade
 										FROM perso, perso_as_grade 
 										WHERE perso_as_grade.id_perso = perso.id_perso
 										AND perso.id_perso='$id_cible_collat'";
