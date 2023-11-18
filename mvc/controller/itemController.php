@@ -144,6 +144,7 @@ class ItemController extends Controller
 				if($result){
 					$_SESSION['flash'] = ['class'=>'success','message'=>"L'objet \"".$_POST['name']."\" a bien été créé"];
 				}else{
+					$_SESSION['old_input'] = $_POST;
 					$_SESSION['flash'] = ["class" => "warning","message"=>"Une erreur inconnue est survenue, veuillez recommencer. Si le problème persiste, contactez l'administrateur."];
 				}
 				
@@ -292,6 +293,7 @@ class ItemController extends Controller
 				if($result){
 					$_SESSION['flash'] = ['class'=>'success','message'=>"L'objet \"".$_POST['name']."\" a bien été edité"];
 				}else{
+					$_SESSION['old_input'] = $_POST;
 					$_SESSION['flash'] = ["class" => "warning","message"=>"Une erreur inconnue est survenue, veuillez recommencer. Si le problème persiste, contactez l'administrateur."];
 				}
 				

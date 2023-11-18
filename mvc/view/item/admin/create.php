@@ -458,6 +458,9 @@ ob_start();
 								(150x150) <span id="imgPreview150"></span>
 								(40x40) <span id="imgPreview40"></span>
 							</div>
+							<p class='mt-3'>
+								<span id='imgPreviewName' class='bg-secondary-subtle border rounded p-2'>Nom du fichier</span>
+							</p>
 						</div>
 					</div>
 					<div class='row mt-3'>
