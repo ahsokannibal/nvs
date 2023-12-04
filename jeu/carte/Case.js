@@ -225,50 +225,52 @@ class Case{
     }
 
     setCouleur(){
-        if (this.f == '3.gif') {
-			// Montagne
-            this.couleur             = couleur_montagne;
-            this.couleur_brouillard  = couleur_brouillard_montagne;
-		}
-		else if (this.f == '2.gif') {
-			// Colinne
-            this.couleur             = couleur_colline;
-			this.couleur_brouillard  = couleur_brouillard_colinne;
-		}
-		else if (this.f == '4.gif') {
-			// Desert
-            this.couleur             = couleur_desert;
-			this.couleur_brouillard  = couleur_brouillard_desert;
-		}
-		else if (this.f == '6.gif') {
-			// marécage
-            this.couleur             = couleur_marecage;
-			this.couleur_brouillard  = couleur_brouillard_marecage;
-		}
-		else if (this.f == '7.gif') {
-			// Foret
-            this.couleur             = couleur_foret;
-			this.couleur_brouillard  = couleur_brouillard_foret;
-		}
-        else if (this.f == 'b5b.png' || this.f == 'b5r.png' || this.f == 'b5g.png') {
-			// pont
-			this.couleur             = couleur_bat_neutre;
-            this.couleur_brouillard  = couleur_brouillard_eau;
-		}
-		else if (this.f == '8.gif') {
-			// eau 
-			this.couleur             = couleur_eau;
-            this.couleur_brouillard  = couleur_brouillard_eau;
-		}else if(this.f == '9.gif'){
-            this.couleur             = couleur_eau_p;
-            this.couleur_brouillard  = couleur_brouillard_eau;
-        }else if(this.f.includes('rail')){
-            this.couleur             = couleur_rail;
-            this.couleur_brouillard  = couleur_brouillard_plaine;
-        }else {
-			// plaine et autres
-			this.couleur             = couleur_plaine;
-            this.couleur_brouillard  = couleur_brouillard_plaine;
+		if(this.f != undefined){
+			if (this.f == '3.gif') {
+				// Montagne
+				this.couleur             = couleur_montagne;
+				this.couleur_brouillard  = couleur_brouillard_montagne;
+			}
+			else if (this.f == '2.gif') {
+				// Colinne
+				this.couleur             = couleur_colline;
+				this.couleur_brouillard  = couleur_brouillard_colinne;
+			}
+			else if (this.f == '4.gif') {
+				// Desert
+				this.couleur             = couleur_desert;
+				this.couleur_brouillard  = couleur_brouillard_desert;
+			}
+			else if (this.f == '6.gif') {
+				// marécage
+				this.couleur             = couleur_marecage;
+				this.couleur_brouillard  = couleur_brouillard_marecage;
+			}
+			else if (this.f == '7.gif') {
+				// Foret
+				this.couleur             = couleur_foret;
+				this.couleur_brouillard  = couleur_brouillard_foret;
+			}
+			else if (this.f == 'b5b.png' || this.f == 'b5r.png' || this.f == 'b5g.png') {
+				// pont
+				this.couleur             = couleur_bat_neutre;
+				this.couleur_brouillard  = couleur_brouillard_eau;
+			}
+			else if (this.f == '8.gif') {
+				// eau 
+				this.couleur             = couleur_eau;
+				this.couleur_brouillard  = couleur_brouillard_eau;
+			}else if(this.f == '9.gif'){
+				this.couleur             = couleur_eau_p;
+				this.couleur_brouillard  = couleur_brouillard_eau;
+			}else if(this.f.includes('rail')){
+				this.couleur             = couleur_rail;
+				this.couleur_brouillard  = couleur_brouillard_plaine;
+			}else {
+				// plaine et autres
+				this.couleur             = couleur_plaine;
+				this.couleur_brouillard  = couleur_brouillard_plaine;
+			}
 		}
     }
 }
