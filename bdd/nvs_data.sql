@@ -103,7 +103,7 @@ INSERT INTO `arme` (`id_arme`, `nom_arme`, `porteeMin_arme`, `porteeMax_arme`, `
 (20, 'Baïonnette normale', 1, 1, 3, 50, 0, 0, 0, 0, 14, 14, 8, 70, '0', 0, '0.5', 0, '', 0, 1, 'baionnette.png'),
 (21, 'Fusil normal', 1, 3, 5, 50, 0, 0, 0, 0, 20, 20, 6, 80, '0', 0, '1.6', 0, '', 0, 1, 'fusil.png'),
 (22, 'Canon normal', 2, 6, 6, 200, 0, 0, 0, 0, 75, 75, 6, 65, '1', 0, '0.0', 0, 'Canon d\'artillerie, extrêmement dévastateur et efficace contre les bâtiments.', 0, 1, 'canon.png'),
-(23, 'Carabine Spencer', 1, 3, 4, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.png'),
+(23, 'Carabine Spencer', 1, 3, 5, 150, 0, 0, 0, 0, 20, 20, 6, 60, '0', 0, '4.0', 0, '', 0, 1, 'carabine_spencer.png'),
 (24, 'Sabre léger', '1', '1', '4', '0', '0', '0', '0', '0', '16', '16', '6', '80', '0', '0', '0.0', '0', '', '0', '1', 'sabre_leger.png');
 
 
@@ -388,7 +388,7 @@ VALUES (
 );
 
 --
--- Contenu de la table `grades`
+-- Contenu de la table `1s`
 --
 
 INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) VALUES
