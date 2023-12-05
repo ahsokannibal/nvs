@@ -581,8 +581,8 @@ if($dispo == '1' || $admin){
 				<br />
 				
 				<div class="row">
-					<div class="col-12">
-						<input type='checkbox' name='mail_info' <?php if($mail_info_joueur) echo 'checked';?> /> Recevoir un mail si on m'attaque
+					<div style="display: none;" class="col-12">
+						<input type='checkbox' disabled="true" name='mail_info' <?php if($mail_info_joueur) echo 'checked';?> /> Recevoir un mail si on m'attaque
 					</div>
 				</div>
 				

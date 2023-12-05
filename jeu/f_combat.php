@@ -500,7 +500,7 @@ function verif_coche_mail($mysqli, $id_joueur){
   * @ return void
   */
 function mail_attaque($mysqli, $nom_attaquant, $id_cible){
-	
+	/**
 	// Recuperation du mail de la cible
 	$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE id_perso='$id_cible' AND id_joueur=idJoueur_perso";
 	$res = $mysqli->query($sql);
@@ -524,6 +524,7 @@ function mail_attaque($mysqli, $nom_attaquant, $id_cible){
 	
 	// Envoie du mail
 	mail($destinataire, $titre, $message, $headers);
+	*/
 }
 
 function log_attaque($mysqli, $id, $id_cible, $id_arme_attaque, $degats, $touche){
