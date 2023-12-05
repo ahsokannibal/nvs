@@ -20,27 +20,7 @@ if(isset($_SESSION["id_perso"])){
 		$id_perso = $_SESSION["id_perso"];
 
 		$perso = new Perso();
-		$perso = $perso->getPerso($id_perso,[
-			'id_perso',
-			'type_perso',
-			'clan',
-			'or_perso',
-			'pv_perso',
-			'pvMax_perso',
-			'pm_perso',
-			'pmMax_perso',
-			'pa_perso',
-			'paMax_perso',
-			'perception_perso',
-			'recup_perso',
-			'charge_perso',
-			'chargeMax_perso',
-			'bonusPerception_perso',
-			'bonusRecup_perso',
-			'bonusPM_perso',
-			'bonusPA_perso',
-			'bourre_perso'
-		]);
+		$perso = $perso->find($id_perso);
 
 		$type_p = $perso->type_perso;
 		$taux_alcool = $perso->bourre_perso;

@@ -2125,29 +2125,11 @@ if($dispo == '1' || $admin){
 					}
 				}
 
-				?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-	<head>
-		<title>Nord VS Sud</title>
-
-		<!-- Required meta tags -->
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
-
-		<!-- Bootstrap CSS -->
-		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
-
-		<link href="../style2.css" rel="stylesheet" type="text/css">
-
-	</head>
-
-	<body>
-				<?php
+				
 				$date_serveur = new DateTime('now', new DateTimeZone('Europe/Paris'));
 
 				$date_dla = date('d-m-Y H:i:s', $n_dla);
-
+				
 				if (anim_perso($mysqli, $id_perso)) {
 					// Récupération des demandes sur la gestion des compagnies
 					$sql = "SELECT * FROM compagnie_demande_anim, compagnies
@@ -2183,40 +2165,66 @@ if($dispo == '1' || $admin){
 
 					$nb_demande_a_traiter = $nb_demandes_gestion_compagnie + $nb_demandes_gestion_perso + $nb_questions_anim + $nb_captures_anim;
 				}
-
+				
 				// Récupération du nombre de missions actives
 				$sql_ma = "SELECT id_mission, nom_mission, texte_mission, recompense_thune, recompense_xp, recompense_pc, nombre_participant, date_debut_mission, date_fin_mission
 						FROM missions WHERE date_debut_mission IS NOT NULL AND (date_fin_mission IS NULL OR date_fin_mission >= CURDATE())
 						AND camp_mission='$clan_p'";
 				$res_ma = $mysqli->query($sql_ma);
 				$nb_missions_actives = $res_ma->num_rows;
+				?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+	<head>
+		<title>Nord VS Sud</title>
 
-				//affichage de l'heure serveur et de nouveau tour
-				echo "<table width=100% bgcolor='white' border=0>";
-				echo "<tr>
-						<td><img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1>".$date_serveur->format('H:i:s')."</span></b></td>
-						<td rowspan=2><img src='../images/accueil/banniere.jpg' alt='banniere Nord VS Sud' width=150 height=63 /></td>
-						<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
-					</tr>";
-				echo "<tr>";
-				echo "	<td>Prochain tour :  ".$date_dla."</td>";
-				echo "	<td align=right>";
-				echo "		<a class='btn btn-info' href=\"https://encyclopedie.nord-vs-sud.fr\"><b>Règles</b></a>";
-				echo "		<a class='btn btn-info' href=\"../faq.php\"><b>FAQ</b></a>";
-				echo "		<a class='btn btn-primary' href=\"http://www.forum.persee.ovh/\" target='_blank'><b>Forum</b></a>";
+		<!-- Required meta tags -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=0.3, shrink-to-fit=no">
+
+		<!-- Bootstrap CSS -->
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+		<link href="../style2.css" rel="stylesheet" type="text/css">
+
+	</head>
+
+	<body>
+				<table width=100% bgcolor='white' border=0>
+				<tr>
+					<td><img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1>"<?=$date_serveur->format('H:i:s')?>"</span></b></td>
+					<td rowspan=2><img src='../images/accueil/banniere.jpg' alt='banniere Nord VS Sud' width=150 height=63 /></td>
+					<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
+				</tr>
+				<tr>
+				<td>Prochain tour :  "<?=$date_dla?>"</td>
+				<td align=right>
+				<a class='btn btn-info' href=\"https://encyclopedie.nord-vs-sud.fr\"><b>Règles</b></a>
+				<a class='btn btn-info' href=\"../faq.php\"><b>FAQ</b></a>
+				<a class='btn btn-primary' href=\"http://www.forum.persee.ovh/\" target='_blank'><b>Forum</b></a>
+				<?php
 				if ($type_perso != 6) {
-					echo "		<a class='btn btn-primary' href=\"question_anim.php\"><b>Questions Anim</b></a>";
-					echo "		<a class='btn btn-primary' href=\"capture.php\"><b>Déclarer une capture</b></a>";
+				?>
+				<a class='btn btn-primary' href=\"question_anim.php\"><b>Questions Anim</b></a>
+				<a class='btn btn-primary' href=\"capture.php\"><b>Déclarer une capture</b></a>
+				<?php
 				}
-				echo "		<a class='btn btn-warning' href=\"missions.php\"><b>Missions ";
+				?>
+				<a class='btn btn-warning' href=\"missions.php\"><b>Missions
+				<?php
 				if ($nb_missions_actives > 0) {
-					echo "<span class='badge badge-success'>".$nb_missions_actives."</span>";
+				?>
+				<span class='badge badge-success'>".$nb_missions_actives."</span>
+				<?php
 				}
-				echo "</b></a>";
-
+				?>
+				</b></a>
+				<?php
 				// Redacteur
 				if(redac_perso($mysqli, $id_perso)) {
-					echo " <a class='btn btn-warning' href='redacteur.php'>Redaction</a>";
+				?>
+				<a class='btn btn-warning' href='redacteur.php'>Redaction</a>
+				<?php
 				}
 
 				// Animation
@@ -3034,7 +3042,6 @@ if($dispo == '1' || $admin){
 							</table>
 
 							<br />
-
 							<table border="2" style="background-color: palevioletred;" width="100%">
 								<tr>
 									<td colspan='3' bgcolor="lightgrey" align='center'><b>Caractéristiques de combat</b></td>
@@ -3755,12 +3762,15 @@ if($dispo == '1' || $admin){
 								}
 								echo "\" >" ;
 
-								// Affichage pastille étendard
-								$id_etendard = id_etendard_joueur($mysqli, $id_perso);
-								$id_etendard == 8 ? $pastille = 'rond_b.png' : $pastille = 'rond_r.png';
-								if($id_etendard > 0){
-									affichage_pastille_etendard($pastille);
-								};
+								// Affichage pastille de marquage 
+								$marquages = marquage_joueur($mysqli, $id_perso);
+								
+								if($marquages){
+									foreach($marquages as $marquage){
+										affichage_pastille_marquage($marquage['pastille']);
+										echo '<br>';
+									}
+								}
 
 								echo  $id_perso . "</div>";
 
@@ -4073,11 +4083,14 @@ if($dispo == '1' || $admin){
 
 													echo "			\" ";
 													echo "		>";
-													// Affichage pastille étendard
-													$id_etendard = id_etendard_joueur($mysqli, $id_ennemi);
-													$id_etendard == 8 ? $pastille = 'rond_b.png' : $pastille = 'rond_r.png';
-													if($id_etendard > 0){
-														affichage_pastille_etendard($pastille);
+													// Affichage pastille de marquage 
+													$marquages = marquage_joueur($mysqli, $id_ennemi);
+													
+													if($marquages){
+														foreach($marquages as $marquage){
+															affichage_pastille_marquage($marquage['pastille']);
+															echo '<br>';
+														}
 													}
 													echo  $id_ennemi . "</div>";
 

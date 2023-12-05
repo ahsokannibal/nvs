@@ -1374,11 +1374,43 @@ function get_fond_carte_perso($mysqli,$carte, $id_perso){
 }
 
 /**
+ * Fonction permettant de savoir si un joueur porte un objet marqué
+ */
+function marquage_joueur($mysqli, $id_perso) {
+	
+	$sql = "SELECT perso_as_objet.id_objet, objet.pastille FROM perso_as_objet LEFT JOIN objet ON objet.id_objet=perso_as_objet.id_objet WHERE perso_as_objet.id_perso='$id_perso' AND objet.pastille>-1 LIMIT 3";
+	$res = $mysqli->query($sql);
+	$res = $res->fetch_all(MYSQLI_ASSOC);
+	
+	if($res){
+		return $res;
+	}
+	
+	return false;
+}
+
+/**
  * Fonction qui affiche une pastille si le perso porte l'étendard
  */
-function affichage_pastille_etendard($pastille){
-	echo "<img tabindex='0'style=\"position: absolute;bottom: -2px;text-align: center; width: 100%;\" 
-		src='../images_perso/".$pastille."' width='40' height='40' title='etendard'alt='Porte-Etendard' />";
+function affichage_pastille_marquage($pastille){
+	switch($pastille){
+		case 1:
+			$color='blue';
+			break;
+		case 2:
+			$color='red';
+			break;
+		case 0:
+			$color='yellow';
+			break;
+		default:
+			$color='grey';
+	}
+	echo '
+	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="'.$color.'" stroke="black" class="spot-obj">
+		<path fill-rule="evenodd" d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z" clip-rule="evenodd" />
+	</svg>
+	';
 }
 
 

@@ -1424,7 +1424,10 @@ CREATE TABLE `objet` (
   `echangeable`	tinyint [0] NOT NULL DEFAULT '1',
   `deposable` tinyint [0] NOT NULL DEFAULT '1',
   `achetable` tinyint [0] NOT NULL DEFAULT '1',
-  `type_objet` varchar(3) NOT NULL DEFAULT 'N'
+  `Perte_Proba` smallint [0] unsigned DEFAULT '0',
+  `type_objet` varchar(3) NOT NULL DEFAULT 'N',
+  `pastille` tinyint [0] DEFAULT '0',
+  `camps` tinytext
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 ALTER TABLE `objet` ADD `Perte_Proba` SMALLINT UNSIGNED NOT NULL DEFAULT '0' COMMENT 'valeur entiere de 0 (jamais perdue) a 100 (perdue avec certitude), representant la probabilite de perdre cet objet en cas de rip' AFTER `deposable`;

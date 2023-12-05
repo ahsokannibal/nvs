@@ -3,16 +3,14 @@ require_once("Model.php");
 
 class Camp extends Model
 {
-	private $id;
-	private	$name;
-	private $desc;
-	private $color;
+	// protected $fillable = [];
+	protected $guarded = [];
 
 	/*
-	 * récupérer les infos du camp
+	 * récupérer les infos du camp 
 	 *
 	*/
-	// cette fonction devra utiliser à terme la table camp qui n'existe pas encore
+	// Rétrocompatibilité
     public function getCamp($id){
 		switch($id){
 			case 1:

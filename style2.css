@@ -169,3 +169,12 @@ a:visited
   position : absolute;
   z-index : 1; 
 }
+
+/* affichage pastille en attente de refacto */
+
+.spot-obj{
+	position:relative;
+	top:0;
+	left:-11px;
+	width:1rem;
+}

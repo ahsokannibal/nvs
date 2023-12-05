@@ -25,7 +25,7 @@ class formValidator
 		if($column===null){
 			$column = $key;
 		}
-		$db = $this->dbConnectPDO();
+		$db = $this->dbConnectPDO();// à adapter à la DAO
 		$query = "SELECT * FROM $table WHERE $column='$value'";
 	
 		$request = $db->prepare($query);
@@ -48,7 +48,7 @@ class formValidator
 		if($column===null){
 			$column = $key;
 		}
-		$db = $this->dbConnectPDO();
+		$db = $this->dbConnectPDO(); //à adapter à la DAO
 		$query = "SELECT COUNT(*) FROM $table WHERE $column='$value'";
 	
 		$request = $db->prepare($query);
@@ -152,7 +152,14 @@ class formValidator
 							}
 							break;
 						case 'not_required':
-							if($_POST[$key]==='' || $_POST[$key]===null){
+							if($_POST[$key]==='' || $_POST[$key]===null || $_POST[$key]==='null'){
+								break;
+							}else{
+								$bail = 0;
+							}
+							break;
+						case 'nullable':
+							if($_POST[$key]==null || $_POST[$key]=='null'){
 								break;
 							}else{
 								$bail = 0;
@@ -175,6 +182,12 @@ class formValidator
 							break;
 						case 'boolean':
 							if(!is_bool($_POST[$key])){
+								$errors[$key][$condition] = 'le champ "'.$key_name.'" ne correspond pas aux valeurs attendues';
+							}else{
+								$bail = 0;
+							}
+						case 'array':
+							if(!is_array($_POST[$key])){
 								$errors[$key][$condition] = 'le champ "'.$key_name.'" ne correspond pas aux valeurs attendues';
 							}else{
 								$bail = 0;
