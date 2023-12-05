@@ -387,7 +387,7 @@ if ($verif_id_perso_session) {
 									
 										// Si perso ou cible est une infanterie 
 										// ou si grade perso >= grade cible - 1
-										$gain_pc = calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible);
+										$gain_pc = calcul_gain_pc_attaque_perso($mysqli, $grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id, $id_cible);
 										
 										// Seringue ou bandage
 										if ($id_arme_attaque == 10 || $id_arme_attaque == 11) {
@@ -577,7 +577,7 @@ if ($verif_id_perso_session) {
 											// L'arme fait des dégats de zone
 											if ($degatZone_arme_attaque) {
 												$degats_collat = floor($degats_final / 2);
-												check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+												check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
 											}
 										}
 										else { // la cible a esquivé l'attaque
@@ -671,7 +671,7 @@ if ($verif_id_perso_session) {
 														$gain_xp_tour_perso += $gain_xp;
 														passage_grade_grouillot($mysqli, $id, $grade_perso, $xp_perso, $gain_xp);
 
-														$gain_pc = calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible);
+														$gain_pc = calcul_gain_pc_attaque_perso($mysqli, $grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id, $id_cible);
 														gain_pc_chef($mysqli, $id, $gain_pc);
 
 														echo "Votre boulet a rencontré un obstacle ! Vous avez infligé $degats_final dégâts à <font color='$couleur_clan_cible'>$nom_cible</font> - Matricule $id_voisin.<br>";
@@ -681,7 +681,7 @@ if ($verif_id_perso_session) {
 														check_cible_capturee($mysqli, $carte, $id, $clan_perso, $couleur_clan_perso, $nom_perso, $nom_grade_perso, $id_cible, $clan_cible, $couleur_clan_cible, $nom_cible, $nom_grade_cible, $pi_cible, $or_cible);
 														// L'arme fait des dégats de zone
 														$degats_collat = floor($degats_final / 2);
-														check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_voisin, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+														check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id, $clan_perso, $couleur_clan_perso, $xp_perso, $id_voisin, $x_cible, $y_cible, $degats_collat, $gain_xp, $gain_pc, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
 													}
 												} else {
 													echo "Fichtre ! Votre boulet atterrit violemment dans un épais buisson. <br>";
@@ -1207,7 +1207,7 @@ if ($verif_id_perso_session) {
 										// L'arme fait des dégats de zone
 										if ($degatZone_arme_attaque) {
 											$degats_collat = floor($degats_final / 2);
-											check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+											check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
 										}
 
 										if ($pv_cible > 0) {
@@ -1933,7 +1933,7 @@ if ($verif_id_perso_session) {
 										// L'arme fait des dégats de zone et n'est pas une gatling
 										if ($degatZone_arme_attaque && $id_arme_attaque != 14) {
 											$degats_collat = floor(($degats_final - $bonus_degats_canon) / 3);
-											check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id_j_perso, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
+											check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type_perso, $id, $clan_perso, $couleur_clan_perso, $xp_perso, $id_cible, $x_cible, $y_cible, $degats_collat, $gain_xp, 0, $gain_xp_tour_perso, $max_xp_tour_atteint, $id_arme_attaque);
 										}
 										
 										//mise à jour des pa
