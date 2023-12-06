@@ -378,20 +378,45 @@ function calcul_des_attaque($nbDes, $valeurDes) {
 /**
  * Fonction permettant de calculer le gain de PC après une attaque sur un perso
  */
-function calcul_gain_pc_attaque_perso($grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_j_perso, $id_joueur_cible) {
+function calcul_gain_pc_attaque_perso($mysqli, $grade_perso, $grade_cible, $clan_perso, $clan_cible, $type_perso, $id_perso, $id_cible) {
 	
+	// recup id joueur perso
+	$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_perso'";
+	$res = $mysqli->query($sql);
+	$t_j = $res->fetch_assoc();
+	
+	$id_j_perso = $t_j["idJoueur_perso"];
+	
+	$sql = "SELECT perso.id_perso, pc_perso, perso_as_grade.id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_j_perso' AND chef='1'";
+	$res = $mysqli->query($sql);
+	$t_chef = $res->fetch_assoc();
+	$id_grade_chef_perso = $t_chef["id_grade"];
+	
+	$sql = "SELECT idJoueur_perso FROM perso WHERE id_perso='$id_cible'";
+	$res = $mysqli->query($sql);
+	$t_j = $res->fetch_assoc();
+	
+	$id_c_perso = $t_j["idJoueur_perso"];
+	
+	$sql = "SELECT perso.id_perso, pc_perso, perso_as_grade.id_grade FROM perso, perso_as_grade WHERE perso.id_perso = perso_as_grade.id_perso AND idJoueur_perso='$id_c_perso' AND chef='1'";
+	$res = $mysqli->query($sql);
+	$t_chef = $res->fetch_assoc();
+	$id_grade_chef_cible = $t_chef["id_grade"];
 	$gain_pc = 0;
-	
-	if ((( $grade_perso <= $grade_cible + 1 && $grade_cible != 101 && $grade_cible != 102 )
-			|| $grade_perso == 1 || $grade_perso == 101 || $grade_perso == 102 
-			|| (($grade_cible == 1 || $grade_cible == 101 || $grade_cible == 102) && $grade_perso == 2)) && ($clan_cible != $clan_perso || $type_perso == 4)) {
-		$gain_pc = 1;
-	}
-	
 	if($clan_cible==0){
 		$gain_pc = 0;
+	}else{
+		if(($id_grade_chef_perso == 2 || $id_grade_chef_perso == 3
+			|| (($id_grade_chef_perso == 4 || $id_grade_chef_perso == 5) && $id_grade_chef_cible >= 3)
+			|| (($id_grade_chef_perso >= 6 && $id_grade_chef_perso <= 9) && $id_grade_chef_cible >= 4)
+			|| (($id_grade_chef_perso >= 10 && $id_grade_chef_perso <= 11) && $id_grade_chef_cible >= 5)
+			|| (($id_grade_chef_perso >= 12 && $id_grade_chef_perso <= 13) && $id_grade_chef_cible >= 6)
+			|| (($id_grade_chef_perso >= 14 && $id_grade_chef_perso <= 15) && $id_grade_chef_cible >= 7)
+			|| (($id_grade_chef_perso >= 16 && $id_grade_chef_perso <= 17) && $id_grade_chef_cible >= 8))
+			&& ($clan_cible != $clan_perso || $type_perso == 4)){
+				$gain_pc = 1;
+		}
 	}
-	
 	return $gain_pc;
 }
 
@@ -881,7 +906,7 @@ function check_degats_zone($mysqli, $carte, $id, $nom_perso, $grade_perso, $type
 			$gain_xp_collat_cumul += $gain_xp_collat;
 			$gain_pc_collat_cumul += 1;
 
-			$gain_pc_collat = calcul_gain_pc_attaque_perso($grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_j_perso, $id_joueur_collat);
+			$gain_pc_collat = calcul_gain_pc_attaque_perso($mysqli, $grade_perso, $grade_collat, $clan_perso, $clan_collat, $type_perso, $id_perso, $id_cible_collat);
 
 			// Limite 2 PC par attaque de Gatling
 			if ($id_arme_attaque == 14 && $gain_pc + $gain_pc_collat_cumul > $max_gain_pc_collat_cumul) {
