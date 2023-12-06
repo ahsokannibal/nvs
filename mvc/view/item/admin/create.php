@@ -4,8 +4,10 @@ $title = "Administration - Créer un objet";
 /* ---Header--- */
 ob_start();
 ?>
+<div class='background-img items'>
+</div>
 <div class="row justify-content-center text-center">
-	<div class="col col-md-6">
+	<div class="col mx-2 rounded bg-light py-3 bg-opacity-75">
 		<h2 class='mb-3'>Créer un objet</h2>
 		<nav>
 			<a class="btn btn-primary me-2 mb-3" href="?">Retour à la gestion des objets</a>
@@ -34,7 +36,7 @@ ob_start();
 <?php endif ?>
 <div class="row">
 	<div class="col">
-		<div class="card h-100 shadow">
+		<div class="card h-100 shadow bg-opacity-50">
 			<div class='card-header'>
 				<h5 class="card-title mt-2">
 					<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
@@ -56,7 +58,7 @@ ob_start();
 							</h5>
 							<div class='row'>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['name'])):?> fw-bold text-danger <?php endif ?>' for='name'>Nom : </label>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['name'])):?> fw-bold text-danger <?php endif ?>' for='name'>Nom : </label>
 									<input class='form-control<?php if(isset($_SESSION['errors']['name'])):?> is-invalid<?php endif ?>' type='text' name='name' id='name' value='<?= $_SESSION['old_input']['name'] ?? ''?>'>
 									<small class='text-muted'>Maximum 50 caractères, espaces compris</small>
 									<?php if(isset($_SESSION['errors']['name'])):?>
@@ -70,7 +72,7 @@ ob_start();
 									<?php endif ?>
 								</div>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['category'])):?> fw-bold text-danger <?php endif ?>' for='name'>Catégorie : </label><br>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['category'])):?> fw-bold text-danger <?php endif ?>' for='name'>Catégorie : </label><br>
 									<div class="form-check form-check-inline">
 										<input class="form-check-input" type="radio" name="category" id="cat1" value='N'<?php if(isset($_SESSION['old_input']['category']) AND $_SESSION['old_input']['category']=='N'):?> checked<?php endif;?>>
 										<label class="form-check-label" for="cat1">
@@ -100,7 +102,7 @@ ob_start();
 									<?php endif ?>
 								</div>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['desc'])):?> fw-bold text-danger <?php endif ?>' for='desc'>Description : </label>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['desc'])):?> fw-bold text-danger <?php endif ?>' for='desc'>Description : </label>
 									<textarea class='form-control<?php if(isset($_SESSION['errors']['desc'])):?> is-invalid<?php endif ?>' id="desc" name="desc" rows="5" cols="33" placeholder='Petit objet en cuir de fesses de buffle servant au sevrage des carottes. Ne rapporte aucun bonus, MAIS... aucun malus non plus'><?= $_SESSION['old_input']['desc'] ?? ''?></textarea>
 									<small class='text-muted'>Maximum 250 caractères, espaces compris</small>
 									<?php if(isset($_SESSION['errors']['desc'])):?>
@@ -113,6 +115,35 @@ ob_start();
 									</div>
 									<?php endif ?>
 								</div>
+								<div class='col-12 mb-3'>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['unitType'])):?> fw-bold text-danger <?php endif ?>' for='unitType'>Type(s) d'unité autorisé(s) : </label><br>
+								
+								<?php if(isset($unitTypes) && !empty($unitTypes)): ?>
+									<div class='d-flex flex-row flex-wrap'>
+									<?php foreach($unitTypes as $type): ?>
+									<div class="form-check form-check-inline mb-2">
+										<input class="form-check-input" type="checkbox" name="unitType[]" id='unit<?= $type->id_unite ?>' value='<?= $type->id_unite ?>'<?php if(isset($_SESSION['old_input']['unitType']) AND is_array($_SESSION['old_input']['unitType']) AND in_array($type->id_unite,$_SESSION['old_input']['unitType'])):?> checked<?php endif;?>>
+										<label class="form-check-label" for="unit<?= $type->id_unite ?>">
+											<?= $type->nom_unite ?>
+										</label>
+									</div>
+										<?php endforeach; ?>
+								<?php if(isset($_SESSION['errors']['unitType'])):?>
+									<div class='mt-2 alert alert-danger'>
+										<ul class='mb-0'>
+										<?php foreach($_SESSION['errors']['unitType'] as $message): ?>
+											<li><?= $message ?></li>
+										<?php endforeach ?>
+										</ul>
+									</div>
+								<?php endif ?>
+									</div>
+								<?php else: ?>
+									<p>
+										Aucune unité trouvée. Vous devez créer des unités pour lancer le jeu.
+									</p>
+								<?php endif; ?>
+								</div>
 							</div>
 						</div>
 						<div class='col-12 col-sm-4 col-lg-3 px-4 pt-2 mb-3 border-end border-start bg-light'>
@@ -124,7 +155,7 @@ ob_start();
 							</h5>
 							<div class='row'>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['weight'])):?> fw-bold text-danger <?php endif ?>' for='weight'>Poids : </label>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['weight'])):?> fw-bold text-danger <?php endif ?>' for='weight'>Poids : </label>
 									<div class="input-group">
 										<input class='form-control<?php if(isset($_SESSION['errors']['weight'])):?> is-invalid<?php endif ?>' type='number' min='0' step='0.1' name='weight' id='weight' value='<?= $_SESSION['old_input']['weight'] ?? ''?>'>
 										<span class="input-group-text">kg(s)</span>
@@ -140,7 +171,7 @@ ob_start();
 									<?php endif ?>
 								</div>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['price'])):?> fw-bold text-danger <?php endif ?>' for='price'>Prix : </label>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['price'])):?> fw-bold text-danger <?php endif ?>' for='price'>Prix : </label>
 									<div class="input-group">
 										<input class='form-control<?php if(isset($_SESSION['errors']['price'])):?> is-invalid<?php endif ?>' type='number' min='0' name='price' id='price' value='<?= $_SESSION['old_input']['price'] ?? ''?>'>
 										<span class="input-group-text">or(s)</span>
@@ -156,7 +187,7 @@ ob_start();
 									<?php endif ?>
 								</div>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['cost_PA'])):?> fw-bold text-danger <?php endif ?>' for='cost_PA'>Coût en PA : </label>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['cost_PA'])):?> fw-bold text-danger <?php endif ?>' for='cost_PA'>Coût en PA : </label>
 									<div class="input-group">
 										<input class='form-control<?php if(isset($_SESSION['errors']['cost_PA'])):?> is-invalid<?php endif ?>' type='number' min='0' name='cost_PA' id='cost_PA' value='<?= $_SESSION['old_input']['cost_PA'] ?? ''?>'>
 										<span class="input-group-text">PA</span>
@@ -172,7 +203,7 @@ ob_start();
 									<?php endif ?>
 								</div>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['range'])):?> fw-bold text-danger <?php endif ?>' for='range'>Portée : </label>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['range'])):?> fw-bold text-danger <?php endif ?>' for='range'>Portée : </label>
 									<div class="input-group">
 										<input class='form-control<?php if(isset($_SESSION['errors']['range'])):?> is-invalid<?php endif ?>' type='number' min='0' name='range' id='range' value='<?= $_SESSION['old_input']['range'] ?? ''?>'>
 										<span class="input-group-text">case(s)</span>
@@ -188,7 +219,7 @@ ob_start();
 									<?php endif ?>
 								</div>
 								<div class='col-12 mb-3'>
-									<label class='form-label<?php if(isset($_SESSION['errors']['loss_chance'])):?> fw-bold text-danger <?php endif ?>' for='loss_chance'>Probabilité de perte : </label>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['loss_chance'])):?> fw-bold text-danger <?php endif ?>' for='loss_chance'>Probabilité de perte : </label>
 									<div class="input-group">
 										<input class='form-control<?php if(isset($_SESSION['errors']['loss_chance'])):?> is-invalid<?php endif ?>' type='number' min='0' max='100' name='loss_chance' id='loss_chance' value='<?= $_SESSION['old_input']['loss_chance'] ?? ''?>'>
 										<span class="input-group-text">%</span>
@@ -207,7 +238,7 @@ ob_start();
 							</div>
 						</div>
 						<div class='col mb-3 ms-3 pt-2'>
-							<h5 class='mb-5'>
+							<h5 class='mb-4'>
 							<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
 								<path stroke-linecap="round" stroke-linejoin="round" d="M4.098 19.902a3.75 3.75 0 005.304 0l6.401-6.402M6.75 21A3.75 3.75 0 013 17.25V4.125C3 3.504 3.504 3 4.125 3h5.25c.621 0 1.125.504 1.125 1.125v4.072M6.75 21a3.75 3.75 0 003.75-3.75V8.197M6.75 21h13.125c.621 0 1.125-.504 1.125-1.125v-5.25c0-.621-.504-1.125-1.125-1.125h-4.072M10.5 8.197l2.88-2.88c.438-.439 1.15-.439 1.59 0l3.712 3.713c.44.44.44 1.152 0 1.59l-2.879 2.88M6.75 17.25h.008v.008H6.75v-.008z" />
 							</svg>
@@ -278,10 +309,80 @@ ob_start();
 									</div>
 									<?php endif ?>
 								</div>
+								<div class='col-12 mb-3'>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['spot'])):?> fw-bold text-danger <?php endif ?>' for='spot'>Objet marqué : </label><br>
+								<?php if(isset($camps) && !empty($camps)): ?>
+									<div class='d-flex flex-row flex-wrap'>
+									<div class="form-check form-check-inline mb-2">
+										<input class="form-check-input" type="radio" name="spot" id='spotN' value='null'>
+										<label class="form-check-label" for="spotN">
+											Non
+										</label>
+									</div>
+									<div class="form-check form-check-inline mb-2">
+										<input class="form-check-input" type="radio" name="spot" id='spot0' value='0'<?php if(isset($_SESSION['old_input']['spot']) AND $_SESSION['old_input']['spot']=='0'):?> checked<?php endif;?>>
+										<label class="form-check-label" for="spot0">
+											Neutre
+										</label>
+									</div>
+									<?php foreach($camps as $camp): ?>
+									<div class="form-check form-check-inline mb-2">
+										<input class="form-check-input" type="radio" name="spot" id='spot<?= $camp->id ?>' value='<?= $camp->id ?>'<?php if(isset($_SESSION['old_input']['spot']) AND $_SESSION['old_input']['spot']==$camp->id):?> checked<?php endif;?>>
+										<label class="form-check-label" for="spot<?= $camp->id ?>">
+											<?= $camp->name ?>
+										</label>
+									</div>
+									<?php endforeach; ?>
+									<small class='text-muted'>Si coché, affichera une pastille de couleur sur le porteur de l'objet</small>
+								<?php if(isset($_SESSION['errors']['spot'])):?>
+									<div class='mt-2 alert alert-danger'>
+										<ul class='mb-0'>
+										<?php foreach($_SESSION['errors']['spot'] as $message): ?>
+											<li><?= $message ?></li>
+										<?php endforeach ?>
+										</ul>
+									</div>
+								<?php endif ?>
+									</div>
+								<?php else: ?>
+									<p>
+										Aucun camp trouvé. Vous devez définir les camps pour lancer le jeu.
+									</p>
+								<?php endif; ?>
+								</div>
+								<div class='col-12 mb-3'>
+									<label class='fw-semibold form-label<?php if(isset($_SESSION['errors']['camps'])):?> fw-bold text-danger <?php endif ?>' for='camps'>Camp(s) autorisé(s) : </label><br>
+								<?php if(isset($camps) && !empty($camps)): ?>
+									<div class='d-flex flex-row flex-wrap'>
+									<?php foreach($camps as $camp): ?>
+									<div class="form-check form-check-inline mb-2">
+										<input class="form-check-input" type="checkbox" name="camps[]" id='camp<?= $camp->id ?>' value='<?= $camp->id ?>'<?php if(isset($_SESSION['old_input']['camps']) AND is_array($_SESSION['old_input']['camps']) AND in_array($camp->id,$_SESSION['old_input']['camps'])):?> checked<?php endif;?>>
+										<label class="form-check-label" for="camp<?= $camp->id ?>">
+											<?= $camp->name ?>
+										</label>
+									</div>
+									<?php endforeach; ?>
+									<small class='text-muted'>Seuls les camps cochés pourront interagir avec et accéder à l'objet.<br>Ne rien cocher si l'objet est universel</small>
+								<?php if(isset($_SESSION['errors']['camps'])):?>
+									<div class='mt-2 alert alert-danger'>
+										<ul class='mb-0'>
+										<?php foreach($_SESSION['errors']['camps'] as $message): ?>
+											<li><?= $message ?></li>
+										<?php endforeach ?>
+										</ul>
+									</div>
+								<?php endif ?>
+									</div>
+								<?php else: ?>
+									<p>
+										Aucun camp trouvé. Vous devez définir les camps pour lancer le jeu.
+									</p>
+								<?php endif; ?>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class='row row-cols-1 row-cols-sm-2 row-cols-md-4 mb-3'>
+					<div class='row row-cols-1 row-cols-sm-2 row-cols-md-5 mb-3'>
 						<div class='col-12 col-sm-12 col-md-12 mb-3'>
 							<h5>
 								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

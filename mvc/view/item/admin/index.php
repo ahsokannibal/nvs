@@ -4,12 +4,14 @@ $title = "Administration - Objets";
 /* ---Header--- */
 ob_start();
 ?>
+<div class='background-img items'>
+</div>
 <div class="row justify-content-center text-center">
-	<div class="col col-md-6">
+	<div class="col mx-2 rounded bg-light py-3 bg-opacity-75">
 		<h2 class='mb-3'>Administration - Objets</h2>
 		<nav>
-			<a class="btn btn-primary me-2" href="admin_nvs.php">Retour à l'administration</a>
-			<a class="btn btn-primary" href="jouer.php">Retour au jeu</a>
+			<a class="btn btn-primary me-2 mb-3" href="admin_nvs.php">Retour à l'administration</a>
+			<a class="btn btn-primary mb-3" href="jouer.php">Retour au jeu</a>
 		</nav>
 	</div>
 </div>
@@ -67,12 +69,21 @@ ob_start();
 					<tbody>
 						<?php foreach($items as $item): ?>
 						<tr>
-							<th scope="row">
+							<th scope="row" class='text-wrap w-max100'>
 								<?php echo (empty($item->nom_objet))?'<span class="text-muted">"sans nom"</span>':$item->nom_objet;?><br>
 								<small class='text-muted'>catégorie : <?= $item->type_objet?></small><br>
-								<img class="img-fluid w-50" src="../public/img/items/<?= $item->image_objet?>">
+								<img class="img-fluid" src="../public/img/items/<?= $item->image_objet?>">
 							</th>
-							<td><?= $item->description_objet?></td>
+							<td>
+								<p>
+									<span class='fw-semibold'>Résumé : </span><br>
+									<?= $item->description_objet?>
+								</p>
+								<p>
+									<span class='fw-semibold'>Unités autorisées : </span><br>
+									<?= (!empty($item->allowed_units))?$item->allowed_units:'Aucune'?>
+								</p>
+							</td>
 							<td>
 								<ul class='list-group list-group-flush'>
 									<li class='list-group-item bg-transparent'><span class='fw-semibold'>Poids : </span><?= str_replace('.',',',$item->poids_objet)?> kg(s)</li>
@@ -98,6 +109,7 @@ ob_start();
 									<li class='list-group-item bg-transparent'><span class='fw-semibold'>Echangeable : </span><?= ($item->echangeable!='0')?'Oui':'Non'?></li>
 									<li class='list-group-item bg-transparent'><span class='fw-semibold'>Déposable : </span><?= ($item->deposable!='0')?'Oui':'Non'?></li>
 									<li class='list-group-item bg-transparent'><span class='fw-semibold'>Achetable : </span><?= ($item->achetable!='0')?'Oui':'Non'?></li>
+									<li class='list-group-item bg-transparent'><span class='fw-semibold'>Marqué : </span><?= ($item->pastille!='-1')?'Oui':'Non'?></li>
 								</ul>
 							</td>							
 							<td class=''>

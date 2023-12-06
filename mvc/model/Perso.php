@@ -3,6 +3,11 @@ require_once("Model.php");
 
 class Perso extends Model
 {
+	// protected $table = "Perso";
+	protected $primaryKey = "id_perso";
+	// protected $fillable = [];
+	protected $guarded = [];
+	
 	public $id_perso;
 	public $idJoueur_perso;
 	public $nom_perso;
@@ -67,12 +72,7 @@ class Perso extends Model
 		return $result;
 	}
 
-	/**
-	* Récupère les infos du perso
-	* @param $id_perso : L'identifiant du personnage
-	* @param $attributs : quelles colonnes doit-on récupérer
-	* @return Perso
-	*/
+	/* Obsolète. Utilisez les fonctions DAO à la place (get et find) */
 	public function getPerso($id,$attributs = []){
 		$db = $this->dbConnectPDO();
 
@@ -92,8 +92,8 @@ class Perso extends Model
 
 		return $result;
 	}
-	
-public function getAllPerso($attributs = [],$camp=null){
+	/* Obsolète. Utilisez les fonctions DAO à la place (get) */
+	public function getAllPerso($attributs = [],$camp=null){
 		$db = $this->dbConnectPDO();
 
 		if($attributs){
