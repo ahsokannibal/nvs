@@ -45,7 +45,7 @@ abstract class Model extends Db
 	
 	// créer une entrée dans une table via des attributs définis
 	public function save()
-	{	
+	{
 		$model_vars = get_object_vars($this);
 		
 		foreach($model_vars as $attr => $value){
@@ -60,6 +60,28 @@ abstract class Model extends Db
 		$bind = implode(', ',$bind);
 		
 		return $this->request('INSERT INTO '.$this->table.' ('.$columns.') VALUES ('.$bind.')',$values);
+	}
+	
+	/* créer une entrée dans une table via des attributs définis
+	 * retourne l'instance de modèle créée
+	*/
+	public function saveWithModel()
+	{
+		$model_vars = get_object_vars($this);
+		
+		foreach($model_vars as $attr => $value){
+			if($value !== null && !in_array($attr,$this->modelAttr) && $attr != $this->primaryKey){
+				$columns[] = $attr;
+				$bind[] = '?';
+				$values[] = $value;
+			}
+		}
+		
+		$columns = implode(', ',$columns);
+		$bind = implode(', ',$bind);
+		
+		$this->request('INSERT INTO '.$this->table.' ('.$columns.') VALUES ('.$bind.')',$values);
+		return $this->find($this->db->lastInsertId());
 	}
 	
 	// créer une entrée à partir d'un tableau de données (hydratation)
@@ -152,6 +174,24 @@ abstract class Model extends Db
 		$columns = implode(', ',$columns);
 		
 		return $this->request('UPDATE '.$this->table.' SET '.$columns.' WHERE '.$this->primaryKey.' = '.$id,$values);
+	}
+	
+	//mettre à jour une entrée d'une table via sa clé primaire
+	public function updateWithModel(int $id)
+	{
+		$model_vars = get_object_vars($this);
+		
+		foreach($model_vars as $attr => $value){
+			if($value !== null && !in_array($attr,$this->modelAttr) && $attr != $this->primaryKey){
+				$columns[] = $attr. ' = ?';
+				$values[] = $value;
+			}
+		}
+		
+		$columns = implode(', ',$columns);
+		
+		$this->request('UPDATE '.$this->table.' SET '.$columns.' WHERE '.$this->primaryKey.' = '.$id,$values);
+		return $this;
 	}
 	
 	//supprimer l'entrée en base de l'instance "sélectionnée" du modèle
@@ -270,7 +310,20 @@ abstract class Model extends Db
 		$this->joinedTables .= $query;
 		
 		return $this;
+	}
+	
+	/**
+     * Ajouter une jointure droite (RIGHT JOIN) à la requête // Séparée de la jointure interne pour plus de clareté
+     * 
+     * @return $this
+     */
+	public function rightJoin(string $joined_table, string $contraint_1,string $operator,string $contraint_2){
+		
+		$query = ' RIGHT JOIN '.$joined_table.' ON '.$contraint_1.$operator.$contraint_2;
 
+		$this->joinedTables .= $query;
+		
+		return $this;
 	}
 	
 	// retrocompatibilité

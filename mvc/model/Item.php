@@ -9,6 +9,55 @@ class Item extends Model
 	protected $guarded = [];
 	
 	/**
+     * Pivot table "objet_as_type_unite" to allow units to use item
+     * @param $type array
+     * @return bool
+     */
+	public function allowUnits(array $types){
+		$firstTableKey = $this->primaryKey;
+		
+		$pivotTable = 'objet_as_type_unite';
+		$requests = 0;
+		
+		if($this->allowed_units){
+			$count1 = count(array_diff($types,$this->allowed_units));
+			$count2 = count(array_diff($this->allowed_units,$types));
+			$control = $count1+$count2;
+			
+			foreach($types as $type){
+				if(!in_array($type,$this->allowed_units)){
+					$query = 'INSERT INTO '.$pivotTable.' ('.$this->primaryKey.',id_type_unite) VALUES (?,?)';
+					$values = [$this->$firstTableKey,$type];
+
+					$request = $this->request($query,$values);
+					$requests ++;
+				}
+			}
+			foreach($this->allowed_units as $unit){
+				if(!in_array($unit,$types)){
+					$query = 'DELETE FROM '.$pivotTable.' WHERE '.$this->primaryKey.'=? AND id_type_unite=?';
+					$values = [$this->$firstTableKey,$unit];
+
+					$request = $this->request($query,$values);
+					$requests ++;
+				}
+			}
+			
+			return $control==$requests;
+		}else{
+			foreach($types as $type){
+				$query = 'INSERT INTO '.$pivotTable.' ('.$this->primaryKey.',id_type_unite) VALUES (?,?)';
+				$values = [$this->$firstTableKey,$type];
+
+				$request = $this->request($query,$values);
+				$requests ++;
+			}
+			
+			return count($types)==$requests;
+		}
+	}
+	
+	/**
 	* Fonction qui permet de supprimer un ticket de train
 	* @param $id_perso : L'identifiant du personnage qui possède le billet
 	* @param $destination : L'identifiant de la gare d'arrivée
@@ -31,10 +80,7 @@ class Item extends Model
 	}
 	
 	/**
-	* Récupère les infos d'un objet
-	* @param $id : L'identifiant du type d'objet
-	* @param $attributs : quelles colonnes doit-on récupérer
-	* @return obj
+	* OBSOLETE. Utiliser la DAO
 	*/
 	public function getItem($id,$attributs = []){
 		$db = $this->dbConnectPDO();

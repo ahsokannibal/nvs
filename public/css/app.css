@@ -12,13 +12,7 @@ body{
 	background:#969696;
 }
 
-.h-6 {
-	height:1.5rem;
-}
-
-.w-6 {
-	height:1.5rem;
-}
+/* couleurs de camps */
 
 /* heights and width custom */
 .rotate-20deg {
@@ -41,12 +35,32 @@ body{
 	width:100%;
 }
 
+.w-max100{
+	max-width:100px;
+}
+
+.h-6 {
+	height:1.5rem;
+}
+
+.w-6 {
+	height:1.5rem;
+}
+
+/* affichage sur la carte */
+
+.spot-obj{
+	position:relative;
+	top:0;
+	left:-13px;
+	width:1rem;
+}
+
 /* messages and notifications */
 
 .maintenance-msg{
 	white-space:pre-line;
 }
-
 
 /* news */
 .news {
@@ -54,7 +68,6 @@ body{
 	text-overflow: "";
 }
 
-/* sac */
 .background-img {
 	position:fixed;
 	top:0;
@@ -63,9 +76,17 @@ body{
 	height:100%;
 }
 
+/* sac */
 .sac {
 	z-index:-1;
 	background:no-repeat url("../img/backgrounds/sac_optimized-transp.png"), url("../img/backgrounds/wood.png");
+}
+
+/* items */
+.items {
+	z-index:-1;
+	background:center url("../img/backgrounds/items_admin.jpg");
+	background-size: auto;
 }
 
 /* icons custom */
