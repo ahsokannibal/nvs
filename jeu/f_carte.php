@@ -165,8 +165,7 @@ function cout_pm($fond, $type_perso)
  */
 function get_bonus_portee($fond){
 	switch($fond) {
-		case(I_COLLINE): return 1; break; //colline
-		case(I_MONTAGNE): return 2; break; //montagne
+		case(I_MONTAGNE): return 1; break; //montagne
 		default: return 0;
 	}
 }
