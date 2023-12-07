@@ -20,7 +20,7 @@ abstract class Model extends Db
 	{
 		// par défaut la table est le nom de la classe
 		if(empty($this->table)){
-			$this->table = get_class($this);
+			$this->table = strtolower(get_class($this));
 		}
 	}
 	
