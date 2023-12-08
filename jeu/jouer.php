@@ -2194,23 +2194,23 @@ if($dispo == '1' || $admin){
 				<tr>
 					<td><img src='../images/clock.png' alt='horloge' width='25' height='25'/> Heure serveur : <b><span id=tp1>"<?=$date_serveur->format('H:i:s')?>"</span></b></td>
 					<td rowspan=2><img src='../images/accueil/banniere.jpg' alt='banniere Nord VS Sud' width=150 height=63 /></td>
-					<td align=right> <a class='btn btn-danger' href=\"../logout.php\"><b>Déconnexion</b></a></td>
+					<td align=right> <a class='btn btn-danger' href="../logout.php"><b>Déconnexion</b></a></td>
 				</tr>
 				<tr>
 				<td>Prochain tour :  "<?=$date_dla?>"</td>
 				<td align=right>
-				<a class='btn btn-info' href=\"https://encyclopedie.nord-vs-sud.fr\"><b>Règles</b></a>
-				<a class='btn btn-info' href=\"../faq.php\"><b>FAQ</b></a>
-				<a class='btn btn-primary' href=\"http://www.forum.persee.ovh/\" target='_blank'><b>Forum</b></a>
+				<a class='btn btn-info' href="https://encyclopedie.nord-vs-sud.fr"><b>Règles</b></a>
+				<a class='btn btn-info' href="../faq.php"><b>FAQ</b></a>
+				<a class='btn btn-primary' href="http://www.forum.persee.ovh/" target='_blank'><b>Forum</b></a>
 				<?php
 				if ($type_perso != 6) {
 				?>
-				<a class='btn btn-primary' href=\"question_anim.php\"><b>Questions Anim</b></a>
-				<a class='btn btn-primary' href=\"capture.php\"><b>Déclarer une capture</b></a>
+				<a class='btn btn-primary' href="question_anim.php"><b>Questions Anim</b></a>
+				<a class='btn btn-primary' href="capture.php"><b>Déclarer une capture</b></a>
 				<?php
 				}
 				?>
-				<a class='btn btn-warning' href=\"missions.php\"><b>Missions
+				<a class='btn btn-warning' href="missions.php"><b>Missions
 				<?php
 				if ($nb_missions_actives > 0) {
 				?>
