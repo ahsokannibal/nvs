@@ -235,21 +235,6 @@ if($dispo == '1' || $admin){
 						$mess .= "Région modifié avec succés.";
 					}
 					
-					// Coche mail attaque
-					if (isset($_POST['mail_info'])){
-						
-						$statut = $_POST['mail_info'];
-						
-						if($statut == 'on'){
-							$sql = "UPDATE joueur SET mail_info='1' WHERE id_joueur ='".$id_joueur."'";
-							$mysqli->query($sql);
-						}
-					} 
-					else {
-						$sql = "UPDATE joueur SET mail_info='0' WHERE id_joueur ='".$id_joueur."'";
-						$mysqli->query($sql);
-					}
-					
 					// Coche mail mp
 					if (isset($_POST['mail_mp'])){
 						
@@ -347,7 +332,6 @@ if($dispo == '1' || $admin){
 				$pays_joueur 			= $t["pays_joueur"];
 				$region_joueur 			= $t["region_joueur"];
 				$description_joueur 	= $t["description_joueur"];
-				$mail_info_joueur 		= $t["mail_info"];
 				$mail_mp_joueur			= $t["mail_mp"];
 				$valid_case_joueur		= $t["valid_case"];
 				$afficher_rosace_joueur	= $t["afficher_rosace"];
@@ -580,11 +564,6 @@ if($dispo == '1' || $admin){
 				
 				<br />
 				
-				<div class="row">
-					<div class="col-12">
-						<input type='checkbox' name='mail_info' <?php if($mail_info_joueur) echo 'checked';?> /> Recevoir un mail si on m'attaque
-					</div>
-				</div>
 				
 				<div class="row">
 					<div class="col-12">

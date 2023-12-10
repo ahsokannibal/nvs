@@ -1,0 +1,1 @@
+ALTER TABLE `joueur` DROP `mail_info`;
