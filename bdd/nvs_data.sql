@@ -388,7 +388,7 @@ VALUES (
 );
 
 --
--- Contenu de la table `1s`
+-- Contenu de la table `grades`
 --
 
 INSERT INTO `grades` (`id_grade`, `nom_grade`, `pc_grade`, `point_armee_grade`) VALUES
