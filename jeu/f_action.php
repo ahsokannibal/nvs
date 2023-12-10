@@ -3912,14 +3912,6 @@ function charge_bonne($mysqli, $id_perso, $nom_perso, $image_perso, $clan, $coul
 		// Récupération de la couleur associée au clan de la cible
 		$couleur_clan_cible = couleur_clan($clan_cible);
 		
-		// Vérifie si le joueur attaqué a coché l'envoi de mail
-		$mail_info_joueur = verif_coche_mail($mysqli, $id_joueur_cible);
-		
-		if($mail_info_joueur){
-			// Envoi du mail
-			mail_attaque($mysqli, $nom_perso, $idPerso_carte);
-		}
-		
 		// Si perso ou cible est une infanterie 
 		// ou si grade perso >= grade cible - 1
 		if ((( $grade_perso <= $grade_cible + 1 && $grade_cible != 101 && $grade_cible != 102 )

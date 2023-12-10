@@ -371,18 +371,7 @@ if ($verif_id_perso_session) {
 									$verif_anti_zerk = gestion_anti_zerk($mysqli, $id);
 									
 									if ($verif_anti_zerk) {
-										
-										// Vérifie si le joueur attaqué a coché l'envoi de mail
-										$mail_info_joueur = verif_coche_mail($mysqli, $id_joueur_cible);
-										
-										// Envoi mail uniquement si attaque n'est pas un soin
-										if ($id_arme_attaque != 10 && $id_arme_attaque != 11) {
-											if($mail_info_joueur){
-												// Envoi du mail
-												mail_attaque($mysqli, $nom_perso, $id_cible);
-											}
-										}
-										
+
 										$soin_termine = false;
 									
 										// Si perso ou cible est une infanterie 
