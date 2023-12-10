@@ -481,52 +481,6 @@ function gestion_anti_zerk($mysqli, $id_perso) {
 	return $verif_anti_zerk;
 }
 
-/**
-  * Fonction qui verifie si le joueur a coche l'envoi de mail lors d'une attaque
-  * @param $id_joueur	: L'identifiant du joueur
-  * @return bool		: Si le joueur e coche ou non l'envoi de mail
-  */
-function verif_coche_mail($mysqli, $id_joueur){
-	$sql_i = "select mail_info from joueur WHERE id_joueur ='".$id_joueur."'";
-	$res_i = $mysqli->query($sql_i);
-	$tabAttr_i = $res_i->fetch_assoc();
-	return $tabAttr_i["mail_info"];
-}
-
-/**
-  * Fonction qui envoi un mail au perso qui est attaque
-  * @param $nom_attaquant	: Nom du pj ou pnj attaquant
-  * @param $id_cible		: identifiant du pj cible de l'attaque
-  * @ return void
-  */
-function mail_attaque($mysqli, $nom_attaquant, $id_cible){
-	/**
-	// Recuperation du mail de la cible
-	$sql = "SELECT email_joueur, nom_perso FROM joueur, perso WHERE id_perso='$id_cible' AND id_joueur=idJoueur_perso";
-	$res = $mysqli->query($sql);
-	$t = $res->fetch_assoc();
-
-	// Headers mail
-	$headers ='From: Nord vs Sud<no-reply@nord-vs-sud.fr>'."\n";
-	$headers .='Reply-To: no-reply@nord-vs-sud.fr'."\n";
-	$headers .='Content-Type: text/plain; charset="utf-8"'."\n";
-	$headers .='Content-Transfer-Encoding: 8bit';
-	
-	// Destinataire du mail
-	$destinataire = $t['email_joueur'];
-	$nom_cible = $t['nom_perso'];
-	
-	// Titre du mail
-	$titre = 'Attaque reçue';
-	
-	// Contenu du mail
-	$message = "Votre personnage $nom_cible a reçu une attaque de $nom_attaquant";
-	
-	// Envoie du mail
-	mail($destinataire, $titre, $message, $headers);
-	*/
-}
-
 function log_attaque($mysqli, $id, $id_cible, $id_arme_attaque, $degats, $touche){
 	// Insertion log attaque
 	$message_log = $id.' a attaqué '.$id_cible;

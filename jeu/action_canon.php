@@ -105,14 +105,6 @@ if (isset($_GET['clef']) && $_GET['clef'] == $clef_secrete) {
 					$nb_des_canon 		= 75;
 					$valeur_des_canon 	= 6;
 					
-					// Vérifie si le joueur attaqué a coché l'envoi de mail
-					$mail_info_joueur = verif_coche_mail($mysqli, $idJoueur_cible);
-								
-					if($mail_info_joueur){
-						// Envoi du mail
-						mail_attaque($mysqli, 'Canon', $id_perso_cible);
-					}
-					
 					// -- Attaque cible
 					// Calcul touche
 					$touche = mt_rand(0,100);
