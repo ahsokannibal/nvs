@@ -1,0 +1,1 @@
+UPDATE `type_unite` SET `pv_unite`=(`pv_unite`+100) WHERE 1;
