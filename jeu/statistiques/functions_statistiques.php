@@ -44,7 +44,7 @@ if(isset($_POST['function']) && isset($_POST['type'])){
                 }
             }break;
 
-            case 'xpPieChart':{
+            case 'xpBarChart':{
                 if(paramsIsSet()){
                     $params = json_decode($_POST["params"], true);//true to return an array
                     header('Content-Type: application/json');

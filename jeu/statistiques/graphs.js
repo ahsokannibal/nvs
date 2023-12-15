@@ -1,4 +1,4 @@
-var dataPieChart, dataBarChart, dataGradeBarChart, pgPieChart, xpPieChart, dataXpGradeBarChart;
+var dataPieChart, dataBarChart, dataGradeBarChart, pgPieChart, xpBarChart, dataXpGradeBarChart;
 
 
 function setChart(){
@@ -27,7 +27,7 @@ function setChart(){
 	        ctx.textBaseline = "middle";
 	        //here write difference percentage
 	       // console.log((chart.config.data.datasets[0].data[0] / chart.config.data.datasets[0].data[1])*100 - 100)
-	        var calcul = (chart.config.data.datasets[0].data[0] / chart.config.data.datasets[0].data[1])*100 - 100;
+	        var calcul = (chart.config.data.datasets[0].data[0] - chart.config.data.datasets[0].data[1]) * 100 / (chart.config.data.datasets[0].data[0] + chart.config.data.datasets[0].data[1]);
 	        var text = calcul.toFixed(2) + "%",
 	            textX = Math.round((width - ctx.measureText(text).width) / 2),
 	            textY = height / 2;
@@ -74,7 +74,7 @@ function getBarChartData(labels, dataNord, dataSud){
 var listTypes = ['Chef', 'Infanterie', 'Cavalerie lourde', 'Soigneur', 'Artillerie', 'Gatling', 'Toutou', 'Cavalerie légère'];
 
 
-function createGrouillotBarChartDatas(labels, dataNord, dataSud){
+function createGrouillotBarChartDatas(dataBarChart, labels, dataNord, dataSud){
 	listTypes.forEach(function(type){
 		var countNord;
 		var foundNord = dataBarChart.find(function(element, index){
@@ -117,7 +117,7 @@ function setGrouillotChart(){
 	var dataNord = [];
 	var dataSud = [];
 
-	createGrouillotBarChartDatas(labels, dataNord, dataSud);
+	createGrouillotBarChartDatas(dataBarChart, labels, dataNord, dataSud);
 
 	var ctx = document.getElementById('playersGrouillot').getContext('2d');
 	window.myBar = new Chart(ctx, {
@@ -162,7 +162,7 @@ function setPgPieChart(){
 	        ctx.textBaseline = "middle";
 	        //here write difference percentage
 	       // console.log((chart.config.data.datasets[0].data[0] / chart.config.data.datasets[0].data[1])*100 - 100)
-	        var calcul = (chart.config.data.datasets[0].data[0] / chart.config.data.datasets[0].data[1])*100 - 100;
+	        var calcul = (parseInt(chart.config.data.datasets[0].data[0]) - parseInt(chart.config.data.datasets[0].data[1])) * 100 / (parseInt(chart.config.data.datasets[0].data[0]) + parseInt(chart.config.data.datasets[0].data[1]));
 	        var text = calcul.toFixed(2) + "%",
 	            textX = Math.round((width - ctx.measureText(text).width) / 2),
 	            textY = height / 2 ;
@@ -183,38 +183,18 @@ function setPgPieChart(){
 	}
 }
 
-function setXpPieChart(){
-	var chPie = document.getElementById("xpPieChart");
+function setXpBarChart(){
+	var labels = [];
+	var dataNord = [];
+	var dataSud = [];
+
+	createGrouillotBarChartDatas(xpBarChart, labels, dataNord, dataSud);
+
+	var chPie = document.getElementById("xpBarChart");
 	if (chPie) {
 	  new Chart(chPie, {
-	    type: 'pie',
-	    data: {
-	      labels: ['Nord', 'Sud'],
-	      datasets: [
-	        {
-	          backgroundColor: ['blue','red'],
-	          borderWidth: 0,
-	          data: xpPieChart.map(e=>e.compte)
-	        }
-	      ]
-	    },
-	    plugins: [{
-	      beforeDraw: function(chart) {
-	        var width = chart.chart.width,
-	            height = chart.chart.height,
-	            ctx = chart.chart.ctx;
-	        ctx.restore();
-	        var fontSize = (height / 70).toFixed(2);
-	        ctx.font = fontSize + "em sans-serif";
-	        ctx.textBaseline = "middle";
-	        var calcul = (chart.config.data.datasets[0].data[0] / chart.config.data.datasets[0].data[1])*100 - 100;
-	        var text = calcul.toFixed(2) + "%",
-	            textX = Math.round((width - ctx.measureText(text).width) / 2),
-	            textY = height / 2 ;
-	        ctx.fillText(text, textX, textY);
-	        ctx.save();
-	      }
-	    }],
+	    type: 'bar',
+	    data: getBarChartData(labels, dataNord, dataSud),
 	    options: {
 	    	layout:{padding:0}, 
 	    	legend:{display:false}, 
@@ -474,13 +454,13 @@ $.ajax({
     url: "functions_statistiques.php",
     data:{
 		"type" :"player",
-		"function":"xpPieChart",
+		"function":"xpBarChart",
 		"params":'{"activeFor":6}'
     },
     success: function(data){
-        xpPieChart = data;
+        xpBarChart = data;
 		console.log(data)
-        setXpPieChart();
+        setXpBarChart();
     },
     error: function(error_data){
         console.log("Endpoint GET request error");

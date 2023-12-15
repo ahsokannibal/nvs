@@ -74,11 +74,11 @@ include("functions_statistiques.php");
 		<div class="row py-2">
 			<div class="col-md-6 py-1">
 				<div >
-					<h6>Répartition de l'xp</h6>
+					<h6>XP par type de perso</h6>
 				</div>
 				<div class="card">
 					<div class="card-body">
-						<canvas id="xpPieChart"></canvas>
+						<canvas id="xpBarChart"></canvas>
 					</div>
 				</div>
 			</div>
